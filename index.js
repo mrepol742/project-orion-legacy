@@ -67,7 +67,7 @@ login({
                     if (input.toLowerCase().startsWith("pdf")) {
                         let data = input.split(" ");
                         if (data.length < 2) {
-                            api.sendMessage("❌Invalid Command\n💡Usage: >search<space>searchText", event.threadID, event.messageID)
+                            api.sendMessage("Opps! I didnt get it. You should try using pdf query instead.\nFor example:\npdf fundamentals in engineering", event.threadID, event.messageID)
                         } else {
                             try {
                                 data.shift()
@@ -79,19 +79,14 @@ login({
 
                                 console.log(res2);
 
-                                let msg = `💠Search Result💠\n\n`;
-                                msg += `🔎You searched for "${searched}"\n\n`;
-
-                                msg += `\n📝Name:\n\n ${res2.ebookName}\n`;
-                                msg += `\n🔗Download:\n ${res2.dlUrl}`;
-
-                                api.sendMessage(msg, event.threadID)
+                                api.sendMessage(`${res2.ebookName}\n\n` + `${res2.dlUrl}`, event.threadID, event.messageID)
                             } catch (err) {
-                                api.sendMessage(`❌ ${err.message}`, event.threadID, event.messageID);
+                                api.setMessageReaction(":sad:", event.messageID);
+                                api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
                             }
                         }
                     }
-                    if (input.toLowerCase().startsWith("mj") || input.toLowerCase().startsWith("hi")) {
+                    if (input.toLowerCase().startsWith("mj") || input.toLowerCase().startsWith("repol") || input.toLowerCase().startsWith("par") || input.toLowerCase().startsWith("mrepol742")) {
                         var {
                             mentions,
                             senderID,
@@ -104,6 +99,13 @@ login({
                             }, messageID)
                         } else {
                             var text = input.substring(3)
+                            if (input.toLowerCase().startsWith("repol")) {
+                                text = input.substring(6)
+                            } else if (input.toLowerCase().startsWith("par")) {
+                                text = input.substring(4)
+                            } else if (input.toLowerCase().startsWith("mrepol742")) {
+                                text = input.substring(10)
+                            }
                             const configuration = new Configuration({
                                 apiKey: "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",
                             });
@@ -122,7 +124,7 @@ login({
                                 if (err) return
                             }, messageID)
                         }
-                    } else if (input.toLowerCase().startsWith("urbandictionary")) {
+                    } else if (input.toLowerCase().startsWith("urbandictionary") || input.toLowerCase().startsWith("dictionary") || input.toLowerCase().startsWith("dict")) {
                         var {
                             mentions,
                             senderID,
@@ -133,6 +135,11 @@ login({
                             api.sendMessage("Opps! I didnt get it. You should try using urbandictionary query instead.\nFor example:\nurbandictionary computer", threadID, messageID)
                         } else {
                             var text = input.substring(17)
+                            if (input.toLowerCase().startsWith("dictionary")) {
+                                text = input.substring(11)
+                            } else if (input.toLowerCase().startsWith("dict")) {
+                                text = input.substring(5)
+                            }
                             const options = {
                                 method: 'GET',
                                 url: 'https://mashape-community-urban-dictionary.p.rapidapi.com/define',
@@ -152,12 +159,14 @@ login({
                                 var sample = data.list[0].example;
                                 var timestamp = data.list[0].written_on;
                                 var source = data.list[0].permalink;
-                                api.sendMessage('=====================\nMj Urban Dictionary Results\n=====================\nTimestamp: ' + timestamp + "\n\nWord: " + word + "\n\nDefinition: " + def + "\n\nExample: " + sample + "\n\nSource :" + source, threadID, messageID)
+                                api.sendMessage(def + "\n\nExample: \n" + sample, threadID, messageID)
                             }).catch(function(error) {
                                 console.error(error);
+                                api.setMessageReaction(":sad:", event.messageID);
+                                api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
                             });
                         }
-                    } else if (input.toLowerCase().startsWith("summarize")) {
+                    } else if (input.toLowerCase().startsWith("summarize") || input.toLowerCase().startsWith("summ")) {
                         var {
                             mentions,
                             senderID,
@@ -168,13 +177,18 @@ login({
                             api.sendMessage("Opps! I didnt get it. You should try using summarize message instead.\n\nFor example:\nsummarize this sentence meant to be summarized.", threadID, messageID)
                         } else {
                             var text = input.substring(11);
+                            if (input.toLowerCase().startsWith("summ")) {
+                                text = input.substring(5)
+                            }
                             const client = new NLPCloudClient('bart-large-cnn', '5ab3c279e089139f63017eea409573731d5e8ce9')
                             client.summarization(text).then(function({
                                 data
                             }) {
-                                api.sendMessage("Successfully Summarize: \n\n" + data.summary_text, threadID, messageID)
+                                api.sendMessage(data.summary_text, threadID, messageID)
                             }).catch(function(err) {
-                                api.sendMessage("⚠️[ERR]: Status:" + err.response.status + "\nError Details: " + err.response.data.detail, threadID, messageID)
+                                console.log(err.response.data.detail);
+                                api.setMessageReaction(":sad:", event.messageID);
+                                api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
                             });
                         }
                     } else if (input.toLowerCase().startsWith("tim")) {
@@ -190,7 +204,9 @@ login({
                                         api.sendMessage(response.data['success'], event.threadID, event.messageID);
                                     })
                             } catch (err) {
-                                api.sendMessage(`⚠️${err.message}`, event.threadID, event.messageID);
+                                console.log(`${err.message}`);
+                                api.setMessageReaction(":sad:", event.messageID);
+                                api.sendMessage("An unknown error as been occured. Please try again later.", event.threadID, event.messageID);
                             }
                         }
                     }
@@ -203,10 +219,10 @@ login({
                                 hl: "en"
                             }
                         }
-                        return await google.search(`search ${searched}`, options);
+                        return await google.search(`${searched}`, options);
                     };
 
-                    if (input.toLowerCase().startsWith("google")) {
+                    if (input.toLowerCase().startsWith("google") || input.toLowerCase().startsWith("search") || input.toLowerCase().startsWith("find")) {
                         let data = input.split(" ");
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using google query instead.\n\nFor example:\ngoogle computer", event.threadID, event.messageID)
@@ -218,25 +234,46 @@ login({
                                 let response = await searching(searched);
                                 let result = response.results;
 
-                                //console.log(response);
+                                console.log(response);
 
                                 if (result === undefined || Object.entries(result).length === 0) {
-                                    throw new Error(`Search was unsuccessful: ${searched}`, event.threadID, event.messageID)
+                                    throw new Error(`Unfortunately there was an error occured while searching "${searched}"`, event.threadID, event.messageID)
                                 }
-                                let msg = `Google Search Result \n\n`;
-                                msg += `🔎 You searched: ${searched}\n\n`;
-
-                                msg += `\n Description:\n [1]. ${result[0].description}\n`;
-                                msg += `\n Reference:\n [1]. ${result[0].url}`;
-
-                                api.sendMessage(msg, event.threadID)
+                                 api.sendMessage(`${result[0].description}\n\n${result[0].url}`, event.threadID, event.messageID);
                             } catch (err) {
-                                api.sendMessage(`❌ ${err.message}`, event.threadID, event.messageID);
+                                api.setMessageReaction(":sad:", event.messageID);
+                                api.sendMessage(`${err.message}`, event.threadID, event.messageID);
                             }
                         }
                     }
-                    if (input.toLowerCase().startsWith("test")) {
+                    if (input.toLowerCase().startsWith("test") || input.toLowerCase().startsWith("hello world") || input.toLowerCase().startsWith("hi world")) {
                         api.sendMessage("Hello World", event.threadID, event.messageID);
+                    }
+                    if (input.toLowerCase() == "hi") {
+                        api.sendMessage("Hello", event.threadID, event.messageID);
+                    } else if (input.toLowerCase() == "hello") {
+                        api.sendMessage("Hi", event.threadID, event.messageID);
+                    } else if (input.toLowerCase() == "bot") {
+                        api.setMessageReaction(":heart:", event.threadID, event.messageID);
+                    } else if (input.toLowerCase() == "sup" || input.toLowerCase() == "wassup" || input.toLowerCase() == "what's up" || input.toLowerCase() == "how are you") {
+                        let ans = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
+                        api.sendMessage(ans[Math.floor(Math.random() * 6)], event.threadID, event.messageID);
+                    } else if (input.toLowerCase().startsWith("hey")) {
+                        let ans = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
+                        api.sendMessage(ans[Math.floor(Math.random() * 5)], event.threadID, event.messageID);
+                    } else if (input.toLowerCase().startsWith("who made you") || input.toLowerCase().startsWith("who's your creator") || input.toLowerCase().startsWith("where do you come from")) {
+                        let ans = ["I'm a long story... About 24h long.", "I'm not too sure", "I never really asked myself this question."];
+                        api.sendMessage(ans[Math.floor(Math.random() * 3)], event.threadID, event.messageID);
+                    } else if (input.toLowerCase().startsWith("sayit")) {
+                        api.sendMessage("your stupid", event.threadID, event.messageID);
+                    } else if (input.toLowerCase().includes("haha") || input.toLowerCase().includes("ahah")) {
+                        api.setMessageReaction(":laughing:", event.messageID);
+                    } else if (input.toLowerCase().startsWith("tsk")) {
+                        api.sendMessage("tsk!..", event.threadID, event.messageID);
+                    } else if (input.toLowerCase() == "yes") {
+                        api.sendMessage("No", event.threadID, event.messageID);
+                    } else if (input.toLowerCase() == "no") {
+                        api.sendMessage("Yes", event.threadID, event.messageID);
                     }
                     if (input.toLowerCase().startsWith("groupid")) {
                         api.getThreadInfo(event.threadID, (err) => {
@@ -246,7 +283,17 @@ login({
                             }
                         });
                     }
-
+                    if (input.toLowerCase() == "help") {
+                        api.sendMessage("tsk!..", event.threadID, event.messageID);
+                    }
+                    if (input.toLowerCase().startsWith("wiki")) {
+                        let data = input.split(" ");
+                        if (data.length < 2) {
+                            api.sendMessage("Opps! I didnt get it. You should try using wiki query instead.\n\nFor example:\nwiki google", event.threadID, event.messageID)
+                        } else {
+                            wiki(api.sendMessage, input.substring("5"), event);
+                        }
+                    }
                 }
                 break;
             case "message_reply":
@@ -255,10 +302,18 @@ login({
                 msgs[msgid] = input;
 
                 if (input.toLowerCase().startsWith("unsent")) {
-                    if (event.messageReply.senderID != api.getCurrentUserID())
-                        return api.sendMessage("Houston! I cannot unsent messages didn't come from me. sorry.", event.threadID);
-                    else {
+                    if (event.messageReply.senderID != api.getCurrentUserID()) {
+                        api.sendMessage("Houston! I cannot unsent messages didn't come from me. sorry.", event.threadID, event.messageID);
+                    } else {
                         api.unsendMessage(event.messageReply.messageID);
+                    }
+                }
+
+                if (input.toLowerCase().startsWith("nickname")) {
+                    if (input.split(" ").length < 2) {
+                       api.sendMessage("Opps! I didnt get it. You should try using rename name instead.\nFor example:\nrename mj", event.threadID, event.messageID);
+                    } else {
+                       api.changeNickname(input.substring(7), event.threadID, event.messageReply.senderID);
                     }
                 }
 
@@ -273,7 +328,26 @@ login({
 
                 break;
             case "message_unsend":
+
+                api.sendMessage("you unsent a message", event.threadID, event.messageID);
                 break;
         }
     });
 });
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+ }
+
+ const wiki = async (api, topic, event) =>{
+   await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${topic}`)
+   .then(res=>{
+   	 let extract = res.data.extract;
+     api(`${extract}`, event.threadID, event.messageID);
+   }).catch(err=>{
+      console.log(err)
+      api(`Sorry. i'm unable to find the wiki for "` + topic + `"`, event.threadID, event.messageID);
+   })
+}
