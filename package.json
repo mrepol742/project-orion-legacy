@@ -1,0 +1,26 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.0.6",
+    "axios": "^0.22.0",
+    "datetime": "^0.0.3",
+    "express": "^4.18.2",
+    "fca-unofficial": "^1.3.10",
+    "googlethis": "^1.3.0",
+    "nlpcloud": "^1.0.23",
+    "node-cron": "^3.0.2",
+    "node-fetch": "^3.2.6",
+    "openai": "^2.0.5",
+    "pdfdrive-ebook-scraper": "^2.0.0",
+    "simsimi": "^3.0.0"
+  }
+}
