@@ -20,7 +20,6 @@
     "node-cron": "^3.0.2",
     "node-fetch": "^3.2.6",
     "openai": "^2.0.5",
-    "pdfdrive-ebook-scraper": "^2.0.0",
-    "simsimi": "^3.0.0"
+    "pdfdrive-ebook-scraper": "^2.0.0"
   }
 }
