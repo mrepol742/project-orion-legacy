@@ -4,12 +4,14 @@ const prefix = "$";
 const msgs = {};
 const pdfdrive = require('pdfdrive-ebook-scraper');
 const google = require("googlethis");
+const request = require("request");
 const {
     Configuration,
     OpenAIApi
 } = require("openai");
 const NLPCloudClient = require('nlpcloud');
 const date = require('./datetime.js');
+const quote = require('./ranquote.js');
 const {
     keep_alive
 } = require("./keep_alive.js");
@@ -39,7 +41,7 @@ login({
         let A = api.getAppState();
         let B = JSON.stringify(A);
         fs.writeFileSync("fb.json", B, "utf8");
-        api.sendMessage("[OK] AppState Refreshed Successfully!", "100071743848974")
+        api.sendMessage("AppState Refreshed Successfully!", "100071743848974")
     });
 
     const listenEmitter = api.listen(async (err, event) => {
@@ -286,12 +288,27 @@ login({
                     if (input.toLowerCase() == "help") {
                         api.sendMessage("tsk!..", event.threadID, event.messageID);
                     }
+                    if (input.toLowerCase() == "quote") {
+                        api.sendMessage(quote(), event.threadID, event.messageID);
+                    }
                     if (input.toLowerCase().startsWith("wiki")) {
                         let data = input.split(" ");
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using wiki query instead.\n\nFor example:\nwiki google", event.threadID, event.messageID)
                         } else {
                             wiki(api.sendMessage, input.substring("5"), event);
+                        }
+                    }
+                    if (input.toLowerCase().startsWith("info")) {
+                        let data = input.split(" ");
+                        if (data.length < 2) {
+                            api.sendMessage("Opps! I didnt get it. You should try using info @user instead.\n\nFor example:\ninfo @Melvin Jones Repol", event.threadID, event.messageID)
+                        } else {
+                           if (input.includes("@")) {
+                               info(api, event);
+                           } else {
+                               api.sendMessage("Unable to find information without mentioning someone.", event.threadID, event.messageID)
+                           }
                         }
                     }
                 }
@@ -309,11 +326,12 @@ login({
                     }
                 }
 
+                // TODO: unable to change other user nickname
                 if (input.toLowerCase().startsWith("nickname")) {
                     if (input.split(" ").length < 2) {
                        api.sendMessage("Opps! I didnt get it. You should try using rename name instead.\nFor example:\nrename mj", event.threadID, event.messageID);
                     } else {
-                       api.changeNickname(input.substring(7), event.threadID, event.messageReply.senderID);
+                       api.changeNickname(input.substring(9), event.threadID, event.messageReply.senderID);
                     }
                 }
 
@@ -350,4 +368,38 @@ function sleep(ms) {
       console.log(err)
       api(`Sorry. i'm unable to find the wiki for "` + topic + `"`, event.threadID, event.messageID);
    })
+}
+
+
+const info = (api, event)=>{
+    let { mentions,threadID,messageID,body,senderID } = event
+    api.getUserInfo(Object.keys(mentions), async (err, ret) => {
+        if(err) return console.error(err);
+        for(var prop in ret) {
+            let {vanity,name,gender,isBirthday} = ret[prop]
+            let url = encodeURI('https://graph.facebook.com/'+`${prop}`+'/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662')
+            let filename = __dirname + "/imgs/"+ prop + ".jpg";
+            let msg = `
+User ID: ${prop}
+Name: ${checkFound(name)}
+Username: ${checkFound(vanity)}
+Gender: ${gender == 1 ? "female" : "male"}
+Birthday: ${checkFound(isBirthday)}  
+`
+            await download(url,filename,()=>{
+                api.sendMessage({ 
+                  body: msg,
+                  attachment:fs.createReadStream(filename)
+                },threadID,messageID)     
+            })
+        }
+    });
+}
+
+var download = async function(uri, filename, callback){
+    await request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+};
+
+const checkFound = (text) =>{
+    return text ? text : "undefined" 
 }
