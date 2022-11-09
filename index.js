@@ -15,9 +15,13 @@ const {
 } = require("./keep_alive.js");
 const cron = require('node-cron');
 const axios = require("axios");
+const weatherjs = require("weather-js")
 
 let msgs = {};
 let threads = ""
+
+let myAccountId = "100071743848974";
+let myGirlAccountId = "100077318906152";
 
 login({
     appState: JSON.parse(fs.readFileSync('fb.json', 'utf8'))
@@ -31,13 +35,13 @@ login({
         hours = hours ? hours : 12;
         mins = mins < 10 ? '0' + mins : mins;
         console.log("Time Check " + hours + ":" + mins + " " + ampm)
-        api.sendMessage("Time Check " + hours + ":" + mins + " " + ampm, "100071743848974");
+        api.sendMessage("Time Check " + hours + ":" + mins + " " + ampm, myAccountId);
     });
     cron.schedule('0 * * * *', () => {
         let A = api.getAppState();
         let B = JSON.stringify(A);
         fs.writeFileSync("fb.json", B, "utf8");
-        api.sendMessage("Bot refresh...", "100071743848974")
+        api.sendMessage("AppState refresh...", myAccountId)
     });
 
     api.setOptions({
@@ -50,9 +54,9 @@ login({
         let settings = JSON.parse(fs.readFileSync("files/settings.json", "utf8"));
 
         if (err) return console.error(err);
+        
         switch (event.type) {
             case "message":
-
                 if (event.attachments.length != 0) {
                     if (event.attachments[0].type == "photo") {
                         msgs[event.messageID] = ['img', event.attachments[0].url]
@@ -71,29 +75,7 @@ login({
                 if (event.body != null) {
                     let input = event.body;
                     let query = input.trim().toLowerCase();
-                    if (query.startsWith("pdf")) {
-                        let data = input.split(" ");
-                        if (data.length < 2) {
-                            api.sendMessage("Opps! I didnt get it. You should try using pdf query instead.\nFor example:\npdf fundamentals in engineering", event.threadID, event.messageID)
-                        } else {
-                            try {
-                                data.shift()
-                                data = data.join(" ");
-                                let searched = data;
-
-                                let res = await pdfdrive.findEbook(searched);
-                                let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
-
-                                console.log(res2);
-
-                                api.sendMessage(`${res2.ebookName}\n\n` + `${res2.dlUrl}`, event.threadID, event.messageID)
-                            } catch (err) {
-                                console.log(err);
-                                api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
-                            }
-                        }
-                    }
-                    if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("par") || query.startsWith("pri") || query.startsWith("mrepol742") || query.endsWith("?")) {
+                    if (query.startsWith("mj") || query.startsWith("repol") || input.toLowerCase().startsWith("par ") || input.toLowerCase().startsWith("pri ") || query.startsWith("mrepol742") || query.endsWith("?")) {
                         var {
                             mentions,
                             senderID,
@@ -101,15 +83,20 @@ login({
                             messageID
                         } = event;
                         if (input.split(" ").length < 2) {
-                            api.sendMessage("Hello the system status is online and waiting for your reply.", threadID, (err) => {
+                            if (event.senderID == myGirlAccountId && query.endsWith("?")) {
+                                return;
+                            }
+                            api.sendMessage("Hello the system status is online and waiting for your reply. \nFor available commands enter help, this project does not disclose any personal data. In aims of breaking apart the line between human and computer.\n\nTHERE IS NO WARRANTY FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE SOFTWARE “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH THE CUSTOMER. SHOULD THE SOFTWARE PROVE DEFECTIVE, THE CUSTOMER ASSUMES THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION EXCEPT TO THE EXTENT SET OUT UNDER THE HARDWARE WARRANTY IN THESE TERMS.", threadID, (err) => {
                                 if (err) return
                             }, messageID)
                         } else {
                             var text = input;
-                            if (query.startsWith("repol")) {
+                            if (event.senderID == myGirlAccountId && query.endsWith("?")) {
+                                return;
+                            } else if (query.startsWith("repol")) {
                                 text = input.substring(6)
-                            } else if (query.startsWith("par") || query.startsWith("pri")) {
-                                text = input.substring(4)
+                            } else if (input.toLowerCase().startsWith("par ") || input.toLowerCase().startsWith("pri ")) {
+                                text = input.substring(5)
                             } else if (query.startsWith("mrepol742")) {
                                 text = input.substring(10)
                             } else if (query.startsWith("mj")) {
@@ -132,6 +119,31 @@ login({
                             api.sendMessage(data.choices[0].text, event.threadID, (err) => {
                                 if (err) return
                             }, messageID)
+                        }
+                    }
+                    if (event.senderID == myGirlAccountId) {
+                        return;
+                    }
+                    if (query.startsWith("pdf")) {
+                        let data = input.split(" ");
+                        if (data.length < 2) {
+                            api.sendMessage("Opps! I didnt get it. You should try using pdf query instead.\nFor example:\npdf fundamentals in engineering", event.threadID, event.messageID)
+                        } else {
+                            try {
+                                data.shift()
+                                data = data.join(" ");
+                                let searched = data;
+
+                                let res = await pdfdrive.findEbook(searched);
+                                let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
+
+                                console.log(res2);
+
+                                api.sendMessage(`${res2.ebookName}\n\n` + `${res2.dlUrl}`, event.threadID, event.messageID)
+                            } catch (err) {
+                                console.log(err);
+                                api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
+                            }
                         }
                     } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query.startsWith("dict")) {
                         var {
@@ -208,7 +220,7 @@ login({
                                 hl: "en"
                             }
                         }
-                        return await google.search(`${searched}`, options);
+                        return await google.search(`google ${searched}`, options);
                     };
 
                     if (query.startsWith("google") || query.startsWith("search") || query.startsWith("find")) {
@@ -234,8 +246,7 @@ login({
                                 api.sendMessage(`${err.message}`, event.threadID, event.messageID);
                             }
                         }
-                    }
-                    if (query.startsWith("baybayin")) {
+                    } else if (query.startsWith("baybayin")) {
                         let data = input.split(" ")
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using baybaying query instead.\n\nFor example:\nbaybayin ako ay filipino", event.threadID, event.messageID)
@@ -250,8 +261,7 @@ login({
                                     api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
                                 })
                         }
-                    }
-                    if (query.startsWith("weather")) {
+                    } else if (query.startsWith("weather")) {
                         let data = input.split(" ")
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using weather country state city instead.\n\nFor example:\nweather philippines ncr caloocan city", event.threadID, event.messageID)
@@ -286,8 +296,7 @@ login({
                                 api.sendMessage(m, event.threadID, event.messageID)
                             }
                         }
-                    }
-                    if (query.startsWith("facts")) {
+                    } else if (query.startsWith("facts")) {
                         let data = input.split(" ")
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using facts query instead.\n\nFor example:\nfacts about computers", event.threadID, event.messageID)
@@ -303,9 +312,7 @@ login({
                                     }, event.threadID, event.messageID);
                                 })
                         }
-                    }
-
-                    if (query.startsWith("instagram") || query.startsWith("insta") || query.startsWith("ig")) {
+                    } else if (query.startsWith("instagram") || query.startsWith("insta") || query.startsWith("ig")) {
                         let data = input.split(" ")
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using instagram username instead.\n\nFor example:\ninstagram melvinjonesrepol", event.threadID, event.messageID)
@@ -338,8 +345,7 @@ login({
                                     api.sendMessage("Unfortunately user was not found.", event.threadID, event.messageID);
                                 })
                         }
-                    }
-                    if (query.startsWith("changeemo")) {
+                    } else if (query.startsWith("changeemo")) {
                         let data = input.split(" ");
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using changeemo emoji instead.\n\nFor example:\nchangeemo 😂", event.threadID, event.messageID)
@@ -349,11 +355,9 @@ login({
                                 if (err) return console.error(err);
                             });
                         }
-                    }
-                    if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
+                    } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
                         api.sendMessage("Hello World", event.threadID, event.messageID);
-                    }
-                    if (query == "hi") {
+                    } else if (query == "hi") {
                         api.sendMessage("Hello", event.threadID, event.messageID);
                     } else if (query == "hello") {
                         api.sendMessage("Hi", event.threadID, event.messageID);
@@ -370,12 +374,18 @@ login({
                         api.sendMessage(ans[Math.floor(Math.random() * 3)], event.threadID, event.messageID);
                     } else if (query.startsWith("sayit")) {
                         api.sendMessage("your stupid", event.threadID, event.messageID);
-                    } else if (query.includes("haha") || query.includes("ahah") || query.includes("😂") || query.includes("🤣") || query.includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol")) {
+                    } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || query.includes("😂") || query.includes("🤣") || query.includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol")) {
                         api.setMessageReaction(":laughing:", event.messageID);
                     } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
                         api.setMessageReaction(":sad:", event.messageID);
-                    } else if (query.startsWith("tsk")) {
-                        api.sendMessage("tsk!..", event.threadID, event.messageID);
+                    } else if (query.includes("angry")) {
+                        api.setMessageReaction(":angry:", event.messageID);
+                    } else if (query.includes("cry")) {
+                        api.setMessageReaction(":cry:", event.messageID);
+                    } else if (query.includes("love")) {
+                        api.setMessageReaction(":love:", event.messageID);
+                    } else if (query == "tsk") {
+                        api.setMessageReaction(":like:", event.messageID);
                     } else if (query == "yes") {
                         api.sendMessage("No", event.threadID, event.messageID);
                     } else if (query == "no") {
@@ -388,38 +398,56 @@ login({
                         api.setMessageReaction("🥺", event.messageID);
                     } else if (query.includes("nude")) {
                         api.sendMessage("Dont!...", event.threadID, event.messageID);
-                    }
-                    if (query.startsWith("unsend on") && !settings.onUnsend) {
+                    } else if (query.startsWith("unsend on") && !settings.onUnsend) {
                         settings.onUnsend = true
                         fs.writeFileSync("files/settings.json", JSON.stringify(settings), "utf8")
                         console.log("unsend enabled");
-                    }
-
-                    if (query.startsWith("unsend off")  && settings.onUnsend) {
+                    } else if (query.startsWith("unsend off")  && settings.onUnsend) {
                         settings.onUnsend = false
                         fs.writeFileSync("files/settings.json", JSON.stringify(settings), "utf8")
                         console.log("unsend disabled");
-                    }
-                    if (query.startsWith("groupid")) {
+                    } else if (query.startsWith("groupid")) {
                         api.getThreadInfo(event.threadID, (err) => {
                             if (err) return cosole.log(err);
                             else {
                                 api.sendMessage(event.threadID, event.threadID, event.messageID);
                             }
                         });
-                    }
-                    if (query == "help") {
-                        api.sendMessage("Help is currently unvailable onthis moment while this system is currently in development stages. Please try again later.", event.threadID, event.messageID);
-                    }
-                    if (query.startsWith("wiki")) {
+                    } else if (query == "help") {
+                        let help = "Hello World\n\n";
+                        help += "Usage: \ncommand [options]\n\n";
+                        help += "Commands:\n";
+                        help += "pdf [search]      - find pdf and ebook\n";
+                        help += "dict [search]     - dictionary\n";
+                        help += "summ [paragraph]  - summarize paragraph and sentence\n";
+                        help += "find [search]     - google search\n";
+                        help += "baybayin [query]  - translate to baybayin\n";
+                        help += "weather [country] [state] [city] - show current weather status\n";
+                        help += "facts [query]     - facts meme generator\n";
+                        help += "ig [username]     - get user instagram info\n";
+                        help += "changeemo [emoji] - change group chat emoji\n";
+                        help += "unsend [on|off]   - enable or disable unsend feature\n";
+                        help += "wiki [query]      - search poeple or info from wikipedia\n";
+                        help += "info [username]   - get user facebook basic info\n";
+                        help += "nickname [username] [nickname] - change the user nickname\n";
+                        help += "landscape         - show landscape photos\n";
+                        help += "animequote        - show anime qoutes\n";
+                        help += "motivation        - show motivation messages\n";
+                        help += "unsent, remove    - unsent my messages\n";
+                        help += "phub              - show p*rnhub meme generator\n";
+                        help += "qrcode [query]    - show generated qrcode from your query\n";
+                        help += "uid               - show person user id\n";
+                        help += "groupid           - show the group id\n";
+                        help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have questions ask me with ? at the end.";
+                        api.sendMessage(help, event.threadID, event.messageID);
+                    } else if (query.startsWith("wiki")) {
                         let data = input.split(" ");
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using wiki query instead.\n\nFor example:\nwiki google", event.threadID, event.messageID)
                         } else {
                             wiki(api.sendMessage, input.substring("5"), event);
                         }
-                    }
-                    if (query.startsWith("info")) {
+                    } else if (query.startsWith("info")) {
                         let data = input.split(" ");
                         if (data.length < 2) {
                             api.sendMessage("Opps! I didnt get it. You should try using info @user instead.\n\nFor example:\ninfo @Melvin Jones Repol", event.threadID, event.messageID)
@@ -430,8 +458,7 @@ login({
                                api.sendMessage("Unable to find information without mentioning someone.", event.threadID, event.messageID)
                            }
                         }
-                    }
-                    if (query.startsWith("nickname")) {
+                    } else if (query.startsWith("nickname")) {
                         var text = input;
                         text = text.substring(26)
                         let data = input.split(" ");
@@ -446,16 +473,21 @@ login({
                                 });
                             });
                         }
-                    }
-                    if (query.startsWith("landscape")) {
+                    } else if (query.startsWith("landscape")) {
                         request("https://source.unsplash.com/1600x900/?landscape").pipe(fs.createWriteStream(__dirname + '/imgs/landscape.png')).on('finish', () => {
                             var message = {
                                 attachment: fs.createReadStream(__dirname + '/imgs/landscape.png')
                             }
                             api.sendMessage(message, event.threadID, event.messageID)
                         })
-                    }
-                    if (query.startsWith("animequote")) {
+                    } else if (query.startsWith("portrait")) {
+                        request("https://source.unsplash.com/900x1600/?portrait").pipe(fs.createWriteStream(__dirname + '/imgs/portrait.png')).on('finish', () => {
+                            var message = {
+                                attachment: fs.createReadStream(__dirname + '/imgs/portrait.png')
+                            }
+                            api.sendMessage(message, event.threadID, event.messageID)
+                        })
+                    } else if (query.startsWith("animequote")) {
                         axios.get('https://animechan.vercel.app/api/random')
                             .then(response => {
                                 api.sendMessage("'" + response.data.quote + "'" + "\n\n- " + response.data.character + " (" + response.data.anime + ")", event.threadID, event.messageID);
@@ -464,8 +496,7 @@ login({
                                 console.log(error);
                                 api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
                             });
-                    }
-                    if (query.startsWith("motivation")) {
+                    } else if (query.startsWith("motivation")) {
                         qt("motivation").then((response) => {
                             if (response == null) {
                                 console.log(response);
@@ -488,15 +519,18 @@ login({
                 let query = input.trim().toLowerCase();
                 msgs[msgid] = input;
 
+                if (event.senderID == myGirlAccountId) {
+                    return;
+                }
+
+
                 if (query.startsWith("unsent") || query.startsWith("unsend") || query.startsWith("remove")) {
                     if (event.messageReply.senderID != api.getCurrentUserID()) {
                         api.sendMessage("Houston! I cannot unsent messages didn't come from me. sorry.", event.threadID, event.messageID);
                     } else {
                         api.unsendMessage(event.messageReply.messageID);
                     }
-                }
-
-                if (query.startsWith("phub") || query.startsWith("pornhub")) {
+                } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
                     api.getUserInfo(event.messageReply.senderID, (err, info) => {
                         if (err) return console.log(err);
 
@@ -517,8 +551,7 @@ login({
                                 })
                         }
                     })
-                }
-                if (query.startsWith("qrcode")) {
+                } else if (query.startsWith("qrcode")) {
                     let body = event.messageReply.body
                     let data = "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + body
                     let f = fs.createWriteStream(__dirname + "/imgs/qr.jpg")
@@ -532,15 +565,14 @@ login({
                                     fs.unlink(__dirname + "/imgs/qr.jpg", (err) => {
                                         if (err) {
                                             console.log(err)
+                                            api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
                                         }
                                     })
                                 }
                             })
                         }, event.threadID, event.messageID)
                     })
-                }
-                
-                if (query.startsWith("nickname")) {
+                } else if (query.startsWith("nickname")) {
                     var text = input;
                     text = text.substring(26)
                     let data = input.split(" ");
@@ -555,9 +587,7 @@ login({
                             });
                         });
                     }
-                }
-
-                if (query.startsWith("uid")) {
+                } else if (query.startsWith("uid")) {
                     api.getUserInfo(event.messageReply.senderID, (err) => {
                         if (err) return console.log(err);
                         else {
@@ -574,14 +604,13 @@ login({
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return console.error(err);
                             else {
-
                                 if (d[0] == "img") {
                                     var file = fs.createWriteStream(__dirname + '/attachments/photo.jpg');
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             console.log('finished downloading photo..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this photo: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/photo.jpg')
@@ -596,7 +625,7 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             console.log('finished downloading gif..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this GIF: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/animated_image.gif')
@@ -611,7 +640,7 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             console.log('finished downloading sticker..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this Sticker: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/sticker.png')
@@ -626,7 +655,7 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             console.log('finished downloading video..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this video: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/video.mp4')
@@ -641,7 +670,7 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             console.log('finished downloading audio..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this audio: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/vm.mp3')
@@ -657,7 +686,7 @@ login({
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return console.error(err);
                             else {
-                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
                                     api.sendMessage(data[event.senderID]['name'] + " unsent this message: \n\n" + msgs[event.messageID], event.threadID);
                                 }
                             }
