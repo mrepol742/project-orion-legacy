@@ -22,13 +22,47 @@ let cd = {};
 let vips = [
     "100071743848974",
     "100016029218667",
-    "100077318906152"
+    "100077318906152",
+    "100037131918629"
 ];
+let sleep = [3000, 2500, 3500, 5000, 4000, 4500, 5500, 3800, 3200, 4800, 4300, 3300, 4600, 5900, 3600]
+let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
+let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
+let whom = ["I'm a long story... About 24h long.", "I'm not too sure", "I never really asked myself this question."];
 let threads = ""
 
 let myAccountId = "100071743848974";
 let myOtherId = "100016029218667";
 let myGirlAccountId = "100077318906152";
+let techhJork = "100037131918629";
+
+let debug = false;
+
+let help = "Hello World\n\n";
+            help += "Usage: \ncommand [options]\n\n";
+            help += "Commands:\n";
+            help += "pdf [search]      - find pdf and ebook\n";
+            help += "dict [search]     - dictionary\n";
+            help += "summ [paragraph]  - summarize paragraph and sentence\n";
+            help += "find [search]     - google search\n";
+            help += "baybayin [query]  - translate to baybayin\n";
+            help += "weather [country] [state] [city] - show current weather status\n";
+            help += "facts [query]     - facts meme generator\n";
+            help += "ig [username]     - get user instagram info\n";
+            help += "changeemo [emoji] - change group chat emoji\n";
+            help += "wiki [query]      - search poeple or info from wikipedia\n";
+            help += "info [username]   - get user facebook basic info\n";
+            help += "nickname [username] [nickname] - change the user nickname\n";
+            help += "landscape         - show landscape photos\n";
+            help += "portrait          - show portrait photos\n";
+            help += "animequote        - show anime qoutes\n";
+            help += "motivation        - show motivation messages\n";
+            help += "remove            - unsent my messages\n";
+            help += "phub              - show p*rnhub meme generator\n";
+            help += "qrcode [query]    - show generated qrcode from your query\n";
+            help += "uid               - show person user id\n";
+            help += "gid               - show the group id\n";
+            help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have questions ask me with ? at the end.";
 
 let apiKey = [
     // phub api key
@@ -46,7 +80,7 @@ let apiKey = [
 login({
     appState: JSON.parse(fs.readFileSync('fb.json', 'utf8'))
 }, (err, api) => {
-    if (err) return reportIssue(api, err);
+    if (err) return reportIssue(api, event.threadID, err);
     cron.schedule('*/30 * * * *', () => {
         var hours = date("Asia/Manila").getHours()
         var mins = date("Asia/Manila").getMinutes()
@@ -54,7 +88,7 @@ login({
         hours = hours % 12;
         hours = hours ? hours : 12;
         mins = mins < 10 ? '0' + mins : mins;
-        reportIssue(api, "Time Check " + hours + ":" + mins + " " + ampm)
+        reportIssue(api, event.threadID, "Time Check " + hours + ":" + mins + " " + ampm)
         api.sendMessage("Time Check " + hours + ":" + mins + " " + ampm, myAccountId);
     });
     cron.schedule('0 * * * *', () => {
@@ -70,21 +104,24 @@ login({
         online: true
     });
 
-    const listenEmitter = api.listen(async (err, event) => {
-        let settings = JSON.parse(fs.readFileSync("files/settings.json", "utf8"));
+    let settings = JSON.parse(fs.readFileSync("files/settings.json", "utf8"));
 
-        if (err) return reportIssue(api, err);
-        
-        if (!(vips.includes(event.senderID))) {
-            if (!(event.senderID in cd)) {
-                cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
-            } else if (Math.floor(Date.now() / 1000) < cd[event.senderID]) {
-                api.sendMessage("Hold on... Your asking too much wait for " + Math.floor((cd[event.senderID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " + (cd[event.senderID] - Math.floor(Date.now() / 1000)) % 60 + " seconds", event.threadID, event.messageID);
-                return
-            } else {
-                cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
+    const listenEmitter = api.listen(async (err, event) => {
+
+        if (err) return reportIssue(api, event.threadID, err);
+
+        if (event.type == "message" || event.type == "message_reply") {
+        if (debug) {
+            let input = event.body;
+            let query = removeEmojis(input.trim().toLowerCase());
+            if (!(vips.includes(event.senderID))) {
+                if (query.startsWith("mj") || query.startsWith("repol") || input.toLowerCase().startsWith("par ") || input.toLowerCase().startsWith("pri ") || query.startsWith("mrepol742") || query.endsWith("?")) {
+                    sendMessage(api, event, "Hold on a moment this system is currently in maintenance mode... only authorized uid is allowed to call and initiate its function in the moment.");
+                }
+                return;
             }
         }
+    }
 
         switch (event.type) {
             case "message":
@@ -102,18 +139,21 @@ login({
                     }
                 } else {
                     msgs[event.messageID] = event.body
+                    if (event.senderID == myAccountId) {
+                        console.log(event.body);
+                    }
                 }
                 ai(api, event);
                 break;
             case "message_reply":
                 let msgid = event.messageID;
                 let input = event.body;
-                let query = input.trim().toLowerCase();
+                let query = removeEmojis(input.trim().toLowerCase());
                 msgs[msgid] = input;
 
-                if (query.startsWith("unsent") || query.startsWith("unsend") || query.startsWith("remove")) {
+                if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
                     if (event.messageReply.senderID != api.getCurrentUserID()) {
-                        api.sendMessage("Houston! I cannot unsent messages didn't come from me. sorry.", event.threadID, event.messageID);
+                        sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
                     } else {
                         api.unsendMessage(event.messageReply.messageID);
                     }
@@ -127,17 +167,21 @@ login({
                 
                 if (query.startsWith("phub") || query.startsWith("pornhub")) {
                     api.getUserInfo(event.messageReply.senderID, (err, info) => {
-                        if (err) return reportIssue(api, err);
+                        if (err) return reportIssue(api, event.threadID, err);
 
                         let name = info[event.messageReply.senderID]['name'];
 
-                        let data = input.split(" ")
-                        if (data.length < 2) {
-                            api.sendMessage("Opps! I didnt get it. You should try using phub replytoamessage anytext instead.\nFor example:\nphub huhu", event.threadID, event.messageID);
+                        if (event.messageReply.senderID == myAccountId || event.messageReply.senderID == myOtherId) {
+                            sendMessage(api, event, "Hahaha.. you cannot do that to my account.. bruhhh..");
                         } else {
-                            data.shift()
-                            var phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + event.messageReply.senderID + '&name=' + name + '&apikey=' + apiKey[0];
-                            parseImage(event, phublink, __dirname + '/imgs/phubmeme.jpg');
+                            let data = input.split(" ")
+                            if (data.length < 2) {
+                                sendMessage(api, event, "Opps! I didnt get it. You should try using phub replytoamessage anytext instead.\nFor example:\nphub huhu");
+                            } else {
+                                data.shift()
+                                var phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + event.messageReply.senderID + '&name=' + name + '&apikey=' + apiKey[0];
+                                parseImage(api, event, phublink, __dirname + '/imgs/phubmeme.jpg');
+                            }
                         }
                     })
                 } else if (query.startsWith("qrcode")) {
@@ -147,47 +191,44 @@ login({
                     let res = request(encodeURI(data))
                     res.pipe(f)
                     f.on("close", () => {
-                        api.sendMessage({
+                        var message = {
                             body: body,
                             attachment: fs.createReadStream(__dirname + "/imgs/qr.jpg").on("end", async () => {
                                 if (fs.existsSync(__dirname + "/imgs/qr.jpg")) {
                                     fs.unlink(__dirname + "/imgs/qr.jpg", (err) => {
                                         if (err) {
-                                            reportIssue(api, err)
-                                            api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
+                                            reportIssue(api, event.threadID, err)
+                                            sendMessage(api, event, "Unfortunately there was an error occured.");
                                         }
                                     })
                                 }
                             })
-                        }, event.threadID, event.messageID)
+                        };
+                        sendMessage(api, event, message);
                     })
-                } else if (query.startsWith("uid")) {
-                    api.getUserInfo(event.messageReply.senderID, (err) => {
-                        if (err) return reportIssue(api, err);
-                        else {
-                            api.sendMessage(event.messageReply.senderID, event.threadID, event.messageID);
-                        }
-                    });
-                }
-
+                } 
                 break;
             case "message_unsend":
+                if (event.senderID == myAccountId && event.senderID == myOtherId) {
+                    break;
+                }
                     let d = msgs[event.messageID];
                     if (typeof(d) == "object") {
                         api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return reportIssue(api, err);
+                            if (err) return reportIssue(api, event.threadID, err);
                             else {
                                 if (d[0] == "img") {
                                     var file = fs.createWriteStream(__dirname + '/attachments/photo.jpg');
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, 'finished downloading photo..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
+                                            reportIssue(api, event.threadID, 'finished downloading photo..')
+                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this photo: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/photo.jpg')
                                                 }
+
                                                 api.sendMessage(message, event.threadID);
                                             }
                                         });
@@ -197,8 +238,8 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, 'finished downloading gif..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
+                                            reportIssue(api, event.threadID, 'finished downloading gif..')
+                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this GIF: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/animated_image.gif')
@@ -212,8 +253,8 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, 'finished downloading sticker..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
+                                            reportIssue(api, event.threadID, 'finished downloading sticker..')
+                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this Sticker: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/sticker.png')
@@ -227,8 +268,8 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, 'finished downloading video..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
+                                            reportIssue(api, event.threadID, 'finished downloading video..')
+                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this video: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/video.mp4')
@@ -242,8 +283,8 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, 'finished downloading audio..')
-                                            if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
+                                            reportIssue(api, event.threadID, 'finished downloading audio..')
+                                            if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this audio: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/vm.mp3')
@@ -257,9 +298,9 @@ login({
                         });
                     } else {
                         api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return reportIssue(api, err);
+                            if (err) return reportIssue(api, event.threadID, err);
                             else {
-                                if (settings.onUnsend && !threads.includes(event.threadID) && event.senderID != myAccountId) {
+                                if (settings.onUnsend && !threads.includes(event.threadID)) {
                                     api.sendMessage(data[event.senderID]['name'] + " unsent this message: \n\n" + msgs[event.messageID], event.threadID);
                                 }
                             }
@@ -271,7 +312,7 @@ login({
     });
 });
 
-function sleep(ms) {
+function wait(ms) {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
     });
@@ -281,10 +322,10 @@ function sleep(ms) {
    await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${topic}`)
    .then(res=>{
    	 let extract = res.data.extract;
-     api(`${extract}`, event.threadID, event.messageID);
+     sendMessage(api, event, `${extract}`);
    }).catch(err=>{
-      reportIssue(api, err)
-      api(`Unfortunately, i am not able to find the "` + topic + `".`, event.threadID, event.messageID);
+      reportIssue(api, event.threadID, err)
+      sendMessage(api, event, `Unfortunately, i am not able to find the "` + topic + `".`);
    })
 }
 
@@ -292,7 +333,7 @@ function sleep(ms) {
 const info = (api, event)=>{
     let { mentions,threadID,messageID,body,senderID } = event
     api.getUserInfo(Object.keys(mentions), async (err, ret) => {
-        if(err) return reportIssue(api, err);
+        if(err) return reportIssue(api, event.threadID, err);
         for(var prop in ret) {
             let {vanity,name,gender,isBirthday} = ret[prop]
             let url = encodeURI('https://graph.facebook.com/'+`${prop}`+'/picture?height=720&width=720&access_token=' + apiKey[1])
@@ -305,10 +346,11 @@ Gender: ${gender == 1 ? "female" : "male"}
 Birthday: ${checkFound(isBirthday)}  
 `
             await download(url,filename,()=>{
-                api.sendMessage({ 
-                  body: msg,
-                  attachment:fs.createReadStream(filename)
-                },threadID,messageID)     
+                var message = { 
+                    body: msg,
+                    attachment:fs.createReadStream(filename)
+                  };
+                api.sendMessage(message,threadID,messageID)     
             })
         }
     });
@@ -317,7 +359,7 @@ Birthday: ${checkFound(isBirthday)}
 async function ai(api, event) {
     if (event.body != null) {
         let input = event.body;
-        let query = input.trim().toLowerCase();
+        let query = removeEmojis(input.trim().toLowerCase());
         if (query.startsWith("mj") || query.startsWith("repol") || input.toLowerCase().startsWith("par ") || input.toLowerCase().startsWith("pri ") || query.startsWith("mrepol742") || query.endsWith("?")) {
             var {
                 mentions,
@@ -364,7 +406,7 @@ async function ai(api, event) {
                     finish = finish.slice(1);
                 }
                 api.sendMessage(finish, event.threadID, (err) => {
-                    if (err) return
+                    if (err) return reportIssue(api, event.threadID, err)
                 }, messageID)
             }
         }
@@ -374,7 +416,7 @@ async function ai(api, event) {
         if (query.startsWith("pdf")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using pdf query instead.\nFor example:\npdf fundamentals in engineering", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using pdf query instead.\nFor example:\npdf fundamentals in engineering")
             } else {
                 try {
                     data.shift()
@@ -384,11 +426,9 @@ async function ai(api, event) {
                     let res = await pdfdrive.findEbook(searched);
                     let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
 
-                    reportIssue(api, res2);
-
-                    api.sendMessage(`${res2.ebookName}\n\n` + `${res2.dlUrl}`, event.threadID, event.messageID)
+                    sendMessage(api, event, `${res2.ebookName}\n\n` + `${res2.dlUrl}`)
                 } catch (err) {
-                    reportIssue(api, err);
+                    reportIssue(api, event.threadID, err);
                     api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
                 }
             }
@@ -429,7 +469,7 @@ async function ai(api, event) {
                     var source = data.list[0].permalink;
                     api.sendMessage(def + "\n\nExample: \n" + sample, threadID, messageID)
                 }).catch(function(error) {
-                    reportIssue(api, error);
+                    reportIssue(api, event.threadID, error);
                     api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
                 });
             }
@@ -453,7 +493,7 @@ async function ai(api, event) {
                 }) {
                     api.sendMessage(data.summary_text, threadID, messageID)
                 }).catch(function(err) {
-                    reportIssue(api, err.response.data.detail);
+                    reportIssue(api, event.threadID, err.response.data.detail);
                     api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
                 });
             }
@@ -473,7 +513,7 @@ async function ai(api, event) {
         if (query.startsWith("google") || query.startsWith("search") || query.startsWith("find")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using google query instead.\n\nFor example:\ngoogle computer", event.threadID, event.messageID)
+                api.sendMessage("Opps! I didnt get it. You should try using google query instead.\n\nFor example:\ngoogle computer")
             } else {
                 try {
                     data.shift()
@@ -481,41 +521,37 @@ async function ai(api, event) {
                     let searched = data;
                     let response = await searching(searched);
                     let result = response.results;
-
-                    reportIssue(api, response);
-
                     if (result === undefined || Object.entries(result).length === 0) {
-                        throw new Error(`Unfortunately there was an error occured while searching "${searched}"`, event.threadID, event.messageID)
+                        throw new Error(`Unfortunately there was an error occured while searching "${searched}"`)
                     }
-                     api.sendMessage(`${result[0].description}\n\n${result[0].url}`, event.threadID, event.messageID);
+                    sendMessage(api, event, `${result[0].description}\n\n${result[0].url}`);
                 } catch (err) {
-                    reportIssue(api, err);
-                    api.sendMessage(`${err.message}`, event.threadID, event.messageID);
+                    reportIssue(api, event.threadID, err);
+                    sendMessage(api, event, `${err.message}`);
                 }
             }
         } else if (query.startsWith("baybayin")) {
             let data = input.split(" ")
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using baybaying query instead.\n\nFor example:\nbaybayin ako ay filipino", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using baybaying query instead.\n\nFor example:\nbaybayin ako ay filipino")
             } else {
                 data.shift()
                 axios.get('https://api-baybayin-transliterator.vercel.app/?text=' + data.join(" "))
                     .then(response => {
-                        api.sendMessage(response.data.baybay, event.threadID, event.messageID);
+                        sendMessage(api, event, response.data.baybay);
                     })
                     .catch(error => {
-                        reportIssue(api, error);
-                        api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
+                        reportIssue(api, event.threadID, error);
+                        sendMessage(api, event, "Unfortunately there was an error occured.");
                     })
             }
         } else if (query.startsWith("weather")) {
             let data = input.split(" ")
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using weather country state city instead.\n\nFor example:\nweather philippines ncr caloocan city", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using weather country state city instead.\n\nFor example:\nweather philippines ncr caloocan city")
             } else {
                 data.shift()
                 let weather = await weathersearch("weather " + data.join(" "))
-                reportIssue(api, weather.weather)
                 if (weather.weather == undefined || weather.weather.temperature == undefined) {
                     weatherjs.find({
                         weathersearch: data.join(" "),
@@ -527,7 +563,7 @@ async function ai(api, event) {
                         m += "Temperature: " + d.current.temperature + "\n"
                         m += "Sky: " + d.current.skytext + "\n"
                         m += "Observation time: " + d.current.date + " " + d.current.observationtime
-                        api.sendMessage(m, event.threadID, event.messageID)
+                        sendMessage(api, event, m)
                     })
                 } else {
                     let output = weather.weather
@@ -540,25 +576,26 @@ async function ai(api, event) {
                         m += "\nHumidity: " + output.humidity
                     if (output.wind != undefined)
                         m += "\nWind speed: " + output.wind
-                    api.sendMessage(m, event.threadID, event.messageID)
+                    sendMessage(api, event, m)
                 }
             }
         } else if (query.startsWith("facts")) {
             let data = input.split(" ")
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using facts query instead.\n\nFor example:\nfacts about computers", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using facts query instead.\n\nFor example:\nfacts about computers")
             } else {
                 data.shift()
                 var url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
-                parseImage(event, url, __dirname + '/imgs/facts.png');
+                parseImage(api, event, url, __dirname + '/imgs/facts.png');
             }
         } else if (query.startsWith("instagram") || query.startsWith("insta") || query.startsWith("ig")) {
             let data = input.split(" ")
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using instagram username instead.\n\nFor example:\ninstagram melvinjonesrepol", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead.\n\nFor example:\ninstagram melvinjonesrepol")
             } else {
                 data.shift()
-                axios.get('https://api.popcat.xyz/instagram?user=' + data.join(" "))
+                let userN = data.join(" ");
+                axios.get('https://api.popcat.xyz/instagram?user=' + userN)
                     .then(response => {
                         var username = response.data.username;
                         var fullname = response.data.full_name;
@@ -574,143 +611,130 @@ async function ai(api, event) {
                         request(profilepic).pipe(fs.createWriteStream(__dirname + '/imgs/instaprofile.png'))
 
                             .on('finish', () => {
-                                api.sendMessage({
+                                var message = {
                                     body: "Username: " + username + "\nFull Name: " + fullname + "\nBio: " + biography + "\nPosts: " + posts + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified,
                                     attachment: fs.createReadStream(__dirname + '/imgs/instaprofile.png')
-                                }, event.threadID, event.messageID);
+                                };
+                                sendMessage(api, event, message);
                             })
                     })
                     .catch(error => {
-                        reportIssue(api, error);
-                        api.sendMessage("Unfortunately user was not found.", event.threadID, event.messageID);
+                        reportIssue(api, event.threadID, error);
+                        sendMessage(api, event, "Unfortunately user \"" + userN + "\" was not found.");
                     })
             }
         } else if (query.startsWith("changeemo")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using changeemo emoji instead.\n\nFor example:\nchangeemo 😂", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using changeemo emoji instead.\n\nFor example:\nchangeemo 😂")
             } else {
                 data.shift()
                 api.changeThreadEmoji(data.join(" "), event.threadID, (err) => {
-                    if (err) return reportIssue(api, err);
+                    if (err) return reportIssue(api, event.threadID, err);
                 });
             }
+        } else if (query == "uid") {
+            if (event.type == "message") {
+                sendMessage(api, event, "Your uid is " + event.senderID);
+            } else if (event.type == "message_reply") {
+                sendMessage(api, event, "His/her uid is " + event.messageReply.senderID);
+            }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
-            api.sendMessage("Hello World", event.threadID, event.messageID);
+            sendMessage(api, event, "Hello World");
         } else if (query == "hi") {
-            api.sendMessage("Hello", event.threadID, event.messageID);
+            sendMessage(api, event, "Hello");
         } else if (query == "hello") {
-            api.sendMessage("Hi", event.threadID, event.messageID);
-        } else if (query == "bot") {
-            api.setMessageReaction(":heart:", event.threadID, event.messageID);
+            sendMessage(api, event, "Hi");
         } else if (query == "sup" || query == "wassup" || query == "what's up" || query == "how are you") {
-            let ans = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
-            api.sendMessage(ans[Math.floor(Math.random() * 6)], event.threadID, event.messageID);
+            sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         } else if (query.startsWith("hey")) {
-            let ans = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
-            api.sendMessage(ans[Math.floor(Math.random() * 5)], event.threadID, event.messageID);
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else if (query.startsWith("who made you") || query.startsWith("who's your creator") || query.startsWith("where do you come from")) {
-            let ans = ["I'm a long story... About 24h long.", "I'm not too sure", "I never really asked myself this question."];
-            api.sendMessage(ans[Math.floor(Math.random() * 3)], event.threadID, event.messageID);
+            sendMessage(api, event, whom[Math.floor(Math.random() * whom.length)]);
         } else if (query.startsWith("sayit")) {
-            api.sendMessage("your stupid", event.threadID, event.messageID);
-        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || query.includes("😂") || query.includes("🤣") || query.includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao")) {
-            api.setMessageReaction(":laughing:", event.messageID);
+            sendMessage(api, event, "your stupid");
+        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao")) {
+            reactMessage(api, event, ":laughing:");
         } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
-            api.setMessageReaction(":sad:", event.messageID);
+            reactMessage(api, event, ":sad:");
         } else if (query.includes("angry")) {
-            api.setMessageReaction(":angry:", event.messageID);
+            reactMessage(api, event, ":angry:");
         } else if (query.includes("cry")) {
-            api.setMessageReaction(":cry:", event.messageID);
-        } else if (query.includes("love")) {
-            api.setMessageReaction(":love:", event.messageID);
+            reactMessage(api, event, ":cry:");
+        } else if (query.includes("love") || query == "bot") {
+            reactMessage(api, event, ":love:");
         } else if (query.startsWith("goodeve")) {
-            api.setMessageReaction(":love:", event.messageID);
-            api.sendMessage("Good evening too...", event.threadID, event.messageID);
+            reactMessage(api, event, ":love:");
+            sendMessage(api, event, "Good evening too...");
         } else if (query.startsWith("goodmorn")) {
-            api.setMessageReaction(":love:", event.messageID);
-            api.sendMessage("Good morning too...", event.threadID, event.messageID);
+            reactMessage(api, event, ":love:");
+            sendMessage(api, event, "Good morning too...");
         } else if (query.startsWith("goodnight")) {
-            api.setMessageReaction(":love:", event.messageID);
-            api.sendMessage("Good night too...", event.threadID, event.messageID);
+            reactMessage(api, event, ":love:");
+            sendMessage(api, event, "Good night too...");
         } else if (query.startsWith("goodafter")) {
-            api.setMessageReaction(":love:", event.messageID);
-            api.sendMessage("Good afternoon too...", event.threadID, event.messageID);
+            reactMessage(api, event, ":love:");
+            sendMessage(api, event, "Good afternoon too...");
         } else if (query == "tsk") {
-            api.setMessageReaction(":like:", event.messageID);
+            reactMessage(api, event, ":like:");
         } else if (query == "yes") {
-            api.sendMessage("No", event.threadID, event.messageID);
+            sendMessage(api, event, "No");
         } else if (query == "okay") {
-            api.sendMessage("Yup", event.threadID, event.messageID);
+            sendMessage(api, event, "Yup");
         } else if (query == "no") {
-            api.sendMessage("Yes", event.threadID, event.messageID);
+            sendMessage(api, event, "Yes");
         } else if (query == "idk") {
-            api.sendMessage("i dont know too...", event.threadID, event.messageID);
-        } else if (query == "nice") {
-            api.setMessageReaction(":heart:", event.messageID);
-        } else if (query.includes("uwu")) {
-            api.setMessageReaction("🥺", event.messageID);
+            sendMessage(api, event, "i dont know too...");
+        } else if (query == "nice" || query == "uwu") {
+            reactMessage(api, event, ":heart:");
         } else if (query.includes("nude")) {
-            api.sendMessage("Dont!...", event.threadID, event.messageID);
-        } else if (query.startsWith("unsend on") && !settings.onUnsend) {
+            asendMessage(api, event, "Dont!...");
+        } else if ((query == "unsendon" || query == "unsenton" || query == "removeon" || query == "deleteon") && !settings.onUnsend) {
+            if (vips.includes(event.senderID)) {
             settings.onUnsend = true
             fs.writeFileSync("files/settings.json", JSON.stringify(settings), "utf8")
-            reportIssue(api, "unsend enabled");
-        } else if (query.startsWith("unsend off")  && settings.onUnsend) {
+            reportIssue(api, event.threadID, "unsend enabled");
+            } else {
+                sendMessage(api, event, "You cannot enable it.. No idea why. Why thought?");
+            }
+        } else if ((query == "unsendon" || query == "unsenton" || query == "removeon" || query == "deleteon") && settings.onUnsend) {
+            if (vips.includes(event.senderID)) {
             settings.onUnsend = false
             fs.writeFileSync("files/settings.json", JSON.stringify(settings), "utf8")
-            reportIssue(api, "unsend disabled");
-        } else if (query.startsWith("groupid")) {
+            reportIssue(api, event.threadID, "unsend disabled");
+            } else {
+                sendMessage(api, event, "Hehe... noo you cannot turn it off...");
+            }
+        } else if (query == "groupid" || query == "guid") {
             api.getThreadInfo(event.threadID, (err) => {
                 if (err) return cosole.log(err);
                 else {
-                    api.sendMessage(event.threadID, event.threadID, event.messageID);
+                    sendMessage(api, event, "The group id is " + event.threadID);
                 }
             });
         } else if (query == "help") {
-            let help = "Hello World\n\n";
-            help += "Usage: \ncommand [options]\n\n";
-            help += "Commands:\n";
-            help += "pdf [search]      - find pdf and ebook\n";
-            help += "dict [search]     - dictionary\n";
-            help += "summ [paragraph]  - summarize paragraph and sentence\n";
-            help += "find [search]     - google search\n";
-            help += "baybayin [query]  - translate to baybayin\n";
-            help += "weather [country] [state] [city] - show current weather status\n";
-            help += "facts [query]     - facts meme generator\n";
-            help += "ig [username]     - get user instagram info\n";
-            help += "changeemo [emoji] - change group chat emoji\n";
-            help += "unsend [on|off]   - enable or disable unsend feature\n";
-            help += "wiki [query]      - search poeple or info from wikipedia\n";
-            help += "info [username]   - get user facebook basic info\n";
-            help += "nickname [username] [nickname] - change the user nickname\n";
-            help += "landscape         - show landscape photos\n";
-            help += "portrait          - show portrait photos\n";
-            help += "animequote        - show anime qoutes\n";
-            help += "motivation        - show motivation messages\n";
-            help += "unsent, remove    - unsent my messages\n";
-            help += "phub              - show p*rnhub meme generator\n";
-            help += "qrcode [query]    - show generated qrcode from your query\n";
-            help += "uid               - show person user id\n";
-            help += "groupid           - show the group id\n";
-            help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have questions ask me with ? at the end.";
-            api.sendMessage(help, event.threadID, event.messageID);
+            sendMessage(api, event, help);
         } else if (query.startsWith("wiki")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using wiki query instead.\n\nFor example:\nwiki google", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using wiki query instead.\n\nFor example:\nwiki google")
             } else {
                 wiki(api.sendMessage, input.substring("5"), event);
             }
         } else if (query.startsWith("info")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using info @user instead.\n\nFor example:\ninfo @Melvin Jones Repol", event.threadID, event.messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using info @user instead.\n\nFor example:\ninfo @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
-                   info(api, event);
+                   if (event.senderID == myAccountId || event.senderID == myOtherId) {
+                      sendMessage(api, event, "Nice try. But it wont gonna work, and i don't know why.")
+                      reactMessage(api, event, ":laughing:");
+                   } else {
+                      info(api, event);
+                   }
                } else {
-                   api.sendMessage("Unable to find information without mentioning someone.", event.threadID, event.messageID)
+                sendMessage(api, event, "Unable to find information without mentioning someone.")
                }
             }
         } else if (query.startsWith("nickname")) {
@@ -718,69 +742,103 @@ async function ai(api, event) {
             text = text.substring(26)
             let data = input.split(" ");
             if (data.length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using nickname mentioned nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol", event.threadID, event.messageID);
+                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname mentioned nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
             } else {
                 api.getThreadInfo(event.threadID, (err, info) => {
                     var mentionid = `${Object.keys(event.mentions)[0]}`;
 
                     api.changeNickname(text, `${info.threadID}`, mentionid, (err) => {
-                        if (err) return api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
+                        if (err) return asendMessage(api, event, "Unfortunately there was an error occured while changing \"" + text + "\" nickname.");
                     });
                 });
             }
         } else if (query.startsWith("landscape")) {
-            parseImage(event, "https://source.unsplash.com/1600x900/?landscape", __dirname + '/imgs/landscape.png');
+            parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + '/imgs/landscape.png');
         } else if (query.startsWith("portrait")) {
-            parseImage(event, "https://source.unsplash.com/900x1600/?portrait", __dirname + '/imgs/portrait.png');
+            parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + '/imgs/portrait.png');
         } else if (query.startsWith("animequote")) {
             axios.get('https://animechan.vercel.app/api/random')
                 .then(response => {
-                    api.sendMessage("'" + response.data.quote + "'" + "\n\n- " + response.data.character + " (" + response.data.anime + ")", event.threadID, event.messageID);
+                    sendMessage(api, event, "'" + response.data.quote + "'" + "\n\n- " + response.data.character + " (" + response.data.anime + ")");
                 })
                 .catch(error => {
-                    reportIssue(api, error);
-                    api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
+                    reportIssue(api, event.threadID, error);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
                 });
         } else if (query.startsWith("motivation")) {
             qt("motivation").then((response) => {
                 if (response == null) {
-                    reportIssue(api, response);
-                    api.sendMessage("Unfortunately there was an error occured.", event.threadID, event.messageID);
+                    reportIssue(api, revent.threadID, esponse);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
                         result = `${response[i].q} \n\n- ${response[i].a}\n\n`
                     }
-                    api.sendMessage(result, event.threadID, event.messageID);
+                    sendMessage(api, event, result);
                 }
             });
         } else if (query == "refresh" || query == "reload") {
+            if (vips.includes(event.senderID)) {
             let A = api.getAppState();
             let B = await JSON.stringify(A);
             fs.writeFileSync("fb.json", B, "utf8");
-            api.sendMessage("AppState Refreshed Successfully!.", event.threadID, event.messageID);
+            sendMessage(api, event, "AppState Refreshed Successfully!.");
+            } else {
+                sendMessage(api, event, "Unable to do such action...");
+            }
         }
         
     }
 }
 
-function parseImage(event, url, dir) {
+function parseImage(api, event, url, dir) {
     request(url).pipe(fs.createWriteStream(dir))
     .on('finish', () => {
-        api.sendMessage({
+        let image = {
             attachment: fs.createReadStream(dir)
-        }, event.threadID, event.messageID);
+        };
+        sendMessage(api, event, image);
     })
 }
 
-function reportIssue(api, api, err) {
+function reportIssue(api, event, err) {
     console.log(err);
-    api.getThreadInfo(event.threadID, (err, info) => {
+    api.getThreadInfo(event, (err, info) => {
         if (err) return console.log(err);
         else {
             api.sendMessage(err, myAccountId);
         }
     });
+}
+
+function sendMessage(api, event, message) {
+    wait(sleep[Math.floor(Math.random() * sleep.length)])
+    api.sendMessage(message, event.threadID, event.messageID);
+}
+
+function reactMessage(api, event, reaction) {
+    wait(sleep[Math.floor(Math.random() * sleep.length)])
+    api.setMessageReaction(reaction, event.messageID);
+}
+
+function removeEmojis(string) {
+    var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
+    return string.replace(regex, '');
+}
+
+function holdOn() {
+    if (!(vips.includes(event.senderID))) {
+        if (!(event.senderID in cd)) {
+            cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
+        } else if (Math.floor(Date.now() / 1000) < cd[event.senderID]) {
+            sendMessage(api, event, "Hold on... Your asking too much wait for " + Math.floor((cd[event.senderID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " + (cd[event.senderID] - Math.floor(Date.now() / 1000)) % 60 + " seconds");
+            return true;
+        } else {
+            cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
+        }
+    }
+    return false;
 }
 
 var download = async function(uri, filename, callback){
