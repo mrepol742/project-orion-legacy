@@ -1,3 +1,5 @@
 /node_modules
-/imgs
-/attachments
+attachments/*
+!attachments/.gitkeep
+imgs/*
+!imgs/.gitkeep
