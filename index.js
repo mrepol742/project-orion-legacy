@@ -56,13 +56,14 @@ let help = "Hello World\n\n";
             help += "landscape         - show landscape photos\n";
             help += "portrait          - show portrait photos\n";
             help += "animequote        - show anime qoutes\n";
-            help += "motivation        - show motivation messages\n";
+            help += "motivation        - gaves motivation messages\n";
+            help += "advice            - show advice messages\n";
             help += "remove            - unsent my messages\n";
             help += "phub              - show p*rnhub meme generator\n";
             help += "qrcode [query]    - show generated qrcode from your query\n";
             help += "uid               - show person user id\n";
             help += "gid               - show the group id\n";
-            help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have questions ask me with ? at the end.";
+            help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have any questions dont hesitate to ask me.";
 
 let apiKey = [
     // phub api key
@@ -110,12 +111,12 @@ login({
 
         if (err) return reportIssue(api, event.threadID, err);
 
-        if (event.type == "message" || event.type == "message_reply") {
         if (debug) {
+            if (event.type == "message" || event.type == "message_reply") {
             let input = event.body;
             let query = removeEmojis(input.trim().toLowerCase());
             if (!(vips.includes(event.senderID))) {
-                if (query.startsWith("mj") || query.startsWith("repol") || input.toLowerCase().startsWith("par ") || input.toLowerCase().startsWith("pri ") || query.startsWith("mrepol742") || query.endsWith("?")) {
+                if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
                     sendMessage(api, event, "Hold on a moment this system is currently in maintenance mode... only authorized uid is allowed to call and initiate its function in the moment.");
                 }
                 return;
@@ -209,7 +210,7 @@ login({
                 } 
                 break;
             case "message_unsend":
-                if (event.senderID == myAccountId && event.senderID == myOtherId) {
+                if (event.senderID == myAccountId) {
                     break;
                 }
                     let d = msgs[event.messageID];
@@ -222,13 +223,12 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, event.threadID, 'finished downloading photo..')
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this photo: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/photo.jpg')
                                                 }
-
+                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
                                                 api.sendMessage(message, event.threadID);
                                             }
                                         });
@@ -238,12 +238,12 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, event.threadID, 'finished downloading gif..')
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this GIF: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/animated_image.gif')
                                                 }
+                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
                                                 api.sendMessage(message, event.threadID);
                                             }
                                         });
@@ -253,12 +253,12 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, event.threadID, 'finished downloading sticker..')
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this Sticker: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/sticker.png')
                                                 }
+                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
                                                 api.sendMessage(message, event.threadID);
                                             }
                                         });
@@ -268,12 +268,12 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, event.threadID, 'finished downloading video..')
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this video: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/video.mp4')
                                                 }
+                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
                                                 api.sendMessage(message, event.threadID);
                                             }
                                         });
@@ -283,12 +283,12 @@ login({
                                     var gifRequest = http.get(d[1], function(gifResponse) {
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
-                                            reportIssue(api, event.threadID, 'finished downloading audio..')
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
                                                     body: data[event.senderID]['name'] + " unsent this audio: \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/vm.mp3')
                                                 }
+                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
                                                 api.sendMessage(message, event.threadID);
                                             }
                                         });
@@ -301,6 +301,7 @@ login({
                             if (err) return reportIssue(api, event.threadID, err);
                             else {
                                 if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                    wait(sleep[Math.floor(Math.random() * sleep.length)])
                                     api.sendMessage(data[event.senderID]['name'] + " unsent this message: \n\n" + msgs[event.messageID], event.threadID);
                                 }
                             }
@@ -308,6 +309,45 @@ login({
                     }
           
             break;
+            case "event":
+                switch (event.logMessageType) {
+                    case "log:subscribe":
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (gc.isGroup) {
+                                api.sendMessage(`Welcome to "${gc.threadName}" ${event.logMessageData.addedParticipants[0].fullName}.`, event.threadID);
+                            }
+                        })
+                        break;
+
+                    case "log:unsubscribe":
+                        var id = event.logMessageData.leftParticipantFbId;
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (err) done(err);
+                            api.getUserInfo(parseInt(id), (err, data) => {
+                                if (err) {
+                                    console.log(err)
+                                } else {
+                                    console.log(data)
+                                    for (var prop in data) {
+                                        if (data.hasOwnProperty(prop) && data[prop].name) {
+                                            var gcn = gc.threadName;
+                                            api.sendMessage("byebye, " + data[prop].name + "..", event.threadID)
+                                        }
+                                    }
+                                }
+                            })
+                        })
+                        /*await new Promise(resolve => setTimeout(resolve, 7500));
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                           if (err) done(err);
+                           var gcn = gc.threadName;
+                           var arr = gc.participantIDs;
+                           var Tmem = arr.length;
+                           api.sendMessage("Group Chat Name: " + gcn + "\n\n💠 Total Member(Updated) 💠\n\n => " + Tmem + " Members", event.threadID, event.messageID)
+                        })*/
+                        break;
+                }
+                break;
         }
     });
 });
@@ -350,6 +390,7 @@ Birthday: ${checkFound(isBirthday)}
                     body: msg,
                     attachment:fs.createReadStream(filename)
                   };
+                  wait(sleep[Math.floor(Math.random() * sleep.length)])
                 api.sendMessage(message,threadID,messageID)     
             })
         }
@@ -357,10 +398,16 @@ Birthday: ${checkFound(isBirthday)}
 }
 
 async function ai(api, event) {
+    /*if (holdOn(event)) {
+        return;
+    }*/
     if (event.body != null) {
         let input = event.body;
         let query = removeEmojis(input.trim().toLowerCase());
-        if (query.startsWith("mj") || query.startsWith("repol") || input.toLowerCase().startsWith("par ") || input.toLowerCase().startsWith("pri ") || query.startsWith("mrepol742") || query.endsWith("?")) {
+        let query2 = removeEmojis(input.toLowerCase());
+        if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") || query.endsWith("?") ||
+        ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
+        query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
             var {
                 mentions,
                 senderID,
@@ -371,22 +418,23 @@ async function ai(api, event) {
                 if (event.senderID == myGirlAccountId && query.endsWith("?")) {
                     return;
                 }
-                api.sendMessage("Hello the system status is online and waiting for your reply. \nFor available commands enter help, this project does not disclose any personal data. In aims of breaking apart the line between human and computer.\n\nTHERE IS NO WARRANTY FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE SOFTWARE “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH THE CUSTOMER. SHOULD THE SOFTWARE PROVE DEFECTIVE, THE CUSTOMER ASSUMES THE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION EXCEPT TO THE EXTENT SET OUT UNDER THE HARDWARE WARRANTY IN THESE TERMS.", threadID, (err) => {
-                    if (err) return
-                }, messageID)
+                sendMessage(api, event, "Hello the system status is online and waiting for your reply.\nFor available commands enter help, this project does not disclose any personal data. \nIn aims of breaking apart the line between human and computer.");
             } else {
                 var text = input;
                 if (event.senderID == myGirlAccountId && query.endsWith("?")) {
                     return;
                 } else if (query.startsWith("repol")) {
                     text = input.substring(6)
-                } else if (input.toLowerCase().startsWith("par ") || input.toLowerCase().startsWith("pri ")) {
-                    text = input.substring(5)
                 } else if (query.startsWith("mrepol742")) {
                     text = input.substring(10)
                 } else if (query.startsWith("mj")) {
                     text = input.substring(3)
-                }
+                } 
+                /*
+                else if (query.startsWith("what") || query.startsWith("when") || query.startsWith("where") || query.startsWith("who") ||
+                    query.startsWith("why") || query.startsWith("how")) {
+                    text = input.substring()
+                }*/
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
                 });
@@ -396,7 +444,7 @@ async function ai(api, event) {
                 } = await openai.createCompletion("text-davinci-002", {
                     prompt: text,
                     temperature: 0.5,
-                    max_tokens: 4000,
+                    max_tokens: 3000,
                     top_p: 0.3,
                     frequency_penalty: 0.5,
                     presence_penalty: 0.0,
@@ -405,6 +453,7 @@ async function ai(api, event) {
                 if (finish.startsWith("?")) {
                     finish = finish.slice(1);
                 }
+                wait(sleep[Math.floor(Math.random() * sleep.length)])
                 api.sendMessage(finish, event.threadID, (err) => {
                     if (err) return reportIssue(api, event.threadID, err)
                 }, messageID)
@@ -467,6 +516,7 @@ async function ai(api, event) {
                     var sample = data.list[0].example;
                     var timestamp = data.list[0].written_on;
                     var source = data.list[0].permalink;
+                    wait(sleep[Math.floor(Math.random() * sleep.length)])
                     api.sendMessage(def + "\n\nExample: \n" + sample, threadID, messageID)
                 }).catch(function(error) {
                     reportIssue(api, event.threadID, error);
@@ -483,14 +533,15 @@ async function ai(api, event) {
             if (input.split(" ").length < 2) {
                 api.sendMessage("Opps! I didnt get it. You should try using summarize message instead.\n\nFor example:\nsummarize this sentence meant to be summarized.", threadID, messageID)
             } else {
-                var text = input.substring(11);
-                if (query.startsWith("summ")) {
-                    text = input.substring(5)
+                var text = input.substring(5);
+                if (query.startsWith("summarize")) {
+                    text = input.substring(11)
                 }
                 const client = new NLPCloudClient('bart-large-cnn', apiKey[4])
                 client.summarization(text).then(function({
                     data
                 }) {
+                    wait(sleep[Math.floor(Math.random() * sleep.length)])
                     api.sendMessage(data.summary_text, threadID, messageID)
                 }).catch(function(err) {
                     reportIssue(api, event.threadID, err.response.data.detail);
@@ -510,7 +561,7 @@ async function ai(api, event) {
             return await google.search(`google ${searched}`, options);
         };
 
-        if (query.startsWith("google") || query.startsWith("search") || query.startsWith("find")) {
+        if (query.startsWith("google") || query2.startsWith("search ") || query2.startsWith("find ")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 api.sendMessage("Opps! I didnt get it. You should try using google query instead.\n\nFor example:\ngoogle computer")
@@ -661,8 +712,10 @@ async function ai(api, event) {
             reactMessage(api, event, ":angry:");
         } else if (query.includes("cry")) {
             reactMessage(api, event, ":cry:");
-        } else if (query.includes("love") || query == "bot") {
+        } else if (query.includes("love") || query == "bot" || query == "good") {
             reactMessage(api, event, ":love:");
+        } else if (query.includes("confuse") && (query.startsWith("im") || query.startsWith("i'm") || query.startsWith("iam"))) {
+            sendMessage(api, event, "me too..");
         } else if (query.startsWith("goodeve")) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, "Good evening too...");
@@ -689,7 +742,7 @@ async function ai(api, event) {
             reactMessage(api, event, ":heart:");
         } else if (query.includes("nude")) {
             asendMessage(api, event, "Dont!...");
-        } else if ((query == "unsendon" || query == "unsenton" || query == "removeon" || query == "deleteon") && !settings.onUnsend) {
+        } else if ((query == "unsend--on") && !settings.onUnsend) {
             if (vips.includes(event.senderID)) {
             settings.onUnsend = true
             fs.writeFileSync("files/settings.json", JSON.stringify(settings), "utf8")
@@ -697,7 +750,7 @@ async function ai(api, event) {
             } else {
                 sendMessage(api, event, "You cannot enable it.. No idea why. Why thought?");
             }
-        } else if ((query == "unsendon" || query == "unsenton" || query == "removeon" || query == "deleteon") && settings.onUnsend) {
+        } else if ((query == "unsend--off") && settings.onUnsend) {
             if (vips.includes(event.senderID)) {
             settings.onUnsend = false
             fs.writeFileSync("files/settings.json", JSON.stringify(settings), "utf8")
@@ -765,8 +818,21 @@ async function ai(api, event) {
                     reportIssue(api, event.threadID, error);
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 });
-        } else if (query.startsWith("motivation")) {
+        } else if (query.startsWith("motivation") || query.startsWith("inspiration") || query.startsWith("determination") ||  query.startsWith("motivate")) {
             qt("motivation").then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, esponse);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    let result;
+                    for (let i = 0; i < response.length; i++) {
+                        result = `${response[i].q} \n\n- ${response[i].a}\n\n`
+                    }
+                    sendMessage(api, event, result);
+                }
+            });
+        } else if (query == "advice") {
+            qt("advice").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, esponse);
                     sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -804,12 +870,13 @@ function parseImage(api, event, url, dir) {
 
 function reportIssue(api, event, err) {
     console.log(err);
+    /*
     api.getThreadInfo(event, (err, info) => {
         if (err) return console.log(err);
         else {
             api.sendMessage(err, myAccountId);
         }
-    });
+    });*/
 }
 
 function sendMessage(api, event, message) {
@@ -827,12 +894,12 @@ function removeEmojis(string) {
     return string.replace(regex, '');
 }
 
-function holdOn() {
+function holdOn(event) {
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cd)) {
             cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
         } else if (Math.floor(Date.now() / 1000) < cd[event.senderID]) {
-            sendMessage(api, event, "Hold on... Your asking too much wait for " + Math.floor((cd[event.senderID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " + (cd[event.senderID] - Math.floor(Date.now() / 1000)) % 60 + " seconds");
+            //sendMessage(api, event, "Hold on... Your asking too much wait for " + Math.floor((cd[event.senderID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " + (cd[event.senderID] - Math.floor(Date.now() / 1000)) % 60 + " seconds");
             return true;
         } else {
             cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
