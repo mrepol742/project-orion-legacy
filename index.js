@@ -64,6 +64,8 @@ let help = "Hello World\n\n";
             help += "pin add           - reply to a message to add as pin\n";
             help += "pin remove        - remove a pin\n";
             help += "pin               - show the pinned message\n";
+            help += "verse today       - today's verse\n";
+            help += "verse random      - random verse\n";
             help += "animequote        - show anime qoutes\n";
             help += "motivation        - gaves motivation messages\n";
             help += "advice            - show advice messages\n";
@@ -125,7 +127,7 @@ login({
         if (debug) {
             if (event.type == "message" || event.type == "message_reply") {
             let input = event.body;
-            let query = removeEmojis(input.trim().toLowerCase());
+            let query = removeEmojis(input.replace(/\s+/g, '').toLowerCase());
             if (!(vips.includes(event.senderID))) {
                 if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
                     sendMessage(api, event, "Hold on a moment this system is currently in maintenance mode... only authorized uid is allowed to call and initiate its function in the moment.");
@@ -160,7 +162,7 @@ login({
             case "message_reply":
                 let msgid = event.messageID;
                 let input = event.body;
-                let query = removeEmojis(input.trim().toLowerCase());
+                let query = removeEmojis(input.replace(/\s+/g, '').toLowerCase());
                 msgs[msgid] = input;
 
                 if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
@@ -421,7 +423,7 @@ async function ai(api, event) {
     }*/
     if (event.body != null) {
         let input = event.body;
-        let query = removeEmojis(input.trim().toLowerCase());
+        let query = removeEmojis(input.replace(/\s+/g, '').toLowerCase());
         let query2 = removeEmojis(input.toLowerCase());
         if (query2.includes("what can you do")) {
             sendMessage(api, event, canDo[Math.floor(Math.random() * canDo.length)]);
@@ -895,7 +897,7 @@ async function ai(api, event) {
                     sendMessage(api, event, result);
                 }
             });
-        } else if (query == "verseran") {
+        } else if (query == "verserandom") {
             getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -903,12 +905,12 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].bookname}\n${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
+                        result = `${response[i].bookname} ${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
                     }
                     sendMessage(api, event, result);
                 }
             });
-        } else if (query == "verseday") {
+        } else if (query == "versetoday") {
             getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -916,12 +918,11 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].bookname}\n${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
+                        result = `${response[i].bookname} ${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
                     }
                     sendMessage(api, event, result);
                 }
             });
-        }
         } else if (query == "refresh" || query == "reload") {
             if (vips.includes(event.senderID)) {
             let A = api.getAppState();
