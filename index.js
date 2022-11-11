@@ -29,6 +29,9 @@ let sleep = [3000, 2500, 3500, 5000, 4000, 4500, 5500, 3800, 3200, 4800, 4300, 3
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
 let whom = ["I'm a long story... About 24h long.", "I'm not too sure", "I never really asked myself this question."];
+let creator = ["Melvin Jones Repol", "Mj", "mrepol742", "Melvin Jones Gallano Repol"];
+let creatorAge = ["I'm 20 years old.", "20 years young since June 13rd 2002", "Will turning 21 next year June 13rd.", "I'm 20y/o still thriving."];
+let canDo = ["I can do almost anything. Try asking me then....", "I can do anything you could imagine for.", "Well thats a good question, try me then.", "I dont know about that, try asking me first", "I'm not totally sure what i can do."];
 let threads = ""
 
 let myAccountId = "100071743848974";
@@ -55,6 +58,9 @@ let help = "Hello World\n\n";
             help += "nickname [username] [nickname] - change the user nickname\n";
             help += "landscape         - show landscape photos\n";
             help += "portrait          - show portrait photos\n";
+            help += "pin add           - reply to a message to add as pin\n";
+            help += "pin remove        - remove a pin\n";
+            help += "pin               - show the pinned message\n";
             help += "animequote        - show anime qoutes\n";
             help += "motivation        - gaves motivation messages\n";
             help += "advice            - show advice messages\n";
@@ -106,6 +112,7 @@ login({
     });
 
     let settings = JSON.parse(fs.readFileSync("files/settings.json", "utf8"));
+    let pinned = JSON.parse(fs.readFileSync("files/pinned.json", "utf8"));
 
     const listenEmitter = api.listen(async (err, event) => {
 
@@ -207,7 +214,16 @@ login({
                         };
                         sendMessage(api, event, message);
                     })
-                } 
+                } else if (query == "pinadd") {
+                    if (event.messageReply.body == "") { 
+                        api.sendMessage("No text Detected, Please Try Again.", event.threadID);
+                    } else {
+                        pinned.pin.message[event.threadID] = event.messageReply.body
+                        pinned.pin.sender[event.threadID] = event.messageReply.senderID
+                        sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
+                        fs.writeFileSync("files/pinned.json", JSON.stringify(pinned), "utf8")
+                    }
+                }
                 break;
             case "message_unsend":
                 if (event.senderID == myAccountId) {
@@ -405,7 +421,17 @@ async function ai(api, event) {
         let input = event.body;
         let query = removeEmojis(input.trim().toLowerCase());
         let query2 = removeEmojis(input.toLowerCase());
-        if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") || query.endsWith("?") ||
+        if (query2.includes("what can you do")) {
+            sendMessage(api, event, canDo[Math.floor(Math.random() * canDo.length)]);
+        } else if (query2.includes("who created you") || (query.includes("what") && query.includes("your") && query.includes("name"))) {
+            sendMessage(api, event, creator[Math.floor(Math.random() * creator.length)]);
+        } else if (query.includes("sourcecode") && query.includes("your")) {
+            sendMessage(api, event, "No. Peroid.");
+        } else if (query.includes("how") && (query.includes("old") || query.includes("young")) && query.includes("you")) {
+            sendMessage(api, event, creatorAge[Math.floor(Math.random() * creatorAge.length)]);
+        } else if (query.startsWith("what?") || query.startsWith("when?") || query.startsWith("who?") || query.startsWith("where?") || query.startsWith("why?") || query.startsWith("how?") || query.startsWith("which?")) {
+            sendMessage(api, event, query);
+        } else if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") || query.endsWith("?") ||
         ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
         query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
             var {
@@ -418,7 +444,11 @@ async function ai(api, event) {
                 if (event.senderID == myGirlAccountId && query.endsWith("?")) {
                     return;
                 }
+                if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742")) {
                 sendMessage(api, event, "Hello the system status is online and waiting for your reply.\nFor available commands enter help, this project does not disclose any personal data. \nIn aims of breaking apart the line between human and computer.");
+                } else if (query == "?") {
+                    sendMessage(api, event, "I dont know what do you mean by that....");
+                } 
             } else {
                 var text = input;
                 if (event.senderID == myGirlAccountId && query.endsWith("?")) {
@@ -462,7 +492,29 @@ async function ai(api, event) {
         if (event.senderID == myGirlAccountId) {
             return;
         }
-        if (query.startsWith("pdf")) {
+
+        if (query == "pinremove") {
+           let pinned = JSON.parse(fs.readFileSync("files/pinned.json", "utf8"));
+            pinned.pin.message[event.threadID] = undefined
+            pinned.pin.sender[event.threadID] = undefined
+            sendMessage(api, event, "Pinned message removed.");
+            fs.writeFileSync("files/pinned.json", JSON.stringify(pinned), "utf8")
+        } else if (query == "pin") {
+            let pinned = JSON.parse(fs.readFileSync("files/pinned.json", "utf8"));
+            if (pinned.pin.message[event.threadID] == undefined) {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (gc.isGroup) {
+                        sendMessage(api, event, "There is no pinned message on this group chat.");
+                    } else {
+                        sendMessage(api, event, "There is no pinned message on this chat.");
+                    }
+                })
+            } else {
+                api.getUserInfo(pinned.pin.sender[event.threadID], (err, data) => {
+                    api.sendMessage(pinned.pin.message[event.threadID], event.threadID);
+                });
+            }
+        } else if (query.startsWith("pdf")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using pdf query instead.\nFor example:\npdf fundamentals in engineering")
@@ -734,6 +786,8 @@ async function ai(api, event) {
             sendMessage(api, event, "No");
         } else if (query == "okay") {
             sendMessage(api, event, "Yup");
+        } else if (query.includes("jabol")) {
+            sendMessage(api, event, "Shhhhhhh watch your mouth.");
         } else if (query == "no") {
             sendMessage(api, event, "Yes");
         } else if (query == "idk") {
