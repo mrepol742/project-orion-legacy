@@ -25,7 +25,7 @@ let vips = [
     "100077318906152",
     "100037131918629"
 ];
-let sleep = [3000, 2500, 3500, 5000, 4000, 4500, 5500, 3800, 3200, 4800, 4300, 3300, 4600, 5900, 3600]
+let sleep = [5500, 7000, 7500, 4000, 4500, 5000, 6000, 5800, 6600, 4300, 7200, 7800, 5800, 6100, 4500, 9000, 9900, 6300, 57000]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
 let whom = ["I'm a long story... About 24h long.", "I'm not too sure", "I never really asked myself this question."];
@@ -73,7 +73,7 @@ let help = "Hello World\n\n";
             help += "phub              - show p*rnhub meme generator\n";
             help += "qrcode [query]    - show generated qrcode from your query\n";
             help += "uid               - show person user id\n";
-            help += "gid               - show the group id\n";
+            help += "guid              - show the group id\n";
             help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have any questions dont hesitate to ask me.";
 
 let apiKey = [
@@ -484,7 +484,7 @@ async function ai(api, event) {
         }
 
         if (query.startsWith("problem")) {
-            if (query.split(" ").length < 2) {
+            if (query2.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
             } else {
                 var text = input;
@@ -498,7 +498,7 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("encode64")) {
-            if (query.split(" ").length < 2) {
+            if (query2.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 query instead.\nFor example:\nencode64 fundamentals in engineering")
             } else {
                 var text = input;
@@ -509,8 +509,8 @@ async function ai(api, event) {
                 sendMessage(api, event, base64data);
             }
         } else if (query.startsWith("decode64")) {
-            if (query.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 query instead.\nFor example:\nedecode64 fundamentals in engineering")
+            if (query2.split(" ").length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 query instead.\nFor example:\ndecode64 fundamentals in engineering")
             } else {
                 var text = input;
                 text = text.substring(9)
@@ -1014,24 +1014,4 @@ async function getResponseData(url) {
         return null
     });
     return data
-}
-
-async function verse() {
-    let v = await axios.get("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
-        return response.data
-    }).catch((err) => {
-        console.error("Error [Verse of the day]: " + e)
-        return null
-    })
-    return v
-}
-
-async function votd() {
-    let v = await axios.get("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
-        return response.data
-    }).catch((err) => {
-        console.error("Error [Verse of the day]: " + e)
-        return null
-    })
-    return v
 }
