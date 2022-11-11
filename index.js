@@ -387,7 +387,6 @@ function wait(ms) {
 
 
 const info = (api, event)=>{
-    let { mentions,threadID,messageID,body,senderID } = event
     api.getUserInfo(Object.keys(mentions), async (err, ret) => {
         if(err) return reportIssue(api, event.threadID, err);
         for(var prop in ret) {
@@ -406,8 +405,7 @@ Birthday: ${checkFound(isBirthday)}
                     body: msg,
                     attachment:fs.createReadStream(filename)
                   };
-                  wait(sleep[Math.floor(Math.random() * sleep.length)])
-                api.sendMessage(message,threadID,messageID)     
+                sendMessage(api, event, message);
             })
         }
     });
@@ -434,18 +432,12 @@ async function ai(api, event) {
         } else if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") || query.endsWith("?") ||
         ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
         query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
-            var {
-                mentions,
-                senderID,
-                threadID,
-                messageID
-            } = event;
             if (input.split(" ").length < 2) {
                 if (event.senderID == myGirlAccountId && query.endsWith("?")) {
                     return;
                 }
                 if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742")) {
-                sendMessage(api, event, "Hello the system status is online and waiting for your reply.\nFor available commands enter help, this project does not disclose any personal data. \nIn aims of breaking apart the line between human and computer.");
+                   sendMessage(api, event, "Hello the system status is online and waiting for your reply.\nFor available commands enter help, this project does not disclose any personal data. \nIn aims of breaking apart the line between human and computer.");
                 } else if (query == "?") {
                     sendMessage(api, event, "I dont know what do you mean by that....");
                 } 
@@ -460,11 +452,6 @@ async function ai(api, event) {
                 } else if (query.startsWith("mj")) {
                     text = input.substring(3)
                 } 
-                /*
-                else if (query.startsWith("what") || query.startsWith("when") || query.startsWith("where") || query.startsWith("who") ||
-                    query.startsWith("why") || query.startsWith("how")) {
-                    text = input.substring()
-                }*/
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
                 });
@@ -483,17 +470,36 @@ async function ai(api, event) {
                 if (finish.startsWith("?")) {
                     finish = finish.slice(1);
                 }
-                wait(sleep[Math.floor(Math.random() * sleep.length)])
-                api.sendMessage(finish, event.threadID, (err) => {
-                    if (err) return reportIssue(api, event.threadID, err)
-                }, messageID)
+                sendMessage(api, event, finish);
             }
         }
         if (event.senderID == myGirlAccountId) {
             return;
         }
 
-        if (query == "pinremove") {
+        if (query.startsWith("encode64")) {
+            if (query.split(" ").length < 2) {
+                ssendMessage(api, event, "Opps! I didnt get it. You should try using encode64 query instead.\nFor example:\nencode64 fundamentals in engineering")
+            } else {
+                var text = input;
+                text = text.substring(9)
+                let data = text;
+                let buff = Buffer.from(data);
+                let base64data = buff.toString('base64');
+                sendMessage(api, event, base64data);
+            }
+        } else if (query.startsWith("decode64")) {
+            if (query.split(" ").length < 2) {
+                ssendMessage(api, event, "Opps! I didnt get it. You should try using decode64 query instead.\nFor example:\nedecode64 fundamentals in engineering")
+            } else {
+                var text = input;
+                text = text.substring(9)
+                let data = text;
+                let buff = Buffer.from(data, 'base64');
+                let base642text = buff.toString('ascii');
+                sendMessage(api, event, base642text);
+            }
+        } else if (query == "pinremove") {
            let pinned = JSON.parse(fs.readFileSync("files/pinned.json", "utf8"));
             pinned.pin.message[event.threadID] = undefined
             pinned.pin.sender[event.threadID] = undefined
@@ -534,14 +540,8 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query.startsWith("dict")) {
-            var {
-                mentions,
-                senderID,
-                threadID,
-                messageID
-            } = event;
             if (input.split(" ").length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using urbandictionary query instead.\nFor example:\nurbandictionary computer", threadID, messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using urbandictionary query instead.\nFor example:\nurbandictionary computer");
             } else {
                 var text = input.substring(17)
                 if (query.startsWith("dictionary")) {
@@ -568,22 +568,15 @@ async function ai(api, event) {
                     var sample = data.list[0].example;
                     var timestamp = data.list[0].written_on;
                     var source = data.list[0].permalink;
-                    wait(sleep[Math.floor(Math.random() * sleep.length)])
-                    api.sendMessage(def + "\n\nExample: \n" + sample, threadID, messageID)
+                    sendMessage(api, event, def + "\n\nExample: \n" + sample);
                 }).catch(function(error) {
                     reportIssue(api, event.threadID, error);
-                    api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
+                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
             }
         } else if (query.startsWith("summarize") || query.startsWith("summ")) {
-            var {
-                mentions,
-                senderID,
-                threadID,
-                messageID
-            } = event;
             if (input.split(" ").length < 2) {
-                api.sendMessage("Opps! I didnt get it. You should try using summarize message instead.\n\nFor example:\nsummarize this sentence meant to be summarized.", threadID, messageID)
+                sendMessage(api, event, "Opps! I didnt get it. You should try using summarize message instead.\n\nFor example:\nsummarize this sentence meant to be summarized.");
             } else {
                 var text = input.substring(5);
                 if (query.startsWith("summarize")) {
@@ -593,11 +586,10 @@ async function ai(api, event) {
                 client.summarization(text).then(function({
                     data
                 }) {
-                    wait(sleep[Math.floor(Math.random() * sleep.length)])
-                    api.sendMessage(data.summary_text, threadID, messageID)
+                    sendMessage(api, event, data.summary_text);
                 }).catch(function(err) {
                     reportIssue(api, event.threadID, err.response.data.detail);
-                    api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
+                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
             }
         } 
