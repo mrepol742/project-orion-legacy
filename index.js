@@ -466,11 +466,11 @@ async function ai(api, event) {
                     data
                 } = await openai.createCompletion("text-davinci-002", {
                     prompt: text,
-                    temperature: 0.5,
-                    max_tokens: 3000,
-                    top_p: 0.3,
-                    frequency_penalty: 0.5,
-                    presence_penalty: 0.0,
+                    temperature: 0.9,
+                    max_tokens: 4000,
+                    top_p: 1,
+                    frequency_penalty: 1,
+                    presence_penalty: 0.4,
                 });
                 let finish = data.choices[0].text;
                 if (finish.startsWith("?")) {
