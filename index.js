@@ -882,10 +882,10 @@ async function ai(api, event) {
                     reportIssue(api, event.threadID, error);
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 });
-        } else if (query.startsWith("motivation") || query.startsWith("inspiration") || query.startsWith("determination") ||  query.startsWith("motivate")) {
-            qt("motivation").then((response) => {
+        } else if (query == "advice" || query.startsWith("motivation") || query.startsWith("inspiration") || query.startsWith("determination") ||  query.startsWith("motivate")) {
+            getResponseData("https://zenquotes.io/api/random").then((response) => {
                 if (response == null) {
-                    reportIssue(api, revent.threadID, esponse);
+                    reportIssue(api, revent.threadID, response);
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
@@ -895,19 +895,33 @@ async function ai(api, event) {
                     sendMessage(api, event, result);
                 }
             });
-        } else if (query == "advice") {
-            qt("advice").then((response) => {
+        } else if (query == "verseran") {
+            getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
                 if (response == null) {
-                    reportIssue(api, revent.threadID, esponse);
+                    reportIssue(api, revent.threadID, response);
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].q} \n\n- ${response[i].a}\n\n`
+                        result = `${response[i].bookname}\n${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
                     }
                     sendMessage(api, event, result);
                 }
             });
+        } else if (query == "verseday") {
+            getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    let result;
+                    for (let i = 0; i < response.length; i++) {
+                        result = `${response[i].bookname}\n${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
+                    }
+                    sendMessage(api, event, result);
+                }
+            });
+        }
         } else if (query == "refresh" || query == "reload") {
             if (vips.includes(event.senderID)) {
             let A = api.getAppState();
@@ -991,11 +1005,32 @@ async function weathersearch(location) {
     return result
 }
 
-async function qt() {
-    let qoute = await axios.get("https://zenquotes.io/api/random").then((response) => {
+async function getResponseData(url) {
+    let data = await axios.get(url).then((response) => {
         return response.data
     }).catch((err) => {
+        console.log(err)
         return null
     });
-    return qoute
+    return data
+}
+
+async function verse() {
+    let v = await axios.get("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
+        return response.data
+    }).catch((err) => {
+        console.error("Error [Verse of the day]: " + e)
+        return null
+    })
+    return v
+}
+
+async function votd() {
+    let v = await axios.get("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
+        return response.data
+    }).catch((err) => {
+        console.error("Error [Verse of the day]: " + e)
+        return null
+    })
+    return v
 }
