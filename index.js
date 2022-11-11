@@ -58,6 +58,9 @@ let help = "Hello World\n\n";
             help += "nickname [username] [nickname] - change the user nickname\n";
             help += "landscape         - show landscape photos\n";
             help += "portrait          - show portrait photos\n";
+            help += "problem  [query]  - solve math problem\n";
+            help += "encode64 [query]  - encode message to base64\n";
+            help += "decode64 [query]  - decode message to base64\n";
             help += "pin add           - reply to a message to add as pin\n";
             help += "pin remove        - remove a pin\n";
             help += "pin               - show the pinned message\n";
@@ -84,26 +87,27 @@ let apiKey = [
     "5ab3c279e089139f63017eea409573731d5e8ce9"
 ];
 
+cron.schedule('*/30 * * * *', () => {
+    var hours = date("Asia/Manila").getHours()
+    var mins = date("Asia/Manila").getMinutes()
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    mins = mins < 10 ? '0' + mins : mins;
+    reportIssue(api, event.threadID, "Time Check " + hours + ":" + mins + " " + ampm)
+    api.sendMessage("Time Check " + hours + ":" + mins + " " + ampm, myAccountId);
+});
+cron.schedule('0 * * * *', () => {
+    let A = api.getAppState();
+    let B = JSON.stringify(A);
+    fs.writeFileSync("fb.json", B, "utf8");
+    api.sendMessage("AppState refresh...", myAccountId)
+});
+
 login({
     appState: JSON.parse(fs.readFileSync('fb.json', 'utf8'))
 }, (err, api) => {
     if (err) return reportIssue(api, event.threadID, err);
-    cron.schedule('*/30 * * * *', () => {
-        var hours = date("Asia/Manila").getHours()
-        var mins = date("Asia/Manila").getMinutes()
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        mins = mins < 10 ? '0' + mins : mins;
-        reportIssue(api, event.threadID, "Time Check " + hours + ":" + mins + " " + ampm)
-        api.sendMessage("Time Check " + hours + ":" + mins + " " + ampm, myAccountId);
-    });
-    cron.schedule('0 * * * *', () => {
-        let A = api.getAppState();
-        let B = JSON.stringify(A);
-        fs.writeFileSync("fb.json", B, "utf8");
-        api.sendMessage("AppState refresh...", myAccountId)
-    });
 
     api.setOptions({
         listenEvents: true,
@@ -477,9 +481,23 @@ async function ai(api, event) {
             return;
         }
 
-        if (query.startsWith("encode64")) {
+        if (query.startsWith("problem")) {
             if (query.split(" ").length < 2) {
-                ssendMessage(api, event, "Opps! I didnt get it. You should try using encode64 query instead.\nFor example:\nencode64 fundamentals in engineering")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
+            } else {
+                var text = input;
+                text = text.substring(8)
+                if (text.includes("√")) {
+                    const res = await sqrt(text.replace(/√/gi, ""));
+                    sendMessage(api, event, res);
+                } else {
+                    const res = await evaluate(text);
+                    sendMessage(api, event, res);
+                }
+            }
+        } else if (query.startsWith("encode64")) {
+            if (query.split(" ").length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 query instead.\nFor example:\nencode64 fundamentals in engineering")
             } else {
                 var text = input;
                 text = text.substring(9)
@@ -490,7 +508,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("decode64")) {
             if (query.split(" ").length < 2) {
-                ssendMessage(api, event, "Opps! I didnt get it. You should try using decode64 query instead.\nFor example:\nedecode64 fundamentals in engineering")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 query instead.\nFor example:\nedecode64 fundamentals in engineering")
             } else {
                 var text = input;
                 text = text.substring(9)
