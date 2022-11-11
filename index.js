@@ -16,6 +16,9 @@ const {
 const cron = require('node-cron');
 const axios = require("axios");
 const weatherjs = require("weather-js")
+const FormData = require('form-data');
+const path = require('path');
+const Innertube = require('youtubei.js');
 
 let msgs = {};
 let cd = {};
@@ -23,7 +26,8 @@ let vips = [
     "100071743848974",
     "100016029218667",
     "100077318906152",
-    "100037131918629"
+    "100037131918629",
+    "100008664752303"
 ];
 let sleep = [5500, 7000, 7500, 4000, 4500, 5000, 6000, 5800, 6600, 4300, 7200, 7800, 5800, 6100, 4500, 9000, 9900, 6300, 57000]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
@@ -67,13 +71,16 @@ let help = "Hello World\n\n";
             help += "verse today       - today's verse\n";
             help += "verse random      - random verse\n";
             help += "animequote        - show anime qoutes\n";
+            help += "bgremove          - reply to an image to remove its background\n";
             help += "motivation        - gaves motivation messages\n";
             help += "advice            - show advice messages\n";
-            help += "remove            - unsent my messages\n";
-            help += "phub              - show p*rnhub meme generator\n";
+            help += "remove            - reply to my messages to unsent it\n";
+            help += "phub              - reply to a message to show the person name in phub meme\n";
             help += "qrcode [query]    - show generated qrcode from your query\n";
-            help += "uid               - show person user id\n";
-            help += "guid              - show the group id\n";
+            help += "music [query]     - find and play music\n";
+            help += "video [query]     - find and play video\n";
+            help += "uid               - reply to a message to show the person uid or message to show your own id\n";
+            help += "guid              - send a message to a group to show its guid\n";
             help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have any questions dont hesitate to ask me.";
 
 let apiKey = [
@@ -222,12 +229,60 @@ login({
                     })
                 } else if (query == "pinadd") {
                     if (event.messageReply.body == "") { 
-                        api.sendMessage("No text Detected, Please Try Again.", event.threadID);
+                        sendMessage(api, event, "You need to reply pinadd to a message which is not empty to pin it.");
                     } else {
                         pinned.pin.message[event.threadID] = event.messageReply.body
                         pinned.pin.sender[event.threadID] = event.messageReply.senderID
                         sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
                         fs.writeFileSync("files/pinned.json", JSON.stringify(pinned), "utf8")
+                    }
+                }
+
+                if (query == "bgremove") {
+                    const {
+                        threadID,
+                        messageID,
+                        type,
+                        messageReply
+                    } = event;
+                    if (type != "message_reply") return
+                    if (messageReply.attachments.length < 1) {
+                        sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
+                    } else if (messageReply.attachments.length > 1) {
+                        sendMessage(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
+                    } else if ((messageReply.attachments.length === 1) && (messageReply.attachments[0].type == 'photo')) {
+                        const url = messageReply.attachments[0].url;
+                        request(url).pipe(fs.createWriteStream(__dirname + '/attachments/removebg.png')).on('finish', () => {
+                            const inputPath = './attachments/removebg.png';
+                            const formData = new FormData();
+                            formData.append('size', 'auto');
+                            formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
+
+                            axios({
+                                    method: 'post',
+                                    url: 'https://api.remove.bg/v1.0/removebg',
+                                    data: formData,
+                                    responseType: 'arraybuffer',
+                                    headers: {
+                                        ...formData.getHeaders(),
+                                        'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
+                                    },
+                                    encoding: null
+                                })
+                                .then((res) => {
+                                    if (res.status != 200) return
+                                    console.error('Error:', res.status, res.statusText);
+                                    fs.writeFileSync("./attachments/removebg.png", res.data);
+                                    var message = {
+                                        attachment: fs.createReadStream(__dirname + "/attachments/removebg.png")
+                                    }
+                                    sendMessage(api, event, message);
+                                })
+                                .catch((error) => {
+                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                                    return reportIssue(api, event.threadID, error);
+                                });
+                        })
                     }
                 }
                 break;
@@ -247,7 +302,7 @@ login({
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
-                                                    body: data[event.senderID]['name'] + " unsent this photo: \n",
+                                                    body: data[event.senderID]['name'] + " deleted this photo. \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/photo.jpg')
                                                 }
                                                 wait(sleep[Math.floor(Math.random() * sleep.length)])
@@ -262,7 +317,7 @@ login({
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
-                                                    body: data[event.senderID]['name'] + " unsent this GIF: \n",
+                                                    body: data[event.senderID]['name'] + " deleted this GIF. \n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/animated_image.gif')
                                                 }
                                                 wait(sleep[Math.floor(Math.random() * sleep.length)])
@@ -277,7 +332,7 @@ login({
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
-                                                    body: data[event.senderID]['name'] + " unsent this Sticker: \n",
+                                                    body: data[event.senderID]['name'] + " deleted this sticker.\n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/sticker.png')
                                                 }
                                                 wait(sleep[Math.floor(Math.random() * sleep.length)])
@@ -292,7 +347,7 @@ login({
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
-                                                    body: data[event.senderID]['name'] + " unsent this video: \n",
+                                                    body: data[event.senderID]['name'] + " deleted this video.\n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/video.mp4')
                                                 }
                                                 wait(sleep[Math.floor(Math.random() * sleep.length)])
@@ -307,7 +362,7 @@ login({
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                                 var message = {
-                                                    body: data[event.senderID]['name'] + " unsent this audio: \n",
+                                                    body: data[event.senderID]['name'] + " deleted this audio.\n",
                                                     attachment: fs.createReadStream(__dirname + '/attachments/vm.mp3')
                                                 }
                                                 wait(sleep[Math.floor(Math.random() * sleep.length)])
@@ -324,7 +379,7 @@ login({
                             else {
                                 if (settings.onUnsend && !threads.includes(event.threadID)) {
                                     wait(sleep[Math.floor(Math.random() * sleep.length)])
-                                    api.sendMessage(data[event.senderID]['name'] + " unsent this message: \n\n" + msgs[event.messageID], event.threadID);
+                                    api.sendMessage(data[event.senderID]['name'] + " deleted this message.\n\n" + msgs[event.messageID], event.threadID);
                                 }
                             }
                         });
@@ -336,7 +391,9 @@ login({
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (gc.isGroup) {
-                                api.sendMessage(`Welcome to "${gc.threadName}" ${event.logMessageData.addedParticipants[0].fullName}.`, event.threadID);
+                                var arr = gc.participantIDs;
+                                var Tmem = arr.length;
+                                api.sendMessage(`Welcome to ${gc.threadName} ${event.logMessageData.addedParticipants[0].fullName} you are the ` + Tmem + "th member.", event.threadID);
                             }
                         })
                         break;
@@ -353,7 +410,7 @@ login({
                                     for (var prop in data) {
                                         if (data.hasOwnProperty(prop) && data[prop].name) {
                                             var gcn = gc.threadName;
-                                            api.sendMessage("byebye, " + data[prop].name + "..", event.threadID)
+                                            api.sendMessage("Thank you for everything " + data[prop].name + " and now your leaving goodbye.", event.threadID)
                                         }
                                     }
                                 }
@@ -435,21 +492,19 @@ async function ai(api, event) {
             sendMessage(api, event, creatorAge[Math.floor(Math.random() * creatorAge.length)]);
         } else if (query.startsWith("what?") || query.startsWith("when?") || query.startsWith("who?") || query.startsWith("where?") || query.startsWith("why?") || query.startsWith("how?") || query.startsWith("which?")) {
             sendMessage(api, event, query);
-        } else if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") || query.endsWith("?") ||
+        } else if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") ||
         ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
         query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
             if (input.split(" ").length < 2) {
-                if (event.senderID == myGirlAccountId && query.endsWith("?")) {
+                if (event.senderID == myGirlAccountId) {
                     return;
                 }
                 if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742")) {
                    sendMessage(api, event, "Hello the system status is online and waiting for your reply.\nFor available commands enter help, this project does not disclose any personal data. \nIn aims of breaking apart the line between human and computer.");
-                } else if (query == "?") {
-                    sendMessage(api, event, "I dont know what do you mean by that....");
                 } 
             } else {
                 var text = input;
-                if (event.senderID == myGirlAccountId && query.endsWith("?")) {
+                if (event.senderID == myGirlAccountId) {
                     return;
                 } else if (query.startsWith("repol")) {
                     text = input.substring(6)
@@ -483,6 +538,7 @@ async function ai(api, event) {
             return;
         }
 
+        /*
         if (query.startsWith("problem")) {
             if (query2.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
@@ -497,7 +553,124 @@ async function ai(api, event) {
                     sendMessage(api, event, res);
                 }
             }
-        } else if (query.startsWith("encode64")) {
+        } */
+        if (query.startsWith("video")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using video query instead.\nFor example:\nvideo In The End by Linkin Park")
+            } else {
+                data.shift()
+                const youtube = await new Innertube();
+                const search = await youtube.search(data.join(" "));
+                if (search.videos[0] === undefined) {
+                    sendMessage(api, event, "Invalid request bro..");
+                } else {
+                    sendMessage(api, event, "I'm finding your video titled \"" + data.join(" ") + "\" please wait...");
+                    var timeleft = 3;
+                    var downloadTimer = setInterval(function() {
+                        if (timeleft <= 0) {
+                            clearInterval(downloadTimer);
+                            // api.sendMessage("A video has found!\n\nStarting to Download", event.threadID, event.messageID);
+                        }
+                        timeleft -= 1;
+                    }, 1000);
+                    const stream = youtube.download(search.videos[0].id, {
+                        format: 'mp4',
+                        quality: '480p',
+                        type: 'videoandaudio',
+                        bitrate: '2500',
+                        audioQuality: 'highest',
+                        loudnessDB: '20',
+                        audioBitrate: '550',
+                        fps: '30'
+                    });
+                    stream.pipe(fs.createWriteStream(__dirname + '/attachments/video.mp4'));
+
+                    stream.on('start', () => {
+                        console.info('[DOWNLOADER]', 'Starting download now!');
+                    });
+                    stream.on('info', (info) => {
+                        sendMessage(api, event, `Found ${info.video_details.title}.\n\nWhile uploading please dont request new one The Project Orion cannot handle everything at once and may slow down further the request.`);
+                        console.info('[DOWNLOADER]', `Downloading ${info.video_details.title} by ${info.video_details.metadata.channel_name}`);
+                    });
+                    stream.on('end', () => {
+                        var limit = 50 * 1024 * 1024; // 50MB in bytes
+                        fs.readFile(__dirname + '/attachments/video.mp4', function(err, data) {
+                            if (err) console.log(err)
+                            if (data.length > limit) {
+                                sendMessage(api, event, "I cannot send the file because its file size is beyond 50mb.");
+                            } else {
+                                console.info('[DOWNLOADER]', 'Done!')
+                                var message = {
+                                    body:  search.videos[0].title,
+                                    attachment: [fs.createReadStream(__dirname + '/attachments/video.mp4')]
+                                }
+                                api.sendMessage(message, event.threadID, event.messageID).catch((err) => api.sendMessage(api, event, "An unknown error occured. Please try again later."));
+                            }
+                        })
+                    });
+                    stream.on('error', (err) => console.error('[ERROR]', err));
+                }
+            }
+        }
+        if (query.startsWith("music")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using music query instead.\nFor example:\nmusic In The End by Linkin Park")
+            } else {
+                data.shift()
+                const youtube = await new Innertube();
+                const search = await youtube.search(data.join(" "));
+                if (search.videos[0] === undefined) {
+                    sendMessage(api, event, "Invalid request bro..");
+                } else {
+                    sendMessage(api, event, "I'm finding your music titled \"" + data.join(" ") + "\" please wait...");
+                    var timeleft = 3;
+                    var downloadTimer = setInterval(function() {
+                        if (timeleft <= 0) {
+                            clearInterval(downloadTimer);
+                        }
+                        timeleft -= 1;
+                    }, 1000);
+                    const stream = youtube.download(search.videos[0].id, {
+                        format: 'mp3',
+                        bitrate: '2500',
+                        audioQuality: 'highest',
+                        loudnessDB: '20',
+                        audioBitrate: '550'
+                    });
+
+                    stream.pipe(fs.createWriteStream(__dirname + '/attachments/music.mp3'));
+
+                    stream.on('start', () => {
+                        console.info('[DOWNLOADER]', 'Starting download now!');
+                    });
+                    stream.on('info', (info) => {
+                        sendMessage(api, event, `Found ${info.video_details.title}.\n\nWhile uploading please dont request new one The Project Orion cannot handle everything at once and may slow down further the request.`);
+                        console.info('[DOWNLOADER]', `Downloading ${info.video_details.title} by ${info.video_details.metadata.channel_name}`);
+                    });
+                    stream.on('end', () => {
+                        var limit = 50 * 1024 * 1024; // 50MB in bytes
+                        fs.readFile(__dirname + '/attachments/music.mp3', function(err, data) {
+                            if (err) console.log(err)
+                            if (data.length > limit) {
+                                sendMessage(api, event, "I cannot send the file because its file size is beyond 50mb.");
+                            } else {
+                                console.info('[DOWNLOADER]', 'Done!')
+                                var message = {
+                                    body: search.videos[0].title,
+                                    attachment: [fs.createReadStream(__dirname + '/attachments/music.mp3')]
+                                }
+                                api.sendMessage(message, event.threadID, event.messageID).catch((err) => api.sendMessage(api, event, "An unknown error occured. Please try again later."));
+                            }
+                        })
+                    });
+                    stream.on('error', (err) => console.error('[ERROR]', err));
+                }
+            }
+        }
+
+        if (query.startsWith("encode64")) {
             if (query2.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 query instead.\nFor example:\nencode64 fundamentals in engineering")
             } else {
@@ -556,7 +729,7 @@ async function ai(api, event) {
                     sendMessage(api, event, `${res2.ebookName}\n\n` + `${res2.dlUrl}`)
                 } catch (err) {
                     reportIssue(api, event.threadID, err);
-                    api.sendMessage("An unknown error as been occured. Please try again later.", threadID, messageID)
+                    sendMessage(api, event, "An unknown error as been occured. Please try again later.")
                 }
             }
         } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query.startsWith("dict")) {
@@ -625,6 +798,7 @@ async function ai(api, event) {
             return await google.search(`google ${searched}`, options);
         };
 
+        /*
         if (query.startsWith("google") || query2.startsWith("search ") || query2.startsWith("find ")) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -645,7 +819,8 @@ async function ai(api, event) {
                     sendMessage(api, event, `${err.message}`);
                 }
             }
-        } else if (query.startsWith("baybayin")) {
+            */
+        if (query.startsWith("baybayin")) {
             let data = input.split(" ")
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using baybaying query instead.\n\nFor example:\nbaybayin ako ay filipino")
@@ -748,12 +923,6 @@ async function ai(api, event) {
                     if (err) return reportIssue(api, event.threadID, err);
                 });
             }
-        } else if (query == "uid") {
-            if (event.type == "message") {
-                sendMessage(api, event, "Your uid is " + event.senderID);
-            } else if (event.type == "message_reply") {
-                sendMessage(api, event, "His/her uid is " + event.messageReply.senderID);
-            }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
         } else if (query == "hi") {
@@ -794,17 +963,13 @@ async function ai(api, event) {
             sendMessage(api, event, "Good afternoon too...");
         } else if (query == "tsk") {
             reactMessage(api, event, ":like:");
-        } else if (query == "yes") {
-            sendMessage(api, event, "No");
-        } else if (query == "okay") {
+        } else if (query == "okay" && event == "message_reply") {
             sendMessage(api, event, "Yup");
         } else if (query.includes("jabol")) {
             sendMessage(api, event, "Shhhhhhh watch your mouth.");
-        } else if (query == "no") {
-            sendMessage(api, event, "Yes");
-        } else if (query == "idk") {
+        } else if (query == "idk"  && event == "message_reply") {
             sendMessage(api, event, "i dont know too...");
-        } else if (query == "nice" || query == "uwu") {
+        } else if ((query == "nice" || query == "uwu") && event == "message_reply") {
             reactMessage(api, event, ":heart:");
         } else if (query.includes("nude")) {
             asendMessage(api, event, "Dont!...");
@@ -824,11 +989,22 @@ async function ai(api, event) {
             } else {
                 sendMessage(api, event, "Hehe... noo you cannot turn it off...");
             }
-        } else if (query == "groupid" || query == "guid") {
-            api.getThreadInfo(event.threadID, (err) => {
+        } else if (query == "groupid" || query == "guid" || query == "uid") {
+            api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return cosole.log(err);
                 else {
-                    sendMessage(api, event, "The group id is " + event.threadID);
+                    if (event.type == "message_reply") {
+                        api.getUserInfo(event.messageReply.senderID, (err, info) => {
+                            if (err) return reportIssue(api, event.threadID, err);
+    
+                            let name = info[event.messageReply.senderID]['name'];
+                            sendMessage(api, event, name + " uid is " + event.messageReply.senderID);
+                        });
+                    } else if (gc.isGroup) {
+                        sendMessage(api, event, `The ${gc.threadName} guid is ` + event.threadID);
+                    } else if (event.type == "message") {
+                        sendMessage(api, event, "Your uid is " + event.senderID);
+                    } 
                 }
             });
         } else if (query == "help") {
@@ -858,7 +1034,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("nickname")) {
             var text = input;
-            text = text.substring(26)
+            text = text.substring(9)
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using nickname mentioned nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
@@ -866,7 +1042,7 @@ async function ai(api, event) {
                 api.getThreadInfo(event.threadID, (err, info) => {
                     var mentionid = `${Object.keys(event.mentions)[0]}`;
 
-                    api.changeNickname(text, `${info.threadID}`, mentionid, (err) => {
+                    api.changeNickname(text.substring(mentionid.length), `${info.threadID}`, mentionid, (err) => {
                         if (err) return asendMessage(api, event, "Unfortunately there was an error occured while changing \"" + text + "\" nickname.");
                     });
                 });
@@ -1015,3 +1191,27 @@ async function getResponseData(url) {
     });
     return data
 }
+
+const searchOptions = {
+    page: 0, 
+    safe: false,
+    additional_params: {
+      hl: 'en' 
+    }
+}
+    
+  
+async function search(api, event, query) {
+    let msg = '';  
+      try{
+        const response = await google.search(query, searchOptions);
+        response.results.map((el,i)=>{
+          let title = el.title;
+          let description = el.description;
+          msg += `${description}\n\n`
+        }) 
+        sendMessage(api, event, msg);
+      }catch(err){
+        sendMessage(api, event, "error searching for" + query);
+      }
+  }
