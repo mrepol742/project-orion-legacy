@@ -1,5 +1,7 @@
 /node_modules
-attachments/*
-!attachments/.gitkeep
-imgs/*
-!imgs/.gitkeep
+cache/audios/*
+!cache/audios/.gitkeep
+cache/images/*
+!cache/images/.gitkeep
+cache/videos/*
+!cache/videos/.gitkeep
