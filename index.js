@@ -57,21 +57,27 @@ let help = "Hello World\n\n";
             help += "baybayin [query]  - translate to baybayin\n";
             help += "weather [country] [state] [city] - show current weather status\n";
             help += "facts [query]     - facts meme generator\n";
+            help += "lulcat [query]    - translate your text into funny Lul Cat Language\n";
+            help += "mock [query]      - manipulate text in a sarcastic tone!\n";
             help += "fact              - random facts\n";
+            help += "thoughts          - random shower thoughts\n";
             help += "ig [username]     - get user instagram info\n";
             help += "github [username] - get user github info\n";
             help += "changeemo [emoji] - change group chat emoji\n";
             help += "wiki [query]      - search poeple or info from wikipedia\n";
             help += "info [username]   - get user facebook basic info\n";
             help += "nickname [username] [nickname] - change the user nickname\n";
-            help += "landscape         - show landscape photos\n";
-            help += "portrait          - show portrait photos\n";
+            help += "landscape         - show random landscape photos\n";
+            help += "landscape [query  - show landscape photos based on query\n";
+            help += "portrait          - show random portrait photos\n";
+            help += "portrait [query]  - show portrait photos based on query\n";
             help += "problem  [query]  - solve math problem\n";
             help += "encode64 [query]  - encode message to base64\n";
             help += "decode64 [query]  - decode message to base64\n";
             help += "pin add           - reply to a message to add as pin\n";
             help += "pin remove        - remove a pin\n";
             help += "pin               - show the pinned message\n";
+            help += "car               - show random cars\n";
             help += "verse today       - today's verse\n";
             help += "verse random      - random verse\n";
             help += "animequote        - show anime qoutes\n";
@@ -80,13 +86,24 @@ let help = "Hello World\n\n";
             help += "advice            - show advice messages\n";
             help += "drake query1:query2  - generate drake meme based on 2 queries\n";
             help += "pooh query1:query2   - generate pooh meme based on 2 queries\n";
+            help += "oogway [query]    - generate oogway meme\n";
+            help += "caution [query]   - generate caution meme\n";
+            help += "alert [query]     - generate alert notification meme\n";
+            help += "sadcat [query]    - generate sadcat meme\n";
+            help += "biden [query]     - generate biden meme\n";
+            help += "pikachu [query]   - generate pikachu meme\n";
+            help += "god [query]       - generate god notification meme\n";
+            help += "website [url]     - screenshot website\n";
             help += "remove            - reply to my messages to unsent it\n";
+            help += "color             - generate random colors\n";
+            help += "meme              - generate random memes\n";
             help += "phub              - reply to a message to show the person name in phub meme\n";
             help += "qrcode [query]    - show generated qrcode from your query\n";
             help += "music [query]     - find and play music\n";
             help += "video [query]     - find and play video\n";
             help += "morse [query]     - text to morse code\n";
             help += "joke              - tell random jokes\n";
+            help += "pickup            - tell pickup lines\n";
             help += "uid               - reply to a message to show the person uid or message to show your own id\n";
             help += "guid              - send a message to a group to show its guid\n";
             help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have any questions dont hesitate to ask me.";
@@ -406,8 +423,9 @@ login({
                             if (gc.isGroup) {
                                 var arr = gc.participantIDs;
                                 var Tmem = arr.length;
-                                api.sendMessage(`Welcome to ${gc.threadName} ${event.logMessageData.addedParticipants[0].fullName} you are the ` + Tmem + "th member.", event.threadID);
-                            }
+                                var url = `https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=Member+` + Tmem + `&avatar=https://cdn.discordapp.com/embed/avatars/3.png`;
+                                parseImage(api, event, url, __dirname + '/cache/images/welcome.jpg');
+                              }
                         })
                         break;
 
@@ -423,7 +441,10 @@ login({
                                     for (var prop in data) {
                                         if (data.hasOwnProperty(prop) && data[prop].name) {
                                             var gcn = gc.threadName;
-                                            api.sendMessage("Thank you for everything " + data[prop].name + " and now your leaving goodbye.", event.threadID)
+                                            var arr = gc.participantIDs;
+                                            var Tmem = arr.length;
+                                            var url = "https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Member+" + Tmem + "&avatar=https://cdn.discordapp.com/embed/avatars/3.png";
+                                            parseImage(api, event, url, __dirname + '/cache/images/byebye.jpg');
                                         }
                                     }
                                 }
@@ -535,7 +556,7 @@ async function ai(api, event) {
                 } = await openai.createCompletion("text-davinci-002", {
                     prompt: text,
                     temperature: 0.9,
-                    max_tokens: 4000,
+                    max_tokens: 2000,
                     top_p: 1,
                     frequency_penalty: 1,
                     presence_penalty: 0.4,
@@ -992,6 +1013,56 @@ async function ai(api, event) {
                             sendMessage(api, event, "Unfortunately user \"" + userN + "\" was not found.");
                         })
                 }
+        } else if (query == "car") {
+            axios.get("https://api.popcat.xyz/car")
+            .then(response => {
+                var image = response.data.image;
+                var title = response.data.title;
+
+                request(image).pipe(fs.createWriteStream(__dirname + '/cache/images/car.png'))
+
+                    .on('finish', () => {
+                        var message = {
+                            body: title,
+                            attachment: fs.createReadStream(__dirname + '/cache/images/car.png')
+                        };
+                        sendMessage(api, event, message);
+                    })
+            })
+            .catch(error => {
+                reportIssue(api, event.threadID, error);
+                sendMessage(api, event, "Unfortunately car run away.");
+            })
+        } else if (query == "color") {
+            axios.get("https://api.popcat.xyz/randomcolor")
+            .then(response => {
+                var hex = response.data.hex;
+                var name = response.data.name;
+                var url = response.data.image;
+
+                request(url).pipe(fs.createWriteStream(__dirname + '/cache/images/color.png'))
+
+                    .on('finish', () => {
+                        var message = {
+                            body: "#" + hex + " " + name,
+                            attachment: fs.createReadStream(__dirname + '/cache/images/color.png')
+                        };
+                        sendMessage(api, event, message);
+                    })
+            })
+            .catch(error => {
+                reportIssue(api, event.threadID, error);
+                sendMessage(api, event, "Unfortunately color fades away.");
+            })
+        } else if (query == "pickup") {
+            axios.get("https://api.popcat.xyz/pickuplines")
+                    .then(response => {
+                        sendMessage(api, event, response.data.pickupline);
+                    })
+                    .catch(error => {
+                        reportIssue(api, event.threadID, error);
+                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                    })
         } else if (query.startsWith("changeemo")) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -1066,7 +1137,7 @@ async function ai(api, event) {
             text = text.substring(6)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using morse query instead.\nFor example:\nnmorse query");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using morse query instead.\nFor example:\nmorse query");
             } else {
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + text).then((response) => {
                 if (response == null) {
@@ -1074,6 +1145,38 @@ async function ai(api, event) {
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
                     sendMessage(api, event, `${response.morse}`);
+                }
+            });
+            }
+        } else if (query.startsWith("lulcat")) {
+            var text = input;
+            text = text.substring(7)
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat query instead.\nFor example:\nlulcat query");
+            } else {
+            getResponseData("https://api.popcat.xyz/lulcat?text=" + text).then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    sendMessage(api, event, `${response.text}`);
+                }
+            });
+            }
+        } else if (query.startsWith("mock")) {
+            var text = input;
+            text = text.substring(5)
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using mock query instead.\nFor example:\nmock query");
+            } else {
+            getResponseData("https://api.popcat.xyz/mock?text=" + text).then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    sendMessage(api, event, `${response.text}`);
                 }
             });
             }
@@ -1093,6 +1196,15 @@ async function ai(api, event) {
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
                     sendMessage(api, event, `${response.fact}`);
+                }
+            });
+        } else if (query == "thoughts") {
+            getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    sendMessage(api, event, `${response.result}`);
                 }
             });
         } else if (query.startsWith("nickname")) {
@@ -1119,6 +1231,91 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/drake.png');
             }
+        } else if (query.startsWith("pika")) {
+            var text = input;
+            text = text.substring(5);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using pika query instead.\nFor example:\npika hahah");
+            } else {
+                parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" +text, __dirname + '/cache/images/pika.png');
+            }
+        } else if (query == "meme") {
+            getResponseData("https://api.popcat.xyz/meme").then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    parseImage(api, event, `${response.image}`, __dirname + '/cache/images/meme.png');
+                }
+            });
+        } else if (query.startsWith("oogway")) {
+            var text = input;
+            text = text.substring(7);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using oogway query instead.\nFor example:\noogway hahah");
+            } else {
+                parseImage(api, event, "https://api.popcat.xyz/oogway?text=" +text, __dirname + '/cache/images/oogway.png');
+            }
+        } else if (query.startsWith("alert")) {
+            var text = input;
+            text = text.substring(6);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using alert query instead.\nFor example:\nalert hahah");
+            } else {
+                parseImage(api, event, "https://api.popcat.xyz/alert?text=" +text, __dirname + '/cache/images/alert.png');
+            }
+        } else if (query.startsWith("caution")) {
+            var text = input;
+            text = text.substring(8);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using caution query instead.\nFor example:\ncaution hahah");
+            } else {
+                parseImage(api, event, "https://api.popcat.xyz/caution?text=" +text, __dirname + '/cache/images/caution.png');
+            }
+        } else if (query.startsWith("biden")) {
+            var text = input;
+            text = text.substring(6);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using biden query instead.\nFor example:\nbiden hahah");
+            } else {
+                parseImage(api, event, "https://api.popcat.xyz/biden?text=" +text, __dirname + '/cache/images/biden.png');
+            }
+        } else if (query.startsWith("website")) {
+            var text = input;
+            text = text.substring(8);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using website url instead.\nFor example:\nwebsite https://mrepol742.github.io");
+            } else {
+                if (text.startsWith("https://") || text.startsWith("http://")) {
+                parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" +text, __dirname + '/cache/images/website.png');
+            } else {
+                sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
+            }
+            }
+        } else if (query.startsWith("god")) {
+            var text = input;
+            text = text.substring(4);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using god query instead.\nFor example:\ngod hahah");
+            } else {
+                parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" +text, __dirname + '/cache/images/god.png');
+            }
+        } else if (query.startsWith("sadcat")) {
+            var text = input;
+            text = text.substring(7);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat query instead.\nFor example:\nsadcat hahah");
+            } else {
+                parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" +text, __dirname + '/cache/images/sadcat.png');
+            }
         } else if (query.startsWith("pooh")) {
             var text = input;
             text = text.substring(5).split(":");
@@ -1129,8 +1326,26 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/pooh.png');
             }
         } else if (query.startsWith("landscape")) {
-            parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + '/cache/images/landscape.png');
+            var text = input;
+            text = text.substring(10);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using landscape query instead.\nFor example:\nlandscape query");
+            } else {
+                parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + '/cache/images/landscape.png');
+            }
         } else if (query.startsWith("portrait")) {
+            var text = input;
+            text = text.substring(9);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using portrait query instead.\nFor example:\nportrait query");
+            } else {
+                parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + '/cache/images/portrait.png');
+            }
+        } else if (query == "landscape") {
+            parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + '/cache/images/landscape.png');
+        } else if (query == "portrait") {
             parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + '/cache/images/portrait.png');
         } else if (query.startsWith("animequote")) {
             axios.get('https://animechan.vercel.app/api/random')
