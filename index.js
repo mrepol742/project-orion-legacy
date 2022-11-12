@@ -32,10 +32,6 @@ let vips = [
 let sleep = [5500, 7000, 7500, 4000, 4500, 5000, 6000, 5800, 6600, 4300, 7200, 7800, 5800, 6100, 4500, 9000, 9900, 6300, 57000]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
-let whom = ["I'm a long story... About 24h long.", "I'm not too sure", "I never really asked myself this question."];
-let creator = ["Melvin Jones Repol", "Mj", "mrepol742", "Melvin Jones Gallano Repol"];
-let creatorAge = ["I'm 20 years old.", "20 years young since June 13rd 2002", "Will turning 21 next year June 13rd.", "I'm 20y/o still thriving."];
-let canDo = ["I can do almost anything. Try asking me then....", "I can do anything you could imagine for.", "Well thats a good question, try me then.", "I dont know about that, try asking me first", "I'm not totally sure what i can do."];
 let threads = ""
 let threadIdMV = {};
 
@@ -106,6 +102,13 @@ let help = "Hello World\n\n";
             help += "pickup            - tell pickup lines\n";
             help += "uid               - reply to a message to show the person uid or message to show your own id\n";
             help += "guid              - send a message to a group to show its guid\n";
+            help += "unsend --on       - enable unsent\n";
+            help += "unsend --off      - disable unsent\n";
+            help += "unsend --all        - null\n";
+            help += "setMaxTokens      - null\n";
+            help += "setTemperatue     - null\n";
+            help += "setFrequencyPenalty - null\n";
+            help += "setProbabilityMass  - null\n";
             help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have any questions dont hesitate to ask me.";
 
 let apiKey = [
@@ -259,7 +262,7 @@ login({
                         pinned.pin.message[event.threadID] = event.messageReply.body
                         pinned.pin.sender[event.threadID] = event.messageReply.senderID
                         sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
-                        fs.writeFileSync("files/pinned.json", JSON.stringify(pinned), "utf8")
+                        fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
                     }
                 }
 
@@ -516,17 +519,7 @@ async function ai(api, event) {
         let input = event.body;
         let query = removeEmojis(input.replace(/\s+/g, '').toLowerCase());
         let query2 = removeEmojis(input.toLowerCase());
-        if (query2.includes("what can you do")) {
-            sendMessage(api, event, canDo[Math.floor(Math.random() * canDo.length)]);
-        } else if (query2.includes("who created you") || (query.includes("what") && query.includes("your") && query.includes("name"))) {
-            sendMessage(api, event, creator[Math.floor(Math.random() * creator.length)]);
-        } else if (query.includes("sourcecode") && query.includes("your")) {
-            sendMessage(api, event, "No. Peroid.");
-        } else if (query.includes("how") && (query.includes("old") || query.includes("young")) && query.includes("you")) {
-            sendMessage(api, event, creatorAge[Math.floor(Math.random() * creatorAge.length)]);
-        } else if (query.startsWith("what?") || query.startsWith("when?") || query.startsWith("who?") || query.startsWith("where?") || query.startsWith("why?") || query.startsWith("how?") || query.startsWith("which?")) {
-            sendMessage(api, event, query);
-        } else if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") ||
+        if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") ||
         ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
         query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
             if (input.split(" ").length < 2) {
@@ -556,7 +549,7 @@ async function ai(api, event) {
                 } = await openai.createCompletion("text-davinci-002", {
                     prompt: text,
                     temperature: 0.9,
-                    max_tokens: 2000,
+                    max_tokens: 300,
                     top_p: 1,
                     frequency_penalty: 1,
                     presence_penalty: 0.4,
@@ -742,13 +735,13 @@ async function ai(api, event) {
                 sendMessage(api, event, base642text);
             }
         } else if (query == "pinremove") {
-           let pinned = JSON.parse(fs.readFileSync("files/pinned.json", "utf8"));
+           let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
             pinned.pin.message[event.threadID] = undefined
             pinned.pin.sender[event.threadID] = undefined
             sendMessage(api, event, "Pinned message removed.");
-            fs.writeFileSync("files/pinned.json", JSON.stringify(pinned), "utf8")
+            fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
         } else if (query == "pin") {
-            let pinned = JSON.parse(fs.readFileSync("files/pinned.json", "utf8"));
+            let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
             if (pinned.pin.message[event.threadID] == undefined) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
                     if (gc.isGroup) {
@@ -781,7 +774,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.")
                 }
             }
-        } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query.startsWith("dict")) {
+        } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using urbandictionary query instead.\nFor example:\nurbandictionary computer");
             } else {
@@ -816,7 +809,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
             }
-        } else if (query.startsWith("summarize") || query.startsWith("summ")) {
+        } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using summarize message instead.\n\nFor example:\nsummarize this sentence meant to be summarized.");
             } else {
@@ -942,7 +935,7 @@ async function ai(api, event) {
                 var url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
                 parseImage(api, event, url, __dirname + '/cache/images/facts.png');
             }
-        } else if (query.startsWith("instagram") || query.startsWith("insta") || query.startsWith("ig")) {
+        } else if (query.startsWith("instagram") || query2.startsWith("insta ") || query2.startsWith("ig ")) {
             let data = input.split(" ")
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead.\n\nFor example:\ninstagram melvinjonesrepol")
@@ -1073,11 +1066,47 @@ async function ai(api, event) {
                     if (err) return reportIssue(api, event.threadID, err);
                 });
             }
+        } else if (query.startsWith("setMaxTokens")) {
+            if (vips.includes(event.senderID)) {
+            settings.maxTokens = 2000
+            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            } else {
+                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+            }
+        } else if (query.startsWith("setTemperature")) {
+            if (vips.includes(event.senderID)) {
+            settings.temperature = 0.9
+            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            } else {
+                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+            }
+        } else if (query.startsWith("setFrequencyPenalty")) {
+            if (vips.includes(event.senderID)) {
+            settings.frequencyPenalty = 1
+            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            } else {
+                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+            }
+        } else if (query.startsWith("setPresencePenalty")) {
+            if (vips.includes(event.senderID)) {
+            settings.presencePenalty = 0.4
+            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            } else {
+                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+            }
+        } else if (query.startsWith("setProbabilityMass")) {
+            if (vips.includes(event.senderID)) {
+            settings.probabilityMass = 1
+            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            } else {
+                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+            }
+        } else if ((query == "unsend--all") && !settings.onUnsend) {
+            sendMessage(api, event, "It looks like you entered an unknown command. Never heard it before.");
         } else if ((query == "unsend--on") && !settings.onUnsend) {
             if (vips.includes(event.senderID)) {
             settings.onUnsend = true
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            reportIssue(api, event.threadID, "unsend enabled");
             } else {
                 sendMessage(api, event, "You cannot enable it.. No idea why. Why thought?");
             }
@@ -1085,7 +1114,6 @@ async function ai(api, event) {
             if (vips.includes(event.senderID)) {
             settings.onUnsend = false
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            reportIssue(api, event.threadID, "unsend disabled");
             } else {
                 sendMessage(api, event, "Hehe... noo you cannot turn it off...");
             }
@@ -1350,7 +1378,7 @@ async function ai(api, event) {
         } else if (query.startsWith("animequote")) {
             axios.get('https://animechan.vercel.app/api/random')
                 .then(response => {
-                    sendMessage(api, event, "'" + response.data.quote + "'" + "\n\n- " + response.data.character + " (" + response.data.anime + ")");
+                    sendMessage(api, event, response.data.quote + "\n\nby " + response.data.character + " of " + response.data.anime);
                 })
                 .catch(error => {
                     reportIssue(api, event.threadID, error);
@@ -1390,7 +1418,7 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].bookname} ${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
+                        result = `The book of ${response[i].bookname} ${response[i].chapter}:${response[i].verse} says\n\n${response[i].text}`
                     }
                     sendMessage(api, event, result);
                 }
@@ -1403,7 +1431,7 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].bookname} ${response[i].chapter}:${response[i].verse}\n\n${response[i].text}`
+                        result = `The book of ${response[i].bookname} ${response[i].chapter}:${response[i].verse} says\n\n${response[i].text}`
                     }
                     sendMessage(api, event, result);
                 }
@@ -1419,19 +1447,15 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
-        } else if (query == "hi") {
+        } else if (query == "hi" && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             sendMessage(api, event, "Hello");
-        } else if (query == "hello") {
+        } else if (query == "hello" && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             sendMessage(api, event, "Hi");
-        } else if (query == "sup" || query == "wassup" || query == "what's up" || query == "how are you") {
+        } else if (query == "sup" || query == "wassup" || query == "what's up" || query == "how are you" && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
-        } else if (query.startsWith("hey")) {
+        } else if (query.startsWith("hey") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-        } else if (query.startsWith("who made you") || query.startsWith("who's your creator") || query.startsWith("where do you come from")) {
-            sendMessage(api, event, whom[Math.floor(Math.random() * whom.length)]);
-        } else if (query.startsWith("sayit")) {
-            sendMessage(api, event, "your stupid");
-        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao")) {
+        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") || query.includes("lmfao")) {
             reactMessage(api, event, ":laughing:");
         } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
             reactMessage(api, event, ":sad:");
@@ -1443,16 +1467,16 @@ async function ai(api, event) {
             reactMessage(api, event, ":love:");
         } else if (query.includes("confuse") && (query.startsWith("im") || query.startsWith("i'm") || query.startsWith("iam"))) {
             sendMessage(api, event, "me too..");
-        } else if (query.startsWith("goodeve")) {
+        } else if (query.startsWith("goodeve") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, "Good evening too...");
-        } else if (query.startsWith("goodmorn")) {
+        } else if (query.startsWith("goodmorn") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, "Good morning too...");
-        } else if (query.startsWith("goodnight")) {
+        } else if (query.startsWith("goodnight") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, "Good night too...");
-        } else if (query.startsWith("goodafter")) {
+        } else if (query.startsWith("goodafter") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, "Good afternoon too...");
         } else if (query == "tsk") {
@@ -1466,7 +1490,7 @@ async function ai(api, event) {
         } else if ((query == "nice" || query == "uwu") && event == "message_reply") {
             reactMessage(api, event, ":heart:");
         } else if (query.includes("nude")) {
-            asendMessage(api, event, "Dont!...");
+            sendMessage(api, event, "Dont!...");
         } 
         
     }
