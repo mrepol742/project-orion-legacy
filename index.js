@@ -37,6 +37,7 @@ let creator = ["Melvin Jones Repol", "Mj", "mrepol742", "Melvin Jones Gallano Re
 let creatorAge = ["I'm 20 years old.", "20 years young since June 13rd 2002", "Will turning 21 next year June 13rd.", "I'm 20y/o still thriving."];
 let canDo = ["I can do almost anything. Try asking me then....", "I can do anything you could imagine for.", "Well thats a good question, try me then.", "I dont know about that, try asking me first", "I'm not totally sure what i can do."];
 let threads = ""
+let threadIdMV = {};
 
 let myAccountId = "100071743848974";
 let myOtherId = "100016029218667";
@@ -180,9 +181,9 @@ login({
                     }
                 } 
 
-                if (event.senderID == myGirlAccountId) {
-                    break;
-                }
+            //    if (event.senderID == myGirlAccountId) {
+            //        break;
+            //    }
 
                 ai(api, event);
                 
@@ -239,6 +240,7 @@ login({
                 }
 
                 if (query == "bgremove") {
+                    if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                     const {
                         threadID,
                         messageID,
@@ -284,6 +286,10 @@ login({
                                 });
                         })
                     }
+                } else {
+                    sendMessage(api, event, "Hold on... There is still a request in progress.");
+                    }
+                
                 }
                 break;
             case "message_unsend":
@@ -534,9 +540,9 @@ async function ai(api, event) {
                 sendMessage(api, event, finish);
             }
         }
-        if (event.senderID == myGirlAccountId) {
-            return;
-        }
+        //if (event.senderID == myGirlAccountId) {
+         //   return;
+       // }
 
         /*
         if (query.startsWith("problem")) {
@@ -559,6 +565,7 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using video query instead.\nFor example:\nvideo In The End by Linkin Park")
             } else {
+                if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
@@ -587,10 +594,12 @@ async function ai(api, event) {
                     stream.pipe(fs.createWriteStream(__dirname + '/attachments/video.mp4'));
 
                     stream.on('start', () => {
+                        threadIdMV[event.threadID] = false;
                         console.info('[DOWNLOADER]', 'Starting download now!');
                     });
                     stream.on('info', (info) => {
-                        sendMessage(api, event, `Found ${info.video_details.title}.\n\nWhile uploading please dont request new one The Project Orion cannot handle everything at once and may slow down further the request.`);
+                        threadIdMV[event.threadID] = false;
+                        sendMessage(api, event, `Found ${info.video_details.title}.`);
                         console.info('[DOWNLOADER]', `Downloading ${info.video_details.title} by ${info.video_details.metadata.channel_name}`);
                     });
                     stream.on('end', () => {
@@ -606,10 +615,14 @@ async function ai(api, event) {
                                     attachment: [fs.createReadStream(__dirname + '/attachments/video.mp4')]
                                 }
                                 api.sendMessage(message, event.threadID, event.messageID).catch((err) => api.sendMessage(api, event, "An unknown error occured. Please try again later."));
+                                threadIdMV[event.threadID] = true;
                             }
                         })
                     });
                     stream.on('error', (err) => console.error('[ERROR]', err));
+                }
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
                 }
             }
         }
@@ -618,6 +631,7 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using music query instead.\nFor example:\nmusic In The End by Linkin Park")
             } else {
+                if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
@@ -643,10 +657,13 @@ async function ai(api, event) {
                     stream.pipe(fs.createWriteStream(__dirname + '/attachments/music.mp3'));
 
                     stream.on('start', () => {
+                        threadIdMV[event.threadID] = false;
                         console.info('[DOWNLOADER]', 'Starting download now!');
                     });
                     stream.on('info', (info) => {
-                        sendMessage(api, event, `Found ${info.video_details.title}.\n\nWhile uploading please dont request new one The Project Orion cannot handle everything at once and may slow down further the request.`);
+                        threadIdMV[event.threadID] = false;
+                        sendMessage(api, event, `Found ${info.video_details.title}.`);
+
                         console.info('[DOWNLOADER]', `Downloading ${info.video_details.title} by ${info.video_details.metadata.channel_name}`);
                     });
                     stream.on('end', () => {
@@ -662,10 +679,14 @@ async function ai(api, event) {
                                     attachment: [fs.createReadStream(__dirname + '/attachments/music.mp3')]
                                 }
                                 api.sendMessage(message, event.threadID, event.messageID).catch((err) => api.sendMessage(api, event, "An unknown error occured. Please try again later."));
+                                threadIdMV[event.threadID] = true;
                             }
                         })
                     });
                     stream.on('error', (err) => console.error('[ERROR]', err));
+                }
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
                 }
             }
         }
@@ -1215,3 +1236,17 @@ async function search(api, event, query) {
         sendMessage(api, event, "error searching for" + query);
       }
   }
+
+function isFileExists(path) {
+    let bool;
+    fs.access(path, fs.F_OK, (err) => {
+        if (err) {
+          console.error(err)
+          bool = false;
+          return;
+        }
+    bool = true;
+      })
+
+      return bool;
+}
