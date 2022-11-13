@@ -1624,7 +1624,19 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
-        } else if (query == "hi") {
+        }
+
+        if (event.type == "message_reply") {
+            if (event.messageReply.senderID == myAccountId) {
+                someR(api, event, query);
+            }
+        } else {
+            if (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742")) {
+               someR(api, event, query);
+            }
+        }
+        
+        if (query == "hi") {
             sendMessage(api, event, "Hello");
         } else if (query == "hello") {
             sendMessage(api, event, "Hi");
@@ -1642,32 +1654,34 @@ async function ai(api, event) {
             reactMessage(api, event, ":cry:");
         } else if (query == "bot" || query == "good") {
             reactMessage(api, event, ":love:");
-        } else if (query.includes("confuse") && (query.startsWith("im") || query.startsWith("i'm") || query.startsWith("iam"))) {
-            sendMessage(api, event, "me too..");
-        } else if (query.startsWith("goodeve") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good evening too...");
-        } else if (query.startsWith("goodmorn") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good morning too...");
-        } else if (query.startsWith("goodnight") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good night too...");
-        } else if (query.startsWith("goodafter") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good afternoon too...");
         } else if (query == "tsk") {
             reactMessage(api, event, ":like:");
-        } else if (query == "okay" && event == "message_reply") {
+        } else if (query == "okay") {
             sendMessage(api, event, "Yup");
         } else if (nsfw(query)) {
             sendMessage(api, event, "Shhhhhhh watch your mouth.");
-        } else if (query == "idk"  && event == "message_reply") {
+        } else if (query == "idk") {
             sendMessage(api, event, "i dont know too...");
-        } else if ((query == "nice" || query == "uwu") && event == "message_reply") {
+        } else if (query == "nice" || query == "uwu") {
             reactMessage(api, event, ":heart:");
         }
         
+    }
+}
+
+function someR(api, event, query) {
+    if (query.startsWith("goodeve")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, "Good evening too...");
+    } else if (query.startsWith("goodmorn")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, "Good morning too...");
+    } else if (query.startsWith("goodnight")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, "Good night too...");
+    } else if (query.startsWith("goodafter")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, "Good afternoon too...");
     }
 }
 
