@@ -29,7 +29,7 @@ let vips = [
     "100037131918629",
     "100008664752303"
 ];
-let sleep = [5500, 7000, 7500, 4000, 4500, 5000, 6000, 5800, 6600, 4300, 7200, 7800, 5800, 6100, 4500, 9000, 9900, 6300, 57000]
+let sleep = [3000, 4000, 3500, 4500, 5000, 4800, 3800, 3200, 5200, 4600, 3200, 4300, 3400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
 let threads = ""
@@ -42,74 +42,93 @@ let techhJork = "100037131918629";
 
 let debug = false;
 
-let help = "Hello World\n\n";
-            help += "Usage: \ncommand [options]\n\n";
-            help += "Commands:\n";
-            help += "pdf [search]      - find pdf and ebook\n";
-            help += "dict [search]     - dictionary\n";
-            help += "summ [paragraph]  - summarize paragraph and sentence\n";
-            help += "find [search]     - google search\n";
-            help += "dfind [search]    - duckduckgo search\n";
-            help += "baybayin [query]  - translate to baybayin\n";
-            help += "weather [country] [state] [city] - show current weather status\n";
-            help += "facts [query]     - facts meme generator\n";
-            help += "lulcat [query]    - translate your text into funny Lul Cat Language\n";
-            help += "mock [query]      - manipulate text in a sarcastic tone!\n";
-            help += "fact              - random facts\n";
-            help += "thoughts          - random shower thoughts\n";
-            help += "ig [username]     - get user instagram info\n";
-            help += "github [username] - get user github info\n";
-            help += "changeemo [emoji] - change group chat emoji\n";
-            help += "wiki [query]      - search poeple or info from wikipedia\n";
-            help += "info [username]   - get user facebook basic info\n";
-            help += "nickname [username] [nickname] - change the user nickname\n";
-            help += "landscape         - show random landscape photos\n";
-            help += "landscape [query  - show landscape photos based on query\n";
-            help += "portrait          - show random portrait photos\n";
-            help += "portrait [query]  - show portrait photos based on query\n";
-            help += "problem  [query]  - solve math problem\n";
-            help += "encode64 [query]  - encode message to base64\n";
-            help += "decode64 [query]  - decode message to base64\n";
-            help += "pin add           - reply to a message to add as pin\n";
-            help += "pin remove        - remove a pin\n";
-            help += "pin               - show the pinned message\n";
-            help += "car               - show random cars\n";
-            help += "verse today       - today's verse\n";
-            help += "verse random      - random verse\n";
-            help += "animequote        - show anime qoutes\n";
-            help += "bgremove          - reply to an image to remove its background\n";
-            help += "motivation        - gaves motivation messages\n";
-            help += "advice            - show advice messages\n";
-            help += "drake query1:query2  - generate drake meme based on 2 queries\n";
-            help += "pooh query1:query2   - generate pooh meme based on 2 queries\n";
-            help += "oogway [query]    - generate oogway meme\n";
-            help += "caution [query]   - generate caution meme\n";
-            help += "alert [query]     - generate alert notification meme\n";
-            help += "sadcat [query]    - generate sadcat meme\n";
-            help += "biden [query]     - generate biden meme\n";
-            help += "pikachu [query]   - generate pikachu meme\n";
-            help += "god [query]       - generate god notification meme\n";
-            help += "website [url]     - screenshot website\n";
-            help += "remove            - reply to my messages to unsent it\n";
-            help += "color             - generate random colors\n";
-            help += "meme              - generate random memes\n";
-            help += "phub              - reply to a message to show the person name in phub meme\n";
-            help += "qrcode [query]    - show generated qrcode from your query\n";
-            help += "music [query]     - find and play music\n";
-            help += "video [query]     - find and play video\n";
-            help += "morse [query]     - text to morse code\n";
-            help += "joke              - tell random jokes\n";
-            help += "pickup            - tell pickup lines\n";
-            help += "uid               - reply to a message to show the person uid or message to show your own id\n";
-            help += "guid              - send a message to a group to show its guid\n";
-            help += "unsend --on       - enable unsent\n";
-            help += "unsend --off      - disable unsent\n";
-            help += "unsend --all        - null\n";
-            help += "setMaxTokens      - null\n";
-            help += "setTemperatue     - null\n";
-            help += "setFrequencyPenalty - null\n";
-            help += "setProbabilityMass  - null\n";
-            help += "help              - show help section\n\nall commands mentioned above are minified to fit to a message, some commands may trigger from certain keyword or actions.\nIf you have any questions dont hesitate to ask me.";
+let help = "Page 1 of 5";
+    help += "\n\n1. help [number of pages]";
+    help += "\n2. pdf [text]";
+    help += "\n3. dict [text]";
+    help += "\n4. summ [text]";
+    help += "\n5. find [text]";
+    help += "\n6. dfind [text]";
+    help += "\n7. baybayin [text]";
+    help += "\n8. weather [location]";
+    help += "\n9. encode64 [text]";
+    help += "\n10. decode64 [text]";
+    help += "\n11. facts [text]";
+    help += "\n12. lulcat [text]";
+    help += "\n13. mock [text]";
+    help += "\n14. fact";
+    help += "\n15. thoughts";
+    help += "\n\nFor every action there is an equal and opposite reaction."
+
+let help1 = "Page 2 of 5";
+    help1 += "\n\n16. ig [username]";
+    help1 += "\n17. github [username]";
+    help1 += "\n18. changeemo [emoji]";
+    help1 += "\n19. wiki [text]";
+    help1 += "\n20. info [username]";
+    help1 += "\n21. nickname @mention [text]";
+    help1 += "\n22. landscape";
+    help1 += "\n23. landscape [text]";
+    help1 += "\n24. portrait";
+    help1 += "\n25. portrait [text";
+    help1 += "\n26. problem [equation]";
+    help1 += "\n27. pin add";
+    help1 += "\n28. pin remove";
+    help1 += "\n29. pin";
+    help1 += "\n30. car";
+    help1 += "\n\nFor every action there is an equal and opposite reaction."
+
+let help2 = "Page 3 of 5";
+    help2 += "\n\n31: verse today";
+    help2 += "\n32: verse random";
+    help2 += "\n33. animeqoute";
+    help2 += "\n34. bgremove";
+    help2 += "\n35. motivate";
+    help2 += "\n36. inspiration";
+    help2 += "\n37. advice";
+    help2 += "\n38. remove";
+    help2 += "\n39. color";
+    help2 += "\n40. meme";
+    help2 += "\n41. drake [text1]: [text2]";
+    help2 += "\n42. pooh [text1]: [text2]";
+    help2 += "\n43. oogway [text]";
+    help2 += "\n44. caution [text]";
+    help2 += "\n45. alert [text]";
+    help2 += "\n\nFor every action there is an equal and opposite reaction."
+
+let help3 = "Page 4 of 5";
+    help3 += "\n46. sadcat [text]";
+    help3 += "\n47. biden [text]";
+    help3 += "\n48. pika [text]";
+    help3 += "\n49. god [text]";
+    help3 += "\n50. website [url]";
+    help3 += "\n51. phub [text]";
+    help2 += "\n52. qrcode [text]";
+    help3 += "\n53. music [text]";
+    help3 += "\n54. video [text]";
+    help3 += "\n55. morse [text]";
+    help3 += "\n56. joke";
+    help3 += "\n57. pickup";
+    help3 += "\n58. uid";
+    help3 += "\n59. guid";
+    help3 += "\n60. gname";
+    help3 += "\n\nFor every action there is an equal and opposite reaction."
+
+let help4 = "Page 5 of 5";
+    help4 += "\n\n61. gmember";
+    help4 += "\n62. unsend --on";
+    help4 += "\n63. unsend --off";
+    help4 += "\n64. unsend --all";
+    help4 += "\n65. setMaxTokens [integer]";
+    help4 += "\n66. setTemperature [integer]";
+    help4 += "\n67. setFrequencyPenalty [integer]";
+    help4 += "\n68. setProbabilityMass [integer]";
+    help4 += "\n69. delay --on";
+    help4 += "\n70. delay --off";
+    help4 += "\n71. setVIP @mention or uid";
+    help4 += "\n72. removeVIP @mention or uid";
+    help4 += "\n73. refresh | reload";
+    help4 += "\n\nFor every action there is an equal and opposite reaction."
 
 let apiKey = [
     // phub api key
@@ -131,9 +150,9 @@ cron.schedule('*/30 * * * *', () => {
     hours = hours % 12;
     hours = hours ? hours : 12;
     mins = mins < 10 ? '0' + mins : mins;
-    reportIssue(api, event.threadID, "Time Check " + hours + ":" + mins + " " + ampm)
     api.sendMessage("Time Check " + hours + ":" + mins + " " + ampm, myAccountId);
 });
+
 cron.schedule('0 * * * *', () => {
     let A = api.getAppState();
     let B = JSON.stringify(A);
@@ -149,7 +168,8 @@ login({
     api.setOptions({
         listenEvents: true,
         selfListen: false,
-        online: true
+        online: true,
+        autoMarkRead: true
     });
 
     let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
@@ -208,9 +228,9 @@ login({
                     }
                 } 
 
-            //    if (event.senderID == myGirlAccountId) {
-            //        break;
-            //    }
+               // if (event.senderID == myGirlAccountId) {
+               //     break;
+                //}
 
                 ai(api, event);
                 
@@ -338,8 +358,7 @@ login({
                                                     body: data[event.senderID]['name'] + " deleted this photo. \n",
                                                     attachment: fs.createReadStream(__dirname + '/cache/images/photo.jpg')
                                                 }
-                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
-                                                api.sendMessage(message, event.threadID);
+                                                sendMessageNoReply(api, event.threadID, message);
                                             }
                                         });
                                     });
@@ -353,8 +372,7 @@ login({
                                                     body: data[event.senderID]['name'] + " deleted this GIF. \n",
                                                     attachment: fs.createReadStream(__dirname + '/cache/images/animated_image.gif')
                                                 }
-                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
-                                                api.sendMessage(message, event.threadID);
+                                                sendMessageNoReply(api, event.threadID, message);
                                             }
                                         });
                                     });
@@ -368,8 +386,7 @@ login({
                                                     body: data[event.senderID]['name'] + " deleted this sticker.\n",
                                                     attachment: fs.createReadStream(__dirname + '/cache/images/sticker.png')
                                                 }
-                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
-                                                api.sendMessage(message, event.threadID);
+                                                sendMessageNoReply(api, event.threadID, message);
                                             }
                                         });
                                     });
@@ -383,8 +400,7 @@ login({
                                                     body: data[event.senderID]['name'] + " deleted this video.\n",
                                                     attachment: fs.createReadStream(__dirname + '/cache/videos/video.mp4')
                                                 }
-                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
-                                                api.sendMessage(message, event.threadID);
+                                                sendMessageNoReply(api, event.threadID, message);
                                             }
                                         });
                                     });
@@ -398,8 +414,7 @@ login({
                                                     body: data[event.senderID]['name'] + " deleted this audio.\n",
                                                     attachment: fs.createReadStream(__dirname + '/cache/audios/vm.mp3')
                                                 }
-                                                wait(sleep[Math.floor(Math.random() * sleep.length)])
-                                                api.sendMessage(message, event.threadID);
+                                                sendMessageNoReply(api, event.threadID, message);
                                             }
                                         });
                                     });
@@ -411,8 +426,7 @@ login({
                             if (err) return reportIssue(api, event.threadID, err);
                             else {
                                 if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                    wait(sleep[Math.floor(Math.random() * sleep.length)])
-                                    api.sendMessage(data[event.senderID]['name'] + " deleted this message.\n\n" + msgs[event.messageID], event.threadID);
+                                    sendMessage(api, event.threadID, data[event.senderID]['name'] + " deleted this message.\n\n" + msgs[event.messageID]);
                                 }
                             }
                         });
@@ -598,7 +612,6 @@ async function ai(api, event) {
                     var downloadTimer = setInterval(function() {
                         if (timeleft <= 0) {
                             clearInterval(downloadTimer);
-                            // api.sendMessage("A video has found!\n\nStarting to Download", event.threadID, event.messageID);
                         }
                         timeleft -= 1;
                     }, 1000);
@@ -616,12 +629,12 @@ async function ai(api, event) {
 
                     stream.on('start', () => {
                         threadIdMV[event.threadID] = false;
-                        console.info('[DOWNLOADER]', 'Starting download now!');
+                        console.log("Starting download...");
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        sendMessage(api, event, `Found ${info.video_details.title}.`);
-                        console.info('[DOWNLOADER]', `Downloading ${info.video_details.title} by ${info.video_details.metadata.channel_name}`);
+                        sendMessage(api, event, `I found this ${info.video_details.title}.`);
+                        console.log(`Downloading ${info.video_details.title}`);
                     });
                     stream.on('end', () => {
                         var limit = 50 * 1024 * 1024; // 50MB in bytes
@@ -630,17 +643,17 @@ async function ai(api, event) {
                             if (data.length > limit) {
                                 sendMessage(api, event, "I cannot send the file because its file size is beyond 50mb.");
                             } else {
-                                console.info('[DOWNLOADER]', 'Done!')
+                                console.log("Done.");
                                 var message = {
                                     body:  search.videos[0].title,
                                     attachment: [fs.createReadStream(__dirname + '/cache/videos/video.mp4')]
                                 }
-                                api.sendMessage(message, event.threadID, event.messageID).catch((err) => api.sendMessage(api, event, "An unknown error occured. Please try again later."));
+                                sendMessage(api, event, message);
                                 threadIdMV[event.threadID] = true;
                             }
                         })
                     });
-                    stream.on('error', (err) => console.error('[ERROR]', err));
+                    stream.on('error', (err) => reportIssue(api, event, err));
                 }
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -679,13 +692,13 @@ async function ai(api, event) {
 
                     stream.on('start', () => {
                         threadIdMV[event.threadID] = false;
-                        console.info('[DOWNLOADER]', 'Starting download now!');
+                        console.log("Starting download now...");
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        sendMessage(api, event, `Found ${info.video_details.title}.`);
+                        sendMessage(api, event, `I found this ${info.video_details.title}.`);
 
-                        console.info('[DOWNLOADER]', `Downloading ${info.video_details.title} by ${info.video_details.metadata.channel_name}`);
+                        console.log(`Downloading ${info.video_details.title}`);
                     });
                     stream.on('end', () => {
                         var limit = 50 * 1024 * 1024; // 50MB in bytes
@@ -694,17 +707,17 @@ async function ai(api, event) {
                             if (data.length > limit) {
                                 sendMessage(api, event, "I cannot send the file because its file size is beyond 50mb.");
                             } else {
-                                console.info('[DOWNLOADER]', 'Done!')
+                                console.log("Done.");
                                 var message = {
                                     body: search.videos[0].title,
                                     attachment: [fs.createReadStream(__dirname + '/cache/audios/music.mp3')]
                                 }
-                                api.sendMessage(message, event.threadID, event.messageID).catch((err) => api.sendMessage(api, event, "An unknown error occured. Please try again later."));
+                                sendMessage(api, event, message);
                                 threadIdMV[event.threadID] = true;
                             }
                         })
                     });
-                    stream.on('error', (err) => console.error('[ERROR]', err));
+                    stream.on('error', (err) => reportIssue(api, event, err));
                 }
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -752,7 +765,7 @@ async function ai(api, event) {
                 })
             } else {
                 api.getUserInfo(pinned.pin.sender[event.threadID], (err, data) => {
-                    api.sendMessage(pinned.pin.message[event.threadID], event.threadID);
+                    sendMessageNoReply(api, event.threadID, pinned.pin.message[event.threadID]);
                 });
             }
         } else if (query.startsWith("pdf")) {
@@ -848,10 +861,10 @@ async function ai(api, event) {
                 data.shift()
                 axios.get('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1')
                     .then(response => {
-                        api.sendMessage( response.data.Abstract, event.threadID, event.messageID);
+                        sendMessage(api, event, response.data.Abstract);
                     })
                     .catch(error => {
-                        api.sendMessage(`Unfortunately there was an error occured.`, event.threadID, event.messageID);
+                        sendMessage(api, event, "Unfortunately there was an error occured.");
                     });
             }
         }
@@ -1066,6 +1079,14 @@ async function ai(api, event) {
                     if (err) return reportIssue(api, event.threadID, err);
                 });
             }
+        } else if (query.startsWith("sendReport")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport message instead.\n\nFor example:\nsendReport a problem.")
+            } else {
+                data.shift()
+                reportIssue(api, event, data.join(" "));
+            }
         } else if (query.startsWith("setMaxTokens")) {
             if (vips.includes(event.senderID)) {
             settings.maxTokens = 2000
@@ -1117,6 +1138,19 @@ async function ai(api, event) {
             } else {
                 sendMessage(api, event, "Hehe... noo you cannot turn it off...");
             }
+        } else if (query == "gmember") {
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    var arr = gc.participantIDs;
+                    sendMessage(api, event, "This group has about " + arr.length + " members.")
+                }
+            })
+        } else if (query == "gname") {
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, `${gc.threadName}`)
+                  }
+            })
         } else if (query == "groupid" || query == "guid" || query == "uid") {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return cosole.log(err);
@@ -1135,8 +1169,16 @@ async function ai(api, event) {
                     } 
                 }
             });
-        } else if (query == "help") {
+        } else if (query == "help" || query == "help1") {
             sendMessage(api, event, help);
+        } else if (query == "help2") {
+            sendMessage(api, event, help1);
+        } else if (query == "help3") {
+            sendMessage(api, event, help2);
+        } else if (query == "help4") {
+            sendMessage(api, event, help3);
+        } else if (query == "help5") {
+            sendMessage(api, event, help4);
         } else if (query.startsWith("wiki")) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -1508,23 +1550,22 @@ function parseImage(api, event, url, dir) {
 
 function reportIssue(api, event, err) {
     console.log(err);
-    /*
-    api.getThreadInfo(event, (err, info) => {
-        if (err) return console.log(err);
-        else {
-            api.sendMessage(err, myAccountId);
-        }
-    });*/
+    api.sendMessage(err + "", myAccountId);
 }
 
-function sendMessage(api, event, message) {
-    wait(sleep[Math.floor(Math.random() * sleep.length)])
-    api.sendMessage(message, event.threadID, event.messageID);
+async function sendMessage(api, event, message) {
+    await wait(sleep[Math.floor(Math.random() * sleep.length)])
+    api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
-function reactMessage(api, event, reaction) {
-    wait(sleep[Math.floor(Math.random() * sleep.length)])
-    api.setMessageReaction(reaction, event.messageID);
+async function sendMessageNoReply(api, eventId, message) {
+    await wait(sleep[Math.floor(Math.random() * sleep.length)])
+    api.sendMessage(message, eventId).catch((err) => reportIssue(api, event, err));
+}
+
+async function reactMessage(api, event, reaction) {
+    await wait(sleep[Math.floor(Math.random() * sleep.length)])
+    api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
 function removeEmojis(string) {
