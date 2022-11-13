@@ -440,7 +440,7 @@ login({
                             if (gc.isGroup) {
                                 var arr = gc.participantIDs;
                                 var Tmem = arr.length;
-                                var url = `https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=Member+` + Tmem + `&avatar=https://cdn.discordapp.com/embed/avatars/3.png`;
+                                var url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=Member+` + Tmem + `&avatar=https://mrepol742.github.io/project-orion/profile.jpg`;
                                 parseImage(api, event, url, __dirname + '/cache/images/welcome.jpg');
                               }
                         })
