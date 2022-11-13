@@ -19,6 +19,8 @@ const weatherjs = require("weather-js")
 const FormData = require('form-data');
 const path = require('path');
 const Innertube = require('youtubei.js');
+const GoogleImages = require('google-images');
+const Genius = require("genius-lyrics");
 
 let msgs = {};
 let cd = {};
@@ -40,95 +42,112 @@ let myOtherId = "100016029218667";
 let myGirlAccountId = "100077318906152";
 let techhJork = "100037131918629";
 
-let debug = false;
+let debug = true;
 
-let help = "Page 1 of 5";
-    help += "\n\n1. help [number of pages]";
-    help += "\n2. pdf [text]";
-    help += "\n3. dict [text]";
-    help += "\n4. summ [text]";
-    help += "\n5. find [text]";
-    help += "\n6. dfind [text]";
-    help += "\n7. baybayin [text]";
-    help += "\n8. weather [location]";
-    help += "\n9. encode64 [text]";
-    help += "\n10. decode64 [text]";
-    help += "\n11. facts [text]";
-    help += "\n12. lulcat [text]";
-    help += "\n13. mock [text]";
-    help += "\n14. fact";
-    help += "\n15. thoughts";
+let help = "Help 1/7";
+    help += "\n\n⦿ help [number of pages]";
+    help += "\n⦿ pdf [text]";
+    help += "\n⦿ dict [text]";
+    help += "\n⦿ summ [text]";
+    help += "\n⦿ find [text]";
+    help += "\n⦿ dfind [text]";
+    help += "\n⦿ findimage [text]";
+    help += "\n⦿ baybayin [text]";
+    help += "\n⦿ weather [location]";
+    help += "\n⦿ encode64 [text]";
+    help += "\n⦿ decode64 [text]";
+    help += "\n⦿ facts [text]";
+    help += "\n⦿ lulcat [text]";
+    help += "\n⦿ mock [text]";
+    help += "\n⦿ fact";
+    help += "\n⦿ thoughts";
     help += "\n\nFor every action there is an equal and opposite reaction."
 
-let help1 = "Page 2 of 5";
-    help1 += "\n\n16. ig [username]";
-    help1 += "\n17. github [username]";
-    help1 += "\n18. changeemo [emoji]";
-    help1 += "\n19. wiki [text]";
-    help1 += "\n20. info [username]";
-    help1 += "\n21. nickname @mention [text]";
-    help1 += "\n22. landscape";
-    help1 += "\n23. landscape [text]";
-    help1 += "\n24. portrait";
-    help1 += "\n25. portrait [text";
-    help1 += "\n26. problem [equation]";
-    help1 += "\n27. pin add";
-    help1 += "\n28. pin remove";
-    help1 += "\n29. pin";
-    help1 += "\n30. car";
+let help1 = "Help 2/7";
+    help1 += "\n\n⦿ thoughts";
+    help1 += "\n⦿ github [username]";
+    help1 += "\n⦿ changeemo [emoji]";
+    help1 += "\n⦿ changename [text]";
+    help1 += "\n⦿ wiki [text]";
+    help1 += "\n⦿ info [username]";
+    help1 += "\n⦿ nickname @mention [text]";
+    help1 += "\n⦿ landscape";
+    help1 += "\n⦿ landscape [text]";
+    help1 += "\n⦿ portrait";
+    help1 += "\n⦿ portrait [text]";
+    help1 += "\n⦿ problem [equation]";
+    help1 += "\n⦿ pin add";
+    help1 += "\n⦿ pin remove";
+    help1 += "\n⦿ pin";
     help1 += "\n\nFor every action there is an equal and opposite reaction."
 
-let help2 = "Page 3 of 5";
-    help2 += "\n\n31: verse today";
-    help2 += "\n32: verse random";
-    help2 += "\n33. animeqoute";
-    help2 += "\n34. bgremove";
-    help2 += "\n35. motivate";
-    help2 += "\n36. inspiration";
-    help2 += "\n37. advice";
-    help2 += "\n38. remove";
-    help2 += "\n39. color";
-    help2 += "\n40. meme";
-    help2 += "\n41. drake [text1]: [text2]";
-    help2 += "\n42. pooh [text1]: [text2]";
-    help2 += "\n43. oogway [text]";
-    help2 += "\n44. caution [text]";
-    help2 += "\n45. alert [text]";
+let help2 = "Help 3/7";
+    help2 += "\n\n⦿ verse today";
+    help2 += "\n⦿ verse random";
+    help2 += "\n⦿ verse [book] [chapter]:[verse]";
+    help2 += "\n⦿ animeqoute";
+    help2 += "\n⦿ bgremove";
+    help2 += "\n⦿ motivate";
+    help2 += "\n⦿ inspiration";
+    help2 += "\n⦿ advice";
+    help2 += "\n⦿ remove";
+    help2 += "\n⦿ meme";
+    help2 += "\n⦿ meme --redit";
+    help2 += "\n⦿ drake [text1]: [text2]";
+    help2 += "\n⦿ pooh [text1]: [text2]";
+    help2 += "\n⦿ oogway [text]";
+    help2 += "\n⦿ caution [text]";
     help2 += "\n\nFor every action there is an equal and opposite reaction."
 
-let help3 = "Page 4 of 5";
-    help3 += "\n46. sadcat [text]";
-    help3 += "\n47. biden [text]";
-    help3 += "\n48. pika [text]";
-    help3 += "\n49. god [text]";
-    help3 += "\n50. website [url]";
-    help3 += "\n51. phub [text]";
-    help2 += "\n52. qrcode [text]";
-    help3 += "\n53. music [text]";
-    help3 += "\n54. video [text]";
-    help3 += "\n55. morse [text]";
-    help3 += "\n56. joke";
-    help3 += "\n57. pickup";
-    help3 += "\n58. uid";
-    help3 += "\n59. guid";
-    help3 += "\n60. gname";
+let help3 = "Help 4/7";
+    help3 += "\n\n⦿ alert [text]";
+    help3 += "\n⦿ sadcat [text]";
+    help3 += "\n⦿ biden [text]";
+    help3 += "\n⦿ pika [text]";
+    help3 += "\n⦿ god [text]";
+    help3 += "\n⦿ website [url]";
+    help3 += "\n⦿ phub [text]";
+    help3 += "\n⦿ qrcode [text]";
+    help3 += "\n⦿ music [text]";
+    help3 += "\n⦿ video [text]";
+    help3 += "\n⦿ lyrics [text]";
+    help3 += "\n⦿ morse [text]";
+    help3 += "\n⦿ pickup";
+    help3 += "\n⦿ uid";
+    help3 += "\n⦿ guid";
     help3 += "\n\nFor every action there is an equal and opposite reaction."
 
-let help4 = "Page 5 of 5";
-    help4 += "\n\n61. gmember";
-    help4 += "\n62. unsend --on";
-    help4 += "\n63. unsend --off";
-    help4 += "\n64. unsend --all";
-    help4 += "\n65. setMaxTokens [integer]";
-    help4 += "\n66. setTemperature [integer]";
-    help4 += "\n67. setFrequencyPenalty [integer]";
-    help4 += "\n68. setProbabilityMass [integer]";
-    help4 += "\n69. delay --on";
-    help4 += "\n70. delay --off";
-    help4 += "\n71. setVIP @mention or uid";
-    help4 += "\n72. removeVIP @mention or uid";
-    help4 += "\n73. refresh | reload";
+let help4 = "Help 5/7";
+    help4 += "\n\n⦿ ig [username]";
+    help4 += "\n⦿ gname";
+    help4 += "\n⦿ joke";
+    help4 += "\n⦿ profilepic";
+    help4 += "\n⦿ wyr";
+    help4 += "\n⦿ 8ball";
+    help4 += "\n⦿ gmember";
+    help4 += "\n⦿ car";
+    help4 += "\n⦿ color";
+    help4 += "\n⦿ count";
     help4 += "\n\nFor every action there is an equal and opposite reaction."
+
+let help5 = "Help 6/7";
+    help5 += "\n\n⦿ unsend --on";
+    help5 += "\n⦿ unsend --off";
+    help5 += "\n⦿ unsend --all";
+    help5 += "\n⦿ setMaxTokens [integer]";
+    help5 += "\n⦿ setTemperature [integer]";
+    help5 += "\n⦿ setFrequencyPenalty [integer]";
+    help5 += "\n⦿ setProbabilityMass [integer]";
+    help5 += "\n⦿ delay --on";
+    help5 += "\n⦿ delay --off";
+    help5 += "\n⦿ setVIP @mention or uid";
+    help5 += "\n⦿ removeVIP @mention or uid";
+    help5 += "\n⦿ refresh | reload";
+    help5 += "\n\nFor every action there is an equal and opposite reaction."
+
+let help6 = "Help 7/7";
+    help6 += "\n⦿ HELLO WORLD";
+    help6 += "\n\nFor every action there is an equal and opposite reaction."
 
 let apiKey = [
     // phub api key
@@ -160,6 +179,9 @@ cron.schedule('0 * * * *', () => {
     api.sendMessage("AppState refresh...", myAccountId)
 });
 
+let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
+let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
+
 login({
     appState: JSON.parse(fs.readFileSync('fb.json', 'utf8'))
 }, (err, api) => {
@@ -172,9 +194,6 @@ login({
         autoMarkRead: true
     });
 
-    let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
-    let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
-
     const listenEmitter = api.listen(async (err, event) => {
 
         if (err) return reportIssue(api, event.threadID, err);
@@ -183,14 +202,14 @@ login({
             if (event.type == "message" || event.type == "message_reply") {
             let input = event.body;
             let query = removeEmojis(input.replace(/\s+/g, '').toLowerCase());
-            if (!(vips.includes(event.senderID))) {
+                if (!(vips.includes(event.senderID))) {
                 if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
                     sendMessage(api, event, "Hold on a moment this system is currently in maintenance mode... only authorized uid is allowed to call and initiate its function in the moment.");
                 }
                 return;
+                }
             }
         }
-    }
 
         switch (event.type) {
             case "message":
@@ -234,26 +253,7 @@ login({
 
                 ai(api, event);
                 
-                if (query.startsWith("phub") || query.startsWith("pornhub")) {
-                    api.getUserInfo(event.messageReply.senderID, (err, info) => {
-                        if (err) return reportIssue(api, event.threadID, err);
-
-                        let name = info[event.messageReply.senderID]['name'];
-
-                        if (event.messageReply.senderID == myAccountId || event.messageReply.senderID == myOtherId) {
-                            sendMessage(api, event, "Hahaha.. you cannot do that to my account.. bruhhh..");
-                        } else {
-                            let data = input.split(" ")
-                            if (data.length < 2) {
-                                sendMessage(api, event, "Opps! I didnt get it. You should try using phub replytoamessage anytext instead.\nFor example:\nphub huhu");
-                            } else {
-                                data.shift()
-                                var phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + event.messageReply.senderID + '&name=' + name + '&apikey=' + apiKey[0];
-                                parseImage(api, event, phublink, __dirname + '/cache/images/phubmeme.jpg');
-                            }
-                        }
-                    })
-                } else if (query.startsWith("qrcode")) {
+               if (query.startsWith("qrcode")) {
                     let body = event.messageReply.body
                     let data = "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + body
                     let f = fs.createWriteStream(__dirname + "/cache/images/qr.jpg")
@@ -283,6 +283,12 @@ login({
                         pinned.pin.sender[event.threadID] = event.messageReply.senderID
                         sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
                         fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
+                    }
+                } else if (query == "count") {
+                    if (event.messageReply.body == "") { 
+                        sendMessage(api, event, "You need to reply count to a message which is not empty.");
+                    } else {
+                        sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + " words.");
                     }
                 }
 
@@ -426,7 +432,7 @@ login({
                             if (err) return reportIssue(api, event.threadID, err);
                             else {
                                 if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                    sendMessage(api, event.threadID, data[event.senderID]['name'] + " deleted this message.\n\n" + msgs[event.messageID]);
+                                    sendMessageNoReply(api, event.threadID, data[event.senderID]['name'] + " deleted this message.\n\n" + msgs[event.messageID]);
                                 }
                             }
                         });
@@ -460,21 +466,13 @@ login({
                                             var gcn = gc.threadName;
                                             var arr = gc.participantIDs;
                                             var Tmem = arr.length;
-                                            var url = "https://api.popcat.xyz/welcomecard?background=https://cdn.discordapp.com/attachments/850808002545319957/859359637106065408/bg.png&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Member+" + Tmem + "&avatar=https://cdn.discordapp.com/embed/avatars/3.png";
+                                            var url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Member+" + Tmem + "&avatar=https://mrepol742.github.io/project-orion/profile.jpg";
                                             parseImage(api, event, url, __dirname + '/cache/images/byebye.jpg');
                                         }
                                     }
                                 }
                             })
                         })
-                        /*await new Promise(resolve => setTimeout(resolve, 7500));
-                        api.getThreadInfo(event.threadID, (err, gc) => {
-                           if (err) done(err);
-                           var gcn = gc.threadName;
-                           var arr = gc.participantIDs;
-                           var Tmem = arr.length;
-                           api.sendMessage("Group Chat Name: " + gcn + "\n\n💠 Total Member(Updated) 💠\n\n => " + Tmem + " Members", event.threadID, event.messageID)
-                        })*/
                         break;
                 }
                 break;
@@ -554,6 +552,10 @@ async function ai(api, event) {
                 } else if (query.startsWith("mj")) {
                     text = input.substring(3)
                 } 
+                if (nsfw(text)) {
+                    sendMessage(api, event, "Shhhhhhh watch your mouth.");
+                    return;
+                }
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
                 });
@@ -595,19 +597,56 @@ async function ai(api, event) {
                 }
             }
         } */
-        if (query.startsWith("video")) {
+        if (event.type == "message") {
+            if (query == "bgremove") {
+                sendMessage(api, event, "You need to reply to an image in order to work.");
+            } else if (query == "count") {
+                sendMessage(api, event, "You need to reply to a message to count its words.");
+            } else if (query == "pinadd") {
+                sendMessage(api, event, "You need to reply to a message to pin a message.");
+            } else if (query.startsWith("qrcode")) {
+                sendMessage(api, event, "You need to reply to a message for qrcode to work.");
+            } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
+                sendMessage(api, event, "Unable to unsent. Please reply to my message you wish to unsent.");
+            }
+        }
+        if (query.startsWith("phub") || query.startsWith("pornhub")) {
+            let id;
+                if (event.type == "message") {
+                    id = event.senderID;
+                } else {
+                    if (event.messageReply.senderID == myAccountId || event.messageReply.senderID == myOtherId) {
+                        id = event.senderID;
+                    } else {
+                  id = event.messageReply.senderID;
+                    }
+                } 
+            api.getUserInfo(id, (err, info) => {
+                if (err) return reportIssue(api, event.threadID, err);
+                let name = info[id]['name'];
+                    let data = input.split(" ")
+                    if (data.length < 2) {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using phub text instead.\nFor example:\nphub why i am here again.");
+                    } else {
+                        data.shift()
+                        var phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + apiKey[0];
+                        parseImage(api, event, phublink, __dirname + '/cache/images/phubmeme.jpg');
+                    }
+                
+            })
+
+        } else if (query.startsWith("video")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using video query instead.\nFor example:\nvideo In The End by Linkin Park")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor example:\nvideo In The End by Linkin Park")
             } else {
                 if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(api, event, "Invalid request bro..");
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor example:\nvideo In The End by Linkin Park")
                 } else {
-                    sendMessage(api, event, "I'm finding your video titled \"" + data.join(" ") + "\" please wait...");
                     var timeleft = 3;
                     var downloadTimer = setInterval(function() {
                         if (timeleft <= 0) {
@@ -633,7 +672,6 @@ async function ai(api, event) {
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        sendMessage(api, event, `I found this ${info.video_details.title}.`);
                         console.log(`Downloading ${info.video_details.title}`);
                     });
                     stream.on('end', () => {
@@ -659,20 +697,18 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
                 }
             }
-        }
-        if (query.startsWith("music")) {
+        } else if (query.startsWith("music")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using music query instead.\nFor example:\nmusic In The End by Linkin Park")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor example:\nmusic In The End by Linkin Park")
             } else {
                 if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(api, event, "Invalid request bro..");
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor example:\nmusic In The End by Linkin Park")
                 } else {
-                    sendMessage(api, event, "I'm finding your music titled \"" + data.join(" ") + "\" please wait...");
                     var timeleft = 3;
                     var downloadTimer = setInterval(function() {
                         if (timeleft <= 0) {
@@ -696,8 +732,6 @@ async function ai(api, event) {
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        sendMessage(api, event, `I found this ${info.video_details.title}.`);
-
                         console.log(`Downloading ${info.video_details.title}`);
                     });
                     stream.on('end', () => {
@@ -723,11 +757,36 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
                 }
             }
-        }
+        } else if (query.startsWith("lyrics")) {
+                const Client = new Genius.Client("RF_40ktL7f4H55RYDtdL27nTZMewq9H9FKkJfuZmzHzq1Cpy_a4LoQi6lzsP5G2L");
+                let data = input.split(" ");
+                if (data.length < 2) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using lyrics text instead.\nFor example:\nlyrics In The End by Linkin Park")
+                } else {
+                    data.shift()
+                    const searches = await Client.songs.search(data.join(" "));
+                    const firstSong = searches[0];
+                    const RES = await firstSong.lyrics();
+                    sendMessage(api, event, RES);
+                }
+        } else if (query.startsWith("googleimage") || query2.startsWith("searchimage ") || query2.startsWith("findimage ")) {
+            let data = input.split(" ");
+            if (data.length < 2){
+                sendMessage(api, event, "Opps! I didnt get it. You should try using findimage text instead.\nFor example:\nfindimage mark zuckerberg")
+            } else {
+                let imgtext = input.substring(12);
+                if (input.startsWith("findimage ")) {
+                    imgtext = input.substring(10);
+                }
+                let client = new GoogleImages('55ffad329ff5f3716', 'AIzaSyC5ojRnS7POz0t19eVwWQ0Ur0L34HZbvok');
+                client.search(imgtext).then(images => {
 
-        if (query.startsWith("encode64")) {
+                  printy(api, event, images);
+                }).catch((err)=> sendReport(api, event, err) )
+            }
+        } else if (query.startsWith("encode64")) {
             if (query2.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 query instead.\nFor example:\nencode64 fundamentals in engineering")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 text instead.\nFor example:\nencode64 fundamentals in engineering")
             } else {
                 var text = input;
                 text = text.substring(9)
@@ -738,7 +797,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("decode64")) {
             if (query2.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 query instead.\nFor example:\ndecode64 fundamentals in engineering")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead.\nFor example:\ndecode64 fundamentals in engineering")
             } else {
                 var text = input;
                 text = text.substring(9)
@@ -771,7 +830,7 @@ async function ai(api, event) {
         } else if (query.startsWith("pdf")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pdf query instead.\nFor example:\npdf fundamentals in engineering")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using pdf text instead.\nFor example:\npdf fundamentals in engineering")
             } else {
                 try {
                     data.shift()
@@ -789,7 +848,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using urbandictionary query instead.\nFor example:\nurbandictionary computer");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using dict text instead.\nFor example:\ndict computer");
             } else {
                 var text = input.substring(17)
                 if (query.startsWith("dictionary")) {
@@ -824,7 +883,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using summarize message instead.\n\nFor example:\nsummarize this sentence meant to be summarized.");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead.\n\nFor example:\nsumm this sentence meant to be summarized.");
             } else {
                 var text = input.substring(5);
                 if (query.startsWith("summarize")) {
@@ -856,7 +915,7 @@ async function ai(api, event) {
         if (query.startsWith("dgoogle") || query2.startsWith("dsearch ") || query2.startsWith("dfind ")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using dgoogle query instead.\n\nFor example:\ndgoogle computer")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using dgoogle text instead.\n\nFor example:\ndgoogle computer")
             } else {
                 data.shift()
                 axios.get('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1')
@@ -872,7 +931,7 @@ async function ai(api, event) {
         if (query.startsWith("google") || query2.startsWith("search ") || query2.startsWith("find ")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using google query instead.\n\nFor example:\ngoogle computer")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using google text instead.\n\nFor example:\ngoogle computer")
             } else {
                 try {
                     data.shift()
@@ -893,7 +952,7 @@ async function ai(api, event) {
         if (query.startsWith("baybayin")) {
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using baybaying query instead.\n\nFor example:\nbaybayin ako ay filipino")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using baybayin text instead.\n\nFor example:\nbaybayin ako ay filipino")
             } else {
                 data.shift()
                 axios.get('https://api-baybayin-transliterator.vercel.app/?text=' + data.join(" "))
@@ -908,7 +967,7 @@ async function ai(api, event) {
         } else if (query.startsWith("weather")) {
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using weather country state city instead.\n\nFor example:\nweather philippines ncr caloocan city")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using weather location instead.\n\nFor example:\nweather caloocan city")
             } else {
                 data.shift()
                 let weather = await weathersearch("weather " + data.join(" "))
@@ -942,12 +1001,31 @@ async function ai(api, event) {
         } else if (query.startsWith("facts")) {
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using facts query instead.\n\nFor example:\nfacts about computers")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using facts text instead.\n\nFor example:\nfacts computer")
             } else {
                 data.shift()
                 var url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
                 parseImage(api, event, url, __dirname + '/cache/images/facts.png');
             }
+        } else if (query == "wyr" || query == "wouldyourather") {
+            getResponseData("https://api.popcat.xyz/wyr").then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    sendMessage(api, event, `Would you rather ${response.ops1} or ${response.ops2}`);
+                }
+            });
+        } else if (query == "8ball") {
+            getResponseData("https://api.popcat.xyz/8ball").then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    sendMessage(api, event, `${response.answer}`);
+                }
+            });
+
         } else if (query.startsWith("instagram") || query2.startsWith("insta ") || query2.startsWith("ig ")) {
             let data = input.split(" ")
             if (data.length < 2) {
@@ -983,6 +1061,16 @@ async function ai(api, event) {
                         sendMessage(api, event, "Unfortunately user \"" + userN + "\" was not found.");
                     })
             } 
+        } else if (query.startsWith("profilepic")) {
+            let id;
+            if (event.type == "message_reply") {
+                id = event.messageReply.senderID;
+            } else {
+                id = event.senderID;
+            } 
+            let url = "https://graph.facebook.com/"  + id + "/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
+            parseImage(api, event, url, __dirname + '/cache/images/profilepic.png');
+            
          } else if (query.startsWith("github")) {
                 let data = input.split(" ")
                 if (data.length < 2) {
@@ -1079,43 +1167,43 @@ async function ai(api, event) {
                     if (err) return reportIssue(api, event.threadID, err);
                 });
             }
-        } else if (query.startsWith("sendReport")) {
+        } else if (query.startsWith("sendreport")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport message instead.\n\nFor example:\nsendReport a problem.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead.\n\nFor example:\nsendReport a problem.")
             } else {
                 data.shift()
                 reportIssue(api, event, data.join(" "));
             }
-        } else if (query.startsWith("setMaxTokens")) {
+        } else if (query.startsWith("setmaxtokens")) {
             if (vips.includes(event.senderID)) {
             settings.maxTokens = 2000
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
                 sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
             }
-        } else if (query.startsWith("setTemperature")) {
+        } else if (query.startsWith("settemperature")) {
             if (vips.includes(event.senderID)) {
             settings.temperature = 0.9
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
                 sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
             }
-        } else if (query.startsWith("setFrequencyPenalty")) {
+        } else if (query.startsWith("setfrequencypenalty")) {
             if (vips.includes(event.senderID)) {
             settings.frequencyPenalty = 1
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
                 sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
             }
-        } else if (query.startsWith("setPresencePenalty")) {
+        } else if (query.startsWith("setpresencepenalty")) {
             if (vips.includes(event.senderID)) {
             settings.presencePenalty = 0.4
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
                 sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
             }
-        } else if (query.startsWith("setProbabilityMass")) {
+        } else if (query.startsWith("setprobabilitymass")) {
             if (vips.includes(event.senderID)) {
             settings.probabilityMass = 1
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
@@ -1145,11 +1233,25 @@ async function ai(api, event) {
                     sendMessage(api, event, "This group has about " + arr.length + " members.")
                 }
             })
+        } else if (query.startsWith("changename")) {
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    let data = input.split(" ");
+                    if (data.length < 2) {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using changename text instead.\n\nFor example:\nchangename Hall of Codes")
+                    } else {
+                        data.shift()
+                        api.setTitle(data.join(" "), event.threadID, (err, obj) => {
+                        if (err) return console.error(err);
+                    });
+                    }
+                }
+            })
         } else if (query == "gname") {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     sendMessage(api, event, `${gc.threadName}`)
-                  }
+                }
             })
         } else if (query == "groupid" || query == "guid" || query == "uid") {
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1179,17 +1281,21 @@ async function ai(api, event) {
             sendMessage(api, event, help3);
         } else if (query == "help5") {
             sendMessage(api, event, help4);
+        } else if (query == "help6") {
+            sendMessage(api, event, help5);
+        } else if (query == "help7") {
+            sendMessage(api, event, help6);
         } else if (query.startsWith("wiki")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using wiki query instead.\n\nFor example:\nwiki google")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead.\n\nFor example:\nwiki google")
             } else {
                 wiki(api.sendMessage, input.substring("5"), event);
             }
         } else if (query.startsWith("info")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using info @user instead.\n\nFor example:\ninfo @Melvin Jones Repol")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                    if (event.senderID == myAccountId || event.senderID == myOtherId) {
@@ -1223,7 +1329,7 @@ async function ai(api, event) {
             text = text.substring(7)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat query instead.\nFor example:\nlulcat query");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat text instead.\nFor example:\nlulcat meowww");
             } else {
             getResponseData("https://api.popcat.xyz/lulcat?text=" + text).then((response) => {
                 if (response == null) {
@@ -1239,7 +1345,7 @@ async function ai(api, event) {
             text = text.substring(5)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using mock query instead.\nFor example:\nmock query");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using mock text instead.\nFor example:\nmock i have no idea");
             } else {
             getResponseData("https://api.popcat.xyz/mock?text=" + text).then((response) => {
                 if (response == null) {
@@ -1282,7 +1388,7 @@ async function ai(api, event) {
             text = text.substring(9)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname mentioned nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
             } else {
                 api.getThreadInfo(event.threadID, (err, info) => {
                     var mentionid = `${Object.keys(event.mentions)[0]}`;
@@ -1297,7 +1403,7 @@ async function ai(api, event) {
             text = text.substring(6).split(":");
             let data = input.split(" ");
             if (data.length < 3) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using drake query1:query2 instead.\nFor example:\ndrake hahah:hehehe");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead.\nFor example:\ndrake error: bug");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/drake.png');
             }
@@ -1306,7 +1412,7 @@ async function ai(api, event) {
             text = text.substring(5);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pika query instead.\nFor example:\npika hahah");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using pika text instead.\nFor example:\npika hayssss");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" +text, __dirname + '/cache/images/pika.png');
             }
@@ -1319,12 +1425,21 @@ async function ai(api, event) {
                     parseImage(api, event, `${response.image}`, __dirname + '/cache/images/meme.png');
                 }
             });
+        } else if (query == "meme--reddit") {
+            getResponseData("https://meme-api.herokuapp.com/gimme").then((response) => {
+                if (response == null) {
+                    reportIssue(api, revent.threadID, response);
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    parseImage(api, event, `${response.url}`, __dirname + '/cache/images/meme.png');
+                }
+            });
         } else if (query.startsWith("oogway")) {
             var text = input;
             text = text.substring(7);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using oogway query instead.\nFor example:\noogway hahah");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using oogway text instead.\nFor example:\noogway bug is not an error");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/oogway?text=" +text, __dirname + '/cache/images/oogway.png');
             }
@@ -1333,7 +1448,7 @@ async function ai(api, event) {
             text = text.substring(6);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using alert query instead.\nFor example:\nalert hahah");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using alert text instead.\nFor example:\nalert hello world");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/alert?text=" +text, __dirname + '/cache/images/alert.png');
             }
@@ -1342,7 +1457,7 @@ async function ai(api, event) {
             text = text.substring(8);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using caution query instead.\nFor example:\ncaution hahah");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using caution text instead.\nFor example:\ncaution bug is not an error");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/caution?text=" +text, __dirname + '/cache/images/caution.png');
             }
@@ -1351,7 +1466,7 @@ async function ai(api, event) {
             text = text.substring(6);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using biden query instead.\nFor example:\nbiden hahah");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using biden text instead.\nFor example:\nbiden i am leaving twitter");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/biden?text=" +text, __dirname + '/cache/images/biden.png');
             }
@@ -1373,7 +1488,7 @@ async function ai(api, event) {
             text = text.substring(4);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using god query instead.\nFor example:\ngod hahah");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using god text instead.\nFor example:\ngod explicit content");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" +text, __dirname + '/cache/images/god.png');
             }
@@ -1382,7 +1497,7 @@ async function ai(api, event) {
             text = text.substring(7);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat query instead.\nFor example:\nsadcat hahah");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat text instead.\nFor example:\nsadcat meoww");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" +text, __dirname + '/cache/images/sadcat.png');
             }
@@ -1391,7 +1506,7 @@ async function ai(api, event) {
             text = text.substring(5).split(":");
             let data = input.split(" ");
             if (data.length < 3) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pooh query1:query2 instead.\nFor example:\npooh hahah:hehehe");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead.\nFor example:\npooh color: colour");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/pooh.png');
             }
@@ -1400,7 +1515,7 @@ async function ai(api, event) {
             text = text.substring(10);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using landscape query instead.\nFor example:\nlandscape query");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using landscape text instead.\nFor example:\nlandscape night");
             } else {
                 parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + '/cache/images/landscape.png');
             }
@@ -1409,7 +1524,7 @@ async function ai(api, event) {
             text = text.substring(9);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using portrait query instead.\nFor example:\nportrait query");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using portrait text instead.\nFor example:\nportrait rgb");
             } else {
                 parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + '/cache/images/portrait.png');
             }
@@ -1478,6 +1593,26 @@ async function ai(api, event) {
                     sendMessage(api, event, result);
                 }
             });
+        } else if (query.startsWith("verse")) {
+                let data = input.split(" ")
+                if (data.length < 2) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor example:\nverse Job 4:9");
+                } else {
+                    data.shift()
+                    let body = data.join(" ");
+                    getResponseData("http://labs.bible.org/api/?passage=" + body + "&type=json").then((r) => {
+                        if (r == null) {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor example:\nverse Job 4:9");
+                        } else {
+                            let result = ""
+                            let total = r.length
+                            for (let i = 0; i < total; i++) {
+                                result += "The book of " + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse + " says\n\n" + r[i].text;
+                            }
+                            sendMessage(api, event, `${result}`);
+                        }
+                    })
+                }
         } else if (query == "refresh" || query == "reload") {
             if (vips.includes(event.senderID)) {
             let A = api.getAppState();
@@ -1489,13 +1624,13 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
-        } else if (query == "hi" && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
+        } else if (query == "hi") {
             sendMessage(api, event, "Hello");
-        } else if (query == "hello" && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
+        } else if (query == "hello") {
             sendMessage(api, event, "Hi");
         } else if (query == "sup" || query == "wassup" || query == "what's up" || query == "how are you" && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
             sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
-        } else if (query.startsWith("hey") && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
+        } else if (query.startsWith("hey")) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") || query.includes("lmfao")) {
             reactMessage(api, event, ":laughing:");
@@ -1525,15 +1660,13 @@ async function ai(api, event) {
             reactMessage(api, event, ":like:");
         } else if (query == "okay" && event == "message_reply") {
             sendMessage(api, event, "Yup");
-        } else if (query.includes("jabol")) {
+        } else if (nsfw(query)) {
             sendMessage(api, event, "Shhhhhhh watch your mouth.");
         } else if (query == "idk"  && event == "message_reply") {
             sendMessage(api, event, "i dont know too...");
         } else if ((query == "nice" || query == "uwu") && event == "message_reply") {
             reactMessage(api, event, ":heart:");
-        } else if (query.includes("nude")) {
-            sendMessage(api, event, "Dont!...");
-        } 
+        }
         
     }
 }
@@ -1554,23 +1687,27 @@ function reportIssue(api, event, err) {
 }
 
 async function sendMessage(api, event, message) {
-    await wait(sleep[Math.floor(Math.random() * sleep.length)])
+    //await wait(sleep[Math.floor(Math.random() * sleep.length)] + 3000)
+    //await wait(countWords(message) * 500);
     api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
 async function sendMessageNoReply(api, eventId, message) {
-    await wait(sleep[Math.floor(Math.random() * sleep.length)])
+   // await wait(sleep[Math.floor(Math.random() * sleep.length)] + 3000)
+    //await wait(countWords(message) * 600);
     api.sendMessage(message, eventId).catch((err) => reportIssue(api, event, err));
 }
 
 async function reactMessage(api, event, reaction) {
-    await wait(sleep[Math.floor(Math.random() * sleep.length)])
+    //await wait(sleep[Math.floor(Math.random() * sleep.length)] + 3000)
+    //await wait(5000);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
 function removeEmojis(string) {
-    var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
-    return string.replace(regex, '');
+   // var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
+   const regex = /\p{Extended_Pictographic}/ug;
+   return string.replace(regex, '');
 }
 
 function holdOn(event) {
@@ -1578,7 +1715,6 @@ function holdOn(event) {
         if (!(event.senderID in cd)) {
             cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
         } else if (Math.floor(Date.now() / 1000) < cd[event.senderID]) {
-            //sendMessage(api, event, "Hold on... Your asking too much wait for " + Math.floor((cd[event.senderID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " + (cd[event.senderID] - Math.floor(Date.now() / 1000)) % 60 + " seconds");
             return true;
         } else {
             cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
@@ -1636,9 +1772,19 @@ async function search(api, event, query) {
         }) 
         sendMessage(api, event, msg);
       }catch(err){
-        sendMessage(api, event, "error searching for" + query);
+        sendMessage(api, event, "Unable to search the query " + query + " please try it again later.");
       }
   }
+
+function countWords(str) {
+    try {
+    return str.split(' ').filter(function(n) {
+        return n != ''
+    }).length;
+} catch (err) {
+    return 5;
+}
+}
 
 function isFileExists(path) {
     let bool;
@@ -1649,7 +1795,33 @@ function isFileExists(path) {
           return;
         }
     bool = true;
-      })
+    })
+    return bool;
+}   
 
-      return bool;
+async function printy(api, event, images) {
+    for (let i = 0; (i < 6 && i < images.length); i++) {
+         let imgs = images[i].url;
+         request(imgs).pipe(fs.createWriteStream("cache/images/Img"+ i +".png"))
+    }
+    //await wait(sleep[Math.floor(Math.random() * sleep.length)] + 5000)
+    let message = {
+        attachment:[
+         fs.createReadStream("./cache/images/Img0.png"),
+         fs.createReadStream("./cache/images/Img1.png"),
+         fs.createReadStream("./cache/images/Img2.png"),
+         fs.createReadStream("./cache/images/Img3.png"),
+         fs.createReadStream("./cache/images/Img4.png"),
+         fs.createReadStream("./cache/images/Img5.png")
+        ]
+       };
+      api.sendMessage(message, event.threadID, (err, done) => {
+        if (err) {
+            sendMessage(api, event, "Unable to find images..");
+        };
+    }, event.messageID);
+}
+
+function nsfw(text) {
+    return text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") || text.includes("sex") || text.includes("masturbate") || text.includes("pussy") || text.includes("dick");
 }
