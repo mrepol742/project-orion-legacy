@@ -42,7 +42,7 @@ let myOtherId = "100016029218667";
 let myGirlAccountId = "100077318906152";
 let techhJork = "100037131918629";
 
-let debug = true;
+let debug = false;
 
 let help = "Help 1/7";
     help += "\n\n⦿ help [number of pages]";
