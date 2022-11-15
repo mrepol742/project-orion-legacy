@@ -43,6 +43,7 @@ let myGirlAccountId = "100077318906152";
 let techhJork = "100037131918629";
 
 let debug = false;
+let isEnabledOnMyGirl = false;
 
 let qot = ["The object will not change its motion unless a force acts on it.",
 "The object is equal to its mass times its acceleration.",
@@ -62,8 +63,10 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 "The molar flux due to diffusion is proportional to the concentration gradient.",
 "The external static pressure applied on a confined liquid is distributed or transmitted evenly throughout the liquid in all directions."]
 
-let help = "Project Orion 1 - 7";
-    help += "\n\n⦿ help [number of pages]";
+let help = "\n⦿ help";
+    help += "\n⦿ help [number]";
+    help += "\n⦿ help all";
+    help += "\n⦿ mj [text]"
     help += "\n⦿ pdf [text]";
     help += "\n⦿ dict [text]";
     help += "\n⦿ summ [text]";
@@ -76,14 +79,8 @@ let help = "Project Orion 1 - 7";
     help += "\n⦿ decode64 [text]";
     help += "\n⦿ facts [text]";
     help += "\n⦿ lulcat [text]";
-    help += "\n⦿ mock [text]";
-    help += "\n⦿ fact";
-    help += "\n⦿ thoughts";
-    help += "\n\n";
-    help += qot[Math.floor(Math.random() * qot.length)];
 
-let help1 = "Project Orion 2 - 7";
-    help1 += "\n\n⦿ thoughts";
+let help1 = "\n⦿ thoughts";
     help1 += "\n⦿ github [username]";
     help1 += "\n⦿ changeemo [emoji]";
     help1 += "\n⦿ changename [text]";
@@ -97,11 +94,8 @@ let help1 = "Project Orion 2 - 7";
     help1 += "\n⦿ problem [equation]";
     help1 += "\n⦿ pin add";
     help1 += "\n⦿ pin remove";
-    help1 += "\n\n";
-    help1 += qot[Math.floor(Math.random() * qot.length)];
 
-let help2 = "Project Orion 3 - 7";
-    help2 += "\n\n⦿ verse today";
+let help2 = "\n⦿ verse today";
     help2 += "\n⦿ verse random";
     help2 += "\n⦿ verse [book] [chapter]:[verse]";
     help2 += "\n⦿ animeqoute";
@@ -111,16 +105,13 @@ let help2 = "Project Orion 3 - 7";
     help2 += "\n⦿ advice";
     help2 += "\n⦿ remove";
     help2 += "\n⦿ meme";
-    help2 += "\n⦿ meme --redit";
+    help2 += "\n⦿ meme --reddit";
     help2 += "\n⦿ drake [text1]: [text2]";
     help2 += "\n⦿ pooh [text1]: [text2]";
     help2 += "\n⦿ oogway [text]";
     help2 += "\n⦿ caution [text]";
-    help2 += "\n\n";
-    help2 += qot[Math.floor(Math.random() * qot.length)];
 
-let help3 = "Project Orion 4 - 7";
-    help3 += "\n\n⦿ alert [text]";
+let help3 = "\n⦿ alert [text]";
     help3 += "\n⦿ sadcat [text]";
     help3 += "\n⦿ biden [text]";
     help3 += "\n⦿ pika [text]";
@@ -135,11 +126,8 @@ let help3 = "Project Orion 4 - 7";
     help3 += "\n⦿ pickup";
     help3 += "\n⦿ uid";
     help3 += "\n⦿ guid";
-    help3 += "\n\n";
-    help3 += qot[Math.floor(Math.random() * qot.length)];
 
-let help4 = "Project Orion 5 - 7";
-    help4 += "\n\n⦿ ig [username]";
+let help4 = "\n⦿ ig [username]";
     help4 += "\n⦿ element [name]";
     help4 += "\n⦿ imdb [title]";
     help4 += "\n⦿ steam [name]";
@@ -154,37 +142,34 @@ let help4 = "Project Orion 5 - 7";
     help4 += "\n⦿ color";
     help4 += "\n⦿ count";
     help4 += "\n⦿ simsimi [text]";
-    help4 += "\n\n";
-    help4 += qot[Math.floor(Math.random() * qot.length)];
 
-let help5 = "Project Orion 6 - 7";
-    help5 += "\n\n⦿ reverse [text]";
+let help5 = "\n⦿ reverse [text]";
     help5 += "\n⦿ itunes [title]";
     help5 += "\n⦿ doublestruct [text]";
     help5 += "\n⦿ translate [language] [text]";
     help5 += "\n⦿ trump [text]";
-    help5 += "\n⦿ conan";
-    help5 += "\n⦿ coding";
-    help5 += "\n⦿ newyear";
-    help5 += "\n⦿ christmas";
-    help5 += "\n\n";
-    help5 += qot[Math.floor(Math.random() * qot.length)];
+    help5 += "\n⦿ mock [text]";
 
-let help6 = "Project Orion 7 - 7";
-    help6 += "\n\n⦿ unsend --on";
-    help6 += "\n⦿ unsend --off";
-    help6 += "\n⦿ unsend --all";
-    help6 += "\n⦿ delay --on";
-    help6 += "\n⦿ delay --off";
-    help6 += "\n⦿ setMaxTokens [integer]";
-    help6 += "\n⦿ setTemperature [integer]";
-    help6 += "\n⦿ setFrequencyPenalty [integer]";
-    help6 += "\n⦿ setProbabilityMass [integer]";
-    help6 += "\n⦿ setVIP @mention or uid";
-    help6 += "\n⦿ remVIP @mention or uid";
-    help6 += "\n⦿ refresh | reload";
-    help6 += "\n\n";
-    help6 += qot[Math.floor(Math.random() * qot.length)];
+let help6 = "\n⦿ conan";
+    help6 += "\n⦿ coding";
+    help6 += "\n⦿ newyear";
+    help6 += "\n⦿ christmas";
+    help6 += "\n⦿ barrier";
+    help6 += "\n⦿ fact";
+    help6 += "\n⦿ thoughts";
+
+let helpadmin = "\n⦿ unsend --on";
+    helpadmin += "\n⦿ unsend --off";
+    helpadmin += "\n⦿ unsend --all";
+    helpadmin += "\n⦿ delay --on";
+    helpadmin += "\n⦿ delay --off";
+    helpadmin += "\n⦿ setMaxTokens [integer]";
+    helpadmin += "\n⦿ setTemperature [integer]";
+    helpadmin += "\n⦿ setFrequencyPenalty [integer]";
+    helpadmin += "\n⦿ setProbabilityMass [integer]";
+    helpadmin += "\n⦿ setVIP @mention or uid";
+    helpadmin += "\n⦿ remVIP @mention or uid";
+    helpadmin += "\n⦿ refresh | reload";
 
 let apiKey = [
     // phub api key
@@ -239,8 +224,12 @@ login({
             let input = event.body;
             let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 if (!(vips.includes(event.senderID))) {
-                if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
-                    sendMessage(api, event, "Hold on a moment this system is currently in maintenance mode... only authorized uid is allowed to call and initiate its function in the moment.\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjones" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
+                    let message = {
+                        body: "Hold on a moment this system is currently in maintenance mode...\n\n" + qot[Math.floor(Math.random() * qot.length)],
+                        attachment: fs.createReadStream(__dirname + '/cache/maintenance.gif')
+                    };
+                    sendMessage(api, event, message);
                 }
                 return;
                 }
@@ -283,13 +272,16 @@ login({
                     }
                 } 
 
-               // if (event.senderID == myGirlAccountId) {
-               //     break;
-                //}
+                if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
+                    break;
+                }
 
                 ai(api, event);
                 
                 if (query == "pinadd") {
+                    if (isGoingToFast(event)) {
+                        break;
+                    }
                     if (event.messageReply.body == "") { 
                         sendMessage(api, event, "You need to reply pinadd to a message which is not empty to pin it.");
                     } else {
@@ -299,6 +291,9 @@ login({
                         fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
                     }
                 } else if (query == "count") {
+                    if (isGoingToFast(event)) {
+                        break;
+                    }
                     if (event.messageReply.body == "") { 
                         sendMessage(api, event, "You need to reply count to a message which is not empty.");
                     } else {
@@ -307,6 +302,9 @@ login({
                 }
 
                 if (query == "bgremove") {
+                    if (isGoingToFast(event)) {
+                        break;
+                    }
                     if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                     const {
                         threadID,
@@ -558,36 +556,7 @@ function wait(ms) {
    })
 }
 
-
-const info = (api, event)=>{
-    api.getUserInfo(Object.keys(mentions), async (err, ret) => {
-        if(err) return reportIssue(api, event.threadID, err);
-        for(let prop in ret) {
-            let {vanity,name,gender,isBirthday} = ret[prop]
-            let url = encodeURI('https://graph.facebook.com/'+`${prop}`+'/picture?height=720&width=720&access_token=' + apiKey[1])
-            let filename = __dirname + "/cache/images/"+ prop + ".jpg";
-            let msg = `
-User ID: ${prop}
-Name: ${checkFound(name)}
-Username: ${checkFound(vanity)}
-Gender: ${gender == 1 ? "female" : "male"}
-Birthday: ${checkFound(isBirthday)}  
-`
-            await download(url,filename,()=>{
-                let message = { 
-                    body: msg,
-                    attachment:fs.createReadStream(filename)
-                  };
-                sendMessage(api, event, message);
-            })
-        }
-    });
-}
-
 async function ai(api, event) {
-    /*if (holdOn(event)) {
-        return;
-    }*/
     if (event.body != null) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
@@ -595,20 +564,23 @@ async function ai(api, event) {
         if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") ||
         ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
         query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             if (input.split(" ").length < 2) {
-                if (event.senderID == myGirlAccountId) {
+                if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
                     return;
                 }
                 if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742")) {
                     let message = {
                         body:  "Moshi mos... \nHow can i help you? If you have any question don't hesitate to ask What, Who, When, Where, Why, How?. For list of commands type help.\n\n" + qot[Math.floor(Math.random() * qot.length)],
-                        attachment: [fs.createReadStream(__dirname + '/cache/hello.jpg')]
+                        attachment: [fs.createReadStream(__dirname + "/cache/hello" +  Math.floor(Math.random() * 8) + ".jpg")]
                     }
                     sendMessage(api, event, message);
                 } 
             } else {
                 let text = input;
-                if (event.senderID == myGirlAccountId) {
+                if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
                     return;
                 } else if (query.startsWith("repol")) {
                     text = input.substring(6)
@@ -619,8 +591,7 @@ async function ai(api, event) {
                 } 
                 if (nsfw(text)) {
                     sendMessage(api, event, "Shhhhhhh watch your mouth.");
-                    return;
-                }
+                } else {
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
                 });
@@ -630,7 +601,7 @@ async function ai(api, event) {
                 } = await openai.createCompletion("text-davinci-002", {
                     prompt: text,
                     temperature: 0.9,
-                    max_tokens: 300,
+                    max_tokens: 100,
                     top_p: 1,
                     frequency_penalty: 1,
                     presence_penalty: 0.4,
@@ -641,12 +612,13 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, finish);
             }
+            }
         }
-        //if (event.senderID == myGirlAccountId) {
-         //   return;
-       // }
+        if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
+           return;
+        }
 
-        /*
+    
         if (query.startsWith("problem")) {
             if (query2.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
@@ -661,7 +633,7 @@ async function ai(api, event) {
                     sendMessage(api, event, res);
                 }
             }
-        } */
+        } 
         if (event.type == "message") {
             if (query == "bgremove") {
                 sendMessage(api, event, "You need to reply to an image in order to work.");
@@ -674,6 +646,9 @@ async function ai(api, event) {
             }
         }
         if (query.startsWith("phub") || query.startsWith("pornhub")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let id;
                 if (event.type == "message") {
                     id = event.senderID;
@@ -699,6 +674,9 @@ async function ai(api, event) {
             })
 
         } else if (query.startsWith("video")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor example:\nvideo In The End by Linkin Park")
@@ -761,6 +739,9 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("music")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor example:\nmusic In The End by Linkin Park")
@@ -821,6 +802,9 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("lyrics")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
                 const Client = new Genius.Client("RF_40ktL7f4H55RYDtdL27nTZMewq9H9FKkJfuZmzHzq1Cpy_a4LoQi6lzsP5G2L");
                 let data = input.split(" ");
                 if (data.length < 2) {
@@ -833,6 +817,9 @@ async function ai(api, event) {
                     sendMessage(api, event, RES);
                 }
         } else if (query.startsWith("googleimage") || query2.startsWith("searchimage ") || query2.startsWith("findimage ")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2){
                 sendMessage(api, event, "Opps! I didnt get it. You should try using findimage text instead.\nFor example:\nfindimage mark zuckerberg")
@@ -860,6 +847,9 @@ async function ai(api, event) {
                 });
             }
         } else if (query.startsWith("encode64")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 text instead.\nFor example:\nencode64 fundamentals in engineering")
             } else {
@@ -870,6 +860,9 @@ async function ai(api, event) {
                 sendMessage(api, event, base64data);
             }
         } else if (query.startsWith("decode64")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead.\nFor example:\ndecode64 fundamentals in engineering")
             } else {
@@ -880,6 +873,9 @@ async function ai(api, event) {
                 sendMessage(api, event, base642text);
             }
         } else if (query.startsWith("reverse")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using reverse text instead.\nFor example:\nreverse fundamentals in engineering")
             } else {
@@ -891,12 +887,18 @@ async function ai(api, event) {
                 sendMessage(api, event, joinArray);
             }
         } else if (query == "pinremove") {
+            if (isGoingToFast(event)) {
+                return;
+            }
            let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
             pinned.pin.message[event.threadID] = undefined
             pinned.pin.sender[event.threadID] = undefined
             sendMessage(api, event, "Pinned message removed.");
             fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
         } else if (query == "pin") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
             if (pinned.pin.message[event.threadID] == undefined) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
@@ -912,6 +914,9 @@ async function ai(api, event) {
                 });
             }
         } else if (query.startsWith("pdf")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using pdf text instead.\nFor example:\npdf fundamentals in engineering")
@@ -931,6 +936,9 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using dict text instead.\nFor example:\ndict computer");
             } else {
@@ -966,6 +974,9 @@ async function ai(api, event) {
                 });
             }
         } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead.\n\nFor example:\nsumm this sentence meant to be summarized.");
             } else {
@@ -997,6 +1008,9 @@ async function ai(api, event) {
         };
 
         if (query.startsWith("dgoogle") || query2.startsWith("dsearch ") || query2.startsWith("dfind ")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using dgoogle text instead.\n\nFor example:\ndgoogle computer")
@@ -1013,6 +1027,9 @@ async function ai(api, event) {
         }
 
         if (query.startsWith("google") || query2.startsWith("search ") || query2.startsWith("find ")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using google text instead.\n\nFor example:\ngoogle computer")
@@ -1034,6 +1051,9 @@ async function ai(api, event) {
             }
         }
         if (query.startsWith("baybayin")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ")
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using baybayin text instead.\n\nFor example:\nbaybayin ako ay filipino")
@@ -1049,6 +1069,9 @@ async function ai(api, event) {
                     })
             }
         } else if (query.startsWith("doublestruck")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using doublestruck text instead.\n\nFor example:\ndoublestruck Hello World")
@@ -1064,6 +1087,9 @@ async function ai(api, event) {
                         })
                 }
         } else if (query.startsWith("translate")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using translate language text instead.\n\nFor example:\ntranslate English Kamusta")
@@ -1081,6 +1107,9 @@ async function ai(api, event) {
                         })
                 }
         } else if (query.startsWith("weather")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ")
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using weather location instead.\n\nFor example:\nweather caloocan city")
@@ -1115,6 +1144,9 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("facts")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ")
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using facts text instead.\n\nFor example:\nfacts computer")
@@ -1124,6 +1156,9 @@ async function ai(api, event) {
                 parseImage(api, event, url, __dirname + '/cache/images/facts.png');
             }
         } else if (query == "wyr" || query == "wouldyourather") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://api.popcat.xyz/wyr").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1133,6 +1168,9 @@ async function ai(api, event) {
                 }
             });
         } else if (query == "8ball") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://api.popcat.xyz/8ball").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1143,6 +1181,9 @@ async function ai(api, event) {
             });
 
         } else if (query.startsWith("instagram") || query2.startsWith("insta ") || query2.startsWith("ig ")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ")
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead.\n\nFor example:\ninstagram melvinjonesrepol")
@@ -1178,6 +1219,9 @@ async function ai(api, event) {
                     })
             } 
         } else if (query.startsWith("profilepic")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let id;
             if (event.type == "message_reply") {
                 id = event.messageReply.senderID;
@@ -1188,6 +1232,9 @@ async function ai(api, event) {
             parseImage(api, event, url, __dirname + '/cache/images/profilepic.png');
             
          } else if (query.startsWith("github")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using github username instead.\n\nFor example:\ngithub melvinjonesrepol")
@@ -1225,6 +1272,9 @@ async function ai(api, event) {
                     
                 }
             } else if (query.startsWith("element")) {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using element name instead.\n\nFor example:\nelement hydrogen")
@@ -1260,6 +1310,9 @@ async function ai(api, event) {
                 
                 }
             } else if (query.startsWith("npm")) {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using npm name instead.\n\nFor example:\nnpm mrepol742")
@@ -1285,6 +1338,9 @@ async function ai(api, event) {
                     
                 }
             } else if (query.startsWith("steam")) {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using steam name instead.\n\nFor example:\nsteam minecraft")
@@ -1316,6 +1372,9 @@ async function ai(api, event) {
                         })
                 }
             } else if (query.startsWith("imdb")) {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using imdb name instead.\n\nFor example:\nimdb iron man")
@@ -1348,6 +1407,9 @@ async function ai(api, event) {
                         })
                 }
             } else if (query.startsWith("itunes")) {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using itunes title instead.\n\nFor example:\nitunes in the end")
@@ -1380,6 +1442,9 @@ async function ai(api, event) {
                         })
                 }
         } else if (query == "car") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             axios.get("https://api.popcat.xyz/car")
             .then(response => {
                 let image = response.data.image;
@@ -1400,6 +1465,9 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately car run away.");
             })
         } else if (query == "color") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             axios.get("https://api.popcat.xyz/randomcolor")
             .then(response => {
                 let hex = response.data.hex;
@@ -1421,6 +1489,9 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately color fades away.");
             })
         } else if (query == "pickup") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             axios.get("https://api.popcat.xyz/pickuplines")
                     .then(response => {
                         sendMessage(api, event, response.data.pickupline);
@@ -1430,6 +1501,9 @@ async function ai(api, event) {
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     })
         } else if (query.startsWith("changeemo")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using changeemo emoji instead.\n\nFor example:\nchangeemo 😂")
@@ -1440,6 +1514,9 @@ async function ai(api, event) {
                 });
             }
         } else if (query.startsWith("sendreport")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead.\n\nFor example:\nsendReport a problem.")
@@ -1499,6 +1576,9 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hehe... noo you cannot turn it off...");
             }
         } else if (query == "gmember") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
@@ -1506,6 +1586,9 @@ async function ai(api, event) {
                 }
             })
         } else if (query.startsWith("changename")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     let data = input.split(" ");
@@ -1520,12 +1603,18 @@ async function ai(api, event) {
                 }
             })
         } else if (query == "gname") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     sendMessage(api, event, `${gc.threadName}`)
                 }
             })
         } else if (query == "groupid" || query == "guid" || query == "uid") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return cosole.log(err);
                 else {
@@ -1544,20 +1633,54 @@ async function ai(api, event) {
                 }
             });
         } else if (query == "help" || query == "help1") {
-            sendMessage(api, event, help);
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion 1 - 7\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help2") {
-            sendMessage(api, event, help1);
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion 2 - 7\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help3") {
-            sendMessage(api, event, help2);
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion 3 - 7\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help4") {
-            sendMessage(api, event, help3);
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion 4 - 7\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help5") {
-            sendMessage(api, event, help4);
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion 5 - 7\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help6") {
-            sendMessage(api, event, help5);
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion 6 - 7\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help7") {
-            sendMessage(api, event, help6);
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion 7 - 7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        } else if (query == "helpadmin") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        } else if (query == "helpall") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query.startsWith("wiki")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead.\n\nFor example:\nwiki google")
@@ -1565,22 +1688,49 @@ async function ai(api, event) {
                 wiki(api.sendMessage, input.substring("5"), event);
             }
         } else if (query.startsWith("info")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
-                   if (event.senderID == myAccountId || event.senderID == myOtherId) {
-                      sendMessage(api, event, "Nice try. But it wont gonna work, and i don't know why.")
-                      reactMessage(api, event, ":laughing:");
-                   } else {
-                      info(api, event);
-                   }
+                let id = Object.keys(event.mentions)[0];
+                console.log(id);
+                if (id == myAccountId || id == myOtherId) {
+                        id = event.senderID;
+                } 
+                   api.getUserInfo(id, async (err, ret) => {
+                    if(err) return reportIssue(api, event.threadID, err);
+                    for(let prop in ret) {
+                        let {vanity,name,gender,isBirthday} = ret[prop]
+                        let url = encodeURI('https://graph.facebook.com/'+`${prop}`+'/picture?height=720&width=720&access_token=' + apiKey[1])
+                        let filename = __dirname + "/cache/images/"+ prop + ".jpg";
+                        let msg = `
+            User ID: ${prop}
+            Name: ${checkFound(name)}
+            Username: ${checkFound(vanity)}
+            Gender: ${gender == 1 ? "female" : "male"}
+            Birthday: ${checkFound(isBirthday)}  
+            `
+                        await download(url,filename,()=>{
+                            let message = { 
+                                body: msg,
+                                attachment:fs.createReadStream(filename)
+                              };
+                            sendMessage(api, event, message);
+                        })
+                    }
+                });
                } else {
                 sendMessage(api, event, "Unable to find information without mentioning someone.")
                }
             }
         } else if (query.startsWith("morse")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(6)
             let data = input.split(" ");
@@ -1597,6 +1747,9 @@ async function ai(api, event) {
             });
             }
         } else if (query.startsWith("lulcat")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(7)
             let data = input.split(" ");
@@ -1613,6 +1766,9 @@ async function ai(api, event) {
             });
             }
         } else if (query.startsWith("mock")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(5)
             let data = input.split(" ");
@@ -1629,6 +1785,9 @@ async function ai(api, event) {
             });
             }
         } else if (query.startsWith("coding")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             axios.get("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random")
             .then(response => {
                 let url = response.data.url;
@@ -1646,9 +1805,12 @@ async function ai(api, event) {
             })
             .catch(error => {
                 reportIssue(api, event.threadID, error);
-                sendMessage(api, event, "Unfortunately car run away.");
+                sendMessage(api, event, "Unfortunately the code throws an exception.");
             })
         } else if (query == "joke") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://api.popcat.xyz/joke").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1657,7 +1819,19 @@ async function ai(api, event) {
                     sendMessage(api, event, `${response.joke}`);
                 }
             });
+        } else if (query == "barrier") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let message = {
+                body: "Anti horny barrier activated.",
+                attachment: fs.createReadStream(__dirname + '/cache/barrier.jpg')
+            };
+            sendMessage(api, event, message);
         } else if (query == "fact") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://api.popcat.xyz/fact").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1667,6 +1841,9 @@ async function ai(api, event) {
                 }
             });
         } else if (query == "thoughts") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1676,6 +1853,9 @@ async function ai(api, event) {
                 }
             });
         } else if (query.startsWith("nickname")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(9)
             let data = input.split(" ");
@@ -1683,14 +1863,20 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
             } else {
                 api.getThreadInfo(event.threadID, (err, info) => {
-                    let mentionid = `${Object.keys(event.mentions)[0]}`;
-
-                    api.changeNickname(text.substring(mentionid.length), `${info.threadID}`, mentionid, (err) => {
-                        if (err) return asendMessage(api, event, "Unfortunately there was an error occured while changing \"" + text + "\" nickname.");
-                    });
+                    let id = Object.keys(event.mentions)[0];
+                    api.getUserInfo(id, (err, info) => {
+                        if (err) return reportIssue(api, event.threadID, err);
+                        let name = info[id]['name'];
+                        api.changeNickname(text.substring(name.length + 1), info.threadID, id, (err) => {
+                            if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
+                        });
+                    })
                 });
             }
         } else if (query.startsWith("drake")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(6).split(":");
             let data = input.split(" ");
@@ -1700,6 +1886,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/drake.png');
             }
         } else if (query.startsWith("pika")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(5);
             let data = input.split(" ");
@@ -1709,6 +1898,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" +text, __dirname + '/cache/images/pika.png');
             }
         } else if (query == "meme") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://api.popcat.xyz/meme").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1718,6 +1910,9 @@ async function ai(api, event) {
                 }
             });
         } else if (query == "meme--reddit") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://meme-api.herokuapp.com/gimme").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1727,8 +1922,14 @@ async function ai(api, event) {
                 }
             });
         } else if (query.startsWith("conan")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             parseImage(api, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + '/cache/images/conan.png');
         } else if (query.startsWith("oogway")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(7);
             let data = input.split(" ");
@@ -1738,6 +1939,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/oogway?text=" +text, __dirname + '/cache/images/oogway.png');
             }
         } else if (query.startsWith("trump")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(6);
             let data = input.split(" ");
@@ -1747,6 +1951,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" +text, __dirname + '/cache/images/trump.png');
             }
         } else if (query.startsWith("qrcode")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(7);
             let data = input.split(" ");
@@ -1756,6 +1963,9 @@ async function ai(api, event) {
                 parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" +text, __dirname + '/cache/images/qrcode.png');
             }
         } else if (query.startsWith("alert")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(6);
             let data = input.split(" ");
@@ -1765,6 +1975,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/alert?text=" +text, __dirname + '/cache/images/alert.png');
             }
         } else if (query.startsWith("caution")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(8);
             let data = input.split(" ");
@@ -1774,6 +1987,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/caution?text=" +text, __dirname + '/cache/images/caution.png');
             }
         } else if (query.startsWith("biden")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(6);
             let data = input.split(" ");
@@ -1783,6 +1999,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/biden?text=" +text, __dirname + '/cache/images/biden.png');
             }
         } else if (query.startsWith("website")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(8);
             let data = input.split(" ");
@@ -1796,6 +2015,9 @@ async function ai(api, event) {
             }
             }
         } else if (query.startsWith("god")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(4);
             let data = input.split(" ");
@@ -1805,6 +2027,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" +text, __dirname + '/cache/images/god.png');
             }
         } else if (query.startsWith("sadcat")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(7);
             let data = input.split(" ");
@@ -1814,6 +2039,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" +text, __dirname + '/cache/images/sadcat.png');
             }
         } else if (query.startsWith("simsimi")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
                 if (data.length < 2) {
                    sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -1830,6 +2058,9 @@ async function ai(api, event) {
                   }
                 }
         } else if (query.startsWith("pooh")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(5).split(":");
             let data = input.split(" ");
@@ -1838,7 +2069,20 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/pooh.png');
             }
+        } else if (query == "landscape") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + '/cache/images/landscape.png');
+        } else if (query == "portrait") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + '/cache/images/portrait.png');
         } else if (query.startsWith("landscape")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(10);
             let data = input.split(" ");
@@ -1848,6 +2092,9 @@ async function ai(api, event) {
                 parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + '/cache/images/landscape.png');
             }
         } else if (query.startsWith("portrait")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let text = input;
             text = text.substring(9);
             let data = input.split(" ");
@@ -1856,11 +2103,10 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + '/cache/images/portrait.png');
             }
-        } else if (query == "landscape") {
-            parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + '/cache/images/landscape.png');
-        } else if (query == "portrait") {
-            parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + '/cache/images/portrait.png');
         } else if (query.startsWith("animequote")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             axios.get('https://animechan.vercel.app/api/random')
                 .then(response => {
                     sendMessage(api, event, response.data.quote + "\n\nby " + response.data.character + " of " + response.data.anime);
@@ -1870,6 +2116,9 @@ async function ai(api, event) {
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 });
         } else if (query == "advice") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://zenquotes.io/api/random").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1883,6 +2132,9 @@ async function ai(api, event) {
                 }
             });
         } else if (query.startsWith("inspiration")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://zenquotes.io/api/random").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1896,6 +2148,9 @@ async function ai(api, event) {
                 }
             });
         } else if (query.startsWith("motivation") || query.startsWith("motivate")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://zenquotes.io/api/random").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1909,6 +2164,9 @@ async function ai(api, event) {
                 }
             });
         } else if (query == "newyear") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let yr = new Date().getFullYear() + 1;
 let future = new Date("Jan 1, " + yr + " 00:00:00").getTime();
   let now = new Date().getTime();
@@ -1923,6 +2181,9 @@ let future = new Date("Jan 1, " + yr + " 00:00:00").getTime();
 };
   sendMessage(api, event, message)
 } else if (query == "christmas") {
+    if (isGoingToFast(event)) {
+        return;
+    }
     let yr = new Date().getFullYear();
 let future = new Date("Dec 25, " + yr + " 00:00:00").getTime();
 let now = new Date().getTime();
@@ -1937,6 +2198,9 @@ attachment: fs.createReadStream(__dirname + '/cache/Christmas.gif')
 };
 sendMessage(api, event, message)
         } else if (query == "verserandom") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1950,6 +2214,9 @@ sendMessage(api, event, message)
                 }
             });
         } else if (query == "versetoday") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
@@ -1963,6 +2230,9 @@ sendMessage(api, event, message)
                 }
             });
         } else if (query.startsWith("verse")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
                 let data = input.split(" ")
                 if (data.length < 2) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor example:\nverse Job 4:9");
@@ -2070,20 +2340,17 @@ function reportIssue(api, event, err) {
 }
 
 async function sendMessage(api, event, message) {
-    //await wait(sleep[Math.floor(Math.random() * sleep.length)] + 3000)
-    //await wait(countWords(message) * 500);
+    await wait(5000);
     api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
 async function sendMessageNoReply(api, eventId, message) {
-   // await wait(sleep[Math.floor(Math.random() * sleep.length)] + 3000)
-    //await wait(countWords(message) * 600);
+    await wait(5000);
     api.sendMessage(message, eventId).catch((err) => reportIssue(api, event, err));
 }
 
 async function reactMessage(api, event, reaction) {
-    //await wait(sleep[Math.floor(Math.random() * sleep.length)] + 3000)
-    //await wait(5000);
+    await wait(5000);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
@@ -2094,11 +2361,12 @@ function formatQuery(string) {
    return str.replace(anu, '');
 }
 
-function holdOn(event) {
+function isGoingToFast(event) {
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cd)) {
             cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
         } else if (Math.floor(Date.now() / 1000) < cd[event.senderID]) {
+            console.log("The user " + event.senderID + " is going to fast of executing commands.");
             return true;
         } else {
             cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
@@ -2112,7 +2380,7 @@ let download = async function(uri, filename, callback){
 };
 
 const checkFound = (text) =>{
-    return text ? text : "undefined" 
+    return text ? text : "unknown" 
 }
 
 async function weathersearch(location) {
@@ -2184,5 +2452,6 @@ function isFileExists(path) {
 }   
 
 function nsfw(text) {
-    return text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") || text.includes("masturbate") || text.includes("pussy") || text.includes("dick");
+    return text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") || 
+    text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny");
 }
