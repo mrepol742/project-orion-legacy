@@ -44,7 +44,25 @@ let techhJork = "100037131918629";
 
 let debug = false;
 
-let help = "Help 1/7";
+let qot = ["The object will not change its motion unless a force acts on it.",
+"The object is equal to its mass times its acceleration.",
+"There is an equal and opposite reaction for every action.",
+"Energy can neither be created nor destroyed, but it can be changed from one form to another.",
+"The radiant intensity from the ideal diffusely reflecting surface and cosine of the angle θ between the direction of incident light and surface normal are directly proportional.",
+"For a system of mass of particles, the sum of the difference of the force acting on the system and the time derivatives of the momenta is zero when projected onto any virtual displacement.",
+"The velocity of the galaxy, which is also known as the redshift, is directly proportional to its distance.",
+"For a given material, the sample path length and concentration of the sample are directly proportional to the absorbance of the light.",
+"The intensity of the radiation is inversely proportional to the square of the distance.",
+"The intensity of the light to an observer from a source is inversely proportional to the square of the distance from the observer to the source.",
+"The the strain of the material is proportional to the applied stress within the elastic limit of that material.",
+"Every point on a wavefront is in itself the source of spherical wavelets which spread out in the forward direction at the speed of light. The sum of these spherical wavelets forms the wavefront.",
+"If the net external force acting on a system of bodies is zero, then the momentum of the system remains constant.",
+"The product of the pressure and the volume of one gram molecule of an ideal gas is equal to the product of the absolute temperature of the gas and the universal gas constant.",
+"The upward buoyant force that is exerted on a body immersed in a fluid, whether partially or fully submerged, is equal to the weight of the fluid that the body displaces and acts in the upward direction at the center of mass of the displaced fluid.",
+"The molar flux due to diffusion is proportional to the concentration gradient.",
+"The external static pressure applied on a confined liquid is distributed or transmitted evenly throughout the liquid in all directions."]
+
+let help = "Project Orion 1 - 7";
     help += "\n\n⦿ help [number of pages]";
     help += "\n⦿ pdf [text]";
     help += "\n⦿ dict [text]";
@@ -61,9 +79,10 @@ let help = "Help 1/7";
     help += "\n⦿ mock [text]";
     help += "\n⦿ fact";
     help += "\n⦿ thoughts";
-    help += "\n\nFor every action there is an equal and opposite reaction."
+    help += "\n\n";
+    help += qot[Math.floor(Math.random() * qot.length)];
 
-let help1 = "Help 2/7";
+let help1 = "Project Orion 2 - 7";
     help1 += "\n\n⦿ thoughts";
     help1 += "\n⦿ github [username]";
     help1 += "\n⦿ changeemo [emoji]";
@@ -78,10 +97,10 @@ let help1 = "Help 2/7";
     help1 += "\n⦿ problem [equation]";
     help1 += "\n⦿ pin add";
     help1 += "\n⦿ pin remove";
-    help1 += "\n⦿ pin";
-    help1 += "\n\nFor every action there is an equal and opposite reaction."
+    help1 += "\n\n";
+    help1 += qot[Math.floor(Math.random() * qot.length)];
 
-let help2 = "Help 3/7";
+let help2 = "Project Orion 3 - 7";
     help2 += "\n\n⦿ verse today";
     help2 += "\n⦿ verse random";
     help2 += "\n⦿ verse [book] [chapter]:[verse]";
@@ -97,9 +116,10 @@ let help2 = "Help 3/7";
     help2 += "\n⦿ pooh [text1]: [text2]";
     help2 += "\n⦿ oogway [text]";
     help2 += "\n⦿ caution [text]";
-    help2 += "\n\nFor every action there is an equal and opposite reaction."
+    help2 += "\n\n";
+    help2 += qot[Math.floor(Math.random() * qot.length)];
 
-let help3 = "Help 4/7";
+let help3 = "Project Orion 4 - 7";
     help3 += "\n\n⦿ alert [text]";
     help3 += "\n⦿ sadcat [text]";
     help3 += "\n⦿ biden [text]";
@@ -115,9 +135,10 @@ let help3 = "Help 4/7";
     help3 += "\n⦿ pickup";
     help3 += "\n⦿ uid";
     help3 += "\n⦿ guid";
-    help3 += "\n\nFor every action there is an equal and opposite reaction."
+    help3 += "\n\n";
+    help3 += qot[Math.floor(Math.random() * qot.length)];
 
-let help4 = "Help 5/7";
+let help4 = "Project Orion 5 - 7";
     help4 += "\n\n⦿ ig [username]";
     help4 += "\n⦿ element [name]";
     help4 += "\n⦿ imdb [title]";
@@ -133,9 +154,10 @@ let help4 = "Help 5/7";
     help4 += "\n⦿ color";
     help4 += "\n⦿ count";
     help4 += "\n⦿ simsimi [text]";
-    help4 += "\n\nFor every action there is an equal and opposite reaction."
+    help4 += "\n\n";
+    help4 += qot[Math.floor(Math.random() * qot.length)];
 
-let help5 = "Help 6/7";
+let help5 = "Project Orion 6 - 7";
     help5 += "\n\n⦿ reverse [text]";
     help5 += "\n⦿ itunes [title]";
     help5 += "\n⦿ doublestruct [text]";
@@ -145,22 +167,24 @@ let help5 = "Help 6/7";
     help5 += "\n⦿ coding";
     help5 += "\n⦿ newyear";
     help5 += "\n⦿ christmas";
-    help5 += "\n\nFor every action there is an equal and opposite reaction."
+    help5 += "\n\n";
+    help5 += qot[Math.floor(Math.random() * qot.length)];
 
-let help6 = "Help 7/7";
+let help6 = "Project Orion 7 - 7";
     help6 += "\n\n⦿ unsend --on";
     help6 += "\n⦿ unsend --off";
     help6 += "\n⦿ unsend --all";
+    help6 += "\n⦿ delay --on";
+    help6 += "\n⦿ delay --off";
     help6 += "\n⦿ setMaxTokens [integer]";
     help6 += "\n⦿ setTemperature [integer]";
     help6 += "\n⦿ setFrequencyPenalty [integer]";
     help6 += "\n⦿ setProbabilityMass [integer]";
-    help6 += "\n⦿ delay --on";
-    help6 += "\n⦿ delay --off";
     help6 += "\n⦿ setVIP @mention or uid";
-    help6 += "\n⦿ removeVIP @mention or uid";
+    help6 += "\n⦿ remVIP @mention or uid";
     help6 += "\n⦿ refresh | reload";
-    help6 += "\n\nFor every action there is an equal and opposite reaction."
+    help6 += "\n\n";
+    help6 += qot[Math.floor(Math.random() * qot.length)];
 
 let apiKey = [
     // phub api key
@@ -216,7 +240,7 @@ login({
             let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 if (!(vips.includes(event.senderID))) {
                 if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
-                    sendMessage(api, event, "Hold on a moment this system is currently in maintenance mode... only authorized uid is allowed to call and initiate its function in the moment.");
+                    sendMessage(api, event, "Hold on a moment this system is currently in maintenance mode... only authorized uid is allowed to call and initiate its function in the moment.\n\n" + qot[Math.floor(Math.random() * qot.length)]);
                 }
                 return;
                 }
@@ -577,7 +601,11 @@ async function ai(api, event) {
                     return;
                 }
                 if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742")) {
-                   sendMessage(api, event, "Hello the system status is online and waiting for your reply.\nFor available commands enter help, this project does not disclose any personal data. \nIn aims of breaking apart the line between human and computer.");
+                    let message = {
+                        body:  "Moshi mos... \nHow can i help you? If you have any question don't hesitate to ask What, Who, When, Where, Why, How?. For list of commands type help.\n\n" + qot[Math.floor(Math.random() * qot.length)],
+                        attachment: [fs.createReadStream(__dirname + '/cache/hello.jpg')]
+                    }
+                    sendMessage(api, event, message);
                 } 
             } else {
                 let text = input;
