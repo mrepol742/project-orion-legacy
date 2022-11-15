@@ -484,7 +484,6 @@ login({
                             }
                         });
                     }
-          
             break;
             case "event":
                 switch (event.logMessageType) {
