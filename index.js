@@ -23,7 +23,8 @@ const GoogleImages = require('google-images');
 const Genius = require("genius-lyrics");
 
 let msgs = {};
-let cd = {};
+let cmd = {};
+let emo = {};
 let vips = [
     "100071743848974",
     "100016029218667",
@@ -82,8 +83,8 @@ let help = "\n⦿ help";
 
 let help1 = "\n⦿ thoughts";
     help1 += "\n⦿ github [username]";
-    help1 += "\n⦿ changeemo [emoji]";
-    help1 += "\n⦿ changename [text]";
+    help1 += "\n⦿ gemoji [emoji]";
+    help1 += "\n⦿ gname [text]";
     help1 += "\n⦿ wiki [text]";
     help1 += "\n⦿ info @mention";
     help1 += "\n⦿ nickname @mention [text]";
@@ -275,8 +276,13 @@ login({
                 }
                 const emo = /\p{Extended_Pictographic}/ug;
                 if (!event.body.replace(emo, '').length) {
-                    console.log(event.body)
-                    sendMessageNoReply(api, event.threadID, event.body);
+                    if (isGoingToFastResendingOfEmo(event)) {
+                        break;
+                    }
+                    let splitString = event.body.split("");
+                    let reverseArray = splitString.reverse();
+                    let joinArray = reverseArray.join("");
+                    sendMessageNoReply(api, event.threadID, joinArray);
                     break;
                 }
                 ai(api, event);
@@ -549,7 +555,7 @@ login({
                                             request(url).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
                                 .on('finish', () => {
                                     let message = {
-                                        body: `Thank you for joining ` + data[prop].name + ` but now your leaving us.`,
+                                        body: `Thank you for joining ` + data[prop].name + ` but now you're leaving us.`,
                                       attachment: fs.createReadStream(__dirname + "/cache/images/byebye.jpg")
                                  };
                                   sendMessage(api, event, message);
@@ -636,6 +642,9 @@ async function ai(api, event) {
                     sendMessage(api, event, "I'm far intelligent than you are human.")
                 } else if (query.startsWith("areyoumj")) {
                     sendMessage(api, event, "Yes i am indeed Mj.")
+                } else if (query == "thanks" || query == "thankyou") {
+                    sendMessage(api, event, "You're welcome.")
+                } else if (query.startsWith("whois") && )
                 } else {
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
@@ -1545,13 +1554,13 @@ async function ai(api, event) {
                         reportIssue(api, event.threadID, error);
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     })
-        } else if (query.startsWith("changeemo")) {
+        } else if (query.startsWith("gemoji")) {
             if (isGoingToFast(event)) {
                 return;
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using changeemo emoji instead.\n\nFor example:\nchangeemo 😂")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead.\n\nFor example:\ngemoji 😂")
             } else {
                 data.shift()
                 api.changeThreadEmoji(data.join(" "), event.threadID, (err) => {
@@ -1630,7 +1639,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "This group has about " + arr.length + " members.")
                 }
             })
-        } else if (query.startsWith("changename")) {
+        } else if (query.startsWith("gname")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -1638,7 +1647,7 @@ async function ai(api, event) {
                 if (gc.isGroup) {
                     let data = input.split(" ");
                     if (data.length < 2) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using changename text instead.\n\nFor example:\nchangename Hall of Codes")
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using gname text instead.\n\nFor example:\ngname Hall of Codes")
                     } else {
                         data.shift()
                         api.setTitle(data.join(" "), event.threadID, (err, obj) => {
@@ -1749,19 +1758,29 @@ async function ai(api, event) {
                 if (id == myAccountId || id == myOtherId) {
                     id = event.senderID;
                 }
+                let sender = event.send
                 getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
                     if (response == null) {
                         reportIssue(api, revent.threadID, response);
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     } else {
-                        request(`${response.url}`).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
-    .on('finish', () => {
-        let image = {
-            body: "@" ,
-            attachment: fs.createReadStream(__dirname + "/cache/images/kiss.png")
-        };
-        sendMessage(api, event, image);
-    })
+                        api.getUserInfo(id, (err, info) => {
+                            if (err) return reportIssue(api, event.threadID, err);
+                            let name = info[id]['name'];
+                            request(`${response.url}`).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
+                          .on('finish', () => {
+                          let image = {
+                              body: "@" + name ,
+                              attachment: fs.createReadStream(__dirname + "/cache/images/kiss.png"),
+                              mentions: [{
+                                tag: '@' + name,
+                                id: id,
+                                fromIndex: 0
+                            }]
+                          };
+                          sendMessage(api, event, image);
+                        })
+                        })
                     }
                 });
                } else {
@@ -2712,20 +2731,46 @@ sendMessage(api, event, message)
                 someR(api, event, query);
             }
         } else {
-            if (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742")) {
+            if (!query.includes("@") || isMe(query2)) {
                someR(api, event, query);
             }
         }
         
         if (query == "hi") {
-            sendMessage(api, event, "Hello");
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, "Hello");
+                } else {
+                    sendMessageNoReply(api, event.threadID, "Hello");
+                }
+            });
         } else if (query == "hello") {
-            sendMessage(api, event, "Hi");
-        } else if (query == "sup" || query == "wassup" || query == "what's up" || query == "how are you" && (query2.includes("melvin jones repol") || query2.includes("mj") || query2.includes("mrepol742"))) {
-            sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, "Hi");
+                } else {
+                    sendMessageNoReply(api, event.threadID, "Hi");
+                }
+            });
+        } else if (query == "sup" || query == "wassup" || query == "whatsup" || query == "howareyou" && (isMe(query2))) {
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
+                } else {
+                    sendMessageNoReply(api, event.threadID, sup[Math.floor(Math.random() * sup.length)]);
+                }
+            });
         } else if (query.startsWith("hey")) {
-            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") || query.includes("lmfao")) {
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+                } else {
+                    sendMessageNoReply(api, event.threadID, hey[Math.floor(Math.random() * hey.length)]);
+                }
+            });
+        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || input.toLowerCase().includes("😂") || 
+        input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || query.includes("funny") || 
+        query.includes("insane") || query.includes("lol") || query.includes("lmao") || query.includes("lmfao")) {
             reactMessage(api, event, ":laughing:");
         } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
             reactMessage(api, event, ":sad:");
@@ -2738,11 +2783,29 @@ sendMessage(api, event, message)
         } else if (query == "tsk") {
             reactMessage(api, event, ":like:");
         } else if (query == "okay") {
-            sendMessage(api, event, "Yup");
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, "Yup");
+                } else {
+                    sendMessageNoReply(api, event.threadID, "Yup");
+                }
+            });
         } else if (nsfw(query)) {
-            sendMessage(api, event, "Shhhhhhh watch your mouth.");
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, "Shhhhhhh watch your mouth.");
+                } else {
+                    sendMessageNoReply(api, event.threadID, "Shhhhhhh watch your mouth.";
+                }
+            });
         } else if (query == "idk") {
-            sendMessage(api, event, "i dont know too...");
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    sendMessage(api, event, "I dont know too...");
+                } else {
+                    sendMessageNoReply(api, event.threadID, "I dont know too...");
+                }
+            });
         } else if (query == "nice" || query == "uwu") {
             reactMessage(api, event, ":heart:");
         }
@@ -2805,18 +2868,31 @@ function formatQuery(string) {
 
 function isGoingToFast(event) {
     if (!(vips.includes(event.senderID))) {
-        if (!(event.senderID in cd)) {
-            cd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
+        if (!(event.senderID in cmd)) {
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
             return false;
-        } else if (Math.floor(Date.now() / 1000) < cd[event.senderID]) {
-            console.log("The user " + event.senderID + " is going to fast of executing commands.   " + Math.floor((cd[event.senderID] - Math.floor(Date.now() / 1000)) / 6) + " mins and " + (cd[event.senderID] - Math.floor(Date.now() / 1000)) % 6 + " seconds");
+        } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
+            console.log("The user " + event.senderID + " is going to fast of executing commands.   " + Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 6) + " mins and " + (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 6 + " seconds");
             return true;
         } else {
-            cd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
             return false;
         }
     }
     return false;
+}
+
+function isGoingToFastResendingOfEmo(event) {
+    if (!(event.senderID in emo)) {
+        emo[event.senderID] = Math.floor(Date.now() / 1000) + (12);
+        return false;
+    } else if (Math.floor(Date.now() / 1000) < emo[event.senderID]) {
+        console.log("The user " + event.senderID + " is going to fast of sending emoji.   " + Math.floor((emo[event.senderID] - Math.floor(Date.now() / 1000)) / 12) + " mins and " + (emo[event.senderID] - Math.floor(Date.now() / 1000)) % 12 + " seconds");
+        return true;
+    } else {
+        emo[event.senderID] = Math.floor(Date.now() / 1000) + (12);
+        return false;
+    }
 }
 
 let download = async function(uri, filename, callback){
@@ -2901,4 +2977,8 @@ function nsfw(text) {
 
 function getProfilePic(id) {
     return "https://graph.facebook.com/"  + id + "/picture?access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
+}
+
+function isMe(query) {
+    return query.includes("melvin jones repol") || query.includes("melvin jones") || query.includes("melvin jones gallano repol") || query.includes(" mj ") || query.includes("mrepol742");
 }
