@@ -165,6 +165,9 @@ let help6 = "\n⦿ conan";
     help6 += "\n⦿ jokeover @mention";
     help6 += "\n⦿ mnm @mention";
     help6 += "\n⦿ pet @mention";
+    help6 += "\n⦿ ship @mention @mention";
+    help6 += "\n⦿ www @mention @mention";
+    help6 += "\n⦿ kiss @mention";
     help6 += "\n⦿ coding";
     help6 += "\n⦿ newyear";
     help6 += "\n⦿ christmas";
@@ -240,7 +243,7 @@ login({
                 if (!(vips.includes(event.senderID))) {
                 if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjones" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
                     let message = {
-                        body: "Hold on a moment this system is currently in maintenance mode...\n\n" + qot[Math.floor(Math.random() * qot.length)],
+                        body: "Hold on a moment this system is currently under maintenance...\n\n" + qot[Math.floor(Math.random() * qot.length)],
                         attachment: fs.createReadStream(__dirname + '/cache/maintenance.gif')
                     };
                     sendMessage(api, event, message);
@@ -269,6 +272,12 @@ login({
                     if (event.senderID == myAccountId) {
                         console.log(event.body);
                     }
+                }
+                const emo = /\p{Extended_Pictographic}/ug;
+                if (!event.body.replace(emo, '').length) {
+                    console.log(event.body)
+                    sendMessageNoReply(api, event.threadID, event.body);
+                    break;
                 }
                 ai(api, event);
                 break;
@@ -504,13 +513,17 @@ login({
                             if (gc.isGroup) {
                                 let arr = gc.participantIDs;
                                 let Tmem = arr.length;
-                                let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the +` + Tmem + `th member&avatar=https://mrepol742.github.io/project-orion/profile.jpg`;
+                                let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + Tmem + `th member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
 
                                 request(url).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
                                 .on('finish', () => {
                                     let message = {
-                                        body: `Welcome ${event.logMessageData.addedParticipants[0].fullName}. You're the ` + Tmem + `th member of this group.`,
+                                        body: `Welcome @${event.logMessageData.addedParticipants[0].fullName}. You're the ` + Tmem + `th member of this group.`,
                                       attachment: fs.createReadStream(__dirname + "/cache/images/welcome.jpg"),
+                                      mentions: [{
+                                        tag: event.logMessageData.addedParticipants[0].fullName,
+                                        id: event.logMessageData.addedParticipants[0].userFbId
+                                    }]
                                  };
                                   sendMessage(api, event, message);
                                  })
@@ -532,7 +545,7 @@ login({
                                             let gcn = gc.threadName;
                                             let arr = gc.participantIDs;
                                             let Tmem = arr.length;
-                                            let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Member+" + Tmem + "&avatar=https://mrepol742.github.io/project-orion/profile.jpg";
+                                            let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Member+" + Tmem + "&avatar=" + getProfilePic(prop);
                                             request(url).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
                                 .on('finish', () => {
                                     let message = {
@@ -605,6 +618,24 @@ async function ai(api, event) {
                 } 
                 if (nsfw(text)) {
                     sendMessage(api, event, "Shhhhhhh watch your mouth.");
+                } else if (query.startsWith("whatiswebvium")) {
+                    sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.")
+                } else if (query.startsWith("whocreatedwebvium")) {
+                    sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.")
+                } else if (query.startsWith("whoareyou")) {
+                    sendMessage(api, event, "I'm Mj.")
+                } else if (query.startsWith("whocreatedyou")) {
+                    sendMessage(api, event, "Melvin Jones Repol")
+                } else if (query.startsWith("howoldareyou") || query.startsWith("howyoungareyou")) {
+                    sendMessage(api, event, "I'm 20 years old.")
+                } else if (query.startsWith("whereyoufrom")) {
+                    sendMessage(api, event, "Somewhere in the place they called the Philippines.")
+                } else if (query.startsWith("areyouhuman") || query.startsWith("areyoubot")) {
+                    sendMessage(api, event, "Scientifically, Programmatically and Technologically Human.")
+                } else if (query.includes("dumb") && query.includes("bot")) {
+                    sendMessage(api, event, "I'm far intelligent than you are human.")
+                } else if (query.startsWith("areyoumj")) {
+                    sendMessage(api, event, "Yes i am indeed Mj.")
                 } else {
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
@@ -1701,6 +1732,42 @@ async function ai(api, event) {
             } else {
                 wiki(api.sendMessage, input.substring("5"), event);
             }
+        } else if (query.startsWith("kiss")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
+            } else {
+               if (input.includes("@")) {
+                let id = Object.keys(event.mentions)[0];
+                if (id === undefined) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
+                    return;
+                }
+                if (id == myAccountId || id == myOtherId) {
+                    id = event.senderID;
+                }
+                getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
+                    if (response == null) {
+                        reportIssue(api, revent.threadID, response);
+                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                    } else {
+                        request(`${response.url}`).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
+    .on('finish', () => {
+        let image = {
+            body: "@" ,
+            attachment: fs.createReadStream(__dirname + "/cache/images/kiss.png")
+        };
+        sendMessage(api, event, image);
+    })
+                    }
+                });
+               } else {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
+               }
+            }
         } else if (query.startsWith("gun")) {
             if (isGoingToFast(event)) {
                 return;
@@ -1720,7 +1787,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\nwgun @Melvin Jones Repol")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("wanted")) {
@@ -1899,6 +1966,56 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
                }
             }
+        } else if (query.startsWith("ship")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
+            } else {
+               if ((input.split('@').length - 1) >= 2) {
+                let id1 = Object.keys(event.mentions)[0];
+                let id2 = Object.keys(event.mentions)[1];
+                if (id1 === undefined || id2 === undefined) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
+                    return;
+                }
+                if (id1 == myAccountId || id1 == myOtherId) {
+                    id1 = event.senderID;
+                } else if (id2 == myAccountId || id2 == myOtherId) {
+                    id2 = event.senderID;
+                }
+                parseImage(api, event, "https://api.popcat.xyz/ship?user1=" + getProfilePic(id1) + "&user2=" + getProfilePic(id2), __dirname + "/cache/images/ship.png");
+               } else {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
+               }
+            }
+        } else if (query.startsWith("www")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
+            } else {
+               if ((input.split('@').length - 1) >= 2) {
+                let id1 = Object.keys(event.mentions)[0];
+                let id2 = Object.keys(event.mentions)[1];
+                if (id1 === undefined || id2 === undefined) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
+                    return;
+                }
+                if (id1 == myAccountId || id1 == myOtherId) {
+                    id1 = event.senderID;
+                } else if (id2 == myAccountId || id2 == myOtherId) {
+                    id2 = event.senderID;
+                }
+                parseImage(api, event, "https://api.popcat.xyz/whowouldwin?image1=" + getProfilePic(id1) + "&image2=" + getProfilePic(id2), __dirname + "/cache/images/www.png");
+               } else {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
+               }
+            }
         } else if (query.startsWith("pet")) {
             if (isGoingToFast(event)) {
                 return;
@@ -2029,16 +2146,14 @@ async function ai(api, event) {
                    api.getUserInfo(id, async (err, ret) => {
                     if(err) return reportIssue(api, event.threadID, err);
                     for(let prop in ret) {
-                        let {vanity,name,gender,isBirthday} = ret[prop]
+                        let { vanity, name, gender, isBirthday} = ret[prop]
                         let url = encodeURI('https://graph.facebook.com/'+`${prop}`+'/picture?height=720&width=720&access_token=' + apiKey[1])
                         let filename = __dirname + "/cache/images/"+ prop + ".jpg";
-                        let msg = `
-            User ID: ${prop}
-            Name: ${checkFound(name)}
-            Username: ${checkFound(vanity)}
-            Gender: ${gender == 1 ? "female" : "male"}
-            Birthday: ${checkFound(isBirthday)}  
-            `
+                        let msg = "Name: " + checkFound(name);
+                            msg += "\nUsername: " + checkFound(vanity);
+                            msg += "\nGender: " + (gender == 1 ? "female" : "male");
+                            msg += "\nBirthday: " + checkFound(isBirthday);
+
                         await download(url,filename,()=>{
                             let message = { 
                                 body: msg,
@@ -2189,10 +2304,12 @@ async function ai(api, event) {
             } else {
                 api.getThreadInfo(event.threadID, (err, info) => {
                     let id = Object.keys(event.mentions)[0];
+                    let tid = info.threadID;
                     api.getUserInfo(id, (err, info) => {
                         if (err) return reportIssue(api, event.threadID, err);
                         let name = info[id]['name'];
-                        api.changeNickname(text.substring(name.length + 1), info.threadID, id, (err) => {
+                        let inp = text.substring(name.length + 2);
+                        api.changeNickname(inp, tid, id, (err) => {
                             if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
                         });
                     })
@@ -2665,17 +2782,17 @@ function reportIssue(api, event, err) {
 }
 
 async function sendMessage(api, event, message) {
-    await wait(5000);
+    await wait(5200);
     api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
 async function sendMessageNoReply(api, eventId, message) {
-    await wait(5000);
+    await wait(4600);
     api.sendMessage(message, eventId).catch((err) => reportIssue(api, event, err));
 }
 
 async function reactMessage(api, event, reaction) {
-    await wait(5000);
+    await wait(8000);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
@@ -2689,12 +2806,14 @@ function formatQuery(string) {
 function isGoingToFast(event) {
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cd)) {
-            cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
+            cd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
+            return false;
         } else if (Math.floor(Date.now() / 1000) < cd[event.senderID]) {
-            console.log("The user " + event.senderID + " is going to fast of executing commands.");
+            console.log("The user " + event.senderID + " is going to fast of executing commands.   " + Math.floor((cd[event.senderID] - Math.floor(Date.now() / 1000)) / 6) + " mins and " + (cd[event.senderID] - Math.floor(Date.now() / 1000)) % 6 + " seconds");
             return true;
         } else {
-            cd[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 3);
+            cd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
+            return false;
         }
     }
     return false;
@@ -2736,7 +2855,6 @@ const searchOptions = {
       hl: 'en' 
     }
 }
-    
   
 async function search(api, event, query) {
     let msg = '';  
