@@ -6,5 +6,5 @@ const port = process.env.PORT || 5000;
 app.get('/', (req, res) => res.send('Orion is online and waiting for commands.'));
 
 app.listen(port, () =>
-	console.log(`listening to http://localhost:${port}`)
+	console.log(`http://localhost:${port}`)
 );

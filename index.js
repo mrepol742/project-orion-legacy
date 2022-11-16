@@ -9,10 +9,10 @@ const {
     OpenAIApi
 } = require("openai");
 const NLPCloudClient = require('nlpcloud');
-const date = require('./datetime.js');
+const date = require('./date.js');
 const {
-    keep_alive
-} = require("./keep_alive.js");
+    live
+} = require("./live.js");
 const cron = require('node-cron');
 const axios = require("axios");
 const weatherjs = require("weather-js")
@@ -30,6 +30,7 @@ let vips = [
     "100016029218667",
     "100077318906152",
     "100037131918629",
+    // felipe santiago
     "100008664752303"
 ];
 let sleep = [3000, 4000, 3500, 4500, 5000, 4800, 3800, 3200, 5200, 4600, 3200, 4300, 3400]
@@ -74,15 +75,19 @@ let help = "\n⦿ help";
     help += "\n⦿ find [text]";
     help += "\n⦿ dfind [text]";
     help += "\n⦿ findimage [text]";
+    help += "\n⦿ github [username]";
     help += "\n⦿ baybayin [text]";
     help += "\n⦿ weather [location]";
+    help += "\n⦿ music [text]";
+    help += "\n⦿ video [text]";
+    help += "\n⦿ lyrics [text]";
     help += "\n⦿ encode64 [text]";
     help += "\n⦿ decode64 [text]";
     help += "\n⦿ facts [text]";
-    help += "\n⦿ lulcat [text]";
+    help += "\n⦿ phub [text]";
 
 let help1 = "\n⦿ thoughts";
-    help1 += "\n⦿ github [username]";
+    help1 += "\n⦿ lulcat [text]";
     help1 += "\n⦿ gemoji [emoji]";
     help1 += "\n⦿ gname [text]";
     help1 += "\n⦿ wiki [text]";
@@ -95,6 +100,12 @@ let help1 = "\n⦿ thoughts";
     help1 += "\n⦿ problem [equation]";
     help1 += "\n⦿ pin add";
     help1 += "\n⦿ pin remove";
+    help1 += "\n⦿ sadcat [text]";
+    help1 += "\n⦿ biden [text]";
+    help1 += "\n⦿ pika [text]";
+    help1 += "\n⦿ god [text]";
+    help1 += "\n⦿ website [url]";
+    help1 += "\n⦿ qrcode [text]";
 
 let help2 = "\n⦿ verse today";
     help2 += "\n⦿ verse random";
@@ -111,29 +122,35 @@ let help2 = "\n⦿ verse today";
     help2 += "\n⦿ pooh [text1]: [text2]";
     help2 += "\n⦿ oogway [text]";
     help2 += "\n⦿ caution [text]";
+    help2 += "\n⦿ element [name]";
+    help2 += "\n⦿ imdb [title]";
+    help2 += "\n⦿ steam [name]";
+    help2 += "\n⦿ npm [name]";
+    help2 += "\n⦿ gname";
 
 let help3 = "\n⦿ alert [text]";
-    help3 += "\n⦿ sadcat [text]";
-    help3 += "\n⦿ biden [text]";
-    help3 += "\n⦿ pika [text]";
-    help3 += "\n⦿ god [text]";
-    help3 += "\n⦿ website [url]";
-    help3 += "\n⦿ phub [text]";
-    help3 += "\n⦿ qrcode [text]";
-    help3 += "\n⦿ music [text]";
-    help3 += "\n⦿ video [text]";
-    help3 += "\n⦿ lyrics [text]";
     help3 += "\n⦿ morse [text]";
     help3 += "\n⦿ pickup";
     help3 += "\n⦿ uid";
     help3 += "\n⦿ guid";
+    help3 += "\n⦿ reverse [text]";
+    help3 += "\n⦿ itunes [title]";
+    help3 += "\n⦿ doublestruct [text]";
+    help3 += "\n⦿ translate [language] [text]";
+    help3 += "\n⦿ trump [text]";
+    help3 += "\n⦿ mock [text]";
+    help3 += "\n⦿ jail @mention";
+    help3 += "\n⦿ communist @mention";
+    help3 += "\n⦿ wanted @mention";
+    help3 += "\n⦿ gun @mention";
+    help3 += "\n⦿ drip @mention";
+    help3 += "\n⦿ clown @mention";
+    help3 += "\n⦿ uncover @mention";
+    help3 += "\n⦿ advert @mention";
+    help3 += "\n⦿ blur @mention";
+
 
 let help4 = "\n⦿ ig [username]";
-    help4 += "\n⦿ element [name]";
-    help4 += "\n⦿ imdb [title]";
-    help4 += "\n⦿ steam [name]";
-    help4 += "\n⦿ npm [name]";
-    help4 += "\n⦿ gname";
     help4 += "\n⦿ joke";
     help4 += "\n⦿ profilepic";
     help4 += "\n⦿ wyr";
@@ -143,40 +160,44 @@ let help4 = "\n⦿ ig [username]";
     help4 += "\n⦿ color";
     help4 += "\n⦿ count";
     help4 += "\n⦿ simsimi [text]";
+    help4 += "\n⦿ pet @mention";
+    help4 += "\n⦿ ship @mention @mention";
+    help4 += "\n⦿ www @mention @mention";
+    help4 += "\n⦿ kiss @mention";
+    help4 += "\n⦿ coding";
+    help4 += "\n⦿ newyear";
+    help4 += "\n⦿ christmas";
+    help4 += "\n⦿ barrier";
+    help4 += "\n⦿ fact";
+    help4 += "\n⦿ thoughts";
 
-let help5 = "\n⦿ reverse [text]";
-    help5 += "\n⦿ itunes [title]";
-    help5 += "\n⦿ doublestruct [text]";
-    help5 += "\n⦿ translate [language] [text]";
-    help5 += "\n⦿ trump [text]";
-    help5 += "\n⦿ mock [text]";
-    help5 += "\n⦿ jail @mention";
-    help5 += "\n⦿ communist @mention";
-    help5 += "\n⦿ wanted @mention";
-    help5 += "\n⦿ gun @mention";
-    help5 += "\n⦿ drip @mention";
-    help5 += "\n⦿ clown @mention";
-    help5 += "\n⦿ uncover @mention";
-    help5 += "\n⦿ advert @mention";
-    help5 += "\n⦿ blur @mention";
+let help5 = "\n⦿ conan";
+    help5 += "\n⦿ invert @mention";
+    help5 += "\n⦿ greyscale @mention";
+    help5 += "\n⦿ jokeover @mention";
+    help5 += "\n⦿ mnm @mention";
+    help5 += "\n⦿ urlshort [url]";
 
-let help6 = "\n⦿ conan";
-    help6 += "\n⦿ invert @mention";
-    help6 += "\n⦿ greyscale @mention";
-    help6 += "\n⦿ jokeover @mention";
-    help6 += "\n⦿ mnm @mention";
-    help6 += "\n⦿ pet @mention";
-    help6 += "\n⦿ ship @mention @mention";
-    help6 += "\n⦿ www @mention @mention";
-    help6 += "\n⦿ kiss @mention";
-    help6 += "\n⦿ coding";
-    help6 += "\n⦿ newyear";
-    help6 += "\n⦿ christmas";
-    help6 += "\n⦿ barrier";
-    help6 += "\n⦿ fact";
-    help6 += "\n⦿ thoughts";
+let help6 = "\n⦿ anime [category]";
+    help6 += "\n   megumin, bully, cuddle, cry";
+    help6 += "\n   hug, awoo, kiss, lick";
+    help6 += "\n   pat, smug, bonk, yeet";
+    help6 += "\n   blush, smile, wave, highfive";
+    help6 += "\n   handhold, nom, biteglomp, slap";
+    help6 += "\n   kill, kick, happy, wink";
+    help6 += "\n   pokedance, cringe";
+    help6 += "\n\n⦿ anime --nsfw [category]";
+    help6 += "\n   waifu, neko, trap, blowjob";
 
-let helpadmin = "\n⦿ unsend --on";
+let categorySFW = ['megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet', 
+    'blush', 'smile', 'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill', 'kick', 'happy', 'wink', 
+    'poke', 'dance', 'cringe'];
+
+let categoryNSFW = ['waifu', 'neko', 'trap', 'blowjob'];
+    
+
+let helpadmin = "\n⦿ unsend";
+    helpadmin += "\n⦿ unsend --on";
     helpadmin += "\n⦿ unsend --off";
     helpadmin += "\n⦿ unsend --all";
     helpadmin += "\n⦿ delay --on";
@@ -247,7 +268,7 @@ login({
                         body: "Hold on a moment this system is currently under maintenance...\n\n" + qot[Math.floor(Math.random() * qot.length)],
                         attachment: fs.createReadStream(__dirname + '/cache/maintenance.gif')
                     };
-                    sendMessage(api, event, message);
+                    sendMessageReply(api, event, message);
                 }
                 return;
                 }
@@ -279,10 +300,7 @@ login({
                     if (isGoingToFastResendingOfEmo(event)) {
                         break;
                     }
-                    let splitString = event.body.split("");
-                    let reverseArray = splitString.reverse();
-                    let joinArray = reverseArray.join("");
-                    sendMessageNoReply(api, event.threadID, joinArray);
+                    sendMessage(api, event, event.body);
                     break;
                 }
                 ai(api, event);
@@ -293,9 +311,9 @@ login({
                 let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 msgs[msgid] = input;
 
-                if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
+                if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete" && (vips.includes(event.senderID))) {
                     if (event.messageReply.senderID != api.getCurrentUserID()) {
-                        sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
+                        sendMessageReply(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
                     } else {
                         api.unsendMessage(event.messageReply.messageID);
                     }
@@ -312,11 +330,11 @@ login({
                         break;
                     }
                     if (event.messageReply.body == "") { 
-                        sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
+                        sendMessageReply(api, event, "You need to reply pin add to a message which is not empty to pin it.");
                     } else {
                         pinned.pin.message[event.threadID] = event.messageReply.body
                         pinned.pin.sender[event.threadID] = event.messageReply.senderID
-                        sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
+                        sendMessageReply(api, event, "Message pinned.. Enter \"pin\" to show it.");
                         fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
                     }
                 } else if (query == "count") {
@@ -324,9 +342,9 @@ login({
                         break;
                     }
                     if (event.messageReply.body == "") { 
-                        sendMessage(api, event, "You need to reply count to a message which is not empty.");
+                        sendMessageReply(api, event, "You need to reply count to a message which is not empty.");
                     } else {
-                        sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + " words.");
+                        sendMessageReply(api, event, "The words on this message is about " + countWords(event.messageReply.body) + " words.");
                     }
                 }
 
@@ -343,9 +361,9 @@ login({
                     } = event;
                     if (type != "message_reply") return
                     if (messageReply.attachments.length < 1) {
-                        sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
+                        sendMessageReply(api, event, "I cannot see an image. Please reply bgremove to an image.");
                     } else if (messageReply.attachments.length > 1) {
-                        sendMessage(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
+                        sendMessageReply(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
                     } else if ((messageReply.attachments.length === 1) && (messageReply.attachments[0].type == 'photo')) {
                         const url = messageReply.attachments[0].url;
                         request(url).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
@@ -372,16 +390,16 @@ login({
                                     let message = {
                                         attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
                                     }
-                                    sendMessage(api, event, message);
+                                    sendMessageReply(api, event, message);
                                 })
                                 .catch((error) => {
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                    sendMessageReply(api, event, "An unknown error as been occured. Please try again later.");
                                     return reportIssue(api, event.threadID, error);
                                 });
                         })
                     }
                 } else {
-                    sendMessage(api, event, "Hold on... There is still a request in progress.");
+                    sendMessageReply(api, event, "Hold on... There is still a request in progress.");
                     }
                 
                 }
@@ -401,16 +419,26 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                                let message = {
-                                                    body: "@" + data[event.senderID]['name'] + " deleted this photo. \n",
-                                                    attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img.jpg'),
-                                                    mentions: [{
-                                                        tag: '@' + data[event.senderID]['name'],
-                                                        id: event.senderID,
-                                                        fromIndex: 0
-                                                    }]
-                                                }
-                                                sendMessageNoReply(api, event.threadID, message);
+                                                api.getThreadInfo(event.threadID, (err, gc) => {
+                                                    if (gc.isGroup) {
+                                                        let message = {
+                                                            body: "@" + data[event.senderID]['name'] + " deleted the following. \n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img.jpg'),
+                                                            mentions: [{
+                                                                tag: '@' + data[event.senderID]['name'],
+                                                                id: event.senderID,
+                                                                fromIndex: 0
+                                                            }]
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    } else {
+                                                        let message = {
+                                                            body: "You deleted this photo. \n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img.jpg')
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    }
+                                                })
                                             }
                                         });
                                     });
@@ -420,16 +448,26 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                                let message = {
-                                                    body: "@" + data[event.senderID]['name'] + " deleted this GIF. \n",
-                                                    attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif.gif'),
-                                                    mentions: [{
-                                                        tag: '@' + data[event.senderID]['name'],
-                                                        id: event.senderID,
-                                                        fromIndex: 0
-                                                    }]
-                                                }
-                                                sendMessageNoReply(api, event.threadID, message);
+                                                api.getThreadInfo(event.threadID, (err, gc) => {
+                                                    if (gc.isGroup) {
+                                                        let message = {
+                                                            body: "@" + data[event.senderID]['name'] + " deleted the following. \n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif.gif'),
+                                                            mentions: [{
+                                                                tag: '@' + data[event.senderID]['name'],
+                                                                id: event.senderID,
+                                                                fromIndex: 0
+                                                            }]
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    } else {
+                                                        let message = {
+                                                            body: "You deleted this GIF. \n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif.gif')
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    }
+                                                })
                                             }
                                         });
                                     });
@@ -439,16 +477,26 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                                let message = {
-                                                    body: "@" + data[event.senderID]['name'] + " deleted this sticker.\n",
-                                                    attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker.png'),
-                                                    mentions: [{
-                                                        tag: '@' + data[event.senderID]['name'],
-                                                        id: event.senderID,
-                                                        fromIndex: 0
-                                                    }]
-                                                }
-                                                sendMessageNoReply(api, event.threadID, message);
+                                                api.getThreadInfo(event.threadID, (err, gc) => {
+                                                    if (gc.isGroup) {
+                                                        let message = {
+                                                            body: "@" + data[event.senderID]['name'] + " deleted the following.\n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker.png'),
+                                                            mentions: [{
+                                                                tag: '@' + data[event.senderID]['name'],
+                                                                id: event.senderID,
+                                                                fromIndex: 0
+                                                            }]
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    } else {
+                                                        let message = {
+                                                            body: "You deleted this sticker.\n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker.png')
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    }
+                                                })
                                             }
                                         });
                                     });
@@ -458,16 +506,26 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                                let message = {
-                                                    body: "@" + data[event.senderID]['name'] + " deleted this video.\n",
-                                                    attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid.mp4'),
-                                                    mentions: [{
-                                                        tag: '@' + data[event.senderID]['name'],
-                                                        id: event.senderID,
-                                                        fromIndex: 0
-                                                    }]
-                                                }
-                                                sendMessageNoReply(api, event.threadID, message);
+                                                api.getThreadInfo(event.threadID, (err, gc) => {
+                                                    if (gc.isGroup) {
+                                                        let message = {
+                                                            body: "@" + data[event.senderID]['name'] + " deleted the following.\n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid.mp4'),
+                                                            mentions: [{
+                                                                tag: '@' + data[event.senderID]['name'],
+                                                                id: event.senderID,
+                                                                fromIndex: 0
+                                                            }]
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    } else {
+                                                        let message = {
+                                                            body: "You deleted this video.\n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid.mp4')
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    }
+                                                })
                                             }
                                         });
                                     });
@@ -477,16 +535,26 @@ login({
                                         gifResponse.pipe(file);
                                         file.on('finish', function() {
                                             if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                                let message = {
-                                                    body: "@" + data[event.senderID]['name'] + " deleted this voice message.\n",
-                                                    attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm.mp3'),
-                                                    mentions: [{
-                                                        tag: '@' + data[event.senderID]['name'],
-                                                        id: event.senderID,
-                                                        fromIndex: 0
-                                                    }]
-                                                }
-                                                sendMessageNoReply(api, event.threadID, message);
+                                                api.getThreadInfo(event.threadID, (err, gc) => {
+                                                    if (gc.isGroup) {
+                                                        let message = {
+                                                            body: "@" + data[event.senderID]['name'] + " deleted the following.\n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm.mp3'),
+                                                            mentions: [{
+                                                                tag: '@' + data[event.senderID]['name'],
+                                                                id: event.senderID,
+                                                                fromIndex: 0
+                                                            }]
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    } else {
+                                                        let message = {
+                                                            body: "You deleted this voice message.\n",
+                                                            attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm.mp3')
+                                                        }
+                                                        sendMessage(api, event, message);
+                                                    }
+                                                })
                                             }
                                         });
                                     });
@@ -498,15 +566,24 @@ login({
                             if (err) return reportIssue(api, event.threadID, err);
                             else {
                                 if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                    let message = {
-                                        body: "@" + data[event.senderID]['name'] + " deleted this message.\n\n" + msgs[event.messageID],
-                                        mentions: [{
-                                            tag: '@' + data[event.senderID]['name'],
-                                            id: event.senderID,
-                                            fromIndex: 0
-                                        }]
-                                    }
-                                    sendMessageNoReply(api, event.threadID, message);
+                                    api.getThreadInfo(event.threadID, (err, gc) => {
+                                        if (gc.isGroup) {
+                                            let message = {
+                                                body: "@" + data[event.senderID]['name'] + " deleted the following.\n\n" + msgs[event.messageID],
+                                                mentions: [{
+                                                    tag: '@' + data[event.senderID]['name'],
+                                                    id: event.senderID,
+                                                    fromIndex: 0
+                                                }]
+                                            }
+                                            sendMessage(api, event, message);
+                                        } else {
+                                            let message = {
+                                                body: "You deleted the following.\n\n" + msgs[event.messageID]
+                                            }
+                                            sendMessage(api, event, message);
+                                        }
+                                    })
                                 }
                             }
                         });
@@ -521,7 +598,7 @@ login({
                                 let Tmem = arr.length;
                                 let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + Tmem + `th member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
 
-                                request(url).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
+                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
                                 .on('finish', () => {
                                     let message = {
                                         body: `Welcome @${event.logMessageData.addedParticipants[0].fullName}. You're the ` + Tmem + `th member of this group.`,
@@ -531,7 +608,7 @@ login({
                                         id: event.logMessageData.addedParticipants[0].userFbId
                                     }]
                                  };
-                                  sendMessage(api, event, message);
+                                  sendMessageReply(api, event, message);
                                  })
                               }
                         })
@@ -552,13 +629,13 @@ login({
                                             let arr = gc.participantIDs;
                                             let Tmem = arr.length;
                                             let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Member+" + Tmem + "&avatar=" + getProfilePic(prop);
-                                            request(url).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
+                                            request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
                                 .on('finish', () => {
                                     let message = {
                                         body: `Thank you for joining ` + data[prop].name + ` but now you're leaving us.`,
                                       attachment: fs.createReadStream(__dirname + "/cache/images/byebye.jpg")
                                  };
-                                  sendMessage(api, event, message);
+                                  sendMessageReply(api, event, message);
                                  })
                                         }
                                     }
@@ -582,10 +659,10 @@ function wait(ms) {
    await axios.get(`https://en.wikipedia.org/api/rest_v1/page/summary/${topic}`)
    .then(res=>{
    	 let extract = res.data.extract;
-     sendMessage(api, event, `${extract}`);
+     sendMessageReply(api, event, `${extract}`);
    }).catch(err=>{
       reportIssue(api, event.threadID, err)
-      sendMessage(api, event, `Unfortunately, i am not able to find the "` + topic + `".`);
+      sendMessageReply(api, event, `Unfortunately, i am not able to find the "` + topic + `".`);
    })
 }
 
@@ -609,7 +686,7 @@ async function ai(api, event) {
                         body:  "Moshi mos... \nHow can i help you? If you have any question don't hesitate to ask What, Who, When, Where, Why, How?. For list of commands type help. \n\nWelcome to the world of AI and bots.\n\n" + qot[Math.floor(Math.random() * qot.length)],
                         attachment: [fs.createReadStream(__dirname + "/cache/hello" +  Math.floor(Math.random() * 8) + ".jpg")]
                     }
-                    sendMessage(api, event, message);
+                    sendMessageReply(api, event, message);
                 } 
             } else {
                 let text = input;
@@ -622,29 +699,114 @@ async function ai(api, event) {
                 } else if (query.startsWith("mj")) {
                     text = input.substring(3)
                 } 
-                if (nsfw(text)) {
-                    sendMessage(api, event, "Shhhhhhh watch your mouth.");
-                } else if (query.startsWith("whatiswebvium")) {
-                    sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.")
-                } else if (query.startsWith("whocreatedwebvium")) {
-                    sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.")
-                } else if (query.startsWith("whoareyou")) {
-                    sendMessage(api, event, "I'm Mj.")
-                } else if (query.startsWith("whocreatedyou")) {
-                    sendMessage(api, event, "Melvin Jones Repol")
-                } else if (query.startsWith("howoldareyou") || query.startsWith("howyoungareyou")) {
-                    sendMessage(api, event, "I'm 20 years old.")
-                } else if (query.startsWith("whereyoufrom")) {
-                    sendMessage(api, event, "Somewhere in the place they called the Philippines.")
-                } else if (query.startsWith("areyouhuman") || query.startsWith("areyoubot")) {
-                    sendMessage(api, event, "Scientifically, Programmatically and Technologically Human.")
-                } else if (query.includes("dumb") && query.includes("bot")) {
-                    sendMessage(api, event, "I'm far intelligent than you are human.")
-                } else if (query.startsWith("areyoumj")) {
-                    sendMessage(api, event, "Yes i am indeed Mj.")
-                } else if (query == "thanks" || query == "thankyou") {
-                    sendMessage(api, event, "You're welcome.")
-                } else if (query.startsWith("whois") && )
+                let text1 = formatQuery(text.replace(/\s+/g, '').toLowerCase());
+                let text2 = formatQuery(text.toLowerCase());
+                if (nsfw(text1)) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Shhhhhhh watch your mouth.");
+                        } else {
+                            sendMessage(api, event, "Shhhhhhh watch your mouth.");
+                        }
+                    })
+                } else if (text1.startsWith("whatiswebvium")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
+                        } else {
+                            sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
+                        }
+                    })
+                } else if (text1.startsWith("whocreatedwebvium")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
+                        } else {
+                            sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
+                        }
+                    })
+                } else if (text1.startsWith("whoareyou")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "I'm Mj.");
+                        } else {
+                            sendMessage(api, event, "I'm Mj.");
+                        }
+                    })
+                } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Melvin Jones Repol created me.");
+                        } else {
+                            sendMessage(api, event, "Melvin Jones Repol created me.");
+                        }
+                    })
+                } else if (text1.startsWith("howoldareyou") || text1.startsWith("howyoungareyou")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "I'm 20 years old.");
+                        } else {
+                            sendMessage(api, event, "I'm 20 years old.");
+                        }
+                    })
+                } else if (text1.startsWith("whereyoufrom") || text1.startsWith("whereareyoufrom") || text1.startsWith("wheredoyoufrom")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Somewhere in the place they called the Philippines.");
+                        } else {
+                            sendMessage(api, event, "Somewhere in the place they called the Philippines.");
+                        }
+                    })
+                } else if (text1.startsWith("areyouhuman") || text1.startsWith("areyoubot")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Scientifically, Programmatically and Technologically Human.");
+                        } else {
+                            sendMessage(api, event, "Scientifically, Programmatically and Technologically Human.");
+                        }
+                    })
+                } else if (text1.includes("dumb") && text1.includes("bot")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "I'm far intelligent than you are human.");
+                        } else {
+                            sendMessage(api, event, "I'm far intelligent than you are human.");
+                        }
+                    })
+                } else if (text1.startsWith("areyoumj")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Yes i am indeed Mj.");
+                        } else {
+                            sendMessage(api, event, "Yes i am indeed Mj.");
+                        }
+                    })
+                } else if (text1 == "thanks" || text1 == "thankyou") {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "You're welcome.");
+                        } else {
+                            sendMessage(api, event, "You're welcome.");
+                        }
+                    })
+                } else if (text1 == "ok" || text1 == "okay") {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Yeahh..");
+                        } else {
+                            sendMessage(api, event, "Yeahh..");
+                        }
+                    })
+                } else if (text1.startsWith("whois") && isMe(text2)) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "A self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.");
+                        } else {
+                            sendMessage(api, event, "A self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.");
+                        }
+                    })
+                } else if (text1 == "help") {
+
                 } else {
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
@@ -664,7 +826,7 @@ async function ai(api, event) {
                 if (finish.startsWith("?") || finish.startsWith("\"")) {
                     finish = finish.slice(1);
                 }
-                sendMessage(api, event, finish);
+                sendMessageReply(api, event, finish);
             }
             }
         }
@@ -675,31 +837,59 @@ async function ai(api, event) {
     
         if (query.startsWith("problem")) {
             if (query2.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
             } else {
                 let text = input;
                 text = text.substring(8)
                 if (text.includes("√")) {
                     const res = await sqrt(text.replace(/√/gi, ""));
-                    sendMessage(api, event, res);
+                    sendMessageReply(api, event, res);
                 } else {
                     const res = await evaluate(text);
-                    sendMessage(api, event, res);
+                    sendMessageReply(api, event, res);
                 }
             }
         } 
         if (event.type == "message") {
             if (query == "bgremove") {
-                sendMessage(api, event, "You need to reply to an image in order to work.");
+                sendMessageReply(api, event, "You need to reply to an image in order to work.");
             } else if (query == "count") {
-                sendMessage(api, event, "You need to reply to a message to count its words.");
+                sendMessageReply(api, event, "You need to reply to a message to count its words.");
             } else if (query == "pinadd") {
-                sendMessage(api, event, "You need to reply to a message to pin a message.");
+                sendMessageReply(api, event, "You need to reply to a message to pin a message.");
             } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
-                sendMessage(api, event, "Unable to unsent. Please reply to my message you wish to unsent.");
+                sendMessageReply(api, event, "Unable to unsent. Please reply to my message you wish to unsent.");
             }
         }
-        if (query.startsWith("phub") || query.startsWith("pornhub")) {
+
+        if (query.startsWith("urlshort")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using linkshort url instead.\nFor example:\nlink https://mrepol742.github.io")
+            } else {
+             let text = input.substring(9)
+             let encodedParams = new URLSearchParams();
+             encodedParams.append("url", text);
+             let options = {
+              method: 'POST',
+              url: 'https://url-shortener-service.p.rapidapi.com/shorten',
+              headers: {
+               'content-type': 'application/x-www-form-urlencoded',
+               'X-RapidAPI-Host': 'url-shortener-service.p.rapidapi.com',
+               'X-RapidAPI-Key': '04357fb2e1msh4dbe5919dc38cccp172823jsna0869f87acc3'
+              },
+              data: encodedParams
+             };
+             await axios.request(options).then(function ({data}) {
+                sendMessage(api, event, data.result_url);
+             }).catch(function (error) {
+                sendMessageReply(api, event, "An unknown error as been occured. Please try again later.")
+             });
+            }
+        } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -718,7 +908,7 @@ async function ai(api, event) {
                 let name = info[id]['name'];
                     let data = input.split(" ")
                     if (data.length < 2) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using phub text instead.\nFor example:\nphub why i am here again.");
+                        sendMessageReply(api, event, "Opps! I didnt get it. You should try using phub text instead.\nFor example:\nphub why i am here again.");
                     } else {
                         data.shift()
                         let phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + apiKey[0];
@@ -733,14 +923,14 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor example:\nvideo In The End by Linkin Park")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor example:\nvideo In The End by Linkin Park")
             } else {
                 if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor example:\nvideo In The End by Linkin Park")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor example:\nvideo In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -774,14 +964,14 @@ async function ai(api, event) {
                         fs.readFile(__dirname + '/cache/videos/video.mp4', function(err, data) {
                             if (err) console.log(err)
                             if (data.length > limit) {
-                                sendMessage(api, event, "I cannot send the file because its file size is beyond 50mb.");
+                                sendMessageReply(api, event, "I cannot send the file because its file size is beyond 50mb.");
                             } else {
                                 console.log("Done.");
                                 let message = {
                                     body:  search.videos[0].title,
                                     attachment: [fs.createReadStream(__dirname + '/cache/videos/video.mp4')]
                                 }
-                                sendMessage(api, event, message);
+                                sendMessageReply(api, event, message);
                                 threadIdMV[event.threadID] = true;
                             }
                         })
@@ -789,7 +979,7 @@ async function ai(api, event) {
                     stream.on('error', (err) => reportIssue(api, event, err));
                 }
             } else {
-                sendMessage(api, event, "Hold on... There is still a request in progress.");
+                sendMessageReply(api, event, "Hold on... There is still a request in progress.");
                 }
             }
         } else if (query.startsWith("music")) {
@@ -798,14 +988,14 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor example:\nmusic In The End by Linkin Park")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor example:\nmusic In The End by Linkin Park")
             } else {
                 if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor example:\nmusic In The End by Linkin Park")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor example:\nmusic In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -837,14 +1027,14 @@ async function ai(api, event) {
                         fs.readFile(__dirname + '/cache/audios/music.mp3', function(err, data) {
                             if (err) console.log(err)
                             if (data.length > limit) {
-                                sendMessage(api, event, "I cannot send the file because its file size is beyond 50mb.");
+                                sendMessageReply(api, event, "I cannot send the file because its file size is beyond 50mb.");
                             } else {
                                 console.log("Done.");
                                 let message = {
                                     body: search.videos[0].title,
                                     attachment: [fs.createReadStream(__dirname + '/cache/audios/music.mp3')]
                                 }
-                                sendMessage(api, event, message);
+                                sendMessageReply(api, event, message);
                                 threadIdMV[event.threadID] = true;
                             }
                         })
@@ -852,7 +1042,7 @@ async function ai(api, event) {
                     stream.on('error', (err) => reportIssue(api, event, err));
                 }
             } else {
-                sendMessage(api, event, "Hold on... There is still a request in progress.");
+                sendMessageReply(api, event, "Hold on... There is still a request in progress.");
                 }
             }
         } else if (query.startsWith("lyrics")) {
@@ -862,21 +1052,21 @@ async function ai(api, event) {
                 const Client = new Genius.Client("RF_40ktL7f4H55RYDtdL27nTZMewq9H9FKkJfuZmzHzq1Cpy_a4LoQi6lzsP5G2L");
                 let data = input.split(" ");
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using lyrics text instead.\nFor example:\nlyrics In The End by Linkin Park")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using lyrics text instead.\nFor example:\nlyrics In The End by Linkin Park")
                 } else {
                     data.shift()
                     const searches = await Client.songs.search(data.join(" "));
                     const firstSong = searches[0];
                     const RES = await firstSong.lyrics();
-                    sendMessage(api, event, RES);
+                    sendMessageReply(api, event, RES);
                 }
-        } else if (query.startsWith("googleimage") || query2.startsWith("searchimage ") || query2.startsWith("findimage ")) {
+        } else if (query.startsWith("googleimage") || query2.startsWith("searchimage") || query2.startsWith("findimage")) {
             if (isGoingToFast(event)) {
                 return;
             }
             let data = input.split(" ");
             if (data.length < 2){
-                sendMessage(api, event, "Opps! I didnt get it. You should try using findimage text instead.\nFor example:\nfindimage mark zuckerberg")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using findimage text instead.\nFor example:\nfindimage mark zuckerberg")
             } else {
                 let imgtext = input.substring(12);
                 if (input.startsWith("findimage ")) {
@@ -905,40 +1095,40 @@ async function ai(api, event) {
                 return;
             }
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 text instead.\nFor example:\nencode64 fundamentals in engineering")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using encode64 text instead.\nFor example:\nencode64 fundamentals in engineering")
             } else {
                 let text = input;
                 text = text.substring(9)
                 let buff = Buffer.from(text);
                 let base64data = buff.toString('base64');
-                sendMessage(api, event, base64data);
+                sendMessageReply(api, event, base64data);
             }
         } else if (query.startsWith("decode64")) {
             if (isGoingToFast(event)) {
                 return;
             }
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead.\nFor example:\ndecode64 fundamentals in engineering")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using decode64 text instead.\nFor example:\ndecode64 fundamentals in engineering")
             } else {
                 let text = input;
                 text = text.substring(9)
                 let buff = Buffer.from(text, 'base64');
                 let base642text = buff.toString('ascii');
-                sendMessage(api, event, base642text);
+                sendMessageReply(api, event, base642text);
             }
         } else if (query.startsWith("reverse")) {
             if (isGoingToFast(event)) {
                 return;
             }
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using reverse text instead.\nFor example:\nreverse fundamentals in engineering")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using reverse text instead.\nFor example:\nreverse fundamentals in engineering")
             } else {
                 let text = input;
                 text = text.substring(8)
                 let splitString = text.split("");
                 let reverseArray = splitString.reverse();
                 let joinArray = reverseArray.join("");
-                sendMessage(api, event, joinArray);
+                sendMessageReply(api, event, joinArray);
             }
         } else if (query == "pinremove") {
             if (isGoingToFast(event)) {
@@ -947,7 +1137,7 @@ async function ai(api, event) {
            let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
             pinned.pin.message[event.threadID] = undefined
             pinned.pin.sender[event.threadID] = undefined
-            sendMessage(api, event, "Pinned message removed.");
+            sendMessageReply(api, event, "Pinned message removed.");
             fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
         } else if (query == "pin") {
             if (isGoingToFast(event)) {
@@ -957,14 +1147,14 @@ async function ai(api, event) {
             if (pinned.pin.message[event.threadID] == undefined) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
                     if (gc.isGroup) {
-                        sendMessage(api, event, "There is no pinned message on this group chat.");
+                        sendMessageReply(api, event, "There is no pinned message on this group chat.");
                     } else {
-                        sendMessage(api, event, "There is no pinned message on this chat.");
+                        sendMessageReply(api, event, "There is no pinned message on this chat.");
                     }
                 })
             } else {
                 api.getUserInfo(pinned.pin.sender[event.threadID], (err, data) => {
-                    sendMessageNoReply(api, event.threadID, pinned.pin.message[event.threadID]);
+                    sendMessage(api, event, pinned.pin.message[event.threadID]);
                 });
             }
         } else if (query.startsWith("pdf")) {
@@ -973,7 +1163,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pdf text instead.\nFor example:\npdf fundamentals in engineering")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using pdf text instead.\nFor example:\npdf fundamentals in engineering")
             } else {
                 try {
                     data.shift()
@@ -983,10 +1173,10 @@ async function ai(api, event) {
                     let res = await pdfdrive.findEbook(searched);
                     let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
 
-                    sendMessage(api, event, `${res2.ebookName}\n\n` + `${res2.dlUrl}`)
+                    sendMessageReply(api, event, `${res2.ebookName}\n\n` + `${res2.dlUrl}`)
                 } catch (err) {
                     reportIssue(api, event.threadID, err);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.")
+                    sendMessageReply(api, event, "An unknown error as been occured. Please try again later.")
                 }
             }
         } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
@@ -994,7 +1184,7 @@ async function ai(api, event) {
                 return;
             }
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using dict text instead.\nFor example:\ndict computer");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using dict text instead.\nFor example:\ndict computer");
             } else {
                 let text = input.substring(17)
                 if (query.startsWith("dictionary")) {
@@ -1021,10 +1211,10 @@ async function ai(api, event) {
                     let sample = data.list[0].example;
                     let timestamp = data.list[0].written_on;
                     let source = data.list[0].permalink;
-                    sendMessage(api, event, def + "\n\nExample: \n" + sample);
+                    sendMessageReply(api, event, def + "\n\nExample: \n" + sample);
                 }).catch(function(error) {
                     reportIssue(api, event.threadID, error);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                    sendMessageReply(api, event, "An unknown error as been occured. Please try again later.");
                 });
             }
         } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
@@ -1032,7 +1222,7 @@ async function ai(api, event) {
                 return;
             }
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead.\n\nFor example:\nsumm this sentence meant to be summarized.");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using summ text instead.\n\nFor example:\nsumm this sentence meant to be summarized.");
             } else {
                 let text = input.substring(5);
                 if (query.startsWith("summarize")) {
@@ -1042,10 +1232,10 @@ async function ai(api, event) {
                 client.summarization(text).then(function({
                     data
                 }) {
-                    sendMessage(api, event, data.summary_text);
+                    sendMessageReply(api, event, data.summary_text);
                 }).catch(function(err) {
                     reportIssue(api, event.threadID, err.response.data.detail);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                    sendMessageReply(api, event, "An unknown error as been occured. Please try again later.");
                 });
             }
         } 
@@ -1067,15 +1257,15 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using dgoogle text instead.\n\nFor example:\ndgoogle computer")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using dgoogle text instead.\n\nFor example:\ndgoogle computer")
             } else {
                 data.shift()
                 axios.get('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1')
                     .then(response => {
-                        sendMessage(api, event, response.data.Abstract);
+                        sendMessageReply(api, event, response.data.Abstract);
                     })
                     .catch(error => {
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                        sendMessageReply(api, event, "Unfortunately there was an error occured.");
                     });
             }
         }
@@ -1086,7 +1276,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using google text instead.\n\nFor example:\ngoogle computer")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using google text instead.\n\nFor example:\ngoogle computer")
             } else {
                 try {
                     data.shift()
@@ -1097,10 +1287,10 @@ async function ai(api, event) {
                     if (result === undefined || Object.entries(result).length === 0) {
                         throw new Error(`Unfortunately there was an error occured while searching "${searched}"`)
                     }
-                    sendMessage(api, event, `${result[0].description}\n\n${result[0].url}`);
+                    sendMessageReply(api, event, `${result[0].description}\n\n${result[0].url}`);
                 } catch (err) {
                     reportIssue(api, event.threadID, err);
-                    sendMessage(api, event, `${err.message}`);
+                    sendMessageReply(api, event, `${err.message}`);
                 }
             }
         }
@@ -1110,16 +1300,16 @@ async function ai(api, event) {
             }
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using baybayin text instead.\n\nFor example:\nbaybayin ako ay filipino")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using baybayin text instead.\n\nFor example:\nbaybayin ako ay filipino")
             } else {
                 data.shift()
                 axios.get('https://api-baybayin-transliterator.vercel.app/?text=' + data.join(" "))
                     .then(response => {
-                        sendMessage(api, event, response.data.baybay);
+                        sendMessageReply(api, event, response.data.baybay);
                     })
                     .catch(error => {
                         reportIssue(api, event.threadID, error);
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                        sendMessageReply(api, event, "Unfortunately there was an error occured.");
                     })
             }
         } else if (query.startsWith("doublestruck")) {
@@ -1128,16 +1318,16 @@ async function ai(api, event) {
             }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using doublestruck text instead.\n\nFor example:\ndoublestruck Hello World")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using doublestruck text instead.\n\nFor example:\ndoublestruck Hello World")
                 } else {
                     data.shift()
                     axios.get('https://api.popcat.xyz/doublestruck?text=' + data.join(" "))
                         .then(response => {
-                            sendMessage(api, event, response.data.text);
+                            sendMessageReply(api, event, response.data.text);
                         })
                         .catch(error => {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately there was an error occured.");
+                            sendMessageReply(api, event, "Unfortunately there was an error occured.");
                         })
                 }
         } else if (query.startsWith("translate")) {
@@ -1146,18 +1336,18 @@ async function ai(api, event) {
             }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using translate language text instead.\n\nFor example:\ntranslate English Kamusta")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using translate language text instead.\n\nFor example:\ntranslate English Kamusta")
                 } else {
                     let text = input.substring(10);
                     let lang = text.split(" ");
                     let message = text.substring(lang[0].length);
                     axios.get('https://api.popcat.xyz/translate?to=' + lang[0] + '&text=' + message)
                         .then(response => {
-                            sendMessage(api, event, response.data.translated);
+                            sendMessageReply(api, event, response.data.translated);
                         })
                         .catch(error => {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately there was an error occured.");
+                            sendMessageReply(api, event, "Unfortunately there was an error occured.");
                         })
                 }
         } else if (query.startsWith("weather")) {
@@ -1166,7 +1356,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using weather location instead.\n\nFor example:\nweather caloocan city")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using weather location instead.\n\nFor example:\nweather caloocan city")
             } else {
                 data.shift()
                 let weather = await weathersearch("weather " + data.join(" "))
@@ -1181,7 +1371,7 @@ async function ai(api, event) {
                         m += "Temperature: " + d.current.temperature + "\n"
                         m += "Sky: " + d.current.skytext + "\n"
                         m += "Observation time: " + d.current.date + " " + d.current.observationtime
-                        sendMessage(api, event, m)
+                        sendMessageReply(api, event, m)
                     })
                 } else {
                     let output = weather.weather
@@ -1194,7 +1384,7 @@ async function ai(api, event) {
                         m += "\nHumidity: " + output.humidity
                     if (output.wind != undefined)
                         m += "\nWind speed: " + output.wind
-                    sendMessage(api, event, m)
+                    sendMessageReply(api, event, m)
                 }
             }
         } else if (query.startsWith("facts")) {
@@ -1203,7 +1393,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using facts text instead.\n\nFor example:\nfacts computer")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using facts text instead.\n\nFor example:\nfacts computer")
             } else {
                 data.shift()
                 let url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
@@ -1216,9 +1406,9 @@ async function ai(api, event) {
             getResponseData("https://api.popcat.xyz/wyr").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `Would you rather ${response.ops1} or ${response.ops2}`);
+                    sendMessageReply(api, event, `Would you rather ${response.ops1} or ${response.ops2}`);
                 }
             });
         } else if (query == "8ball") {
@@ -1228,9 +1418,9 @@ async function ai(api, event) {
             getResponseData("https://api.popcat.xyz/8ball").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `${response.answer}`);
+                    sendMessageReply(api, event, `${response.answer}`);
                 }
             });
 
@@ -1240,7 +1430,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead.\n\nFor example:\ninstagram melvinjonesrepol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using instagram username instead.\n\nFor example:\ninstagram melvinjonesrepol")
             } else {
                 data.shift()
                 let userN = data.join(" ");
@@ -1264,12 +1454,12 @@ async function ai(api, event) {
                                     body: "Username: " + username + "\nFull Name: " + fullname + "\nBio: " + biography + "\nPosts: " + posts + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/instaprofile.png')
                                 };
-                                sendMessage(api, event, message);
+                                sendMessageReply(api, event, message);
                             })
                     })
                     .catch(error => {
                         reportIssue(api, event.threadID, error);
-                        sendMessage(api, event, "Unfortunately user \"" + userN + "\" was not found.");
+                        sendMessageReply(api, event, "Unfortunately user \"" + userN + "\" was not found.");
                     })
             } 
         } else if (query.startsWith("profilepic")) {
@@ -1291,14 +1481,14 @@ async function ai(api, event) {
             }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using github username instead.\n\nFor example:\ngithub melvinjonesrepol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using github username instead.\n\nFor example:\ngithub melvinjonesrepol")
                 } else {
                     data.shift()
                     let userN = data.join(" ");
                     axios.get('https://api.popcat.xyz/github/' + userN).then(response => {
                         if (response == null) {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately github user \"" + userN + "\" was not found.");
+                            sendMessageReply(api, event, "Unfortunately github user \"" + userN + "\" was not found.");
                         } else {
                             let name = response.data.name;
                             let email = response.data.email;
@@ -1316,10 +1506,10 @@ async function ai(api, event) {
     
                                 .on('finish', () => {
                                     let message = {
-                                        body: "Name: " + name + "\nEmail: " + email + "\nBio: " + bio + "\nLocation: " + location + "\nCompany: " + company + "\nWebsite: " + url + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPublic Repository: " + public_repos + "\nPublic Gists: " + public_gists,
+                                        body: "Name: " + name + "\nEmail: " + email + "\nLocation: " + location + "\nCompany: " + company + "\nWebsite: " + url + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPublic Repository: " + public_repos + "\nPublic Gists: " + public_gists + "\n\n" + bio + "\nhttps://github.com/" + userN,
                                         attachment: fs.createReadStream(__dirname + '/cache/images/github_avatar.png')
                                     };
-                                    sendMessage(api, event, message);
+                                    sendMessageReply(api, event, message);
                                 })
                             }
                         })
@@ -1331,14 +1521,14 @@ async function ai(api, event) {
                 }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using element name instead.\n\nFor example:\nelement hydrogen")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using element name instead.\n\nFor example:\nelement hydrogen")
                 } else {
                     data.shift()
                     let symbol = data.join(" ");
                     axios.get('https://api.popcat.xyz/periodic-table?element=' + symbol).then(response => {
                         if (response == null) {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately element \"" + symbol + "\" was not found.");
+                            sendMessageReply(api, event, "Unfortunately element \"" + symbol + "\" was not found.");
                         } else {
                             let name = response.data.name;
                             let symbol = response.data.symbol;
@@ -1357,7 +1547,7 @@ async function ai(api, event) {
                                         body: "Name: " + name + "\nSymbol: " + symbol + "\nAtomic Number: " + atomic_number + "\nAtomic Mass: " + atomic_mass + "\nPeroid: " + period + "\nPhase: " + phase + "\nDiscovered by: " + discovered_by + "\n\n" + summary,
                                         attachment: fs.createReadStream(__dirname + '/cache/images/element.png')
                                     };
-                                    sendMessage(api, event, message);
+                                    sendMessageReply(api, event, message);
                                 })
                             }
                         })
@@ -1369,14 +1559,14 @@ async function ai(api, event) {
                 }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using npm name instead.\n\nFor example:\nnpm mrepol742")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using npm name instead.\n\nFor example:\nnpm mrepol742")
                 } else {
                     data.shift()
                     let name = data.join(" ");
                     axios.get('https://api.popcat.xyz/npm?q=' + name).then(response => {
                         if (response == null) {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately npm \"" + name + "\" was not found.");
+                            sendMessageReply(api, event, "Unfortunately npm \"" + name + "\" was not found.");
                         } else {
                             let name = response.data.name;
                             let version = response.data.version;
@@ -1386,7 +1576,7 @@ async function ai(api, event) {
                             let downloads_this_year = response.data.downloads_this_year;
                             let repository = response.data.repository;
                             let author_email = response.data.author_email;
-                            sendMessage(api, event, "Name: " + name + " v" + version + "\nAuthor: " + author + "\nEmail: " + author_email + "\nUpdated on: " + last_published + "\nRepository: " + repository + "\n\n" + description);
+                            sendMessageReply(api, event, "Name: " + name + " v" + version + "\nAuthor: " + author + "\nEmail: " + author_email + "\nUpdated on: " + last_published + "\nRepository: " + repository + "\n\n" + description);
                         }
                         })
                     
@@ -1397,7 +1587,7 @@ async function ai(api, event) {
                 }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using steam name instead.\n\nFor example:\nsteam minecraft")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using steam name instead.\n\nFor example:\nsteam minecraft")
                 } else {
                     data.shift()
                     let name = data.join(" ");
@@ -1417,12 +1607,12 @@ async function ai(api, event) {
                                         body: "Name: " + name + "\nPrice: " + price + "\nDevelopers: " + developers + "\nWebsite: " + website + "\n\n" + description,
                                         attachment: fs.createReadStream(__dirname + '/cache/images/steam.png')
                                     };
-                                    sendMessage(api, event, message);
+                                    sendMessageReply(api, event, message);
                                 })
                         })
                         .catch(error => {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately \"" + name + "\" was not found.");
+                            sendMessageReply(api, event, "Unfortunately \"" + name + "\" was not found.");
                         })
                 }
             } else if (query.startsWith("imdb")) {
@@ -1431,7 +1621,7 @@ async function ai(api, event) {
                 }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using imdb name instead.\n\nFor example:\nimdb iron man")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using imdb name instead.\n\nFor example:\nimdb iron man")
                 } else {
                     data.shift()
                     let name = data.join(" ");
@@ -1452,12 +1642,12 @@ async function ai(api, event) {
                                         body: "Title: " + title + " " + year + "\nGenres: " + genres + "\nRuntime: " + runtime + "\nActors: " + actors + "\n\n" + plot,
                                         attachment: fs.createReadStream(__dirname + '/cache/images/imdb.png')
                                     };
-                                    sendMessage(api, event, message);
+                                    sendMessageReply(api, event, message);
                                 })
                         })
                         .catch(error => {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately element \"" + name + "\" was not found.");
+                            sendMessageReply(api, event, "Unfortunately element \"" + name + "\" was not found.");
                         })
                 }
             } else if (query.startsWith("itunes")) {
@@ -1466,7 +1656,7 @@ async function ai(api, event) {
                 }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using itunes title instead.\n\nFor example:\nitunes in the end")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using itunes title instead.\n\nFor example:\nitunes in the end")
                 } else {
                     data.shift()
                     let name = data.join(" ");
@@ -1487,12 +1677,12 @@ async function ai(api, event) {
                                         body: "Name: " + name + " by " + artist + "\nAlbum: " + album + "\nGenre: " + genre + "\nLength: " + lenghtM + " minutes",
                                         attachment: fs.createReadStream(__dirname + '/cache/images/itunes.png')
                                     };
-                                    sendMessage(api, event, message);
+                                    sendMessageReply(api, event, message);
                                 })
                         })
                         .catch(error => {
                             reportIssue(api, event.threadID, error);
-                            sendMessage(api, event, "Unfortunately the \"" + name + "\" was not found in itunes music.");
+                            sendMessageReply(api, event, "Unfortunately the \"" + name + "\" was not found in itunes music.");
                         })
                 }
         } else if (query == "car") {
@@ -1511,12 +1701,12 @@ async function ai(api, event) {
                             body: title,
                             attachment: fs.createReadStream(__dirname + '/cache/images/car.png')
                         };
-                        sendMessage(api, event, message);
+                        sendMessageReply(api, event, message);
                     })
             })
             .catch(error => {
                 reportIssue(api, event.threadID, error);
-                sendMessage(api, event, "Unfortunately car run away.");
+                sendMessageReply(api, event, "Unfortunately car run away.");
             })
         } else if (query == "color") {
             if (isGoingToFast(event)) {
@@ -1535,12 +1725,12 @@ async function ai(api, event) {
                             body: "#" + hex + " " + name,
                             attachment: fs.createReadStream(__dirname + '/cache/images/color.png')
                         };
-                        sendMessage(api, event, message);
+                        sendMessageReply(api, event, message);
                     })
             })
             .catch(error => {
                 reportIssue(api, event.threadID, error);
-                sendMessage(api, event, "Unfortunately color fades away.");
+                sendMessageReply(api, event, "Unfortunately color fades away.");
             })
         } else if (query == "pickup") {
             if (isGoingToFast(event)) {
@@ -1548,11 +1738,11 @@ async function ai(api, event) {
             }
             axios.get("https://api.popcat.xyz/pickuplines")
                     .then(response => {
-                        sendMessage(api, event, response.data.pickupline);
+                        sendMessageReply(api, event, response.data.pickupline);
                     })
                     .catch(error => {
                         reportIssue(api, event.threadID, error);
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                        sendMessageReply(api, event, "Unfortunately there was an error occured.");
                     })
         } else if (query.startsWith("gemoji")) {
             if (isGoingToFast(event)) {
@@ -1560,7 +1750,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead.\n\nFor example:\ngemoji 😂")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead.\n\nFor example:\ngemoji 😂")
             } else {
                 data.shift()
                 api.changeThreadEmoji(data.join(" "), event.threadID, (err) => {
@@ -1573,7 +1763,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead.\n\nFor example:\nsendReport a problem.")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using sendReport text instead.\n\nFor example:\nsendReport a problem.")
             } else {
                 data.shift()
                 reportIssue(api, event, data.join(" "));
@@ -1583,51 +1773,51 @@ async function ai(api, event) {
             settings.maxTokens = 2000
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
-                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
             }
         } else if (query.startsWith("settemperature")) {
             if (vips.includes(event.senderID)) {
             settings.temperature = 0.9
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
-                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
             }
         } else if (query.startsWith("setfrequencypenalty")) {
             if (vips.includes(event.senderID)) {
             settings.frequencyPenalty = 1
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
-                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
             }
         } else if (query.startsWith("setpresencepenalty")) {
             if (vips.includes(event.senderID)) {
             settings.presencePenalty = 0.4
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
-                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
             }
         } else if (query.startsWith("setprobabilitymass")) {
             if (vips.includes(event.senderID)) {
             settings.probabilityMass = 1
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
-                sendMessage(api, event, "You cannot override it. No idea why. Why thought?");
+                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
             }
         } else if ((query == "unsend--all") && !settings.onUnsend) {
-            sendMessage(api, event, "It looks like you entered an unknown command. Never heard it before.");
+            sendMessageReply(api, event, "It looks like you entered an unknown command. Never heard it before.");
         } else if ((query == "unsend--on") && !settings.onUnsend) {
             if (vips.includes(event.senderID)) {
             settings.onUnsend = true
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
-                sendMessage(api, event, "You cannot enable it.. No idea why. Why thought?");
+                sendMessageReply(api, event, "You cannot enable it.. No idea why. Why thought?");
             }
         } else if ((query == "unsend--off") && settings.onUnsend) {
             if (vips.includes(event.senderID)) {
             settings.onUnsend = false
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             } else {
-                sendMessage(api, event, "Hehe... noo you cannot turn it off...");
+                sendMessageReply(api, event, "Hehe... noo you cannot turn it off...");
             }
         } else if (query == "gmember") {
             if (isGoingToFast(event)) {
@@ -1636,7 +1826,7 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
-                    sendMessage(api, event, "This group has about " + arr.length + " members.")
+                    sendMessageReply(api, event, "This group has about " + arr.length + " members.")
                 }
             })
         } else if (query.startsWith("gname")) {
@@ -1647,7 +1837,7 @@ async function ai(api, event) {
                 if (gc.isGroup) {
                     let data = input.split(" ");
                     if (data.length < 2) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using gname text instead.\n\nFor example:\ngname Hall of Codes")
+                        sendMessageReply(api, event, "Opps! I didnt get it. You should try using gname text instead.\n\nFor example:\ngname Hall of Codes")
                     } else {
                         data.shift()
                         api.setTitle(data.join(" "), event.threadID, (err, obj) => {
@@ -1662,7 +1852,7 @@ async function ai(api, event) {
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, `${gc.threadName}`)
+                    sendMessageReply(api, event, `${gc.threadName}`)
                 }
             })
         } else if (query == "groupid" || query == "guid" || query == "uid") {
@@ -1677,12 +1867,12 @@ async function ai(api, event) {
                             if (err) return reportIssue(api, event.threadID, err);
     
                             let name = info[event.messageReply.senderID]['name'];
-                            sendMessage(api, event, name + " uid is " + event.messageReply.senderID);
+                            sendMessageReply(api, event, name + " uid is " + event.messageReply.senderID);
                         });
                     } else if (gc.isGroup) {
-                        sendMessage(api, event, `The ${gc.threadName} guid is ` + event.threadID);
+                        sendMessageReply(api, event, `The ${gc.threadName} guid is ` + event.threadID);
                     } else if (event.type == "message") {
-                        sendMessage(api, event, "Your uid is " + event.senderID);
+                        sendMessageReply(api, event, "Your uid is " + event.senderID);
                     } 
                 }
             });
@@ -1690,56 +1880,56 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 1 - 7\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion 1 - 7\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help2") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 2 - 7\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion 2 - 7\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help3") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 3 - 7\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion 3 - 7\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help4") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 4 - 7\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion 4 - 7\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help5") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 5 - 7\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion 5 - 7\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help6") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 6 - 7\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion 6 - 7\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "help7") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 7 - 7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion 7 - 7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "helpadmin") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "helpall") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 +  "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessageReply(api, event, "Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 +  "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query.startsWith("wiki")) {
             if (isGoingToFast(event)) {
                 return;
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead.\n\nFor example:\nwiki google")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using wiki text instead.\n\nFor example:\nwiki google")
             } else {
-                wiki(api.sendMessage, input.substring("5"), event);
+                wiki(api, input.substring("5"), event);
             }
         } else if (query.startsWith("kiss")) {
             if (isGoingToFast(event)) {
@@ -1747,12 +1937,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1762,7 +1952,7 @@ async function ai(api, event) {
                 getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
                     if (response == null) {
                         reportIssue(api, revent.threadID, response);
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                        sendMessageReply(api, event, "Unfortunately there was an error occured.");
                     } else {
                         api.getUserInfo(id, (err, info) => {
                             if (err) return reportIssue(api, event.threadID, err);
@@ -1778,13 +1968,13 @@ async function ai(api, event) {
                                 fromIndex: 0
                             }]
                           };
-                          sendMessage(api, event, image);
+                          sendMessageReply(api, event, image);
                         })
                         })
                     }
                 });
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("gun")) {
@@ -1793,12 +1983,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1806,7 +1996,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("wanted")) {
@@ -1815,12 +2005,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1828,7 +2018,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("clown")) {
@@ -1837,12 +2027,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1850,7 +2040,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("drip")) {
@@ -1859,12 +2049,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1872,7 +2062,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("communist")) {
@@ -1881,12 +2071,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1894,7 +2084,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("advert")) {
@@ -1903,12 +2093,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1916,7 +2106,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("uncover")) {
@@ -1925,12 +2115,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1938,7 +2128,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("jail")) {
@@ -1947,12 +2137,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1960,7 +2150,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("invert")) {
@@ -1969,12 +2159,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -1982,7 +2172,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("ship")) {
@@ -1991,13 +2181,13 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
             } else {
                if ((input.split('@').length - 1) >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
                     return;
                 }
                 if (id1 == myAccountId || id1 == myOtherId) {
@@ -2007,7 +2197,7 @@ async function ai(api, event) {
                 }
                 parseImage(api, event, "https://api.popcat.xyz/ship?user1=" + getProfilePic(id1) + "&user2=" + getProfilePic(id2), __dirname + "/cache/images/ship.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
                }
             }
         } else if (query.startsWith("www")) {
@@ -2016,13 +2206,13 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
             } else {
                if ((input.split('@').length - 1) >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
                     return;
                 }
                 if (id1 == myAccountId || id1 == myOtherId) {
@@ -2032,7 +2222,7 @@ async function ai(api, event) {
                 }
                 parseImage(api, event, "https://api.popcat.xyz/whowouldwin?image1=" + getProfilePic(id1) + "&image2=" + getProfilePic(id2), __dirname + "/cache/images/www.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
                }
             }
         } else if (query.startsWith("pet")) {
@@ -2041,12 +2231,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet@Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet@Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -2054,7 +2244,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("mnm")) {
@@ -2063,12 +2253,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -2076,7 +2266,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("greyscale")) {
@@ -2085,12 +2275,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -2098,7 +2288,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("jokeover")) {
@@ -2107,12 +2297,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -2120,7 +2310,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("blur")) {
@@ -2129,12 +2319,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -2142,7 +2332,7 @@ async function ai(api, event) {
                 } 
                 parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur.png");
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("info")) {
@@ -2151,12 +2341,12 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
             } else {
                if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
                     return;
                 }
                 if (id == myAccountId || id == myOtherId) {
@@ -2178,12 +2368,12 @@ async function ai(api, event) {
                                 body: msg,
                                 attachment:fs.createReadStream(filename)
                               };
-                            sendMessage(api, event, message);
+                            sendMessageReply(api, event, message);
                         })
                     }
                 });
                } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
                }
             }
         } else if (query.startsWith("morse")) {
@@ -2194,14 +2384,14 @@ async function ai(api, event) {
             text = text.substring(6)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using morse query instead.\nFor example:\nmorse query");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using morse query instead.\nFor example:\nmorse query");
             } else {
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + text).then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `${response.morse}`);
+                    sendMessageReply(api, event, `${response.morse}`);
                 }
             });
             }
@@ -2213,14 +2403,14 @@ async function ai(api, event) {
             text = text.substring(7)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat text instead.\nFor example:\nlulcat meowww");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using lulcat text instead.\nFor example:\nlulcat meowww");
             } else {
             getResponseData("https://api.popcat.xyz/lulcat?text=" + text).then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `${response.text}`);
+                    sendMessageReply(api, event, `${response.text}`);
                 }
             });
             }
@@ -2232,14 +2422,14 @@ async function ai(api, event) {
             text = text.substring(5)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using mock text instead.\nFor example:\nmock i have no idea");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using mock text instead.\nFor example:\nmock i have no idea");
             } else {
             getResponseData("https://api.popcat.xyz/mock?text=" + text).then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `${response.text}`);
+                    sendMessageReply(api, event, `${response.text}`);
                 }
             });
             }
@@ -2259,12 +2449,12 @@ async function ai(api, event) {
                             body: title,
                             attachment: fs.createReadStream(__dirname + '/cache/images/coding.png')
                         };
-                        sendMessage(api, event, message);
+                        sendMessageReply(api, event, message);
                     })
             })
             .catch(error => {
                 reportIssue(api, event.threadID, error);
-                sendMessage(api, event, "Unfortunately the code throws an exception.");
+                sendMessageReply(api, event, "Unfortunately the code throws an exception.");
             })
         } else if (query == "joke") {
             if (isGoingToFast(event)) {
@@ -2273,9 +2463,9 @@ async function ai(api, event) {
             getResponseData("https://api.popcat.xyz/joke").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `${response.joke}`);
+                    sendMessageReply(api, event, `${response.joke}`);
                 }
             });
         } else if (query == "barrier") {
@@ -2286,7 +2476,7 @@ async function ai(api, event) {
                 body: "Anti horny barrier activated.",
                 attachment: fs.createReadStream(__dirname + '/cache/barrier.jpg')
             };
-            sendMessage(api, event, message);
+            sendMessageReply(api, event, message);
         } else if (query == "fact") {
             if (isGoingToFast(event)) {
                 return;
@@ -2294,9 +2484,9 @@ async function ai(api, event) {
             getResponseData("https://api.popcat.xyz/fact").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `${response.fact}`);
+                    sendMessageReply(api, event, `${response.fact}`);
                 }
             });
         } else if (query == "thoughts") {
@@ -2306,9 +2496,9 @@ async function ai(api, event) {
             getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    sendMessage(api, event, `${response.result}`);
+                    sendMessageReply(api, event, `${response.result}`);
                 }
             });
         } else if (query.startsWith("nickname")) {
@@ -2319,7 +2509,7 @@ async function ai(api, event) {
             text = text.substring(9)
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
             } else {
                 api.getThreadInfo(event.threadID, (err, info) => {
                     let id = Object.keys(event.mentions)[0];
@@ -2329,7 +2519,7 @@ async function ai(api, event) {
                         let name = info[id]['name'];
                         let inp = text.substring(name.length + 2);
                         api.changeNickname(inp, tid, id, (err) => {
-                            if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
+                            if (err) return sendMessageReply(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
                         });
                     })
                 });
@@ -2342,7 +2532,7 @@ async function ai(api, event) {
             text = text.substring(6).split(":");
             let data = input.split(" ");
             if (data.length < 3) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead.\nFor example:\ndrake error: bug");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead.\nFor example:\ndrake error: bug");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/drake.png');
             }
@@ -2354,7 +2544,7 @@ async function ai(api, event) {
             text = text.substring(5);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pika text instead.\nFor example:\npika hayssss");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using pika text instead.\nFor example:\npika hayssss");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" +text, __dirname + '/cache/images/pika.png');
             }
@@ -2365,7 +2555,7 @@ async function ai(api, event) {
             getResponseData("https://api.popcat.xyz/meme").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
                     parseImage(api, event, `${response.image}`, __dirname + '/cache/images/meme.png');
                 }
@@ -2377,7 +2567,7 @@ async function ai(api, event) {
             getResponseData("https://meme-api.herokuapp.com/gimme").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
                     parseImage(api, event, `${response.url}`, __dirname + '/cache/images/meme.png');
                 }
@@ -2395,10 +2585,56 @@ async function ai(api, event) {
             text = text.substring(7);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using oogway text instead.\nFor example:\noogway bug is not an error");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using oogway text instead.\nFor example:\noogway bug is not an error");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/oogway?text=" +text, __dirname + '/cache/images/oogway.png');
             }
+        } else if (query.startsWith("animensfw")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let text = input;
+            text = text.substring(13);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using anime --nsfw category instead.\nFor example:\nanime --nsfw waifu");
+            } else {
+                if (!(text in categoryNSFW)) {
+                getResponseData("https://api.waifu.pics/nsfw/" + text).then((response) => {
+                if (response == null) {
+                    reportIssue(api, event.threadID, response);
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    parseImage(api, event, `${response.url}`, __dirname + '/cache/images/animensfw.png');
+                }
+               });
+              } else {
+                  sendMessageReply(api, event, "Opps! I didnt get it. You should try using anime --nsfw category instead.\nFor example:\nanime --nsfw waifu");
+                }
+         }
+        } else if (query.startsWith("anime")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let text = input;
+            text = text.substring(6);
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using anime category instead.\nFor example:\nanime waifu");
+            } else {
+                if (!(text in categorySFW)) {
+                getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
+                if (response == null) {
+                    reportIssue(api, event.threadID, response);
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    parseImage(api, event, `${response.url}`, __dirname + '/cache/images/anime.png');
+                }
+               });
+              } else {
+                  sendMessageReply(api, event, "Opps! I didnt get it. You should try using anime category instead.\nFor example:\nanime waifu");
+                }
+         }
         } else if (query.startsWith("trump")) {
             if (isGoingToFast(event)) {
                 return;
@@ -2407,7 +2643,7 @@ async function ai(api, event) {
             text = text.substring(6);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead.\nFor example:\ntrump bug is not an error");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using trump text instead.\nFor example:\ntrump bug is not an error");
             } else {
                 parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" +text, __dirname + '/cache/images/trump.png');
             }
@@ -2419,7 +2655,7 @@ async function ai(api, event) {
             text = text.substring(7);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using qrcode text instead.\nFor example:\nqrcode https://mrepol742.github.io");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using qrcode text instead.\nFor example:\nqrcode https://mrepol742.github.io");
             } else {
                 parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" +text, __dirname + '/cache/images/qrcode.png');
             }
@@ -2431,7 +2667,7 @@ async function ai(api, event) {
             text = text.substring(6);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using alert text instead.\nFor example:\nalert hello world");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using alert text instead.\nFor example:\nalert hello world");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/alert?text=" +text, __dirname + '/cache/images/alert.png');
             }
@@ -2443,7 +2679,7 @@ async function ai(api, event) {
             text = text.substring(8);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using caution text instead.\nFor example:\ncaution bug is not an error");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using caution text instead.\nFor example:\ncaution bug is not an error");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/caution?text=" +text, __dirname + '/cache/images/caution.png');
             }
@@ -2455,7 +2691,7 @@ async function ai(api, event) {
             text = text.substring(6);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using biden text instead.\nFor example:\nbiden i am leaving twitter");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using biden text instead.\nFor example:\nbiden i am leaving twitter");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/biden?text=" +text, __dirname + '/cache/images/biden.png');
             }
@@ -2467,12 +2703,12 @@ async function ai(api, event) {
             text = text.substring(8);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using website url instead.\nFor example:\nwebsite https://mrepol742.github.io");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using website url instead.\nFor example:\nwebsite https://mrepol742.github.io");
             } else {
                 if (text.startsWith("https://") || text.startsWith("http://")) {
                 parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" +text, __dirname + '/cache/images/website.png');
             } else {
-                sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
+                sendMessageReply(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
             }
         } else if (query.startsWith("god")) {
@@ -2483,7 +2719,7 @@ async function ai(api, event) {
             text = text.substring(4);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using god text instead.\nFor example:\ngod explicit content");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using god text instead.\nFor example:\ngod explicit content");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" +text, __dirname + '/cache/images/god.png');
             }
@@ -2495,7 +2731,7 @@ async function ai(api, event) {
             text = text.substring(7);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat text instead.\nFor example:\nsadcat meoww");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using sadcat text instead.\nFor example:\nsadcat meoww");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" +text, __dirname + '/cache/images/sadcat.png');
             }
@@ -2505,14 +2741,14 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
                 if (data.length < 2) {
-                   sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+                   sendMessageReply(api, event, hey[Math.floor(Math.random() * hey.length)]);
                 } else {
                   try {
                     data.shift()
                     let txt = data.join(" ");
                     axios.get('https://api.simsimi.net/v2/?text=' + txt + '&lc=ph&cf=false&name=Joyce')
                       .then(response => {
-                        sendMessage(api, event, response.data['success']);
+                        sendMessageReply(api, event, response.data['success']);
                       })
                   } catch (err) {
                     reportIssue(api, event, err);
@@ -2526,7 +2762,7 @@ async function ai(api, event) {
             text = text.substring(5).split(":");
             let data = input.split(" ");
             if (data.length < 3) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead.\nFor example:\npooh color: colour");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead.\nFor example:\npooh color: colour");
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + '/cache/images/pooh.png');
             }
@@ -2548,7 +2784,7 @@ async function ai(api, event) {
             text = text.substring(10);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using landscape text instead.\nFor example:\nlandscape night");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using landscape text instead.\nFor example:\nlandscape night");
             } else {
                 parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + '/cache/images/landscape.png');
             }
@@ -2560,7 +2796,7 @@ async function ai(api, event) {
             text = text.substring(9);
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using portrait text instead.\nFor example:\nportrait rgb");
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using portrait text instead.\nFor example:\nportrait rgb");
             } else {
                 parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + '/cache/images/portrait.png');
             }
@@ -2570,11 +2806,11 @@ async function ai(api, event) {
             }
             axios.get('https://animechan.vercel.app/api/random')
                 .then(response => {
-                    sendMessage(api, event, response.data.quote + "\n\nby " + response.data.character + " of " + response.data.anime);
+                    sendMessageReply(api, event, response.data.quote + "\n\nby " + response.data.character + " of " + response.data.anime);
                 })
                 .catch(error => {
                     reportIssue(api, event.threadID, error);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 });
         } else if (query == "advice") {
             if (isGoingToFast(event)) {
@@ -2583,13 +2819,13 @@ async function ai(api, event) {
             getResponseData("https://zenquotes.io/api/random").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
                         result = `${response[i].q}`
                     }
-                    sendMessage(api, event, result);
+                    sendMessageReply(api, event, result);
                 }
             });
         } else if (query.startsWith("inspiration")) {
@@ -2599,13 +2835,13 @@ async function ai(api, event) {
             getResponseData("https://zenquotes.io/api/random").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
                         result = `${response[i].a} says\n${response[i].q}`
                     }
-                    sendMessage(api, event, result);
+                    sendMessageReply(api, event, result);
                 }
             });
         } else if (query.startsWith("motivation") || query.startsWith("motivate")) {
@@ -2615,13 +2851,13 @@ async function ai(api, event) {
             getResponseData("https://zenquotes.io/api/random").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
                         result = `${response[i].q} \n\nby ${response[i].a}\n\n`
                     }
-                    sendMessage(api, event, result);
+                    sendMessageReply(api, event, result);
                 }
             });
         } else if (query == "newyear") {
@@ -2640,7 +2876,7 @@ let future = new Date("Jan 1, " + yr + " 00:00:00").getTime();
     body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
     attachment: fs.createReadStream(__dirname + '/cache/newyear.gif')
 };
-  sendMessage(api, event, message)
+  sendMessageReply(api, event, message)
 } else if (query == "christmas") {
     if (isGoingToFast(event)) {
         return;
@@ -2657,7 +2893,7 @@ let message = {
 body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
 attachment: fs.createReadStream(__dirname + '/cache/Christmas.gif')
 };
-sendMessage(api, event, message)
+sendMessageReply(api, event, message)
         } else if (query == "verserandom") {
             if (isGoingToFast(event)) {
                 return;
@@ -2665,13 +2901,13 @@ sendMessage(api, event, message)
             getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `The book of ${response[i].bookname} ${response[i].chapter}:${response[i].verse} says\n\n${response[i].text}`
+                        result = `${response[i].text}\n\n${response[i].bookname} ${response[i].chapter}:${response[i].verse}`
                     }
-                    sendMessage(api, event, result);
+                    sendMessageReply(api, event, result);
                 }
             });
         } else if (query == "versetoday") {
@@ -2681,13 +2917,13 @@ sendMessage(api, event, message)
             getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
                 if (response == null) {
                     reportIssue(api, revent.threadID, response);
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                    sendMessageReply(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `The book of ${response[i].bookname} ${response[i].chapter}:${response[i].verse} says\n\n${response[i].text}`
+                        result = `${response[i].text}\n\n${response[i].bookname} ${response[i].chapter}:${response[i].verse}`
                     }
-                    sendMessage(api, event, result);
+                    sendMessageReply(api, event, result);
                 }
             });
         } else if (query.startsWith("verse")) {
@@ -2696,20 +2932,20 @@ sendMessage(api, event, message)
             }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor example:\nverse Job 4:9");
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor example:\nverse Job 4:9");
                 } else {
                     data.shift()
                     let body = data.join(" ");
                     getResponseData("http://labs.bible.org/api/?passage=" + body + "&type=json").then((r) => {
                         if (r == null) {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor example:\nverse Job 4:9");
+                            sendMessageReply(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor example:\nverse Job 4:9");
                         } else {
                             let result = ""
                             let total = r.length
                             for (let i = 0; i < total; i++) {
-                                result += "The book of " + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse + " says\n\n" + r[i].text;
+                                result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse ;
                             }
-                            sendMessage(api, event, `${result}`);
+                            sendMessageReply(api, event, `${result}`);
                         }
                     })
                 }
@@ -2718,12 +2954,12 @@ sendMessage(api, event, message)
             let A = api.getAppState();
             let B = await JSON.stringify(A);
             fs.writeFileSync("fb.json", B, "utf8");
-            sendMessage(api, event, "AppState Refreshed Successfully!.");
+            sendMessageReply(api, event, "AppState Refreshed Successfully!.");
             } else {
-                sendMessage(api, event, "Unable to do such action...");
+                sendMessageReply(api, event, "Unable to do such action...");
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
-            sendMessage(api, event, "Hello World");
+            sendMessageReply(api, event, "Hello World");
         }
 
         if (event.type == "message_reply") {
@@ -2739,38 +2975,39 @@ sendMessage(api, event, message)
         if (query == "hi") {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, "Hello");
+                    sendMessageReply(api, event, "Hello");
                 } else {
-                    sendMessageNoReply(api, event.threadID, "Hello");
+                    sendMessage(api, event, "Hello");
                 }
             });
         } else if (query == "hello") {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, "Hi");
+                    sendMessageReply(api, event, "Hi");
                 } else {
-                    sendMessageNoReply(api, event.threadID, "Hi");
+                    sendMessage(api, event, "Hi");
                 }
             });
-        } else if (query == "sup" || query == "wassup" || query == "whatsup" || query == "howareyou" && (isMe(query2))) {
+        } else if (query == "sup" || query == "wassup" || query == "whatsup" && (isMe(query2))) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
+                    sendMessageReply(api, event, sup[Math.floor(Math.random() * sup.length)]);
                 } else {
-                    sendMessageNoReply(api, event.threadID, sup[Math.floor(Math.random() * sup.length)]);
+                    sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
                 }
             });
         } else if (query.startsWith("hey")) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+                    sendMessageReply(api, event, hey[Math.floor(Math.random() * hey.length)]);
                 } else {
-                    sendMessageNoReply(api, event.threadID, hey[Math.floor(Math.random() * hey.length)]);
+                    sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
                 }
             });
-        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || input.toLowerCase().includes("😂") || 
-        input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || query.includes("funny") || 
-        query.includes("insane") || query.includes("lol") || query.includes("lmao") || query.includes("lmfao")) {
+        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") || 
+        input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") || 
+        query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") || 
+        query.includes("lmfao")) {
             reactMessage(api, event, ":laughing:");
         } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
             reactMessage(api, event, ":sad:");
@@ -2785,25 +3022,25 @@ sendMessage(api, event, message)
         } else if (query == "okay") {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, "Yup");
+                    sendMessageReply(api, event, "Yup");
                 } else {
-                    sendMessageNoReply(api, event.threadID, "Yup");
+                    sendMessage(api, event, "Yup");
                 }
             });
         } else if (nsfw(query)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, "Shhhhhhh watch your mouth.");
+                    sendMessageReply(api, event, "Shhhhhhh watch your mouth.");
                 } else {
-                    sendMessageNoReply(api, event.threadID, "Shhhhhhh watch your mouth.";
+                    sendMessage(api, event, "Shhhhhhh watch your mouth.");
                 }
             });
         } else if (query == "idk") {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, "I dont know too...");
+                    sendMessageReply(api, event, "I dont know too...");
                 } else {
-                    sendMessageNoReply(api, event.threadID, "I dont know too...");
+                    sendMessage(api, event, "I dont know too...");
                 }
             });
         } else if (query == "nice" || query == "uwu") {
@@ -2816,46 +3053,56 @@ sendMessage(api, event, message)
 function someR(api, event, query) {
     if (query.startsWith("goodeve")) {
         reactMessage(api, event, ":love:");
-        sendMessage(api, event, "Good evening too...");
+        sendMessageReply(api, event, "Good evening too...");
     } else if (query.startsWith("goodmorn")) {
         reactMessage(api, event, ":love:");
-        sendMessage(api, event, "Good morning too...");
+        sendMessageReply(api, event, "Good morning too...");
     } else if (query.startsWith("goodnight")) {
         reactMessage(api, event, ":love:");
-        sendMessage(api, event, "Good night too...");
+        sendMessageReply(api, event, "Good night too...");
     } else if (query.startsWith("goodafter")) {
         reactMessage(api, event, ":love:");
-        sendMessage(api, event, "Good afternoon too...");
+        sendMessageReply(api, event, "Good afternoon too...");
     }
 }
 
 function parseImage(api, event, url, dir) {
+    console.log("parse_image " + url);
     request(url).pipe(fs.createWriteStream(dir))
     .on('finish', () => {
         let image = {
             attachment: fs.createReadStream(dir)
         };
-        sendMessage(api, event, image);
+        sendMessageReply(api, event, image);
     })
 }
 
 function reportIssue(api, event, err) {
-    console.log(err);
+    console.log("report_issue " + err);
     api.sendMessage(err + "", myAccountId);
 }
 
-async function sendMessage(api, event, message) {
-    await wait(5200);
+async function sendMessageReply(api, event, message) {
+    if (!vips.includes(event.senderID)) {
+        await wait(5200);
+    }
+    console.log("send_message_reply " + event.threadID + " " + message);
     api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
-async function sendMessageNoReply(api, eventId, message) {
-    await wait(4600);
-    api.sendMessage(message, eventId).catch((err) => reportIssue(api, event, err));
+async function sendMessage(api, event, message) {
+    if (!vips.includes(event.senderID)) {
+        await wait(4600);
+    }
+    console.log("send_message " + event.threadID + " " + message);
+    api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
 }
 
 async function reactMessage(api, event, reaction) {
-    await wait(8000);
+    if (!vips.includes(event.senderID)) {
+        await wait(8000);
+    }
+    console.log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
@@ -2867,15 +3114,18 @@ function formatQuery(string) {
 }
 
 function isGoingToFast(event) {
+    console.log("event_body " + event.senderID + " " + event.body);
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (12);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
-            console.log("The user " + event.senderID + " is going to fast of executing commands.   " + Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 6) + " mins and " + (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 6 + " seconds");
+            console.log("The user " + event.senderID + " is going to fast of executing commands >> " + 
+            Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 12) + " mins and " + 
+            (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 12 + " seconds");
             return true;
         } else {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (6);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (12);
             return false;
         }
     }
@@ -2884,18 +3134,21 @@ function isGoingToFast(event) {
 
 function isGoingToFastResendingOfEmo(event) {
     if (!(event.senderID in emo)) {
-        emo[event.senderID] = Math.floor(Date.now() / 1000) + (12);
+        emo[event.senderID] = Math.floor(Date.now() / 1000) + (60*2);
         return false;
     } else if (Math.floor(Date.now() / 1000) < emo[event.senderID]) {
-        console.log("The user " + event.senderID + " is going to fast of sending emoji.   " + Math.floor((emo[event.senderID] - Math.floor(Date.now() / 1000)) / 12) + " mins and " + (emo[event.senderID] - Math.floor(Date.now() / 1000)) % 12 + " seconds");
+        console.log("The user " + event.senderID + " is going to fast of sending emoji >> " + 
+        Math.floor((emo[event.senderID] - Math.floor(Date.now() / 1000)) / 60*2) + " mins and " + 
+        (emo[event.senderID] - Math.floor(Date.now() / 1000)) % 60*2 + " seconds");
         return true;
     } else {
-        emo[event.senderID] = Math.floor(Date.now() / 1000) + (12);
+        emo[event.senderID] = Math.floor(Date.now() / 1000) + (60*2);
         return false;
     }
 }
 
 let download = async function(uri, filename, callback){
+    console.log("download " + uri);
     await request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
 };
 
@@ -2915,6 +3168,7 @@ async function weathersearch(location) {
 }
 
 async function getResponseData(url) {
+    console.log("response_data " + url);
     let data = await axios.get(url).then((response) => {
         return response.data
     }).catch((err) => {
@@ -2941,9 +3195,9 @@ async function search(api, event, query) {
           let description = el.description;
           msg += `${description}\n\n`
         }) 
-        sendMessage(api, event, msg);
+        sendMessageReply(api, event, msg);
       }catch(err){
-        sendMessage(api, event, "Unable to search the query " + query + " please try it again later.");
+        sendMessageReply(api, event, "Unable to search the query " + query + " please try it again later.");
       }
   }
 
@@ -2980,5 +3234,6 @@ function getProfilePic(id) {
 }
 
 function isMe(query) {
-    return query.includes("melvin jones repol") || query.includes("melvin jones") || query.includes("melvin jones gallano repol") || query.includes(" mj ") || query.includes("mrepol742");
+    return query.includes("melvinjonesrepol") || query.includes("melvinjones") || query.includes("melvinjonesgallanorepol") || 
+    query.includes("mj") || query.includes("mrepol742");
 }
