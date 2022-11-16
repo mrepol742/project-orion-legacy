@@ -1690,7 +1690,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help56 "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 +  "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query.startsWith("wiki")) {
             if (isGoingToFast(event)) {
                 return;
