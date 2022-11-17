@@ -1980,17 +1980,17 @@ async function ai(api, event) {
                 fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                 sendMessageReply(api, event, "Not Safe For Work is been disabled.");
             } 
-        } else if ((query == "preventSimultanoesExecutionon") && !settings.preventSimultanoesExecution) {
+        } else if ((query == "preventsimultaneousexecutionon") && !settings.preventSimultaneousExecution) {
             if (vips.includes(event.senderID)) {
-                settings.preventSimultanoesExecution = true
+                settings.preventSimultaneousExecution = true
                 fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                sendMessageReply(api, event, "Prevention of simulatenoes execution are now enabled.");
+                sendMessageReply(api, event, "Prevention of simulataneous execution are now enabled.");
             } 
-        } else if ((query == "preventSimultanoesExecutionoff") && settings.preventSimultanoesExecution) {
+        } else if ((query == "preventsimultaneousexecutionoff") && settings.preventSimultaneousExecution) {
             if (vips.includes(event.senderID)) {
-                settings.preventSimultanoesExecution = false
+                settings.preventSimultaneousExecution = false
                 fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                sendMessageReply(api, event, "Prevention of simulatenoes execution is now disabled.");
+                sendMessageReply(api, event, "Prevention of simulataneous execution is now disabled.");
             } 
         } else if (query == "gmember") {
             if (isGoingToFast(event)) {
