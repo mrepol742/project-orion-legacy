@@ -22,6 +22,8 @@ const Innertube = require('youtubei.js');
 const GoogleImages = require('google-images');
 const Genius = require("genius-lyrics");
 
+console.log("The Project Orion is now active and waiting for commands execution.")
+
 let msgs = {};
 let cmd = {};
 let emo = {};
@@ -45,7 +47,7 @@ let myGirlAccountId = "100077318906152";
 let techhJork = "100037131918629";
 
 let debug = false;
-let isEnabledOnMyGirl = false;
+let isEnabledOnMyGirl = true;
 
 let qot = ["The object will not change its motion unless a force acts on it.",
 "The object is equal to its mass times its acceleration.",
@@ -158,8 +160,8 @@ let help4 = "\n⦿ ig [username]";
     help4 += "\n⦿ gmember";
     help4 += "\n⦿ car";
     help4 += "\n⦿ color";
-    help4 += "\n⦿ count";
-    help4 += "\n⦿ simsimi [text]";
+    help4 += "\n⦿ urlshort [url]";
+    help4 += "\n⦿ sim [text]";
     help4 += "\n⦿ pet @mention";
     help4 += "\n⦿ ship @mention @mention";
     help4 += "\n⦿ www @mention @mention";
@@ -176,7 +178,12 @@ let help5 = "\n⦿ conan";
     help5 += "\n⦿ greyscale @mention";
     help5 += "\n⦿ jokeover @mention";
     help5 += "\n⦿ mnm @mention";
-    help5 += "\n⦿ urlshort [url]";
+    help5 += "\n⦿ count";
+    help5 += "\n⦿ count --vowels";
+    help5 += "\n⦿ count --consonants";
+    help5 += "\n⦿ wfind [text]";
+    help5 += "\n⦿ time";
+  
 
 let help6 = "\n⦿ anime [category]";
     help6 += "\n   megumin, bully, cuddle, cry";
@@ -202,12 +209,14 @@ let helpadmin = "\n⦿ unsend";
     helpadmin += "\n⦿ unsend --all";
     helpadmin += "\n⦿ delay --on";
     helpadmin += "\n⦿ delay --off";
+    helpadmin += "\n⦿ nsfw --on";
+    helpadmin += "\n⦿ nsfw --off";
+    helpadmin += "\n⦿ preventSimultanoesExecution --on";
+    helpadmin += "\n⦿ preventSimultanoesExecution --off";
     helpadmin += "\n⦿ setMaxTokens [integer]";
     helpadmin += "\n⦿ setTemperature [integer]";
     helpadmin += "\n⦿ setFrequencyPenalty [integer]";
     helpadmin += "\n⦿ setProbabilityMass [integer]";
-    helpadmin += "\n⦿ setVIP @mention or uid";
-    helpadmin += "\n⦿ remVIP @mention or uid";
     helpadmin += "\n⦿ refresh | reload";
 
 let apiKey = [
@@ -222,6 +231,8 @@ let apiKey = [
     // nlpcloudclient summarize api key
     "5ab3c279e089139f63017eea409573731d5e8ce9"
 ];
+
+let domains = [".aaa", ".abb", ".abc", ".ac", ".aco", ".ad", ".ads", ".ae", ".aeg", ".af", ".afl", ".ag", ".ai", ".aig", ".al", ".am", ".anz", ".ao", ".aol", ".app", ".aq", ".ar", ".art", ".as", ".at", ".au", ".aw", ".aws", ".ax", ".axa", ".az", ".ba", ".bar", ".bb", ".bbc", ".bbt", ".bcg", ".bcn", ".bd", ".be", ".bet", ".bf", ".bg", ".bh", ".bi", ".bid", ".bio", ".biz", ".bj", ".bm", ".bms", ".bmw", ".bn", ".bo", ".bom", ".boo", ".bot", ".box", ".br", ".bs", ".bt", ".buy", ".bv", ".bw", ".by", ".bz", ".bzh", ".ca", ".cab", ".cal", ".cam", ".car", ".cat", ".cba", ".cbn", ".cbs", ".cc", ".cd", ".ceb", ".ceo", ".cf", ".cfa", ".cfd", ".cg", ".ch", ".ci", ".ck", ".cl", ".cm", ".cn", ".co", ".com", ".cpa", ".cr", ".crs", ".csc", ".cu", ".cv", ".cw", ".cx", ".cy", ".cz", ".dad", ".day", ".dds", ".de", ".dev", ".dhl", ".diy", ".dj", ".dk", ".dm", ".dnp", ".do", ".dog", ".dot", ".dtv", ".dvr", ".dz", ".eat", ".ec", ".eco", ".edu", ".ee", ".eg", ".er", ".es", ".esq", ".et", ".eu", ".eus", ".fan", ".fi", ".fit", ".fj", ".fk", ".fly", ".fm", ".fo", ".foo", ".fox", ".fr", ".frl", ".ftr", ".fun", ".fyi", ".ga", ".gal", ".gap", ".gay", ".gb", ".gd", ".gdn", ".ge", ".gea", ".gf", ".gg", ".gh", ".gi", ".gl", ".gle", ".gm", ".gmo", ".gmx", ".gn", ".goo", ".gop", ".got", ".gov", ".gp", ".gq", ".gr", ".gs", ".gt", ".gu", ".gw", ".gy", ".hbo", ".hiv", ".hk", ".hkt", ".hm", ".hn", ".hot", ".how", ".hr", ".ht", ".hu", ".ibm", ".ice", ".icu", ".id", ".ie", ".ifm", ".il", ".im", ".in", ".inc", ".ing", ".ink", ".int", ".io", ".iq", ".ir", ".is", ".ist", ".it", ".itv", ".jcb", ".jcp", ".je", ".jio", ".jll", ".jm", ".jmp", ".jnj", ".jo", ".jot", ".joy", ".jp", ".ke", ".kfh", ".kg", ".kh", ".ki", ".kia", ".kim", ".km", ".kn", ".kp", ".kpn", ".kr", ".krd", ".kw", ".ky", ".kz", ".la", ".lat", ".law", ".lb", ".lc", ".lds", ".li", ".lk", ".llc", ".llp", ".lol", ".lpl", ".lr", ".ls", ".lt", ".ltd", ".lu", ".lv", ".ly", ".ma", ".man", ".map", ".mba", ".mc", ".md", ".me", ".med", ".men", ".mg", ".mh", ".mil", ".mit", ".mk", ".ml", ".mlb", ".mls", ".mm", ".mma", ".mn", ".mo", ".moe", ".moi", ".mom", ".mov", ".mp", ".mq", ".mr", ".ms", ".msd", ".mt", ".mtn", ".mtr", ".mu", ".mv", ".mw", ".mx", ".my", ".mz", ".na", ".nab", ".nba", ".nc", ".ne", ".nec", ".net", ".new", ".nf", ".nfl", ".ng", ".ngo", ".nhk", ".ni", ".nl", ".no", ".now", ".np", ".nr", ".nra", ".nrw", ".ntt", ".nu", ".nyc", ".nz", ".obi", ".off", ".om", ".one", ".ong", ".onl", ".ooo", ".org", ".ott", ".ovh", ".pa", ".pay", ".pe", ".pet", ".pf", ".pg", ".ph", ".phd", ".pid", ".pin", ".pk", ".pl", ".pm", ".pn", ".pnc", ".pr", ".pro", ".pru", ".ps", ".pt", ".pub", ".pw", ".pwc", ".py", ".qa", ".qvc", ".re", ".red", ".ren", ".ril", ".rio", ".rip", ".ro", ".rs", ".ru", ".run", ".rw", ".rwe", ".sa", ".sap", ".sas", ".sb", ".sbi", ".sbs", ".sc", ".sca", ".scb", ".sd", ".se", ".ses", ".sew", ".sex", ".sfr", ".sg", ".sh", ".si", ".sj", ".sk", ".ski", ".sky", ".sl", ".sm", ".sn", ".so", ".soy", ".sr", ".srl", ".ss", ".st", ".stc", ".su", ".sv", ".sx", ".sy", ".sz", ".tab", ".tax", ".tc", ".tci", ".td", ".tdk", ".tel", ".tf", ".tg", ".th", ".thd", ".tj", ".tjx", ".tk", ".tl", ".tm", ".tn", ".to", ".top", ".tr", ".trv", ".tt", ".tui", ".tv", ".tvs", ".tw", ".tz", ".ua", ".ubs", ".ug", ".uk", ".uno", ".uol", ".ups", ".us", ".uy", ".uz", ".va", ".vc", ".ve", ".vet", ".vg", ".vi", ".vig", ".vin", ".vip", ".vn", ".vu", ".wed", ".wf", ".win", ".wme", ".wow", ".ws", ".wtc", ".wtf", ".xin", ".xxx", ".xyz", ".ye", ".you", ".yt", ".yun", ".za", ".zip", ".zm", ".zw"];
 
 cron.schedule('*/30 * * * *', () => {
     let hours = date("Asia/Manila").getHours()
@@ -242,6 +253,12 @@ cron.schedule('0 * * * *', () => {
 
 let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
 let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
+
+process.on('SIGINT', function() {
+    console.log("\n\n\tCaught interrupt signal");
+    fs.writeFileSync(__dirname + "/msgs/" + new Date().toISOString() + ".json", JSON.stringify(msgs), "utf8")
+    process.exit();
+});
 
 login({
     appState: JSON.parse(fs.readFileSync('fb.json', 'utf8'))
@@ -300,9 +317,11 @@ login({
                     if (isGoingToFastResendingOfEmo(event)) {
                         break;
                     }
+                    await wait(1500);
                     sendMessage(api, event, event.body);
                     break;
                 }
+
                 ai(api, event);
                 break;
             case "message_reply":
@@ -342,10 +361,46 @@ login({
                         break;
                     }
                     if (event.messageReply.body == "") { 
-                        sendMessageReply(api, event, "You need to reply count to a message which is not empty.");
+                        sendMessageReply(api, event, "You need to reply count to a message.");
                     } else {
-                        sendMessageReply(api, event, "The words on this message is about " + countWords(event.messageReply.body) + " words.");
+                        sendMessageReply(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
                     }
+                } else if (query == "countvowels") {
+                    if (isGoingToFast(event)) {
+                        break;
+                    }
+                    if (event.messageReply.body == "") { 
+                        sendMessageReply(api, event, "You need to reply count --vowels to a message.");
+                    } else {
+                        sendMessageReply(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
+                    }
+                } else if (query == "countconsonants") {
+                    if (isGoingToFast(event)) {
+                        break;
+                    }
+                    if (event.messageReply.body == "") { 
+                        sendMessageReply(api, event, "You need to reply count --consonants to a message.");
+                    } else {
+                        sendMessageReply(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
+                    }
+                } else if (query.startsWith("wfind")) {
+                    if (isGoingToFast(event)) {
+                        break;
+                    }
+                    let data = input.split(" ");
+                    if (data.length < 2) {
+                        sendMessageReply(api, event, "Opps! I didnt get it. You should try using wfind text instead.\nFor example:\nwfind my name")
+                    } else {
+                        data.shift();
+                        let se = data.join(" ");
+                    if (event.messageReply.body == "") { 
+                        sendMessageReply(api, event, "You need to reply wfind text to a message.");
+                    } else if (event.messageReply.body.includes(se)) {
+                        sendMessageReply(api, event, "I found the \"" + se + "\" on this message " + (se.split(se).length - 1) + " times.");
+                    } else {
+                        sendMessageReply(api, event, "I cannot found any apperance of your search term on the message.");
+                    }
+                }
                 }
 
                 if (query == "bgremove") {
@@ -409,6 +464,9 @@ login({
                     break;
                 }
                     let d = msgs[event.messageID];
+                    if (d === undefined) {
+                        break;
+                    }
                     if (typeof(d) == "object") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return reportIssue(api, event.threadID, err);
@@ -733,7 +791,7 @@ async function ai(api, event) {
                             sendMessage(api, event, "I'm Mj.");
                         }
                     })
-                } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner")) {
+                } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou")) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (gc.isGroup) {
                             sendMessageReply(api, event, "Melvin Jones Repol created me.");
@@ -805,8 +863,17 @@ async function ai(api, event) {
                             sendMessage(api, event, "A self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.");
                         }
                     })
+                } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.";
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, mss);
+                        } else {
+                            sendMessage(api, event, mss);
+                        }
+                    })
                 } else if (text1 == "help") {
-
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using help number instead.\nFor example:\nhelp 2");
                 } else {
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
@@ -816,17 +883,17 @@ async function ai(api, event) {
                     data
                 } = await openai.createCompletion("text-davinci-002", {
                     prompt: text,
-                    temperature: 0.9,
-                    max_tokens: 100,
-                    top_p: 1,
-                    frequency_penalty: 1,
-                    presence_penalty: 0.4,
+                    temperature: parseInt(settings.temperature),
+                    max_tokens: parseInt(settings.max_tokens),
+                    top_p: parseInt(settings.probability_mass),
+                    frequency_penalty: parseInt(settings.frequency_penalty),
+                    presence_penalty: parseInt(settings.presence_penalty),
                 });
                 let finish = data.choices[0].text;
                 if (finish.startsWith("?") || finish.startsWith("\"")) {
                     finish = finish.slice(1);
                 }
-                sendMessageReply(api, event, finish);
+                sendMessageReply(api, event, finish.replace(/\n\s*\n/g, '\n'));
             }
             }
         }
@@ -836,17 +903,27 @@ async function ai(api, event) {
 
     
         if (query.startsWith("problem")) {
-            if (query2.split(" ").length < 2) {
+            if (input.split(" ").length < 2) {
                 sendMessageReply(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
             } else {
                 let text = input;
                 text = text.substring(8)
                 if (text.includes("√")) {
-                    const res = await sqrt(text.replace(/√/gi, ""));
-                    sendMessageReply(api, event, res);
+                    let res;
+                    try {
+                       res = await Math.sqrt(text.replace(/√/gi, ""));
+                    } catch (err) {
+                        res = "You enter an invalid token in the equation. Please try it again.";
+                    }
+                    sendMessageReply(api, event, res + "");
                 } else {
-                    const res = await evaluate(text);
-                    sendMessageReply(api, event, res);
+                    let res;
+                    try {
+                       res = await eval(text);
+                    } catch (err) {
+                       res = "You enter an invalid token in the equation. Please try it again.";
+                    }
+                    sendMessageReply(api, event, res + "");
                 }
             }
         } 
@@ -1770,55 +1847,151 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("setmaxtokens")) {
             if (vips.includes(event.senderID)) {
-            settings.maxTokens = 2000
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            } else {
-                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
+                let data = input.split(" ");
+                if (data.length < 2) {
+                   sendMessageReply(api, event, "Opps! I didnt get it. You should try using setMaxTokens [integer] instead.\n\nFor example:\nsetMaxTokens 1000.")
+                } else {
+                    data.shift();
+                    let num = data.join(" ");
+                    if (num > 4000) {
+                        sendMessageReply(api, event, "Opps! the limit is 4000.");
+                    } else if (num < 10) {
+                        sendMessageReply(api, event, "Opps! the minimum value 10");
+                    } else {
+                        settings.max_tokens = num;
+                        fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                        sendMessageReply(api, event, "Max Tokens is now set to " + num);
+                    }
+                }
             }
         } else if (query.startsWith("settemperature")) {
             if (vips.includes(event.senderID)) {
-            settings.temperature = 0.9
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            } else {
-                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
+                let data = input.split(" ");
+                if (data.length < 2) {
+                   sendMessageReply(api, event, "Opps! I didnt get it. You should try using setTemperature [integer] instead.\n\nFor example:\nsetTemperature 0.")
+                } else {
+                    data.shift();
+                    let num = data.join(" ");
+                    if (num > 1) {
+                        sendMessageReply(api, event, "Opps! the limit is 1.");
+                    } else if (num < -0) {
+                        sendMessageReply(api, event, "Opps! the minimum value 0.1");
+                    } else {
+                        settings.temperature = num;
+                        fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                        sendMessageReply(api, event, "Temperature is now set to " + num);
+                    }
+                }
             }
         } else if (query.startsWith("setfrequencypenalty")) {
             if (vips.includes(event.senderID)) {
-            settings.frequencyPenalty = 1
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            } else {
-                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
+                let data = input.split(" ");
+                if (data.length < 2) {
+                   sendMessageReply(api, event, "Opps! I didnt get it. You should try using setFrequencyPenalty [integer] instead.\n\nFor example:\nsetFrequencyPenalty 1.")
+                } else {
+                    data.shift();
+                    let num = data.join(" ");
+                    if (num > 2) {
+                        sendMessageReply(api, event, "Opps! the limit is 2.");
+                    } else if (num < -2) {
+                        sendMessageReply(api, event, "Opps! the minimum value -2");
+                    } else {
+                        settings.frequency_penalty = num;
+                        fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                        sendMessageReply(api, event, "Frequency Penalty is now set to " + num);
+                    }
+                }
             }
         } else if (query.startsWith("setpresencepenalty")) {
             if (vips.includes(event.senderID)) {
-            settings.presencePenalty = 0.4
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            } else {
-                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
+                let data = input.split(" ");
+                if (data.length < 2) {
+                   sendMessageReply(api, event, "Opps! I didnt get it. You should try using setPresencePenalty [integer] instead.\n\nFor example:\nsetPresencePenalty 1.")
+                } else {
+                    data.shift();
+                    let num = data.join(" ");
+                    if (num > 2) {
+                        sendMessageReply(api, event, "Opps! the limit is 2.");
+                    } else if (num < -2) {
+                        sendMessageReply(api, event, "Opps! the minimum value -2");
+                    } else {
+                        settings.presence_penalty = num;
+                        fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                        sendMessageReply(api, event, "Presence Penalty is now set to " + num);
+                    }
+                }
             }
         } else if (query.startsWith("setprobabilitymass")) {
             if (vips.includes(event.senderID)) {
-            settings.probabilityMass = 1
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            } else {
-                sendMessageReply(api, event, "You cannot override it. No idea why. Why thought?");
+                let data = input.split(" ");
+                if (data.length < 2) {
+                   sendMessageReply(api, event, "Opps! I didnt get it. You should try using setProbabilityMass [integer] instead.\n\nFor example:\nsetProbabilityMass 0.1.")
+                } else {
+                    data.shift();
+                    let num = data.join(" ");
+                    if (num > 1) {
+                        sendMessageReply(api, event, "Opps! the limit is 1.");
+                    } else if (num < -0) {
+                        sendMessageReply(api, event, "Opps! the minimum value 0");
+                    } else {
+                        settings.probability_mass = num;
+                        fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                        sendMessageReply(api, event, "Probability Mass is now set to " + num);
+                    }
+                }
             }
-        } else if ((query == "unsend--all") && !settings.onUnsend) {
-            sendMessageReply(api, event, "It looks like you entered an unknown command. Never heard it before.");
-        } else if ((query == "unsend--on") && !settings.onUnsend) {
+        } else if ((query == "unsendall") && !settings.onUnsend) {
             if (vips.includes(event.senderID)) {
-            settings.onUnsend = true
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            } else {
-                sendMessageReply(api, event, "You cannot enable it.. No idea why. Why thought?");
+                sendMessageReply(api, event, "...");
             }
-        } else if ((query == "unsend--off") && settings.onUnsend) {
+        } else if ((query == "unsendon") && !settings.onUnsend) {
             if (vips.includes(event.senderID)) {
-            settings.onUnsend = false
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-            } else {
-                sendMessageReply(api, event, "Hehe... noo you cannot turn it off...");
+                settings.onUnsend = true
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Resending of unsend messages and attachments are now enabled.");
             }
+        } else if ((query == "unsendoff") && settings.onUnsend) {
+            if (vips.includes(event.senderID)) {
+                settings.onUnsend = false
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Resending of unsend messages and attachments is been disabled.");
+            } 
+        } else if ((query == "delayon") && !settings.onDelay) {
+            if (vips.includes(event.senderID)) {
+                settings.onDelay = true
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Delay on messages, replies and reaction are now enabled.");
+            }
+        } else if ((query == "delayoff") && settings.onDelay) {
+            if (vips.includes(event.senderID)) {
+                settings.onDelay = false
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Delay on messages, replies and reaction is been disabled.");
+            } 
+        } else if ((query == "nsfwon") && !settings.onNsfw) {
+            if (vips.includes(event.senderID)) {
+                settings.onNsfw = true
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Not Safe For Work are now enabled.");
+            }
+        } else if ((query == "nsfwoff") && settings.onNsfw) {
+            if (vips.includes(event.senderID)) {
+                settings.onNsfw = false
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Not Safe For Work is been disabled.");
+            } 
+        } else if ((query == "preventSimultanoesExecutionon") && !settings.preventSimultanoesExecution) {
+            if (vips.includes(event.senderID)) {
+                settings.preventSimultanoesExecution = true
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Prevention of simulatenoes execution are now enabled.");
+            } 
+        } else if ((query == "preventSimultanoesExecutionoff") && settings.preventSimultanoesExecution) {
+            if (vips.includes(event.senderID)) {
+                settings.preventSimultanoesExecution = false
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessageReply(api, event, "Prevention of simulatenoes execution is now disabled.");
+            } 
         } else if (query == "gmember") {
             if (isGoingToFast(event)) {
                 return;
@@ -1930,6 +2103,21 @@ async function ai(api, event) {
                 sendMessageReply(api, event, "Opps! I didnt get it. You should try using wiki text instead.\n\nFor example:\nwiki google")
             } else {
                 wiki(api, input.substring("5"), event);
+            }
+        } else if (query.startsWith("isValidDomain")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using isValidDomain url instead.\n\nFor example:\nisValidDomain https://mrepol742.github.io")
+            } else {
+                data.shift();
+                if (isValidDomain(data.join(" "))) {
+                    sendMessage(api, event, "It is a valid domain.");
+                } else {
+                    sendMessage(api, event, "It is not a valid domain.");
+                }
             }
         } else if (query.startsWith("kiss")) {
             if (isGoingToFast(event)) {
@@ -2735,7 +2923,7 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" +text, __dirname + '/cache/images/sadcat.png');
             }
-        } else if (query.startsWith("simsimi")) {
+        } else if (query.startsWith("sim")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -2828,6 +3016,8 @@ async function ai(api, event) {
                     sendMessageReply(api, event, result);
                 }
             });
+        } else if (query == "time") {
+            sendMessageReply(api, event, "It's " + getMonth() + " " + new Date().getDate() + ", " + getDay() + " " + formateDate(new Date()));
         } else if (query.startsWith("inspiration")) {
             if (isGoingToFast(event)) {
                 return;
@@ -2962,15 +3152,21 @@ sendMessageReply(api, event, message)
             sendMessageReply(api, event, "Hello World");
         }
 
-        if (event.type == "message_reply") {
-            if (event.messageReply.senderID == myAccountId) {
+        api.getThreadInfo(event.threadID, (err, gc) => {
+            if (gc.isGroup) {
+                if (event.type == "message_reply") {
+                    if (event.messageReply.senderID == myAccountId) {
+                        someR(api, event, query);
+                    }
+                } else {
+                    if ((query.includes("@") && isMe(query2)) || !query.includes("@")) {
+                       someR(api, event, query);
+                    }
+                }
+            } else {
                 someR(api, event, query);
             }
-        } else {
-            if (!query.includes("@") || isMe(query2)) {
-               someR(api, event, query);
-            }
-        }
+        });
         
         if (query == "hi") {
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -3052,17 +3248,37 @@ sendMessageReply(api, event, message)
 
 function someR(api, event, query) {
     if (query.startsWith("goodeve")) {
-        reactMessage(api, event, ":love:");
-        sendMessageReply(api, event, "Good evening too...");
+        if (isEvening()) {
+           reactMessage(api, event, ":love:");
+           sendMessageReply(api, event, "Good evening too... The sun set is so beautiful as always, hope you're seeing it too.");
+           sendMessage(api, event, "🥰🌘");
+        } else {
+           sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+        }
     } else if (query.startsWith("goodmorn")) {
-        reactMessage(api, event, ":love:");
-        sendMessageReply(api, event, "Good morning too...");
+        if (isMorning()) {
+           reactMessage(api, event, ":love:");
+           sendMessageReply(api, event, "Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.");
+           sendMessage(api, event, "🥰☀️");
+        } else {
+            sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+        }
     } else if (query.startsWith("goodnight")) {
-        reactMessage(api, event, ":love:");
-        sendMessageReply(api, event, "Good night too...");
+        if (isNight()) {
+            reactMessage(api, event, ":love:");
+            sendMessageReply(api, event, "Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.");
+            sendMessage(api, event, "🥰😴");
+        } else {
+            sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+        }
     } else if (query.startsWith("goodafter")) {
-        reactMessage(api, event, ":love:");
-        sendMessageReply(api, event, "Good afternoon too...");
+        if (isAfternoon()) {
+            reactMessage(api, event, ":love:");
+            sendMessageReply(api, event, "Good afternoon too... It's quite hot now.. Always remember to stay hydrated.");
+            sendMessage(api, event, "🥰😇");
+        } else {
+            sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+        }
     }
 }
 
@@ -3084,7 +3300,9 @@ function reportIssue(api, event, err) {
 
 async function sendMessageReply(api, event, message) {
     if (!vips.includes(event.senderID)) {
-        await wait(5200);
+        if (settings.onDelay) {
+           await wait(5200);
+        }
     }
     console.log("send_message_reply " + event.threadID + " " + message);
     api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
@@ -3092,7 +3310,9 @@ async function sendMessageReply(api, event, message) {
 
 async function sendMessage(api, event, message) {
     if (!vips.includes(event.senderID)) {
-        await wait(4600);
+        if (settings.onDelay) {
+           await wait(4600);
+        }
     }
     console.log("send_message " + event.threadID + " " + message);
     api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
@@ -3100,7 +3320,9 @@ async function sendMessage(api, event, message) {
 
 async function reactMessage(api, event, reaction) {
     if (!vips.includes(event.senderID)) {
-        await wait(8000);
+        if (settings.onDelay) {
+           await wait(8000);
+        }
     }
     console.log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
@@ -3115,6 +3337,9 @@ function formatQuery(string) {
 
 function isGoingToFast(event) {
     console.log("event_body " + event.senderID + " " + event.body);
+    if (!settings.preventSimultanoesExecution) {
+        return false;
+    }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (12);
@@ -3211,6 +3436,22 @@ function countWords(str) {
 }
 }
 
+function countVowel(str) { 
+    const count = str.match(/[aeiou]/gi).length;
+    return count;
+}
+
+function countConsonants(str) {
+    var countConsonants = 0;
+    for (var i = 0; i < str.length; i++) {
+      if (str[i] !== "a" && str[i] !== "e" && str[i] !== "i" &&
+        str[i] !== "o" && str[i] !== "u" && str[i] !== " ") {
+        countConsonants++;
+      }
+    }
+    return (countConsonants);
+  }
+
 function isFileExists(path) {
     let bool;
     fs.access(path, fs.F_OK, (err) => {
@@ -3225,8 +3466,9 @@ function isFileExists(path) {
 }   
 
 function nsfw(text) {
-    return text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") || 
-    text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny");
+    return (text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") || 
+    text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny") || 
+    text.includes("blowjob") || text.includes("lolli")) && settings.onNsfw;
 }
 
 function getProfilePic(id) {
@@ -3236,4 +3478,68 @@ function getProfilePic(id) {
 function isMe(query) {
     return query.includes("melvinjonesrepol") || query.includes("melvinjones") || query.includes("melvinjonesgallanorepol") || 
     query.includes("mj") || query.includes("mrepol742");
+}
+
+function isValidDomain(url) {
+    let l = url.toLowerCase();
+    for (url in domains) {
+        if (l.endsWith(s) && !l.includes(" ")) {
+            return true;
+        } else if (l.includes(s) && l.includes("/") && !l.includes(" ")) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function isMorning() {
+    var curHr = new Date().getHours()
+    return curHr >= 6 && curHr <= 12;
+}
+
+function isAfternoon() {
+    var curHr = new Date().getHours()
+    return curHr >= 12 && curHr <= 18;
+}
+
+function isEvening() {
+    var curHr = new Date().getHours()
+    return curHr >= 18 && curHr <= 21;
+}
+
+function isNight() {
+    var curHr = new Date().getHours()
+    return curHr >= 21 && curHr <= 6;
+}
+
+function getDayNightTime() {
+    if (isMorning()) {
+        return "morning";
+    } else if (isEvening()) {
+        return "evening";
+    } else if (isAfternoon()) {
+        return "afternoon";
+    }
+    return "night";
+}
+
+function formateDate(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+}
+
+function getDay() {
+    let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return days[new Date().getDay()];
+}
+
+function getMonth() {
+    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return months[new Date().getMonth()];
 }
