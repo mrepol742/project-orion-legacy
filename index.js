@@ -1558,7 +1558,7 @@ async function ai(api, event) {
             }
                 let data = input.split(" ")
                 if (data.length < 2) {
-                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using github username instead.\n\nFor example:\ngithub melvinjonesrepol")
+                    sendMessageReply(api, event, "Opps! I didnt get it. You should try using github username instead.\n\nFor example:\ngithub mrepol742")
                 } else {
                     data.shift()
                     let userN = data.join(" ");
