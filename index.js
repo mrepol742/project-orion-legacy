@@ -937,6 +937,13 @@ async function ai(api, event) {
                 if (finish.startsWith("?") || finish.startsWith("\"")) {
                     finish = finish.slice(1);
                 }
+                let fmm = "There is no one definitive answer to this question.";
+                let fmm1 = "There is no one answer to this question as";
+                if (finish.startsWith(fmm)) {
+                    finish.slice(fmm.length);
+                } else if (finish.startsWith(fmm1)) {
+                    finish.slice(fmm1.lenght);
+                }
                 sendMessageReply(api, event, finish.replace(/\n\s*\n/g, '\n'));
             }
             }
@@ -1583,6 +1590,10 @@ async function ai(api, event) {
                             let public_repos = response.data.public_repos;
                             let public_gists = response.data.public_gists;
                             let avatar = response.data.avatar;
+
+                            if (bio == "No Bio") {
+                                bio = "";
+                            }
     
                             request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/github_avatar.png'))
     
