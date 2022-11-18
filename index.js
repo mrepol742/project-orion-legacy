@@ -213,6 +213,8 @@ let helpadmin = "\n⦿ unsend";
     helpadmin += "\n⦿ nsfw --off";
     helpadmin += "\n⦿ preventSimultanoesExecution --on";
     helpadmin += "\n⦿ preventSimultanoesExecution --off";
+    helpadmin += "\n⦿ setPrefix [prefix]";
+    helpadmin += "\n⦿ remPrefix";
     helpadmin += "\n⦿ setMaxTokens [integer]";
     helpadmin += "\n⦿ setTemperature [integer]";
     helpadmin += "\n⦿ setFrequencyPenalty [integer]";
@@ -759,7 +761,15 @@ async function ai(api, event) {
                 } 
                 let text1 = formatQuery(text.replace(/\s+/g, '').toLowerCase());
                 let text2 = formatQuery(text.toLowerCase());
-                if (nsfw(text1)) {
+                if (!/[a-z0-9]/gi.test(text1)) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
+                        } else {
+                            sendMessage(api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
+                        }
+                    })
+                } else if (nsfw(text1)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (gc.isGroup) {
                             sendMessageReply(api, event, "Shhhhhhh watch your mouth.");
@@ -789,6 +799,14 @@ async function ai(api, event) {
                             sendMessageReply(api, event, "I'm Mj.");
                         } else {
                             sendMessage(api, event, "I'm Mj.");
+                        }
+                    })
+                } else if (text1.startsWith("whoisactive")) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Me");
+                        } else {
+                            sendMessage(api, event, "Me");
                         }
                     })
                 } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou")) {
@@ -896,13 +914,9 @@ async function ai(api, event) {
                 sendMessageReply(api, event, finish.replace(/\n\s*\n/g, '\n'));
             }
             }
-        }
-        if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
+        } else if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
            return;
-        }
-
-    
-        if (query.startsWith("problem")) {
+        } else if (query.startsWith("problem")) {
             if (input.split(" ").length < 2) {
                 sendMessageReply(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
             } else {
@@ -926,20 +940,21 @@ async function ai(api, event) {
                     sendMessageReply(api, event, res + "");
                 }
             }
-        } 
-        if (event.type == "message") {
+        } else if (event.type == "message") {
             if (query == "bgremove") {
                 sendMessageReply(api, event, "You need to reply to an image in order to work.");
             } else if (query == "count") {
                 sendMessageReply(api, event, "You need to reply to a message to count its words.");
+            } else if (query == "countvowels") {
+                sendMessageReply(api, event, "You need to reply to a message to count its vowels.");
+            } else if (query == "countconsonants") {
+                sendMessageReply(api, event, "You need to reply to a message to count its consonants.");
+            } else if (query.startsWith("wfind")) {
+                sendMessageReply(api, event, "You need to reply to a message to find a word from a message.");
             } else if (query == "pinadd") {
                 sendMessageReply(api, event, "You need to reply to a message to pin a message.");
-            } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
-                sendMessageReply(api, event, "Unable to unsent. Please reply to my message you wish to unsent.");
-            }
-        }
-
-        if (query.startsWith("urlshort")) {
+            } 
+        } else if (query.startsWith("urlshort")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -1145,6 +1160,7 @@ async function ai(api, event) {
             if (data.length < 2){
                 sendMessageReply(api, event, "Opps! I didnt get it. You should try using findimage text instead.\nFor example:\nfindimage mark zuckerberg")
             } else {
+                if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 let imgtext = input.substring(12);
                 if (input.startsWith("findimage ")) {
                     imgtext = input.substring(10);
@@ -1166,6 +1182,9 @@ async function ai(api, event) {
                       };
                      api.sendMessage(message, event.threadID,  event.messageID);
                 });
+            } else {
+                sendMessageReply(api, event, "Hold on... There is still a request in progress.");
+                }
             }
         } else if (query.startsWith("encode64")) {
             if (isGoingToFast(event)) {
@@ -1939,6 +1958,32 @@ async function ai(api, event) {
                         sendMessageReply(api, event, "Probability Mass is now set to " + num);
                     }
                 }
+            }
+        } else if (query.startsWith("setprefix")) {
+            if (vips.includes(event.senderID)) {
+                let data = input.split(" ");
+                if (data.length < 2) {
+                   sendMessageReply(api, event, "Opps! I didnt get it. You should try using setPrefix prefix instead.\n\nFor example:\nsetPrefix $")
+                } else {
+                    data.shift();
+                    let pref = data.join(" ");
+                    let first = pref.split("");
+                    if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
+                        settings.prefix = pref;
+                        fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                        sendMessageReply(api, event, "Prefix is now set to " + first);
+                    } else {
+                        sendMessageReply(api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
+                    }
+                }
+            }
+        } else if (query == "remprefix") {
+            if (vips.includes(event.senderID)) {
+                 if (settings.prefix != "null" || settings.prefix != undefined) {
+                    settings.prefix = "null";
+                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    sendMessageReply(api, event, "Prefix reset to default values.");
+                 }
             }
         } else if ((query == "unsendall") && !settings.onUnsend) {
             if (vips.includes(event.senderID)) {
@@ -3017,7 +3062,7 @@ async function ai(api, event) {
                 }
             });
         } else if (query == "time") {
-            sendMessageReply(api, event, "It's " + getMonth() + " " + new Date().getDate() + ", " + getDay() + " " + formateDate(new Date()));
+            sendMessageReply(api, event, "It's " + getMonth() + " " + (new Date().getDate() + 1) + ", " + getDay() + " " + formateDate(getDateGMT()));
         } else if (query.startsWith("inspiration")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3253,7 +3298,7 @@ function someR(api, event, query) {
            sendMessageReply(api, event, "Good evening too... The sun set is so beautiful as always, hope you're seeing it too.");
            sendMessage(api, event, "🥰🌘");
         } else {
-           sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+           sendMessageReply(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
         }
     } else if (query.startsWith("goodmorn")) {
         if (isMorning()) {
@@ -3261,7 +3306,7 @@ function someR(api, event, query) {
            sendMessageReply(api, event, "Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.");
            sendMessage(api, event, "🥰☀️");
         } else {
-            sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+            sendMessageReply(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
         }
     } else if (query.startsWith("goodnight")) {
         if (isNight()) {
@@ -3269,7 +3314,7 @@ function someR(api, event, query) {
             sendMessageReply(api, event, "Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.");
             sendMessage(api, event, "🥰😴");
         } else {
-            sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+            sendMessageReply(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
         }
     } else if (query.startsWith("goodafter")) {
         if (isAfternoon()) {
@@ -3277,7 +3322,7 @@ function someR(api, event, query) {
             sendMessageReply(api, event, "Good afternoon too... It's quite hot now.. Always remember to stay hydrated.");
             sendMessage(api, event, "🥰😇");
         } else {
-            sendMessageReply(api, event, "It's currently " + formateDate(new Date()) + " in the " + getDayNightTime() + ".");
+            sendMessageReply(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
         }
     }
 }
@@ -3493,22 +3538,22 @@ function isValidDomain(url) {
 }
 
 function isMorning() {
-    var curHr = new Date().getHours()
+    var curHr = getDateGMT().getHours() + 8
     return curHr >= 6 && curHr <= 12;
 }
 
 function isAfternoon() {
-    var curHr = new Date().getHours()
+    var curHr = getDateGMT().getHours() + 8
     return curHr >= 12 && curHr <= 18;
 }
 
 function isEvening() {
-    var curHr = new Date().getHours()
+    var curHr = getDateGMT().getHours() + 8
     return curHr >= 18 && curHr <= 21;
 }
 
 function isNight() {
-    var curHr = new Date().getHours()
+    var curHr = getDateGMT().getHours() + 8
     return curHr >= 21 && curHr <= 6;
 }
 
@@ -3524,7 +3569,7 @@ function getDayNightTime() {
 }
 
 function formateDate(date) {
-    var hours = date.getHours();
+    var hours = date.getHours() + 8;
     var minutes = date.getMinutes();
     var ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
@@ -3536,10 +3581,14 @@ function formateDate(date) {
 
 function getDay() {
     let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return days[new Date().getDay()];
+    return days[getDateGMT().getDay() + 1];
 }
 
 function getMonth() {
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[new Date().getMonth()];
+    return months[getDateGMT().getMonth()];
+}
+
+function getDateGMT() {
+    return new Date();
 }
