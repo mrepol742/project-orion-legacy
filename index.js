@@ -316,18 +316,18 @@ login({
                     if (event.senderID == myAccountId) {
                         console.log(event.body);
                     }
-                }
-                const emo = /\p{Extended_Pictographic}/ug;
-                if (!event.body.replace(emo, '').length) {
-                    if (isGoingToFastResendingOfEmo(event)) {
+                    const emo = /\p{Extended_Pictographic}/ug;
+                    if (!event.body.replace(emo, '').length) {
+                        if (isGoingToFastResendingOfEmo(event)) {
+                            break;
+                        }
+                        await wait(1500);
+                        sendMessage(api, event, event.body);
                         break;
                     }
-                    await wait(1500);
-                    sendMessage(api, event, event.body);
-                    break;
+    
+                    ai(api, event);
                 }
-
-                ai(api, event);
                 break;
             case "message_reply":
                 let msgid = event.messageID;
@@ -1456,7 +1456,7 @@ async function ai(api, event) {
                     }, (err, r) => {
                         if (err) return reportIssue(api, err)
                         let d = r[0]
-                        let m = "Location: " + d.location.name + "\n"
+                        let m = d.location.name + "\n\n"
                         m += "Temperature: " + d.current.temperature + "\n"
                         m += "Sky: " + d.current.skytext + "\n"
                         m += "Observation time: " + d.current.date + " " + d.current.observationtime
@@ -1464,8 +1464,8 @@ async function ai(api, event) {
                     })
                 } else {
                     let output = weather.weather
-                    let m = "Location: " + output.location
-                    m += "\nForecast: " + output.forecast
+                    let m = output.location
+                    m += "\n\nForecast: " + output.forecast
                     m += "\nTemperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
                     if (output.precipitation != undefined)
                         m += "\nPrecipitation: " + output.precipitation
