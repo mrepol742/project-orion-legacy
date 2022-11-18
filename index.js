@@ -38,6 +38,9 @@ let vips = [
 let sleep = [3000, 4000, 3500, 4500, 5000, 4800, 3800, 3200, 5200, 4600, 3200, 4300, 3400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
+let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
+let idknow = ["Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.", "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.", "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do."]
+let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆"];
 let threads = ""
 let threadIdMV = {};
 
@@ -70,13 +73,13 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 let help = "\n⦿ help";
     help += "\n⦿ help [number]";
     help += "\n⦿ help all";
-    help += "\n⦿ mj [text]"
+    help += "\n⦿ mj [text]";
+    help += "\n⦿ search [text]"
+    help += "\n⦿ searchincog [text]";
+    help += "\n⦿ searchimg [text]";
     help += "\n⦿ pdf [text]";
     help += "\n⦿ dict [text]";
     help += "\n⦿ summ [text]";
-    help += "\n⦿ find [text]";
-    help += "\n⦿ dfind [text]";
-    help += "\n⦿ findimage [text]";
     help += "\n⦿ github [username]";
     help += "\n⦿ baybayin [text]";
     help += "\n⦿ weather [location]";
@@ -284,7 +287,7 @@ login({
                 if (!(vips.includes(event.senderID))) {
                 if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjones" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
                     let message = {
-                        body: "Hold on a moment this system is currently under maintenance...\n\n" + qot[Math.floor(Math.random() * qot.length)],
+                        body: "Hold on a moment this system is currently under maintenance...",
                         attachment: fs.createReadStream(__dirname + '/cache/maintenance.gif')
                     };
                     sendMessageReply(api, event, message);
@@ -425,7 +428,7 @@ login({
                         sendMessageReply(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
                     } else if ((messageReply.attachments.length === 1) && (messageReply.attachments[0].type == 'photo')) {
                         const url = messageReply.attachments[0].url;
-                        request(url).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
+                        request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
                             const inputPath = './cache/images/removebg.png';
                             const formData = new FormData();
                             formData.append('size', 'auto');
@@ -484,7 +487,7 @@ login({
                                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                                     if (gc.isGroup) {
                                                         let message = {
-                                                            body: "@" + data[event.senderID]['name'] + " deleted the following. \n",
+                                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
                                                             attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img.jpg'),
                                                             mentions: [{
                                                                 tag: '@' + data[event.senderID]['name'],
@@ -513,7 +516,7 @@ login({
                                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                                     if (gc.isGroup) {
                                                         let message = {
-                                                            body: "@" + data[event.senderID]['name'] + " deleted the following. \n",
+                                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
                                                             attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif.gif'),
                                                             mentions: [{
                                                                 tag: '@' + data[event.senderID]['name'],
@@ -542,7 +545,7 @@ login({
                                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                                     if (gc.isGroup) {
                                                         let message = {
-                                                            body: "@" + data[event.senderID]['name'] + " deleted the following.\n",
+                                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
                                                             attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker.png'),
                                                             mentions: [{
                                                                 tag: '@' + data[event.senderID]['name'],
@@ -571,7 +574,7 @@ login({
                                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                                     if (gc.isGroup) {
                                                         let message = {
-                                                            body: "@" + data[event.senderID]['name'] + " deleted the following.\n",
+                                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
                                                             attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid.mp4'),
                                                             mentions: [{
                                                                 tag: '@' + data[event.senderID]['name'],
@@ -600,7 +603,7 @@ login({
                                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                                     if (gc.isGroup) {
                                                         let message = {
-                                                            body: "@" + data[event.senderID]['name'] + " deleted the following.\n",
+                                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
                                                             attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm.mp3'),
                                                             mentions: [{
                                                                 tag: '@' + data[event.senderID]['name'],
@@ -631,7 +634,7 @@ login({
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (gc.isGroup) {
                                             let message = {
-                                                body: "@" + data[event.senderID]['name'] + " deleted the following.\n\n" + msgs[event.messageID],
+                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + msgs[event.messageID],
                                                 mentions: [{
                                                     tag: '@' + data[event.senderID]['name'],
                                                     id: event.senderID,
@@ -713,6 +716,7 @@ login({
 
 function wait(ms) {
     return new Promise((resolve) => {
+      console.log("wait_timeout >> " + ms);
       setTimeout(resolve, ms);
     });
  }
@@ -734,7 +738,7 @@ async function ai(api, event) {
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
         if (query.startsWith("mj") || query.startsWith("repol")|| query.startsWith("mrepol742") ||
-        ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
+        ((query.startsWith("search") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") || 
         query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
             if (isGoingToFast(event)) {
                 return;
@@ -745,7 +749,7 @@ async function ai(api, event) {
                 }
                 if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742")) {
                     let message = {
-                        body:  "Moshi mos... \nHow can i help you? If you have any question don't hesitate to ask What, Who, When, Where, Why, How?. For list of commands type help. \n\nWelcome to the world of AI and bots.\n\n" + qot[Math.floor(Math.random() * qot.length)],
+                        body:  "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type help. \n\nWelcome to the world of AI, NLP and bots.",
                         attachment: [fs.createReadStream(__dirname + "/cache/hello" +  Math.floor(Math.random() * 8) + ".jpg")]
                     }
                     sendMessageReply(api, event, message);
@@ -760,6 +764,8 @@ async function ai(api, event) {
                     text = input.substring(10)
                 } else if (query.startsWith("mj")) {
                     text = input.substring(3)
+                } else if (query.startsWith("search")) {
+                    text = input.substring(7)
                 } 
                 let text1 = formatQuery(text.replace(/\s+/g, '').toLowerCase());
                 let text2 = formatQuery(text.toLowerCase());
@@ -867,6 +873,22 @@ async function ai(api, event) {
                             sendMessage(api, event, "You're welcome.");
                         }
                     })
+                } else if (text1 == "wascorrect") {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "Yeah i knew it.");
+                        } else {
+                            sendMessage(api, event, "Yeah i knew it.");
+                        }
+                    })
+                } else if (text1 == "bye" || text1 == "goodbye") {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            sendMessageReply(api, event, "bye bye.");
+                        } else {
+                            sendMessage(api, event, "bye bye.");
+                        }
+                    })
                 } else if (text1 == "ok" || text1 == "okay") {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (gc.isGroup) {
@@ -878,14 +900,14 @@ async function ai(api, event) {
                 } else if (text1.startsWith("whois") && isMe(text2)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (gc.isGroup) {
-                            sendMessageReply(api, event, "A self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.");
+                            sendMessageReply(api, event, "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\nhttps://mrepol742.github.io");
                         } else {
-                            sendMessage(api, event, "A self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.");
+                            sendMessage(api, event, "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\nhttps://mrepol742.github.io");
                         }
                     })
                 } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
-                        let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.";
+                        let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\nhttps://0x3ef8.github.io";
                         if (gc.isGroup) {
                             sendMessageReply(api, event, mss);
                         } else {
@@ -894,6 +916,8 @@ async function ai(api, event) {
                     })
                 } else if (text1 == "help") {
                     sendMessageReply(api, event, "Opps! I didnt get it. You should try using help number instead.\nFor example:\nhelp 2");
+                } else if (text1.split('').length < 10) {
+                    sendMessageReply(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                 } else {
                 const configuration = new Configuration({
                     apiKey: apiKey[2],
@@ -1154,7 +1178,7 @@ async function ai(api, event) {
                     const RES = await firstSong.lyrics();
                     sendMessageReply(api, event, RES);
                 }
-        } else if (query.startsWith("googleimage") || query2.startsWith("searchimage") || query2.startsWith("findimage")) {
+        } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -1163,14 +1187,11 @@ async function ai(api, event) {
                 sendMessageReply(api, event, "Opps! I didnt get it. You should try using findimage text instead.\nFor example:\nfindimage mark zuckerberg")
             } else {
                 if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                let imgtext = input.substring(12);
-                if (input.startsWith("findimage ")) {
-                    imgtext = input.substring(10);
-                }
+                let imgtext = input.substring(10);
                 let client = new GoogleImages('55ffad329ff5f3716', 'AIzaSyC5ojRnS7POz0t19eVwWQ0Ur0L34HZbvok');
                 client.search(imgtext).then(images => {
                     for (let i = 0; (i < 6 && i < images.length); i++) {
-                        request(images[i].url).pipe(fs.createWriteStream(__dirname + "/cache/images/findimg"+ i +".png"))
+                        request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/findimg"+ i +".png"))
                     }
                    let message = {
                        attachment: [
@@ -1338,24 +1359,13 @@ async function ai(api, event) {
             }
         } 
 
-        const searching = async (searched) => {
-            let options = {
-                page: 0,
-                safe: false,
-                additional_params: {
-                    hl: "en"
-                }
-            }
-            return await google.search(`google ${searched}`, options);
-        };
-
-        if (query.startsWith("dgoogle") || query2.startsWith("dsearch ") || query2.startsWith("dfind ")) {
+        if (query.startsWith("searchincog")) {
             if (isGoingToFast(event)) {
                 return;
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessageReply(api, event, "Opps! I didnt get it. You should try using dgoogle text instead.\n\nFor example:\ndgoogle computer")
+                sendMessageReply(api, event, "Opps! I didnt get it. You should try using searchincog text instead.\n\nFor example:\nsearchincog Who is Melvin Jones Repol")
             } else {
                 data.shift()
                 axios.get('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1')
@@ -1366,33 +1376,7 @@ async function ai(api, event) {
                         sendMessageReply(api, event, "Unfortunately there was an error occured.");
                     });
             }
-        }
-
-        if (query.startsWith("google") || query2.startsWith("search ") || query2.startsWith("find ")) {
-            if (isGoingToFast(event)) {
-                return;
-            }
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessageReply(api, event, "Opps! I didnt get it. You should try using google text instead.\n\nFor example:\ngoogle computer")
-            } else {
-                try {
-                    data.shift()
-                    data = data.join(" ");
-                    let searched = data;
-                    let response = await searching(searched);
-                    let result = response.results;
-                    if (result === undefined || Object.entries(result).length === 0) {
-                        throw new Error(`Unfortunately there was an error occured while searching "${searched}"`)
-                    }
-                    sendMessageReply(api, event, `${result[0].description}\n\n${result[0].url}`);
-                } catch (err) {
-                    reportIssue(api, event.threadID, err);
-                    sendMessageReply(api, event, `${err.message}`);
-                }
-            }
-        }
-        if (query.startsWith("baybayin")) {
+        } else if (query.startsWith("baybayin")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -1545,7 +1529,7 @@ async function ai(api, event) {
                         let verified = ((response.data.verified) ? "Yes" : "No");
                         let profilepic = response.data.profile_pic;
 
-                        request(profilepic).pipe(fs.createWriteStream(__dirname + '/cache/images/instaprofile.png'))
+                        request(encodeURI(profilepic)).pipe(fs.createWriteStream(__dirname + '/cache/images/instaprofile.png'))
 
                             .on('finish', () => {
                                 let message = {
@@ -1600,7 +1584,7 @@ async function ai(api, event) {
                             let public_gists = response.data.public_gists;
                             let avatar = response.data.avatar;
     
-                            request(avatar).pipe(fs.createWriteStream(__dirname + '/cache/images/github_avatar.png'))
+                            request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/github_avatar.png'))
     
                                 .on('finish', () => {
                                     let message = {
@@ -1638,7 +1622,7 @@ async function ai(api, event) {
                             let image = response.data.image;
                             let summary = response.data.summary;
     
-                            request(image).pipe(fs.createWriteStream(__dirname + '/cache/images/element.png'))
+                            request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/element.png'))
     
                                 .on('finish', () => {
                                     let message = {
@@ -1698,7 +1682,7 @@ async function ai(api, event) {
                             let banner = response.data.banner;
                             let price = response.data.price;
     
-                            request(banner).pipe(fs.createWriteStream(__dirname + '/cache/images/steam.png'))
+                            request(encodeURI(banner)).pipe(fs.createWriteStream(__dirname + '/cache/images/steam.png'))
     
                                 .on('finish', () => {
                                     let message = {
@@ -1733,7 +1717,7 @@ async function ai(api, event) {
                             let genres = response.data.genres;
                             let plot = response.data.plot;
     
-                            request(poster).pipe(fs.createWriteStream(__dirname + '/cache/images/imdb.png'))
+                            request(encodeURI(poster)).pipe(fs.createWriteStream(__dirname + '/cache/images/imdb.png'))
     
                                 .on('finish', () => {
                                     let message = {
@@ -1768,7 +1752,7 @@ async function ai(api, event) {
                             let lenghtM = (Math.round((length / 60) * 100) / 100).toFixed(2);
                             let thumbnail = response.data.thumbnail;
     
-                            request(thumbnail).pipe(fs.createWriteStream(__dirname + '/cache/images/itunes.png'))
+                            request(encodeURI(thumbnail)).pipe(fs.createWriteStream(__dirname + '/cache/images/itunes.png'))
     
                                 .on('finish', () => {
                                     let message = {
@@ -1792,7 +1776,7 @@ async function ai(api, event) {
                 let image = response.data.image;
                 let title = response.data.title;
 
-                request(image).pipe(fs.createWriteStream(__dirname + '/cache/images/car.png'))
+                request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/car.png'))
 
                     .on('finish', () => {
                         let message = {
@@ -1816,7 +1800,7 @@ async function ai(api, event) {
                 let name = response.data.name;
                 let url = response.data.image;
 
-                request(url).pipe(fs.createWriteStream(__dirname + '/cache/images/color.png'))
+                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/color.png'))
 
                     .on('finish', () => {
                         let message = {
@@ -2192,7 +2176,7 @@ async function ai(api, event) {
                         api.getUserInfo(id, (err, info) => {
                             if (err) return reportIssue(api, event.threadID, err);
                             let name = info[id]['name'];
-                            request(`${response.url}`).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
+                            request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
                           .on('finish', () => {
                           let image = {
                               body: "@" + name ,
@@ -2677,7 +2661,7 @@ async function ai(api, event) {
                 let url = response.data.url;
                 let title = response.data.title;
 
-                request(url).pipe(fs.createWriteStream(__dirname + '/cache/images/coding.png'))
+                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/coding.png'))
 
                     .on('finish', () => {
                         let message = {
@@ -2970,7 +2954,7 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" +text, __dirname + '/cache/images/sadcat.png');
             }
-        } else if (query.startsWith("sim")) {
+        } else if (query2.startsWith("sim ")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -3252,6 +3236,9 @@ sendMessageReply(api, event, message)
         query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") || 
         query.includes("lmfao")) {
             reactMessage(api, event, ":laughing:");
+            if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
+                sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
+            }
         } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
             reactMessage(api, event, ":sad:");
         } else if (query.includes("angry")) {
@@ -3331,7 +3318,7 @@ function someR(api, event, query) {
 
 function parseImage(api, event, url, dir) {
     console.log("parse_image " + url);
-    request(url).pipe(fs.createWriteStream(dir))
+    request(encodeURI(url)).pipe(fs.createWriteStream(dir))
     .on('finish', () => {
         let image = {
             attachment: fs.createReadStream(dir)
@@ -3348,7 +3335,7 @@ function reportIssue(api, event, err) {
 async function sendMessageReply(api, event, message) {
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
-           await wait(5200);
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
     console.log("send_message_reply " + event.threadID + " " + message);
@@ -3358,7 +3345,7 @@ async function sendMessageReply(api, event, message) {
 async function sendMessage(api, event, message) {
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
-           await wait(4600);
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
     console.log("send_message " + event.threadID + " " + message);
@@ -3368,7 +3355,7 @@ async function sendMessage(api, event, message) {
 async function reactMessage(api, event, reaction) {
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
-           await wait(8000);
+           await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
     console.log("react_message " + event.messageID + " " + reaction);
@@ -3389,15 +3376,15 @@ function isGoingToFast(event) {
     }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (12);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (13);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
             console.log("The user " + event.senderID + " is going to fast of executing commands >> " + 
-            Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 12) + " mins and " + 
-            (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 12 + " seconds");
+            Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 13) + " mins and " + 
+            (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 13 + " seconds");
             return true;
         } else {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (12);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (13);
             return false;
         }
     }
@@ -3421,7 +3408,7 @@ function isGoingToFastResendingOfEmo(event) {
 
 let download = async function(uri, filename, callback){
     console.log("download " + uri);
-    await request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    await request(encodeURI(uri)).pipe(fs.createWriteStream(filename)).on('close', callback);
 };
 
 const checkFound = (text) =>{
