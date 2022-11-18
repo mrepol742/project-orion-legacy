@@ -332,11 +332,13 @@ login({
                 let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 msgs[msgid] = input;
 
-                if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete" && (vips.includes(event.senderID))) {
+                if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
+                    if (vips.includes(event.senderID)) {
                     if (event.messageReply.senderID != api.getCurrentUserID()) {
                         sendMessageReply(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
                     } else {
                         api.unsendMessage(event.messageReply.messageID);
+                    }
                     }
                 } 
 
