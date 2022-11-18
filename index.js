@@ -940,10 +940,13 @@ async function ai(api, event) {
                 }
                 let fmm = "There is no one definitive answer to this question.";
                 let fmm1 = "There is no one answer to this question as";
+                let fmm2 = "There is no one-size-fits-all answer to this question,";
                 if (finish.startsWith(fmm)) {
-                    finish.slice(fmm.length);
+                    finish = finish.slice(fmm.length);
                 } else if (finish.startsWith(fmm1)) {
-                    finish.slice(fmm1.lenght);
+                    finish = finish.slice(fmm1.lenght);
+                } else if (finish.startsWith(fmm2)) {
+                    finish = finish.slice(fmm2.length);
                 }
                 sendMessageReply(api, event, finish.replace(/\n\s*\n/g, '\n'));
             }
@@ -1092,7 +1095,7 @@ async function ai(api, event) {
                         fs.readFile(__dirname + '/cache/videos/video.mp4', function(err, data) {
                             if (err) console.log(err)
                             if (data.length > limit) {
-                                sendMessageReply(api, event, "I cannot send the file because its file size is beyond 50mb.");
+                                sendMessageReply(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                             } else {
                                 console.log("Done.");
                                 let message = {
@@ -1100,8 +1103,8 @@ async function ai(api, event) {
                                     attachment: [fs.createReadStream(__dirname + '/cache/videos/video.mp4')]
                                 }
                                 sendMessageReply(api, event, message);
-                                threadIdMV[event.threadID] = true;
                             }
+                            threadIdMV[event.threadID] = true;
                         })
                     });
                     stream.on('error', (err) => reportIssue(api, event, err));
@@ -1155,7 +1158,7 @@ async function ai(api, event) {
                         fs.readFile(__dirname + '/cache/audios/music.mp3', function(err, data) {
                             if (err) console.log(err)
                             if (data.length > limit) {
-                                sendMessageReply(api, event, "I cannot send the file because its file size is beyond 50mb.");
+                                sendMessageReply(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                             } else {
                                 console.log("Done.");
                                 let message = {
@@ -1163,8 +1166,8 @@ async function ai(api, event) {
                                     attachment: [fs.createReadStream(__dirname + '/cache/audios/music.mp3')]
                                 }
                                 sendMessageReply(api, event, message);
-                                threadIdMV[event.threadID] = true;
                             }
+                            threadIdMV[event.threadID] = true;
                         })
                     });
                     stream.on('error', (err) => reportIssue(api, event, err));
