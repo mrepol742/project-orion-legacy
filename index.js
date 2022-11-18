@@ -1185,11 +1185,15 @@ async function ai(api, event) {
                 if (data.length < 2) {
                     sendMessageReply(api, event, "Opps! I didnt get it. You should try using lyrics text instead.\nFor example:\nlyrics In The End by Linkin Park")
                 } else {
+                    try {
                     data.shift()
                     const searches = await Client.songs.search(data.join(" "));
                     const firstSong = searches[0];
                     const RES = await firstSong.lyrics();
                     sendMessageReply(api, event, RES);
+                    } catch (err) {
+                        sendMessageReply(api, event, "Unfortunately an error occured while getting the lyrics " + data.join(" "));
+                    }
                 }
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
