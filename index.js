@@ -40,7 +40,7 @@ let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?",
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
 let idknow = ["Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.", "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.", "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do."]
-let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆"];
+let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
 let threads = ""
 let threadIdMV = {};
 
@@ -974,7 +974,8 @@ async function ai(api, event) {
                     sendMessageReply(api, event, res + "");
                 }
             }
-        } else if (event.type == "message") {
+        } 
+         if (event.type == "message") {
             if (query == "bgremove") {
                 sendMessageReply(api, event, "You need to reply to an image in order to work.");
             } else if (query == "count") {
@@ -988,7 +989,8 @@ async function ai(api, event) {
             } else if (query == "pinadd") {
                 sendMessageReply(api, event, "You need to reply to a message to pin a message.");
             } 
-        } else if (query.startsWith("urlshort")) {
+        }
+        if (query.startsWith("urlshort")) {
             if (isGoingToFast(event)) {
                 return;
             }
