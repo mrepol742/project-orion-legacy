@@ -325,7 +325,6 @@ login({
                         sendMessage(api, event, event.body);
                         break;
                     }
-    
                     ai(api, event);
                 }
                 break;
@@ -349,7 +348,8 @@ login({
                     break;
                 }
 
-                ai(api, event);
+                if (event.attachments.length == 0) {
+                    ai(api, event);
                 
                 if (query == "pinadd") {
                     if (isGoingToFast(event)) {
@@ -409,6 +409,7 @@ login({
                     }
                 }
                 }
+            }
 
                 if (query == "bgremove") {
                     if (isGoingToFast(event)) {
