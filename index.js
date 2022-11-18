@@ -47,6 +47,7 @@ let myAccountId = "100071743848974";
 let myOtherId = "100016029218667";
 let myGirlAccountId = "100077318906152";
 let techhJork = "100037131918629";
+let style = "text-davinci-002";
 
 let debug = false;
 let isEnabledOnMyGirl = true;
@@ -959,7 +960,7 @@ async function ai(api, event) {
                     const openai = new OpenAIApi(configuration);
                     const {
                         data
-                    } = await openai.createCompletion("text-davinci-002", {
+                    } = await openai.createCompletion(style, {
                         prompt: text,
                         temperature: parseInt(settings.temperature),
                         max_tokens: parseInt(settings.max_tokens),
@@ -981,6 +982,7 @@ async function ai(api, event) {
                     } else if (finish.startsWith(fmm2)) {
                         finish = finish.slice(fmm2.length);
                     }
+                    await wait(1000);
                     sendMessageReply(api, event, finish.replace(/\n\s*\n/g, '\n'));
                 }
             }
