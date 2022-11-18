@@ -982,7 +982,7 @@ async function ai(api, event) {
                     } else if (finish.startsWith(fmm2)) {
                         finish = finish.slice(fmm2.length);
                     }
-                    await wait(1000);
+                    await wait(1500);
                     sendMessageReply(api, event, finish.replace(/\n\s*\n/g, '\n'));
                 }
             }
