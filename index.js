@@ -3439,17 +3439,17 @@ function isMorning(tz) {
 }
 
 function isAfternoon(tz) {
-    var curHr = etTimeDate(tz).getHours();
+    var curHr = getTimeDate(tz).getHours();
     return curHr >= 12 && curHr <= 18;
 }
 
 function isEvening(tz) {
-    var curHr = etTimeDate(tz).getHours();
+    var curHr = getTimeDate(tz).getHours();
     return curHr >= 18 && curHr <= 21;
 }
 
 function isNight(tz) {
-    var curHr = etTimeDate(tz).getHours();
+    var curHr = getTimeDate(tz).getHours();
     return curHr >= 21 && curHr <= 6;
 }
 
