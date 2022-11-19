@@ -327,6 +327,9 @@ login({
                     if (event.senderID == myAccountId) {
                         console.log(event.body);
                     }
+                    if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
+                        break;
+                    }
                     const emo = /\p{Extended_Pictographic}/ug;
                     if (!event.body.replace(emo, '').length) {
                         if (isGoingToFastResendingOfEmo(event)) {
@@ -852,7 +855,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "bye bye.");
                 } else if (text1 == "ok" || text1 == "okay") {
                     sendMessage(api, event, "Yeahh..");
-                } else if (text1 == "delete") {
+                } else if (text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
                     sendMessage(api, event, "huhhhhhhhhh uh.");
                 } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" || 
                     (text1.startsWith("whois") && isMe(text2))) {
@@ -864,7 +867,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using help number instead.\nFor example:\nhelp 2");
                 //} else if (text1.split('').length < 10) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                } else if (someR(api, event, query) || someA(api, event, query, input)) {
+                } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
                     return;
                 } else {
                     await wait(3000);
