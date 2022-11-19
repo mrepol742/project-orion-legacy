@@ -291,7 +291,7 @@ login({
         if (err) return console.log(err);
 
         if (settings.isEnabled && (event.type == "message" || event.type == "message_reply")) {
-            break;
+            return;
         }
 
         if (settings.isDebugEnabled) {
@@ -306,7 +306,7 @@ login({
                         };
                         sendMessage(api, event, message);
                     }
-                    break;
+                    return;
                 }
             }
         }
