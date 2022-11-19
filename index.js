@@ -357,7 +357,6 @@ login({
                         }
                     } 
 
-
                     const emo = /\p{Extended_Pictographic}/ug;
                     if (!event.body.replace(emo, '').length) {
                         if (isGoingToFastResendingOfEmo(event)) {
@@ -850,6 +849,53 @@ async function ai(api, event) {
                     sendMessage(api, event, "I'm Mj.");
                 } else if (text1.startsWith("whoisactive")) {
                     sendMessage(api, event, "Me");
+                } else if (text1 == "sim") {
+                    sendMessage(api, event, "Me? noooo...");
+                } else if (text1 == "callme") {
+                    let id;
+                    if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else if (event.type == "message") {
+                        id = event.senderID;
+                    }
+                    api.getUserInfo(id, (err, info) => {
+                        if (err) return reportIssue(api, event.threadID, err);
+                        let name = info[id]['name'];
+                        let message = {
+                            body: "Yes " + name + "?",
+                            mentions: [{
+                                tag: '@' + name,
+                                id: id,
+                                fromIndex: 0
+                            }]
+                        };
+                        sendMessage(api, event, message);
+                    });
+                } else if (text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis") {
+                    let id;
+                    if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else if (event.type == "message") {
+                        id = event.senderID;
+                    }
+                    api.getUserInfo(id, (err, info) => {
+                        if (err) return reportIssue(api, event.threadID, err);
+                        let name = info[id]['name'];
+                        request(encodeURI(getProfilePic(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam.png'))
+
+                        .on('finish', () => {
+                            let message = {
+                                body: "You're " + name,
+                                attachment: fs.createReadStream(__dirname + '/cache/images/whoiam.png'),
+                                mentions: [{
+                                    tag: '@' + name,
+                                    id: id,
+                                    fromIndex: 0
+                                }]
+                            };
+                            sendMessage(api, event, message);
+                        })
+                    });
                 } else if (text1 == "whoownyou") {
                     sendMessage(api, event, "Melvin Jones Repol.")
                 } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker")) {
@@ -1509,7 +1555,6 @@ async function ai(api, event) {
             }
             let url = "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
             parseImage(api, event, url, __dirname + '/cache/images/profilepic.png');
-
         } else if (query.startsWith("github")) {
             if (isGoingToFast(event)) {
                 return;
