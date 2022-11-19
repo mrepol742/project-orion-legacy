@@ -290,7 +290,7 @@ login({
                 if (!(vips.includes(event.senderID))) {
                     if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjones" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
                         let message = {
-                            body: "Hold on a moment this system is currently under maintenance...",
+                            body: "Hold on a moment this system is currently under maintenance...\nhttps://mrepol742.github.io/project-orion/",
                             attachment: fs.createReadStream(__dirname + '/cache/maintenance.gif')
                         };
                         sendMessage(api, event, message);
@@ -778,7 +778,7 @@ async function ai(api, event) {
                 if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
                     if (nonRRR[event.senderID] == undefined) {
                         let message = {
-                            body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type help. \n\nWelcome to the world of AI, NLP and bots.",
+                            body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type help. \n\nhttps://mrepol742.github.io/project-orion/",
                             attachment: [fs.createReadStream(__dirname + "/cache/hello" + Math.floor(Math.random() * 8) + ".jpg")]
                         }
                         sendMessage(api, event, message);
