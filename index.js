@@ -1881,7 +1881,7 @@ async function ai(api, event) {
                         settings.timezone = pref;
                         fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                         sendMessage(api, event, "Timezone is now set to " + pref);
-                        sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: settings.timezone})) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
+                        sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
                     } else {
                         sendMessage(api, event, "Timezone " + pref + " is invalid. Please input valid timezones.")
                     }
@@ -2998,13 +2998,13 @@ async function ai(api, event) {
             } else {
                 let body = input.substring(5);
                 if (timeZones.includes(body)) {
-                    sendMessage(api, event, "It's " + getMonth(body) + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: body})) + ", " + getDay(body) + " " + formateDate(body));
+                    sendMessage(api, event, "It's " + getMonth(body) + " " + getDayN(body) + ", " + getDay(body) + " " + formateDate(body));
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead.\nFor example:\ntime Asia/Singapore");
                 }
             }
         } else if (query == "time") {
-            sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: settings.timezone})) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
+            sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
         } else if (query.startsWith("inspiration")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3434,22 +3434,22 @@ function isValidDomain(url) {
 }
 
 function isMorning(tz) {
-    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
+    var curHr = getTimeDate(tz).getHours();
     return curHr >= 6 && curHr <= 12;
 }
 
 function isAfternoon(tz) {
-    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
+    var curHr = etTimeDate(tz).getHours();
     return curHr >= 12 && curHr <= 18;
 }
 
 function isEvening(tz) {
-    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
+    var curHr = etTimeDate(tz).getHours();
     return curHr >= 18 && curHr <= 21;
 }
 
 function isNight(tz) {
-    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
+    var curHr = etTimeDate(tz).getHours();
     return curHr >= 21 && curHr <= 6;
 }
 
@@ -3465,9 +3465,8 @@ function getDayNightTime(tz) {
 }
 
 function formateDate(tz) {
-    let date = new Date();
-    var hours = date.getHours().toLocaleString("en-US", {timeZone: tz});
-    var minutes = date.getMinutes().toLocaleString("en-US", {timeZone: tz});
+    var hours = getTimeDate(tz).getHours();
+    var minutes = getTimeDate(tz).getMinutes();
     var ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12;
@@ -3478,12 +3477,20 @@ function formateDate(tz) {
 
 function getDay(tz) {
     let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return days[new Date().getDay().toLocaleString("en-US", {timeZone: tz})];
+    return days[getTimeDate(tz).getDay()];
+}
+
+function getDayN(tz) {
+    return getTimeDate(tz).getDay();
 }
 
 function getMonth(tz) {
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[new Date().getMonth().toLocaleString("en-US", {timeZone: tz})];
+    return months[getTimeDate(tz).getMonth()];
+}
+
+function getTimeDate(tz) {
+    return new Date(new Date().toLocaleString("en-US", {timeZone: tz}))
 }
 
 async function getImages(api, event, images) {
