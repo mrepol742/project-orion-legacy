@@ -864,7 +864,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using help number instead.\nFor example:\nhelp 2");
                 //} else if (text1.split('').length < 10) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                } else if (someR(api, event, query) || someA(api, event, query)) {
+                } else if (someR(api, event, query) || someA(api, event, query, input)) {
                     return;
                 } else {
                     await wait(3000);
@@ -3155,11 +3155,11 @@ async function ai(api, event) {
             }
         });
 
-        someA(api, event, query);
+        someA(api, event, query, input);
     }
 }
 
-function someA(api, event, query) {
+function someA(api, event, query, input) {
     if (query == "hi") {
         sendMessage(api, event, "Hello");
         return true;
