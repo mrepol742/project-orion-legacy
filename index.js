@@ -881,7 +881,7 @@ async function ai(api, event) {
                     api.getUserInfo(id, (err, info) => {
                         if (err) return reportIssue(api, event.threadID, err);
                         let name = info[id]['name'];
-                        request(encodeURI(getProfilePic(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam.png'))
+                        request(encodeURI(getProfilePicFullHD(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam.png'))
 
                         .on('finish', () => {
                             let message = {
@@ -1553,8 +1553,7 @@ async function ai(api, event) {
             } else {
                 id = event.senderID;
             }
-            let url = "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
-            parseImage(api, event, url, __dirname + '/cache/images/profilepic.png');
+            parseImage(api, event, getProfilePicFullHD(id), __dirname + '/cache/images/profilepic.png');
         } else if (query.startsWith("github")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3520,6 +3519,10 @@ function nsfw(text) {
 
 function getProfilePic(id) {
     return "https://graph.facebook.com/" + id + "/picture?access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
+}
+
+function getProfilePicFullHD(id) {
+    return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
 }
 
 function isMe(query) {
