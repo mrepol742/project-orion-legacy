@@ -3481,7 +3481,7 @@ function getDay(tz) {
 }
 
 function getDayN(tz) {
-    return getTimeDate(tz).getDay();
+    return getTimeDate(tz).getDate();
 }
 
 function getMonth(tz) {
