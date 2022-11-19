@@ -33,7 +33,7 @@ let vips = [
     // felipe santiago
     "100008664752303"
 ];
-let sleep = [3000, 4000, 3500, 4500, 5000, 4800, 3800, 3200, 5200, 4600, 3200, 4300, 3400]
+let sleep = [4000, 5000, 4500, 5500, 6000, 5800, 4800, 4200, 6200, 5600, 4200, 5300, 4400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
