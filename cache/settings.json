@@ -1,1 +1,1 @@
-{"onUnsend":true,"onNsfw":false,"preventSimultaneousExecution":true,"onDelay":true,"frequency_penalty":"1","temperature":"0.9","max_tokens":"123","presence_penalty":"0.4","probability_mass":"1"}
+{"onUnsend":true,"onNsfw":false,"preventSimultaneousExecution":true,"onDelay":true,"frequency_penalty":"1","temperature":"0.9","max_tokens":"123","presence_penalty":"0.4","probability_mass":"1","prefix":"$pat","timezone":"Asia/Singapore"}

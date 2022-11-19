@@ -20,7 +20,7 @@ const path = require('path');
 const Innertube = require('youtubei.js');
 const GoogleImages = require('google-images');
 
-console.log("The Project Orion is now active and waiting for commands execution.")
+console.log("The Project Orion is now active and waiting for commands execution. ONLINE")
 
 let msgs = {};
 let cmd = {};
@@ -33,13 +33,17 @@ let vips = [
     // felipe santiago
     "100008664752303"
 ];
-let sleep = [4000, 5000, 4500, 5500, 6000, 5800, 4800, 4200, 6200, 5600, 4200, 5300, 4400]
+let sleep = [5000, 6000, 5500, 6500, 7000, 6800, 5800, 5200, 7200, 6600, 5200, 6300, 5400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
 let idknow = ["Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.", "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.", "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do."]
 let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
 let mjme = ["Mj", "Melvin Jones Repol", "Melvin Jones Gallano Repol"]
+let goodev = ["Good evening too... The sun set is so beautiful as always, hope you're seeing it too.", "Good evening, as well. As always, the sun set is quite lovely; I hope you can see it as well.", "Good evening as well... As always, the sun set is breathtaking; I hope you can see it too."]
+let goodmo = ["Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.", "Also good morning... Enjoy your day, and never forget that breakfast should always be the heaviest meal of the day.", "Greetings as well... Have a fantastic day, and never forget that breakfast ought to be the largest meal of the day."]
+let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
+let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
 let qaLIST = [];
 let threads = ""
 let threadIdMV = {};
@@ -72,6 +76,8 @@ let qot = ["The object will not change its motion unless a force acts on it.",
     "The molar flux due to diffusion is proportional to the concentration gradient.",
     "The external static pressure applied on a confined liquid is distributed or transmitted evenly throughout the liquid in all directions."
 ]
+
+let timeZones =['Europe/Andorra','Asia/Dubai','Asia/Kabul','Europe/Tirane','Asia/Yerevan','Antarctica/Casey','Antarctica/Davis','Antarctica/DumontDUrville','Antarctica/Mawson','Antarctica/Palmer','Antarctica/Rothera','Antarctica/Syowa','Antarctica/Troll','Antarctica/Vostok','America/Argentina/Buenos_Aires','America/Argentina/Cordoba','America/Argentina/Salta','America/Argentina/Jujuy','America/Argentina/Tucuman','America/Argentina/Catamarca','America/Argentina/La_Rioja','America/Argentina/San_Juan','America/Argentina/Mendoza','America/Argentina/San_Luis','America/Argentina/Rio_Gallegos','America/Argentina/Ushuaia','Pacific/Pago_Pago','Europe/Vienna','Australia/Lord_Howe','Antarctica/Macquarie','Australia/Hobart','Australia/Currie','Australia/Melbourne','Australia/Sydney','Australia/Broken_Hill','Australia/Brisbane','Australia/Lindeman','Australia/Adelaide','Australia/Darwin','Australia/Perth','Australia/Eucla','Asia/Baku','America/Barbados','Asia/Dhaka','Europe/Brussels','Europe/Sofia','Atlantic/Bermuda','Asia/Brunei','America/La_Paz','America/Noronha','America/Belem','America/Fortaleza','America/Recife','America/Araguaina','America/Maceio','America/Bahia','America/Sao_Paulo','America/Campo_Grande','America/Cuiaba','America/Santarem','America/Porto_Velho','America/Boa_Vista','America/Manaus','America/Eirunepe','America/Rio_Branco','America/Nassau','Asia/Thimphu','Europe/Minsk','America/Belize','America/St_Johns','America/Halifax','America/Glace_Bay','America/Moncton','America/Goose_Bay','America/Blanc-Sablon','America/Toronto','America/Nipigon','America/Thunder_Bay','America/Iqaluit','America/Pangnirtung','America/Atikokan','America/Winnipeg','America/Rainy_River','America/Resolute','America/Rankin_Inlet','America/Regina','America/Swift_Current','America/Edmonton','America/Cambridge_Bay','America/Yellowknife','America/Inuvik','America/Creston','America/Dawson_Creek','America/Fort_Nelson','America/Vancouver','America/Whitehorse','America/Dawson','Indian/Cocos','Europe/Zurich','Africa/Abidjan','Pacific/Rarotonga','America/Santiago','America/Punta_Arenas','Pacific/Easter','Asia/Shanghai','Asia/Urumqi','America/Bogota','America/Costa_Rica','America/Havana','Atlantic/Cape_Verde','America/Curacao','Indian/Christmas','Asia/Nicosia','Asia/Famagusta','Europe/Prague','Europe/Berlin','Europe/Copenhagen','America/Santo_Domingo','Africa/Algiers','America/Guayaquil','Pacific/Galapagos','Europe/Tallinn','Africa/Cairo','Africa/El_Aaiun','Europe/Madrid','Africa/Ceuta','Atlantic/Canary','Europe/Helsinki','Pacific/Fiji','Atlantic/Stanley','Pacific/Chuuk','Pacific/Pohnpei','Pacific/Kosrae','Atlantic/Faroe','Europe/Paris','Europe/London','Asia/Tbilisi','America/Cayenne','Africa/Accra','Europe/Gibraltar','America/Godthab','America/Danmarkshavn','America/Scoresbysund','America/Thule','Europe/Athens','Atlantic/South_Georgia','America/Guatemala','Pacific/Guam','Africa/Bissau','America/Guyana','Asia/Hong_Kong','America/Tegucigalpa','America/Port-au-Prince','Europe/Budapest','Asia/Jakarta','Asia/Pontianak','Asia/Makassar','Asia/Jayapura','Europe/Dublin','Asia/Jerusalem','Asia/Kolkata','Indian/Chagos','Asia/Baghdad','Asia/Tehran','Atlantic/Reykjavik','Europe/Rome','America/Jamaica','Asia/Amman','Asia/Tokyo','Africa/Nairobi','Asia/Bishkek','Pacific/Tarawa','Pacific/Enderbury','Pacific/Kiritimati','Asia/Pyongyang','Asia/Seoul','Asia/Almaty','Asia/Qyzylorda','Asia/Qostanay','Asia/Aqtobe','Asia/Aqtau','Asia/Atyrau','Asia/Oral','Asia/Beirut','Asia/Colombo','Africa/Monrovia','Europe/Vilnius','Europe/Luxembourg','Europe/Riga','Africa/Tripoli','Africa/Casablanca','Europe/Monaco','Europe/Chisinau','Pacific/Majuro','Pacific/Kwajalein','Asia/Yangon','Asia/Ulaanbaatar','Asia/Hovd','Asia/Choibalsan','Asia/Macau','America/Martinique','Europe/Malta','Indian/Mauritius','Indian/Maldives','America/Mexico_City','America/Cancun','America/Merida','America/Monterrey','America/Matamoros','America/Mazatlan','America/Chihuahua','America/Ojinaga','America/Hermosillo','America/Tijuana','America/Bahia_Banderas','Asia/Kuala_Lumpur','Asia/Kuching','Africa/Maputo','Africa/Windhoek','Pacific/Noumea','Pacific/Norfolk','Africa/Lagos','America/Managua','Europe/Amsterdam','Europe/Oslo','Asia/Kathmandu','Pacific/Nauru','Pacific/Niue','Pacific/Auckland','Pacific/Chatham','America/Panama','America/Lima','Pacific/Tahiti','Pacific/Marquesas','Pacific/Gambier','Pacific/Port_Moresby','Pacific/Bougainville','Asia/Manila','Asia/Karachi','Europe/Warsaw','America/Miquelon','Pacific/Pitcairn','America/Puerto_Rico','Asia/Gaza','Asia/Hebron','Europe/Lisbon','Atlantic/Madeira','Atlantic/Azores','Pacific/Palau','America/Asuncion','Asia/Qatar','Indian/Reunion','Europe/Bucharest','Europe/Belgrade','Europe/Kaliningrad','Europe/Moscow','Europe/Simferopol','Europe/Kirov','Europe/Astrakhan','Europe/Volgograd','Europe/Saratov','Europe/Ulyanovsk','Europe/Samara','Asia/Yekaterinburg','Asia/Omsk','Asia/Novosibirsk','Asia/Barnaul','Asia/Tomsk','Asia/Novokuznetsk','Asia/Krasnoyarsk','Asia/Irkutsk','Asia/Chita','Asia/Yakutsk','Asia/Khandyga','Asia/Vladivostok','Asia/Ust-Nera','Asia/Magadan','Asia/Sakhalin','Asia/Srednekolymsk','Asia/Kamchatka','Asia/Anadyr','Asia/Riyadh','Pacific/Guadalcanal','Indian/Mahe','Africa/Khartoum','Europe/Stockholm','Asia/Singapore','America/Paramaribo','Africa/Juba','Africa/Sao_Tome','America/El_Salvador','Asia/Damascus','America/Grand_Turk','Africa/Ndjamena','Indian/Kerguelen','Asia/Bangkok','Asia/Dushanbe','Pacific/Fakaofo','Asia/Dili','Asia/Ashgabat','Africa/Tunis','Pacific/Tongatapu','Europe/Istanbul','America/Port_of_Spain','Pacific/Funafuti','Asia/Taipei','Europe/Kiev','Europe/Uzhgorod','Europe/Zaporozhye','Pacific/Wake','America/New_York','America/Detroit','America/Kentucky/Louisville','America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes','America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg','America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City','America/Indiana/Knox','America/Menominee','America/North_Dakota/Center','America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver','America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage','America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat','America/Nome','America/Adak','Pacific/Honolulu','America/Montevideo','Asia/Samarkand','Asia/Tashkent','America/Caracas','Asia/Ho_Chi_Minh','Pacific/Efate','Pacific/Wallis','Pacific/Apia','Africa/Johannesburg'];
 
 let help = "\n⦿ help";
 help += "\n⦿ help [number]";
@@ -189,7 +195,7 @@ help5 += "\n⦿ count --vowels";
 help5 += "\n⦿ count --consonants";
 help5 += "\n⦿ wfind [text]";
 help5 += "\n⦿ time";
-
+help5 += "\n⦿ time [timezone]";
 
 let help6 = "\n⦿ anime [category]";
 help6 += "\n   megumin, bully, cuddle, cry";
@@ -222,6 +228,7 @@ helpadmin += "\n⦿ preventSimultanoesExecution --on";
 helpadmin += "\n⦿ preventSimultanoesExecution --off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
+helpadmin += "\n⦿ setTimezone [timezone]";
 helpadmin += "\n⦿ setMaxTokens [integer]";
 helpadmin += "\n⦿ setTemperature [integer]";
 helpadmin += "\n⦿ setFrequencyPenalty [integer]";
@@ -264,8 +271,7 @@ let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
 let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
 
 process.on('SIGINT', function() {
-    console.log("\n\n\tCaught interrupt signal");
-    fs.writeFileSync(__dirname + "/msgs/" + new Date().toISOString() + ".json", JSON.stringify(msgs), "utf8")
+    console.log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     process.exit();
 });
 
@@ -766,7 +772,7 @@ async function ai(api, event) {
                     }
                 });
             }
-        } else if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
+        } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
             ((query.startsWith("search") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
             if (isGoingToFast(event)) {
@@ -776,7 +782,7 @@ async function ai(api, event) {
                 if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
                     return;
                 }
-                if (query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
+                if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
                     if (nonRRR[event.senderID] == undefined) {
                         let message = {
                             body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type help. \n\nhttps://mrepol742.github.io/project-orion/",
@@ -802,6 +808,8 @@ async function ai(api, event) {
                     text = input.substring(17)
                 } else if (query.startsWith("search")) {
                     text = input.substring(7)
+                } else if (input.startsWith(settings.prefix)) {
+                    text = input.substring(settings.prefix.length);
                 }
                 let text1 = formatQuery(text.replace(/\s+/g, '').toLowerCase());
                 let text2 = formatQuery(text.toLowerCase());
@@ -889,7 +897,7 @@ async function ai(api, event) {
                         }
                     }
                     await wait(3000);
-                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj");
+                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines");
                     qaLIST.push([text, finalDataCC, event.messageID])
                     sendMessage(api, event, finalDataCC);
                 }
@@ -1860,6 +1868,24 @@ async function ai(api, event) {
                     }
                 }
             }
+        } else if (query.startsWith("settimezone")) {
+            if (vips.includes(event.senderID)) {
+                let data = input.split(" ");
+                if (data.length < 2) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead.\n\nFor example:\nsetTimezone Asia/Singapore")
+                } else {
+                    data.shift();
+                    let pref = data.join(" ");
+                    if (timeZones.includes(pref)) {
+                        settings.timezone = pref;
+                        fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                        sendMessage(api, event, "Timezone is now set to " + pref);
+                        sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: settings.timezone})) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
+                    } else {
+                        sendMessage(api, event, "Timezone " + pref + " is invalid. Please input valid timezones.")
+                    }
+                }
+            }
         } else if (query.startsWith("setprefix")) {
             if (vips.includes(event.senderID)) {
                 let data = input.split(" ");
@@ -1872,7 +1898,7 @@ async function ai(api, event) {
                     if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
                         settings.prefix = pref;
                         fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                        sendMessage(api, event, "Prefix is now set to " + first);
+                        sendMessage(api, event, "Prefix is now set to " + pref);
                     } else {
                         sendMessage(api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
                     }
@@ -2885,7 +2911,7 @@ async function ai(api, event) {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately i am not simp anymore.");
                     } else {
-                        sendMessage(api, event, response.success);
+                        sendMessage(api, event, response['success']);
                     }
                 });
             }
@@ -2961,8 +2987,23 @@ async function ai(api, event) {
                     sendMessage(api, event, result);
                 }
             });
+        } else if (query2.startsWith("time ")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ")
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead.\nFor example:\ntime Asia/Singapore");
+            } else {
+                let body = input.substring(5);
+                if (timeZones.includes(body)) {
+                    sendMessage(api, event, "It's " + getMonth(body) + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: body})) + ", " + getDay(body) + " " + formateDate(body));
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead.\nFor example:\ntime Asia/Singapore");
+                }
+            }
         } else if (query == "time") {
-            sendMessage(api, event, "It's " + getMonth() + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: "Asia/Singapore"})) + ", " + getDay() + " " + formateDate());
+            sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: settings.timezone})) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
         } else if (query.startsWith("inspiration")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3150,36 +3191,36 @@ async function ai(api, event) {
 
 function someR(api, event, query) {
     if (query.startsWith("goodeve")) {
-        if (isEvening()) {
+        if (isEvening(settings.timezone)) {
             reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good evening too... The sun set is so beautiful as always, hope you're seeing it too.");
+            sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
             sendMessage(api, event, "🥰🌘");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
     } else if (query.startsWith("goodmorn")) {
-        if (isMorning()) {
+        if (isMorning(settings.timezone)) {
             reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.");
+            sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
             sendMessage(api, event, "🥰☀️");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
     } else if (query.startsWith("goodnight")) {
-        if (isNight()) {
+        if (isNight(settings.timezone)) {
             reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.");
+            sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
             sendMessage(api, event, "🥰😴");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
     } else if (query.startsWith("goodafter")) {
-        if (isAfternoon()) {
+        if (isAfternoon(settings.timezone)) {
             reactMessage(api, event, ":love:");
-            sendMessage(api, event, "Good afternoon too... It's quite hot now.. Always remember to stay hydrated.");
+            sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
             sendMessage(api, event, "🥰😇");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
     }
 }
@@ -3247,7 +3288,7 @@ async function reactMessage(api, event, reaction) {
 
 function formatQuery(string) {
     const emo = /\p{Extended_Pictographic}/ug;
-    const anu = /[^a-z0-9]/gi;
+    const anu = /[^a-z0-9\s]/gi;
     let str = string.replace(emo, '');
     return str.replace(anu, '');
 }
@@ -3391,40 +3432,41 @@ function isValidDomain(url) {
     return false;
 }
 
-function isMorning() {
-    var curHr = getDateGMT().getHours()
+function isMorning(tz) {
+    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
     return curHr >= 6 && curHr <= 12;
 }
 
-function isAfternoon() {
-    var curHr = getDateGMT().getHours()
+function isAfternoon(tz) {
+    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
     return curHr >= 12 && curHr <= 18;
 }
 
-function isEvening() {
-    var curHr = getDateGMT().getHours()
+function isEvening(tz) {
+    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
     return curHr >= 18 && curHr <= 21;
 }
 
-function isNight() {
-    var curHr = getDateGMT().getHours()
+function isNight(tz) {
+    var curHr = new Date().getHours().toLocaleString("en-US", {timeZone: tz})
     return curHr >= 21 && curHr <= 6;
 }
 
-function getDayNightTime() {
-    if (isMorning()) {
+function getDayNightTime(tz) {
+    if (isMorning(tz)) {
         return "morning";
-    } else if (isEvening()) {
+    } else if (isEvening(tz)) {
         return "evening";
-    } else if (isAfternoon()) {
+    } else if (isAfternoon(tz)) {
         return "afternoon";
     }
     return "night";
 }
 
-function formateDate() {
-    var hours = date.getHours().toLocaleString("en-US", {timeZone: "Asia/Singapore"});
-    var minutes = date.getMinutes().toLocaleString("en-US", {timeZone: "Asia/Singapore"});
+function formateDate(tz) {
+    let date = new Date();
+    var hours = date.getHours().toLocaleString("en-US", {timeZone: tz});
+    var minutes = date.getMinutes().toLocaleString("en-US", {timeZone: tz});
     var ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12;
@@ -3433,14 +3475,14 @@ function formateDate() {
     return strTime;
 }
 
-function getDay() {
+function getDay(tz) {
     let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return days[new Date().getDay().toLocaleString("en-US", {timeZone: "Asia/Singapore"})];
+    return days[new Date().getDay().toLocaleString("en-US", {timeZone: tz})];
 }
 
-function getMonth() {
+function getMonth(tz) {
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[new Date().getMonth().toLocaleString("en-US", {timeZone: "Asia/Singapore"})];
+    return months[new Date().getMonth().toLocaleString("en-US", {timeZone: tz})];
 }
 
 async function getImages(api, event, images) {
