@@ -54,10 +54,6 @@ let myAccountId = "100071743848974";
 let myOtherId = "100016029218667";
 let myGirlAccountId = "100077318906152";
 let techhJork = "100037131918629";
-let style = "text-davinci-002";
-
-let debug = false;
-let isEnabledOnMyGirl = true;
 
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
@@ -216,7 +212,6 @@ let categorySFW = ['megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', '
 
 let categoryNSFW = ['waifu', 'neko', 'trap', 'blowjob'];
 
-
 let helpadmin = "\n⦿ unsend";
 helpadmin += "\n⦿ unsend --on";
 helpadmin += "\n⦿ unsend --off";
@@ -234,6 +229,10 @@ helpadmin += "\n⦿ setMaxTokens [integer]";
 helpadmin += "\n⦿ setTemperature [integer]";
 helpadmin += "\n⦿ setFrequencyPenalty [integer]";
 helpadmin += "\n⦿ setProbabilityMass [integer]";
+helpadmin += "\n⦿ isEnabled";
+helpadmin += "\n⦿ isDisabled";
+helpadmin += "\n⦿ isDebugEnabled";
+helpadmin += "\n⦿ isDebugDisabled";
 helpadmin += "\n⦿ refresh | reload";
 
 let apiKey = [
@@ -291,7 +290,11 @@ login({
 
         if (err) return console.log(err);
 
-        if (debug) {
+        if (settings.isEnabled && (event.type == "message" || event.type == "message_reply")) {
+            break;
+        }
+
+        if (settings.isDebugEnabled) {
             if (event.type == "message" || event.type == "message_reply") {
                 let input = event.body;
                 let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
@@ -303,7 +306,7 @@ login({
                         };
                         sendMessage(api, event, message);
                     }
-                    return;
+                    break;
                 }
             }
         }
@@ -327,9 +330,34 @@ login({
                     if (event.senderID == myAccountId) {
                         console.log(event.body);
                     }
-                    if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
-                        break;
-                    }
+                    
+                    if (query == "isEnabled") {
+                        if (vips.includes(event.senderID)) {
+                            settings.isEnabled = true;
+                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                            sendMessage(api, event, "Hello");
+                        }
+                    } else if (query == "isDisabled") {
+                        if (vips.includes(event.senderID)) {
+                            settings.isEnabled = false;
+                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                            sendMessage(api, event, "Bye bye.");
+                        }
+                    } else if (query == "isDebugEnabled") {
+                        if (vips.includes(event.senderID)) {
+                            settings.isDebugEnabled = true;
+                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                            sendMessage(api, event, "Debug mode enabled.");
+                        }
+                    } else if (query == "isDebugDisabled") {
+                        if (vips.includes(event.senderID)) {
+                            settings.isDebugEnabled = false;
+                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                            sendMessage(api, event, "Konnichiwa i am back.");
+                        }
+                    } 
+
+
                     const emo = /\p{Extended_Pictographic}/ug;
                     if (!event.body.replace(emo, '').length) {
                         if (isGoingToFastResendingOfEmo(event)) {
@@ -356,10 +384,6 @@ login({
                             api.unsendMessage(event.messageReply.messageID);
                         }
                     }
-                }
-
-                if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
-                    break;
                 }
 
                 if (event.attachments.length == 0) {
@@ -783,9 +807,6 @@ async function ai(api, event) {
                 return;
             }
             if (input.split(" ").length < 2) {
-                if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
-                    return;
-                }
                 if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
                     if (nonRRR[event.senderID] == undefined) {
                         let message = {
@@ -800,9 +821,7 @@ async function ai(api, event) {
                 }
             } else {
                 let text = input;
-                if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
-                    return;
-                } else if (query.startsWith("repol")) {
+                if (query.startsWith("repol")) {
                     text = input.substring(6)
                 } else if (query.startsWith("mrepol742")) {
                     text = input.substring(10)
@@ -877,7 +896,7 @@ async function ai(api, event) {
                     const openai = new OpenAIApi(configuration);
                     const {
                         data
-                    } = await openai.createCompletion(style, {
+                    } = await openai.createCompletion(settings.text_complextion, {
                         prompt: text,
                         temperature: parseInt(settings.temperature),
                         max_tokens: parseInt(settings.max_tokens),
@@ -907,8 +926,6 @@ async function ai(api, event) {
                     sendMessage(api, event, finalDataCC);
                 }
             }
-        } else if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
-            return;
         } else if (query.startsWith("problem")) {
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor example:\nproblem 5*5/9")
@@ -1853,6 +1870,19 @@ async function ai(api, event) {
                         fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                         sendMessage(api, event, "Presence Penalty is now set to " + num);
                     }
+                }
+            }
+        } else if (query.startsWith("setTextComplextion")) {
+            if (vips.includes(event.senderID)) {
+                let data = input.split(" ");
+                if (data.length < 2) {
+                    sendMessage(api, event, "Opps! I didnt get it.")
+                } else {
+                    data.shift();
+                    let num = data.join(" ");
+                    settings.text_complextion = num;
+                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    sendMessage(api, event, "Text Complextion is now set to " + num);
                 }
             }
         } else if (query.startsWith("setprobabilitymass")) {
