@@ -872,22 +872,23 @@ async function ai(api, event) {
                     let finish = data.choices[0].text;
                     if (finish.startsWith("?") || finish.startsWith("\"") || finish.startsWith("'")) {
                         finish = finish.slice(1);
-                    }
-                    let fmm = "There is no one definitive answer to this question.";
-                    let fmm1 = "There is no one answer to this question as";
-                    let fmm2 = "There is no one-size-fits-all answer to this question,";
-                    let lat89;
-                    if (finish.startsWith(fmm)) {
-                        lat89 = finish.substring(fmm.length + 1);
-                    } else if (finish.startsWith(fmm1)) {
-                        lat89 = finish.substring(fmm1.length + 1);
-                    } else if (finish.startsWith(fmm2)) {
-                        lat89 = finish.substring(fmm2.length + 1);
                     } else {
-                        lat89 = finish;
+                        let fmm = "There is no one definitive answer to this question.";
+                        let fmm1 = "There is no one answer to this question as";
+                        let fmm2 = "There is no one-size-fits-all answer to this question,";
+                        if (finish.startsWith(fmm)) {
+                            finish = finish.substring(fmm.length + 1);
+                            console.log("The finish output contains " + fmm)
+                        } else if (finish.startsWith(fmm1)) {
+                            finish = finish.substring(fmm1.length + 1);
+                            console.log("The finish output contains " + fmm1)
+                        } else if (finish.startsWith(fmm2)) {
+                            finish = finish.substring(fmm2.length + 1);
+                            console.log("The finish output contains " + fmm2)
+                        }
                     }
                     await wait(3000);
-                    sendMessage(api, event, lat89.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj"));
+                    sendMessage(api, event, finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj"));
                 }
             }
         } else if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
