@@ -864,7 +864,10 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using help number instead.\nFor example:\nhelp 2");
                 //} else if (text1.split('').length < 10) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                } else if (someR(api, event, query) || someA(api, event, query)) {
+                    return;
                 } else {
+                    await wait(3000);
                     const configuration = new Configuration({
                         apiKey: apiKey[2],
                     });
@@ -881,24 +884,22 @@ async function ai(api, event) {
                     });
                     let finish = data.choices[0].text;
                     if (finish.startsWith("?") || finish.startsWith("\"") || finish.startsWith("'")) {
-                        finish = finish.slice(1);
-                    } else {
-                        let fmm = "There is no one definitive answer to this question.";
-                        let fmm1 = "There is no one answer to this question as";
-                        let fmm2 = "There is no one-size-fits-all answer to this question,";
-                        if (finish.startsWith(fmm)) {
-                            finish = finish.substring(fmm.length + 1);
-                            console.log("The finish output contains " + fmm)
-                        } else if (finish.startsWith(fmm1)) {
-                            finish = finish.substring(fmm1.length + 1);
-                            console.log("The finish output contains " + fmm1)
-                        } else if (finish.startsWith(fmm2)) {
-                            finish = finish.substring(fmm2.length + 1);
-                            console.log("The finish output contains " + fmm2)
-                        }
+                        finish = finish.slice(1).trim();
                     }
-                    await wait(3000);
-                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines");
+                    let fmm = "There is no one definitive answer to this question.";
+                    let fmm1 = "There is no one answer to this question as";
+                    let fmm2 = "There is no one-size-fits-all answer to this question,";
+                    if (finish.startsWith(fmm)) {
+                        finish = finish.substring(fmm.length + 1);
+                        console.log("The finish output contains " + fmm)
+                    } else if (finish.startsWith(fmm1)) {
+                        finish = finish.substring(fmm1.length + 1);
+                        console.log("The finish output contains " + fmm1)
+                    } else if (finish.startsWith(fmm2)) {
+                        finish = finish.substring(fmm2.length + 1);
+                        console.log("The finish output contains " + fmm2)
+                    }
+                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
                     qaLIST.push([text, finalDataCC, event.messageID])
                     sendMessage(api, event, finalDataCC);
                 }
@@ -1759,6 +1760,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead.\n\nFor example:\ngemoji 😂")
             } else {
                 data.shift()
+                await wait(3000);
                 api.changeThreadEmoji(data.join(" "), event.threadID, (err) => {
                     if (err) return reportIssue(api, event.threadID, err);
                 });
@@ -1979,6 +1981,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
+            await wait(3000);
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     let data = input.split(" ");
@@ -2678,6 +2681,7 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
             } else {
+                await wait(3000);
                 api.getThreadInfo(event.threadID, (err, info) => {
                     let id = Object.keys(event.mentions)[0];
                     let tid = info.threadID;
@@ -3151,43 +3155,61 @@ async function ai(api, event) {
             }
         });
 
-        if (query == "hi") {
-            sendMessage(api, event, "Hello");
-        } else if (query == "hello") {
-            sendMessage(api, event, "Hi");
-        } else if (query == "sup" || query == "wassup" || query == "whatsup" && (isMe(query2))) {
-            sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
-        } else if (query.startsWith("hey")) {
-            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-        } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") ||
-            input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") ||
-            query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") ||
-            query.includes("lmfao")) {
-            reactMessage(api, event, ":laughing:");
-            if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
-                sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
-            }
-        } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
-            reactMessage(api, event, ":sad:");
-        } else if (query.includes("angry")) {
-            reactMessage(api, event, ":angry:");
-        } else if (query.includes("cry")) {
-            reactMessage(api, event, ":cry:");
-        } else if (query == "bot" || query == "good") {
-            reactMessage(api, event, ":love:");
-        } else if (query == "tsk") {
-            reactMessage(api, event, ":like:");
-        } else if (query == "okay") {
-            sendMessage(api, event, "Yup");
-        } else if (nsfw(query)) {
-            sendMessage(api, event, "Shhhhhhh watch your mouth.");
-        } else if (query == "idk") {
-            sendMessage(api, event, "I dont know too...");
-        } else if (query == "nice" || query == "uwu") {
-            reactMessage(api, event, ":heart:");
-        }
-
+        someA(api, event, query);
     }
+}
+
+function someA(api, event, query) {
+    if (query == "hi") {
+        sendMessage(api, event, "Hello");
+        return true;
+    } else if (query == "hello") {
+        sendMessage(api, event, "Hi");
+        return true;
+    } else if (query == "sup" || query == "wassup" || query == "whatsup" && (isMe(query2))) {
+        sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
+        return true;
+    } else if (query.startsWith("hey")) {
+        sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+        return true;
+    } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") ||
+        input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") ||
+        query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") ||
+        query.includes("lmfao")) {
+        reactMessage(api, event, ":laughing:");
+        if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
+            sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
+        }
+        return true;
+    } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
+        reactMessage(api, event, ":sad:");
+        return true;
+    } else if (query.includes("angry")) {
+        reactMessage(api, event, ":angry:");
+        return true;
+    } else if (query.includes("cry")) {
+        reactMessage(api, event, ":cry:");
+        return true;
+    } else if (query == "bot" || query == "good") {
+        reactMessage(api, event, ":love:");
+        return true;
+    } else if (query == "tsk") {
+        reactMessage(api, event, ":like:");
+        return true;
+    } else if (query == "okay") {
+        sendMessage(api, event, "Yup");
+        return true;
+    } else if (nsfw(query)) {
+        sendMessage(api, event, "Shhhhhhh watch your mouth.");
+        return true;
+    } else if (query == "idk") {
+        sendMessage(api, event, "I dont know too...");
+        return true;
+    } else if (query == "nice" || query == "uwu") {
+        reactMessage(api, event, ":heart:");
+        return true;
+    }
+    return false;
 }
 
 function someR(api, event, query) {
@@ -3199,6 +3221,7 @@ function someR(api, event, query) {
         } else {
             sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
+        return true;
     } else if (query.startsWith("goodmorn")) {
         if (isMorning(settings.timezone)) {
             reactMessage(api, event, ":love:");
@@ -3207,6 +3230,7 @@ function someR(api, event, query) {
         } else {
             sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
+        return true;
     } else if (query.startsWith("goodnight")) {
         if (isNight(settings.timezone)) {
             reactMessage(api, event, ":love:");
@@ -3215,6 +3239,7 @@ function someR(api, event, query) {
         } else {
             sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
+        return true;
     } else if (query.startsWith("goodafter")) {
         if (isAfternoon(settings.timezone)) {
             reactMessage(api, event, ":love:");
@@ -3223,7 +3248,9 @@ function someR(api, event, query) {
         } else {
             sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
+        return true;
     }
+    return false;
 }
 
 function parseImage(api, event, url, dir) {
@@ -3353,6 +3380,7 @@ async function weathersearch(location) {
 
 async function getResponseData(url) {
     console.log("response_data " + url);
+    await wait(1000);
     let data = await axios.get(encodeURI(url)).then((response) => {
         if (response.data.error === undefined) {
             return response.data;
@@ -3435,7 +3463,7 @@ function isValidDomain(url) {
 
 function isMorning(tz) {
     var curHr = getTimeDate(tz).getHours();
-    return curHr >= 6 && curHr <= 12;
+    return curHr >= 3 && curHr <= 12;
 }
 
 function isAfternoon(tz) {
@@ -3450,7 +3478,7 @@ function isEvening(tz) {
 
 function isNight(tz) {
     var curHr = getTimeDate(tz).getHours();
-    return curHr >= 21 && curHr <= 6;
+    return curHr >= 21 && curHr <= 3;
 }
 
 function getDayNightTime(tz) {
