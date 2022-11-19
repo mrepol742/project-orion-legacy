@@ -40,6 +40,7 @@ let unsendMessage = ["deleted the following.", "unsent the following.", "tries t
 let idknow = ["Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.", "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.", "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do."]
 let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
 let mjme = ["Mj", "Melvin Jones Repol", "Melvin Jones Gallano Repol"]
+let qaLIST = [];
 let threads = ""
 let threadIdMV = {};
 let nonRRR = {};
@@ -888,7 +889,9 @@ async function ai(api, event) {
                         }
                     }
                     await wait(3000);
-                    sendMessage(api, event, finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj"));
+                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj");
+                    qaLIST.push([text, finalDataCC, event.messageID])
+                    sendMessage(api, event, finalDataCC);
                 }
             }
         } else if (event.senderID == myGirlAccountId && isEnabledOnMyGirl) {
@@ -2959,7 +2962,7 @@ async function ai(api, event) {
                 }
             });
         } else if (query == "time") {
-            sendMessage(api, event, "It's " + getMonth() + " " + (new Date().getDate() + 1) + ", " + getDay() + " " + formateDate(getDateGMT()));
+            sendMessage(api, event, "It's " + getMonth() + " " + (new Date().getDate().toLocaleString("en-US", {timeZone: "Asia/Singapore"})) + ", " + getDay() + " " + formateDate());
         } else if (query.startsWith("inspiration")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3152,7 +3155,7 @@ function someR(api, event, query) {
             sendMessage(api, event, "Good evening too... The sun set is so beautiful as always, hope you're seeing it too.");
             sendMessage(api, event, "🥰🌘");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
         }
     } else if (query.startsWith("goodmorn")) {
         if (isMorning()) {
@@ -3160,7 +3163,7 @@ function someR(api, event, query) {
             sendMessage(api, event, "Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.");
             sendMessage(api, event, "🥰☀️");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
         }
     } else if (query.startsWith("goodnight")) {
         if (isNight()) {
@@ -3168,7 +3171,7 @@ function someR(api, event, query) {
             sendMessage(api, event, "Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.");
             sendMessage(api, event, "🥰😴");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
         }
     } else if (query.startsWith("goodafter")) {
         if (isAfternoon()) {
@@ -3176,7 +3179,7 @@ function someR(api, event, query) {
             sendMessage(api, event, "Good afternoon too... It's quite hot now.. Always remember to stay hydrated.");
             sendMessage(api, event, "🥰😇");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(getDateGMT()) + " in the " + getDayNightTime() + ".");
+            sendMessage(api, event, "It's currently " + formateDate() + " in the " + getDayNightTime() + ".");
         }
     }
 }
@@ -3389,22 +3392,22 @@ function isValidDomain(url) {
 }
 
 function isMorning() {
-    var curHr = getDateGMT().getHours() + 8
+    var curHr = getDateGMT().getHours()
     return curHr >= 6 && curHr <= 12;
 }
 
 function isAfternoon() {
-    var curHr = getDateGMT().getHours() + 8
+    var curHr = getDateGMT().getHours()
     return curHr >= 12 && curHr <= 18;
 }
 
 function isEvening() {
-    var curHr = getDateGMT().getHours() + 8
+    var curHr = getDateGMT().getHours()
     return curHr >= 18 && curHr <= 21;
 }
 
 function isNight() {
-    var curHr = getDateGMT().getHours() + 8
+    var curHr = getDateGMT().getHours()
     return curHr >= 21 && curHr <= 6;
 }
 
@@ -3419,9 +3422,9 @@ function getDayNightTime() {
     return "night";
 }
 
-function formateDate(date) {
-    var hours = date.getHours() + 8;
-    var minutes = date.getMinutes();
+function formateDate() {
+    var hours = date.getHours().toLocaleString("en-US", {timeZone: "Asia/Singapore"});
+    var minutes = date.getMinutes().toLocaleString("en-US", {timeZone: "Asia/Singapore"});
     var ampm = hours >= 12 ? 'pm' : 'am';
     hours = hours % 12;
     hours = hours ? hours : 12;
@@ -3432,16 +3435,12 @@ function formateDate(date) {
 
 function getDay() {
     let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return days[getDateGMT().getDay() + 1];
+    return days[new Date().getDay().toLocaleString("en-US", {timeZone: "Asia/Singapore"})];
 }
 
 function getMonth() {
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[getDateGMT().getMonth()];
-}
-
-function getDateGMT() {
-    return new Date();
+    return months[new Date().getMonth().toLocaleString("en-US", {timeZone: "Asia/Singapore"})];
 }
 
 async function getImages(api, event, images) {
