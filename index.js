@@ -330,26 +330,26 @@ login({
                     if (event.senderID == myAccountId) {
                         console.log(event.body);
                     }
-                    
-                    if (query == "isEnabled") {
+                    let nonSS = event.body;
+                    if (nonSS == "isEnabled") {
                         if (vips.includes(event.senderID)) {
                             settings.isEnabled = true;
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                             sendMessage(api, event, "Hello");
                         }
-                    } else if (query == "isDisabled") {
+                    } else if (nonSS == "isDisabled") {
                         if (vips.includes(event.senderID)) {
                             settings.isEnabled = false;
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                             sendMessage(api, event, "Bye bye.");
                         }
-                    } else if (query == "isDebugEnabled") {
+                    } else if (nonSS == "isDebugEnabled") {
                         if (vips.includes(event.senderID)) {
                             settings.isDebugEnabled = true;
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                             sendMessage(api, event, "Debug mode enabled.");
                         }
-                    } else if (query == "isDebugDisabled") {
+                    } else if (nonSS == "isDebugDisabled") {
                         if (vips.includes(event.senderID)) {
                             settings.isDebugEnabled = false;
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
