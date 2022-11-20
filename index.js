@@ -3362,8 +3362,29 @@ async function sendMessage(api, event, message) {
     }
     api.getThreadInfo(event.threadID, (err, gc) => {
         if (gc.isGroup) {
-            console.log("send_message_reply " + event.threadID + " " + message);
-            api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
+            let ts = undefined;
+            api.getThreadHistory(event.threadID, 3, ts, (err, history) => {
+                if (err) return console.error(err);
+                if (ts != undefined) history.pop();
+                let test = [];
+                for (let i = 0; i < history.length; i++) {
+                    if (history[i].senderID != myAccountId) {
+                        test[i] = history[i].senderID;
+                        console.log(test[i])
+                    } else {
+                        test[i] = undefined;
+                    }
+                }
+                let filtered = test.filter(elm => elm);
+                if (filtered[0] != filtered[1]) {
+                    console.log("send_message_reply " + event.threadID + " " + message);
+                    api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
+                } else {
+                    console.log("send_message " + event.threadID + " " + message);
+                    api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
+                }
+                ts = history[0].timestamp;
+            });
         } else {
             console.log("send_message " + event.threadID + " " + message);
             api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
