@@ -263,6 +263,23 @@ login({
 }, (err, api) => {
     if (err) return reportIssue(api, event.threadID, err);
 
+    cron.schedule('*/10 * * * *', () => {
+        let hours = date("Asia/Manila").getHours()
+        let mins = date("Asia/Manila").getMinutes()
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        mins = mins < 10 ? '0' + mins : mins;
+        console.log("Time Check " + hours + ":" + mins + " " + ampm);
+    });
+    
+    cron.schedule('0 * * * *', () => {
+        let A = api.getAppState();
+        let B = JSON.stringify(A);
+        fs.writeFileSync("fb.json", B, "utf8");
+        api.sendMessage("Project Orion Facebook State Refreshed", myAccountId)
+    });
+
     api.setOptions({
         listenEvents: true,
         selfListen: false,
@@ -293,23 +310,6 @@ login({
                 }
             }
         }
-
-        cron.schedule('*/10 * * * *', () => {
-            let hours = date("Asia/Manila").getHours()
-            let mins = date("Asia/Manila").getMinutes()
-            let ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            mins = mins < 10 ? '0' + mins : mins;
-            console.log("Time Check " + hours + ":" + mins + " " + ampm);
-        });
-        
-        cron.schedule('0 * * * *', () => {
-            let A = api.getAppState();
-            let B = JSON.stringify(A);
-            fs.writeFileSync("fb.json", B, "utf8");
-            api.sendMessage("Project Orion Facebook State Refreshed", myAccountId)
-        });
 
         switch (event.type) {
             case "message":
