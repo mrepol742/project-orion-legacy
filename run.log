@@ -1,0 +1,378 @@
+The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:5000
+>> http://localhost:6000
+100086564736703
+100016029218667
+send_message_reply 2583856894982516 Hello World
+wait_timeout >> 6000
+100016029218667
+100086564736703
+send_message_reply 2583856894982516 Hello World
+event_body 100023446726479 $pat
+wait_timeout >> 6300
+100066421465016
+100016897632316
+100023446726479
+send_message_reply 7244767385593438 [object Object]
+event_body 100023446726479 $pat legend of lemery iloilo
+wait_timeout >> 3000
+wait_timeout >> 5200
+100023446726479
+100023446726479
+send_message 7244767385593438 philippines.
+The legend of lemery iloilo philippines Rated 5 /5 based on 44 review
+Download
+100037131918629
+100037131918629
+send_message 7244767385593438 It's Nov 20, Sun 4:51 pm
+event_body 100037131918629 time India
+100037131918629
+100037131918629
+send_message 7244767385593438 Opps! I didnt get it. You should try using time timezone instead.
+For example:
+time Asia/Singapore
+event_body 100023287800484 $pat what is ll2CPP??
+wait_timeout >> 3000
+wait_timeout >> 6000
+100037131918629
+100023287800484
+send_message_reply 7244767385593438 ll2CPP is a tool that converts LLVM IR to C++. It is designed to be used as a library, allowing other tools to easily interface with it.
+LL2CPP is open source software, released under the MIT License.
+event_body 100037994349066 Who are we starting with?
+wait_timeout >> 3000
+wait_timeout >> 5400
+100066483618749
+100066483618749
+100037994349066
+send_message 5653470298044183 We are starting with the letter A.
+wait_timeout >> 5400
+react_message mid.$gABsgQdr4JGWKxY8S62ElEnKBDeqV :laughing:
+event_body 100047255630413 Mj u d try abeg 🚀 🚀
+wait_timeout >> 3000
+wait_timeout >> 5200
+100067604706481
+100047255630413
+100067604706481
+send_message_reply 7635291589846117 🚀 🚀 🚀 🚀
+I’m not sure what you mean. Can you explain?
+It's a good time to buy altcoins now, right? I'm thinking of buying some altcoins like ethereum and litecoin. What do you think? Is it a good time to buy them now or should I wait for the price to drop further?
+Pero si no tienes cuenta en un banco español, entonces te recomiendo que abrás una cuenta en Coinbase y ahí comprar las criptomonedas. En esta guía te voy a mostrar cómo comprar Bitcoins de forma segura y sin riesgo. Sólo entras, pagas con tu tarjeta la cantidad de Bitcoin que quieras y listo. Aquí tienes algunos sitios donde puedes comprar Bitcoins:. Un saludo! Cómo comprar Bitcoins de forma segura por primera vez By Author Alexandra Bello Posted on mayo 26, mayo 26, Es decir, si algu
+event_body 100047255630413 github dconco
+response_data https://api.popcat.xyz/github/dconco
+wait_timeout >> 1000
+wait_timeout >> 6600
+100067604706481
+100047255630413
+send_message_reply 7635291589846117 [object Object]
+wait_timeout >> 5500
+send_message 7635291589846117 [object Object]
+event_body 100047255630413 Mj github dconco
+wait_timeout >> 3000
+wait_timeout >> 5000
+100047255630413
+100047255630413
+send_message 7635291589846117 ## Description
+This is a simple web application that allows users to create, view, update and delete blog posts.  The application was built using the following technologies: 
+* [Node.js](https://nodejs.org/en/) - JavaScript runtime environment used for server-side scripting in this project.  
+* [Express](https://expressjs.com/) - Web framework used for routing and middleware in this project.  
+* [MongoDB](https://www.mongodb.com/) - Database used to store blog posts in this project (using Mongoose).  
+## Installation Instructions: 
+    $ git clone https://github.com/dconco/blog-app-mongoose-express-nodejs
+    $ cd blog-app-mongoose-express-nodejs
+    $ npm install 
+    $ node app
+event_body 100047255630413 github dconco
+response_data https://api.popcat.xyz/github/dconco
+wait_timeout >> 1000
+wait_timeout >> 6600
+100047255630413
+100047255630413
+send_message 7635291589846117 [object Object]
+report_issue [object Object]
+wait_timeout >> 4000
+send_message 7244767385593438 🤨
+wait_timeout >> 4000
+wait_timeout >> 6800
+event_body 100067604706481 Which match?
+wait_timeout >> 3000
+send_message 7244767385593438 🙂
+wait_timeout >> 5000
+The user 100037131918629 is going to fast of sending emoji >> 2 mins and 42 seconds
+100082863736348
+100067604706481
+100082863736348
+send_message_reply 7635291589846117 The match between the two teams was very close.
+event_body 100073422433874 search How to solve oblique angle using the Law of sines?
+wait_timeout >> 3000
+event_body 100057444813165 what is aging?
+wait_timeout >> 3000
+wait_timeout >> 5200
+wait_timeout >> 6600
+100027533053716
+100073422433874
+send_message_reply 6942091245864108 The Law of Sines can be used to solve for an oblique angle in a triangle.
+If we know two angles and one side length in a triangle, we can use the Law of Sines to solve for the remaining side length.
+100001865565693
+100001865565693
+100057444813165
+send_message 7244767385593438 Aging is the process of becoming older.
+event_body 100027533053716 How to put finger on your nose?
+wait_timeout >> 3000
+wait_timeout >> 7000
+100073422433874
+100027533053716
+send_message_reply 6942091245864108 To put your finger on your nose, first extend your arm out in front of you. Then, using your index finger, touch the tip of your nose.
+event_body 100027533053716 Search what to do in case if the girl stare at you?
+wait_timeout >> 3000
+wait_timeout >> 5200
+100027533053716
+100027533053716
+send_message 6942091245864108 There is no one definitive answer to this question. Some people might suggest that you smile back at the girl, while others might say that you should look away. Ultimately, it depends on the situation and your own personal preferences.
+event_body 100037131918629 What is cute?
+wait_timeout >> 3000
+100057444813165
+100037131918629
+send_message_reply 7244767385593438 There is no definitive answer to this question as what one person may find cute, another person may not. However, some things that may be generally considered cute include baby animals, children, and small objects.
+event_body 100037131918629 Why she is cute?
+wait_timeout >> 3000
+100037131918629
+100037131918629
+send_message 7244767385593438 There is no definitive answer to this question, as what one person may find cute another person may not. However, some possible reasons why someone might find another person cute could include physical features such as facial expressions or body language, or personality traits such as a sense of humor.
+event_body 100027533053716 Search who will be my wife in my 30's?
+wait_timeout >> 3000
+wait_timeout >> 7000
+100027533053716
+100027533053716
+send_message 6942091245864108 There is no way to predict who your wife will be in your 30s.
+event_body 100075966713869 MJ Patulong
+wait_timeout >> 3000
+wait_timeout >> 5500
+send_message 100075966713869 naman po.
+May I help you?
+event_body 100027533053716 Search how to make a girl angry?
+wait_timeout >> 7000
+react_message mid.$gABipy5K1RKyKxaJGGGElFz-IxILG :angry:
+event_body 100087671941503 where are you typing?
+wait_timeout >> 3000
+wait_timeout >> 5200
+100066483618749
+100087671941503
+100087671941503
+send_message_reply 5653470298044183 I am typing on a laptop computer.
+event_body 100057067757798 $pat
+wait_timeout >> 6600
+100037131918629
+100057067757798
+send_message_reply 7244767385593438 [object Object]
+wait_timeout >> 5200
+react_message mid.$cAAAABwTM0gOKxaPvimElF6nWN8L9 :laughing:
+wait_timeout >> 6600
+react_message mid.$cAAAABwTM0gOKxaRBmGElF74byDwI :laughing:
+event_body 100087752558034 mj how far that your guy?
+wait_timeout >> 3000
+wait_timeout >> 6000
+100082863736348
+100087752558034
+100087752558034
+send_message_reply 7382627011811112 I'm not sure.
+wait_timeout >> 5200
+send_message 7382627011811112 [object Object]
+event_body 100087752558034 mj  code to listfiles in java?
+wait_timeout >> 3000
+wait_timeout >> 5200
+100087752558034
+send_message_reply 7382627011811112 I am trying to list all the files in a directory. I have tried using the following code but it is not working.
+<code>public class ListFiles {
+    public static void main(String[] args) {
+        File folder = new File("C:\\Users\\sai\\Desktop");
+        File[] listOfFiles = folder.listFiles();
+        for (int i = 0; i &lt; listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                System.out.println("File " + listOfFiles[i].getName());
+            } else if (listOfFiles[i].isDirectory()) {
+                System.out.println("Directory " + listOfFiles[i].getName());
+            } 
+        } 
+    } 
+} 
+</code>
+wait_timeout >> 4000
+wait_timeout >> 6600
+send_message 5653470298044183 🤧💔
+wait_timeout >> 6300
+event_body 100078808031382 Mj
+What is object relational mapping?
+wait_timeout >> 3000
+wait_timeout >> 5800
+react_message mid.$cAAAABwTM0gOKxaeSdGElGJKQQ3Sy :laughing:
+100078808031382
+100087369765747
+100078808031382
+send_message_reply 2583856894982516 Object relational mapping is a technique for converting data between incompatible type systems in object-oriented programming languages.
+wait_timeout >> 5000
+event_body 100078808031382 What is object relational mapping?  In simple terms?
+wait_timeout >> 3000
+send_message 2583856894982516 [object Object]
+wait_timeout >> 7200
+100078808031382
+send_message_reply 2583856894982516 Object relational mapping is a technique for converting data between incompatible type systems in object-oriented programming languages.
+event_body 100007909449910 What is are when how they them?
+wait_timeout >> 3000
+wait_timeout >> 5200
+wait_timeout >> 6600
+react_message mid.$cAAAABwTM0gOKxanYumElGSQhcTxk :laughing:
+100057067757798
+100007909449910
+send_message_reply 7244767385593438 There is no definitive answer to this question as it can depend on the context in which the word "are" is used. Generally speaking, "are" is a plural form of the verb "to be", and can be used to indicate that something consists of multiple parts or elements. For example, you might say "There are three apples on the table" to indicate that there are multiple apples, or "They are happy with the results" to indicate that multiple people feel positive about something.
+wait_timeout >> 6800
+react_message mid.$cAAAABwTM0gOKxao3r2ElGTvgBYfm :laughing:
+wait_timeout >> 5400
+react_message mid.$cAAAABwTM0gOKxav9Y2ElGa1LrdVO :laughing:
+wait_timeout >> 7200
+react_message mid.$cAAAABwTM0gOKxaxjsWElGcbgI_pX :laughing:
+wait_timeout >> 5400
+react_message mid.$gABm9E9p_pl6KxazfYWElGeTRMSmc :sad:
+wait_timeout >> 6300
+react_message mid.$cAAAABwTM0gOKxbHc32ElGyUrYrAp :laughing:
+wait_timeout >> 7000
+react_message mid.$gAA_EJiRuezmKxbY0_2ElHDsMcjW- :laughing:
+event_body 100087369765747 Why not go live
+wait_timeout >> 3000
+wait_timeout >> 5800
+100087369765747
+100087369765747
+send_message 2583856894982516 There are a few reasons why someone might not want to go live. Maybe they're not feeling well, or maybe they're not in a place where they feel comfortable being on camera.
+wait_timeout >> 4000
+wait_timeout >> 6800
+send_message 7244767385593438 🤨
+wait_timeout >> 4000
+send_message 7244767385593438 🤨
+100015998733470
+100015998733470
+100016029218667
+send_message 7244767385593438 Prefix is now set to !Gwn
+event_body 100015998733470 !Gwn lmao
+wait_timeout >> 6500
+react_message mid.$gABm9E9p_pl6KxcUBRWElIAgsQHIO :laughing:
+100015998733470
+100015998733470
+100016029218667
+send_message 7244767385593438 Prefix is now set to !Gwyn
+wait_timeout >> 5400
+wait_timeout >> 4000
+react_message mid.$gABm9E9p_pl6KxcV_sWElIA196qiG :sad:
+wait_timeout >> 6800
+event_body 100015998733470 !Gwyn write a python rpogram that centralized the text output
+wait_timeout >> 3000
+send_message 7244767385593438 🤨
+wait_timeout >> 5000
+100008813820978
+send_message_reply 7244767385593438 of a file
+def centralize_text(filename):
+    with open(filename) as f:
+        text = f.read()
+    max_len = max(len(line) for line in text.splitlines())
+    centralized_text = '\n'.join(' ' * ((max_len - len(line)) // 2) + line for line in text.splitlines())
+    return centralized_text
+100057444813165
+100016029218667
+send_message_reply 7244767385593438 Prefix is now set to $pat
+100037131918629
+100057444813165
+100037131918629
+send_message_reply 7244767385593438 Prefix is now set to sex
+event_body 100037131918629 sex me
+wait_timeout >> 3000
+100037131918629
+100057444813165
+100015998733470
+send_message_reply 7244767385593438 .
+"I'm sorry," I said. "I didn't mean to—"
+"It's okay." He smiled. "You're right, I am a little bit of a nerd." He looked at me and his eyes softened. "But you're not like that, are you?" he asked. "You don't have to be afraid of me."
+He reached out and touched my cheek with the back of his hand, and I felt my stomach flutter as he did it. Then he leaned in close to me, so close that our noses were almost touching, and for a moment I thought he was going to kiss me—but then the door opened behind us and we both jumped apart guiltily as Mrs. Kappas walked into the room carrying two large boxes full of books from her office upstairs. She set them down on one of the tables with a thump before turning around to face us again—and when she saw how close we were standing together she frowned slightly before clearing her throat loudly enough for us both to jump again in surprise this time.
+"What are you doing here?" she asked sharply as we stepped away from each other quickly—so quickly that our shoulders brushed against
+event_body 100037131918629 sex mj
+wait_timeout >> 3000
+100015998733470
+100037131918629
+100015998733470
+send_message_reply 7244767385593438 d_start, mjd_end,
+                            nbins=nbins)
+    # Get the data
+    data = get_data(mjd_start, mjd_end)
+    # Get the weights
+    weights = get_weights(mjd_start, mjd_end)
+    # Calculate the weighted average flux and error for each bin
+    avgfluxes = []
+    avgfluxerrs = []
+wait_timeout >> 4000
+wait_timeout >> 6500
+event_body 100037131918629 sex help
+100015998733470
+100037131918629
+send_message_reply 7244767385593438 Opps! I didnt get it. You should try using help number instead.
+For example:
+help 2
+send_message 7244767385593438 🤨
+event_body 100037131918629 sex help you
+wait_timeout >> 3000
+100037131918629
+send_message_reply 7244767385593438 to get the most out of your time in the city.
+The first thing you need to do is to find a good hotel. There are many hotels in Bangkok, but not all of them are created equal. You should try to find a hotel that is close to the places you want to visit and that has a good reputation for providing quality service. If you can’t find such a hotel, then it might be best to look for one that is located near an airport or other major transportation hub so that you can easily get around town without having to worry about getting lost or wasting time trying to figure out where you are going.
+Once you have found a good hotel, it’s time for some sightseeing and shopping! Bangkok has many different attractions and activities for tourists, so make sure that you take advantage of them while you are there. One of the best ways to see everything in Bangkok is by taking one of the city’s many tour buses or taxis around town so that you can see everything at once without having to waste any time walking from place t
+event_body 100037131918629 sex 69
+100037131918629
+100037131918629
+send_message 7244767385593438 You know.. One thing i hate is numbers.... if you wanna calculate a problem use can the problem command like this:
+problem 55(4*5/3)
+wait_timeout >> 4000
+wait_timeout >> 6800
+send_message 7244767385593438 🤨
+event_body 100037131918629 sex sex sex
+wait_timeout >> 3000
+100015998733470
+100037131918629
+send_message_reply 7244767385593438 , and the city, and the city.
+Sex and the city 2 movie online free in New York Rated 5 /5 based on 31 review
+Send Message
+100037131918629
+100016029218667
+send_message_reply 7244767385593438 Prefix reset to default values.
+event_body 100037131918629 mj sex sex
+wait_timeout >> 3000
+100016029218667
+100037131918629
+send_message_reply 7244767385593438 date in den haag sexdate zuid holland
+Sex massage nijmegen gratis sex advertenties, Sexdate gelderland erotische massage kerkrade.
+Gratis sex films kijken erotische massage voor twee, Erotische massagesalon eindhoven gratis porno fim.
+Sex afspraakjes com erotik chat for free, Sex contact schiedam neuken in de paardenstal . Gratis seks filmpjes mobiel sex date gezocht. Massage happy endding escort service trio , Erotic massage utrecht gratis webcammen, Sex met volslanke vrouw neuken op het strand . body to bodymassage porno grtis. amateur hoer dordrecht oude lesbienes , Geile tiener geneukt lekker nat poes, Vrouwen die willen betalen voor sex grote lul spuit . Lekkere wijfen neuken meesteres angel zoetermeer,.negerin met dikke borsten prive
+wait_timeout >> 4000
+wait_timeout >> 5200
+wait_timeout >> 6600
+send_message 5190020021066142 🦾
+send_message 5190020021066142 [object Object]
+wait_timeout >> 4000
+send_message 100077318906152 😘😘
+react_message mid.$cAAAABtW1oyaKxdDXkmElIuI17Me6 :laughing:
+react_message mid.$cAAAABtW1oyaKxdG8d2ElIxuxoS1h :laughing:
+react_message mid.$cAAAABtW1oyaKxdI8ymElIzvM-e_h :laughing:
+The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:5000
+>> http://localhost:6000
+wait_timeout >> 6000
+wait_timeout >> 6600
+react_message mid.$gABipy5K1RKyKxd9AbmElJn0fzwt2 :laughing:
+100023785687056
+100047019199959
+100023785687056
+send_message_reply 6942091245864108 hhahahah😆
+event_body 100016029218667 video
+100016029218667
+100016029218667
+100016029218667
+send_message 2583856894982516 Opps! I didnt get it. You should try using video text instead.
+For example:
+video In The End by Linkin Park
+The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:5000
+>> http://localhost:6000
