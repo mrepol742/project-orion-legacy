@@ -21,7 +21,7 @@ const Innertube = require('youtubei.js');
 const GoogleImages = require('google-images');
 const google = require('googlethis');
 
-console.log("The Project Orion is now active and waiting for commands execution. ONLINE")
+log("The Project Orion is now active and waiting for commands execution. ONLINE")
 
 let msgs = {};
 let cmd = {};
@@ -102,7 +102,7 @@ help1 += "\n⦿ lulcat [text]";
 help1 += "\n⦿ gemoji [emoji]";
 help1 += "\n⦿ gname [text]";
 help1 += "\n⦿ wiki [text]";
-help1 += "\n⦿ info @mention";
+help1 += "\n⦿ urlshort [url]";
 help1 += "\n⦿ nickname @mention [text]";
 help1 += "\n⦿ landscape";
 help1 += "\n⦿ landscape [text]";
@@ -160,8 +160,8 @@ help3 += "\n⦿ uncover @mention";
 help3 += "\n⦿ advert @mention";
 help3 += "\n⦿ blur @mention";
 
-
 let help4 = "\n⦿ ig [username]";
+help4 += "\n⦿ facebook @mention";
 help4 += "\n⦿ joke";
 help4 += "\n⦿ profilepic";
 help4 += "\n⦿ wyr";
@@ -169,7 +169,6 @@ help4 += "\n⦿ 8ball";
 help4 += "\n⦿ gmember";
 help4 += "\n⦿ car";
 help4 += "\n⦿ color";
-help4 += "\n⦿ urlshort [url]";
 help4 += "\n⦿ sim [text]";
 help4 += "\n⦿ pet @mention";
 help4 += "\n⦿ ship @mention @mention";
@@ -202,7 +201,7 @@ help6 += "\n   blush, smile, wave, highfive";
 help6 += "\n   handhold, nom, biteglomp, slap";
 help6 += "\n   kill, kick, happy, wink";
 help6 += "\n   pokedance, cringe";
-help6 += "\n\n⦿ anime --nsfw [category]";
+help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob";
 
 let categorySFW = ['megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet',
@@ -225,6 +224,7 @@ helpadmin += "\n⦿ preventSimultanoesExecution --off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
 helpadmin += "\n⦿ setTimezone [timezone]";
+helpadmin += "\n⦿ setTextComplextion [complextion]"
 helpadmin += "\n⦿ setMaxTokens [integer]";
 helpadmin += "\n⦿ setTemperature [integer]";
 helpadmin += "\n⦿ setFrequencyPenalty [integer]";
@@ -254,7 +254,7 @@ let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
 let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
 
 process.on('SIGINT', function() {
-    console.log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
+    log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     process.exit();
 });
 
@@ -270,7 +270,7 @@ login({
         hours = hours % 12;
         hours = hours ? hours : 12;
         mins = mins < 10 ? '0' + mins : mins;
-        console.log("Time Check " + hours + ":" + mins + " " + ampm);
+        log("Time Check " + hours + ":" + mins + " " + ampm);
     });
     
     cron.schedule('0 * * * *', () => {
@@ -278,6 +278,7 @@ login({
         let B = JSON.stringify(A);
         fs.writeFileSync("fb.json", B, "utf8");
         api.sendMessage("Project Orion Facebook State Refreshed", myAccountId)
+        log("Project Orion Facebook State Refreshed")
     });
 
     api.setOptions({
@@ -288,7 +289,7 @@ login({
 
     const listenEmitter = api.listen(async (err, event) => {
 
-        if (err) return console.log(err);
+        if (err) return log(err);
 
         if (settings.isEnabled && (event.type == "message" || event.type == "message_reply")) {
             return;
@@ -328,7 +329,7 @@ login({
                 } else {
                     msgs[event.messageID] = event.body
                     if (event.senderID == myAccountId) {
-                        console.log(event.body);
+                        log(event.body);
                     }
                     let nonSS = event.body;
                     if (nonSS == "isEnabled") {
@@ -699,7 +700,7 @@ login({
                             if (gc.isGroup) {
                                 let arr = gc.participantIDs;
                                 let Tmem = arr.length;
-                                let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + Tmem + `th member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
+                                let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + Tmem + getSuffix(Tmem) +` member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
 
                                 request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
                                     .on('finish', () => {
@@ -723,15 +724,15 @@ login({
                             if (err) done(err);
                             api.getUserInfo(parseInt(id), (err, data) => {
                                 if (err) {
-                                    console.log(err)
+                                    log(err)
                                 } else {
-                                    console.log(data)
+                                    log(data)
                                     for (let prop in data) {
                                         if (data.hasOwnProperty(prop) && data[prop].name) {
                                             let gcn = gc.threadName;
                                             let arr = gc.participantIDs;
                                             let Tmem = arr.length;
-                                            let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Member+" + Tmem + "&avatar=" + getProfilePic(prop);
+                                            let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Total+Members+" + Tmem + "&avatar=" + getProfilePic(prop);
                                             request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
                                                 .on('finish', () => {
                                                     let message = {
@@ -754,7 +755,7 @@ login({
 
 function wait(ms) {
     return new Promise((resolve) => {
-        console.log("wait_timeout >> " + ms);
+        log("wait_timeout >> " + ms);
         setTimeout(resolve, ms);
     });
 }
@@ -959,13 +960,13 @@ async function ai(api, event) {
                     let fmm2 = "There is no one-size-fits-all answer to this question,";
                     if (finish.startsWith(fmm)) {
                         finish = finish.substring(fmm.length + 1);
-                        console.log("The finish output contains " + fmm)
+                        log("The finish output contains " + fmm)
                     } else if (finish.startsWith(fmm1)) {
                         finish = finish.substring(fmm1.length + 1);
-                        console.log("The finish output contains " + fmm1)
+                        log("The finish output contains " + fmm1)
                     } else if (finish.startsWith(fmm2)) {
                         finish = finish.substring(fmm2.length + 1);
-                        console.log("The finish output contains " + fmm2)
+                        log("The finish output contains " + fmm2)
                     }
                     let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
                     qaLIST.push([text, finalDataCC, event.messageID])
@@ -1105,20 +1106,20 @@ async function ai(api, event) {
 
                         stream.on('start', () => {
                             threadIdMV[event.threadID] = false;
-                            console.log("Starting download...");
+                            log("Starting download...");
                         });
                         stream.on('info', (info) => {
                             threadIdMV[event.threadID] = false;
-                            console.log(`Downloading ${info.video_details.title}`);
+                            log(`Downloading ${info.video_details.title}`);
                         });
                         stream.on('end', () => {
                             let limit = 25 * 1024 * 1024;
                             fs.readFile(__dirname + '/cache/videos/video.mp4', function(err, data) {
-                                if (err) console.log(err)
+                                if (err) log(err)
                                 if (data.length > limit) {
                                     sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                                 } else {
-                                    console.log("Done.");
+                                    log("Done.");
                                     let message = {
                                         body: search.videos[0].title,
                                         attachment: [fs.createReadStream(__dirname + '/cache/videos/video.mp4')]
@@ -1168,20 +1169,20 @@ async function ai(api, event) {
 
                         stream.on('start', () => {
                             threadIdMV[event.threadID] = false;
-                            console.log("Starting download now...");
+                            log("Starting download now...");
                         });
                         stream.on('info', (info) => {
                             threadIdMV[event.threadID] = false;
-                            console.log(`Downloading ${info.video_details.title}`);
+                            log(`Downloading ${info.video_details.title}`);
                         });
                         stream.on('end', () => {
                             let limit = 25 * 1024 * 1024;
                             fs.readFile(__dirname + '/cache/audios/music.mp3', function(err, data) {
-                                if (err) console.log(err)
+                                if (err) log(err)
                                 if (data.length > limit) {
                                     sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                                 } else {
-                                    console.log("Done.");
+                                    log("Done.");
                                     let message = {
                                         body: search.videos[0].title,
                                         attachment: [fs.createReadStream(__dirname + '/cache/audios/music.mp3')]
@@ -1506,7 +1507,7 @@ async function ai(api, event) {
                     sendMessage(api, event, response.answer);
                 }
             });
-        } else if (query.startsWith("instagram") || query2.startsWith("insta ") || query2.startsWith("ig ")) {
+        } else if (query.startsWith("instagram") || query2.startsWith("ig ")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -1516,6 +1517,9 @@ async function ai(api, event) {
             } else {
                 data.shift()
                 let userN = data.join(" ");
+                if (userN.startsWith("@")) {
+                    userN = userN.slice(1);
+                }
                 getResponseData('https://api.popcat.xyz/instagram?user=' + userN).then((response) => {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately instagram user \"" + userN + "\" was not found.");
@@ -1564,6 +1568,9 @@ async function ai(api, event) {
             } else {
                 data.shift()
                 let userN = data.join(" ");
+                if (userN.startsWith("@")) {
+                    userN = userN.slice(1);
+                }
                 getResponseData('https://api.popcat.xyz/github/' + userN).then((response) => {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately github user \"" + userN + "\" was not found.");
@@ -2051,7 +2058,7 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
-                    sendMessage(api, event, "This group has about " + arr.length + " members.")
+                    sendMessage(api, event, "This group has about " + arr.length +" members.")
                 }
             })
         } else if (query.startsWith("gname")) {
@@ -2584,18 +2591,18 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                 }
             }
-        } else if (query.startsWith("info")) {
+        } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
             if (isGoingToFast(event)) {
                 return;
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
             } else {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
                         return;
                     }
                     if (id == myAccountId || id == myOtherId) {
@@ -2627,7 +2634,7 @@ async function ai(api, event) {
                         }
                     });
                 } else {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using info @mention instead.\n\nFor example:\ninfo @Melvin Jones Repol")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
                 }
             }
         } else if (query.startsWith("morse")) {
@@ -3290,7 +3297,7 @@ function someA(api, event, query, input) {
 }
 
 function someR(api, event, query) {
-    if (query.startsWith("goodeve")) {
+    if (query.startsWith("goodeve") || query.startsWith("evening")) {
         if (isEvening(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
@@ -3299,7 +3306,7 @@ function someR(api, event, query) {
             sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
         return true;
-    } else if (query.startsWith("goodmorn")) {
+    } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         if (isMorning(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
@@ -3308,7 +3315,7 @@ function someR(api, event, query) {
             sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
         return true;
-    } else if (query.startsWith("goodnight")) {
+    } else if (query.startsWith("goodnight") || query.startsWith("night")) {
         if (isNight(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
@@ -3317,7 +3324,7 @@ function someR(api, event, query) {
             sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
         return true;
-    } else if (query.startsWith("goodafter")) {
+    } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
         if (isAfternoon(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
@@ -3331,12 +3338,12 @@ function someR(api, event, query) {
 }
 
 function parseImage(api, event, url, dir) {
-    console.log("parse_image " + url);
+    log("parse_image " + url);
     request(encodeURI(url)).pipe(fs.createWriteStream(dir))
         .on('finish', () => {
             let limit = 25 * 1024 * 1024;
             fs.readFile(dir, function(err, data) {
-                if (err) console.log(err)
+                if (err) log(err)
                 if (data.length > limit) {
                     sendMessage(api, event, "Unfortunately i cannot send you the file due to the size restrictions on messenger platform.");
                 } else {
@@ -3350,7 +3357,7 @@ function parseImage(api, event, url, dir) {
 }
 
 function reportIssue(api, event, err) {
-    console.log("report_issue " + err);
+    log("report_issue " + err);
     api.sendMessage(err + "", myAccountId);
 }
 
@@ -3370,23 +3377,23 @@ async function sendMessage(api, event, message) {
                 for (let i = 0; i < history.length; i++) {
                     if (history[i].senderID != myAccountId) {
                         test[i] = history[i].senderID;
-                        console.log(test[i])
+                        log(test[i])
                     } else {
                         test[i] = undefined;
                     }
                 }
                 let filtered = test.filter(elm => elm);
                 if (filtered[0] != filtered[1]) {
-                    console.log("send_message_reply " + event.threadID + " " + message);
+                    log("send_message_reply " + event.threadID + " " + message);
                     api.sendMessage(message, event.threadID, event.messageID).catch((err) => reportIssue(api, event, err));
                 } else {
-                    console.log("send_message " + event.threadID + " " + message);
+                    log("send_message " + event.threadID + " " + message);
                     api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
                 }
                 ts = history[0].timestamp;
             });
         } else {
-            console.log("send_message " + event.threadID + " " + message);
+            log("send_message " + event.threadID + " " + message);
             api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
         }
     });
@@ -3398,7 +3405,7 @@ async function sendMessageOnly(api, event, message) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
-    console.log("send_message " + event.threadID + " " + message);
+    log("send_message " + event.threadID + " " + message);
     api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
 }
 
@@ -3408,7 +3415,7 @@ async function reactMessage(api, event, reaction) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
-    console.log("react_message " + event.messageID + " " + reaction);
+    log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
 
@@ -3419,8 +3426,13 @@ function formatQuery(string) {
     return str.replace(anu, '');
 }
 
+function log(data) {
+    let date = new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"}).replace(",", "");
+    console.log(date + "$ " + data);
+}
+
 function isGoingToFast(event) {
-    console.log("event_body " + event.senderID + " " + event.body);
+    log("event_body " + event.senderID + " " + event.body);
     if (!settings.preventSimultanoesExecution) {
         return false;
     }
@@ -3429,7 +3441,7 @@ function isGoingToFast(event) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (13);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
-            console.log("The user " + event.senderID + " is going to fast of executing commands >> " +
+            log("The user " + event.senderID + " is going to fast of executing commands >> " +
                 Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 13) + " mins and " +
                 (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 13 + " seconds");
             return true;
@@ -3446,7 +3458,7 @@ function isGoingToFastResendingOfEmo(event) {
         emo[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
     } else if (Math.floor(Date.now() / 1000) < emo[event.senderID]) {
-        console.log("The user " + event.senderID + " is going to fast of sending emoji >> " +
+        log("The user " + event.senderID + " is going to fast of sending emoji >> " +
             Math.floor((emo[event.senderID] - Math.floor(Date.now() / 1000)) / 60 * 2) + " mins and " +
             (emo[event.senderID] - Math.floor(Date.now() / 1000)) % 60 * 2 + " seconds");
         return true;
@@ -3457,7 +3469,7 @@ function isGoingToFastResendingOfEmo(event) {
 }
 
 let download = async function(uri, filename, callback) {
-    console.log("download " + uri);
+    log("download " + uri);
     await request(encodeURI(uri)).pipe(fs.createWriteStream(filename)).on('close', callback);
 };
 
@@ -3477,17 +3489,17 @@ async function weathersearch(location) {
 }
 
 async function getResponseData(url) {
-    console.log("response_data " + url);
+    log("response_data " + url);
     await wait(1000);
     let data = await axios.get(encodeURI(url)).then((response) => {
         if (response.data.error === undefined) {
             return response.data;
         } else {
-            console.log("response_null " + url);
+            log("response_null " + url);
             return null;
         }
     }).catch((err) => {
-        console.log("response_data_err " + err)
+        log("response_data_err " + err)
         return null
     });
     return data
@@ -3621,6 +3633,44 @@ function getMonth(tz) {
 
 function getTimeDate(tz) {
     return new Date(new Date().toLocaleString("en-US", {timeZone: tz}))
+}
+
+function getSuffix(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+
+
+async function getMusic(query) {
+    var songs = fetch(query);
+    let response = await songs.then((response) => {
+        let slist = response;
+        if (slist == "err") {
+            return "err"
+        } else if (slist.t < 1300) {
+            let d_url = conv(slist.vid, slist.token, slist.timeExpires).then((response) => {
+                return [response, slist.title]
+            });
+            return d_url
+        } else if (slist.p == "search") {
+            return 'err'
+        } else if (slist.mess.startsWith("The video you want to download is posted on TikTok.")) {
+            return 'tiktok'
+        } else {
+            return 'pakyo'
+        }
+    });
+    return response;
 }
 
 async function getImages(api, event, images) {
