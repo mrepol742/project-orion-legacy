@@ -303,7 +303,7 @@ login({
                     if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjones" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
                         let message = {
                             body: "Hold on a moment this system is currently under maintenance...\nhttps://mrepol742.github.io/project-orion/",
-                            attachment: fs.createReadStream(__dirname + '/cache/maintenance.gif')
+                            attachment: fs.createReadStream(__dirname + '/cache/maintenance.jpg')
                         };
                         sendMessage(api, event, message);
                     }
