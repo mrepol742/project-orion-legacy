@@ -1247,7 +1247,7 @@ async function ai(api, event) {
             } else {
                 if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                     try {
-                        let s = leechTT(data[1]);
+                        let s = getMusic(data[1]);
                         s.then((response) => {
                             if (response == "null") {
                                 sendMessage(api, event, "Opps! I didnt get it. You should try using tiktokdl url instead.\nFor example:\ntiktokdl https://www.tiktok.com/@mrepol742/video/7077820418790362395")
