@@ -32,7 +32,8 @@ let vips = [
     "100077318906152",
     "100037131918629",
     // felipe santiago
-    "100008664752303"
+    "100008664752303",
+    "100049247221868"
 ];
 let sleep = [5000, 6000, 5500, 6500, 7000, 6800, 5800, 5200, 7200, 6600, 5200, 6300, 5400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
@@ -872,7 +873,7 @@ async function ai(api, event) {
                         };
                         sendMessage(api, event, message);
                     });
-                } else if (text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis") {
+                } else if (text1 == "whoami" || text1 == "whatsmyname" || text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis") {
                     let id;
                     if (event.type == "message_reply") {
                         id = event.messageReply.senderID;
