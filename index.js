@@ -820,6 +820,9 @@ async function ai(api, event) {
                         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
                     }
                 }
+            } else if (event.type == "message_reply" && (event.messageReply.senderID != myAccountId || 
+                event.messageReply.senderID != myAccountId)) {
+                    return;
             } else {
                 let text = input;
                 if (query.startsWith("repol")) {
@@ -3326,7 +3329,7 @@ function someA(api, event, query, input) {
     } else if (query == "hello") {
         sendMessage(api, event, "Hi");
         return true;
-    } else if (query == "sup" || query == "wassup" || query == "whatsup" && (isMe(query2))) {
+    } else if (query == "sup" || query == "wassup" || query == "whatsup" && (isMe(query))) {
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
     } else if (query.startsWith("hey")) {
