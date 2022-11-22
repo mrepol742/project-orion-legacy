@@ -46,6 +46,7 @@ let goodev = ["Good evening too... The sun set is so beautiful as always, hope y
 let goodmo = ["Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.", "Also good morning... Enjoy your day, and never forget that breakfast should always be the heaviest meal of the day.", "Greetings as well... Have a fantastic day, and never forget that breakfast ought to be the largest meal of the day."]
 let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
 let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
+let tips = ["Be detailed but brief", "Ask me like Who are you?", "Ask me like How to do this?"]
 let qaLIST = [];
 let threads = ""
 let threadIdMV = {};
@@ -701,6 +702,7 @@ login({
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (gc.isGroup) {
+                                console.log(event.logMessageData.addedParticipants);
                                 let arr = gc.participantIDs;
                                 let Tmem = arr.length;
                                 let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + getSuffix(Tmem) +` member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
@@ -3302,8 +3304,6 @@ async function ai(api, event) {
                 let B = await JSON.stringify(A);
                 fs.writeFileSync("fb.json", B, "utf8");
                 sendMessage(api, event, "AppState Refreshed Successfully!.");
-            } else {
-                sendMessage(api, event, "Unable to do such action...");
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
@@ -3331,10 +3331,10 @@ async function ai(api, event) {
 
 function someA(api, event, query, input) {
     if (query == "hi") {
-        sendMessage(api, event, "Hello");
+        sendMessage(api, event, "Hello po.");
         return true;
     } else if (query == "hello") {
-        sendMessage(api, event, "Hi");
+        sendMessage(api, event, "Hi po.");
         return true;
     } else if (query == "sup" || query == "wassup" || query == "whatsup" && (isMe(query))) {
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
@@ -3387,36 +3387,36 @@ function someR(api, event, query) {
         if (isEvening(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
-            sendMessage(api, event, "🥰🌘");
+            sendMessageOnly(api, event, "🥰🌘");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
         return true;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         if (isMorning(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
-            sendMessage(api, event, "🥰☀️");
+            sendMessageOnly(api, event, "🥰☀️");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night")) {
         if (isNight(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
-            sendMessage(api, event, "🥰😴");
+            sendMessageOnly(api, event, "🥰😴");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
         if (isAfternoon(settings.timezone)) {
             reactMessage(api, event, ":love:");
             sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
-            sendMessage(api, event, "🥰😇");
+            sendMessageOnly(api, event, "🥰😇");
         } else {
-            sendMessage(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
         }
         return true;
     }
