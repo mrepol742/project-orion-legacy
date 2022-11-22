@@ -946,16 +946,18 @@ async function ai(api, event) {
                     return;
                 } else {
                     await wait(3000);
-                    const configuration = new Configuration({
-                        apiKey: apiKey[2],
-                    });
-                    const openai = new OpenAIApi(configuration);
                     let complextion = settings.text_complextion;
                     let max = parseInt(settings.max_tokens);
+                    let api = apiKey[2];
                     if (query.startsWith("searchcode")) {
                         complextion = "code-davinci-edit-001";
                         max = 0;
+                        api = apiKey[5];
                     }
+                    const configuration = new Configuration({
+                        apiKey: api,
+                    });
+                    const openai = new OpenAIApi(configuration);
                     const {
                         data
                     } = await openai.createCompletion(complextion, {
