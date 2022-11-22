@@ -972,7 +972,7 @@ async function ai(api, event) {
                     } else {
                         const {
                             data
-                        } = await openaiA.createEdit(({
+                        } = await openaiA.createEdit({
                             model: "code-davinci-edit-001",
                             input: text,
                             instruction: "",
