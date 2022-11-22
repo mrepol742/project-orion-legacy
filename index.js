@@ -802,7 +802,7 @@ async function ai(api, event) {
                 });
             }
         } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
-            ((query.startsWith("search") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
+            ((query.startsWith("search") || query.startsWith("searchcode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1) ||
                 otherQ(query2)) {
             if (isGoingToFast(event)) {
@@ -836,6 +836,8 @@ async function ai(api, event) {
                     text = input.substring(17)
                 } else if (query.startsWith("search")) {
                     text = input.substring(7)
+                } else if (query.startsWith("searchcode")) {
+                    text = input.substring(11)
                 } else if (input.startsWith(settings.prefix)) {
                     text = input.substring(settings.prefix.length);
                 }
@@ -946,12 +948,18 @@ async function ai(api, event) {
                         apiKey: apiKey[2],
                     });
                     const openai = new OpenAIApi(configuration);
+                    let complextion = settings.text_complextion;
+                    let max = parseInt(settings.max_tokens);
+                    if (query.startsWith("searchcode")) {
+                        complextion = "code-davinci-edit-001";
+                        max = 0;
+                    }
                     const {
                         data
-                    } = await openai.createCompletion(settings.text_complextion, {
+                    } = await openai.createCompletion(complextion, {
                         prompt: text,
                         temperature: parseInt(settings.temperature),
-                        max_tokens: parseInt(settings.max_tokens),
+                        max_tokens: max,
                         top_p: parseInt(settings.probability_mass),
                         frequency_penalty: parseInt(settings.frequency_penalty),
                         presence_penalty: parseInt(settings.presence_penalty),
