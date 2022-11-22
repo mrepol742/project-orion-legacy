@@ -946,15 +946,11 @@ async function ai(api, event) {
                     return;
                 } else {
                     await wait(3000);
-                    const configuration = new Configuration({
-                        apiKey: apiKey[2],
-                    });
-                    const configurationA = new Configuration({
-                        apiKey: apiKey[5],
-                    });
-                    const openai = new OpenAIApi(configuration);
-                    const openaiA = new OpenAIApi(configurationA);
                     if (!query.startsWith("searchcode")) {
+                        const configuration = new Configuration({
+                            apiKey: apiKey[2],
+                        });
+                        const openai = new OpenAIApi(configuration);
                         const {
                             data
                         } = await openai.createCompletion(settings.text_complextion, {
@@ -970,11 +966,15 @@ async function ai(api, event) {
                         qaLIST.push([text, finalDataCC, event.messageID])
                         sendMessage(api, event, finalDataCC);
                     } else {
+                        const configurationA = new Configuration({
+                            apiKey: apiKey[5],
+                        });
+                        const openaiA = new OpenAIApi(configurationA);
                         const {
                             data
                         } = await openaiA.createEdit({
                             model: "code-davinci-edit-001",
-                            input:  "/* "+ text +" */",
+                            input:  text,
                             instruction: "",
                             temperature: 0,
                             top_p: 1,
