@@ -701,7 +701,7 @@ login({
                             if (gc.isGroup) {
                                 let arr = gc.participantIDs;
                                 let Tmem = arr.length;
-                                let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + Tmem + getSuffix(Tmem) +` member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
+                                let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + getSuffix(Tmem) +` member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
 
                                 request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
                                     .on('finish', () => {
@@ -803,7 +803,8 @@ async function ai(api, event) {
             }
         } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
             ((query.startsWith("search") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
-                query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1)) {
+                query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1) ||
+                otherQ(query)) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -915,7 +916,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "I'm far intelligent than you are human.");
                 } else if (text1.startsWith("areyoumj")) {
                     sendMessage(api, event, "Yes i am indeed Mj.");
-                } else if (text1 == "thanks" || text1 == "thankyou") {
+                } else if (text1 == "thanks" || text1 == "thankyou" || text1 == "thanksbro") {
                     sendMessage(api, event, "You're welcome.");
                 } else if (text1 == "whatareyou") {
                     sendMessage(api, event, "A human.");
@@ -956,22 +957,6 @@ async function ai(api, event) {
                         presence_penalty: parseInt(settings.presence_penalty),
                     });
                     let finish = data.choices[0].text;
-                    if (finish.startsWith("?") || finish.startsWith("\"") || finish.startsWith("'")) {
-                        finish = finish.slice(1).trim();
-                    }
-                    let fmm = "There is no one definitive answer to this question.";
-                    let fmm1 = "There is no one answer to this question as";
-                    let fmm2 = "There is no one-size-fits-all answer to this question,";
-                    if (finish.startsWith(fmm)) {
-                        finish = finish.substring(fmm.length + 1);
-                        log("The finish output contains " + fmm)
-                    } else if (finish.startsWith(fmm1)) {
-                        finish = finish.substring(fmm1.length + 1);
-                        log("The finish output contains " + fmm1)
-                    } else if (finish.startsWith(fmm2)) {
-                        finish = finish.substring(fmm2.length + 1);
-                        log("The finish output contains " + fmm2)
-                    }
                     let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
                     qaLIST.push([text, finalDataCC, event.messageID])
                     sendMessage(api, event, finalDataCC);
@@ -3729,6 +3714,21 @@ function getSuffix(i) {
     return i + "th";
 }
 
+function otherQ(query) {
+    let sqq = ["in", "having", "an", "do", "does", "with", "are you", "was", "the", "as far", "can you", "a", "did"];
+    for (let i = 0; i < sqq.length; i++) {
+        if (query.startsWith(sqq[i] + " ") && query.split(" ").length < 3 || (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function nonNN(api, event, query) {
+    if (event.type == "message" || (event.type == "message_reply" && (event.messageReply.senderID == myAccountId))) {
+        
+    }
+}
 
 async function getMusic(query) {
     var songs = fetch(query);
