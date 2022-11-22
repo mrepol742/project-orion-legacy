@@ -946,32 +946,42 @@ async function ai(api, event) {
                     return;
                 } else {
                     await wait(3000);
-                    let complextion = settings.text_complextion;
-                    let max = parseInt(settings.max_tokens);
-                    let api = apiKey[2];
-                    if (query.startsWith("searchcode")) {
-                        complextion = "code-davinci-edit-001";
-                        max = 0;
-                        api = apiKey[5];
-                    }
                     const configuration = new Configuration({
-                        apiKey: api,
+                        apiKey: apiKey[2],
+                    });
+                    const configurationA = new Configuration({
+                        apiKey: apiKey[5],
                     });
                     const openai = new OpenAIApi(configuration);
-                    const {
-                        data
-                    } = await openai.createCompletion(complextion, {
-                        prompt: text,
-                        temperature: parseInt(settings.temperature),
-                        max_tokens: max,
-                        top_p: parseInt(settings.probability_mass),
-                        frequency_penalty: parseInt(settings.frequency_penalty),
-                        presence_penalty: parseInt(settings.presence_penalty),
-                    });
-                    let finish = data.choices[0].text;
-                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
-                    qaLIST.push([text, finalDataCC, event.messageID])
-                    sendMessage(api, event, finalDataCC);
+                    const openaiA = new OpenAIApi(configurationA);
+                    if (!query.startsWith("searchcode")) {
+                        const {
+                            data
+                        } = await openai.createCompletion(settings.text_complextion, {
+                            prompt: text,
+                            temperature: parseInt(settings.temperature),
+                            max_tokens: parseInt(settings.max_tokens),
+                            top_p: parseInt(settings.probability_mass),
+                            frequency_penalty: parseInt(settings.frequency_penalty),
+                            presence_penalty: parseInt(settings.presence_penalty),
+                        });
+                        let finish = data.choices[0].text;
+                        let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
+                        qaLIST.push([text, finalDataCC, event.messageID])
+                        sendMessage(api, event, finalDataCC);
+                    } else {
+                        const {
+                            data
+                        } = await openaiA.createEdit(({
+                            model: "code-davinci-edit-001",
+                            input: text,
+                            instruction: "",
+                            temperature: 0,
+                            top_p: 1,
+                           });
+                        let finish = data.choices[0].text;
+                        sendMessage(api, event, finish);
+                    }
                 }
             }
         } else if (query.startsWith("problem")) {
