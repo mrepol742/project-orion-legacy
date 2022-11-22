@@ -804,7 +804,7 @@ async function ai(api, event) {
         } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
             ((query.startsWith("search") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1) ||
-                otherQ(query)) {
+                otherQ(query2)) {
             if (isGoingToFast(event)) {
                 return;
             }
