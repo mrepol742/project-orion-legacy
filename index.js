@@ -3717,7 +3717,7 @@ function getSuffix(i) {
 function otherQ(query) {
     let sqq = ["in", "having", "an", "do", "does", "with", "are you", "was", "the", "as far", "can you", "a", "did"];
     for (let i = 0; i < sqq.length; i++) {
-        if (query.startsWith(sqq[i] + " ") && query.split(" ").length < 3 || (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
+        if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 3 || (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
             return true;
         }
     }
