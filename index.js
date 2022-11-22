@@ -343,10 +343,7 @@ login({
                         msgs[event.messageID] = ['vm', event.attachments[0].url]
                     }
                 } else {
-                    msgs[event.messageID] = event.body
-                    if (event.senderID == getMyId()) {
-                        log(event.body);
-                    }
+                    msgs[event.messageID] = event.body;
                     let nonSS = event.body;
                     if (nonSS == "isDebugEnabled") {
                         if (vips.includes(event.senderID)) {
@@ -701,19 +698,23 @@ login({
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (gc.isGroup) {
-                                let arr = gc.participantIDs;
-                                let Tmem = arr.length;
                                 let gname = gc.threadName;
                                 let i = 0;
-                                while (!(event.logMessageData.addedParticipants.length[i] === "undefined")) {
+                                while (true) {
+                                    if (event.logMessageData.addedParticipants[i] === undefined) {
+                                        break;
+                                    }
                                     let name = event.logMessageData.addedParticipants[i].fullName;
                                     let id = event.logMessageData.addedParticipants[i].userFbId;
+                                    let arr = gc.participantIDs;
+                                    let Tmem = arr.length;
                                     console.log("new_member " + id + " " + name )
-                                    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
+                                    let num = i;
+                                    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome" + num + ".jpg"))
                                         .on('finish', () => {
                                         let message = {
                                             body: "Welcome @" + name + ". You're the " + getSuffix(Tmem) + " member of this group.",
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome.jpg"),
+                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome" + num + ".jpg"),
                                             mentions: [{
                                                 tag: name,
                                                 id: id
@@ -723,24 +724,6 @@ login({
                                     })
                                     i++;
                                 }
-                                /*
-                                let arr = gc.participantIDs;
-                                let Tmem = arr.length;
-                                let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + getSuffix(Tmem) +` member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
-
-                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
-                                    .on('finish', () => {
-                                        let message = {
-                                            body: `Welcome @${event.logMessageData.addedParticipants[0].fullName}. You're the ` + Tmem + `th member of this group.`,
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome.jpg"),
-                                            mentions: [{
-                                                tag: event.logMessageData.addedParticipants[0].fullName,
-                                                id: event.logMessageData.addedParticipants[0].userFbId
-                                            }]
-                                        };
-                                        sendMessageOnly(api, event, message);
-                                    })
-                                    */
                             }
                         })
                         break;
@@ -785,12 +768,6 @@ function wait(ms) {
         log("wait_timeout >> " + ms);
         setTimeout(resolve, ms);
     });
-}
-
-function wait(api, event, ms) {
-    api.sendTypingIndicator(event.threadID, (err) => {
-
-    })
 }
 
 async function ai(api, event) {
