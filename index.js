@@ -23,18 +23,6 @@ const google = require('googlethis');
 
 log("The Project Orion is now active and waiting for commands execution. ONLINE")
 
-let msgs = {};
-let cmd = {};
-let emo = {};
-let vips = [
-    "100071743848974",
-    "100016029218667",
-    "100077318906152",
-    "100037131918629",
-    // felipe santiago
-    "100008664752303",
-    "100049247221868"
-];
 let sleep = [5000, 6000, 5500, 6500, 7000, 6800, 5800, 5200, 7200, 6600, 5200, 6300, 5400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?"];
@@ -47,16 +35,23 @@ let goodmo = ["Good morning too... Have a great day ahead, and always don't forg
 let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
 let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
 let tips = ["Be detailed but brief", "Ask me like Who are you?", "Ask me like How to do this?"]
-let qaLIST = [];
+let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there"];
+let saveAns = [];
 let threads = ""
 let threadIdMV = {};
 let nonRRR = {};
-
-let myAccountId = "100071743848974";
-let myOtherId = "100016029218667";
-let myGirlAccountId = "100077318906152";
-let techhJork = "100037131918629";
-
+let msgs = {};
+let cmd = {};
+let emo = {};
+let vips = [
+    "100071743848974",
+    "100016029218667",
+    "100077318906152",
+    "100037131918629",
+    // felipe santiago
+    "100008664752303",
+    "100049247221868"
+];
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
     "There is an equal and opposite reaction for every action.",
@@ -281,7 +276,7 @@ login({
         let A = api.getAppState();
         let B = JSON.stringify(A);
         fs.writeFileSync("fb.json", B, "utf8");
-        api.sendMessage("Project Orion Facebook State Refreshed", myAccountId)
+        api.sendMessage("Project Orion Facebook State Refreshed", getMyId())
         log("Project Orion Facebook State Refreshed")
     });
 
@@ -295,7 +290,24 @@ login({
 
         if (err) return log(err);
 
-        if (settings.isEnabled && (event.type == "message" || event.type == "message_reply")) {
+        if (event.type == "message") {
+            let nonSS = event.body;
+            if (nonSS == "isEnabled") {
+                if (vips.includes(event.senderID)) {
+                    settings.isEnabled = true;
+                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    sendMessage(api, event, "Hello");
+                    }
+            } else if (nonSS == "isDisabled") {
+                if (vips.includes(event.senderID)) {
+                    settings.isEnabled = false;
+                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    sendMessage(api, event, "Bye bye.");
+                }
+            }
+        }
+
+        if (settings.isEnabled && (event.type == "message" || event.type == "message_reply") && event.senderID == vips[0]) {
             return;
         }
 
@@ -332,23 +344,11 @@ login({
                     }
                 } else {
                     msgs[event.messageID] = event.body
-                    if (event.senderID == myAccountId) {
+                    if (event.senderID == getMyId()) {
                         log(event.body);
                     }
                     let nonSS = event.body;
-                    if (nonSS == "isEnabled") {
-                        if (vips.includes(event.senderID)) {
-                            settings.isEnabled = true;
-                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                            sendMessage(api, event, "Hello");
-                        }
-                    } else if (nonSS == "isDisabled") {
-                        if (vips.includes(event.senderID)) {
-                            settings.isEnabled = false;
-                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                            sendMessage(api, event, "Bye bye.");
-                        }
-                    } else if (nonSS == "isDebugEnabled") {
+                    if (nonSS == "isDebugEnabled") {
                         if (vips.includes(event.senderID)) {
                             settings.isDebugEnabled = true;
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
@@ -361,14 +361,13 @@ login({
                             sendMessage(api, event, "Konnichiwa i am back.");
                         }
                     } 
-
                     const emo = /\p{Extended_Pictographic}/ug;
-                    if (!event.body.replace(emo, '').length) {
+                    if (!nonSS.replace(emo, '').length) {
                         if (isGoingToFastResendingOfEmo(event)) {
                             break;
                         }
                         await wait(4000);
-                        sendMessageOnly(api, event, event.body);
+                        sendMessageOnly(api, event, nonSS);
                         break;
                     }
                     ai(api, event);
@@ -510,7 +509,7 @@ login({
                 }
                 break;
             case "message_unsend":
-                if (event.senderID == myAccountId) {
+                if (event.senderID == getMyId()) {
                     break;
                 }
                 let d = msgs[event.messageID];
@@ -702,7 +701,29 @@ login({
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (gc.isGroup) {
-                                console.log(event.logMessageData.addedParticipants);
+                                let arr = gc.participantIDs;
+                                let Tmem = arr.length;
+                                let gname = gc.threadName;
+                                let i = 0;
+                                while (!(event.logMessageData.addedParticipants.length[i] === "undefined")) {
+                                    let name = event.logMessageData.addedParticipants[i].fullName;
+                                    let id = event.logMessageData.addedParticipants[i].userFbId;
+                                    console.log("new_member " + id + " " + name )
+                                    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
+                                        .on('finish', () => {
+                                        let message = {
+                                            body: "Welcome @" + name + ". You're the " + getSuffix(Tmem) + " member of this group.",
+                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome.jpg"),
+                                            mentions: [{
+                                                tag: name,
+                                                id: id
+                                            }]
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                    })
+                                    i++;
+                                }
+                                /*
                                 let arr = gc.participantIDs;
                                 let Tmem = arr.length;
                                 let url = `https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=${event.logMessageData.addedParticipants[0].fullName}&text2=Welcome+To+${gc.threadName}&text3=You're the ` + getSuffix(Tmem) +` member&avatar=` + getProfilePic(event.logMessageData.addedParticipants[0].userFbId);
@@ -719,6 +740,7 @@ login({
                                         };
                                         sendMessageOnly(api, event, message);
                                     })
+                                    */
                             }
                         })
                         break;
@@ -765,6 +787,12 @@ function wait(ms) {
     });
 }
 
+function wait(api, event, ms) {
+    api.sendTypingIndicator(event.threadID, (err) => {
+
+    })
+}
+
 async function ai(api, event) {
     if (event.body != null) {
         let input = event.body;
@@ -807,12 +835,14 @@ async function ai(api, event) {
             }
         } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
             ((query.startsWith("search") || query.startsWith("searchcode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
-                query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 1) ||
+                query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 2) ||
                 otherQ(query2)) {
             if (isGoingToFast(event)) {
                 return;
             }
-            if (input.split(" ").length < 2) {
+            if (event.type == "message_reply" && !isMyId(event.messageReply.senderID)) {
+                return;
+            } else if (input.split(" ").length < 2) {
                 if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
                     if (nonRRR[event.senderID] == undefined) {
                         let message = {
@@ -825,9 +855,6 @@ async function ai(api, event) {
                         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
                     }
                 }
-            } else if (event.type == "message_reply" && (event.messageReply.senderID != myAccountId || 
-                event.messageReply.senderID != myAccountId)) {
-                    return;
             } else {
                 let text = input;
                 if (query.startsWith("repol")) {
@@ -949,13 +976,13 @@ async function ai(api, event) {
                 } else {
                     await wait(3000);
                     if (!query.startsWith("searchcode")) {
-                        const configuration = new Configuration({
+                        const config = new Configuration({
                             apiKey: apiKey[2],
                         });
-                        const openai = new OpenAIApi(configuration);
+                        const ai = new OpenAIApi(config);
                         const {
                             data
-                        } = await openai.createCompletion(settings.text_complextion, {
+                        } = await ai.createCompletion(settings.text_complextion, {
                             prompt: text,
                             temperature: parseInt(settings.temperature),
                             max_tokens: parseInt(settings.max_tokens),
@@ -965,24 +992,25 @@ async function ai(api, event) {
                         });
                         let finish = data.choices[0].text;
                         let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
-                        qaLIST.push([text, finalDataCC, event.messageID])
+                        if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
+                            finalDataCC = finalDataCC.slice(1);
+                        }
+                        saveAns.push([text, finalDataCC, event.messageID])
                         sendMessage(api, event, finalDataCC);
                     } else {
-                        const configurationA = new Configuration({
+                        const config = new Configuration({
                             apiKey: apiKey[5],
                         });
-                        const openaiA = new OpenAIApi(configurationA);
+                        const ai = new OpenAIApi(config);
                         const {
-                            data
-                        } = await openaiA.createEdit({
-                            model: "code-davinci-edit-001",
+                            data 
+                        } = await ai.createEdit("code-davinci-edit-001", {
                             input:  text,
                             instruction: "",
                             temperature: 0,
                             top_p: 1,
-                           });
-                        let finish = data.choices[0].text;
-                        sendMessage(api, event, finish);
+                        });
+                        sendMessage(api, event, data.choices[0].text);
                     }
                 }
             }
@@ -1063,7 +1091,7 @@ async function ai(api, event) {
             if (event.type == "message") {
                 id = event.senderID;
             } else {
-                if (event.messageReply.senderID == myAccountId || event.messageReply.senderID == myOtherId) {
+                if (isMyId(event.messageReply.senderID)) {
                     id = event.senderID;
                 } else {
                     id = event.messageReply.senderID;
@@ -2290,7 +2318,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     let sender = event.send
@@ -2335,7 +2363,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun.png");
@@ -2357,7 +2385,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted.png");
@@ -2379,7 +2407,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown.png");
@@ -2401,7 +2429,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip.png");
@@ -2423,7 +2451,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist.png");
@@ -2445,7 +2473,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert.png");
@@ -2467,7 +2495,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover.png");
@@ -2489,7 +2517,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail.png");
@@ -2511,7 +2539,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert.png");
@@ -2534,9 +2562,9 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor example:\nship @Melvin Jones Repol @Alexa Guno")
                         return;
                     }
-                    if (id1 == myAccountId || id1 == myOtherId) {
+                    if (isMyId(id1)) {
                         id1 = event.senderID;
-                    } else if (id2 == myAccountId || id2 == myOtherId) {
+                    } else if (isMyId(id2)) {
                         id2 = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/ship?user1=" + getProfilePic(id1) + "&user2=" + getProfilePic(id2), __dirname + "/cache/images/ship.png");
@@ -2559,9 +2587,9 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor example:\nwww @Melvin Jones Repol @Alexa Guno")
                         return;
                     }
-                    if (id1 == myAccountId || id1 == myOtherId) {
+                    if (isMyId(id1)) {
                         id1 = event.senderID;
-                    } else if (id2 == myAccountId || id2 == myOtherId) {
+                    } else if (isMyId(id2)) {
                         id2 = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/whowouldwin?image1=" + getProfilePic(id1) + "&image2=" + getProfilePic(id2), __dirname + "/cache/images/www.png");
@@ -2583,7 +2611,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet.png");
@@ -2605,7 +2633,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm.png");
@@ -2627,7 +2655,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale.png");
@@ -2649,7 +2677,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover.png");
@@ -2671,7 +2699,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur.png");
@@ -2693,7 +2721,7 @@ async function ai(api, event) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
                         return;
                     }
-                    if (id == myAccountId || id == myOtherId) {
+                    if (isMyId(id)) {
                         id = event.senderID;
                     }
                     api.getUserInfo(id, async (err, ret) => {
@@ -2931,6 +2959,10 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + text, __dirname + '/cache/images/oogway.png');
             }
         } else if (query.startsWith("animensfw")) {
+            if (nsfw(query)) {
+                sendMessage(api, event, "There are kids!!!");
+                return;
+            }
             if (isGoingToFast(event)) {
                 return;
             }
@@ -3312,7 +3344,7 @@ async function ai(api, event) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (gc.isGroup) {
                 if (event.type == "message_reply") {
-                    if (event.messageReply.senderID == myAccountId) {
+                    if (event.messageReply.senderID == getMyId()) {
                         someR(api, event, query);
                     }
                 } else {
@@ -3444,7 +3476,7 @@ function parseImage(api, event, url, dir) {
 
 function reportIssue(api, event, err) {
     log("report_issue " + err);
-    api.sendMessage(err + "", myAccountId);
+    api.sendMessage(err + "", getMyId());
 }
 
 async function sendMessage(api, event, message) {
@@ -3461,7 +3493,7 @@ async function sendMessage(api, event, message) {
                 if (ts != undefined) history.pop();
                 let test = [];
                 for (let i = 0; i < history.length; i++) {
-                    if (history[i].senderID != myAccountId) {
+                    if (history[i].senderID != getMyId()) {
                         test[i] = history[i].senderID;
                         log(test[i])
                     } else {
@@ -3540,16 +3572,16 @@ function isGoingToFast(event) {
 }
 
 function isGoingToFastResendingOfEmo(event) {
-    if (!(event.senderID in emo)) {
-        emo[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 2);
+    if (!(event.threadID in emo)) {
+        emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
-    } else if (Math.floor(Date.now() / 1000) < emo[event.senderID]) {
-        log("The user " + event.senderID + " is going to fast of sending emoji >> " +
-            Math.floor((emo[event.senderID] - Math.floor(Date.now() / 1000)) / 60 * 2) + " mins and " +
-            (emo[event.senderID] - Math.floor(Date.now() / 1000)) % 60 * 2 + " seconds");
+    } else if (Math.floor(Date.now() / 1000) < emo[event.threadID]) {
+        log("The user " + event.threadID + " is going to fast of sending emoji >> " +
+            Math.floor((emo[event.threadID] - Math.floor(Date.now() / 1000)) / 60 * 2) + " mins and " +
+            (emo[event.threadID] - Math.floor(Date.now() / 1000)) % 60 * 2 + " seconds");
         return true;
     } else {
-        emo[event.senderID] = Math.floor(Date.now() / 1000) + (60 * 2);
+        emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
     }
 }
@@ -3633,7 +3665,7 @@ function isFileExists(path) {
 function nsfw(text) {
     return (text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") ||
         text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny") ||
-        text.includes("blowjob") || text.includes("lolli")) && settings.onNsfw;
+        text.includes("blowjob") || text.includes("lolli")) && !settings.onNsfw;
 }
 
 function getProfilePic(id) {
@@ -3737,7 +3769,6 @@ function getSuffix(i) {
 }
 
 function otherQ(query) {
-    let sqq = ["in", "having", "an", "do", "does", "with", "are you", "was", "the", "as far", "can you", "a", "did"];
     for (let i = 0; i < sqq.length; i++) {
         if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 3 || (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
             return true;
@@ -3747,9 +3778,21 @@ function otherQ(query) {
 }
 
 function nonNN(api, event, query) {
-    if (event.type == "message" || (event.type == "message_reply" && (event.messageReply.senderID == myAccountId))) {
+    if (event.type == "message" || (event.type == "message_reply" && (isMyId(event.messageReply.senderID)))) {
         
     }
+}
+
+function isMyId(id) {
+    return id == "100071743848974" || id == "100016029218667";
+}
+
+function getMyId() {
+    return "100071743848974";
+}
+
+function getWelcomeImage(name, gname, Tmem, id) {
+    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + name + "&text2=Welcome+To+" + gname + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
 }
 
 async function getMusic(query) {
