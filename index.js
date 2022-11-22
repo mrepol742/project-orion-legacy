@@ -974,7 +974,7 @@ async function ai(api, event) {
                             data
                         } = await openaiA.createEdit({
                             model: "code-davinci-edit-001",
-                            input: text,
+                            input:  "/* "+ text +" */",
                             instruction: "",
                             temperature: 0,
                             top_p: 1,
