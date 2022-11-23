@@ -3654,7 +3654,7 @@ function getProfilePicFullHD(id) {
 }
 
 function isMe(query) {
-    return query.includes("melvinjonesrepol") || query.includes("melvinjones") || query.includes("melvinjonesgallanorepol") ||
+    return query.includes("melvin jones repol") || query.includes("melvin jones") || query.includes("melvin jones gallano repol") ||
         query.includes("mj") || query.includes("mrepol742");
 }
 
