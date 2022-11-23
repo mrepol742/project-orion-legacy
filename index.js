@@ -817,9 +817,12 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            if (event.type == "message_reply" && !isMyId(event.messageReply.senderID)) {
-                return;
-            } else if (input.split(" ").length < 2) {
+            if (event.type == "message_reply") {
+                if (!isMyId(event.messageReply.senderID)) {
+                    return;
+                }
+            } 
+            if (input.split(" ").length < 2) {
                 if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
                     if (nonRRR[event.senderID] == undefined) {
                         let message = {
