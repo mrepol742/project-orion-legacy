@@ -363,7 +363,7 @@ login({
                         if (isGoingToFastResendingOfEmo(event)) {
                             break;
                         }
-                        await wait(4000);
+                        await wait(5000);
                         sendMessageOnly(api, event, nonSS);
                         break;
                     }
@@ -707,7 +707,7 @@ login({
                                     let name = event.logMessageData.addedParticipants[i].fullName;
                                     let id = event.logMessageData.addedParticipants[i].userFbId;
                                     let arr = gc.participantIDs;
-                                    let Tmem = arr.length;
+                                    let Tmem = arr.length - i;
                                     console.log("new_member " + id + " " + name )
                                     let num = i;
                                     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome" + num + ".jpg"))
