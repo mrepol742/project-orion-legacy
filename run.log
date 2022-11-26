@@ -14647,3 +14647,1497 @@ We tried switching to voice call and then back to video call, but that didn't he
 11/26/2022 6:00:00 AM$ Project Orion Facebook State Refreshed
 11/26/2022 6:00:33 AM$ send_message 100016029218667 Bye bye.
 11/26/2022 6:00:45 AM$ send_message 100016029218667 Hello World
+11/26/2022 12:02:39 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:5000
+>> http://localhost:6000
+11/26/2022 12:02:42 PM$ wait_timeout >> 6500
+11/26/2022 12:02:49 PM$ react_message mid.$gABipy5K1RKyK419QXWEshn3eEIBB :laughing:
+11/26/2022 12:02:55 PM$ wait_timeout >> 6500
+11/26/2022 12:02:59 PM$ wait_timeout >> 5500
+11/26/2022 12:03:01 PM$ react_message mid.$gABipy5K1RKyK41-FOGEshopv21HD :laughing:
+11/26/2022 12:03:04 PM$ react_message mid.$gABipy5K1RKyK41-WQ2EshpPE3O_Y :laughing:
+11/26/2022 12:03:31 PM$ wait_timeout >> 5000
+11/26/2022 12:03:36 PM$ react_message mid.$gABipy5K1RKyK42ARxmEshq4wpdmt :laughing:
+11/26/2022 12:03:40 PM$ wait_timeout >> 6000
+11/26/2022 12:03:46 PM$ react_message mid.$gABipy5K1RKyK42A30GEshrcVayvg :laughing:
+11/26/2022 12:04:05 PM$ wait_timeout >> 5400
+11/26/2022 12:04:10 PM$ react_message mid.$gABipy5K1RKyK42CWjWEshs9zru-d :laughing:
+11/26/2022 12:10:31 PM$ wait_timeout >> 7000
+11/26/2022 12:10:38 PM$ react_message mid.$gABipy5K1RKyK42Z6nGEsiEzXKUTV :laughing:
+11/26/2022 12:11:32 PM$ wait_timeout >> 6500
+11/26/2022 12:11:38 PM$ react_message mid.$gABipy5K1RKyK42dpJ2EsiIHyYPfk :laughing:
+11/26/2022 12:12:45 PM$ wait_timeout >> 7000
+11/26/2022 12:12:52 PM$ react_message mid.$gABipy5K1RKyK42iGK2EsiI_A3AdF :laughing:
+11/26/2022 12:14:56 PM$ wait_timeout >> 5800
+11/26/2022 12:15:02 PM$ react_message mid.$gABipy5K1RKyK42qICWEsiUddgH2e :laughing:
+11/26/2022 12:18:44 PM$ wait_timeout >> 5800
+11/26/2022 12:18:50 PM$ react_message mid.$gABipy5K1RKyK424AuWEsig_AaGDG :laughing:
+11/26/2022 12:19:25 PM$ wait_timeout >> 6800
+11/26/2022 12:19:31 PM$ react_message mid.$gABipy5K1RKyK426gfWEsilZR1evo :laughing:
+11/26/2022 12:19:40 PM$ wait_timeout >> 6600
+11/26/2022 12:19:47 PM$ react_message mid.$gABipy5K1RKyK427b0mEsill0wPSo :laughing:
+11/26/2022 12:20:02 PM$ wait_timeout >> 5000
+11/26/2022 12:20:07 PM$ send_message 7244767385593438 🥴
+11/26/2022 12:21:05 PM$ wait_timeout >> 6800
+11/26/2022 12:21:11 PM$ react_message mid.$gABipy5K1RKyK43AmxWEsirBIQ878 :laughing:
+11/26/2022 12:21:30 PM$ wait_timeout >> 6600
+11/26/2022 12:21:37 PM$ react_message mid.$gABipy5K1RKyK43CKZGEsisKZSZ2r :laughing:
+11/26/2022 12:21:42 PM$ wait_timeout >> 5800
+11/26/2022 12:21:48 PM$ 100087874545472
+11/26/2022 12:21:48 PM$ 100037131918629
+11/26/2022 12:21:48 PM$ send_message_reply 7244767385593438 Hello po.
+11/26/2022 12:21:48 PM$ react_message mid.$gABipy5K1RKyK43C6l2EsithiRVoe :laughing:
+11/26/2022 12:22:25 PM$ wait_timeout >> 6300
+11/26/2022 12:22:31 PM$ react_message mid.$gABipy5K1RKyK43FgW2EsiwZGdss1 :laughing:
+11/26/2022 12:22:39 PM$ wait_timeout >> 5000
+11/26/2022 12:22:44 PM$ react_message mid.$gABm9E9p_pl6K43GWCmEsiw8ria4i :laughing:
+11/26/2022 12:22:46 PM$ wait_timeout >> 6000
+11/26/2022 12:22:52 PM$ react_message mid.$gABm9E9p_pl6K43Gz0GEsixSKpJuP :laughing:
+11/26/2022 12:24:04 PM$ wait_timeout >> 6600
+11/26/2022 12:24:05 PM$ wait_timeout >> 7000
+11/26/2022 12:24:10 PM$ react_message mid.$gABm9E9p_pl6K43LjBmEsi2adQdD4 :laughing:
+11/26/2022 12:24:12 PM$ react_message mid.$gABipy5K1RKyK43Lno2Esi2gfvZMR :laughing:
+11/26/2022 12:24:45 PM$ wait_timeout >> 5200
+11/26/2022 12:24:50 PM$ react_message mid.$gABipy5K1RKyK43OBlGEsi4DiWM3X :laughing:
+11/26/2022 12:24:54 PM$ wait_timeout >> 6000
+11/26/2022 12:25:00 PM$ react_message mid.$gABipy5K1RKyK43OnZWEsi31LbZFv :laughing:
+11/26/2022 12:25:03 PM$ wait_timeout >> 5000
+11/26/2022 12:25:08 PM$ react_message mid.$gABipy5K1RKyK43PKxGEsi5LRgs3w :laughing:
+11/26/2022 12:25:33 PM$ wait_timeout >> 6500
+11/26/2022 12:25:40 PM$ react_message mid.$gABipy5K1RKyK43Q_1mEsi72EuhCO :laughing:
+11/26/2022 12:26:22 PM$ wait_timeout >> 5500
+11/26/2022 12:26:27 PM$ react_message mid.$gABipy5K1RKyK43T9hWEsi-2W1W9C :laughing:
+11/26/2022 12:26:32 PM$ wait_timeout >> 5400
+11/26/2022 12:26:37 PM$ react_message mid.$gABipy5K1RKyK43UlZmEsi-8RQ_6u :laughing:
+11/26/2022 12:26:43 PM$ wait_timeout >> 6500
+11/26/2022 12:26:50 PM$ react_message mid.$gABipy5K1RKyK43VS6mEsi_6I4scV :laughing:
+11/26/2022 12:27:04 PM$ wait_timeout >> 6500
+11/26/2022 12:27:11 PM$ react_message mid.$gABipy5K1RKyK43WjzWEsjBIIt48a :laughing:
+11/26/2022 12:30:21 PM$ wait_timeout >> 5800
+11/26/2022 12:30:26 PM$ react_message mid.$gABipy5K1RKyK43iikGEsjNYkP-ue :laughing:
+11/26/2022 12:30:45 PM$ wait_timeout >> 6800
+11/26/2022 12:30:52 PM$ react_message mid.$gABipy5K1RKyK43kCKmEsjO6z8mZi :laughing:
+11/26/2022 12:31:15 PM$ wait_timeout >> 7200
+11/26/2022 12:31:23 PM$ react_message mid.$gABipy5K1RKyK43l5C2EsjQxtAbwl :laughing:
+11/26/2022 12:33:08 PM$ event_body 100037131918629 Give me that data
+11/26/2022 12:33:08 PM$ wait_timeout >> 3000
+11/26/2022 12:33:15 PM$ 100037131918629
+11/26/2022 12:33:15 PM$ 100037131918629
+11/26/2022 12:33:15 PM$ send_message 7244767385593438 The data you requested is as follows:
+1. The average age of users of the site is 35.
+2. The average number of pages viewed per visit is 2.5.
+3. The average time spent on the site is 3 minutes and 20 seconds.
+11/26/2022 12:33:52 PM$ wait_timeout >> 7000
+11/26/2022 12:33:59 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 12:34:08 PM$ wait_timeout >> 5200
+11/26/2022 12:34:13 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 12:35:17 PM$ wait_timeout >> 6500
+11/26/2022 12:35:24 PM$ react_message mid.$gABipy5K1RKyK430qVWEsjfVuPko1 :laughing:
+11/26/2022 12:35:27 PM$ event_body 100016029218667 anime waifu
+11/26/2022 12:35:27 PM$ response_data https://api.waifu.pics/sfw/waifu
+11/26/2022 12:35:27 PM$ wait_timeout >> 1000
+11/26/2022 12:35:28 PM$ parse_image https://i.waifu.pics/pojy7zt.jpg
+11/26/2022 12:35:29 PM$ 100008813820978
+11/26/2022 12:35:29 PM$ 100008813820978
+11/26/2022 12:35:29 PM$ 100016029218667
+11/26/2022 12:35:29 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 12:35:44 PM$ wait_timeout >> 5500
+11/26/2022 12:35:50 PM$ react_message mid.$gABipy5K1RKyK432RvWEsjgza5ciN :laughing:
+11/26/2022 12:36:37 PM$ wait_timeout >> 5800
+11/26/2022 12:36:43 PM$ react_message mid.$gABipy5K1RKyK435gD2EsjkGZ3dnu :laughing:
+11/26/2022 12:36:59 PM$ wait_timeout >> 6300
+11/26/2022 12:36:59 PM$ wait_timeout >> 7000
+11/26/2022 12:37:00 PM$ wait_timeout >> 6800
+11/26/2022 12:37:05 PM$ react_message mid.$gABipy5K1RKyK4361xmEsjluiAJLd :laughing:
+11/26/2022 12:37:06 PM$ 100008816107904
+11/26/2022 12:37:06 PM$ 100007918201091
+11/26/2022 12:37:06 PM$ send_message_reply 6942091245864108 🤣🤣🤣
+11/26/2022 12:37:07 PM$ react_message mid.$gABipy5K1RKyK4366j2Esjlw1HePi :laughing:
+11/26/2022 12:37:50 PM$ wait_timeout >> 5200
+11/26/2022 12:37:56 PM$ react_message mid.$gABipy5K1RKyK439_6WEsjo2HqapA :laughing:
+11/26/2022 12:38:04 PM$ wait_timeout >> 5800
+11/26/2022 12:38:10 PM$ react_message mid.$gABipy5K1RKyK43-2DmEsjpsOI92i :laughing:
+11/26/2022 12:38:24 PM$ event_body 100050993673646 What language vabyan ehehe
+11/26/2022 12:38:24 PM$ wait_timeout >> 3000
+11/26/2022 12:38:29 PM$ wait_timeout >> 7000
+11/26/2022 12:38:36 PM$ 100007918201091
+11/26/2022 12:38:36 PM$ 100050993673646
+11/26/2022 12:38:36 PM$ send_message_reply 6942091245864108 Vabyan is a constructed language created by YouTube user Saphirya.
+11/26/2022 12:49:48 PM$ wait_timeout >> 7000
+11/26/2022 12:49:55 PM$ 100057444813165
+11/26/2022 12:49:55 PM$ 100087874545472
+11/26/2022 12:49:55 PM$ 100080934841785
+11/26/2022 12:49:55 PM$ send_message_reply 7244767385593438 How are you?
+11/26/2022 12:51:28 PM$ wait_timeout >> 5800
+11/26/2022 12:51:33 PM$ react_message mid.$gABipy5K1RKyK44v3iGEskaS848zQ :laughing:
+11/26/2022 12:56:15 PM$ [object Object]
+11/26/2022 12:56:17 PM$ wait_timeout >> 5200
+11/26/2022 12:56:22 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 12:58:45 PM$ wait_timeout >> 5000
+11/26/2022 12:58:50 PM$ react_message mid.$gABipy5K1RKyK45Kk7WEsk0yYeAHI :laughing:
+11/26/2022 1:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 1:00:03 PM$ wait_timeout >> 6600
+11/26/2022 1:00:03 PM$ wait_timeout >> 5000
+11/26/2022 1:00:03 PM$ wait_timeout >> 6300
+11/26/2022 1:00:03 PM$ wait_timeout >> 7000
+11/26/2022 1:00:03 PM$ wait_timeout >> 5400
+11/26/2022 1:00:03 PM$ wait_timeout >> 6000
+11/26/2022 1:00:03 PM$ wait_timeout >> 6000
+11/26/2022 1:00:03 PM$ wait_timeout >> 7000
+11/26/2022 1:00:03 PM$ wait_timeout >> 5800
+11/26/2022 1:00:08 PM$ 100019443545963
+11/26/2022 1:00:08 PM$ 100033556681639
+11/26/2022 1:00:08 PM$ 100087874545472
+11/26/2022 1:00:08 PM$ send_message_reply 8119958531412014 Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water.
+11/26/2022 1:00:09 PM$ 100057444813165
+11/26/2022 1:00:09 PM$ 100087874545472
+11/26/2022 1:00:09 PM$ 100087874545472
+11/26/2022 1:00:09 PM$ send_message_reply 7244767385593438 Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.
+11/26/2022 1:00:09 PM$ send_message 7244767385593438 🥰😇
+11/26/2022 1:00:09 PM$ send_message 8119958531412014 🥰😇
+11/26/2022 1:00:09 PM$ send_message 6942091245864108 🥰😇
+11/26/2022 1:00:09 PM$ react_message mid.$gABipy5K1RKyK45PV1GEsk6KsvJjX :love:
+11/26/2022 1:00:10 PM$ react_message mid.$gABzZDyvbEC6K45PU9WEsk6LcyU8i :love:
+11/26/2022 1:00:10 PM$ react_message mid.$gABm9E9p_pl6K45PVBmEsk6KS4xnO :love:
+11/26/2022 1:00:11 PM$ 100050993673646
+11/26/2022 1:00:11 PM$ 100087874545472
+11/26/2022 1:00:11 PM$ send_message_reply 6942091245864108 Good afternoon too... It's quite hot now.. Always remember to stay hydrated.
+11/26/2022 1:01:21 PM$ wait_timeout >> 5400
+11/26/2022 1:01:26 PM$ react_message mid.$gABipy5K1RKyK45UFD2Esk-8Hz3kr :laughing:
+11/26/2022 1:01:49 PM$ wait_timeout >> 5200
+11/26/2022 1:01:54 PM$ react_message mid.$gABipy5K1RKyK45VyRWEslAo6zGBJ :laughing:
+11/26/2022 1:04:25 PM$ wait_timeout >> 5500
+11/26/2022 1:04:31 PM$ react_message mid.$gABipy5K1RKyK45fWa2EslKPDJ4Pv :laughing:
+11/26/2022 1:04:57 PM$ wait_timeout >> 6300
+11/26/2022 1:05:00 PM$ wait_timeout >> 6500
+11/26/2022 1:05:03 PM$ react_message mid.$gABipy5K1RKyK45hQt2EslL05gcej :laughing:
+11/26/2022 1:05:07 PM$ react_message mid.$gABipy5K1RKyK45heCWEslMUz-Eor :laughing:
+11/26/2022 1:05:21 PM$ wait_timeout >> 5800
+11/26/2022 1:05:26 PM$ react_message mid.$gABipy5K1RKyK45itcWEslNkh2fF6 :laughing:
+11/26/2022 1:05:41 PM$ wait_timeout >> 5000
+11/26/2022 1:05:46 PM$ react_message mid.$gABipy5K1RKyK45j9fGEslO0ftjOd :laughing:
+11/26/2022 1:07:19 PM$ wait_timeout >> 5500
+11/26/2022 1:07:24 PM$ react_message mid.$gABipy5K1RKyK45p8GWEslUqtBz3c :laughing:
+11/26/2022 1:07:42 PM$ wait_timeout >> 5200
+11/26/2022 1:07:47 PM$ react_message mid.$gABipy5K1RKyK45rWY2EslWNLMB8p :laughing:
+11/26/2022 1:09:24 PM$ wait_timeout >> 5400
+11/26/2022 1:09:25 PM$ event_body 100087874545472 An Entity Relationship Diagram (ERD) is a graphical representation of the relationships between entities in a database. An Information Schema is a database schema that contains information about the structure of a database.
+11/26/2022 1:09:29 PM$ react_message mid.$gABipy5K1RKyK45xjbmEslcasLfPB :laughing:
+11/26/2022 1:10:18 PM$ wait_timeout >> 5400
+11/26/2022 1:10:23 PM$ react_message mid.$gABipy5K1RKyK4502vWEslft0c357 :laughing:
+11/26/2022 1:10:29 PM$ wait_timeout >> 6300
+11/26/2022 1:10:35 PM$ react_message mid.$gABipy5K1RKyK451hj2EslgaWI1xS :laughing:
+new_member 100079281550444 Triggered Triggered
+11/26/2022 1:11:21 PM$ wait_timeout >> 7000
+11/26/2022 1:11:28 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 1:12:18 PM$ wait_timeout >> 7000
+11/26/2022 1:12:25 PM$ react_message mid.$gABipy5K1RKyK458L7mEslnCuITpM :laughing:
+11/26/2022 1:12:30 PM$ wait_timeout >> 5200
+11/26/2022 1:12:36 PM$ react_message mid.$gABipy5K1RKyK45883mEslnz4mmyx :laughing:
+11/26/2022 1:12:43 PM$ event_body 100050993673646 How hahaha
+11/26/2022 1:12:43 PM$ wait_timeout >> 5400
+11/26/2022 1:12:48 PM$ react_message mid.$gABipy5K1RKyK459sOWEslojTNSJq :laughing:
+11/26/2022 1:14:23 PM$ wait_timeout >> 5200
+11/26/2022 1:14:25 PM$ wait_timeout >> 5200
+11/26/2022 1:14:29 PM$ react_message mid.$gABipy5K1RKyK46D2DGEsltnOiqmB :laughing:
+11/26/2022 1:14:31 PM$ react_message mid.$gABipy5K1RKyK46D-MWEslu08HVmy :laughing:
+11/26/2022 1:14:39 PM$ wait_timeout >> 6600
+11/26/2022 1:14:46 PM$ react_message mid.$gABipy5K1RKyK46EysWEslvpgbu3L :laughing:
+11/26/2022 1:15:33 PM$ wait_timeout >> 6600
+11/26/2022 1:15:40 PM$ react_message mid.$gABipy5K1RKyK46IG62Esly96jPFU :laughing:
+11/26/2022 1:15:57 PM$ wait_timeout >> 7200
+11/26/2022 1:16:04 PM$ react_message mid.$gABipy5K1RKyK46JhsWEsl0Ybz70x :laughing:
+11/26/2022 1:16:07 PM$ wait_timeout >> 7200
+11/26/2022 1:16:07 PM$ wait_timeout >> 7000
+11/26/2022 1:16:08 PM$ wait_timeout >> 5500
+11/26/2022 1:16:13 PM$ react_message mid.$gABipy5K1RKyK46KM92Esl1D33XYx :laughing:
+11/26/2022 1:16:14 PM$ react_message mid.$gABipy5K1RKyK46KKumEsl0x_16vx :laughing:
+11/26/2022 1:16:16 PM$ 100023785687056
+11/26/2022 1:16:16 PM$ 100050993673646
+11/26/2022 1:16:16 PM$ send_message_reply 6942091245864108 😆😆
+11/26/2022 1:16:29 PM$ wait_timeout >> 5200
+11/26/2022 1:16:34 PM$ react_message mid.$gABipy5K1RKyK46LhqmEsl2YyxdOg :laughing:
+11/26/2022 1:16:50 PM$ wait_timeout >> 5000
+11/26/2022 1:16:55 PM$ react_message mid.$gABipy5K1RKyK46M0pWEsl3rcKWmY :laughing:
+11/26/2022 1:17:01 PM$ wait_timeout >> 7000
+11/26/2022 1:17:08 PM$ react_message mid.$gABipy5K1RKyK46Nc82Esl4TwTHub :laughing:
+11/26/2022 1:17:48 PM$ wait_timeout >> 6600
+11/26/2022 1:17:54 PM$ react_message mid.$gABipy5K1RKyK46QUZ2Esl7LnisGh :laughing:
+11/26/2022 1:19:17 PM$ wait_timeout >> 5800
+11/26/2022 1:19:23 PM$ react_message mid.$gABipy5K1RKyK46VwiWEsmAnZG9bA :laughing:
+11/26/2022 1:19:39 PM$ wait_timeout >> 7200
+11/26/2022 1:19:46 PM$ react_message mid.$gABipy5K1RKyK46XFvGEsmB8vUFn9 :laughing:
+11/26/2022 1:19:50 PM$ wait_timeout >> 5000
+11/26/2022 1:19:55 PM$ react_message mid.$gABipy5K1RKyK46XxPmEsmCd0ZY5a :laughing:
+11/26/2022 1:20:11 PM$ wait_timeout >> 5200
+11/26/2022 1:20:11 PM$ wait_timeout >> 5500
+11/26/2022 1:20:16 PM$ react_message mid.$gABipy5K1RKyK46ZDoGEsmD64DjtC :laughing:
+11/26/2022 1:20:17 PM$ 100023785687056
+11/26/2022 1:20:17 PM$ 100050993673646
+11/26/2022 1:20:17 PM$ 100027533053716
+11/26/2022 1:20:17 PM$ send_message_reply 6942091245864108 😂😂🤣🤣
+11/26/2022 1:22:17 PM$ wait_timeout >> 5200
+11/26/2022 1:22:22 PM$ react_message mid.$gABipy5K1RKyK46gvSmEsmLkEP0ak :laughing:
+11/26/2022 1:22:37 PM$ [object Object]
+11/26/2022 1:22:38 PM$ wait_timeout >> 5200
+11/26/2022 1:22:43 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 1:23:10 PM$ wait_timeout >> 7000
+11/26/2022 1:23:10 PM$ wait_timeout >> 6600
+11/26/2022 1:23:17 PM$ react_message mid.$gABipy5K1RKyK46j-iGEsmOzaMFqD :laughing:
+11/26/2022 1:23:17 PM$ 100023785687056
+11/26/2022 1:23:17 PM$ 100008816107904
+11/26/2022 1:23:17 PM$ send_message_reply 6942091245864108 hahahahhah
+11/26/2022 1:23:19 PM$ wait_timeout >> 5400
+11/26/2022 1:23:24 PM$ react_message mid.$gABipy5K1RKyK46khGGEsmPZ9MMQD :laughing:
+11/26/2022 1:27:03 PM$ wait_timeout >> 5500
+11/26/2022 1:27:08 PM$ send_message 5190020021066142 [object Object]
+11/26/2022 1:27:31 PM$ wait_timeout >> 5200
+11/26/2022 1:27:36 PM$ react_message mid.$gABipy5K1RKyK46z712EsmewzJakJ :laughing:
+11/26/2022 1:27:56 PM$ wait_timeout >> 6600
+11/26/2022 1:28:01 PM$ wait_timeout >> 5000
+11/26/2022 1:28:03 PM$ react_message mid.$gABipy5K1RKyK461dZ2EsmgWLZM6t :laughing:
+11/26/2022 1:28:06 PM$ wait_timeout >> 6500
+11/26/2022 1:28:12 PM$ send_message 6942091245864108 🤖
+11/26/2022 1:29:46 PM$ The user 6942091245864108 is going to fast of sending emoji >> 0 mins and 30 seconds
+11/26/2022 1:38:44 PM$ wait_timeout >> 5000
+11/26/2022 1:38:44 PM$ wait_timeout >> 7200
+11/26/2022 1:38:49 PM$ react_message mid.$gABJwS7O7mZ6K47c_dGEsnH0bpPCv :laughing:
+11/26/2022 1:38:51 PM$ 100010693996982
+11/26/2022 1:38:51 PM$ 100010693996982
+11/26/2022 1:38:51 PM$ 100010693996982
+11/26/2022 1:38:51 PM$ send_message 5190020021066142 😆
+11/26/2022 1:38:58 PM$ wait_timeout >> 5400
+11/26/2022 1:39:04 PM$ react_message mid.$gABJwS7O7mZ6K47d3n2EsnIq5A6Dt :laughing:
+11/26/2022 1:40:10 PM$ wait_timeout >> 6300
+11/26/2022 1:40:16 PM$ react_message mid.$gABJwS7O7mZ6K47iPSWEsnNCk1RJ8 :laughing:
+11/26/2022 1:40:51 PM$ event_body 100084145420981 Music Happy birthday
+11/26/2022 1:40:52 PM$ Downloading Happy Birthday song
+11/26/2022 1:40:52 PM$ Starting the download of music file.
+11/26/2022 1:40:53 PM$ Finish downloading music.
+11/26/2022 1:40:53 PM$ wait_timeout >> 6000
+11/26/2022 1:40:59 PM$ 100010693996982
+11/26/2022 1:40:59 PM$ 100084145420981
+11/26/2022 1:40:59 PM$ 100084145420981
+11/26/2022 1:40:59 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 1:48:20 PM$ event_body 100087874545472 🔎Searching for "mahika adie"...
+11/26/2022 1:53:25 PM$ wait_timeout >> 5000
+11/26/2022 1:53:30 PM$ send_message 100077318906152 🥵🥵🥵
+11/26/2022 1:53:53 PM$ react_message mid.$cAAAABtW1oyaK48UgJ2Esn_Ud0Wfp :laughing:
+11/26/2022 1:57:54 PM$ react_message mid.$cAAAABtW1oyaK48jMvmEsoOA7wx8e :laughing:
+11/26/2022 2:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 2:00:19 PM$ wait_timeout >> 7200
+11/26/2022 2:00:26 PM$ react_message mid.$gABJwS7O7mZ6K48sB02EsoW0knadt :laughing:
+11/26/2022 2:00:32 PM$ event_body 100084145420981 Kiss moko bilis
+11/26/2022 2:00:32 PM$ wait_timeout >> 5200
+11/26/2022 2:00:38 PM$ 100084145420981
+11/26/2022 2:00:38 PM$ 100022324327078
+11/26/2022 2:00:38 PM$ 100084145420981
+11/26/2022 2:00:38 PM$ send_message_reply 5190020021066142 Opps! I didnt get it. You should try using kiss @mention instead.
+
+For example:
+kiss @Melvin Jones Repol
+11/26/2022 2:05:27 PM$ wait_timeout >> 5500
+11/26/2022 2:05:27 PM$ wait_timeout >> 6000
+11/26/2022 2:05:32 PM$ react_message mid.$gABipy5K1RKyK48-1X2Esopp768wg :laughing:
+11/26/2022 2:05:33 PM$ 100011572356932
+11/26/2022 2:05:33 PM$ 100011572356932
+11/26/2022 2:05:33 PM$ 100011572356932
+11/26/2022 2:05:33 PM$ send_message 6942091245864108 🤣🤣🤣
+11/26/2022 2:07:35 PM$ wait_timeout >> 5200
+11/26/2022 2:07:35 PM$ wait_timeout >> 6500
+11/26/2022 2:07:40 PM$ react_message mid.$gABipy5K1RKyK49GoAmEsoxc0VooL :laughing:
+11/26/2022 2:07:42 PM$ 100011572356932
+11/26/2022 2:07:42 PM$ 100011572356932
+11/26/2022 2:07:42 PM$ 100023785687056
+11/26/2022 2:07:42 PM$ send_message 6942091245864108 🤣🤣hahaahhaha
+11/26/2022 2:07:42 PM$ event_body 100087874545472 🔎Searching for "genius"...
+11/26/2022 2:11:00 PM$ wait_timeout >> 5800
+11/26/2022 2:11:00 PM$ wait_timeout >> 5500
+11/26/2022 2:11:06 PM$ react_message mid.$gABipy5K1RKyK49TKNWEso-Bnfef3 :laughing:
+11/26/2022 2:11:06 PM$ 100023785687056
+11/26/2022 2:11:06 PM$ 100023785687056
+11/26/2022 2:11:06 PM$ 100069372241195
+11/26/2022 2:11:06 PM$ send_message 6942091245864108 hahaa😆🤣
+11/26/2022 2:11:14 PM$ wait_timeout >> 5800
+11/26/2022 2:11:20 PM$ react_message mid.$gABipy5K1RKyK49UA0WEso-4SkATA :laughing:
+11/26/2022 2:16:13 PM$ event_body 100037131918629 How you storing data and store similar utterances and parse response from that?
+11/26/2022 2:16:13 PM$ wait_timeout >> 3000
+11/26/2022 2:16:20 PM$ send_message 100037131918629 There is no one-size-fits-all answer to this question, as the best way to store data and parse responses will vary depending on the specific application and data set. However, some tips on how to store data and parse responses efficiently include using a database system such as MySQL or MongoDB, and using a parsing library such as NLTK or spaCy.
+11/26/2022 2:17:52 PM$ wait_timeout >> 7000
+11/26/2022 2:17:52 PM$ wait_timeout >> 6300
+11/26/2022 2:17:52 PM$ wait_timeout >> 5200
+11/26/2022 2:17:58 PM$ send_message 7244767385593438 🥰😇
+11/26/2022 2:17:59 PM$ 100087874545472
+11/26/2022 2:17:59 PM$ 100016897632316
+11/26/2022 2:17:59 PM$ send_message_reply 7244767385593438 Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water.
+11/26/2022 2:17:59 PM$ react_message mid.$gABm9E9p_pl6K49sT62EspXLcyG2t :love:
+11/26/2022 2:22:57 PM$ event_body 100087874545472 🔎Searching for "sia-unstoppable"...
+11/26/2022 2:29:26 PM$ event_body 100087874545472 🔎Searching for "enemy"...
+11/26/2022 2:30:13 PM$ wait_timeout >> 5000
+11/26/2022 2:30:18 PM$ wait_timeout >> 6300
+11/26/2022 2:30:25 PM$ send_message 7244767385593438 🥴
+11/26/2022 2:30:36 PM$ react_message mid.$cAAAABtW1oyaK4-a82WEsqFxNdtBg :laughing:
+11/26/2022 2:31:09 PM$ event_body 100064918833822 Music numb
+11/26/2022 2:31:10 PM$ event_body 100087874545472 A fuel cell is a device that converts chemical energy from a fuel into electricity through an electrochemical reaction of hydrogen and oxygen.
+11/26/2022 2:31:10 PM$ Downloading Numb [Official Music Video] - Linkin Park
+11/26/2022 2:31:10 PM$ Starting the download of music file.
+11/26/2022 2:31:11 PM$ Finish downloading music.
+11/26/2022 2:31:11 PM$ wait_timeout >> 7200
+11/26/2022 2:31:18 PM$ 100084145420981
+11/26/2022 2:31:18 PM$ 100064918833822
+11/26/2022 2:31:18 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 2:31:37 PM$ event_body 100087874545472 The memory address would be D. 03100H
+11/26/2022 2:33:55 PM$ event_body 100071451787437 Music Pilipina
+11/26/2022 2:33:56 PM$ Downloading Pilipina   GuthBen Duo X  Tyrone X SevenJC ( Official Music Video )
+11/26/2022 2:33:56 PM$ Starting the download of music file.
+11/26/2022 2:33:57 PM$ Finish downloading music.
+11/26/2022 2:33:57 PM$ wait_timeout >> 7200
+11/26/2022 2:34:04 PM$ 100064918833822
+11/26/2022 2:34:04 PM$ 100071451787437
+11/26/2022 2:34:04 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 2:35:54 PM$ wait_timeout >> 5200
+11/26/2022 2:35:59 PM$ react_message mid.$gABm9E9p_pl6K4-uUeWEsqY_f2nmf :laughing:
+11/26/2022 2:37:24 PM$ wait_timeout >> 5000
+11/26/2022 2:37:29 PM$ send_message 7244767385593438 [object Object]
+11/26/2022 2:37:42 PM$ wait_timeout >> 7200
+11/26/2022 2:37:49 PM$ react_message mid.$gABm9E9p_pl6K4-07CWEsqfvh1alu :laughing:
+11/26/2022 2:37:50 PM$ wait_timeout >> 6800
+11/26/2022 2:37:56 PM$ send_message 7244767385593438 [object Object]
+11/26/2022 2:41:25 PM$ event_body 100064918833822 Music rich flex
+11/26/2022 2:41:26 PM$ Downloading Drake, 21 Savage - Rich Flex (Audio)
+11/26/2022 2:41:26 PM$ Starting the download of music file.
+11/26/2022 2:41:26 PM$ Finish downloading music.
+11/26/2022 2:41:26 PM$ wait_timeout >> 6000
+11/26/2022 2:41:32 PM$ 100071451787437
+11/26/2022 2:41:32 PM$ 100064918833822
+11/26/2022 2:41:32 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 2:41:36 PM$ wait_timeout >> 5400
+11/26/2022 2:41:41 PM$ react_message mid.$gABm9E9p_pl6K4_DNe2Esqt-mGGYG :sad:
+11/26/2022 2:44:30 PM$ wait_timeout >> 6300
+11/26/2022 2:44:36 PM$ react_message mid.$gABJwS7O7mZ6K4_N1hGEsq4pgE5NL :laughing:
+11/26/2022 2:45:13 PM$ wait_timeout >> 6300
+11/26/2022 2:45:19 PM$ send_message 7244767385593438 [object Object]
+11/26/2022 2:45:37 PM$ wait_timeout >> 5500
+11/26/2022 2:45:42 PM$ send_message 7244767385593438 [object Object]
+11/26/2022 2:45:54 PM$ wait_timeout >> 5500
+11/26/2022 2:46:00 PM$ react_message mid.$gABm9E9p_pl6K4_S-vGEsq91Qgqq6 :laughing:
+11/26/2022 2:46:57 PM$ wait_timeout >> 5200
+11/26/2022 2:47:02 PM$ react_message mid.$gABJwS7O7mZ6K4_WznGEsrBoXqepq :laughing:
+11/26/2022 2:48:57 PM$ react_message mid.$cAAAB-HEI3yuK4_eIGGEsrI-evGFF :laughing:
+11/26/2022 2:49:13 PM$ wait_timeout >> 5500
+11/26/2022 2:49:13 PM$ wait_timeout >> 5200
+11/26/2022 2:49:15 PM$ react_message mid.$cAAAB-HEI3yuK4_fNe2EsrKD8gVan :laughing:
+11/26/2022 2:49:18 PM$ react_message mid.$gABm9E9p_pl6K4_fHBWEsrJ9rby1S :laughing:
+11/26/2022 2:49:19 PM$ 100008813820978
+11/26/2022 2:49:19 PM$ 100002235780366
+11/26/2022 2:49:19 PM$ 100050993673646
+11/26/2022 2:49:19 PM$ send_message_reply 7244767385593438 😂😆
+11/26/2022 2:50:20 PM$ wait_timeout >> 5200
+11/26/2022 2:50:25 PM$ react_message mid.$gABm9E9p_pl6K4_jL42EsrOCkJpnr :laughing:
+new_member 100040120524188 Reina Mae Andres Batoon
+11/26/2022 2:50:29 PM$ event_body 100016029218667 in addressing method operation, the DS-data segment is mutiplied to constant ____ to refer to an address to memory
+
+A. 20H
+B. 100H
+C. 50H
+D. 10H
+11/26/2022 2:50:29 PM$ wait_timeout >> 3000
+11/26/2022 2:50:30 PM$ wait_timeout >> 5200
+11/26/2022 2:50:33 PM$ send_message 100016029218667 B. 100H
+11/26/2022 2:50:35 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 2:50:50 PM$ event_body 100087874545472 🔎Searching for "whoa - jroa"...
+11/26/2022 2:52:32 PM$ event_body 100087874545472 There is no one definitive answer to this question. Some possible reasons include that Brian is a member of the opposite sex, that he is perceived as being more attractive or successful than Glen, or that he has done something to hurt or embarrass Glen in the past.
+11/26/2022 2:52:53 PM$ wait_timeout >> 5200
+11/26/2022 2:52:58 PM$ react_message mid.$gABm9E9p_pl6K4_siNmEsrXY22U1g :laughing:
+11/26/2022 2:55:35 PM$ event_body 100071451787437 Music Yakap
+11/26/2022 2:55:36 PM$ Downloading Zack Tabudlo - Yakap (Official Music Video), Part 3/3 of the Pano Trilogy
+11/26/2022 2:55:36 PM$ Starting the download of music file.
+11/26/2022 2:55:36 PM$ Finish downloading music.
+11/26/2022 2:55:36 PM$ wait_timeout >> 6800
+11/26/2022 2:55:43 PM$ 100010693996982
+11/26/2022 2:55:43 PM$ 100010693996982
+11/26/2022 2:55:43 PM$ 100071451787437
+11/26/2022 2:55:43 PM$ send_message 5190020021066142 [object Object]
+11/26/2022 2:55:43 PM$ event_body 100002235780366 About sa naninira ?
+11/26/2022 2:55:47 PM$ wait_timeout >> 5200
+11/26/2022 2:55:53 PM$ react_message mid.$gABm9E9p_pl6K4_3L92EsriCzJNSF :laughing:
+11/26/2022 2:55:55 PM$ event_body 100087874545472 The Bioinformatics of Human is the study of the human genome and its proteins.
+11/26/2022 2:56:08 PM$ wait_timeout >> 5200
+11/26/2022 2:56:11 PM$ event_body 100002235780366 About this @Nerfe Guno
+11/26/2022 2:56:11 PM$ wait_timeout >> 3000
+11/26/2022 2:56:13 PM$ react_message mid.$gABm9E9p_pl6K4_4c12EsrjTqBTNR :laughing:
+11/26/2022 2:56:17 PM$ wait_timeout >> 6500
+11/26/2022 2:56:24 PM$ 100011363410925
+11/26/2022 2:56:24 PM$ 100050993673646
+11/26/2022 2:56:24 PM$ 100002235780366
+11/26/2022 2:56:24 PM$ send_message_reply 7244767385593438 This Nerfe Guno is a replica of the Nerfe gun that was used in the movie "The Matrix". It is made out of high quality materials and it is very realistic. It has a working trigger and a safety switch. It also comes with a magazine that holds up to six darts. This gun is perfect for cosplay or for just having fun.
+11/26/2022 2:56:30 PM$ event_body 100002235780366 Can you apologize to me instead?
+11/26/2022 2:56:30 PM$ wait_timeout >> 3000
+11/26/2022 2:56:32 PM$ wait_timeout >> 5500
+11/26/2022 2:56:34 PM$ wait_timeout >> 5500
+11/26/2022 2:56:36 PM$ wait_timeout >> 6000
+11/26/2022 2:56:37 PM$ react_message mid.$gABm9E9p_pl6K4_54UWEsrkvKUNl5 :laughing:
+11/26/2022 2:56:40 PM$ 100050993673646
+11/26/2022 2:56:40 PM$ 100050993673646
+11/26/2022 2:56:40 PM$ 100002235780366
+11/26/2022 2:56:40 PM$ send_message 7244767385593438 I'm sorry for what I said.
+11/26/2022 2:56:42 PM$ react_message mid.$gABm9E9p_pl6K4_6KVWEsrlBEvWJC :laughing:
+11/26/2022 2:57:11 PM$ event_body 100084145420981 Music Huling sandali December avenue
+11/26/2022 2:57:12 PM$ Downloading December Avenue - Huling Sandali (OFFICIAL LYRIC VIDEO)
+11/26/2022 2:57:12 PM$ Starting the download of music file.
+11/26/2022 2:57:13 PM$ Finish downloading music.
+11/26/2022 2:57:13 PM$ wait_timeout >> 6600
+11/26/2022 2:57:20 PM$ 100071451787437
+11/26/2022 2:57:20 PM$ 100084145420981
+11/26/2022 2:57:20 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 3:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 3:00:05 PM$ event_body 100010693996982 Music Coming Home Are we heroes
+11/26/2022 3:00:06 PM$ Downloading Skylar Grey - Coming Home (part II) - (Are We Heroes Rock Cover ft. Shan Lidster)
+11/26/2022 3:00:06 PM$ Starting the download of music file.
+11/26/2022 3:00:07 PM$ Finish downloading music.
+11/26/2022 3:00:07 PM$ wait_timeout >> 5200
+11/26/2022 3:00:13 PM$ 100084145420981
+11/26/2022 3:00:13 PM$ 100010693996982
+11/26/2022 3:00:13 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 3:00:23 PM$ wait_timeout >> 7000
+11/26/2022 3:00:30 PM$ react_message mid.$gABm9E9p_pl6K5AICQWEsryzlv1C2 :laughing:
+11/26/2022 3:01:18 PM$ wait_timeout >> 7200
+11/26/2022 3:01:25 PM$ react_message mid.$gABm9E9p_pl6K5ALWpGEsr2H6yDDi :sad:
+11/26/2022 3:01:36 PM$ wait_timeout >> 5200
+11/26/2022 3:01:41 PM$ react_message mid.$gABm9E9p_pl6K5AMdBGEsr3UqaKyn :laughing:
+11/26/2022 3:01:52 PM$ event_body 100016029218667 if a logic gate includes four input then how many possible combinations can be performed?
+
+A. 8
+B. 4
+C. 12
+D. 16
+11/26/2022 3:01:52 PM$ wait_timeout >> 3000
+11/26/2022 3:01:56 PM$ send_message 100016029218667 D. 16
+11/26/2022 3:04:23 PM$ wait_timeout >> 6500
+11/26/2022 3:04:29 PM$ react_message mid.$gABm9E9p_pl6K5AWoxGEssBftgRuT :laughing:
+11/26/2022 3:04:33 PM$ wait_timeout >> 6300
+11/26/2022 3:04:39 PM$ react_message mid.$gABm9E9p_pl6K5AXP7GEssCHuOGHl :laughing:
+11/26/2022 3:05:50 PM$ react_message mid.$gABm9E9p_pl6K5Ab-L2EssG0H3eeT :angry:
+11/26/2022 3:06:30 PM$ event_body 100040710825619 Music boom tarat tarat
+11/26/2022 3:06:31 PM$ Downloading Boom Tarat Tarat - Wilie Revilliame (2006)
+11/26/2022 3:06:31 PM$ Starting the download of music file.
+11/26/2022 3:06:32 PM$ Finish downloading music.
+11/26/2022 3:06:32 PM$ wait_timeout >> 7000
+11/26/2022 3:06:39 PM$ 100010693996982
+11/26/2022 3:06:39 PM$ 100040710825619
+11/26/2022 3:06:39 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 3:07:15 PM$ event_body 100064918833822 Music Boombastic
+11/26/2022 3:07:16 PM$ Downloading Boombastic
+11/26/2022 3:07:16 PM$ Starting the download of music file.
+11/26/2022 3:07:16 PM$ Finish downloading music.
+11/26/2022 3:07:16 PM$ wait_timeout >> 5800
+11/26/2022 3:07:23 PM$ 100040710825619
+11/26/2022 3:07:23 PM$ 100064918833822
+11/26/2022 3:07:23 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 3:08:14 PM$ wait_timeout >> 5000
+11/26/2022 3:08:14 PM$ wait_timeout >> 6600
+11/26/2022 3:08:19 PM$ react_message mid.$gABm9E9p_pl6K5AkyYmEssPpR4jZc :laughing:
+11/26/2022 3:08:22 PM$ 100037131918629
+11/26/2022 3:08:22 PM$ 100050993673646
+11/26/2022 3:08:22 PM$ 100050993673646
+11/26/2022 3:08:22 PM$ send_message_reply 7244767385593438 😆😆
+11/26/2022 3:14:37 PM$ wait_timeout >> 7000
+11/26/2022 3:14:44 PM$ react_message mid.$gABm9E9p_pl6K5A8KFmEssm7JSBuF :laughing:
+11/26/2022 3:15:04 PM$ event_body 100087874545472 There is no board exam for biology because it is not a regulated profession.
+11/26/2022 3:15:16 PM$ wait_timeout >> 6800
+11/26/2022 3:15:23 PM$ react_message mid.$gABm9E9p_pl6K5A-g62EsspSmXnMb :laughing:
+new_member 100048849231623 Savitha Krivokrasov
+11/26/2022 3:15:58 PM$ wait_timeout >> 5200
+11/26/2022 3:16:03 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 3:18:49 PM$ event_body 100087874545472 There is a small chance that the cysts will grow back.
+new_member 100038696257947 Rhovic Dave Dela Cruz
+11/26/2022 3:19:21 PM$ wait_timeout >> 6600
+11/26/2022 3:19:28 PM$ send_message 6942091245864108 [object Object]
+new_member 100054657462203 Mikee Moratalla
+11/26/2022 3:20:19 PM$ wait_timeout >> 5000
+11/26/2022 3:20:24 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 3:24:39 PM$ wait_timeout >> 6000
+11/26/2022 3:24:45 PM$ react_message mid.$gABm9E9p_pl6K5Bg3hWEstLvLCqRk :laughing:
+11/26/2022 3:25:40 PM$ event_body 100087874545472 🔎Searching for "kobo Numa Numa ye"...
+11/26/2022 3:31:57 PM$ wait_timeout >> 5500
+11/26/2022 3:32:03 PM$ react_message mid.$gABm9E9p_pl6K5B7oTmEstmf2w97F :sad:
+11/26/2022 3:32:32 PM$ wait_timeout >> 5500
+11/26/2022 3:32:38 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 3:33:04 PM$ wait_timeout >> 6300
+11/26/2022 3:33:10 PM$ react_message mid.$gABipy5K1RKyK5B_tSWEstqMAbM9_ :laughing:
+11/26/2022 3:34:00 PM$ wait_timeout >> 5500
+11/26/2022 3:34:01 PM$ wait_timeout >> 5400
+11/26/2022 3:34:01 PM$ wait_timeout >> 6300
+11/26/2022 3:34:06 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 3:34:06 PM$ react_message mid.$gABipy5K1RKyK5CDJ1GEstt_jH2KX :laughing:
+11/26/2022 3:34:07 PM$ react_message mid.$gABipy5K1RKyK5CDKDmEstuA1_NEV :laughing:
+11/26/2022 3:35:04 PM$ [object Object]
+11/26/2022 3:35:21 PM$ wait_timeout >> 6500
+11/26/2022 3:35:28 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 3:35:39 PM$ wait_timeout >> 5000
+11/26/2022 3:35:41 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 116 seconds
+11/26/2022 3:35:43 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 112 seconds
+11/26/2022 3:35:44 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 110 seconds
+11/26/2022 3:35:44 PM$ wait_timeout >> 5000
+11/26/2022 3:35:46 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 106 seconds
+11/26/2022 3:35:48 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 102 seconds
+11/26/2022 3:35:49 PM$ send_message 6942091245864108 🤖
+11/26/2022 3:35:50 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 98 seconds
+11/26/2022 3:35:51 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 96 seconds
+11/26/2022 3:35:53 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 92 seconds
+11/26/2022 3:35:54 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 90 seconds
+11/26/2022 3:35:55 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 88 seconds
+11/26/2022 3:35:57 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 84 seconds
+11/26/2022 3:35:59 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 80 seconds
+11/26/2022 3:36:00 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 78 seconds
+11/26/2022 3:36:02 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 74 seconds
+11/26/2022 3:36:03 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 72 seconds
+11/26/2022 3:36:04 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 70 seconds
+11/26/2022 3:36:06 PM$ The user 6942091245864108 is going to fast of sending emoji >> 3 mins and 66 seconds
+11/26/2022 3:36:32 PM$ The user 6942091245864108 is going to fast of sending emoji >> 2 mins and 14 seconds
+11/26/2022 3:36:34 PM$ The user 6942091245864108 is going to fast of sending emoji >> 2 mins and 10 seconds
+11/26/2022 3:36:36 PM$ The user 6942091245864108 is going to fast of sending emoji >> 2 mins and 6 seconds
+11/26/2022 3:43:54 PM$ wait_timeout >> 6500
+11/26/2022 3:44:00 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 3:49:41 PM$ event_body 100023785687056 $music You're still the one
+11/26/2022 3:49:43 PM$ Downloading Shania Twain - You’re Still The One (Official Music Video)
+11/26/2022 3:49:43 PM$ Starting the download of music file.
+11/26/2022 3:49:43 PM$ Finish downloading music.
+11/26/2022 3:49:43 PM$ wait_timeout >> 6500
+11/26/2022 3:49:50 PM$ 100023785687056
+11/26/2022 3:49:50 PM$ 100087874545472
+11/26/2022 3:49:50 PM$ send_message_reply 6942091245864108 [object Object]
+11/26/2022 3:58:15 PM$ event_body 100023785687056 $music "Ako naman muna" cover by Kenth John Beredo
+11/26/2022 3:58:15 PM$ Downloading Ako Naman Muna ( Angela Ken) - boy version by Kenth John
+11/26/2022 3:58:16 PM$ Starting the download of music file.
+11/26/2022 3:58:18 PM$ Finish downloading music.
+11/26/2022 3:58:18 PM$ wait_timeout >> 5800
+11/26/2022 3:58:25 PM$ 100050536393867
+11/26/2022 3:58:25 PM$ 100023785687056
+11/26/2022 3:58:25 PM$ 100087874545472
+11/26/2022 3:58:25 PM$ send_message_reply 6942091245864108 [object Object]
+11/26/2022 4:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 4:00:32 PM$ wait_timeout >> 5000
+11/26/2022 4:00:37 PM$ react_message mid.$gABm9E9p_pl6K5DkS1WEsvO_39-8D :laughing:
+11/26/2022 4:29:36 PM$ react_message mid.$cAAAB-HEI3yuK5FOuZ2Esw5kur2qf :laughing:
+11/26/2022 4:29:57 PM$ event_body 100037131918629 mj 💦
+11/26/2022 4:29:57 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:30:04 PM$ event_body 100037131918629 mj  💦
+11/26/2022 4:30:04 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:30:20 PM$ event_body 100037131918629 mj  👊💦
+11/26/2022 4:30:21 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:30:28 PM$ event_body 100037131918629 mj 😁
+11/26/2022 4:30:28 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:30:33 PM$ event_body 100037131918629 mj ❤️
+11/26/2022 4:30:34 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:30:44 PM$ event_body 100037131918629 mj 😂
+11/26/2022 4:30:44 PM$ react_message mid.$cAAAB-HEI3yuK5FS2pGEsw9s8I7I9 :laughing:
+11/26/2022 4:30:44 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:30:57 PM$ event_body 100037131918629 mj (y)
+11/26/2022 4:30:57 PM$ wait_timeout >> 3000
+11/26/2022 4:31:06 PM$ event_body 100037131918629 mj :/
+11/26/2022 4:31:06 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:31:10 PM$ send_message 100037131918629 return y
+def get_data(filename):
+    """Reads data from a CSV file.
+    Args:
+        filename: The name of the CSV file.
+    Returns:
+        A list of lists, where each sublist contains the data for one row of the CSV file. Each element in this list is a string.
+        For example, if we had a CSV file containing:
+            1,2,3,4
+            5,,7,,9
+        Then get_data("example.csv") would return the following list of lists (strings):
+            [["1","2","3","4"],["5","","7","","9"]]
+        Note that elements with missing values are given an empty string "". This is different from how Pandas reads in data by default (it uses NaN instead). However, you can change this behavior by specifying na_values when calling read_csv(). See https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html for more details on how to do this and other things you can do with Pandas' read_csv() function (e
+11/26/2022 4:32:14 PM$ event_body 100037131918629 mj •́  ‿ ,•̀
+11/26/2022 4:32:14 PM$ send_message 100037131918629 Hmmmmm... Seems like i cannot understand what do you mean by that...
+11/26/2022 4:47:56 PM$ event_body 100087874545472 🔎Searching for "despacito"...
+11/26/2022 4:50:21 PM$ wait_timeout >> 5400
+11/26/2022 4:50:27 PM$ react_message mid.$gABzZDyvbEC6K5GavCWEsx_fCkBhv :sad:
+11/26/2022 4:50:44 PM$ wait_timeout >> 5200
+11/26/2022 4:50:49 PM$ react_message mid.$gABm9E9p_pl6K5GcG4WEsyG-hcdIf :laughing:
+11/26/2022 4:52:31 PM$ wait_timeout >> 5200
+11/26/2022 4:52:36 PM$ react_message mid.$gABm9E9p_pl6K5Gioa2EsyNf9y9MG :laughing:
+11/26/2022 4:54:05 PM$ wait_timeout >> 6600
+11/26/2022 4:54:12 PM$ react_message mid.$gABm9E9p_pl6K5Goak2EsyTSO13IH :laughing:
+11/26/2022 4:54:49 PM$ wait_timeout >> 7200
+11/26/2022 4:54:56 PM$ react_message mid.$gABm9E9p_pl6K5GrDR2EsyVzRIoNj :laughing:
+11/26/2022 5:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 5:12:52 PM$ react_message mid.$cAAAABtW1oyaK5HtMOWEszYAOpik4 :laughing:
+11/26/2022 5:12:55 PM$ wait_timeout >> 5000
+11/26/2022 5:13:00 PM$ send_message 100077318906152 🥰😘😘
+11/26/2022 5:13:18 PM$ react_message mid.$cAAAABtW1oyaK5HuymWEszZms9XCo :laughing:
+11/26/2022 5:16:28 PM$ wait_timeout >> 5800
+11/26/2022 5:16:28 PM$ wait_timeout >> 5200
+11/26/2022 5:16:33 PM$ 100037131918629
+11/26/2022 5:16:33 PM$ 100016897632316
+11/26/2022 5:16:33 PM$ send_message_reply 7244767385593438 😆
+11/26/2022 5:16:33 PM$ react_message mid.$gABm9E9p_pl6K5H6Vx2EszlNbO4u3 :laughing:
+11/26/2022 5:20:10 PM$ wait_timeout >> 6300
+11/26/2022 5:20:17 PM$ react_message mid.$gABKoHelyx4-K5IH7pGEszyzPQmzp :laughing:
+11/26/2022 5:20:35 PM$ wait_timeout >> 5800
+11/26/2022 5:20:41 PM$ send_message 100003456381355 It's currently 5:20 pm in the afternoon.
+11/26/2022 5:23:39 PM$ wait_timeout >> 5500
+11/26/2022 5:23:45 PM$ react_message mid.$gABKoHelyx4-K5IUrhWEszZyyScua :laughing:
+11/26/2022 5:23:58 PM$ wait_timeout >> 5500
+11/26/2022 5:24:03 PM$ react_message mid.$gABKoHelyx4-K5IV0QWEsza7KbTWK :laughing:
+11/26/2022 5:25:50 PM$ wait_timeout >> 5400
+11/26/2022 5:25:55 PM$ react_message mid.$gABKoHelyx4-K5IcqVWEszhyKbhBo :laughing:
+11/26/2022 5:25:56 PM$ wait_timeout >> 6000
+11/26/2022 5:26:02 PM$ react_message mid.$gABm9E9p_pl6K5IdANmEs0H3zwlue :laughing:
+11/26/2022 5:27:22 PM$ react_message mid.$cAAAABtW1oyaK5IiS_2Es0NGrI4tO :laughing:
+11/26/2022 5:32:26 PM$ react_message mid.$gABm9E9p_pl6K5I02VGEs0ftsMRq7 :laughing:
+11/26/2022 5:33:33 PM$ 100037131918629
+11/26/2022 5:33:33 PM$ 100037131918629
+11/26/2022 5:33:33 PM$ 100016029218667
+11/26/2022 5:33:33 PM$ send_message 7244767385593438 Hello World
+11/26/2022 5:42:33 PM$ wait_timeout >> 5000
+11/26/2022 5:42:38 PM$ wait_timeout >> 5500
+11/26/2022 5:42:43 PM$ send_message 7244767385593438 🥴
+11/26/2022 5:42:52 PM$ wait_timeout >> 5000
+11/26/2022 5:42:57 PM$ wait_timeout >> 6600
+11/26/2022 5:43:04 PM$ send_message 6942091245864108 🤖
+11/26/2022 5:43:47 PM$ event_body 100071451787437 Music Ganda mo
+11/26/2022 5:43:48 PM$ Downloading Lil-p & J-king - GANDA MO (Lyrics)
+11/26/2022 5:43:49 PM$ Starting the download of music file.
+11/26/2022 5:43:49 PM$ Finish downloading music.
+11/26/2022 5:43:49 PM$ wait_timeout >> 7200
+11/26/2022 5:43:56 PM$ 100029315742680
+11/26/2022 5:43:56 PM$ 100010693996982
+11/26/2022 5:43:56 PM$ 100071451787437
+11/26/2022 5:43:56 PM$ send_message_reply 5190020021066142 [object Object]
+11/26/2022 5:44:33 PM$ event_body 100071451787437 Music Ganda mo cue c
+11/26/2022 5:44:34 PM$ Downloading sa iyung ganda ako may papanga - Lyrics | Cue C 🎵 Ang Ganda Mo TikTok
+11/26/2022 5:44:34 PM$ Starting the download of music file.
+11/26/2022 5:44:34 PM$ Finish downloading music.
+11/26/2022 5:44:34 PM$ wait_timeout >> 5000
+11/26/2022 5:44:40 PM$ 100071451787437
+11/26/2022 5:44:40 PM$ 100071451787437
+11/26/2022 5:44:40 PM$ send_message 5190020021066142 [object Object]
+11/26/2022 5:44:40 PM$ wait_timeout >> 5200
+11/26/2022 5:44:40 PM$ wait_timeout >> 5800
+11/26/2022 5:44:46 PM$ react_message mid.$gABJwS7O7mZ6K5JhqJGEs1MeiG0sM :laughing:
+11/26/2022 5:44:47 PM$ 100071451787437
+11/26/2022 5:44:47 PM$ 100040710825619
+11/26/2022 5:44:47 PM$ send_message_reply 5190020021066142 ahahaahh
+11/26/2022 5:47:53 PM$ event_body 100071451787437 Music chosen blxst
+11/26/2022 5:47:54 PM$ wait_timeout >> 7000
+11/26/2022 5:48:01 PM$ 100040710825619
+11/26/2022 5:48:01 PM$ 100071451787437
+11/26/2022 5:48:01 PM$ 100071451787437
+11/26/2022 5:48:01 PM$ send_message_reply 5190020021066142 Opps! I didnt get it. You should try using music text instead.
+For example:
+music In The End by Linkin Park
+11/26/2022 5:48:39 PM$ event_body 100071451787437 music Chosen by Blxst
+11/26/2022 5:48:40 PM$ Downloading Blxst - Chosen (feat. Ty Dolla $ign & Tyga) [Official Music Video]
+11/26/2022 5:48:40 PM$ Starting the download of music file.
+11/26/2022 5:48:40 PM$ Finish downloading music.
+11/26/2022 5:48:40 PM$ wait_timeout >> 5200
+11/26/2022 5:48:46 PM$ 100071451787437
+11/26/2022 5:48:46 PM$ 100071451787437
+11/26/2022 5:48:46 PM$ send_message 5190020021066142 [object Object]
+11/26/2022 5:50:13 PM$ event_body 100087874545472 🔎Searching for "louder"...
+11/26/2022 5:53:00 PM$ event_body 100071451787437 music Gwolf
+11/26/2022 5:53:01 PM$ Downloading G WOLF - FLOW G (Official Music Video)
+11/26/2022 5:53:01 PM$ Starting the download of music file.
+11/26/2022 5:53:02 PM$ Finish downloading music.
+11/26/2022 5:53:02 PM$ wait_timeout >> 7000
+11/26/2022 5:53:09 PM$ 100071451787437
+11/26/2022 5:53:09 PM$ 100071451787437
+11/26/2022 5:53:09 PM$ send_message 5190020021066142 [object Object]
+11/26/2022 5:56:01 PM$ event_body 100064918833822 Music akala mo ata
+11/26/2022 5:56:02 PM$ Downloading Akala Mo Ata (feat. Nateman, Realest Cram & CK YG)
+11/26/2022 5:56:02 PM$ Starting the download of music file.
+11/26/2022 5:56:02 PM$ Finish downloading music.
+11/26/2022 5:56:02 PM$ wait_timeout >> 7000
+11/26/2022 5:56:10 PM$ 100064918833822
+11/26/2022 5:56:10 PM$ 100064918833822
+11/26/2022 5:56:10 PM$ send_message 5190020021066142 [object Object]
+11/26/2022 6:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 6:00:15 PM$ wait_timeout >> 5800
+11/26/2022 6:00:15 PM$ wait_timeout >> 7200
+11/26/2022 6:00:20 PM$ react_message mid.$gABIv62rnpRGK5KasEWEs2FkFBJSg :laughing:
+11/26/2022 6:00:22 PM$ 100087185842116
+11/26/2022 6:00:22 PM$ 100087185842116
+11/26/2022 6:00:22 PM$ send_message 5119237738177809 haahaaa
+11/26/2022 6:00:56 PM$ wait_timeout >> 6600
+11/26/2022 6:00:56 PM$ wait_timeout >> 5500
+11/26/2022 6:01:02 PM$ 100087185842116
+11/26/2022 6:01:02 PM$ 100087185842116
+11/26/2022 6:01:02 PM$ send_message 5119237738177809 hhahahah😆
+11/26/2022 6:01:02 PM$ react_message mid.$gABIv62rnpRGK5KdMxWEs2IEs3kj5 :laughing:
+11/26/2022 6:02:02 PM$ wait_timeout >> 5500
+11/26/2022 6:02:02 PM$ wait_timeout >> 5400
+11/26/2022 6:02:07 PM$ react_message mid.$gABIv62rnpRGK5KhO7mEs2MG8Sara :laughing:
+11/26/2022 6:02:08 PM$ 100087185842116
+11/26/2022 6:02:08 PM$ 100087185842116
+11/26/2022 6:02:08 PM$ send_message 5119237738177809 🤣🤣🤣
+11/26/2022 6:04:26 PM$ wait_timeout >> 7000
+11/26/2022 6:04:26 PM$ wait_timeout >> 5400
+11/26/2022 6:04:32 PM$ 100087185842116
+11/26/2022 6:04:32 PM$ 100087185842116
+11/26/2022 6:04:32 PM$ send_message 5119237738177809 😂😆
+11/26/2022 6:04:33 PM$ react_message mid.$gABIv62rnpRGK5KqB52Es2U6AL98X :laughing:
+11/26/2022 6:05:23 PM$ wait_timeout >> 5800
+11/26/2022 6:05:29 PM$ react_message mid.$gABIv62rnpRGK5KtftWEs2YXyN3DA :laughing:
+11/26/2022 6:06:00 PM$ wait_timeout >> 6600
+11/26/2022 6:06:06 PM$ react_message mid.$gABIv62rnpRGK5KvvNWEs2anSukAs :laughing:
+11/26/2022 6:06:31 PM$ event_body 100087185842116 help
+11/26/2022 6:06:31 PM$ wait_timeout >> 5400
+11/26/2022 6:06:36 PM$ 100087185842116
+11/26/2022 6:06:36 PM$ 100087185842116
+11/26/2022 6:06:36 PM$ send_message 5119237738177809 Project Orion 1 - 7
+
+⦿ help
+⦿ help [number]
+⦿ help all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ summ [text]
+⦿ github [username]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ facts [text]
+⦿ phub [text]
+
+If the net external force acting on a system of bodies is zero, then the momentum of the system remains constant.
+11/26/2022 6:07:02 PM$ event_body 100087185842116 searchimg spongebob
+11/26/2022 6:07:02 PM$ wait_timeout >> 1000
+11/26/2022 6:07:03 PM$ wait_timeout >> 1000
+11/26/2022 6:07:04 PM$ wait_timeout >> 1000
+11/26/2022 6:07:05 PM$ wait_timeout >> 1000
+11/26/2022 6:07:06 PM$ wait_timeout >> 1000
+11/26/2022 6:07:07 PM$ wait_timeout >> 1000
+11/26/2022 6:07:08 PM$ wait_timeout >> 1000
+11/26/2022 6:07:23 PM$ wait_timeout >> 6600
+11/26/2022 6:07:29 PM$ react_message mid.$gABIv62rnpRGK5K00PWEs2fsJ6ON4 :laughing:
+11/26/2022 6:08:14 PM$ wait_timeout >> 7000
+11/26/2022 6:08:21 PM$ react_message mid.$gABIv62rnpRGK5K3-DmEs2i1-Cc5v :laughing:
+11/26/2022 6:08:23 PM$ wait_timeout >> 6000
+11/26/2022 6:08:29 PM$ react_message mid.$gABIv62rnpRGK5K4eY2Es2jVIDU4g :laughing:
+11/26/2022 6:08:47 PM$ wait_timeout >> 6800
+11/26/2022 6:08:54 PM$ react_message mid.$gABIv62rnpRGK5K588WEs2k1EsSGC :laughing:
+11/26/2022 6:11:21 PM$ wait_timeout >> 6500
+11/26/2022 6:11:27 PM$ react_message mid.$gABsgQdr4JGWK5LDV82Es2uMN1lJp :laughing:
+11/26/2022 6:15:56 PM$ wait_timeout >> 6600
+11/26/2022 6:15:56 PM$ wait_timeout >> 7200
+11/26/2022 6:16:02 PM$ react_message mid.$gABIv62rnpRGK5LUIJWEs2_AO_kNZ :laughing:
+11/26/2022 6:16:03 PM$ 100087185842116
+11/26/2022 6:16:03 PM$ 100087185842116
+11/26/2022 6:16:03 PM$ send_message 5119237738177809 🤣🤣hahaahhaha
+11/26/2022 6:16:35 PM$ wait_timeout >> 5200
+11/26/2022 6:16:40 PM$ react_message mid.$gABIv62rnpRGK5LWgOGEs3BSzFUXA :laughing:
+11/26/2022 6:17:11 PM$ wait_timeout >> 5000
+11/26/2022 6:17:16 PM$ react_message mid.$gABm9E9p_pl6K5LYrZGEs3DkKC533 :laughing:
+11/26/2022 6:17:17 PM$ wait_timeout >> 7000
+11/26/2022 6:17:17 PM$ wait_timeout >> 5400
+11/26/2022 6:17:23 PM$ 100087185842116
+11/26/2022 6:17:23 PM$ send_message_reply 5119237738177809 🤣🤣hahaahhaha
+11/26/2022 6:17:24 PM$ react_message mid.$gABIv62rnpRGK5LZEu2Es3Dpb8o3s :laughing:
+11/26/2022 6:17:30 PM$ event_body 100082863736348 Mj
+11/26/2022 6:17:30 PM$ wait_timeout >> 5200
+11/26/2022 6:17:33 PM$ wait_timeout >> 6800
+11/26/2022 6:17:33 PM$ wait_timeout >> 6800
+11/26/2022 6:17:36 PM$ 100082863736348
+11/26/2022 6:17:36 PM$ 100082863736348
+11/26/2022 6:17:36 PM$ 100009148465025
+11/26/2022 6:17:36 PM$ send_message 7635291589846117 [object Object]
+11/26/2022 6:17:37 PM$ wait_timeout >> 5000
+11/26/2022 6:17:40 PM$ react_message mid.$gABIv62rnpRGK5LaFw2Es3E9n2lRS :laughing:
+11/26/2022 6:17:41 PM$ 100087185842116
+11/26/2022 6:17:41 PM$ send_message_reply 5119237738177809 🤣🤣hahaahhaha
+11/26/2022 6:17:41 PM$ wait_timeout >> 5200
+11/26/2022 6:17:42 PM$ wait_timeout >> 5000
+11/26/2022 6:17:42 PM$ wait_timeout >> 7200
+11/26/2022 6:17:42 PM$ wait_timeout >> 7000
+11/26/2022 6:17:46 PM$ react_message mid.$gABm9E9p_pl6K5LaiGmEs3FXYJpw1 :sad:
+11/26/2022 6:17:47 PM$ send_message 7635291589846117 🤔
+11/26/2022 6:17:48 PM$ event_body 100087185842116 help all
+11/26/2022 6:17:48 PM$ wait_timeout >> 2000
+11/26/2022 6:17:49 PM$ react_message mid.$gABIv62rnpRGK5LanJWEs3Feivq6x :laughing:
+11/26/2022 6:17:49 PM$ 100087185842116
+11/26/2022 6:17:49 PM$ 100087185842116
+11/26/2022 6:17:49 PM$ send_message 5119237738177809 hhahahah😆
+11/26/2022 6:17:50 PM$ wait_timeout >> 7200
+11/26/2022 6:17:58 PM$ 100087185842116
+11/26/2022 6:17:58 PM$ 100087185842116
+11/26/2022 6:17:58 PM$ send_message 5119237738177809 Project Orion
+
+⦿ help
+⦿ help [number]
+⦿ help all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ summ [text]
+⦿ github [username]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ facts [text]
+⦿ phub [text]
+⦿ thoughts
+⦿ lulcat [text]
+⦿ gemoji [emoji]
+⦿ gname [text]
+⦿ wiki [text]
+⦿ urlshort [url]
+⦿ nickname @mention [text]
+⦿ landscape
+⦿ landscape [text]
+⦿ portrait
+⦿ portrait [text]
+⦿ problem [equation]
+⦿ pin add
+⦿ pin remove
+⦿ sadcat [text]
+⦿ biden [text]
+⦿ pika [text]
+⦿ god [text]
+⦿ website [url]
+⦿ qrcode [text]
+⦿ verse today
+⦿ verse random
+⦿ verse [book] [chapter]:[verse]
+⦿ animeqoute
+⦿ bgremove
+⦿ motivate
+⦿ inspiration
+⦿ advice
+⦿ remove
+⦿ meme
+⦿ meme --reddit
+⦿ drake [text1]: [text2]
+⦿ pooh [text1]: [text2]
+⦿ oogway [text]
+⦿ caution [text]
+⦿ element [name]
+⦿ imdb [title]
+⦿ steam [name]
+⦿ npm [name]
+⦿ gname
+⦿ alert [text]
+⦿ morse [text]
+⦿ pickup
+⦿ uid
+⦿ guid
+⦿ reverse [text]
+⦿ itunes [title]
+⦿ doublestruck [text]
+⦿ translate [language] [text]
+⦿ trump [text]
+⦿ mock [text]
+⦿ jail @mention
+⦿ communist @mention
+⦿ wanted @mention
+⦿ gun @mention
+⦿ drip @mention
+⦿ clown @mention
+⦿ uncover @mention
+⦿ advert @mention
+⦿ blur @mention
+⦿ ig [username]
+⦿ facebook @mention
+⦿ joke
+⦿ profilepic
+⦿ wyr
+⦿ 8ball
+⦿ gmember
+⦿ car
+⦿ color
+⦿ sim [text]
+⦿ pet @mention
+⦿ ship @mention @mention
+⦿ www @mention @mention
+⦿ kiss @mention
+⦿ coding
+⦿ newyear
+⦿ christmas
+⦿ barrier
+⦿ fact
+⦿ thoughts
+⦿ conan
+⦿ invert @mention
+⦿ greyscale @mention
+⦿ jokeover @mention
+⦿ mnm @mention
+⦿ count
+⦿ count --vowels
+⦿ count --consonants
+⦿ wfind [text]
+⦿ time
+⦿ time [timezone]
+⦿ anime [category]
+   megumin, bully, cuddle, cry
+   hug, awoo, kiss, lick
+   pat, smug, bonk, yeet
+   blush, smile, wave, highfive
+   handhold, nom, biteglomp, slap
+   kill, kick, happy, wink
+   pokedance, cringe
+⦿ anime --nsfw [category]
+   waifu, neko, trap, blowjob
+
+Energy can neither be created nor destroyed, but it can be changed from one form to another.
+11/26/2022 6:18:18 PM$ wait_timeout >> 6000
+11/26/2022 6:18:18 PM$ wait_timeout >> 6300
+11/26/2022 6:18:18 PM$ wait_timeout >> 6800
+11/26/2022 6:18:24 PM$ react_message mid.$gABm9E9p_pl6K5Lcv4WEs3Hm7gBgg :love:
+11/26/2022 6:18:24 PM$ send_message 7244767385593438 🥰🌘
+11/26/2022 6:18:25 PM$ 100008813820978
+11/26/2022 6:18:25 PM$ 100013123092880
+11/26/2022 6:18:25 PM$ 100087874545472
+11/26/2022 6:18:25 PM$ send_message_reply 7244767385593438 Good evening as well... As always, the sun set is breathtaking; I hope you can see it too.
+11/26/2022 6:20:21 PM$ event_body 100082863736348 Mj code for navigation bar in html and javascript
+11/26/2022 6:20:21 PM$ wait_timeout >> 3000
+11/26/2022 6:20:30 PM$ wait_timeout >> 5500
+11/26/2022 6:20:36 PM$ 100009148465025
+11/26/2022 6:20:36 PM$ 100009148465025
+11/26/2022 6:20:36 PM$ 100082863736348
+11/26/2022 6:20:36 PM$ send_message 7635291589846117 <div class="navbar">
+  <a href="#home">Home</a>
+  <a href="#news">News</a>
+  <div class="dropdown">
+    <button class="dropbtn">Dropdown 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </div>
+11/26/2022 6:21:02 PM$ wait_timeout >> 6300
+11/26/2022 6:21:02 PM$ wait_timeout >> 6500
+11/26/2022 6:21:09 PM$ react_message mid.$gABIv62rnpRGK5Lm1W2Es3Rta9eqV :laughing:
+11/26/2022 6:21:09 PM$ 100087185842116
+11/26/2022 6:21:09 PM$ 100087185842116
+11/26/2022 6:21:09 PM$ send_message 5119237738177809 hahaa😆🤣
+11/26/2022 6:21:32 PM$ event_body 100016029218667 what is matter
+11/26/2022 6:21:32 PM$ wait_timeout >> 3000
+11/26/2022 6:21:37 PM$ 100087185842116
+11/26/2022 6:21:37 PM$ 100016029218667
+11/26/2022 6:21:37 PM$ send_message_reply 5119237738177809 Matter is anything that has mass and occupies space.
+11/26/2022 6:21:47 PM$ wait_timeout >> 6800
+11/26/2022 6:21:52 PM$ event_body 100016029218667 gave me examples of a solution
+11/26/2022 6:21:52 PM$ wait_timeout >> 3000
+11/26/2022 6:21:54 PM$ react_message mid.$gABm9E9p_pl6K5Lpko2Es3UcMW8zH :laughing:
+11/26/2022 6:21:59 PM$ event_body 100082863736348 Mj drop down menu in javascript
+11/26/2022 6:21:59 PM$ wait_timeout >> 3000
+11/26/2022 6:22:01 PM$ 100087185842116
+11/26/2022 6:22:01 PM$ 100016029218667
+11/26/2022 6:22:01 PM$ send_message_reply 5119237738177809 to the problem
+1. One solution to the problem is to increase the amount of time spent on physical activity each day. This can be done by adding a daily walk or jog to your routine, or by signing up for a gym membership and attending classes regularly.
+2. Another solution is to change your diet and eat more healthy foods that will help you lose weight and keep it off. This can be done by eating more fruits and vegetables, lean protein, and whole grains. You should also cut back on sugary drinks and snacks, as well as processed foods.
+3. Finally, you can also try some natural weight loss supplements that can help you burn fat more effectively. These include green tea extract, garcinia cambogia, and raspberry ketones.
+11/26/2022 6:22:04 PM$ wait_timeout >> 7000
+11/26/2022 6:22:12 PM$ 100009148465025
+11/26/2022 6:22:12 PM$ 100082863736348
+11/26/2022 6:22:12 PM$ 100009148465025
+11/26/2022 6:22:12 PM$ send_message_reply 7635291589846117 1. Create a <select> element with multiple options:
+<select id="mySelect">
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+11/26/2022 6:23:33 PM$ event_body 100087874545472 There could be a number of reasons why your partner doesn't want to put you in their social media profiles. It could be that they are not ready to make their relationship public, or it could be that they simply don't think it's necessary. If your partner is not ready to make the relationship public, it's important to respect their wishes and not pressure them into doing so.
+11/26/2022 6:23:46 PM$ wait_timeout >> 5400
+11/26/2022 6:23:51 PM$ react_message mid.$gABm9E9p_pl6K5Lwzk2Es3brLpp-a :laughing:
+11/26/2022 6:24:06 PM$ react_message mid.$gABm9E9p_pl6K5LyBdWEs3c4TBHgN :laughing:
+11/26/2022 6:24:06 PM$ 100016897632316
+11/26/2022 6:24:06 PM$ 100081936620905
+11/26/2022 6:24:06 PM$ 100037131918629
+11/26/2022 6:24:06 PM$ send_message_reply 7244767385593438 haahaaa
+11/26/2022 6:24:18 PM$ 100037131918629
+11/26/2022 6:24:18 PM$ 100037131918629
+11/26/2022 6:24:18 PM$ send_message 7244767385593438 Hey :D
+11/26/2022 6:24:25 PM$ wait_timeout >> 7200
+11/26/2022 6:24:25 PM$ wait_timeout >> 6800
+11/26/2022 6:24:32 PM$ 100087185842116
+11/26/2022 6:24:32 PM$ 100087185842116
+11/26/2022 6:24:32 PM$ send_message 5119237738177809 hhahahah😆
+11/26/2022 6:24:32 PM$ react_message mid.$gABIv62rnpRGK5LzLyGEs3eDazbwv :laughing:
+11/26/2022 6:27:48 PM$ wait_timeout >> 5000
+11/26/2022 6:27:53 PM$ send_message 7244767385593438 🥴
+11/26/2022 6:32:59 PM$ wait_timeout >> 5000
+11/26/2022 6:33:04 PM$ wait_timeout >> 6600
+11/26/2022 6:33:11 PM$ send_message 7635291589846117 🙂😭
+11/26/2022 6:33:25 PM$ The user 7635291589846117 is going to fast of sending emoji >> 3 mins and 68 seconds
+11/26/2022 6:46:12 PM$ wait_timeout >> 6800
+11/26/2022 6:46:19 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 6:47:47 PM$ event_body 100016029218667 trump calls the federal bureau of investigation
+11/26/2022 6:47:47 PM$ parse_image https://un5vyw.deta.dev/tweet?text=calls the federal bureau of investigation
+11/26/2022 6:47:49 PM$ event_body 100016029218667 barrier
+11/26/2022 6:47:50 PM$ 100016029218667
+11/26/2022 6:47:50 PM$ 100016029218667
+11/26/2022 6:47:50 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 6:47:51 PM$ 100016029218667
+11/26/2022 6:47:51 PM$ 100016029218667
+11/26/2022 6:47:51 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 6:48:34 PM$ 100016029218667
+11/26/2022 6:48:34 PM$ send_message_reply 6942091245864108 Hello World
+11/26/2022 6:49:38 PM$ wait_timeout >> 5000
+11/26/2022 6:49:43 PM$ wait_timeout >> 7000
+11/26/2022 6:49:50 PM$ send_message 2583856894982516 🌤
+11/26/2022 6:52:35 PM$ [object Object]
+11/26/2022 6:52:36 PM$ wait_timeout >> 5400
+11/26/2022 6:52:42 PM$ send_message 6942091245864108 [object Object]
+11/26/2022 6:53:30 PM$ wait_timeout >> 6300
+11/26/2022 6:53:36 PM$ react_message mid.$gABJwS7O7mZ6K5Ndr1mEs5IglOR87 :laughing:
+11/26/2022 6:54:17 PM$ wait_timeout >> 6500
+11/26/2022 6:54:23 PM$ react_message mid.$gABipy5K1RKyK5NgiUmEs5LXiGmri :laughing:
+11/26/2022 7:00:00 PM$ [object Object]
+11/26/2022 7:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 7:00:03 PM$ wait_timeout >> 7000
+11/26/2022 7:00:04 PM$ wait_timeout >> 5200
+11/26/2022 7:00:04 PM$ wait_timeout >> 6300
+11/26/2022 7:00:04 PM$ wait_timeout >> 5200
+11/26/2022 7:00:04 PM$ wait_timeout >> 6000
+11/26/2022 7:00:04 PM$ wait_timeout >> 6800
+11/26/2022 7:00:04 PM$ wait_timeout >> 5200
+11/26/2022 7:00:04 PM$ wait_timeout >> 6000
+11/26/2022 7:00:04 PM$ wait_timeout >> 5000
+11/26/2022 7:00:04 PM$ wait_timeout >> 6800
+11/26/2022 7:00:09 PM$ react_message mid.$gABzZDyvbEC6K5N1vVWEs5gl4i_hE :love:
+11/26/2022 7:00:09 PM$ send_message 8119958531412014 🥰🌘
+11/26/2022 7:00:09 PM$ send_message 7244767385593438 🥰🌘
+11/26/2022 7:00:10 PM$ send_message 7635291589846117 [object Object]
+11/26/2022 7:00:10 PM$ 100011572356932
+11/26/2022 7:00:10 PM$ 100023785687056
+11/26/2022 7:00:10 PM$ 100087874545472
+11/26/2022 7:00:10 PM$ send_message_reply 6942091245864108 Good evening as well... As always, the sun set is breathtaking; I hope you can see it too.
+11/26/2022 7:00:10 PM$ react_message mid.$gABm9E9p_pl6K5N1vcWEs5gl0HAl7 :love:
+11/26/2022 7:00:10 PM$ react_message mid.$gABipy5K1RKyK5N1vtmEs5gloIaLQ :love:
+11/26/2022 7:00:11 PM$ 100087874545472
+11/26/2022 7:00:11 PM$ 100087874545472
+11/26/2022 7:00:11 PM$ send_message 8119958531412014 Good evening too... The sun set is so beautiful as always, hope you're seeing it too.
+11/26/2022 7:00:11 PM$ send_message 6942091245864108 🥰🌘
+11/26/2022 7:00:11 PM$ 100087874545472
+11/26/2022 7:00:11 PM$ send_message_reply 7244767385593438 Good evening, as well. As always, the sun set is quite lovely; I hope you can see it as well.
+11/26/2022 7:00:12 PM$ wait_timeout >> 6300
+11/26/2022 7:00:12 PM$ wait_timeout >> 6000
+11/26/2022 7:00:12 PM$ wait_timeout >> 6300
+11/26/2022 7:00:18 PM$ react_message mid.$gABzZDyvbEC6K5N2NoWEs5hEYlRh7 :love:
+11/26/2022 7:00:18 PM$ send_message 8119958531412014 🥰🌘
+11/26/2022 7:00:18 PM$ 100008813820978
+11/26/2022 7:00:18 PM$ send_message_reply 8119958531412014 Good evening, as well. As always, the sun set is quite lovely; I hope you can see it as well.
+11/26/2022 7:07:36 PM$ event_body 100008816107904 $sim ano ulam mo?
+11/26/2022 7:07:36 PM$ response_data https://api.simsimi.net/v2/?text=ano ulam mo?&lc=ph&cf=false&name=Mj
+11/26/2022 7:07:36 PM$ wait_timeout >> 1000
+11/26/2022 7:07:38 PM$ wait_timeout >> 5800
+11/26/2022 7:07:45 PM$ 100008816107904
+11/26/2022 7:07:45 PM$ 100087874545472
+11/26/2022 7:07:45 PM$ send_message_reply 6942091245864108 Pakbet
+11/26/2022 7:08:04 PM$ event_body 100008816107904 $sim masarap ba?
+11/26/2022 7:08:04 PM$ response_data https://api.simsimi.net/v2/?text=masarap ba?&lc=ph&cf=false&name=Melvin Jones Gallano Repol
+11/26/2022 7:08:04 PM$ wait_timeout >> 1000
+11/26/2022 7:08:06 PM$ wait_timeout >> 5800
+11/26/2022 7:08:12 PM$ 100008816107904
+11/26/2022 7:08:12 PM$ 100087874545472
+11/26/2022 7:08:12 PM$ send_message_reply 6942091245864108 oo naman tangina 1 round pa 
+11/26/2022 7:08:26 PM$ wait_timeout >> 5500
+11/26/2022 7:08:32 PM$ react_message mid.$gABipy5K1RKyK5OUZlGEs5_SQm36u :laughing:
+11/26/2022 7:08:58 PM$ event_body 100008816107904 $sim gawa mo?
+11/26/2022 7:08:58 PM$ response_data https://api.simsimi.net/v2/?text=gawa mo?&lc=ph&cf=false&name=Mj
+11/26/2022 7:08:58 PM$ wait_timeout >> 1000
+11/26/2022 7:09:00 PM$ wait_timeout >> 6600
+11/26/2022 7:09:07 PM$ 100008816107904
+11/26/2022 7:09:07 PM$ 100008816107904
+11/26/2022 7:09:07 PM$ 100087874545472
+11/26/2022 7:09:07 PM$ send_message 6942091245864108 Ano gawa mo?
+11/26/2022 7:18:05 PM$ event_body 100037131918629 is that you keybind the file which run  ?
+11/26/2022 7:18:05 PM$ wait_timeout >> 3000
+11/26/2022 7:18:10 PM$ 100037131918629
+11/26/2022 7:18:10 PM$ send_message_reply 7244767385593438 There is no specific file that needs to be keybound in order to run a program. However, most programs will have a shortcut key that can be used to launch them.
+11/26/2022 7:18:34 PM$ wait_timeout >> 5000
+11/26/2022 7:18:39 PM$ send_message 100077318906152 🥰😘
+11/26/2022 7:19:16 PM$ wait_timeout >> 5000
+11/26/2022 7:19:21 PM$ wait_timeout >> 6600
+11/26/2022 7:19:26 PM$ wait_timeout >> 6600
+11/26/2022 7:19:27 PM$ send_message 7635291589846117 🦾
+11/26/2022 7:19:32 PM$ send_message 7635291589846117 [object Object]
+11/26/2022 7:19:55 PM$ react_message mid.$gABm9E9p_pl6K5O-dO2Es6pVCXBKd :laughing:
+11/26/2022 7:23:48 PM$ event_body 100016029218667 npm google-images
+11/26/2022 7:23:48 PM$ response_data https://api.popcat.xyz/npm?q=google-images
+11/26/2022 7:23:48 PM$ wait_timeout >> 1000
+11/26/2022 7:23:50 PM$ 100087185842116
+11/26/2022 7:23:50 PM$ 100016029218667
+11/26/2022 7:23:50 PM$ send_message_reply 5119237738177809 Name: google-images v2.1.0
+Author: vdemedes
+Email: vdemedes@gmail.com
+Updated on: Mon Feb 27 2017
+Repository: https://github.com/vadimdemedes/google-images
+
+Search images using Google Custom Search Engine API
+11/26/2022 7:25:46 PM$ event_body 100064918833822 Music numa numa
+11/26/2022 7:25:47 PM$ report_issue [object Object]
+11/26/2022 7:33:09 PM$ react_message mid.$gABm9E9p_pl6K5Pu4q2Es7ZwZkHsu :love:
+11/26/2022 7:33:19 PM$ event_body 100037131918629 mj are you there
+11/26/2022 7:33:19 PM$ wait_timeout >> 3000
+11/26/2022 7:33:23 PM$ 100037131918629
+11/26/2022 7:33:23 PM$ 100037131918629
+11/26/2022 7:33:23 PM$ 100037131918629
+11/26/2022 7:33:23 PM$ send_message 7244767385593438 
+Yes, I'm here.
+11/26/2022 7:34:19 PM$ event_body 100037131918629 mj who is the president of vietnam
+11/26/2022 7:34:19 PM$ wait_timeout >> 3000
+11/26/2022 7:34:23 PM$ 100037131918629
+11/26/2022 7:34:23 PM$ 100037131918629
+11/26/2022 7:34:23 PM$ send_message 7244767385593438 The current president of Vietnam is Nguyen Phu Trong.
+11/26/2022 7:35:18 PM$ event_body 100037131918629 mj what is interrogative
+11/26/2022 7:35:18 PM$ wait_timeout >> 3000
+11/26/2022 7:35:22 PM$ 100037131918629
+11/26/2022 7:35:22 PM$ 100037131918629
+11/26/2022 7:35:22 PM$ 100037131918629
+11/26/2022 7:35:22 PM$ send_message 7244767385593438 A question that requires an answer is called an interrogative.
+11/26/2022 7:35:40 PM$ [object Object]
+11/26/2022 7:35:41 PM$ wait_timeout >> 7200
+11/26/2022 7:35:42 PM$ event_body 100037131918629 mj send you your source code
+11/26/2022 7:35:42 PM$ wait_timeout >> 3000
+11/26/2022 7:35:47 PM$ 100057444813165
+11/26/2022 7:35:47 PM$ 100037131918629
+11/26/2022 7:35:47 PM$ 100087874545472
+11/26/2022 7:35:47 PM$ send_message_reply 7244767385593438 and the output of your program.
+The output of the program is:
+Hello, world!
+11/26/2022 7:35:48 PM$ send_message 7244767385593438 [object Object]
+11/26/2022 7:36:59 PM$ event_body 100087874545472 There is no one-size-fits-all answer to this question, as the best way to prepare for exams will vary depending on the individual and the specific exam. However, some tips that may be helpful for preparing for exams include:
+
+1. Make a study schedule and stick to it. This will help ensure that you have enough time to cover all of the material that will be on the exam.
+
+2. Start studying early. This will give you more time to absorb the material and will help reduce stress levels closer to the exam date.
+
+3. Create a study guide. This can be a helpful tool for organizing your thoughts and keeping track of what you need to study.
+
+4. Practice, practice, practice. Taking practice exams can help you get a feel for the format of the real exam and can also help identify any areas where you may need additional review.
+11/26/2022 7:37:03 PM$ event_body 100087874545472 🔎Searching for "XVX-XVX"...
+11/26/2022 7:37:29 PM$ event_body 100023446726479 $help
+11/26/2022 7:37:29 PM$ wait_timeout >> 6800
+11/26/2022 7:37:36 PM$ 100087874545472
+11/26/2022 7:37:36 PM$ 100023446726479
+11/26/2022 7:37:36 PM$ 100087874545472
+11/26/2022 7:37:36 PM$ send_message_reply 7244767385593438 Project Orion 1 - 7
+
+⦿ help
+⦿ help [number]
+⦿ help all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ summ [text]
+⦿ github [username]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ facts [text]
+⦿ phub [text]
+
+Every point on a wavefront is in itself the source of spherical wavelets which spread out in the forward direction at the speed of light. The sum of these spherical wavelets forms the wavefront.
+11/26/2022 7:38:12 PM$ event_body 100087874545472 There is no definitive answer to this question as there is no agreed upon definition for what constitutes a "planet." Some astronomers believe that the largest known planet in the universe is VY Canis Majoris, which is about 3,900 times the size of Earth. Other astronomers believe that the title of largest known planet should go to IC 1101, which is a supermassive black hole located in the constellation of Virgo.
+11/26/2022 7:42:21 PM$ event_body 100087874545472 🔎Searching for "having you here me"...
+11/26/2022 7:46:08 PM$ event_body 100087874545472 A social group of friends is a group of people who interact with each other on a regular basis and share similar interests.
+11/26/2022 7:46:39 PM$ event_body 100087874545472 A social group of friends is a collection of individuals who interact with one another and share similar characteristics. Friends typically share common interests, experiences, and perspectives. They may also have similar backgrounds or share similar social status. Friendships are often built on trust and mutual respect.
+
+Friends typically spend time together engaging in activities that they enjoy. This could include anything from going to the movies or out to eat, to playing sports or video games. Friends may also simply enjoy spending time talking with one another. In some cases, friends may live close to one another and see each other on a daily basis. In other cases, friends may live in different parts of the world and only see each other occasionally.
+
+The strength of a friendship can vary greatly. Some friendships are very strong and last a lifetime. Other friendships may be more casual and only last for a short period of time. The level of commitment that friends have to one another also varies. Some friends may be willing to go above and beyond for one another, while others may only offer support when it is convenient for them.
+
+The size of a social group of friends can also vary greatly. Some groups may only have two or three members, while others may have dozens or even hundreds of members. The size of a group is often determined by the number of people who are interested in participating in the activities that the group engages in.
+11/26/2022 7:48:38 PM$ event_body 100081836541264 Mj
+11/26/2022 7:48:38 PM$ wait_timeout >> 6800
+11/26/2022 7:48:45 PM$ 100081836541264
+11/26/2022 7:48:45 PM$ send_message_reply 7635291589846117 [object Object]
+11/26/2022 7:48:47 PM$ 100023446726479
+11/26/2022 7:48:47 PM$ 100087874545472
+11/26/2022 7:48:47 PM$ 100016029218667
+11/26/2022 7:48:47 PM$ send_message_reply 7244767385593438 Hello World
+11/26/2022 7:49:44 PM$ event_body 100072126136877 $what is the longest word in dictionary?
+11/26/2022 7:49:44 PM$ wait_timeout >> 3000
+11/26/2022 7:49:50 PM$ wait_timeout >> 7200
+11/26/2022 7:49:57 PM$ 100087874545472
+11/26/2022 7:49:57 PM$ 100072126136877
+11/26/2022 7:49:57 PM$ 100087874545472
+11/26/2022 7:49:57 PM$ send_message_reply 8119958531412014 antidisestablishmentarianism
+11/26/2022 7:52:48 PM$ wait_timeout >> 5000
+11/26/2022 7:52:53 PM$ wait_timeout >> 5000
+11/26/2022 7:52:58 PM$ send_message 7635291589846117 🙄
+11/26/2022 7:53:50 PM$ event_body 100081836541264 Mj
+Write a program for bubble sort in oop c++?
+11/26/2022 7:53:50 PM$ wait_timeout >> 3000
+11/26/2022 7:54:01 PM$ wait_timeout >> 6000
+11/26/2022 7:54:07 PM$ 100081836541264
+11/26/2022 7:54:07 PM$ 100081836541264
+11/26/2022 7:54:07 PM$ send_message 7635291589846117 #include <iostream> 
+using namespace std; 
+class Array { 
+public: 
+    int *a; 
+    int n; 
+    Array(int n) { 
+        a = new int[n]; 
+        this->n = n; 
+    }
+    void input() {   //function to input elements in array
+        for (int i = 0; i < n; i++) {   //for loop to take input from user and store it in array a[] one by one.
+            cin >> a[i];     //input statement.
+        }
+    }
+     void bubbleSort() {      //function for bubble sort algorithm. Time complexity of this algorithm is O(n^2). Space complexity is O(1). It is an in-place sorting algorithm. It means that it doesn't require any extra space for sorting the elements of the array. It can be done by swapping the adjacent elements if they are not in order. The outer loop runs from 0 to size-1 and inner loop runs from 0 to size-i-1, where i represents the number of passes completed so far starting from the first pass
+11/26/2022 7:58:58 PM$ wait_timeout >> 5000
+11/26/2022 7:59:03 PM$ wait_timeout >> 5800
+11/26/2022 7:59:09 PM$ send_message 7244767385593438 🥴
+11/26/2022 7:59:19 PM$ wait_timeout >> 5000
+11/26/2022 7:59:19 PM$ wait_timeout >> 5000
+11/26/2022 7:59:21 PM$ event_body 100009220664352 Help
+11/26/2022 7:59:21 PM$ wait_timeout >> 6300
+11/26/2022 7:59:24 PM$ react_message mid.$gABm9E9p_pl6K5ROtrWEs85i1POh8 :laughing:
+11/26/2022 7:59:24 PM$ 100009220664352
+11/26/2022 7:59:24 PM$ 100009220664352
+11/26/2022 7:59:24 PM$ send_message 7244767385593438 hahahahhah
+11/26/2022 7:59:28 PM$ 100009220664352
+11/26/2022 7:59:28 PM$ 100009220664352
+11/26/2022 7:59:28 PM$ send_message 7244767385593438 Project Orion 1 - 7
+
+⦿ help
+⦿ help [number]
+⦿ help all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ summ [text]
+⦿ github [username]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ facts [text]
+⦿ phub [text]
+
+Every point on a wavefront is in itself the source of spherical wavelets which spread out in the forward direction at the speed of light. The sum of these spherical wavelets forms the wavefront.
+11/26/2022 7:59:29 PM$ event_body 100009220664352 Where to find the lD
+11/26/2022 7:59:29 PM$ wait_timeout >> 3000
+11/26/2022 7:59:33 PM$ wait_timeout >> 6000
+11/26/2022 7:59:40 PM$ 100009220664352
+11/26/2022 7:59:40 PM$ send_message_reply 7244767385593438 AP server
+The lDAP server is typically located on the same server as the domain controller.
+11/26/2022 8:00:00 PM$ Project Orion Facebook State Refreshed
+11/26/2022 8:01:04 PM$ wait_timeout >> 5800
+11/26/2022 8:01:04 PM$ wait_timeout >> 5400
+11/26/2022 8:01:10 PM$ react_message mid.$gABipy5K1RKyK5RVIiWEs9IVLtOUm :laughing:
+11/26/2022 8:01:10 PM$ 100008816107904
+11/26/2022 8:01:10 PM$ 100078808031382
+11/26/2022 8:01:10 PM$ send_message_reply 6942091245864108 ahahaahh
+11/26/2022 8:01:36 PM$ wait_timeout >> 7200
+11/26/2022 8:01:44 PM$ react_message mid.$gABipy5K1RKyK5RXHd2Es9KULTMGV :laughing:
+11/26/2022 8:02:06 PM$ event_body 100087874545472 A young dolphin is called a calf.
+11/26/2022 8:02:13 PM$ event_body 100087874545472 🔎Searching for "she's gone"...
+11/26/2022 8:02:27 PM$ event_body 100087874545472 A young dolphin is called a calf.
+11/26/2022 8:02:47 PM$ event_body 100087874545472 A young turtle is called a hatchling.
+11/26/2022 8:03:00 PM$ event_body 100072126136877 $help 4
+11/26/2022 8:03:00 PM$ wait_timeout >> 6800
+11/26/2022 8:03:01 PM$ wait_timeout >> 6800
+11/26/2022 8:03:08 PM$ 100087874545472
+11/26/2022 8:03:08 PM$ 100072126136877
+11/26/2022 8:03:08 PM$ 100087874545472
+11/26/2022 8:03:08 PM$ send_message_reply 8119958531412014 Project Orion 4 - 7
+
+⦿ alert [text]
+⦿ morse [text]
+⦿ pickup
+⦿ uid
+⦿ guid
+⦿ reverse [text]
+⦿ itunes [title]
+⦿ doublestruck [text]
+⦿ translate [language] [text]
+⦿ trump [text]
+⦿ mock [text]
+⦿ jail @mention
+⦿ communist @mention
+⦿ wanted @mention
+⦿ gun @mention
+⦿ drip @mention
+⦿ clown @mention
+⦿ uncover @mention
+⦿ advert @mention
+⦿ blur @mention
+
+The radiant intensity from the ideal diffusely reflecting surface and cosine of the angle θ between the direction of incident light and surface normal are directly proportional.
+11/26/2022 8:03:08 PM$ react_message mid.$gABzZDyvbEC6K5RcSoWEs9HI9MMsP :laughing:
+11/26/2022 8:03:13 PM$ event_body 100087874545472 A baby panda is called a cub.
+11/26/2022 8:03:39 PM$ event_body 100072126136877 $help 3
+11/26/2022 8:03:39 PM$ wait_timeout >> 5200
+11/26/2022 8:03:44 PM$ 100072126136877
+11/26/2022 8:03:44 PM$ 100087874545472
+11/26/2022 8:03:44 PM$ send_message_reply 8119958531412014 Project Orion 3 - 7
+
+⦿ verse today
+⦿ verse random
+⦿ verse [book] [chapter]:[verse]
+⦿ animeqoute
+⦿ bgremove
+⦿ motivate
+⦿ inspiration
+⦿ advice
+⦿ remove
+⦿ meme
+⦿ meme --reddit
+⦿ drake [text1]: [text2]
+⦿ pooh [text1]: [text2]
+⦿ oogway [text]
+⦿ caution [text]
+⦿ element [name]
+⦿ imdb [title]
+⦿ steam [name]
+⦿ npm [name]
+⦿ gname
+
+Every point on a wavefront is in itself the source of spherical wavelets which spread out in the forward direction at the speed of light. The sum of these spherical wavelets forms the wavefront.
+11/26/2022 8:03:53 PM$ wait_timeout >> 5200
+11/26/2022 8:03:58 PM$ react_message mid.$gABipy5K1RKyK5RfcR2Es9SolA-6p :laughing:
+11/26/2022 8:04:04 PM$ event_body 100072126136877 $help 2
+11/26/2022 8:04:04 PM$ wait_timeout >> 7200
+11/26/2022 8:04:05 PM$ wait_timeout >> 6600
+11/26/2022 8:04:11 PM$ react_message mid.$gABzZDyvbEC6K5RgL-mEs9LChVeke :cry:
+11/26/2022 8:04:12 PM$ 100072126136877
+11/26/2022 8:04:12 PM$ 100087874545472
+11/26/2022 8:04:12 PM$ send_message_reply 8119958531412014 Project Orion 2 - 7
+
+⦿ thoughts
+⦿ lulcat [text]
+⦿ gemoji [emoji]
+⦿ gname [text]
+⦿ wiki [text]
+⦿ urlshort [url]
+⦿ nickname @mention [text]
+⦿ landscape
+⦿ landscape [text]
+⦿ portrait
+⦿ portrait [text]
+⦿ problem [equation]
+⦿ pin add
+⦿ pin remove
+⦿ sadcat [text]
+⦿ biden [text]
+⦿ pika [text]
+⦿ god [text]
+⦿ website [url]
+⦿ qrcode [text]
+
+Every point on a wavefront is in itself the source of spherical wavelets which spread out in the forward direction at the speed of light. The sum of these spherical wavelets forms the wavefront.
+11/26/2022 8:04:46 PM$ event_body 100072126136877 $help 1
+11/26/2022 8:04:46 PM$ wait_timeout >> 7200
+11/26/2022 8:04:46 PM$ wait_timeout >> 6600
+11/26/2022 8:04:46 PM$ wait_timeout >> 5200
+11/26/2022 8:04:52 PM$ 100078808031382
+11/26/2022 8:04:52 PM$ 100078808031382
+11/26/2022 8:04:52 PM$ send_message 6942091245864108 😆
+11/26/2022 8:04:53 PM$ react_message mid.$gABipy5K1RKyK5Ritf2Es9V570J8m :laughing:
+11/26/2022 8:04:54 PM$ 100072126136877
+11/26/2022 8:04:54 PM$ 100087874545472
+11/26/2022 8:04:54 PM$ send_message_reply 8119958531412014 Project Orion 1 - 7
+
+⦿ help
+⦿ help [number]
+⦿ help all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ summ [text]
+⦿ github [username]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ facts [text]
+⦿ phub [text]
+
+The product of the pressure and the volume of one gram molecule of an ideal gas is equal to the product of the absolute temperature of the gas and the universal gas constant.
+11/26/2022 8:05:58 PM$ event_body 100087874545472 🔎Searching for "she's gone."...
+11/26/2022 8:08:42 PM$ event_body 100087874545472 The cognitive domain levels of Blooms Taxonomy are:
+
+1. Knowledge: This level focuses on the recall of information. Examples include memorizing facts, dates, and formulas.
+
+2. Comprehension: This level focuses on understanding the information. Examples include summarizing, interpreting, and predicting.
+
+3. Application: This level focuses on using the information. Examples include solving problems, applying concepts, and making decisions.
+11/26/2022 8:11:55 PM$ wait_timeout >> 5800
+11/26/2022 8:12:00 PM$ wait_timeout >> 6300
+11/26/2022 8:12:01 PM$ react_message mid.$gABm9E9p_pl6K5R836mEs9nvLfUNu :cry:
+11/26/2022 8:12:06 PM$ react_message mid.$gABm9E9p_pl6K5R9LOWEs9oB9qNk2 :cry:
+11/26/2022 8:12:41 PM$ wait_timeout >> 6000
+11/26/2022 8:12:47 PM$ react_message mid.$gABm9E9p_pl6K5R_sv2Es9qkJxc5v :cry:
+11/26/2022 8:12:55 PM$ wait_timeout >> 5200
+11/26/2022 8:13:00 PM$ react_message mid.$gABm9E9p_pl6K5SAhzWEs9rYJ_NDi :cry:
+11/26/2022 8:15:05 PM$ wait_timeout >> 5800
+11/26/2022 8:15:10 PM$ react_message mid.$gABm9E9p_pl6K5SIdTGEs9zUt7YNp :cry:
+11/26/2022 8:15:20 PM$ wait_timeout >> 6000
+11/26/2022 8:15:26 PM$ react_message mid.$gABm9E9p_pl6K5SJY92Es90N-IAUN :cry:
+11/26/2022 8:18:14 PM$ wait_timeout >> 6500
+11/26/2022 8:18:18 PM$ wait_timeout >> 7200
+11/26/2022 8:18:20 PM$ react_message mid.$gABm9E9p_pl6K5SUAXWEs9-3vid-A :cry:
+11/26/2022 8:18:25 PM$ react_message mid.$gABm9E9p_pl6K5SUOMGEs9_DGrD1T :cry:
+11/26/2022 8:18:36 PM$ wait_timeout >> 5800
+11/26/2022 8:18:42 PM$ react_message mid.$gABm9E9p_pl6K5SVWFmEs-ANT48TF :cry:
+11/26/2022 8:18:46 PM$ wait_timeout >> 6300
+11/26/2022 8:18:52 PM$ react_message mid.$gABm9E9p_pl6K5SV-LGEs-A0XEORi :cry:
+11/26/2022 8:20:50 PM$ wait_timeout >> 5400
+11/26/2022 8:20:56 PM$ react_message mid.$gABm9E9p_pl6K5SdjVmEs-IapKu7K :cry:
+11/26/2022 8:21:32 PM$ wait_timeout >> 5400
+11/26/2022 8:21:38 PM$ react_message mid.$gABm9E9p_pl6K5SgHHGEs-K-GSGtv :cry:
+11/26/2022 8:21:49 PM$ wait_timeout >> 6800
+11/26/2022 8:21:55 PM$ react_message mid.$gABm9E9p_pl6K5ShHAGEs-L-KlGgq :cry:
+11/26/2022 8:21:56 PM$ wait_timeout >> 6300
+11/26/2022 8:22:00 PM$ wait_timeout >> 5200
+11/26/2022 8:22:02 PM$ react_message mid.$gABm9E9p_pl6K5Shj8WEs-Ma491a_ :cry:
+11/26/2022 8:22:05 PM$ react_message mid.$gABm9E9p_pl6K5ShxeGEs-MoIGN6R :cry:
+11/26/2022 8:22:08 PM$ wait_timeout >> 7200
+11/26/2022 8:22:08 PM$ wait_timeout >> 5500
+11/26/2022 8:22:08 PM$ wait_timeout >> 5000
+11/26/2022 8:22:13 PM$ send_message 6942091245864108 🥰🌘
+11/26/2022 8:22:14 PM$ 100023785687056
+11/26/2022 8:22:14 PM$ 100055464229665
+11/26/2022 8:22:14 PM$ send_message_reply 6942091245864108 Good evening as well... As always, the sun set is breathtaking; I hope you can see it too.
+11/26/2022 8:22:16 PM$ react_message mid.$gABipy5K1RKyK5SiR3mEs-NJa5EIR :love:
+11/26/2022 8:22:48 PM$ wait_timeout >> 5200
+11/26/2022 8:22:53 PM$ react_message mid.$gABm9E9p_pl6K5SkuMWEs-PlczxmT :cry:
+11/26/2022 8:23:02 PM$ wait_timeout >> 7000
+11/26/2022 8:23:09 PM$ react_message mid.$gABm9E9p_pl6K5SljMWEs-QZeZgVG :cry:
+11/26/2022 8:24:20 PM$ event_body 100087874545472 The main features of child include human.
+11/26/2022 8:25:29 PM$ wait_timeout >> 6500
+11/26/2022 8:25:35 PM$ react_message mid.$gABm9E9p_pl6K5Suh9GEs-ZZQ1NrU :cry:
