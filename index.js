@@ -2688,7 +2688,8 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                 }
             }
-        } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
+        } 
+        /* if (query.startsWith("facebook") || query2.startsWith("fb ")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -2734,7 +2735,46 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
                 }
             }
-        } else if (query.startsWith("morse")) {
+        } */
+/*
+        if (input.startsWith("getfb")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                api.sendMessage("⚠️ Invalid Use Of Command!\n💡 Usage: //getfb <mention>", event.threadID);
+            } else {
+                    var mentionid = Object.keys(event.mentions)[0];
+                    axios.get('https://manhict.tech/api/fbinfo?id=' + mentionid + '&apikey=CcIDaVqu')
+                    .then(response => {
+                        var name = response.data.result.name;
+                        var vanity = response.data.result.vanity;
+                        var birthday = response.data.result.birthday;
+                        var follow = response.data.result.follow;
+                        var profileurl = response.data.result.profileUrl;
+                        var gender = ((response.data.result.gender) ? "Male" : "Female");
+                        var hometown = response.data.result.hometown;
+                        var location = response.data.result.location;
+                        var relationship = response.data.result.relationship;
+                        var love = response.data.result.love;
+                        var website = response.data.result.website;
+                        var about = response.data.result.about;
+                        var quotes = response.data.result.quotes;
+
+                        request('https://graph.facebook.com/' + mentionid + '/picture?height=1500&width=1500&access_token=463372798834978|csqGyA8VWtIhabZZt-yhEBStl9Y').pipe(fs.createWriteStream(__dirname + '/attachments/profile.jpg'))
+
+                        .on('finish', () => {
+                            api.sendMessage({
+                                body: "Name: " + name + "\nUsername: " + vanity + "\nBirthday: " + birthday + "\nFollowers: " + follow + "\nProfile URL: " + profileurl + "\nGender: " + gender + "\nHometown: " + hometown + "\nLocation: " + location + "\nRelationship: " + relationship + "\nLove: " + love + "\nWebsite: " + website + "\nAbout: " + about + "\nQuotes: " + quotes,
+                                attachment: fs.createReadStream(__dirname + '/attachments/profile.jpg')
+                            }, event.threadID, event.messageID);
+                        })
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }
+        }
+*/
+         if (query.startsWith("morse")) {
             if (isGoingToFast(event)) {
                 return;
             }
