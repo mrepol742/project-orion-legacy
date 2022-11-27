@@ -826,7 +826,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query. == "melvinjonesrepol") {
+            if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol") {
                 if (nonRRR[event.senderID] == undefined) {
                     let message = {
                         body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type help. \n\nhttps://mrepol742.github.io/project-orion/",
