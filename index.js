@@ -837,7 +837,6 @@ async function ai(api, event) {
                     } else {
                         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
                     }
-                }
             } else {
                 let text = input;
                 if (query.startsWith("repol")) {
