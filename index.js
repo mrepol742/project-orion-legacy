@@ -44,6 +44,7 @@ let msgs = {};
 let cmd = {};
 let emo = {};
 let threadMaintenance = {};
+let nwww = {};
 let vips = [
     "100071743848974",
     "100016029218667",
@@ -956,6 +957,9 @@ async function ai(api, event) {
                 } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
                     return;
                 } else if (text.split(" ").length < 3 || text.indexOf(" ") == -1) {
+                    if (repeatOfNonWWW(event)) {
+                        return;
+                    }
                    sendMessage(api, event, text + "?");
                 } else {
                     await wait(3000);
@@ -3629,6 +3633,21 @@ function isGoingToFastCallingTheCommand(event) {
         return true;
     } else {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
+        return false;
+    }
+}
+
+function repeatOfNonWWW(event) {
+    if (!(event.threadID in nwww)) {
+        nwww[event.threadID] = Math.floor(Date.now() / 1000) + (60);
+        return false;
+    } else if (Math.floor(Date.now() / 1000) < nwww[event.threadID]) {
+        log("The user " + event.threadID + " is going to fast of calling the command >> " +
+            Math.floor((nwww[event.threadID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " +
+            (nwww[event.threadID] - Math.floor(Date.now() / 1000)) % 60 + " seconds");
+        return true;
+    } else {
+        nwww[event.threadID] = Math.floor(Date.now() / 1000) + (60);
         return false;
     }
 }
