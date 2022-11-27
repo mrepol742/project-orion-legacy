@@ -43,6 +43,7 @@ let nonRRR = {};
 let msgs = {};
 let cmd = {};
 let emo = {};
+let threadMaintenance = {};
 let vips = [
     "100071743848974",
     "100016029218667",
@@ -317,7 +318,9 @@ login({
                 let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 if (!(vips.includes(event.senderID))) {
                     if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjones" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
-                      
+                        if (isGoingToFastCallingTheCommand(event)) {
+                            return;
+                        }
                         let message = {
                             body: "Hold on a moment this system is currently under maintenance...\nhttps://mrepol742.github.io/project-orion/",
                             attachment: fs.createReadStream(__dirname + '/cache/maintenance.jpg')
@@ -815,14 +818,14 @@ async function ai(api, event) {
             ((query.startsWith("search") || query.startsWith("searchcode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 2) ||
                 otherQ(query2)) {
-            if (isGoingToFast(event)) {
-                return;
-            }
             if (event.type == "message_reply") {
                 if (!isMyId(event.messageReply.senderID)) {
                     return;
                 }
             } 
+            if (isGoingToFast(event)) {
+                return;
+            }
             if (input.split(" ").length < 2) {
                 if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
                     if (nonRRR[event.senderID] == undefined) {
@@ -918,7 +921,7 @@ async function ai(api, event) {
                     });
                 } else if (text1 == "whoownyou") {
                     sendMessage(api, event, "Melvin Jones Repol.")
-                } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker")) {
+                } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou")) {
                     sendMessage(api, event, "Melvin Jones Repol created me.");
                 } else if (text1.startsWith("howoldareyou") || text1.startsWith("howyoungareyou")) {
                     sendMessage(api, event, "I'm 20 years old.");
@@ -940,7 +943,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "bye bye.");
                 } else if (text1 == "ok" || text1 == "okay") {
                     sendMessage(api, event, "Yeahh..");
-                } else if (text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
+                } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
                     sendMessage(api, event, "huhhhhhhhhh uh.");
                 } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" || 
                     (text1.startsWith("whois") && isMe(text2))) {
@@ -954,6 +957,8 @@ async function ai(api, event) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                 } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
                     return;
+                } else if (input.split(" ").length < 4 && input.split(" ").length > 2) {
+                   sendMessage(api, event, text + "?");
                 } else {
                     await wait(3000);
                     if (!query.startsWith("searchcode")) {
@@ -2736,28 +2741,37 @@ async function ai(api, event) {
                 }
             }
         } */
-/*
-        if (input.startsWith("getfb")) {
+
+        if (input.startsWith("facebook")) {
             let data = input.split(" ");
             if (data.length < 2) {
-                api.sendMessage("⚠️ Invalid Use Of Command!\n💡 Usage: //getfb <mention>", event.threadID);
+                sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
             } else {
-                    var mentionid = Object.keys(event.mentions)[0];
-                    axios.get('https://manhict.tech/api/fbinfo?id=' + mentionid + '&apikey=CcIDaVqu')
-                    .then(response => {
-                        var name = response.data.result.name;
-                        var vanity = response.data.result.vanity;
-                        var birthday = response.data.result.birthday;
-                        var follow = response.data.result.follow;
-                        var profileurl = response.data.result.profileUrl;
-                        var gender = ((response.data.result.gender) ? "Male" : "Female");
-                        var hometown = response.data.result.hometown;
-                        var location = response.data.result.location;
-                        var relationship = response.data.result.relationship;
-                        var love = response.data.result.love;
-                        var website = response.data.result.website;
-                        var about = response.data.result.about;
-                        var quotes = response.data.result.quotes;
+                var id = Object.keys(event.mentions)[0];
+                if (id === undefined) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
+                    return;
+                }
+                if (isMyId(id)) {
+                    id = event.senderID;
+                }
+                getResponseData('https://manhict.tech/api/fbinfo?id=' + id + '&apikey=CcIDaVqu').then((response) => {
+                    if (response == null) {
+                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                    } else {
+                        var name = response.result.name;
+                        var vanity = response.result.vanity;
+                        var birthday = response.result.birthday;
+                        var follow = response.result.follow;
+                        var profileurl = response.result.profileUrl;
+                        var gender = ((response.result.gender) ? "Male" : "Female");
+                        var hometown = response.result.hometown;
+                        var location = response.result.location;
+                        var relationship = response.result.relationship;
+                        var love = response.result.love;
+                        var website = response.result.website;
+                        var about = response.result.about;
+                        var quotes = response.result.quotes;
 
                         request('https://graph.facebook.com/' + mentionid + '/picture?height=1500&width=1500&access_token=463372798834978|csqGyA8VWtIhabZZt-yhEBStl9Y').pipe(fs.createWriteStream(__dirname + '/attachments/profile.jpg'))
 
@@ -2767,13 +2781,11 @@ async function ai(api, event) {
                                 attachment: fs.createReadStream(__dirname + '/attachments/profile.jpg')
                             }, event.threadID, event.messageID);
                         })
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
+                    }
+                });
             }
         }
-*/
+
          if (query.startsWith("morse")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3603,6 +3615,22 @@ function isGoingToFastResendingOfEmo(event) {
         return true;
     } else {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
+        return false;
+    }
+}
+
+
+function isGoingToFastCallingTheCommand(event) {
+    if (!(event.threadID in threadMaintenance)) {
+        threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
+        return false;
+    } else if (Math.floor(Date.now() / 1000) < threadMaintenance[event.threadID]) {
+        log("The user " + event.threadID + " is going to fast of calling the command >> " +
+            Math.floor((threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) / 60 * 5) + " mins and " +
+            (threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) % 60 * 5 + " seconds");
+        return true;
+    } else {
+        threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
         return false;
     }
 }
