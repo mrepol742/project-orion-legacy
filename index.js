@@ -957,7 +957,7 @@ async function ai(api, event) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                 } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
                     return;
-                } else if (input.split(" ").length < 4 && input.split(" ").length > 2) {
+                } else if (input.split(" ").length < 3) {
                    sendMessage(api, event, text + "?");
                 } else {
                     await wait(3000);
