@@ -949,7 +949,7 @@ async function ai(api, event) {
                 } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
                     let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\nhttps://0x3ef8.github.io";
                     sendMessage(api, event, mss);
-                } else if (text1 == "help") {
+                } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using help number instead.\nFor example:\nhelp 2");
                 //} else if (text1.split('').length < 10) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
