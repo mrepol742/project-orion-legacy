@@ -816,7 +816,7 @@ async function ai(api, event) {
             }
         } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
             ((query.startsWith("search") || query.startsWith("searchcode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
-                query.startsWith("how") || query.startsWith("why") || query.startsWith("which")) && input.indexOf(" ") > 2) ||
+                query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
                 otherQ(query2)) {
             if (event.type == "message_reply") {
                 if (!isMyId(event.messageReply.senderID)) {
@@ -826,8 +826,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            if (input.split(" ").length < 2) {
-                if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
+            if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol")) {
                     if (nonRRR[event.senderID] == undefined) {
                         let message = {
                             body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type help. \n\nhttps://mrepol742.github.io/project-orion/",
@@ -957,7 +956,7 @@ async function ai(api, event) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                 } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
                     return;
-                } else if (text.split(" ").length < 3) {
+                } else if (text.split(" ").length < 3 || text.indexOf(" ") == -1) {
                    sendMessage(api, event, text + "?");
                 } else {
                     await wait(3000);
