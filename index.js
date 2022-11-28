@@ -714,7 +714,7 @@ login({
                                 let gname = gc.threadName;
                                 let count = 0;
                                 while (true) {
-                                    if (event.logMessageData.addedParticipants[i] === undefined) {
+                                    if (event.logMessageData.addedParticipants[count] === undefined) {
                                         break;
                                     }
                                     count++;
@@ -2792,29 +2792,28 @@ async function ai(api, event) {
                 if (isMyId(id)) {
                     id = event.senderID;
                 }
-                getResponseData('https://manhict.tech/api/fbinfo?id=' + id + '&apikey=CcIDaVqu').then((response) => {
+                await axios.get(encodeURI('https://manhict.tech/api/fbinfo?id=' + id + '&apikey=CcIDaVqu')).then((response) => {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     } else {
-                        var name = response.result.name;
-                        var vanity = response.result.vanity;
-                        var birthday = response.result.birthday;
-                        var follow = response.result.follow;
-                        var profileurl = response.result.profileUrl;
-                        var gender = ((response.result.gender) ? "Male" : "Female");
-                        var hometown = response.result.hometown;
-                        var location = response.result.location;
-                        var relationship = response.result.relationship;
+                        var name = response.data.result.name;
+                        var vanity = response.data.result.vanity;
+                        var birthday = response.data.result.birthday;
+                        var follow = response.data.result.follow;
+                        var profileurl = response.data.result.profileUrl;
+                        var gender = ((response.data.result.gender) ? "Male" : "Female");
+                        var hometown = response.data.result.hometown;
+                        var location = response.data.result.location;
+                        var relationship = response.data.result.relationship;
                         var love = response.result.love;
-                        var website = response.result.website;
-                        var about = response.result.about;
-                        var quotes = response.result.quotes;
-
+                        var website = response.data.result.website;
+                        var about = response.data.result.about;
+                        var quotes = response.data.result.quotes;
                         request('https://graph.facebook.com/' + mentionid + '/picture?height=1500&width=1500&access_token=463372798834978|csqGyA8VWtIhabZZt-yhEBStl9Y').pipe(fs.createWriteStream(__dirname + '/attachments/profile.jpg'))
 
                         .on('finish', () => {
                             api.sendMessage({
-                                body: "Name: " + name + "\nUsername: " + vanity + "\nBirthday: " + birthday + "\nFollowers: " + follow + "\nProfile URL: " + profileurl + "\nGender: " + gender + "\nHometown: " + hometown + "\nLocation: " + location + "\nRelationship: " + relationship + "\nLove: " + love + "\nWebsite: " + website + "\nAbout: " + about + "\nQuotes: " + quotes,
+                                body: "Name: " + name + " @" + vanity + "\nBirthday: " + birthday + "\nFollowers: " + follow + "\nGender: " + gender + "\nHometown: " + hometown + "\nLocation: " + location + "\nRelationship: " + relationship + "\nLove: " + love + "\n\n" + about + "\n" + quotes + "\n" + website,
                                 attachment: fs.createReadStream(__dirname + '/attachments/profile.jpg')
                             }, event.threadID, event.messageID);
                         })
