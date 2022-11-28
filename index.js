@@ -496,6 +496,7 @@ login({
                                             attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
                                         }
                                         sendMessage(api, event, message);
+                                        unLink(__dirname + "/cache/images/removebg.png");
                                     })
                                     .catch((error) => {
                                         sendMessage(api, event, "An unknown error as been occured. Please try again later.");
@@ -547,6 +548,7 @@ login({
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
+                                                unLink(__dirname + "/cache/images/unsend_img.jpg");
                                             })
                                         }
                                     });
@@ -576,6 +578,7 @@ login({
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
+                                                unLink(__dirname + "/cache/images/unsend_gif.gif");
                                             })
                                         }
                                     });
@@ -605,6 +608,7 @@ login({
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
+                                                unLink(__dirname + "/cache/images/unsend_sticker.png");
                                             })
                                         }
                                     });
@@ -634,6 +638,7 @@ login({
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
+                                                unLink(__dirname + "/cache/videos/unsend_vid.mp4");
                                             })
                                         }
                                     });
@@ -663,6 +668,7 @@ login({
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
+                                                unLink(__dirname + "/cache/audios/unsend_vm.mp3");
                                             })
                                         }
                                     });
@@ -706,6 +712,13 @@ login({
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (gc.isGroup) {
                                 let gname = gc.threadName;
+                                let count = 0;
+                                while (true) {
+                                    if (event.logMessageData.addedParticipants[i] === undefined) {
+                                        break;
+                                    }
+                                    count++;
+                                }
                                 let i = 0;
                                 while (true) {
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
@@ -714,7 +727,10 @@ login({
                                     let name = event.logMessageData.addedParticipants[i].fullName;
                                     let id = event.logMessageData.addedParticipants[i].userFbId;
                                     let arr = gc.participantIDs;
-                                    let Tmem = arr.length - i;
+                                    let Tmem = arr.length;
+                                    if (count > 1) {
+                                        Tmem = Tmem - 1;
+                                    }
                                     log("new_member " + id + " " + name )
                                     let num = i;
                                     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome" + num + ".jpg"))
@@ -728,6 +744,7 @@ login({
                                             }]
                                         };
                                         sendMessageOnly(api, event, message);
+                                        unLink(__dirname + "/cache/images/welcome" + num + ".jpg");
                                     })
                                     i++;
                                 }
@@ -758,6 +775,7 @@ login({
                                                     };
                                                     sendMessageOnly(api, event, message);
                                                     log("leave_member " + data[prop].name);
+                                                    unLink(__dirname + "/cache/images/byebye.jpg");
                                                 })
                                         }
                                     }
@@ -919,6 +937,7 @@ async function ai(api, event) {
                                 }]
                             };
                             sendMessage(api, event, message);
+                            unLink(__dirname + "/cache/images/whoiam.png");
                         })
                     });
                 } else if (text1 == "whoownyou") {
@@ -1151,6 +1170,7 @@ async function ai(api, event) {
                                 if (data.length > limit) {
                                     log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
                                     sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
+                                    unLink(__dirname + '/cache/videos/video.mp4');
                                 } else {
                                     log("Done.");
                                     let message = {
@@ -1215,6 +1235,7 @@ async function ai(api, event) {
                                 if (data.length > limit) {
                                     log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
                                     sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
+                                    unlink(__dirname + '/cache/audios/music.mp3');
                                 } else {
                                     log("Finish downloading music.");
                                     let message = {
@@ -1249,11 +1270,12 @@ async function ai(api, event) {
                             request(encodeURI(response.result.hd)).pipe(fs.createWriteStream(__dirname + '/cache/videos/fbvideodl.mp4'))
                                 .on('finish', () => {
                                     var limit = 25 * 1024 * 1024;
-                                    fs.readFile(__dirname + '/attachments/facebookvid.mp4', function(err, data) {
+                                    fs.readFile(__dirname + '/cache/videos/fbvideodl.mp4', function(err, data) {
                                     if (err) log(err)
                                     if (data.length > limit) {
                                         log("Unable to upload the facebook due to the file limit. The file size is " + (data.length / 1024 / 1024));
                                         sendMessage(api, event, "Unfortunately i cannot send your facebook video due to the size restrictions on messenger platform.");
+                                        unlink(__dirname + '/cache/videos/fbvideodl.mp4');
                                     } else {
                                         log("Finish downloading facebook video.");
                                         let message = {
@@ -1336,6 +1358,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(__dirname + '/cache/images/lyrics.png')
                                 };
                                 sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/lyrics.png");
                             })
                     }
                 });
@@ -1650,6 +1673,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(__dirname + '/cache/images/instaprofile.png')
                                 };
                                 sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/instaprofile.png");
                             })
                     }
                 });
@@ -1706,6 +1730,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(__dirname + '/cache/images/github_avatar.png')
                                 };
                                 sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/github_avatar.png");
                             })
                     }
                 });
@@ -1742,6 +1767,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(__dirname + '/cache/images/element.png')
                                 };
                                 sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/element.png");
                             })
                     }
                 });
@@ -1801,6 +1827,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(__dirname + '/cache/images/steam.png')
                                 };
                                 sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/steam.png");
                             })
                     }
                 });
@@ -1835,6 +1862,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(__dirname + '/cache/images/imdb.png')
                                 };
                                 sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/imdb.png");
                             })
                     }
                 });
@@ -1869,6 +1897,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(__dirname + '/cache/images/itunes.png')
                                 };
                                 sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/itunes.png");
                             })
                     }
                 });
@@ -1892,6 +1921,7 @@ async function ai(api, event) {
                                 attachment: fs.createReadStream(__dirname + '/cache/images/car.png')
                             };
                             sendMessage(api, event, message);
+                            unLink(__dirname + "/cache/images/car.png");
                         })
                 }
             });
@@ -1915,6 +1945,7 @@ async function ai(api, event) {
                                 attachment: fs.createReadStream(__dirname + '/cache/images/color.png')
                             };
                             sendMessage(api, event, message);
+                            unLink(__dirname + "/cache/images/color.png");
                         })
                 }
             });
@@ -2332,6 +2363,7 @@ async function ai(api, event) {
                                             }]
                                         };
                                         sendMessage(api, event, image);
+                                        unLink(__dirname + "/cache/images/kiss.png");
                                     })
                             })
                         }
@@ -2864,6 +2896,7 @@ async function ai(api, event) {
                                 attachment: fs.createReadStream(__dirname + '/cache/images/coding.png')
                             };
                             sendMessage(api, event, message);
+                            unLink(__dirname + "/cache/images/coding.png");
                         })
                 }
             });
@@ -3508,6 +3541,7 @@ function parseImage(api, event, url, dir) {
                     };
                     sendMessage(api, event, image);
                 }
+                unLink(dir);
             })
         })
 }
@@ -3904,11 +3938,21 @@ async function getImages(api, event, images) {
         ]
     };
     api.sendMessage(message, event.threadID, (err, done) => {
-        fs.unlinkSync(__dirname + "/cache/images/findimg0.png")
-        fs.unlinkSync(__dirname + "/cache/images/findimg1.png")
-        fs.unlinkSync(__dirname + "/cache/images/findimg2.png")
-        fs.unlinkSync(__dirname + "/cache/images/findimg3.png")
-        fs.unlinkSync(__dirname + "/cache/images/findimg4.png")
-        fs.unlinkSync(__dirname + "/cache/images/findimg5.png")
+        unLink(__dirname + "/cache/images/findimg0.png")
+        unLink(__dirname + "/cache/images/findimg1.png")
+        unLink(__dirname + "/cache/images/findimg2.png")
+        unLink(__dirname + "/cache/images/findimg3.png")
+        unLink(__dirname + "/cache/images/findimg4.png")
+        unLink(__dirname + "/cache/images/findimg5.png")
     }, event.messageID)
+}
+
+function unLink(dir) {
+    await wait(20000);
+    fs.unlink(dir, (err => {
+        if (err) log(err);
+        else {
+          log("un_link " + dir);
+        }
+    }));
 }
