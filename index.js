@@ -3947,7 +3947,7 @@ async function getImages(api, event, images) {
     }, event.messageID)
 }
 
-function unLink(dir) {
+async function unLink(dir) {
     await wait(20000);
     fs.unlink(dir, (err => {
         if (err) log(err);
