@@ -75,9 +75,9 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 
 let timeZones =['Europe/Andorra','Asia/Dubai','Asia/Kabul','Europe/Tirane','Asia/Yerevan','Antarctica/Casey','Antarctica/Davis','Antarctica/DumontDUrville','Antarctica/Mawson','Antarctica/Palmer','Antarctica/Rothera','Antarctica/Syowa','Antarctica/Troll','Antarctica/Vostok','America/Argentina/Buenos_Aires','America/Argentina/Cordoba','America/Argentina/Salta','America/Argentina/Jujuy','America/Argentina/Tucuman','America/Argentina/Catamarca','America/Argentina/La_Rioja','America/Argentina/San_Juan','America/Argentina/Mendoza','America/Argentina/San_Luis','America/Argentina/Rio_Gallegos','America/Argentina/Ushuaia','Pacific/Pago_Pago','Europe/Vienna','Australia/Lord_Howe','Antarctica/Macquarie','Australia/Hobart','Australia/Currie','Australia/Melbourne','Australia/Sydney','Australia/Broken_Hill','Australia/Brisbane','Australia/Lindeman','Australia/Adelaide','Australia/Darwin','Australia/Perth','Australia/Eucla','Asia/Baku','America/Barbados','Asia/Dhaka','Europe/Brussels','Europe/Sofia','Atlantic/Bermuda','Asia/Brunei','America/La_Paz','America/Noronha','America/Belem','America/Fortaleza','America/Recife','America/Araguaina','America/Maceio','America/Bahia','America/Sao_Paulo','America/Campo_Grande','America/Cuiaba','America/Santarem','America/Porto_Velho','America/Boa_Vista','America/Manaus','America/Eirunepe','America/Rio_Branco','America/Nassau','Asia/Thimphu','Europe/Minsk','America/Belize','America/St_Johns','America/Halifax','America/Glace_Bay','America/Moncton','America/Goose_Bay','America/Blanc-Sablon','America/Toronto','America/Nipigon','America/Thunder_Bay','America/Iqaluit','America/Pangnirtung','America/Atikokan','America/Winnipeg','America/Rainy_River','America/Resolute','America/Rankin_Inlet','America/Regina','America/Swift_Current','America/Edmonton','America/Cambridge_Bay','America/Yellowknife','America/Inuvik','America/Creston','America/Dawson_Creek','America/Fort_Nelson','America/Vancouver','America/Whitehorse','America/Dawson','Indian/Cocos','Europe/Zurich','Africa/Abidjan','Pacific/Rarotonga','America/Santiago','America/Punta_Arenas','Pacific/Easter','Asia/Shanghai','Asia/Urumqi','America/Bogota','America/Costa_Rica','America/Havana','Atlantic/Cape_Verde','America/Curacao','Indian/Christmas','Asia/Nicosia','Asia/Famagusta','Europe/Prague','Europe/Berlin','Europe/Copenhagen','America/Santo_Domingo','Africa/Algiers','America/Guayaquil','Pacific/Galapagos','Europe/Tallinn','Africa/Cairo','Africa/El_Aaiun','Europe/Madrid','Africa/Ceuta','Atlantic/Canary','Europe/Helsinki','Pacific/Fiji','Atlantic/Stanley','Pacific/Chuuk','Pacific/Pohnpei','Pacific/Kosrae','Atlantic/Faroe','Europe/Paris','Europe/London','Asia/Tbilisi','America/Cayenne','Africa/Accra','Europe/Gibraltar','America/Godthab','America/Danmarkshavn','America/Scoresbysund','America/Thule','Europe/Athens','Atlantic/South_Georgia','America/Guatemala','Pacific/Guam','Africa/Bissau','America/Guyana','Asia/Hong_Kong','America/Tegucigalpa','America/Port-au-Prince','Europe/Budapest','Asia/Jakarta','Asia/Pontianak','Asia/Makassar','Asia/Jayapura','Europe/Dublin','Asia/Jerusalem','Asia/Kolkata','Indian/Chagos','Asia/Baghdad','Asia/Tehran','Atlantic/Reykjavik','Europe/Rome','America/Jamaica','Asia/Amman','Asia/Tokyo','Africa/Nairobi','Asia/Bishkek','Pacific/Tarawa','Pacific/Enderbury','Pacific/Kiritimati','Asia/Pyongyang','Asia/Seoul','Asia/Almaty','Asia/Qyzylorda','Asia/Qostanay','Asia/Aqtobe','Asia/Aqtau','Asia/Atyrau','Asia/Oral','Asia/Beirut','Asia/Colombo','Africa/Monrovia','Europe/Vilnius','Europe/Luxembourg','Europe/Riga','Africa/Tripoli','Africa/Casablanca','Europe/Monaco','Europe/Chisinau','Pacific/Majuro','Pacific/Kwajalein','Asia/Yangon','Asia/Ulaanbaatar','Asia/Hovd','Asia/Choibalsan','Asia/Macau','America/Martinique','Europe/Malta','Indian/Mauritius','Indian/Maldives','America/Mexico_City','America/Cancun','America/Merida','America/Monterrey','America/Matamoros','America/Mazatlan','America/Chihuahua','America/Ojinaga','America/Hermosillo','America/Tijuana','America/Bahia_Banderas','Asia/Kuala_Lumpur','Asia/Kuching','Africa/Maputo','Africa/Windhoek','Pacific/Noumea','Pacific/Norfolk','Africa/Lagos','America/Managua','Europe/Amsterdam','Europe/Oslo','Asia/Kathmandu','Pacific/Nauru','Pacific/Niue','Pacific/Auckland','Pacific/Chatham','America/Panama','America/Lima','Pacific/Tahiti','Pacific/Marquesas','Pacific/Gambier','Pacific/Port_Moresby','Pacific/Bougainville','Asia/Manila','Asia/Karachi','Europe/Warsaw','America/Miquelon','Pacific/Pitcairn','America/Puerto_Rico','Asia/Gaza','Asia/Hebron','Europe/Lisbon','Atlantic/Madeira','Atlantic/Azores','Pacific/Palau','America/Asuncion','Asia/Qatar','Indian/Reunion','Europe/Bucharest','Europe/Belgrade','Europe/Kaliningrad','Europe/Moscow','Europe/Simferopol','Europe/Kirov','Europe/Astrakhan','Europe/Volgograd','Europe/Saratov','Europe/Ulyanovsk','Europe/Samara','Asia/Yekaterinburg','Asia/Omsk','Asia/Novosibirsk','Asia/Barnaul','Asia/Tomsk','Asia/Novokuznetsk','Asia/Krasnoyarsk','Asia/Irkutsk','Asia/Chita','Asia/Yakutsk','Asia/Khandyga','Asia/Vladivostok','Asia/Ust-Nera','Asia/Magadan','Asia/Sakhalin','Asia/Srednekolymsk','Asia/Kamchatka','Asia/Anadyr','Asia/Riyadh','Pacific/Guadalcanal','Indian/Mahe','Africa/Khartoum','Europe/Stockholm','Asia/Singapore','America/Paramaribo','Africa/Juba','Africa/Sao_Tome','America/El_Salvador','Asia/Damascus','America/Grand_Turk','Africa/Ndjamena','Indian/Kerguelen','Asia/Bangkok','Asia/Dushanbe','Pacific/Fakaofo','Asia/Dili','Asia/Ashgabat','Africa/Tunis','Pacific/Tongatapu','Europe/Istanbul','America/Port_of_Spain','Pacific/Funafuti','Asia/Taipei','Europe/Kiev','Europe/Uzhgorod','Europe/Zaporozhye','Pacific/Wake','America/New_York','America/Detroit','America/Kentucky/Louisville','America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes','America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg','America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City','America/Indiana/Knox','America/Menominee','America/North_Dakota/Center','America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver','America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage','America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat','America/Nome','America/Adak','Pacific/Honolulu','America/Montevideo','Asia/Samarkand','Asia/Tashkent','America/Caracas','Asia/Ho_Chi_Minh','Pacific/Efate','Pacific/Wallis','Pacific/Apia','Africa/Johannesburg'];
 
-let help = "\n⦿ help";
-help += "\n⦿ help [number]";
-help += "\n⦿ help all";
+let help = "\n⦿ cmd";
+help += "\n⦿ cmd [number]";
+help += "\n⦿ cmd all";
 help += "\n⦿ mj [text]";
 help += "\n⦿ search [text]"
 help += "\n⦿ searchincog [text]";
@@ -125,7 +125,7 @@ help2 += "\n⦿ bgremove";
 help2 += "\n⦿ motivate";
 help2 += "\n⦿ inspiration";
 help2 += "\n⦿ advice";
-help2 += "\n⦿ remove";
+help2 += "\n⦿ mnm @mention";
 help2 += "\n⦿ meme";
 help2 += "\n⦿ meme --reddit";
 help2 += "\n⦿ drake [text1]: [text2]";
@@ -168,7 +168,7 @@ help4 += "\n⦿ 8ball";
 help4 += "\n⦿ gmember";
 help4 += "\n⦿ car";
 help4 += "\n⦿ color";
-help4 += "\n⦿ sim [text]";
+help4 += "\n⦿ sip [text]";
 help4 += "\n⦿ pet @mention";
 help4 += "\n⦿ ship @mention @mention";
 help4 += "\n⦿ www @mention @mention";
@@ -184,7 +184,6 @@ let help5 = "\n⦿ conan";
 help5 += "\n⦿ invert @mention";
 help5 += "\n⦿ greyscale @mention";
 help5 += "\n⦿ jokeover @mention";
-help5 += "\n⦿ mnm @mention";
 help5 += "\n⦿ count";
 help5 += "\n⦿ count --vowels";
 help5 += "\n⦿ count --consonants";
@@ -540,6 +539,7 @@ login({
                                                         }]
                                                     }
                                                     sendMessageOnly(api, event, message);
+                                                    
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this photo. \n",
@@ -686,11 +686,13 @@ login({
                                             }]
                                         }
                                         sendMessageOnly(api, event, message);
+                                        log("unsend_message_group " + event.senderID + message);
                                     } else {
                                         let message = {
                                             body: "You deleted the following.\n\n" + msgs[event.messageID]
                                         }
                                         sendMessageOnly(api, event, message);
+                                        log("unsend_message " + event.senderID + message);
                                     }
                                 })
                             }
@@ -713,7 +715,7 @@ login({
                                     let id = event.logMessageData.addedParticipants[i].userFbId;
                                     let arr = gc.participantIDs;
                                     let Tmem = arr.length - i;
-                                    console.log("new_member " + id + " " + name )
+                                    log("new_member " + id + " " + name )
                                     let num = i;
                                     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome" + num + ".jpg"))
                                         .on('finish', () => {
@@ -755,6 +757,7 @@ login({
                                                         attachment: fs.createReadStream(__dirname + "/cache/images/byebye.jpg")
                                                     };
                                                     sendMessageOnly(api, event, message);
+                                                    log("leave_member " + data[prop].name);
                                                 })
                                         }
                                     }
@@ -830,7 +833,7 @@ async function ai(api, event) {
             if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol") {
                 if (nonRRR[event.senderID] == undefined) {
                     let message = {
-                        body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type help. \n\nhttps://mrepol742.github.io/project-orion/",
+                        body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n\nhttps://mrepol742.github.io/project-orion/",
                         attachment: [fs.createReadStream(__dirname + "/cache/hello" + Math.floor(Math.random() * 8) + ".jpg")]
                     }
                     sendMessage(api, event, message);
@@ -871,7 +874,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "I'm Mj.");
                 } else if (text1.startsWith("whoisactive")) {
                     sendMessage(api, event, "Me");
-                } else if (text1 == "sim") {
+                } else if (text1 == "sip") {
                     sendMessage(api, event, "Me? noooo...");
                 } else if (text1 == "callme") {
                     let id;
@@ -950,8 +953,8 @@ async function ai(api, event) {
                 } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
                     let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\nhttps://0x3ef8.github.io";
                     sendMessage(api, event, mss);
-                } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using help number instead.\nFor example:\nhelp 2");
+                } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead.\nFor example:\ncmd 2");
                 //} else if (text1.split('').length < 10) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                 } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
@@ -1247,7 +1250,7 @@ async function ai(api, event) {
                                 .on('finish', () => {
                                     var limit = 25 * 1024 * 1024;
                                     fs.readFile(__dirname + '/attachments/facebookvid.mp4', function(err, data) {
-                                    if (err) console.log(err)
+                                    if (err) log(err)
                                     if (data.length > limit) {
                                         log("Unable to upload the facebook due to the file limit. The file size is " + (data.length / 1024 / 1024));
                                         sendMessage(api, event, "Unfortunately i cannot send your facebook video due to the size restrictions on messenger platform.");
@@ -2213,48 +2216,48 @@ async function ai(api, event) {
                     }
                 }
             });
-        } else if (query == "help" || query == "help1") {
+        } else if (query == "cmd" || query == "cmd1") {
             if (isGoingToFast(event)) {
                 return;
             }
             sendMessage(api, event, "Project Orion 1 - 7\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "help2") {
+        } else if (query == "cmd2") {
             if (isGoingToFast(event)) {
                 return;
             }
             sendMessage(api, event, "Project Orion 2 - 7\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "help3") {
+        } else if (query == "cmd3") {
             if (isGoingToFast(event)) {
                 return;
             }
             sendMessage(api, event, "Project Orion 3 - 7\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "help4") {
+        } else if (query == "cmd4") {
             if (isGoingToFast(event)) {
                 return;
             }
             sendMessage(api, event, "Project Orion 4 - 7\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "help5") {
+        } else if (query == "cmd5") {
             if (isGoingToFast(event)) {
                 return;
             }
             sendMessage(api, event, "Project Orion 5 - 7\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "help6") {
+        } else if (query == "cmd6") {
             if (isGoingToFast(event)) {
                 return;
             }
             sendMessage(api, event, "Project Orion 6 - 7\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "help7") {
+        } else if (query == "cmd7") {
             if (isGoingToFast(event)) {
                 return;
             }
             sendMessage(api, event, "Project Orion 7 - 7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "helpadmin") {
+        } else if (query == "cmdadmin") {
             if (isGoingToFast(event)) {
                 return;
             }
             await wait(6000);
             sendMessage(api, event, "Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query == "helpall") {
+        } else if (query == "cmdall") {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -3141,7 +3144,7 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + '/cache/images/sadcat.png');
             }
-        } else if (query2.startsWith("sim ")) {
+        } else if (query2.startsWith("sip ")) {
             if (isGoingToFast(event)) {
                 return;
             }
