@@ -2794,8 +2794,8 @@ async function ai(api, event) {
                 if (isMyId(id)) {
                     id = event.senderID;
                 }
-                await axios.get(encodeURI('https://manhict.tech/api/fbinfo?id=' + id + '&apikey=' + apiKey[6])).then((response) => {
-                    if (response == null) {
+                axios.get(encodeURI('https://manhict.tech/api/fbinfo?id=' + id + '&apikey=' + apiKey[6])).then((response) => {
+                    if (response.data == null) {
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     } else {
                         var name = response.data.result.name;
