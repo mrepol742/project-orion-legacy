@@ -3576,6 +3576,11 @@ function reportIssue(api, event, err) {
 }
 
 async function sendMessage(api, event, message) {
+    if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        }
+    }
     api.getThreadInfo(event.threadID, (err, gc) => {
         if (gc.isGroup) {
             let ts = undefined;
@@ -3609,6 +3614,11 @@ async function sendMessage(api, event, message) {
 }
 
 async function sendMessageOnly(api, event, message) { 
+    if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        }
+    }
     log("send_message " + event.threadID + " " + message);
     api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
 }
@@ -3639,11 +3649,6 @@ async function isGoingToFast(event) {
     log("event_body " + event.senderID + " " + event.body);
     if (!settings.preventSimultanoesExecution) {
         return false;
-    }
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
     }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
@@ -3679,11 +3684,6 @@ async function isGoingToFastResendingOfEmo(event) {
 
 
 async function isGoingToFastCallingTheCommand(event) {
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
-    }
     if (!(event.threadID in threadMaintenance)) {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
         return false;
