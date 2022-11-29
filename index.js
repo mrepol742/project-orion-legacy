@@ -36,6 +36,8 @@ let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget
 let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
 let tips = ["Be detailed but brief", "Ask me like Who are you?", "Ask me like How to do this?"]
 let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there"];
+let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 let saveAns = [];
 let threads = ""
 let threadIdMV = {};
@@ -774,7 +776,7 @@ login({
                                             request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
                                                 .on('finish', () => {
                                                     let message = {
-                                                        body: `Thank you for joining ` + data[prop].name + ` but now you're leaving us.`,
+                                                        body: "Thank you for joining " + data[prop].name + " but now you're leaving us.",
                                                         attachment: fs.createReadStream(__dirname + "/cache/images/byebye.jpg")
                                                     };
                                                     sendMessageOnly(api, event, message);
@@ -1165,7 +1167,7 @@ async function ai(api, event) {
                         });
                         stream.on('info', (info) => {
                             threadIdMV[event.threadID] = false;
-                            log(`Downloading ${info.video_details.title}`);
+                            log("downloading " + info.video_details.title);
                         });
                         stream.on('end', () => {
                             let limit = 25 * 1024 * 1024;
@@ -1230,7 +1232,7 @@ async function ai(api, event) {
                         });
                         stream.on('info', (info) => {
                             threadIdMV[event.threadID] = false;
-                            log(`Downloading ${info.video_details.title}`);
+                            log("downloading " + info.video_details.title);
                         });
                         stream.on('end', () => {
                             let limit = 25 * 1024 * 1024;
@@ -1376,7 +1378,7 @@ async function ai(api, event) {
                     let res = await pdfdrive.findEbook(searched);
                     let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
 
-                    sendMessage(api, event, `${res2.ebookName}\n\n` + `${res2.dlUrl}`)
+                    sendMessage(api, event, res2.ebookName + "\n\n" + res2.dlUrl)
                 } catch (err) {
                     reportIssue(api, event.threadID, err);
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.")
@@ -1665,7 +1667,7 @@ async function ai(api, event) {
             } else {
                 data.shift()
                 let userN = data.join(" ");
-                getResponseData('https://manhict.tech/api/scInfo?query=' + userN + "&apikey=" + apiKey[0]).then((response) => {
+                getResponseData('https://manhict.tech/api/scInfo?query=' + encodeURI(userN) + "&apikey=" + apiKey[0]).then((response) => {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
                     } else {
@@ -2229,7 +2231,7 @@ async function ai(api, event) {
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
-                    sendMessage(api, event, `${gc.threadName}`)
+                    sendMessage(api, event, gc.threadName);
                 }
             })
         } else if (query == "groupid" || query == "guid" || query == "uid") {
@@ -2247,7 +2249,7 @@ async function ai(api, event) {
                             sendMessage(api, event, name + " uid is " + event.messageReply.senderID);
                         });
                     } else if (gc.isGroup) {
-                        sendMessage(api, event, `The ${gc.threadName} guid is ` + event.threadID);
+                        sendMessage(api, event, "The " + gc.threadName + " guid is " + event.threadID);
                     } else if (event.type == "message") {
                         sendMessage(api, event, "Your uid is " + event.senderID);
                     }
@@ -2843,7 +2845,7 @@ async function ai(api, event) {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     } else {
-                        sendMessage(api, event, `${response.morse}`);
+                        sendMessage(api, event, response.morse);
                     }
                 });
             }
@@ -2861,7 +2863,7 @@ async function ai(api, event) {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     } else {
-                        sendMessage(api, event, `${response.text}`);
+                        sendMessage(api, event, response.text);
                     }
                 });
             }
@@ -2879,7 +2881,7 @@ async function ai(api, event) {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately there was an error occured.");
                     } else {
-                        sendMessage(api, event, `${response.text}`);
+                        sendMessage(api, event, response.text);
                     }
                 });
             }
@@ -3020,7 +3022,7 @@ async function ai(api, event) {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    parseImage(api, event, `${response.image}`, __dirname + '/cache/images/meme.png');
+                    parseImage(api, event, response.image, __dirname + '/cache/images/meme.png');
                 }
             });
         } else if (query == "meme--reddit") {
@@ -3031,7 +3033,7 @@ async function ai(api, event) {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
-                    parseImage(api, event, `${response.url}`, __dirname + '/cache/images/meme.png');
+                    parseImage(api, event, response.url, __dirname + '/cache/images/meme.png');
                 }
             });
         } else if (query.startsWith("conan")) {
@@ -3070,7 +3072,7 @@ async function ai(api, event) {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately there was an error occured.");
                         } else {
-                            parseImage(api, event, `${response.url}`, __dirname + '/cache/images/animensfw.png');
+                            parseImage(api, event, response.url, __dirname + '/cache/images/animensfw.png');
                         }
                     });
                 } else {
@@ -3092,7 +3094,7 @@ async function ai(api, event) {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately there was an error occured.");
                         } else {
-                            parseImage(api, event, `${response.url}`, __dirname + '/cache/images/anime.png');
+                            parseImage(api, event, response.url, __dirname + '/cache/images/anime.png');
                         }
                     });
                 } else {
@@ -3284,7 +3286,7 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].q}`
+                        result = response[i].q;
                     }
                     sendMessage(api, event, result);
                 }
@@ -3316,7 +3318,7 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].a} says\n${response[i].q}`
+                        result = response[i].a + " says\n" + response[i].q;
                     }
                     sendMessage(api, event, result);
                 }
@@ -3331,7 +3333,7 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].q} \n\nby ${response[i].a}\n\n`
+                        result = response[i].q + "\n\nby " + response[i].a;
                     }
                     sendMessage(api, event, result);
                 }
@@ -3380,7 +3382,7 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].text}\n\n${response[i].bookname} ${response[i].chapter}:${response[i].verse}`
+                        result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
                     }
                     sendMessage(api, event, result);
                 }
@@ -3395,7 +3397,7 @@ async function ai(api, event) {
                 } else {
                     let result;
                     for (let i = 0; i < response.length; i++) {
-                        result = `${response[i].text}\n\n${response[i].bookname} ${response[i].chapter}:${response[i].verse}`
+                        result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
                     }
                     sendMessage(api, event, result);
                 }
@@ -3419,7 +3421,7 @@ async function ai(api, event) {
                         for (let i = 0; i < total; i++) {
                             result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse;
                         }
-                        sendMessage(api, event, `${result}`);
+                        sendMessage(api, event, result);
                     }
                 })
             }
@@ -3574,11 +3576,6 @@ function reportIssue(api, event, err) {
 }
 
 async function sendMessage(api, event, message) {
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
-    }
     api.getThreadInfo(event.threadID, (err, gc) => {
         if (gc.isGroup) {
             let ts = undefined;
@@ -3611,22 +3608,12 @@ async function sendMessage(api, event, message) {
     });
 }
 
-async function sendMessageOnly(api, event, message) {
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
-    }
+async function sendMessageOnly(api, event, message) { 
     log("send_message " + event.threadID + " " + message);
     api.sendMessage(message, event.threadID).catch((err) => reportIssue(api, event, err));
 }
 
 async function reactMessage(api, event, reaction) {
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
-    }
     log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
@@ -3648,6 +3635,11 @@ function isGoingToFast(event) {
     if (!settings.preventSimultanoesExecution) {
         return false;
     }
+    if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        }
+    }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (13);
@@ -3666,6 +3658,11 @@ function isGoingToFast(event) {
 }
 
 function isGoingToFastResendingOfEmo(event) {
+    if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        }
+    }
     if (!(event.threadID in emo)) {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
@@ -3682,6 +3679,11 @@ function isGoingToFastResendingOfEmo(event) {
 
 
 function isGoingToFastCallingTheCommand(event) {
+    if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        }
+    }
     if (!(event.threadID in threadMaintenance)) {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
         return false;
@@ -3861,7 +3863,6 @@ function formateDate(tz) {
 }
 
 function getDay(tz) {
-    let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return days[getTimeDate(tz).getDay()];
 }
 
@@ -3870,7 +3871,6 @@ function getDayN(tz) {
 }
 
 function getMonth(tz) {
-    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return months[getTimeDate(tz).getMonth()];
 }
 
