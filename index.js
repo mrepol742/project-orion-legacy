@@ -2676,8 +2676,7 @@ async function ai(api, event) {
                             sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
                         }
                         return;
-                    }
-                    if (isMyId(id)) {
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     api.getUserInfo(id, async (err, ret) => {
