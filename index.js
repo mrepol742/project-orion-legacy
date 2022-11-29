@@ -1624,6 +1624,8 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok [username] instead.\n\nFor example:\ntiktok mrepol742")
             } else {
+                data.shift()
+                let userN = data.join(" ");
                 getResponseData('https://manhict.tech/api/tikInfo?query=' + userN + "&apikey=" + apiKey[0]).then((response) => {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately tiktok user \"" + userN + "\" was not found.");
