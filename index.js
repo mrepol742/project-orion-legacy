@@ -1644,7 +1644,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Name: " + name + " @" + username + "\nHearts: " + heart + "\nFollowers: " + followers + "\nFollowing: " + following + "\nVideos: " + video + "\nDigg: " + diggCount + "\n\n" + bio,
+                                    body: "Name: " + name + " @" + username + "\nHearts: " + heart + "\nFollowers: " + followers + "\nFollowing: " + following + "\nVideos: " + video + "\nDigg: " + digg + "\n\n" + bio,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/tiktok_avatar.png')
                                 };
                                 sendMessage(api, event, message);
