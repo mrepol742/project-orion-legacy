@@ -2690,7 +2690,7 @@ async function ai(api, event) {
                             } = ret[prop]
                             let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + apiKey[1])
                             let filename = __dirname + "/cache/images/" + prop + ".jpg";
-                            let msg = "Name: " + checkFound(name) + " @" + checkFound(vanity);
+                            let msg = checkFound(name) + " @" + checkFound(vanity);
                             msg += "\nGender: " + (gender == 1 ? "female" : "male");
                             msg += "\nBirthday: " + checkFound(isBirthday);
 
@@ -2836,19 +2836,29 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
             } else {
-                await wait(3000);
-                api.getThreadInfo(event.threadID, (err, info) => {
+                if (input.includes("@")) {
+                    await wait(3000);
                     let id = Object.keys(event.mentions)[0];
-                    let tid = info.threadID;
+                    if (id === undefined) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
+                            return;
+                        }
+                    } else if (isMyId(id)) {
+                        id = event.senderID;
+                    }
                     api.getUserInfo(id, (err, info) => {
                         if (err) return reportIssue(api, event.threadID, err);
                         let name = info[id]['name'];
                         let inp = text.substring(name.length + 2);
-                        api.changeNickname(inp, tid, id, (err) => {
+                        api.changeNickname(inp, event.threadID, id, (err) => {
                             if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
-                        });
                     })
-                });
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
+                }
             }
         } else if (query.startsWith("drake")) {
             if (isGoingToFast(event)) {
