@@ -372,9 +372,9 @@ login({
                         await wait(5000);
                         sendMessageOnly(api, event, nonSS);
                         if (event.isGroup) {
-                        log("isGroup ", "true");
+                        log("isGroup ", "yes");
                         } else {
-                            log("isGroup ", "false");
+                            log("isGroup ", "no");
                         }
                         break;
                     }
