@@ -1596,7 +1596,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Username: " + username + "\nFull Name: " + fullname + "\nBio: " + biography + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified,
+                                    body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified + "\n\n" + biography,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/instaprofile.png')
                                 };
                                 sendMessage(api, event, message);
