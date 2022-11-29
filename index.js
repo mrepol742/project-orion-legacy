@@ -3645,7 +3645,7 @@ function log(data) {
     console.log(date + "$ " + data);
 }
 
-async function isGoingToFast(event) {
+function isGoingToFast(event) {
     log("event_body " + event.senderID + " " + event.body);
     if (!settings.preventSimultanoesExecution) {
         return false;
@@ -3667,7 +3667,7 @@ async function isGoingToFast(event) {
     return false;
 }
 
-async function isGoingToFastResendingOfEmo(event) {
+function isGoingToFastResendingOfEmo(event) {
     if (!(event.threadID in emo)) {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
@@ -3683,7 +3683,7 @@ async function isGoingToFastResendingOfEmo(event) {
 }
 
 
-async function isGoingToFastCallingTheCommand(event) {
+function isGoingToFastCallingTheCommand(event) {
     if (!(event.threadID in threadMaintenance)) {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
         return false;
