@@ -3614,6 +3614,11 @@ async function sendMessageOnly(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
+    if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        }
+    }
     log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID).catch((err) => reportIssue(api, event, err));
 }
@@ -3658,11 +3663,6 @@ async function isGoingToFast(event) {
 }
 
 async function isGoingToFastResendingOfEmo(event) {
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
-    }
     if (!(event.threadID in emo)) {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
