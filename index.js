@@ -371,7 +371,11 @@ login({
                         }
                         await wait(5000);
                         sendMessageOnly(api, event, nonSS);
-                        log("isGroup ", event.isGroup + "");
+                        if (event.isGroup) {
+                        log("isGroup ", "true");
+                        } else {
+                            log("isGroup ", "false");
+                        }
                         break;
                     }
                     ai(api, event);
