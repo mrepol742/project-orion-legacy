@@ -2852,7 +2852,12 @@ async function ai(api, event) {
                     api.getUserInfo(id, (err, info) => {
                         if (err) return reportIssue(api, event.threadID, err);
                         let name = info[id]['name'];
-                        let inp = text.substring(name.length + 2);
+                        let inp;
+                        if (text.startsWith("@me")) {
+                            inp = text.substring(4);
+                        } else {
+                            text.substring(name.length + 2);
+                        }
                         api.changeNickname(inp, event.threadID, id, (err) => {
                             if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
                         });
