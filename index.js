@@ -1616,6 +1616,41 @@ async function ai(api, event) {
                 id = event.senderID;
             }
             parseImage(api, event, getProfilePicFullHD(id), __dirname + '/cache/images/profilepic.png');
+        } else if (query.startsWith("tiktok")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok [username] instead.\n\nFor example:\ntiktok mrepol742")
+            } else {
+                getResponseData('https://manhict.tech/api/tikInfo?query=' + userN + "&apikey=" + apiKey[0]).then((response) => {
+                    if (response == null) {
+                        sendMessage(api, event, "Unfortunately tiktok user \"" + userN + "\" was not found.");
+                    } else {
+                        let username = response.result.uniqueId;
+                        let name = response.result.nickname;
+                        let bio = response.result.signature;
+                        let followers = response.result.followerCount;
+                        let following = response.result.followingCount;
+                        let heart = response.result.heartCount;
+                        let video =  response.result.videoCount;
+                        let digg = response.result.diggCount;
+                        let avatar = response.result.avatar;
+
+                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/tiktok_avatar.png'))
+
+                            .on('finish', () => {
+                                let message = {
+                                    body: "Name: " + name + " @" + username + "\nHearts: " + heart + "\nFollowers: " + followers + "\nFollowing: " + following + "\nVideos: " + video + "\nDigg: " + diggCount + "\n\n" + bio,
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/tiktok_avatar.png')
+                                };
+                                sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/tiktok_avatar.png");
+                            })
+                    }
+                });
+            }
         } else if (query.startsWith("github")) {
             if (isGoingToFast(event)) {
                 return;
@@ -2702,8 +2737,6 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                 }
             }
-        } else if (query.startsWith("tiktok")) {
-
         } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
             if (isGoingToFast(event)) {
                 return;
