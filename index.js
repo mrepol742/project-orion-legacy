@@ -371,6 +371,7 @@ login({
                         }
                         await wait(5000);
                         sendMessageOnly(api, event, nonSS);
+                        log("isGroup ", event.isGroup);
                         break;
                     }
                     ai(api, event);
@@ -1250,80 +1251,6 @@ async function ai(api, event) {
                             })
                         });
                         stream.on('error', (err) => reportIssue(api, event, err));
-                    }
-                } else {
-                    sendMessage(api, event, "Hold on... There is still a request in progress.");
-                }
-            }
-        } else if (query.startsWith("fbvideodl")) {
-            if (isGoingToFast(event)) {
-                return;
-            }
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using fbvideodl url.")
-            } else {
-                if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                    data.shift()
-                    getResponseData('https://manhict.tech/api/fbDL?url=' + data.join(" ") + '/&apikey=CcIDaVqu').then((response) => {
-                        if (response == null) {
-                            sendMessage(api, event, "Unfortunately there was an error occured.");
-                        } else {
-                            request(encodeURI(response.result.hd)).pipe(fs.createWriteStream(__dirname + '/cache/videos/fbvideodl.mp4'))
-                                .on('finish', () => {
-                                    var limit = 25 * 1024 * 1024;
-                                    fs.readFile(__dirname + '/cache/videos/fbvideodl.mp4', function(err, data) {
-                                    if (err) log(err)
-                                    if (data.length > limit) {
-                                        log("Unable to upload the facebook due to the file limit. The file size is " + (data.length / 1024 / 1024));
-                                        sendMessage(api, event, "Unfortunately i cannot send your facebook video due to the size restrictions on messenger platform.");
-                                        unlink(__dirname + '/cache/videos/fbvideodl.mp4');
-                                    } else {
-                                        log("Finish downloading facebook video.");
-                                        let message = {
-                                            attachment: fs.createReadStream(__dirname + '/cache/videos/fbvideodl.mp4')
-                                        }
-                                        sendMessage(api, event, message);
-                                    }
-                                })
-                            })
-                        }
-                    });
-                } else {
-                    sendMessage(api, event, "Hold on... There is still a request in progress.");
-                }
-            }
-        } else if (query.startsWith("tiktokdl")) {
-            if (isGoingToFast(event)) {
-                return;
-            }
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using tiktokdl url instead.\nFor example:\ntiktokdl https://www.tiktok.com/@mrepol742/video/7077820418790362395")
-            } else {
-                if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                    try {
-                        let s = getMusic(data[1]);
-                        s.then((response) => {
-                            if (response == "null") {
-                                sendMessage(api, event, "Opps! I didnt get it. You should try using tiktokdl url instead.\nFor example:\ntiktokdl https://www.tiktok.com/@mrepol742/video/7077820418790362395")
-                            } else {
-                                var file = fs.createWriteStream(__dirname + '/cache/videos/tiktokdl.mp4');
-                                var targetUrl = response;
-                                var gifRequest = http.get(targetUrl, function(gifResponse) {
-                                    gifResponse.pipe(file);
-                                    file.on('finish', function() {
-                                        log('Done.')
-                                        var message = {
-                                            attachment: fs.createReadStream(__dirname + '/cache/videos/tiktokdl.mp4')
-                                        }
-                                        sendMessage(message);
-                                    });
-                                });
-                            }
-                        });
-                    } catch (err) {
-                        reportIssue(api, event, err);
                     }
                 } else {
                     sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -3853,28 +3780,6 @@ function getWelcomeImage(name, gname, Tmem, id) {
     return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + name + "&text2=Welcome+To+" + gname + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
 }
 
-async function getMusic(query) {
-    var songs = fetch(query);
-    let response = await songs.then((response) => {
-        let slist = response;
-        if (slist == "err") {
-            return "err"
-        } else if (slist.t < 1300) {
-            let d_url = conv(slist.vid, slist.token, slist.timeExpires).then((response) => {
-                return [response, slist.title]
-            });
-            return d_url
-        } else if (slist.p == "search") {
-            return 'null'
-        } else if (slist.mess.startsWith("The video you want to download is posted on TikTok.")) {
-            return 'tiktok'
-        } else {
-            return 'pakyo'
-        }
-    });
-    return response;
-}
-
 async function getImages(api, event, images) {
     for (let i = 0;
         (i < 6 && i < images.length); i++) {
@@ -3910,18 +3815,4 @@ async function unLink(dir) {
           log("un_link " + dir);
         }
     }));
-}
-
-async function fetch(query) {
-    const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    results = await axios.post("https://yt5s.com/api/ajaxSearch", "q=" + query + "&vt=mp3", {
-        headers: headers
-    }).then((response) => {
-        return response.data
-    }).catch((error) => {
-        return error.message
-    });
-    return results
 }
