@@ -227,6 +227,8 @@ helpadmin += "\n⦿ setMaxTokens [integer]";
 helpadmin += "\n⦿ setTemperature [integer]";
 helpadmin += "\n⦿ setFrequencyPenalty [integer]";
 helpadmin += "\n⦿ setProbabilityMass [integer]";
+helpadmin += "\n⦿ isEnabled";
+helpadmin += "\n⦿ isDisabled";
 helpadmin += "\n⦿ isDebugEnabled";
 helpadmin += "\n⦿ isDebugDisabled";
 helpadmin += "\n⦿ refresh | reload";
@@ -291,7 +293,24 @@ login({
 
         if (err) return log(err);
 
-        if ((event.type == "message" || event.type == "message_reply") && event.senderID == vips[0]) {
+        if (event.type == "message") {
+            let nonSS = event.body;
+            if (nonSS == "isEnabled") {
+                if (vips.includes(event.senderID)) {
+                    settings.isEnabled = true;
+                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    sendMessage(api, event, "Hello");
+                    }
+            } else if (nonSS == "isDisabled") {
+                if (vips.includes(event.senderID)) {
+                    settings.isEnabled = false;
+                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    sendMessage(api, event, "Bye bye.");
+                }
+            }
+        }
+
+        if (settings.isEnabled && (event.type == "message" || event.type == "message_reply") && event.senderID == vips[2]) {
             return;
         }
 
