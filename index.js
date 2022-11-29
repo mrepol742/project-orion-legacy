@@ -160,7 +160,7 @@ help3 += "\n⦿ advert @mention";
 help3 += "\n⦿ blur @mention";
 
 let help4 = "\n⦿ ig [username]";
-help4 += "\n⦿ facebook @mention";
+help4 += "\n⦿ facebook @mention | @me";
 help4 += "\n⦿ joke";
 help4 += "\n⦿ profilepic";
 help4 += "\n⦿ wyr";
@@ -371,11 +371,6 @@ login({
                         }
                         await wait(5000);
                         sendMessageOnly(api, event, nonSS);
-                        if (event.isGroup) {
-                        log("isGroup ", "yes");
-                        } else {
-                            log("isGroup ", "no");
-                        }
                         break;
                     }
                     ai(api, event);
@@ -2675,7 +2670,11 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
+                        }
                         return;
                     }
                     if (isMyId(id)) {
