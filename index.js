@@ -2742,7 +2742,7 @@ async function ai(api, event) {
                             } = ret[prop]
                             let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + apiKey[1])
                             let filename = __dirname + "/cache/images/" + prop + ".jpg";
-                            let msg = "Name: " + checkFound(name) + " @" checkFound(vanity);
+                            let msg = "Name: " + checkFound(name) + " @" + checkFound(vanity);
                             msg += "\nGender: " + (gender == 1 ? "female" : "male");
                             msg += "\nBirthday: " + checkFound(isBirthday);
 
