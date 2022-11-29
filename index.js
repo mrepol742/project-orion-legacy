@@ -227,8 +227,6 @@ helpadmin += "\n⦿ setMaxTokens [integer]";
 helpadmin += "\n⦿ setTemperature [integer]";
 helpadmin += "\n⦿ setFrequencyPenalty [integer]";
 helpadmin += "\n⦿ setProbabilityMass [integer]";
-helpadmin += "\n⦿ isEnabled";
-helpadmin += "\n⦿ isDisabled";
 helpadmin += "\n⦿ isDebugEnabled";
 helpadmin += "\n⦿ isDebugDisabled";
 helpadmin += "\n⦿ refresh | reload";
@@ -293,24 +291,7 @@ login({
 
         if (err) return log(err);
 
-        if (event.type == "message") {
-            let nonSS = event.body;
-            if (nonSS == "isEnabled") {
-                if (vips.includes(event.senderID)) {
-                    settings.isEnabled = true;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(api, event, "Hello");
-                    }
-            } else if (nonSS == "isDisabled") {
-                if (vips.includes(event.senderID)) {
-                    settings.isEnabled = false;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(api, event, "Bye bye.");
-                }
-            }
-        }
-
-        if (settings.isEnabled && (event.type == "message" || event.type == "message_reply") && event.senderID == vips[0]) {
+        if ((event.type == "message" || event.type == "message_reply") && event.senderID == vips[0]) {
             return;
         }
 
@@ -2732,8 +2713,8 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                 }
             }
-        } 
-        /* if (query.startsWith("facebook") || query2.startsWith("fb ")) {
+        } else if (query.startsWith("tiktok")) {
+        } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -2761,8 +2742,7 @@ async function ai(api, event) {
                             } = ret[prop]
                             let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + apiKey[1])
                             let filename = __dirname + "/cache/images/" + prop + ".jpg";
-                            let msg = "Name: " + checkFound(name);
-                            msg += "\nUsername: " + checkFound(vanity);
+                            let msg = "Name: " + checkFound(name) + " @" checkFound(vanity);
                             msg += "\nGender: " + (gender == 1 ? "female" : "male");
                             msg += "\nBirthday: " + checkFound(isBirthday);
 
@@ -2779,52 +2759,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
                 }
             }
-        } */
-
-        if (input.startsWith("facebook")) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
-            } else {
-                var id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
-                    return;
-                }
-                if (isMyId(id)) {
-                    id = event.senderID;
-                }
-                axios.get(encodeURI('https://manhict.tech/api/fbinfo?id=' + id + '&apikey=' + apiKey[6])).then((response) => {
-                    if (response.data == null) {
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
-                    } else {
-                        var name = response.data.result.name;
-                        var vanity = response.data.result.vanity;
-                        var birthday = response.data.result.birthday;
-                        var follow = response.data.result.follow;
-                        var profileurl = response.data.result.profileUrl;
-                        var gender = ((response.data.result.gender) ? "Male" : "Female");
-                        var hometown = response.data.result.hometown;
-                        var location = response.data.result.location;
-                        var relationship = response.data.result.relationship;
-                        var love = response.result.love;
-                        var website = response.data.result.website;
-                        var about = response.data.result.about;
-                        var quotes = response.data.result.quotes;
-                        request('https://graph.facebook.com/' + mentionid + '/picture?height=1500&width=1500&access_token=463372798834978|csqGyA8VWtIhabZZt-yhEBStl9Y').pipe(fs.createWriteStream(__dirname + '/attachments/profile.jpg'))
-
-                        .on('finish', () => {
-                            api.sendMessage({
-                                body: "Name: " + name + " @" + vanity + "\nBirthday: " + birthday + "\nFollowers: " + follow + "\nGender: " + gender + "\nHometown: " + hometown + "\nLocation: " + location + "\nRelationship: " + relationship + "\nLove: " + love + "\n\n" + about + "\n" + quotes + "\n" + website,
-                                attachment: fs.createReadStream(__dirname + '/attachments/profile.jpg')
-                            }, event.threadID, event.messageID);
-                        })
-                    }
-                });
-            }
-        }
-
-         if (query.startsWith("morse")) {
+        } else if (query.startsWith("morse")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -3956,4 +3891,18 @@ async function unLink(dir) {
           log("un_link " + dir);
         }
     }));
+}
+
+async function fetch(query) {
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+    results = await axios.post("https://yt5s.com/api/ajaxSearch", "q=" + query + "&vt=mp3", {
+        headers: headers
+    }).then((response) => {
+        return response.data
+    }).catch((error) => {
+        return error.message
+    });
+    return results
 }
