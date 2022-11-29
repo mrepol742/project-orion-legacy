@@ -1665,7 +1665,7 @@ async function ai(api, event) {
             } else {
                 data.shift()
                 let userN = data.join(" ");
-                getResponseData('https://manhict.tech/api/scInfo?query=' + userN + "&apikey=" + apikey[0]).then((response) => {
+                getResponseData('https://manhict.tech/api/scInfo?query=' + userN + "&apikey=" + apiKey[0]).then((response) => {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
                     } else {
