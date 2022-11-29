@@ -3630,7 +3630,7 @@ function log(data) {
     console.log(date + "$ " + data);
 }
 
-function isGoingToFast(event) {
+async function isGoingToFast(event) {
     log("event_body " + event.senderID + " " + event.body);
     if (!settings.preventSimultanoesExecution) {
         return false;
@@ -3657,7 +3657,7 @@ function isGoingToFast(event) {
     return false;
 }
 
-function isGoingToFastResendingOfEmo(event) {
+async function isGoingToFastResendingOfEmo(event) {
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
@@ -3678,7 +3678,7 @@ function isGoingToFastResendingOfEmo(event) {
 }
 
 
-function isGoingToFastCallingTheCommand(event) {
+async function isGoingToFastCallingTheCommand(event) {
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
