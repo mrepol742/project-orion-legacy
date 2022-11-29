@@ -1669,18 +1669,18 @@ async function ai(api, event) {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
                     } else {
-                        let name = response.result.full_name;
-                        let username = response.result.username;
-                        let bio = response.result.description;
-                        let location = response.result.city + " " + response.result.country_code;
-                        let followers = response.result.followers_count;
-                        let following = response.result.followings_count;
-                        let likes = response.result.likes_count;
-                        let playlist = response.result.playlist_count;
-                        let playlistLikes = response.result.playlist_likes_count;
-                        let trackCount = response.result.track_count;
-                        let permalinkUrl = response.result.permalink_url;
-                        let avatar = response.result.avatar_url;
+                        let name = response.result['full_name'];
+                        let username = response.result['username'];
+                        let bio = response.result['description'];
+                        let location = response.result['city'] + " " + response.result['country_code'];
+                        let followers = response.result['followers_count'];
+                        let following = response.result['followings_count'];
+                        let likes = response.result['likes_count'];
+                        let playlist = response.result['playlist_count'];
+                        let playlistLikes = response.result['playlist_likes_count'];
+                        let trackCount = response.result['track_count'];
+                        let permalinkUrl = response.result['permalink_url'];
+                        let avatar = response.result['avatar_url'];
 
                         request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/soundcloud_avatar.png'))
 
