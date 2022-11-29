@@ -102,7 +102,7 @@ help1 += "\n⦿ gemoji [emoji]";
 help1 += "\n⦿ gname [text]";
 help1 += "\n⦿ wiki [text]";
 help1 += "\n⦿ urlshort [url]";
-help1 += "\n⦿ nickname @mention [text]";
+help1 += "\n⦿ pickup";
 help1 += "\n⦿ landscape";
 help1 += "\n⦿ landscape [text]";
 help1 += "\n⦿ portrait";
@@ -125,7 +125,7 @@ help2 += "\n⦿ bgremove";
 help2 += "\n⦿ motivate";
 help2 += "\n⦿ inspiration";
 help2 += "\n⦿ advice";
-help2 += "\n⦿ mnm @mention";
+help2 = "\n⦿ alert [text]";
 help2 += "\n⦿ meme";
 help2 += "\n⦿ meme --reddit";
 help2 += "\n⦿ drake [text1]: [text2]";
@@ -138,29 +138,29 @@ help2 += "\n⦿ steam [name]";
 help2 += "\n⦿ npm [name]";
 help2 += "\n⦿ gname";
 
-let help3 = "\n⦿ alert [text]";
-help3 += "\n⦿ morse [text]";
-help3 += "\n⦿ pickup";
-help3 += "\n⦿ uid";
-help3 += "\n⦿ guid";
-help3 += "\n⦿ reverse [text]";
-help3 += "\n⦿ itunes [title]";
-help3 += "\n⦿ doublestruck [text]";
+let help3 = "\n⦿ mnm @mention|@me";
+help3 += "\n⦿ facebook @mention|@me";
+help3 += "\n⦿ nickname @mention|@me [text]";
+help3 += "\n⦿ invert @mention";
+help3 += "\n⦿ greyscale @mention";
+help3 += "\n⦿ ship @mention @mention";
+help3 += "\n⦿ www @mention @mention";
+help3 += "\n⦿ jokeover @mention|@me";
 help3 += "\n⦿ translate [language] [text]";
-help3 += "\n⦿ trump [text]";
-help3 += "\n⦿ mock [text]";
-help3 += "\n⦿ jail @mention";
-help3 += "\n⦿ communist @mention";
-help3 += "\n⦿ wanted @mention";
-help3 += "\n⦿ gun @mention";
-help3 += "\n⦿ drip @mention";
-help3 += "\n⦿ clown @mention";
-help3 += "\n⦿ uncover @mention";
-help3 += "\n⦿ advert @mention";
-help3 += "\n⦿ blur @mention";
+help3 += "\n⦿ kiss @mention|@me";
+help3 += "\n⦿ pet @mention|@me";
+help3 += "\n⦿ jail @mention|@me";
+help3 += "\n⦿ communist @mention|@me";
+help3 += "\n⦿ wanted @mention|@me";
+help3 += "\n⦿ gun @mention|@me";
+help3 += "\n⦿ drip @mention|@me";
+help3 += "\n⦿ clown @mention|@me";
+help3 += "\n⦿ uncover @mention|@me";
+help3 += "\n⦿ advert @mention|@me";
+help3 += "\n⦿ blur @mention|@me";
 
 let help4 = "\n⦿ ig [username]";
-help4 += "\n⦿ facebook @mention | @me";
+help4 += "\n⦿ morse [text]";
 help4 += "\n⦿ joke";
 help4 += "\n⦿ profilepic";
 help4 += "\n⦿ wyr";
@@ -169,10 +169,10 @@ help4 += "\n⦿ gmember";
 help4 += "\n⦿ car";
 help4 += "\n⦿ color";
 help4 += "\n⦿ sip [text]";
-help4 += "\n⦿ pet @mention";
-help4 += "\n⦿ ship @mention @mention";
-help4 += "\n⦿ www @mention @mention";
-help4 += "\n⦿ kiss @mention";
+help4 += "\n⦿ trump [text]";
+help4 += "\n⦿ mock [text]";
+help4 += "\n⦿ reverse [text]";
+help4 += "\n⦿ itunes [title]";
 help4 += "\n⦿ coding";
 help4 += "\n⦿ newyear";
 help4 += "\n⦿ christmas";
@@ -181,9 +181,9 @@ help4 += "\n⦿ fact";
 help4 += "\n⦿ thoughts";
 
 let help5 = "\n⦿ conan";
-help5 += "\n⦿ invert @mention";
-help5 += "\n⦿ greyscale @mention";
-help5 += "\n⦿ jokeover @mention";
+help5 += "\n⦿ uid";
+help5 += "\n⦿ guid";
+help5 += "\n⦿ doublestruck [text]";
 help5 += "\n⦿ count";
 help5 += "\n⦿ count --vowels";
 help5 += "\n⦿ count --consonants";
@@ -192,13 +192,13 @@ help5 += "\n⦿ time";
 help5 += "\n⦿ time [timezone]";
 
 let help6 = "\n⦿ anime [category]";
-help6 += "\n   megumin, bully, cuddle, cry";
+help6 += "\n   waifu, megumin, bully, cuddle,";
 help6 += "\n   hug, awoo, kiss, lick";
 help6 += "\n   pat, smug, bonk, yeet";
 help6 += "\n   blush, smile, wave, highfive";
 help6 += "\n   handhold, nom, biteglomp, slap";
 help6 += "\n   kill, kick, happy, wink";
-help6 += "\n   pokedance, cringe";
+help6 += "\n   pokedance, cringe, cry";
 help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob";
 
@@ -1578,26 +1578,25 @@ async function ai(api, event) {
                 if (userN.startsWith("@")) {
                     userN = userN.slice(1);
                 }
-                getResponseData('https://api.popcat.xyz/instagram?user=' + userN).then((response) => {
+                getResponseData('https://manhict.tech/api/igInfo?query=' + userN + '&apikey=' + apiKey[0]).then((response) => {
                     if (response == null) {
                         sendMessage(api, event, "Unfortunately instagram user \"" + userN + "\" was not found.");
                     } else {
-                        let username = response.username;
-                        let fullname = response.full_name;
-                        let biography = response.biography;
-                        let posts = response.posts;
-                        let reels = new Intl.NumberFormat().format(response.reels);
-                        let followers = new Intl.NumberFormat().format(response.followers);
-                        let following = new Intl.NumberFormat().format(response.following);
-                        let private = ((response.private) ? "Yes" : "No");
-                        let verified = ((response.verified) ? "Yes" : "No");
-                        let profilepic = response.profile_pic;
+                        let username = response.result.username;
+                        let fullname = response.result.fullname;
+                        let biography = response.result.biography;
+                        let reels = new Intl.NumberFormat().format(response.result.reels);
+                        let followers = new Intl.NumberFormat().format(response.result.followers);
+                        let following = new Intl.NumberFormat().format(response.result.following);
+                        let private = ((response.result.private) ? "Yes" : "No");
+                        let verified = ((response.result.verified) ? "Yes" : "No");
+                        let profilepic = response.result.profilePicture;
 
                         request(encodeURI(profilepic)).pipe(fs.createWriteStream(__dirname + '/cache/images/instaprofile.png'))
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Username: " + username + "\nFull Name: " + fullname + "\nBio: " + biography + "\nPosts: " + posts + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified,
+                                    body: "Username: " + username + "\nFull Name: " + fullname + "\nBio: " + biography + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/instaprofile.png')
                                 };
                                 sendMessage(api, event, message);
@@ -2265,10 +2264,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     let sender = event.send
@@ -2311,10 +2313,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun.png");
@@ -2333,10 +2338,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted.png");
@@ -2355,10 +2363,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown.png");
@@ -2377,10 +2388,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                           sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
+                           return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip.png");
@@ -2399,10 +2413,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist.png");
@@ -2421,10 +2438,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert.png");
@@ -2443,10 +2463,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover.png");
@@ -2465,10 +2488,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail.png");
@@ -2487,10 +2513,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert.png");
@@ -2559,10 +2588,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet.png");
@@ -2581,10 +2613,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm.png");
@@ -2603,10 +2638,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale.png");
@@ -2625,10 +2663,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover.png");
@@ -2647,10 +2688,13 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
-                        return;
-                    }
-                    if (isMyId(id)) {
+                        if (input.includes("@me")) {
+                            id = event.senderID;
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
+                            return;
+                        }
+                    } else if (isMyId(id)) {
                         id = event.senderID;
                     }
                     parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur.png");
@@ -2659,6 +2703,7 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("tiktok")) {
+
         } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
             if (isGoingToFast(event)) {
                 return;
