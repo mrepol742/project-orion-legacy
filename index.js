@@ -2855,6 +2855,7 @@ async function ai(api, event) {
                         let inp = text.substring(name.length + 2);
                         api.changeNickname(inp, event.threadID, id, (err) => {
                             if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
+                        });
                     })
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
