@@ -85,7 +85,6 @@ help += "\n⦿ searchimg [text]";
 help += "\n⦿ pdf [text]";
 help += "\n⦿ dict [text]";
 help += "\n⦿ summ [text]";
-help += "\n⦿ github [username]";
 help += "\n⦿ baybayin [text]";
 help += "\n⦿ weather [location]";
 help += "\n⦿ music [text]";
@@ -93,8 +92,10 @@ help += "\n⦿ video [text]";
 help += "\n⦿ lyrics [text]";
 help += "\n⦿ encode64 [text]";
 help += "\n⦿ decode64 [text]";
-help += "\n⦿ facts [text]";
-help += "\n⦿ phub [text]";
+help += "\n⦿ github [username]";
+help += "\n⦿ ig [username]";
+help += "\n⦿ tiktok [username]";
+
 
 let help1 = "\n⦿ thoughts";
 help1 += "\n⦿ lulcat [text]";
@@ -159,7 +160,7 @@ help3 += "\n⦿ uncover @mention|@me";
 help3 += "\n⦿ advert @mention|@me";
 help3 += "\n⦿ blur @mention|@me";
 
-let help4 = "\n⦿ ig [username]";
+let help4 = "\n⦿ phub [text]";
 help4 += "\n⦿ morse [text]";
 help4 += "\n⦿ joke";
 help4 += "\n⦿ profilepic";
@@ -183,6 +184,7 @@ help4 += "\n⦿ thoughts";
 let help5 = "\n⦿ conan";
 help5 += "\n⦿ uid";
 help5 += "\n⦿ guid";
+help5 += "\n⦿ facts [text]";
 help5 += "\n⦿ doublestruck [text]";
 help5 += "\n⦿ count";
 help5 += "\n⦿ count --vowels";
@@ -1622,7 +1624,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok [username] instead.\n\nFor example:\ntiktok mrepol742")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok username instead.\n\nFor example:\ntiktok mrepol742")
             } else {
                 data.shift()
                 let userN = data.join(" ");
@@ -1644,11 +1646,51 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Name: " + name + " @" + username + "\nHearts: " + heart + "\nFollowers: " + followers + "\nFollowing: " + following + "\nVideos: " + video + "\nDigg: " + digg + "\n\n" + bio,
+                                    body: name + " @" + username + "\nHearts: " + heart + "\nFollowers: " + followers + "\nFollowing: " + following + "\nVideos: " + video + "\nDigg: " + digg + "\n\n" + bio,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/tiktok_avatar.png')
                                 };
                                 sendMessage(api, event, message);
                                 unLink(__dirname + "/cache/images/tiktok_avatar.png");
+                            })
+                    }
+                });
+            }
+        } else if (query.startsWith("soundcloud")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ")
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using soundcloud username instead.\n\nFor example:\nsoundcloud Denvau")
+            } else {
+                data.shift()
+                let userN = data.join(" ");
+                getResponseData('https://manhict.tech/api/scInfo?query=' + userN + "&apikey=" + apikey[0]).then((response) => {
+                    if (response == null) {
+                        sendMessage(api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
+                    } else {
+                        let name = response.full_name;
+                        let username = response.username;
+                        let bio = response.description;
+                        let location = response.city + " " + response.country_code;
+                        let followers = response.followers_count;
+                        let following = response.followings_count;
+                        let likes = response.likes_count;
+                        let playlist = response.playlist_count;
+                        let playlistLikes = response.playlist.playlist_likes_count;
+                        let trackCount = response.track_count;
+                        let permalinkUrl = response.playlist.permalink_url;
+                        let avatar = response.avatar_url;
+
+                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/soundcloud_avatar.png'))
+
+                            .on('finish', () => {
+                                let message = {
+                                    body: name + " @" + username + "\nLocation: " + location + "\nLikes: " + likes + "\nPlaylist: " + playlist + "\nPlaylist Likes: " + playlistLikes + "\nTracks: " + trackCount + "\nFollowers: " + followers + "\nFollowing: " + following + "\n\n" + bio + "\n" + permalinkUrl,
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/soundcloud_avatar.png')
+                                };
+                                sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/soundcloud_avatar.png");
                             })
                     }
                 });
