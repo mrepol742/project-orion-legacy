@@ -35,7 +35,7 @@ let goodmo = ["Good morning too... Have a great day ahead, and always don't forg
 let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
 let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
 let tips = ["Be detailed but brief", "Ask me like Who are you?", "Ask me like How to do this?"]
-let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there"];
+let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe"];
 let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 let saveAns = [];
@@ -842,7 +842,7 @@ async function ai(api, event) {
                     }
                 });
             }
-        } else if (isMyId(Object.keys(event.mentions)[0]) || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
+        } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
             ((query.startsWith("search") || query.startsWith("searchcode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
                 otherQ(query2)) {
@@ -984,7 +984,7 @@ async function ai(api, event) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                 } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
                     return;
-                } else if (text.split(" ").length < 3 || text.indexOf(" ") == -1) {
+                } else if (!query.startsWith("search") && (text.split(" ").length < 3 || text.indexOf(" ") == -1)) {
                     if (repeatOfNonWWW(event)) {
                         return;
                     }
