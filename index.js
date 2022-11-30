@@ -3454,7 +3454,7 @@ async function ai(api, event) {
 
 function someA(api, event, query, input) {
     if (event.type == "message" || event.type == "message_reply") {
-        if (!isMyId(event.messageReply.senderID)) {
+        if (event.type == "message_reply" && !isMyId(event.messageReply.senderID)) {
             return false;
         } else if (query == "sup" || query == "wassup" || query == "whatsup") {
             sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
