@@ -23,10 +23,17 @@ const google = require('googlethis');
 const os = require('os');
 const NetworkSpeed = require('network-speed')
 const process_p = require('process');
+const googleTTS = require('google-tts-api');
 
 log("The Project Orion is now active and waiting for commands execution. ONLINE")
 
 const testNetworkSpeed = new NetworkSpeed();
+const config = new Configuration({
+    apiKey: "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",
+});
+const openai = new OpenAIApi(config);
+const pictographic = /\p{Extended_Pictographic}/ug;
+const latinC = /[^a-z0-9\s]/gi;
 
 let sleep = [5000, 6000, 5500, 6500, 7000, 6800, 5800, 5200, 7200, 6600, 5200, 6300, 5400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
@@ -47,6 +54,7 @@ let happyEE = ['haha', 'ahah', 'ahha', 'funny ', 'insane ', 'lol', 'lmao', 'lmfa
 let sadEE = ['pain', 'painful', 'cry ', 'crying ', 'unhappy', 'sad ', 'tired', 'sick ', 'dejected', 'regretful', 'depressed', 'downcast', 'miserable ', 'downhearted', 'heartbroken', 'wretched', 'doleful', 'low-spirited', 'sorry', 'disgraceful', 'regrettable', 'sorrowful', 'upsetting', 'traumatic', 'truma', 'pitiful', 'depressing', 'depress', 'unfortunate', 'awful', 'miserable', 'grievous', 'cheerless'];
 let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed' , 'fury ', 'rage ', 'ire ', 'wrath']
 let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 'regards', 'respects', 'dear', 'darling', 'boyfriend', 'girlfriend', 'sweetheart', 'angel', 'honey', 'adore', 'treasure', 'prize', 'devotion', 'friend']
+let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
 let saveAns = [];
 let threads = ""
 let threadIdMV = {};
@@ -380,8 +388,7 @@ login({
                             sendMessage(api, event, "Konnichiwa i am back.");
                         }
                     } 
-                    const emo = /\p{Extended_Pictographic}/ug;
-                    if (!nonSS.replace(emo, '').length) {
+                    if (!nonSS.replace(pictographic, '').length) {
                         if (isGoingToFastResendingOfEmo(event)) {
                             break;
                         }
@@ -809,7 +816,31 @@ async function ai(api, event) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
-        if (query == "ping") {
+        if (query2.startsWith("tts")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead.\nFor example:\ntts I am melvin jones repol")
+            } else {
+                data.shift();
+                const url = googleTTS.getAudioUrl(data.join(" "), {
+                    lang: 'en',
+                    slow: false,
+                    host: 'https://translate.google.com',
+                });
+                request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts.mp3'))
+
+                        .on('finish', () => {
+                            let message = {
+                                attachment: fs.createReadStream(__dirname + '/cache/audios/tts.mp3'),
+                        };
+                        sendMessage(api, event, message);
+                        unLink(__dirname + "/cache/audios/tts.mp3");
+                })
+            }
+        } else if (query == "ping") {
+            if (isGoingToFast(event)) {
+                return;
+            }
             (async () => {
                 let osFreeMemm = os.freemem();
                 let osFreeMem = convertBytes(osFreeMemm);
@@ -830,7 +861,7 @@ async function ai(api, event) {
                     },
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-                sendMessage(api, event, "Uptime: " + seconds_con + " seconds\n\n SERVER INFO \n⦿ RAM: " + osFreeMem + "\n ⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + "mbps\n⦿ Upload Speed: " + speed.mbps + "mbps");
+                sendMessage(api, event, "Uptime is" + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + "mbps\n⦿ Upload Speed: " + speed.mbps + "mbps");
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
@@ -1017,13 +1048,9 @@ async function ai(api, event) {
                 } else {
                     await wait(3000);
                     if (!query.startsWith("searchcode")) {
-                        const config = new Configuration({
-                            apiKey: apiKey[2],
-                        });
-                        const ai = new OpenAIApi(config);
                         const {
                             data
-                        } = await ai.createCompletion(settings.text_complextion, {
+                        } = await openai.createCompletion(settings.text_complextion, {
                             prompt: text,
                             temperature: parseInt(settings.temperature),
                             max_tokens: parseInt(settings.max_tokens),
@@ -3651,10 +3678,8 @@ async function reactMessage(api, event, reaction) {
 }
 
 function formatQuery(string) {
-    const emo = /\p{Extended_Pictographic}/ug;
-    const anu = /[^a-z0-9\s]/gi;
-    let str = string.replace(emo, '');
-    return str.replace(anu, '');
+    let str = string.replace(pictographic, '');
+    return str.replace(latinC, '');
 }
 
 function log(data) {
@@ -3992,15 +4017,14 @@ async function unLink(dir) {
 }
 
 const convertBytes = function(bytes) {
-    let sizes = ["Bytes", "KB", "MB", "GB", "TB"]
     if (bytes == 0) {
         return "n/a"
     }
     let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
     if (i == 0) {
-        return bytes + " " + sizes[i]
+        return bytes + " " + sizesM[i]
     }
-    return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
+    return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizesM[i]
 }
 
 function secondsToTime(e){
