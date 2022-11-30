@@ -846,7 +846,7 @@ async function ai(api, event) {
                 if (!isMyId(event.messageReply.senderID)) {
                     return;
                 }
-            } 
+            }
             if (isGoingToFast(event)) {
                 return;
             }
