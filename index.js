@@ -38,6 +38,10 @@ let tips = ["Be detailed but brief", "Ask me like Who are you?", "Ask me like Ho
 let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe"];
 let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+let happyEE = ['haha', 'ahah', 'ahha', 'funny ', 'insane ', 'lol', 'lmao', 'lmfao', 'silly ', 'laugh ', 'laughable', 'humorous', 'amusing', 'hilarious', 'absurd', 'ridicolous', 'ludicrous', 'entertaining']
+let sadEE = ['pain', 'painful', 'cry ', 'crying ', 'unhappy', 'sad ', 'tired', 'sick ', 'dejected', 'regretful', 'depressed', 'downcast', 'miserable ', 'downhearted', 'heartbroken', 'wretched', 'doleful', 'low-spirited', 'sorry', 'disgraceful', 'regrettable', 'sorrowful', 'upsetting', 'traumatic', 'truma', 'pitiful', 'depressing', 'depress', 'unfortunate', 'awful', 'miserable', 'grievous', 'cheerless'];
+let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed' , 'fury ', 'rage ', 'ire ', 'wrath']
+let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 'regards', 'respects', 'dear', 'darling', 'boyfriend', 'girlfriend', 'sweetheart', 'angel', 'honey', 'adore', 'treasure', 'prize', 'devotion', 'friend']
 let saveAns = [];
 let threads = ""
 let threadIdMV = {};
@@ -720,13 +724,6 @@ login({
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (gc.isGroup) {
                                 let gname = gc.threadName;
-                                let count = 0;
-                                while (true) {
-                                    if (event.logMessageData.addedParticipants[count] === undefined) {
-                                        break;
-                                    }
-                                    count++;
-                                }
                                 let i = 0;
                                 while (true) {
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
@@ -735,16 +732,13 @@ login({
                                     let name = event.logMessageData.addedParticipants[i].fullName;
                                     let id = event.logMessageData.addedParticipants[i].userFbId;
                                     let arr = gc.participantIDs;
-                                    let Tmem = arr.length;
-                                    if (count > 1) {
-                                        Tmem = Tmem - 1;
-                                    }
+                                    let Tmem = arr.length - 1;
                                     log("new_member " + id + " " + name )
                                     let num = i;
                                     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome" + num + ".jpg"))
                                         .on('finish', () => {
                                         let message = {
-                                            body: "Welcome @" + name + ". You're the " + getSuffix(Tmem) + " member of this group.",
+                                            body: "Welcome @" + name + " to " + gname + ". I'm Mj, How are you? if you needed assistance you can call me for list of commands type cmd.",
                                             attachment: fs.createReadStream(__dirname + "/cache/images/welcome" + num + ".jpg"),
                                             mentions: [{
                                                 tag: name,
@@ -3459,37 +3453,27 @@ async function ai(api, event) {
 }
 
 function someA(api, event, query, input) {
-    if (query == "hi") {
-        sendMessage(api, event, "Hello po.");
-        return true;
-    } else if (query == "hello") {
-        sendMessage(api, event, "Hi po.");
-        return true;
-    } else if (query == "sup" || query == "wassup" || query == "whatsup" && (isMe(query) || isMyId(Object.keys(event.mentions)[0]))) {
-        sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
-        return true;
-    } else if (query.startsWith("hey")) {
-        sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-        return true;
-    } else if (query.includes("haha") || query.includes("ahah") || query.includes("ahha") ||
-        input.toLowerCase().includes("😂") || input.toLowerCase().includes("🤣") || input.toLowerCase().includes("😆") ||
-        query.includes("funny") || query.includes("insane") || query.includes("lol") || query.includes("lmao") ||
-        query.includes("lmfao")) {
+    if (isMe(query) || isMyId(Object.keys(event.mentions)[0])) {
+        if (query == "sup" || query == "wassup" || query == "whatsup") {
+            sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
+            return true;
+        } else if (query == "hi" || query == "hello" || query.startsWith("hey")) {
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+            return true;
+        }
+    } else if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
             sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
         }
         return true;
-    } else if (query.includes("sad") || query.includes("tired") || query.includes("sick")) {
+    } else if (containsAny(query2, sadEE)) {
         reactMessage(api, event, ":sad:");
         return true;
-    } else if (query.includes("angry")) {
+    } else if (containsAny(query2, angryEE)) {
         reactMessage(api, event, ":angry:");
         return true;
-    } else if (query.includes("cry")) {
-        reactMessage(api, event, ":cry:");
-        return true;
-    } else if (query == "bot" || query == "good") {
+    } else if (containsAny(query, loveEE) || (query == "bot" || query == "good")) {
         reactMessage(api, event, ":love:");
         return true;
     } else if (query == "tsk") {
@@ -3645,6 +3629,16 @@ function formatQuery(string) {
 function log(data) {
     let date = new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"}).replace(",", "");
     console.log(date + "$ " + data);
+}
+
+function containsAny(str, substrings) {
+    for (var i = 0; i != substrings.length; i++) {
+       var substring = substrings[i];
+       if (str.indexOf(substring) != - 1) {
+         return true;
+       }
+    }
+    return false; 
 }
 
 function isGoingToFast(event) {
