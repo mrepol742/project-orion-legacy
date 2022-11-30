@@ -17,6 +17,7 @@
     "fca-unofficial": "^1.3.10",
     "google-images": "^2.1.0",
     "googlethis": "^1.6.0",
+    "network-speed": "^2.1.1",
     "nlpcloud": "^1.0.23",
     "node-cron": "^3.0.2",
     "node-fetch": "^3.2.6",
