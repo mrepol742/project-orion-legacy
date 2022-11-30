@@ -205,6 +205,7 @@ help5 += "\n⦿ count --consonants";
 help5 += "\n⦿ wfind [text]";
 help5 += "\n⦿ time";
 help5 += "\n⦿ time [timezone]";
+help5 += "\n⦿ ping";
 
 let help6 = "\n⦿ anime [category]";
 help6 += "\n   waifu, megumin, bully, cuddle,";
@@ -743,7 +744,7 @@ login({
                                     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome" + num + ".jpg"))
                                         .on('finish', () => {
                                         let message = {
-                                            body: "Welcome @" + name + " to " + gname + ". I'm Mj, How are you? if you needed assistance you can call me for list of commands type cmd.",
+                                            body: "Welcome @" + name + " to " + gname + ".\n\nI'm Mj, How are you? if you needed assistance you can call me for list of commands type cmd.",
                                             attachment: fs.createReadStream(__dirname + "/cache/images/welcome" + num + ".jpg"),
                                             mentions: [{
                                                 tag: name,
@@ -809,31 +810,29 @@ async function ai(api, event) {
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
         if (query == "ping") {
-   (async () => {
- var osFreeMemm = os.freemem();
-    var osFreeMem = convertBytes(osFreeMemm);
-    var osTotalMemm = os.totalmem();
-    var second_process = process_p.uptime();
-    var seconds_con = secondsToTime(second_process);
-    var osTotalMem = convertBytes(osTotalMemm);
-    var baseUrl = 'https://eu.httpbin.org/stream-bytes/500000';
-    var fileSizeInBytes = 500000;
-    var speed = await testNetworkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
-   var optionss = {
-    hostname: 'www.google.com',
-    port: 80,
-    path: '/catchers/544b09b4599c1d0200000289',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-  
-  var upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-   sendMessage(api, event, "Uptime: " + seconds_con + " seconds \n\n SERVER INFO \n ⦿ RAM: " + osFreeMem + " / 1GB \n ⦿ ROM: " + osTotalMem + " / 30GB \n ⦿ Download Speed: " + upload_spee.mbps + "\n⦿ Upload Speed: " + speed.mbps + "");
-  })();
-}
-        if (query.startsWith("searchimg")) {
+            (async () => {
+                let osFreeMemm = os.freemem();
+                let osFreeMem = convertBytes(osFreeMemm);
+                let osTotalMemm = os.totalmem();
+                let second_process = process_p.uptime();
+                let seconds_con = secondsToTime(second_process);
+                let osTotalMem = convertBytes(osTotalMemm);
+                let baseUrl = 'https://eu.httpbin.org/stream-bytes/500000';
+                let fileSizeInBytes = 500000;
+                let speed = await testNetworkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+                let optionss = {
+                    hostname: 'www.google.com',
+                    port: 80,
+                    path: '/catchers/544b09b4599c1d0200000289',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                };
+                let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
+                sendMessage(api, event, "Uptime: " + seconds_con + " seconds\n\n SERVER INFO \n⦿ RAM: " + osFreeMem + "\n ⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + "mbps\n⦿ Upload Speed: " + speed.mbps + "mbps");
+            })();
+        } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -1542,22 +1541,22 @@ async function ai(api, event) {
                         if (err) return reportIssue(api, err)
                         let d = r[0]
                         let m = d.location.name + "\n\n"
-                        m += "Temperature: " + d.current.temperature + "\n"
-                        m += "Sky: " + d.current.skytext + "\n"
-                        m += "Observation time: " + d.current.date + " " + d.current.observationtime
+                        m += "⦿ Temperature: " + d.current.temperature + "\n"
+                        m += "⦿ Sky: " + d.current.skytext + "\n"
+                        m += "⦿ Observation time: " + d.current.date + " " + d.current.observationtime
                         sendMessage(api, event, m)
                     })
                 } else {
                     let output = weather.weather
                     let m = output.location
-                    m += "\n\nForecast: " + output.forecast
-                    m += "\nTemperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
+                    m += "\n\n⦿ Forecast: " + output.forecast
+                    m += "\n⦿ Temperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
                     if (output.precipitation != undefined)
-                        m += "\nPrecipitation: " + output.precipitation
+                        m += "\n⦿ Precipitation: " + output.precipitation
                     if (output.humidity != undefined)
-                        m += "\nHumidity: " + output.humidity
+                        m += "\n⦿ Humidity: " + output.humidity
                     if (output.wind != undefined)
-                        m += "\nWind speed: " + output.wind
+                        m += "\n⦿ Wind speed: " + output.wind
                     sendMessage(api, event, m)
                 }
             }
@@ -1674,7 +1673,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: name + " @" + username + "\nHearts: " + heart + "\nFollowers: " + followers + "\nFollowing: " + following + "\nVideos: " + video + "\nDigg: " + digg + "\n\n" + bio,
+                                    body: name + " @" + username + "\n⦿ Hearts: " + heart + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Videos: " + video + "\n⦿ Digg: " + digg + "\n\n" + bio,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/tiktok_avatar.png')
                                 };
                                 sendMessage(api, event, message);
@@ -1714,7 +1713,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: name + " @" + username + "\nLocation: " + location + "\nLikes: " + likes + "\nPlaylist: " + playlist + "\nPlaylist Likes: " + playlistLikes + "\nTracks: " + trackCount + "\nFollowers: " + followers + "\nFollowing: " + following + "\n\n" + bio + "\n" + permalinkUrl,
+                                    body: name + " @" + username + "\n⦿ Location: " + location + "\n⦿ Likes: " + likes + "\n⦿ Playlist: " + playlist + "\n⦿ Playlist Likes: " + playlistLikes + "\n⦿ Tracks: " + trackCount + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n\n" + bio + "\n" + permalinkUrl,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/soundcloud_avatar.png')
                                 };
                                 sendMessage(api, event, message);
@@ -1760,7 +1759,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Name: " + name + "\nEmail: " + email + "\nLocation: " + location + "\nCompany: " + company + "\nWebsite: " + url + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPublic Repository: " + public_repos + "\nPublic Gists: " + public_gists + "\n\n" + bio + "\nhttps://github.com/" + userN,
+                                    body: "⦿ Name: " + name + "\n⦿ Email: " + email + "\n⦿ Location: " + location + "\n⦿ Company: " + company + "\n⦿ Website: " + url + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Public Repository: " + public_repos + "\n⦿ Public Gists: " + public_gists + "\n\n" + bio + "\nhttps://github.com/" + userN,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/github_avatar.png')
                                 };
                                 sendMessage(api, event, message);
@@ -1797,7 +1796,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Name: " + name + "\nSymbol: " + symbol + "\nAtomic Number: " + atomic_number + "\nAtomic Mass: " + atomic_mass + "\nPeroid: " + period + "\nPhase: " + phase + "\nDiscovered by: " + discovered_by + "\n\n" + summary,
+                                    body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/element.png')
                                 };
                                 sendMessage(api, event, message);
@@ -1828,7 +1827,7 @@ async function ai(api, event) {
                         let downloads_this_year = response.downloads_this_year;
                         let repository = response.repository;
                         let author_email = response.author_email;
-                        sendMessage(api, event, "Name: " + name + " v" + version + "\nAuthor: " + author + "\nEmail: " + author_email + "\nUpdated on: " + last_published + "\nRepository: " + repository + "\n\n" + description);
+                        sendMessage(api, event, "⦿ Name: " + name + " v" + version + "\n⦿ Author: " + author + "\n⦿ Email: " + author_email + "\n⦿ Updated on: " + last_published + "\n⦿ Repository: " + repository + "\n\n" + description);
                     }
                 });
             }
@@ -1857,7 +1856,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Name: " + name + "\nPrice: " + price + "\nDevelopers: " + developers + "\nWebsite: " + website + "\n\n" + description,
+                                    body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/steam.png')
                                 };
                                 sendMessage(api, event, message);
@@ -1892,7 +1891,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Title: " + title + " " + year + "\nGenres: " + genres + "\nRuntime: " + runtime + "\nActors: " + actors + "\n\n" + plot,
+                                    body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
                                     attachment: fs.createReadStream(__dirname + '/cache/images/imdb.png')
                                 };
                                 sendMessage(api, event, message);
@@ -1927,7 +1926,7 @@ async function ai(api, event) {
 
                             .on('finish', () => {
                                 let message = {
-                                    body: "Name: " + name + " by " + artist + "\nAlbum: " + album + "\nGenre: " + genre + "\nLength: " + lenghtM + " minutes",
+                                    body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
                                     attachment: fs.createReadStream(__dirname + '/cache/images/itunes.png')
                                 };
                                 sendMessage(api, event, message);
@@ -2841,8 +2840,8 @@ async function ai(api, event) {
                             let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + apiKey[1])
                             let filename = __dirname + "/cache/images/" + prop + ".jpg";
                             let msg = checkFound(name) + " @" + checkFound(vanity);
-                            msg += "\nGender: " + (gender == 1 ? "female" : "male");
-                            msg += "\nBirthday: " + checkFound(isBirthday);
+                            msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
+                            msg += "\n⦿ Birthday: " + checkFound(isBirthday);
 
                             await download(url, filename, () => {
                                 let message = {
@@ -3992,22 +3991,21 @@ async function unLink(dir) {
     }));
 }
 
-let convertBytes = function(bytes) {
-  let sizes = ["Bytes", "KB", "MB", "GB", "TB"]
-  if (bytes == 0) {
-    return "n/a"
-  }
-  let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
-  if (i == 0) {
-    return bytes + " " + sizes[i]
-  }
-  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
+const convertBytes = function(bytes) {
+    let sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+    if (bytes == 0) {
+        return "n/a"
+    }
+    let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+    if (i == 0) {
+        return bytes + " " + sizes[i]
+    }
+    return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
 }
 
-  function secondsToTime(e){
-    let h = Math.floor(e / 3600).toString().padStart(2,'0'),
-          m = Math.floor(e % 3600 / 60).toString().padStart(2,'0'),
-          s = Math.floor(e % 60).toString().padStart(2,'0');
-    
+function secondsToTime(e){
+    let h = Math.floor(e / 3600).toString().padStart(2,'0');
+    let m = Math.floor(e % 3600 / 60).toString().padStart(2,'0');
+    let s = Math.floor(e % 60).toString().padStart(2,'0');
     return h + ':' + m + ':' + s;
 }
