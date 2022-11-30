@@ -3467,10 +3467,10 @@ function someA(api, event, query, input) {
             sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
         }
         return true;
-    } else if (containsAny(query2, sadEE)) {
+    } else if (containsAny(input.toLowerCase(), sadEE)) {
         reactMessage(api, event, ":sad:");
         return true;
-    } else if (containsAny(query2, angryEE)) {
+    } else if (containsAny(input.toLowerCase(), angryEE)) {
         reactMessage(api, event, ":angry:");
         return true;
     } else if (containsAny(query, loveEE) || (query == "bot" || query == "good")) {
