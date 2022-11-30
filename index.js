@@ -24,6 +24,7 @@ const os = require('os');
 const NetworkSpeed = require('network-speed')
 const process_p = require('process');
 const googleTTS = require('google-tts-api');
+const gis = require('g-i-s');
 
 log("The Project Orion is now active and waiting for commands execution. ONLINE")
 
@@ -105,7 +106,7 @@ help += "\n⦿ searchincog [text]";
 help += "\n⦿ searchimg [text]";
 help += "\n⦿ pdf [text]";
 help += "\n⦿ dict [text]";
-help += "\n⦿ summ [text]";
+help += "\n⦿ tts [text]";
 help += "\n⦿ baybayin [text]";
 help += "\n⦿ weather [location]";
 help += "\n⦿ music [text]";
@@ -214,6 +215,7 @@ help5 += "\n⦿ wfind [text]";
 help5 += "\n⦿ time";
 help5 += "\n⦿ time [timezone]";
 help5 += "\n⦿ ping";
+help5 += "\n⦿ summ [text]";
 
 let help6 = "\n⦿ anime [category]";
 help6 += "\n   waifu, megumin, bully, cuddle,";
@@ -816,7 +818,13 @@ async function ai(api, event) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
-        if (query2.startsWith("tts")) {
+        if (query == "cosplay") {
+            gis("Anime Cosplay", async (error, result) => {
+                n = result;
+                dl_link = n[Math.floor(Math.random() * n.length)].url;
+                parseImage(api, event, dl_link, __dirname + '/cache/images/cosplay.jpg');
+            });
+        } else if (query2.startsWith("tts")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead.\nFor example:\ntts I am melvin jones repol")
@@ -861,7 +869,7 @@ async function ai(api, event) {
                     },
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-                sendMessage(api, event, "Uptime is" + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + "mbps\n⦿ Upload Speed: " + speed.mbps + "mbps");
+                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps");
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
