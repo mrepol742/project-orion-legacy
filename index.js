@@ -3818,12 +3818,12 @@ function isValidDomain(url) {
 
 function isMorning(tz) {
     var curHr = getTimeDate(tz).getHours();
-    return curHr >= 3 && curHr <= 12;
+    return curHr >= 3 && curHr <= 11;
 }
 
 function isAfternoon(tz) {
     var curHr = getTimeDate(tz).getHours();
-    return curHr >= 12 && curHr <= 18;
+    return curHr >= 12 && curHr <= 17;
 }
 
 function isEvening(tz) {
@@ -3833,7 +3833,7 @@ function isEvening(tz) {
 
 function isNight(tz) {
     var curHr = getTimeDate(tz).getHours();
-    return curHr >= 21 && curHr <= 3;
+    return curHr >= 22 && curHr <= 3;
 }
 
 function getDayNightTime(tz) {
