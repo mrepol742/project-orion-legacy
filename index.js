@@ -20,8 +20,13 @@ const path = require('path');
 const Innertube = require('youtubei.js');
 const GoogleImages = require('google-images');
 const google = require('googlethis');
+const os = require('os');
+const NetworkSpeed = require('network-speed')
+const process_p = require('process');
 
 log("The Project Orion is now active and waiting for commands execution. ONLINE")
+
+const testNetworkSpeed = new NetworkSpeed();
 
 let sleep = [5000, 6000, 5500, 6500, 7000, 6800, 5800, 5200, 7200, 6600, 5200, 6300, 5400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
@@ -803,6 +808,31 @@ async function ai(api, event) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
+        if (query == "ping") {
+   (async () => {
+ var osFreeMemm = os.freemem();
+    var osFreeMem = convertBytes(osFreeMemm);
+    var osTotalMemm = os.totalmem();
+    var second_process = process_p.uptime();
+    var seconds_con = secondsToTime(second_process);
+    var osTotalMem = convertBytes(osTotalMemm);
+    var baseUrl = 'https://eu.httpbin.org/stream-bytes/500000';
+    var fileSizeInBytes = 500000;
+    var speed = await testNetworkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+   var optionss = {
+    hostname: 'www.google.com',
+    port: 80,
+    path: '/catchers/544b09b4599c1d0200000289',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  
+  var upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
+   sendMessage(api, event, "Uptime: " + seconds_con + " seconds \n\n SERVER INFO \n ⦿ RAM: " + osFreeMem + " / 1GB \n ⦿ ROM: " + osTotalMem + " / 30GB \n ⦿ Download Speed: " + upload_spee.mbps + "\n⦿ Upload Speed: " + speed.mbps + "");
+  })();
+}
         if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3960,4 +3990,24 @@ async function unLink(dir) {
           log("un_link " + dir);
         }
     }));
+}
+
+let convertBytes = function(bytes) {
+  let sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+  if (bytes == 0) {
+    return "n/a"
+  }
+  let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+  if (i == 0) {
+    return bytes + " " + sizes[i]
+  }
+  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
+}
+
+  function secondsToTime(e){
+    let h = Math.floor(e / 3600).toString().padStart(2,'0'),
+          m = Math.floor(e % 3600 / 60).toString().padStart(2,'0'),
+          s = Math.floor(e % 60).toString().padStart(2,'0');
+    
+    return h + ':' + m + ':' + s;
 }
