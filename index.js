@@ -3453,8 +3453,10 @@ async function ai(api, event) {
 }
 
 function someA(api, event, query, input) {
-    if (isMe(query) || isMyId(Object.keys(event.mentions)[0])) {
-        if (query == "sup" || query == "wassup" || query == "whatsup") {
+    if (event.type == "message" || event.type == "message_reply") {
+        if (!isMyId(event.messageReply.senderID)) {
+            return false;
+        } else if (query == "sup" || query == "wassup" || query == "whatsup") {
             sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
             return true;
         } else if (query == "hi" || query == "hello" || query.startsWith("hey")) {
