@@ -150,8 +150,8 @@ help2 += "\n⦿ gname";
 let help3 = "\n⦿ mnm @mention|@me";
 help3 += "\n⦿ facebook @mention|@me";
 help3 += "\n⦿ nickname @mention|@me [text]";
-help3 += "\n⦿ invert @mention";
-help3 += "\n⦿ greyscale @mention";
+help3 += "\n⦿ invert @mention|@me";
+help3 += "\n⦿ greyscale @mention|@me";
 help3 += "\n⦿ ship @mention @mention";
 help3 += "\n⦿ www @mention @mention";
 help3 += "\n⦿ jokeover @mention|@me";
@@ -212,7 +212,7 @@ help6 += "\n   pokedance, cringe, cry";
 help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob";
 
-let categorySFW = ['megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet',
+let categorySFW = ['waifu', 'megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet',
     'blush', 'smile', 'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill', 'kick', 'happy', 'wink',
     'poke', 'dance', 'cringe'
 ];
