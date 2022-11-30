@@ -54,7 +54,9 @@ let vips = [
     "100037131918629",
     // felipe santiago
     "100008664752303",
-    "100049247221868"
+    "100049247221868",
+    // edmon
+    "100029315742680"
 ];
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
