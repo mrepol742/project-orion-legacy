@@ -1,10 +1,7 @@
-const express = require('express');
-const app = express();
-
-const port = process.env.PORT || 5000;
-
-app.get('/', (req, res) => res.send('Orion is online and waiting for commands.'));
-
-app.listen(port, () =>
-	console.log(`>> http://localhost:${port}`)
-);
+module.exports = (timezone) => {
+	const a = new Date()
+	const b = new Date(a.toLocaleString('en-US', {
+		timeZone: timezone
+	}))
+	return new Date(a.getTime() - (a.getTime() - b.getTime()))
+}
