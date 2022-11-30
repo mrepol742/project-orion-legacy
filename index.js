@@ -3913,7 +3913,14 @@ function getMyId() {
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
-    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + encodeURI(name) + "&text2=Welcome+To+" + encodeURI(gname) + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
+    var rforeign = /[^\u0000-\u007f]/;
+    let nameA = name;
+    let gnameA = gname;
+    if (rforeign.test(name)) {
+        nameA = encodeURI(name);
+        gnameA = encodeURI(gname);
+    } 
+    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + nameA + "&text2=Welcome+To+" + gnameA + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
 }
 
 async function getImages(api, event, images) {
