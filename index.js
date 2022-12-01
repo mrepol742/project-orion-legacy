@@ -818,13 +818,7 @@ async function ai(api, event) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
-        if (query == "cosplay") {
-            gis("Anime Cosplay", async (error, result) => {
-                n = result;
-                dl_link = n[Math.floor(Math.random() * n.length)].url;
-                parseImage(api, event, dl_link, __dirname + '/cache/images/cosplay.jpg');
-            });
-        } else if (query2.startsWith("tts")) {
+        if (query2.startsWith("tts")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead.\nFor example:\ntts I am melvin jones repol")
@@ -1236,7 +1230,6 @@ async function ai(api, event) {
                                 if (data.length > limit) {
                                     log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
                                     sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
-                                    unLink(__dirname + '/cache/videos/video.mp4');
                                 } else {
                                     log("Done.");
                                     let message = {
@@ -1246,6 +1239,7 @@ async function ai(api, event) {
                                     sendMessage(api, event, message);
                                 }
                                 threadIdMV[event.threadID] = true;
+                                unLink(__dirname + '/cache/videos/video.mp4')
                             })
                         });
                         stream.on('error', (err) => reportIssue(api, event, err));
@@ -1301,7 +1295,6 @@ async function ai(api, event) {
                                 if (data.length > limit) {
                                     log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
                                     sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
-                                    unlink(__dirname + '/cache/audios/music.mp3');
                                 } else {
                                     log("Finish downloading music.");
                                     let message = {
@@ -1311,6 +1304,7 @@ async function ai(api, event) {
                                     sendMessage(api, event, message);
                                 }
                                 threadIdMV[event.threadID] = true;
+                                unlink(__dirname + '/cache/audios/music.mp3');
                             })
                         });
                         stream.on('error', (err) => reportIssue(api, event, err));
@@ -2873,7 +2867,7 @@ async function ai(api, event) {
                                 isBirthday
                             } = ret[prop]
                             let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + apiKey[1])
-                            let filename = __dirname + "/cache/images/" + prop + ".jpg";
+                            let filename = __dirname + "/cache/images/facebook.jpg";
                             let msg = checkFound(name) + " @" + checkFound(vanity);
                             msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
                             msg += "\n⦿ Birthday: " + checkFound(isBirthday);
@@ -2884,6 +2878,7 @@ async function ai(api, event) {
                                     attachment: fs.createReadStream(filename)
                                 };
                                 sendMessage(api, event, message);
+                                unLink(filename);
                             })
                         }
                     });
@@ -4015,7 +4010,7 @@ async function getImages(api, event, images) {
 }
 
 async function unLink(dir) {
-    await wait(20000);
+    await wait(60000);
     fs.unlink(dir, (err => {
         if (err) log(err);
         else {
