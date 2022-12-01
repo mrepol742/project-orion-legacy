@@ -1305,7 +1305,7 @@ async function ai(api, event) {
                                     sendMessage(api, event, message);
                                 }
                                 threadIdMV[event.threadID] = true;
-                                unlink(__dirname + '/cache/audios/music.mp3');
+                                unLink(__dirname + '/cache/audios/music.mp3');
                             })
                         });
                         stream.on('error', (err) => reportIssue(api, event, err));
