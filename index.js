@@ -3647,6 +3647,11 @@ function reportIssue(api, event, err) {
 }
 
 async function sendMessage(api, event, message) {
+    let sendTyping = api.sendTypingIndicator(event.threadID, (err) => {
+        if (err) log(err);
+        log("send_typing");
+        sendTyping();
+    });
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
@@ -3685,6 +3690,11 @@ async function sendMessage(api, event, message) {
 }
 
 async function sendMessageOnly(api, event, message) { 
+    let sendTyping = api.sendTypingIndicator(event.threadID, (err) => {
+        if (err) log(err);
+        log("send_typing");
+        sendTyping();
+    });
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
@@ -3695,6 +3705,11 @@ async function sendMessageOnly(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
+    let sendTyping = api.sendTypingIndicator(event.threadID, (err) => {
+        if (err) log(err);
+        log("send_typing");
+        sendTyping();
+    });
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
