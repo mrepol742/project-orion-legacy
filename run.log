@@ -32608,3 +32608,137 @@ The output of the above code is like this:
 >> http://localhost:6000
 12/1/2022 10:42:53 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
 >> http://localhost:6000
+12/1/2022 10:44:45 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 10:50:00 AM$ Time Check 10:50 AM
+12/1/2022 10:50:41 AM$ event_body 100037131918629 Translate
+12/1/2022 10:50:42 AM$ 100037131918629
+12/1/2022 10:50:42 AM$ 100037131918629
+12/1/2022 10:50:42 AM$ send_message 2583856894982516 Opps! I didnt get it. You should try using translate language text instead.
+
+For example:
+translate English Kamusta
+12/1/2022 11:00:00 AM$ Time Check 11:00 AM
+12/1/2022 11:00:00 AM$ Project Orion Facebook State Refreshed
+12/1/2022 11:04:02 AM$ react_message mid.$cAAAABtW1oyaK_Oln9mEy6Qe-nXVO :love:
+12/1/2022 11:04:02 AM$ send_message 100077318906152 🥰☀️
+12/1/2022 11:04:02 AM$ send_message 100077318906152 Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.
+12/1/2022 11:04:05 AM$ wait_timeout >> 5000
+12/1/2022 11:04:10 AM$ send_message 100077318906152 😘
+12/1/2022 11:10:00 AM$ Time Check 11:10 AM
+12/1/2022 11:20:00 AM$ Time Check 11:20 AM
+12/1/2022 11:28:37 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 11:30:00 AM$ Time Check 11:30 AM
+12/1/2022 11:39:37 AM$ event_body 100006471639106 $pat
+12/1/2022 11:39:37 AM$ wait_timeout >> 6800
+12/1/2022 11:39:45 AM$ 100016897632316
+12/1/2022 11:39:45 AM$ 100006471639106
+12/1/2022 11:39:45 AM$ 100087874545472
+12/1/2022 11:39:45 AM$ send_message_reply 7244767385593438 [object Object]
+12/1/2022 11:40:00 AM$ Time Check 11:40 AM
+12/1/2022 11:40:54 AM$ 100016897632316
+12/1/2022 11:40:54 AM$ 100016897632316
+12/1/2022 11:40:54 AM$ 100016029218667
+12/1/2022 11:40:54 AM$ send_message 7244767385593438 Prefix reset to default values.
+12/1/2022 11:50:00 AM$ Time Check 11:50 AM
+12/1/2022 12:00:00 PM$ Time Check 12:00 PM
+12/1/2022 12:00:00 PM$ Project Orion Facebook State Refreshed
+12/1/2022 12:04:23 PM$ new_member 100087118989160 Kali Khunt
+12/1/2022 12:04:25 PM$ wait_timeout >> 6300
+12/1/2022 12:04:25 PM$ wait_timeout >> 60000
+12/1/2022 12:04:31 PM$ send_message 7635291589846117 [object Object]
+12/1/2022 12:05:25 PM$ un_link /home/runner/project-orion/cache/images/welcome0.jpg
+12/1/2022 12:08:34 PM$ send_message 7244767385593438 It's currently 12:08 pm in the afternoon.
+12/1/2022 12:10:00 PM$ Time Check 12:10 PM
+12/1/2022 12:11:57 PM$ new_member 100010771304499 Reynante Bejano
+12/1/2022 12:11:58 PM$ new_member 100014269863064 Criselle Mae Gabia Amores
+12/1/2022 12:11:59 PM$ wait_timeout >> 5200
+12/1/2022 12:11:59 PM$ wait_timeout >> 60000
+12/1/2022 12:12:00 PM$ new_member 100081936620905 日元日元
+12/1/2022 12:12:00 PM$ wait_timeout >> 5400
+12/1/2022 12:12:00 PM$ wait_timeout >> 60000
+12/1/2022 12:12:01 PM$ wait_timeout >> 6500
+12/1/2022 12:12:01 PM$ wait_timeout >> 60000
+12/1/2022 12:12:04 PM$ send_message 6942091245864108 [object Object]
+12/1/2022 12:12:05 PM$ send_message 6942091245864108 [object Object]
+12/1/2022 12:12:08 PM$ send_message 6942091245864108 [object Object]
+12/1/2022 12:12:59 PM$ un_link /home/runner/project-orion/cache/images/welcome0.jpg
+12/1/2022 12:13:00 PM$ Error: ENOENT: no such file or directory, unlink '/home/runner/project-orion/cache/images/welcome0.jpg'
+12/1/2022 12:13:01 PM$ Error: ENOENT: no such file or directory, unlink '/home/runner/project-orion/cache/images/welcome0.jpg'
+12/1/2022 12:16:53 PM$ wait_timeout >> 5000
+12/1/2022 12:16:58 PM$ wait_timeout >> 7000
+12/1/2022 12:17:05 PM$ send_message 5190020021066142 🦾
+12/1/2022 12:20:00 PM$ Time Check 12:20 PM
+12/1/2022 12:23:05 PM$ event_body 100084145420981 Music Strong by One direction
+12/1/2022 12:23:06 PM$ downloading One Direction - Strong (Audio)
+12/1/2022 12:23:06 PM$ Starting the download of music file.
+12/1/2022 12:23:07 PM$ Finish downloading music.
+12/1/2022 12:23:07 PM$ wait_timeout >> 6600
+12/1/2022 12:31:55 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 12:34:11 PM$ 100087185842116
+12/1/2022 12:34:11 PM$ 100087185842116
+12/1/2022 12:34:11 PM$ 100016029218667
+12/1/2022 12:34:11 PM$ send_message 2583856894982516 Hello World
+12/1/2022 12:34:16 PM$ event_body 100016029218667 cmd
+12/1/2022 12:34:17 PM$ 100016029218667
+12/1/2022 12:34:17 PM$ 100016029218667
+12/1/2022 12:34:17 PM$ send_message 2583856894982516 Project Orion 1 - 7
+
+⦿ cmd
+⦿ cmd [number]
+⦿ cmd all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ tts [text]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ github [username]
+⦿ ig [username]
+⦿ tiktok [username]
+
+The object will not change its motion unless a force acts on it.
+12/1/2022 12:36:14 PM$ event_body 100087185842116 cmd 2
+12/1/2022 12:36:14 PM$ wait_timeout >> 5500
+12/1/2022 12:36:20 PM$ 100087185842116
+12/1/2022 12:36:20 PM$ 100087185842116
+12/1/2022 12:36:20 PM$ send_message 2583856894982516 Project Orion 2 - 7
+
+⦿ thoughts
+⦿ lulcat [text]
+⦿ gemoji [emoji]
+⦿ gname [text]
+⦿ wiki [text]
+⦿ urlshort [url]
+⦿ pickup
+⦿ landscape
+⦿ landscape [text]
+⦿ portrait
+⦿ portrait [text]
+⦿ problem [equation]
+⦿ pin add
+⦿ pin remove
+⦿ sadcat [text]
+⦿ biden [text]
+⦿ pika [text]
+⦿ god [text]
+⦿ website [url]
+⦿ qrcode [text]
+
+The product of the pressure and the volume of one gram molecule of an ideal gas is equal to the product of the absolute temperature of the gas and the universal gas constant.
+12/1/2022 12:36:43 PM$ event_body 100087185842116 sadcat sana all
+12/1/2022 12:36:43 PM$ parse_image https://api.popcat.xyz/sadcat?text=sana all
+12/1/2022 12:36:44 PM$ wait_timeout >> 5500
+12/1/2022 12:36:44 PM$ wait_timeout >> 60000
+12/1/2022 12:36:51 PM$ 100087185842116
+12/1/2022 12:36:51 PM$ send_message_reply 2583856894982516 [object Object]
