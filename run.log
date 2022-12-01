@@ -31889,3 +31889,407 @@ Bot don dey turn human o
 12/1/2022 7:14:35 AM$ wait_timeout >> 5000
 12/1/2022 7:14:40 AM$ wait_timeout >> 5400
 12/1/2022 7:14:46 AM$ send_message 100045819710001 😶
+12/1/2022 7:20:00 AM$ Time Check 7:20 AM
+12/1/2022 7:29:28 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 7:29:40 AM$ send_message 100016029218667 Uptime: 00:00:12 seconds
+
+ SERVER INFO 
+⦿ RAM: 35.9 GB
+ ⦿ ROM: 62.8 GB
+⦿ Download Speed: 190.48mbps
+⦿ Upload Speed: 11.40mbps
+12/1/2022 7:30:00 AM$ Time Check 7:30 AM
+12/1/2022 7:38:10 AM$ event_body 100045819710001 Whatsapp have some weird restrictions that's why I used axios.get
+12/1/2022 7:38:10 AM$ wait_timeout >> 3000
+12/1/2022 7:48:11 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 7:48:22 AM$ wait_timeout >> 20000
+12/1/2022 7:48:22 AM$ send_message 100016029218667 [object Object]
+12/1/2022 7:48:42 AM$ wait_timeout >> 20000
+12/1/2022 7:48:42 AM$ un_link /home/runner/project-orion/cache/audios/tts.mp3
+12/1/2022 7:48:42 AM$ 100087185842116
+12/1/2022 7:48:42 AM$ 100087185842116
+12/1/2022 7:48:42 AM$ 100016029218667
+12/1/2022 7:48:42 AM$ send_message 2583856894982516 [object Object]
+12/1/2022 7:49:02 AM$ Error: ENOENT: no such file or directory, unlink '/home/runner/project-orion/cache/audios/tts.mp3'
+12/1/2022 7:49:08 AM$ wait_timeout >> 20000
+12/1/2022 7:49:08 AM$ 100016029218667
+12/1/2022 7:49:08 AM$ 100016029218667
+12/1/2022 7:49:08 AM$ send_message 2583856894982516 [object Object]
+12/1/2022 7:49:28 AM$ un_link /home/runner/project-orion/cache/audios/tts.mp3
+12/1/2022 7:49:32 AM$ event_body 100016029218667 ping
+12/1/2022 7:49:34 AM$ 100016029218667
+12/1/2022 7:49:34 AM$ 100016029218667
+12/1/2022 7:49:34 AM$ send_message 2583856894982516 Uptime is00:01:23 seconds
+
+SERVER INFO
+⦿ RAM: 35.9 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 83.33mbps
+⦿ Upload Speed: 19.23mbps
+12/1/2022 7:50:00 AM$ Time Check 7:50 AM
+12/1/2022 7:56:42 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 7:57:03 AM$ parse_image https://media.istockphoto.com/id/672842562/photo/japan-anime-cosplay-girl-in-white-tone.jpg?s\u003d1024x1024\u0026w\u003dis\u0026k\u003d20\u0026c\u003ddcHE2QqZXKznTDkIhk2OpMRoEq-3eyaKEy6ihmru3mw\u003d
+12/1/2022 7:57:04 AM$ wait_timeout >> 20000
+12/1/2022 7:57:04 AM$ send_message 100016029218667 [object Object]
+12/1/2022 7:57:04 AM$ report_issue TypeError: Cannot convert undefined or null to object
+12/1/2022 7:57:24 AM$ un_link /home/runner/project-orion/cache/images/cosplay.jpg
+12/1/2022 7:57:47 AM$ wait_timeout >> 5000
+12/1/2022 7:57:52 AM$ wait_timeout >> 5500
+12/1/2022 7:57:58 AM$ send_message 100045819710001 😆
+12/1/2022 8:00:00 AM$ Time Check 8:00 AM
+12/1/2022 8:00:00 AM$ Project Orion Facebook State Refreshed
+12/1/2022 8:00:16 AM$ event_body 100016029218667 ping
+12/1/2022 8:00:17 AM$ send_message 100016029218667 Uptime is 00:03:35 seconds
+
+SERVER INFO
+⦿ RAM: 35.9 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 210.53 mbps
+⦿ Upload Speed: 17.47 mbps
+12/1/2022 8:03:06 AM$ event_body 100045819710001 searchimg Anime cosplay
+12/1/2022 8:03:06 AM$ wait_timeout >> 1000
+12/1/2022 8:03:07 AM$ wait_timeout >> 1000
+12/1/2022 8:03:08 AM$ wait_timeout >> 1000
+12/1/2022 8:03:09 AM$ wait_timeout >> 1000
+12/1/2022 8:03:10 AM$ wait_timeout >> 1000
+12/1/2022 8:03:11 AM$ wait_timeout >> 1000
+12/1/2022 8:03:12 AM$ wait_timeout >> 1000
+12/1/2022 8:03:15 AM$ wait_timeout >> 20000
+12/1/2022 8:03:15 AM$ wait_timeout >> 20000
+12/1/2022 8:03:15 AM$ wait_timeout >> 20000
+12/1/2022 8:03:15 AM$ wait_timeout >> 20000
+12/1/2022 8:03:15 AM$ wait_timeout >> 20000
+12/1/2022 8:03:15 AM$ wait_timeout >> 20000
+12/1/2022 8:03:35 AM$ un_link /home/runner/project-orion/cache/images/findimg0.png
+12/1/2022 8:03:35 AM$ un_link /home/runner/project-orion/cache/images/findimg1.png
+12/1/2022 8:03:35 AM$ un_link /home/runner/project-orion/cache/images/findimg2.png
+12/1/2022 8:03:35 AM$ un_link /home/runner/project-orion/cache/images/findimg3.png
+12/1/2022 8:03:35 AM$ un_link /home/runner/project-orion/cache/images/findimg4.png
+12/1/2022 8:03:35 AM$ un_link /home/runner/project-orion/cache/images/findimg5.png
+12/1/2022 8:03:45 AM$ event_body 100045819710001 anime --nsfw waifu
+12/1/2022 8:03:45 AM$ response_data https://api.waifu.pics/nsfw/waifu
+12/1/2022 8:03:45 AM$ wait_timeout >> 1000
+12/1/2022 8:03:46 AM$ parse_image https://i.waifu.pics/UIGJAw2.jpg
+12/1/2022 8:03:47 AM$ wait_timeout >> 7200
+12/1/2022 8:03:47 AM$ wait_timeout >> 20000
+12/1/2022 8:03:54 AM$ send_message 100045819710001 [object Object]
+12/1/2022 8:04:04 AM$ wait_timeout >> 5000
+12/1/2022 8:04:07 AM$ un_link /home/runner/project-orion/cache/images/animensfw.png
+12/1/2022 8:04:09 AM$ wait_timeout >> 5200
+12/1/2022 8:04:14 AM$ send_message 100045819710001 😂😂😂😂😂😂
+12/1/2022 8:04:52 AM$ event_body 100016029218667 cmd all
+12/1/2022 8:04:52 AM$ wait_timeout >> 2000
+12/1/2022 8:04:55 AM$ send_message 100016029218667 Project Orion
+
+⦿ cmd
+⦿ cmd [number]
+⦿ cmd all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ tts [text]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ github [username]
+⦿ ig [username]
+⦿ tiktok [username]
+⦿ thoughts
+⦿ lulcat [text]
+⦿ gemoji [emoji]
+⦿ gname [text]
+⦿ wiki [text]
+⦿ urlshort [url]
+⦿ pickup
+⦿ landscape
+⦿ landscape [text]
+⦿ portrait
+⦿ portrait [text]
+⦿ problem [equation]
+⦿ pin add
+⦿ pin remove
+⦿ sadcat [text]
+⦿ biden [text]
+⦿ pika [text]
+⦿ god [text]
+⦿ website [url]
+⦿ qrcode [text]
+⦿ alert [text]
+⦿ meme
+⦿ meme --reddit
+⦿ drake [text1]: [text2]
+⦿ pooh [text1]: [text2]
+⦿ oogway [text]
+⦿ caution [text]
+⦿ element [name]
+⦿ imdb [title]
+⦿ steam [name]
+⦿ npm [name]
+⦿ gname
+⦿ mnm @mention|@me
+⦿ facebook @mention|@me
+⦿ nickname @mention|@me [text]
+⦿ invert @mention|@me
+⦿ greyscale @mention|@me
+⦿ ship @mention @mention
+⦿ www @mention @mention
+⦿ jokeover @mention|@me
+⦿ translate [language] [text]
+⦿ kiss @mention|@me
+⦿ pet @mention|@me
+⦿ jail @mention|@me
+⦿ communist @mention|@me
+⦿ wanted @mention|@me
+⦿ gun @mention|@me
+⦿ drip @mention|@me
+⦿ clown @mention|@me
+⦿ uncover @mention|@me
+⦿ advert @mention|@me
+⦿ blur @mention|@me
+⦿ phub [text]
+⦿ morse [text]
+⦿ joke
+⦿ profilepic
+⦿ wyr
+⦿ 8ball
+⦿ gmember
+⦿ car
+⦿ color
+⦿ sip [text]
+⦿ trump [text]
+⦿ mock [text]
+⦿ reverse [text]
+⦿ itunes [title]
+⦿ coding
+⦿ newyear
+⦿ christmas
+⦿ barrier
+⦿ fact
+⦿ thoughts
+⦿ conan
+⦿ uid
+⦿ guid
+⦿ facts [text]
+⦿ doublestruck [text]
+⦿ count
+⦿ count --vowels
+⦿ count --consonants
+⦿ wfind [text]
+⦿ time
+⦿ time [timezone]
+⦿ ping
+⦿ summ [text]
+⦿ anime [category]
+   waifu, megumin, bully, cuddle,
+   hug, awoo, kiss, lick
+   pat, smug, bonk, yeet
+   blush, smile, wave, highfive
+   handhold, nom, biteglomp, slap
+   kill, kick, happy, wink
+   pokedance, cringe, cry
+⦿ anime --nsfw [category]
+   waifu, neko, trap, blowjob
+
+The object will not change its motion unless a force acts on it.
+12/1/2022 8:06:35 AM$ event_body 100016029218667 cmd admin
+12/1/2022 8:06:35 AM$ wait_timeout >> 6000
+12/1/2022 8:06:41 AM$ send_message 100016029218667 Project Orion Admin
+
+⦿ unsend
+⦿ unsend --on
+⦿ unsend --off
+⦿ unsend --all
+⦿ delay --on
+⦿ delay --off
+⦿ nsfw --on
+⦿ nsfw --off
+⦿ preventSimultanoesExecution --on
+⦿ preventSimultanoesExecution --off
+⦿ setPrefix [prefix]
+⦿ remPrefix
+⦿ setTimezone [timezone]
+⦿ setTextComplextion [complextion]
+⦿ setMaxTokens [integer]
+⦿ setTemperature [integer]
+⦿ setFrequencyPenalty [integer]
+⦿ setProbabilityMass [integer]
+⦿ isEnabled
+⦿ isDisabled
+⦿ isDebugEnabled
+⦿ isDebugDisabled
+⦿ refresh | reload
+
+The intensity of the radiation is inversely proportional to the square of the distance.
+12/1/2022 8:10:00 AM$ Time Check 8:10 AM
+12/1/2022 8:12:11 AM$ event_body 100016029218667 cmd all
+12/1/2022 8:12:11 AM$ wait_timeout >> 2000
+12/1/2022 8:12:13 AM$ 100016029218667
+12/1/2022 8:12:13 AM$ 100016029218667
+12/1/2022 8:12:13 AM$ send_message 2583856894982516 Project Orion
+
+⦿ cmd
+⦿ cmd [number]
+⦿ cmd all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ pdf [text]
+⦿ dict [text]
+⦿ tts [text]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ github [username]
+⦿ ig [username]
+⦿ tiktok [username]
+⦿ thoughts
+⦿ lulcat [text]
+⦿ gemoji [emoji]
+⦿ gname [text]
+⦿ wiki [text]
+⦿ urlshort [url]
+⦿ pickup
+⦿ landscape
+⦿ landscape [text]
+⦿ portrait
+⦿ portrait [text]
+⦿ problem [equation]
+⦿ pin add
+⦿ pin remove
+⦿ sadcat [text]
+⦿ biden [text]
+⦿ pika [text]
+⦿ god [text]
+⦿ website [url]
+⦿ qrcode [text]
+⦿ alert [text]
+⦿ meme
+⦿ meme --reddit
+⦿ drake [text1]: [text2]
+⦿ pooh [text1]: [text2]
+⦿ oogway [text]
+⦿ caution [text]
+⦿ element [name]
+⦿ imdb [title]
+⦿ steam [name]
+⦿ npm [name]
+⦿ gname
+⦿ mnm @mention|@me
+⦿ facebook @mention|@me
+⦿ nickname @mention|@me [text]
+⦿ invert @mention|@me
+⦿ greyscale @mention|@me
+⦿ ship @mention @mention
+⦿ www @mention @mention
+⦿ jokeover @mention|@me
+⦿ translate [language] [text]
+⦿ kiss @mention|@me
+⦿ pet @mention|@me
+⦿ jail @mention|@me
+⦿ communist @mention|@me
+⦿ wanted @mention|@me
+⦿ gun @mention|@me
+⦿ drip @mention|@me
+⦿ clown @mention|@me
+⦿ uncover @mention|@me
+⦿ advert @mention|@me
+⦿ blur @mention|@me
+⦿ phub [text]
+⦿ morse [text]
+⦿ joke
+⦿ profilepic
+⦿ wyr
+⦿ 8ball
+⦿ gmember
+⦿ car
+⦿ color
+⦿ sip [text]
+⦿ trump [text]
+⦿ mock [text]
+⦿ reverse [text]
+⦿ itunes [title]
+⦿ coding
+⦿ newyear
+⦿ christmas
+⦿ barrier
+⦿ fact
+⦿ thoughts
+⦿ conan
+⦿ uid
+⦿ guid
+⦿ facts [text]
+⦿ doublestruck [text]
+⦿ count
+⦿ count --vowels
+⦿ count --consonants
+⦿ wfind [text]
+⦿ time
+⦿ time [timezone]
+⦿ ping
+⦿ summ [text]
+⦿ anime [category]
+   waifu, megumin, bully, cuddle,
+   hug, awoo, kiss, lick
+   pat, smug, bonk, yeet
+   blush, smile, wave, highfive
+   handhold, nom, biteglomp, slap
+   kill, kick, happy, wink
+   pokedance, cringe, cry
+⦿ anime --nsfw [category]
+   waifu, neko, trap, blowjob
+
+The radiant intensity from the ideal diffusely reflecting surface and cosine of the angle θ between the direction of incident light and surface normal are directly proportional.
+12/1/2022 8:19:14 AM$ wait_timeout >> 6800
+12/1/2022 8:19:14 AM$ unsend_message_group 100064068709620[object Object]
+12/1/2022 8:19:21 AM$ send_message 6942091245864108 [object Object]
+12/1/2022 8:19:32 AM$ event_body 100045819710001 Whatsapp isn't accepting the direct link
+12/1/2022 8:19:32 AM$ wait_timeout >> 3000
+12/1/2022 8:20:58 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 8:21:07 AM$ event_body 100016029218667 what is matter
+12/1/2022 8:21:07 AM$ wait_timeout >> 3000
+12/1/2022 8:23:55 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 8:23:59 AM$ event_body 100016029218667 what is matter
+12/1/2022 8:23:59 AM$ wait_timeout >> 3000
+12/1/2022 8:25:59 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 8:26:04 AM$ event_body 100016029218667 what is matter
+12/1/2022 8:26:04 AM$ wait_timeout >> 3000
+12/1/2022 8:26:10 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 8:28:45 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 8:28:51 AM$ event_body 100016029218667 what is matter
+12/1/2022 8:28:51 AM$ wait_timeout >> 3000
+12/1/2022 8:30:09 AM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/1/2022 8:30:16 AM$ event_body 100016029218667 what is matter
+12/1/2022 8:30:16 AM$ wait_timeout >> 3000
+12/1/2022 8:30:21 AM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/1/2022 8:31:42 AM$ event_body 100087185842116 ?meme
+12/1/2022 8:31:42 AM$ response_data https://api.popcat.xyz/meme
+12/1/2022 8:31:42 AM$ wait_timeout >> 1000
+12/1/2022 8:31:44 AM$ parse_image https://i.redd.it/4gtg97xoj53a1.jpg
+12/1/2022 8:31:44 AM$ wait_timeout >> 6300
+12/1/2022 8:31:44 AM$ wait_timeout >> 20000
+12/1/2022 8:31:51 AM$ 100087185842116
+12/1/2022 8:31:51 AM$ 100087185842116
+12/1/2022 8:31:51 AM$ 100087612000387
+12/1/2022 8:31:51 AM$ send_message 5119237738177809 [object Object]
+12/1/2022 8:32:04 AM$ un_link /home/runner/project-orion/cache/images/meme.png

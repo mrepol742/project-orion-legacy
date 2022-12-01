@@ -29,10 +29,6 @@ const gis = require('g-i-s');
 log("The Project Orion is now active and waiting for commands execution. ONLINE")
 
 const testNetworkSpeed = new NetworkSpeed();
-const config = new Configuration({
-    apiKey: "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",
-});
-const openai = new OpenAIApi(config);
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 
@@ -264,14 +260,12 @@ let apiKey = [
     "CcIDaVqu",
     // graph for facebook access token
     "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
-    // open ai api key
-    "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",
     // urban dictionary api key
     "bc23ad59e1mshdb14f6cce13bafap18cbc5jsn13348153e5cf",
     // nlpcloudclient summarize api key
     "5ab3c279e089139f63017eea409573731d5e8ce9",
      // open ai api key
-     "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",
+    "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",
 
      "NMkYp5CF"
 ];
@@ -1056,6 +1050,10 @@ async function ai(api, event) {
                 } else {
                     await wait(3000);
                     if (!query.startsWith("searchcode")) {
+                        const config = new Configuration({
+                            apiKey: apiKey[4],
+                        });
+                        const openai = new OpenAIApi(config);
                         const {
                             data
                         } = await openai.createCompletion(settings.text_complextion, {
