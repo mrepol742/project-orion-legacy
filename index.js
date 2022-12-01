@@ -55,25 +55,12 @@ let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
 let saveAns = [];
 let threads = ""
 let threadIdMV = {};
-let nonRRR = {};
 let msgs = {};
 let cmd = {};
 let emo = {};
 let threadMaintenance = {};
 let nwww = {};
-/*
-let vips = [
-    "100071743848974",
-    "100016029218667",
-    "100077318906152",
-    "100037131918629",
-    // felipe santiago
-    "100008664752303",
-    "100049247221868",
-    // edmon
-    "100029315742680"
-];
-*/
+
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
     "There is an equal and opposite reaction for every action.",
@@ -280,6 +267,7 @@ let domains = [".aaa", ".abb", ".abc", ".ac", ".aco", ".ad", ".ads", ".ae", ".ae
 let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
 let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
 let vips = JSON.parse(fs.readFileSync("cache/admin.json", "utf8"));
+let nonRRR = JSON.parse(fs.readFileSync("cache/users.json", "utf8"));
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
@@ -923,6 +911,7 @@ async function ai(api, event) {
                     }
                     sendMessage(api, event, message);
                     nonRRR[event.senderID] = event.senderID;
+                    fs.writeFileSync("cache/users.json", JSON.stringify(nonRRR), "utf8");
                 } else {
                     sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
                 }
