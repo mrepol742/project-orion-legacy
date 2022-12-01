@@ -306,7 +306,10 @@ login({
     api.setOptions({
         listenEvents: true,
         selfListen: false,
-        online: true
+        online: true,
+        logLevel: "info",
+        autoMarkDelivery: false,
+        userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18"
     });
 
     const listenEmitter = api.listen(async (err, event) => {
@@ -808,7 +811,7 @@ function wait(ms) {
 }
 
 async function ai(api, event) {
-    if (event.body != null) {
+    if (event.body != null && (typeof event.body === "string")) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
