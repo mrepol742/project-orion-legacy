@@ -144,7 +144,7 @@ help2 += "\n⦿ bgremove";
 help2 += "\n⦿ motivate";
 help2 += "\n⦿ inspiration";
 help2 += "\n⦿ advice";
-help2 = "\n⦿ alert [text]";
+help2 += "\n⦿ alert [text]";
 help2 += "\n⦿ meme";
 help2 += "\n⦿ meme --reddit";
 help2 += "\n⦿ drake [text1]: [text2]";
@@ -3513,16 +3513,12 @@ async function ai(api, event) {
 }
 
 function someA(api, event, query, input) {
-    if (event.type == "message" || event.type == "message_reply") {
-        if (event.type == "message_reply" && !isMyId(event.messageReply.senderID)) {
-            return false;
-        } else if (query == "sup" || query == "wassup" || query == "whatsup") {
-            sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
-            return true;
-        } else if (query == "hi" || query == "hello" || query.startsWith("hey")) {
-            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-            return true;
-        }
+    if (query == "sup" || query == "wassup" || query == "whatsup") {
+        sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
+        return true;
+    } else if (query == "hi" || query == "hello" || query.startsWith("hey")) {
+        sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+        return true;
     } else if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
@@ -3973,14 +3969,7 @@ function getMyId() {
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
-    var rforeign = /[^\u0000-\u007f]/;
-    let nameA = name;
-    let gnameA = gname;
-    if (rforeign.test(name)) {
-        nameA = encodeURI(name);
-        gnameA = encodeURI(gname);
-    } 
-    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + nameA + "&text2=Welcome+To+" + gnameA + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
+    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + name + "&text2=Welcome+To+" + gname + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
 }
 
 async function getImages(api, event, images) {
