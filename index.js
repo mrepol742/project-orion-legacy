@@ -199,8 +199,7 @@ help4 += "\n⦿ barrier";
 help4 += "\n⦿ fact";
 help4 += "\n⦿ thoughts";
 
-let help5 = "\n⦿ conan";
-help5 += "\n⦿ uid";
+let help5 = "\n⦿ uid";
 help5 += "\n⦿ guid";
 help5 += "\n⦿ facts [text]";
 help5 += "\n⦿ doublestruck [text]";
@@ -212,15 +211,16 @@ help5 += "\n⦿ time";
 help5 += "\n⦿ time [timezone]";
 help5 += "\n⦿ ping";
 help5 += "\n⦿ summ [text]";
+help5 += "\n⦿ anime [category]";
+help5 += "\n   waifu, megumin, bully, cuddle,";
+help5 += "\n   hug, awoo, kiss, lick";
+help5 += "\n   pat, smug, bonk, yeet";
+help5 += "\n   blush, smile, wave, highfive";
+help5 += "\n   handhold, nom, biteglomp, slap";
+help5 += "\n   kill, kick, happy, wink";
+help5 += "\n   pokedance, cringe, cry";
 
-let help6 = "\n⦿ anime [category]";
-help6 += "\n   waifu, megumin, bully, cuddle,";
-help6 += "\n   hug, awoo, kiss, lick";
-help6 += "\n   pat, smug, bonk, yeet";
-help6 += "\n   blush, smile, wave, highfive";
-help6 += "\n   handhold, nom, biteglomp, slap";
-help6 += "\n   kill, kick, happy, wink";
-help6 += "\n   pokedance, cringe, cry";
+let help6 = "\n⦿ conan";
 help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob";
 
