@@ -234,11 +234,19 @@ let categoryNSFW = ['waifu', 'neko', 'trap', 'blowjob'];
 let helpadmin = "\n⦿ unsend";
 helpadmin += "\n⦿ unsend --on";
 helpadmin += "\n⦿ unsend --off";
-helpadmin += "\n⦿ unsend --all";
 helpadmin += "\n⦿ delay --on";
 helpadmin += "\n⦿ delay --off";
 helpadmin += "\n⦿ nsfw --on";
 helpadmin += "\n⦿ nsfw --off";
+helpadmin += "\n⦿ enable --on";
+helpadmin += "\n⦿ enable --off";
+helpadmin += "\n⦿ debug --on";
+helpadmin += "\n⦿ debug --off";
+helpadmin += "\n⦿ sleep --on";
+helpadmin += "\n⦿ sleep --off";
+helpadmin += "\n⦿ refresh | reload";
+helpadmin += "\n⦿ addAdmin @mention";
+helpadmin += "\n⦿ remAdmin @mention";
 helpadmin += "\n⦿ preventSimultanoesExecution --on";
 helpadmin += "\n⦿ preventSimultanoesExecution --off";
 helpadmin += "\n⦿ setPrefix [prefix]";
@@ -249,11 +257,6 @@ helpadmin += "\n⦿ setMaxTokens [integer]";
 helpadmin += "\n⦿ setTemperature [integer]";
 helpadmin += "\n⦿ setFrequencyPenalty [integer]";
 helpadmin += "\n⦿ setProbabilityMass [integer]";
-helpadmin += "\n⦿ isEnabled";
-helpadmin += "\n⦿ isDisabled";
-helpadmin += "\n⦿ isDebugEnabled";
-helpadmin += "\n⦿ isDebugDisabled";
-helpadmin += "\n⦿ refresh | reload";
 
 let apiKey = [
     // phub api key
@@ -318,13 +321,13 @@ login({
 
         if (event.type == "message") {
             let nonSS = event.body;
-            if (nonSS == "isEnabled") {
+            if (nonSS == "enableon") {
                 if (vips.includes(event.senderID)) {
                     settings.isEnabled = true;
                     fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Hello");
                     }
-            } else if (nonSS == "isDisabled") {
+            } else if (nonSS == "enableoff") {
                 if (vips.includes(event.senderID)) {
                     settings.isEnabled = false;
                     fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
@@ -374,13 +377,13 @@ login({
                 } else {
                     msgs[event.messageID] = event.body;
                     let nonSS = event.body;
-                    if (nonSS == "isDebugEnabled") {
+                    if (nonSS == "debugon") {
                         if (vips.includes(event.senderID)) {
                             settings.isDebugEnabled = true;
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                             sendMessage(api, event, "Debug mode enabled.");
                         }
-                    } else if (nonSS == "isDebugDisabled") {
+                    } else if (nonSS == "debugoff") {
                         if (vips.includes(event.senderID)) {
                             settings.isDebugEnabled = false;
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
@@ -2200,9 +2203,41 @@ async function ai(api, event) {
                     sendMessage(api, event, "Prefix reset to default values.");
                 }
             }
-        } else if ((query == "unsendall") && !settings.onUnsend) {
+        } else if (query.startsWith("addadmin")) {
             if (vips.includes(event.senderID)) {
-                sendMessage(api, event, "...");
+                if (input.includes("@")) {
+                    let id = Object.keys(event.mentions)[0];
+                    if (id === undefined) {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead.\n\nFor example:\naddAdmin @Melvin Jones Repol")
+                        return;
+                    } else if (isMyId(id)) {
+                        sendMessage(api, event, "This account is already an admin.");
+                        return;
+                    }
+                    vips.push(id);
+                    sendMessage(api, event, "Admin permission granted.");
+                    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead.\n\nFor example:\naddAdmin @Melvin Jones Repol")
+                }
+            }
+        } else if (query.startsWith("remadmin")) {
+            if (vips.includes(event.senderID)) {
+                if (input.includes("@")) {
+                    let id = Object.keys(event.mentions)[0];
+                    if (id === undefined) {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead.\n\nFor example:\nremAdmin @Melvin Jones Repol")
+                        return;
+                    } else if (isMyId(id)) {
+                        sendMessage(api, event, "Unfortunately an error occured.");
+                        return;
+                    }
+                    vips = vips.filter(item => item !== id);
+                    sendMessage(api, event, "Admin permission removed.");
+                    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead.\n\nFor example:\nremAdmin @Melvin Jones Repol")
+                }
             }
         } else if ((query == "unsendon") && !settings.onUnsend) {
             if (vips.includes(event.senderID)) {
