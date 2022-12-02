@@ -52,7 +52,6 @@ let sadEE = ['pain', 'painful', 'cry ', 'crying ', 'unhappy', 'sad ', 'tired', '
 let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed' , 'fury ', 'rage ', 'ire ', 'wrath']
 let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 'regards', 'respects', 'dear', 'darling', 'boyfriend', 'girlfriend', 'sweetheart', 'angel', 'honey', 'adore', 'treasure', 'prize', 'devotion', 'friend']
 let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
-let saveAns = [];
 let threads = ""
 let threadIdMV = {};
 let msgs = {};
@@ -262,9 +261,11 @@ let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
 let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
 let vips = JSON.parse(fs.readFileSync("cache/admin.json", "utf8"));
 let nonRRR = JSON.parse(fs.readFileSync("cache/users.json", "utf8"));
+let saveAns = JSON.parse(fs.readFileSync("cache/answer.json", "utf8"));
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
+    fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
     process.exit();
 });
 
@@ -281,6 +282,7 @@ login({
         hours = hours ? hours : 12;
         mins = mins < 10 ? '0' + mins : mins;
         log("Time Check " + hours + ":" + mins + " " + ampm);
+        fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
     });
     
     cron.schedule('0 * * * *', () => {
@@ -738,7 +740,7 @@ login({
                             if (gc.isGroup) {
                                 let gname = gc.threadName;
                                 let i = 0;
-                                let names = {};
+                                let names = [];
                                 while (true) {
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
                                         break;
@@ -749,11 +751,15 @@ login({
                                 let gret;
                                 if (i > 1) {
                                     gret = "Welcome ";
-                                    for (let a = 0; names.length; b++) {
-                                        gret += "@" + names[a][1];
+                                    for (let a = 0; a < names.length; a++) {
+                                        if (a == names.length - 1) {
+                                           gret += "and @" + names[a][1] + " ";
+                                        } else {
+                                           gret += "@" + names[a][1] + ", ";
+                                        }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += ".\n\nI'm Mj btw, How are you'll? if you needed assistance you can call me for list of commands type cmd.";
+                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? if you needed assistance you can call me for list of commands type cmd.";
                                 } else {
                                     gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? if you needed assistance you can call me for list of commands type cmd.";
                                     log("new_member " + names[0][0] + " " + names[0][1])
@@ -761,7 +767,7 @@ login({
                                 let name = event.logMessageData.addedParticipants[0].fullName;
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
                                 let arr = gc.participantIDs;
-                                let Tmem = arr.length - 1;
+                                let Tmem = arr.length;
                                 let num = i;
                                 request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
                                     .on('finish', () => {
@@ -798,8 +804,12 @@ login({
                                             request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
                                                 .on('finish', () => {
                                                     let message = {
-                                                        body: "Thank you for joining " + data[prop].name + " but now you're leaving us.",
-                                                        attachment: fs.createReadStream(__dirname + "/cache/images/byebye.jpg")
+                                                        body: "Thank you for joining @" + data[prop].name + " but now you're leaving us.",
+                                                        attachment: fs.createReadStream(__dirname + "/cache/images/byebye.jpg"),
+                                                        mentions: [{
+                                                            tag: data[prop].name,
+                                                            id: prop
+                                                        }]
                                                     };
                                                     sendMessageOnly(api, event, message);
                                                     log("leave_member " + data[prop].name);
@@ -927,7 +937,7 @@ async function ai(api, event) {
                 if (nonRRR[event.senderID] == undefined) {
                     let message = {
                         body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n\nhttps://mrepol742.github.io/project-orion/",
-                        attachment: [fs.createReadStream(__dirname + "/cache/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+                        attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
                     }
                     sendMessage(api, event, message);
                     nonRRR[event.senderID] = event.senderID;
@@ -1058,10 +1068,16 @@ async function ai(api, event) {
                     if (repeatOfNonWWW(event)) {
                         return;
                     }
-                   sendMessage(api, event, text + "?");
+                    sendMessage(api, event, text + "?");
                 } else {
-                    await wait(3000);
                     if (!query.startsWith("searchcode")) {
+                        for (let i = 0; i < saveAns.length; i++) {
+                            if (saveAns[i][0] == text) {
+                                log("answer_cache");
+                                sendMessage(api, event, saveAns[i][1]);
+                                return;
+                            }
+                        }
                         const config = new Configuration({
                             apiKey: apiKey[4],
                         });
@@ -1081,7 +1097,7 @@ async function ai(api, event) {
                         if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
                             finalDataCC = finalDataCC.slice(1);
                         }
-                        saveAns.push([text, finalDataCC, event.messageID])
+                        saveAns.push([text, finalDataCC])
                         sendMessage(api, event, finalDataCC);
                     } else {
                         const config = new Configuration({
