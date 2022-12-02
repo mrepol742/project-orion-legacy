@@ -817,21 +817,10 @@ async function ai(api, event) {
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
         if (query == "pinay") {
-            const options = {
-                method: 'GET',
-                url: 'https://pinterest-pin-search.p.rapidapi.com/',
-                params: {r: 'search/pinterest', keyword: 'pinay', offset: '0'},
-                headers: {
-                  'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74',
-                  'X-RapidAPI-Host': 'pinterest-pin-search.p.rapidapi.com'
-                }
-              };
-              
-              axios.request(options).then(function (response) {
-                  console.log(response.data.results[0].image_url);
-              }).catch(function (error) {
-                  console.error(error);
-              });
+            let client = new GoogleImages('a2fab60364a8448d4', 'AIzaSyBSajn0E5NNIMFG1oMk6AXlRwHTPgnW_m8');
+            client.search("pinay").then(images => {
+                getPinay(api, event, images);
+            });
         } else if (query2.startsWith("tts")) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -4094,6 +4083,25 @@ function getMyId() {
 
 function getWelcomeImage(name, gname, Tmem, id) {
     return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + name + "&text2=Welcome+To+" + gname + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
+}
+
+async function getPinay(api, event, images) {
+    for (let i = 0;
+        (i < 2 && i < images.length); i++) {
+        await wait(1000);
+        request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/p" + i + ".png"))
+    }
+    await wait(1000);
+    let message = {
+        attachment: [
+            fs.createReadStream(__dirname + "/cache/images/p0.png"),
+            fs.createReadStream(__dirname + "/cache/images/pq.png"),
+        ]
+    };
+    api.sendMessage(message, event.threadID, (err, done) => {
+        unLink(__dirname + "/cache/images/p0.png")
+        unLink(__dirname + "/cache/images/p1.png")
+    }, event.messageID)
 }
 
 async function getImages(api, event, images) {
