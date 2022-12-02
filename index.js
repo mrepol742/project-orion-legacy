@@ -2207,12 +2207,6 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead.\n\nFor example:\naddAdmin @Melvin Jones Repol")
-                        return;
-                    } else if (isMyId(id)) {
-                        sendMessage(api, event, "This account is already an admin.");
-                        return;
-                    } else {
                         let data = input.split(" ");
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
@@ -2222,6 +2216,9 @@ async function ai(api, event) {
                             sendMessage(api, event, "Admin permission granted.");
                             fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
                         });
+                        return;
+                    } else if (isMyId(id)) {
+                        sendMessage(api, event, "This account is already an admin.");
                         return;
                     }
                     vips.push(id);
@@ -2236,12 +2233,6 @@ async function ai(api, event) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead.\n\nFor example:\nremAdmin @Melvin Jones Repol")
-                        return;
-                    } else if (isMyId(id)) {
-                        sendMessage(api, event, "Unfortunately an error occured.");
-                        return;
-                    } else {
                         let data = input.split(" ");
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
@@ -2251,6 +2242,9 @@ async function ai(api, event) {
                             sendMessage(api, event, "Admin permission removed.");
                             fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
                         });
+                        return;
+                    } else if (isMyId(id)) {
+                        sendMessage(api, event, "Unfortunately an error occured.");
                         return;
                     }
                     vips = vips.filter(item => item !== id);
