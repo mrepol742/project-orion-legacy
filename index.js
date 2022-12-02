@@ -4002,7 +4002,7 @@ function isEvening(tz) {
 
 function isNight(tz) {
     var curHr = getTimeDate(tz).getHours();
-    return curHr >= 22 && curHr <= 3;
+    return curHr >= 22;
 }
 
 function getDayNightTime(tz) {
