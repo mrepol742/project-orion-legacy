@@ -816,7 +816,23 @@ async function ai(api, event) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
-        if (query2.startsWith("tts")) {
+        if (query == "pinay") {
+            const options = {
+                method: 'GET',
+                url: 'https://pinterest-pin-search.p.rapidapi.com/',
+                params: {r: 'search/pinterest', keyword: 'pinay', offset: '0'},
+                headers: {
+                  'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74',
+                  'X-RapidAPI-Host': 'pinterest-pin-search.p.rapidapi.com'
+                }
+              };
+              
+              axios.request(options).then(function (response) {
+                  console.log(response.data.results[0]);
+              }).catch(function (error) {
+                  console.error(error);
+              });
+        } else if (query2.startsWith("tts")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead.\nFor example:\ntts I am melvin jones repol")
