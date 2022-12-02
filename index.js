@@ -2210,13 +2210,9 @@ async function ai(api, event) {
                         let data = input.split(" ");
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                            if(err) return console.error(err);
-                            var userID = data[0].userID;
-                            vips.push(userID);
-                            sendMessage(api, event, "Admin permission granted.");
-                            fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            id = data[0].userID;
                         });
-                        return;
                     } else if (isMyId(id)) {
                         sendMessage(api, event, "This account is already an admin.");
                         return;
@@ -2236,13 +2232,9 @@ async function ai(api, event) {
                         let data = input.split(" ");
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                            if(err) return console.error(err);
-                            var userID = data[0].userID;
-                            vips = vips.filter(item => item !== userID);
-                            sendMessage(api, event, "Admin permission removed.");
-                            fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            id = data[0].userID;
                         });
-                        return;
                     } else if (isMyId(id)) {
                         sendMessage(api, event, "Unfortunately an error occured.");
                         return;
@@ -2455,7 +2447,7 @@ async function ai(api, event) {
                         } else {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                                if(err) return console.error(err);
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 id = data[0].userID;
                             });
                         }
@@ -2505,8 +2497,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2530,8 +2525,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2555,8 +2553,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2580,8 +2581,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                           sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
-                           return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2605,8 +2609,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2630,8 +2637,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2655,8 +2665,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2680,8 +2693,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2705,8 +2721,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2780,8 +2799,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2805,8 +2827,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2830,8 +2855,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2855,8 +2883,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2880,8 +2911,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -2905,8 +2939,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor example:\nfacebook @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
@@ -3076,8 +3113,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
