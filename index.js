@@ -738,31 +738,44 @@ login({
                             if (gc.isGroup) {
                                 let gname = gc.threadName;
                                 let i = 0;
+                                let names = {};
                                 while (true) {
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
                                         break;
                                     }
-                                    let name = event.logMessageData.addedParticipants[i].fullName;
-                                    let id = event.logMessageData.addedParticipants[i].userFbId;
-                                    let arr = gc.participantIDs;
-                                    let Tmem = arr.length - 1;
-                                    log("new_member " + id + " " + name )
-                                    let num = i;
-                                    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome" + num + ".jpg"))
-                                        .on('finish', () => {
-                                        let message = {
-                                            body: "Welcome @" + name + " to " + gname + ".\n\nI'm Mj, How are you? if you needed assistance you can call me for list of commands type cmd.",
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome" + num + ".jpg"),
+                                    names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName])
+                                    i++;
+                                }
+                                let gret;
+                                if (i > 1) {
+                                    gret = "Welcome ";
+                                    for (let a = 0; names.length; b++) {
+                                        gret += "@" + names[a][1];
+                                        log("new_member_multi " + names[a][0] + " " + names[a][1])
+                                    }
+                                    gret += ".\n\nI'm Mj btw, How are you'll? if you needed assistance you can call me for list of commands type cmd.";
+                                } else {
+                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? if you needed assistance you can call me for list of commands type cmd.";
+                                    log("new_member " + names[0][0] + " " + names[0][1])
+                                }
+                                let name = event.logMessageData.addedParticipants[0].fullName;
+                                let id = event.logMessageData.addedParticipants[0].userFbId;
+                                let arr = gc.participantIDs;
+                                let Tmem = arr.length - 1;
+                                let num = i;
+                                request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
+                                    .on('finish', () => {
+                                    let message = {
+                                        body: gret,
+                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome.jpg"),
                                             mentions: [{
                                                 tag: name,
                                                 id: id
-                                            }]
-                                        };
-                                        sendMessageOnly(api, event, message);
-                                        unLink(__dirname + "/cache/images/welcome" + num + ".jpg");
-                                    })
-                                    i++;
-                                }
+                                        }]
+                                    };
+                                    sendMessageOnly(api, event, message);
+                                    unLink(__dirname + "/cache/images/welcome.jpg");
+                                })
                             }
                         })
                         break;
@@ -816,12 +829,7 @@ async function ai(api, event) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
-        if (query == "pinay") {
-            let client = new GoogleImages('a2fab60364a8448d4', 'AIzaSyBSajn0E5NNIMFG1oMk6AXlRwHTPgnW_m8');
-            client.search("pinay").then(images => {
-                getPinay(api, event, images);
-            });
-        } else if (query2.startsWith("tts")) {
+        if (query2.startsWith("tts")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead.\nFor example:\ntts I am melvin jones repol")
@@ -4083,25 +4091,6 @@ function getMyId() {
 
 function getWelcomeImage(name, gname, Tmem, id) {
     return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background.jpeg&text1=" + name + "&text2=Welcome+To+" + gname + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
-}
-
-async function getPinay(api, event, images) {
-    for (let i = 0;
-        (i < 2 && i < images.length); i++) {
-        await wait(1000);
-        request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/p" + i + ".png"))
-    }
-    await wait(1000);
-    let message = {
-        attachment: [
-            fs.createReadStream(__dirname + "/cache/images/p0.png"),
-            fs.createReadStream(__dirname + "/cache/images/p1.png"),
-        ]
-    };
-    api.sendMessage(message, event.threadID, (err, done) => {
-        unLink(__dirname + "/cache/images/p0.png")
-        unLink(__dirname + "/cache/images/p1.png")
-    }, event.messageID)
 }
 
 async function getImages(api, event, images) {
