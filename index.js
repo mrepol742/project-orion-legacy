@@ -4095,7 +4095,7 @@ async function getPinay(api, event, images) {
     let message = {
         attachment: [
             fs.createReadStream(__dirname + "/cache/images/p0.png"),
-            fs.createReadStream(__dirname + "/cache/images/pq.png"),
+            fs.createReadStream(__dirname + "/cache/images/p1.png"),
         ]
     };
     api.sendMessage(message, event.threadID, (err, done) => {
