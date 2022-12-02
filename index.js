@@ -828,7 +828,7 @@ async function ai(api, event) {
               };
               
               axios.request(options).then(function (response) {
-                  console.log(response.data.results[0]);
+                  console.log(response.data.results[0].image_url);
               }).catch(function (error) {
                   console.error(error);
               });
