@@ -221,23 +221,17 @@ let categorySFW = ['waifu', 'megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 
 let categoryNSFW = ['waifu', 'neko', 'trap', 'blowjob'];
 
 let helpadmin = "\n⦿ unsend";
-helpadmin += "\n⦿ unsend --on";
-helpadmin += "\n⦿ unsend --off";
-helpadmin += "\n⦿ delay --on";
-helpadmin += "\n⦿ delay --off";
-helpadmin += "\n⦿ nsfw --on";
-helpadmin += "\n⦿ nsfw --off";
-helpadmin += "\n⦿ enable --on";
-helpadmin += "\n⦿ enable --off";
-helpadmin += "\n⦿ debug --on";
-helpadmin += "\n⦿ debug --off";
-helpadmin += "\n⦿ sleep --on";
-helpadmin += "\n⦿ sleep --off";
-helpadmin += "\n⦿ refresh | reload";
+helpadmin += "\n⦿ unsend on|off";
+helpadmin += "\n⦿ delay on|off";
+helpadmin += "\n⦿ nsfw on|off";
+helpadmin += "\n⦿ enable on|off";
+helpadmin += "\n⦿ debug on|off";
+helpadmin += "\n⦿ sleep on|off";
+helpadmin += "\n⦿ stop";
+helpadmin += "\n⦿ refresh|reload";
 helpadmin += "\n⦿ addAdmin @mention";
 helpadmin += "\n⦿ remAdmin @mention";
-helpadmin += "\n⦿ preventSimultanoesExecution --on";
-helpadmin += "\n⦿ preventSimultanoesExecution --off";
+helpadmin += "\n⦿ preventSimultanoesExecution on/off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
 helpadmin += "\n⦿ setTimezone [timezone]";
@@ -380,7 +374,20 @@ login({
                             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                             sendMessage(api, event, "Konnichiwa i am back.");
                         }
-                    } 
+                    } else if (nonSS == "sleepon") {
+                        if (vips.includes(event.senderID)) {
+                            api.muteThread(message.threadID, -1);
+                            sendMessage(api, event, "Konbanwa. I'm sleepy now...");
+                        }
+                    } else if (nonSS == "sleepoff") {
+                        if (vips.includes(event.senderID)) {
+                            api.muteThread(message.threadID, 0);
+                            sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
+                        }
+                    } else if (nonSS == "stop") {
+                        sendMessage(api, event, "Goodbye...");
+                        return listenEmitter.stopListening();
+                    }
                     if (!nonSS.replace(pictographic, '').length) {
                         if (isGoingToFastResendingOfEmo(event)) {
                             break;
@@ -2205,6 +2212,17 @@ async function ai(api, event) {
                     } else if (isMyId(id)) {
                         sendMessage(api, event, "This account is already an admin.");
                         return;
+                    } else {
+                        let data = input.split(" ");
+                        data.shift();
+                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                            if(err) return console.error(err);
+                            var userID = data[0].userID;
+                            vips.push(userID);
+                            sendMessage(api, event, "Admin permission granted.");
+                            fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                        });
+                        return;
                     }
                     vips.push(id);
                     sendMessage(api, event, "Admin permission granted.");
@@ -2222,6 +2240,17 @@ async function ai(api, event) {
                         return;
                     } else if (isMyId(id)) {
                         sendMessage(api, event, "Unfortunately an error occured.");
+                        return;
+                    } else {
+                        let data = input.split(" ");
+                        data.shift();
+                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                            if(err) return console.error(err);
+                            var userID = data[0].userID;
+                            vips = vips.filter(item => item !== userID);
+                            sendMessage(api, event, "Admin permission removed.");
+                            fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                        });
                         return;
                     }
                     vips = vips.filter(item => item !== id);
