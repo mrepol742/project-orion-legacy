@@ -2453,8 +2453,11 @@ async function ai(api, event) {
                         if (input.includes("@me")) {
                             id = event.senderID;
                         } else {
-                            sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
-                            return;
+                            data.shift();
+                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                if(err) return console.error(err);
+                                id = data[0].userID;
+                            });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
