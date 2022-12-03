@@ -1062,7 +1062,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead.\nFor example:\ncmd 2");
                 //} else if (text1.split('').length < 10) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                } else if (someR(api, event, text1) || someA(api, event, text1, input)) {
+                } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
                     return;
                 } else if (!query.startsWith("search") && (text.split(" ").length < 3 || text.indexOf(" ") == -1)) {
                     if (repeatOfNonWWW(event)) {
@@ -3630,7 +3630,10 @@ async function ai(api, event) {
             }
         });
 
-        someA(api, event, query, input);
+        if (!query.includes("@")) {
+            someA(api, event, query, input);
+        }
+        reaction(api, event, query, input);
     }
 }
 
@@ -3641,24 +3644,6 @@ function someA(api, event, query, input) {
     } else if (query == "hi" || query == "hello" || query.startsWith("hey")) {
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
-    } else if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
-        reactMessage(api, event, ":laughing:");
-        if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
-            sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
-        }
-        return true;
-    } else if (containsAny(input.toLowerCase(), sadEE)) {
-        reactMessage(api, event, ":sad:");
-        return true;
-    } else if (containsAny(input.toLowerCase(), angryEE)) {
-        reactMessage(api, event, ":angry:");
-        return true;
-    } else if (containsAny(query, loveEE) || (query == "bot" || query == "good")) {
-        reactMessage(api, event, ":love:");
-        return true;
-    } else if (query == "tsk") {
-        reactMessage(api, event, ":like:");
-        return true;
     } else if (query == "okay") {
         sendMessage(api, event, "Yup");
         return true;
@@ -3668,11 +3653,27 @@ function someA(api, event, query, input) {
     } else if (query == "idk") {
         sendMessage(api, event, "I dont know too...");
         return true;
+    } 
+    return false;
+}
+
+function reaction(api, event, query, input) {
+    if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
+        reactMessage(api, event, ":laughing:");
+        if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
+            sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
+        }
+    } else if (containsAny(input.toLowerCase(), sadEE)) {
+        reactMessage(api, event, ":sad:");
+    } else if (containsAny(input.toLowerCase(), angryEE)) {
+        reactMessage(api, event, ":angry:");
+    } else if (containsAny(query, loveEE) || (query == "bot" || query == "good")) {
+        reactMessage(api, event, ":love:");
+    } else if (query == "tsk") {
+        reactMessage(api, event, ":like:");
     } else if (query == "nice" || query == "uwu") {
         reactMessage(api, event, ":heart:");
-        return true;
     }
-    return false;
 }
 
 function someR(api, event, query) {
