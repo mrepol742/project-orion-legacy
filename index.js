@@ -759,9 +759,9 @@ login({
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? if you needed assistance you can call me for list of commands type cmd.";
+                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About ⦿ License\n⦿ Copyright ⦿ cmd";
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? if you needed assistance you can call me for list of commands type cmd.";
+                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About ⦿ License\n⦿ Copyright ⦿ cmd";
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -936,7 +936,7 @@ async function ai(api, event) {
             if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
                 if (nonRRR[event.senderID] == undefined) {
                     let message = {
-                        body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n\nhttps://mrepol742.github.io/project-orion/",
+                        body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n⦿ About ⦿ License\n⦿ Copyright ⦿ cmd\n\nhttps://mrepol742.github.io/project-orion/",
                         attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
                     }
                     sendMessage(api, event, message);
@@ -1097,9 +1097,9 @@ async function ai(api, event) {
                         if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
                             finalDataCC = finalDataCC.slice(1);
                         }
-                        finalDataCC = lowercaseFirstLetter(finalDataCC.replaceAll("'", ""));
-                        saveAns.push([text, finalDataCC])
-                        sendMessage(api, event, finalDataCC);
+                        let finalDataCC2 = lowercaseFirstLetter(finalDataCC.replaceAll("'", ""));
+                        saveAns.push([text, finalDataCC2])
+                        sendMessage(api, event, finalDataCC2);
                     } else {
                         const config = new Configuration({
                             apiKey: apiKey[5],
@@ -3611,23 +3611,45 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
-        }
-
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (gc.isGroup) {
-                if (event.type == "message_reply") {
-                    if (event.messageReply.senderID == getMyId()) {
-                        someR(api, event, query);
+        } else if (query == "about") {
+            let message = {
+                body: "Hi there, i am Mj. \n\nIf you need help i am always be here. For list of commands type cmd. Melvin Jones Repol created me on Nov 2022.",
+                attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+            }
+            sendMessage(api, event, message);
+        } else if (query == "copyright") {
+            let message = {
+                body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. Project Orion is a Closed Source Project.",
+                attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+            }
+            sendMessage(api, event, message);
+        } else if (query == "license") {
+            let message = {
+                body: "/* Copyright (C) MREPOL742 - All Rights Reserved\n" +
+                "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
+                "* Proprietary and confidential\n" +
+                "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
+                "*/",
+                attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+            }
+            sendMessage(api, event, message);
+        } else {
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    if (event.type == "message_reply") {
+                        if (event.messageReply.senderID == getMyId()) {
+                            someR(api, event, query);
+                        }
+                    } else {
+                        if (isMyId(Object.keys(event.mentions)[0]) || (query.includes("@") && isMe(query2)) || !query.includes("@")) {
+                            someR(api, event, query);
+                        }
                     }
                 } else {
-                    if (isMyId(Object.keys(event.mentions)[0]) || (query.includes("@") && isMe(query2)) || !query.includes("@")) {
-                        someR(api, event, query);
-                    }
+                    someR(api, event, query);
                 }
-            } else {
-                someR(api, event, query);
-            }
-        });
+            });
+        }
 
         if (!query.includes("@")) {
             if (event.type == "message_reply") {
