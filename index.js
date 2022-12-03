@@ -2345,7 +2345,6 @@ async function ai(api, event) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
                             }
-                            await wait(3000);
                             api.removeUserFromGroup(id, event.threadID, (err) => {
                                 if (err) log(err);
                                 log("user_remove " + event.threadID + " " + id);
