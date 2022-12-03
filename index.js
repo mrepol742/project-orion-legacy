@@ -3232,7 +3232,7 @@ async function ai(api, event) {
                 parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + text, __dirname + '/cache/images/oogway.png');
             }
         } else if (query.startsWith("animensfw")) {
-            if (nsfw(query)) {
+            if (settings.onNsfw) {
                 sendMessage(api, event, "There are kids!!!");
                 return;
             }
