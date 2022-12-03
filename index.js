@@ -3841,15 +3841,15 @@ function isGoingToFast(event) {
     }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (13);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (60);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
             log("The user " + event.senderID + " is going to fast of executing commands >> " +
-                Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 13) + " mins and " +
-                (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 13 + " seconds");
+                Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " +
+                (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 60 + " seconds");
             return true;
         } else {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (13);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (60);
             return false;
         }
     }
