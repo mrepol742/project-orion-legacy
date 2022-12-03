@@ -580,7 +580,6 @@ login({
                             } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
                                 const url = event.messageReply.attachments[0].url;
                                 request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto.png')).on('finish', () => {
-                                    await wait(3000);
                                     api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto.png'), event.threadID, (err) => {
                                         if(err) return console.error(err);
                                     });
