@@ -921,7 +921,7 @@ async function ai(api, event) {
                     }
                 });
             }
-        } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") ||
+        } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
             ((query.startsWith("search") || query.startsWith("searchcode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
                 otherQ(query2)) {
@@ -933,7 +933,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol") {
+            if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
                 if (nonRRR[event.senderID] == undefined) {
                     let message = {
                         body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n\nhttps://mrepol742.github.io/project-orion/",
@@ -1097,6 +1097,7 @@ async function ai(api, event) {
                         if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
                             finalDataCC = finalDataCC.slice(1);
                         }
+                        finalDataCC = lowercaseFirstLetter(finalDataCC.replaceAll("'", ""));
                         saveAns.push([text, finalDataCC])
                         sendMessage(api, event, finalDataCC);
                     } else {
@@ -2420,13 +2421,11 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            await wait(6000);
             sendMessage(api, event, "Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmdall") {
             if (isGoingToFast(event)) {
                 return;
             }
-            await wait(2000);
             sendMessage(api, event, "Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query.startsWith("wiki")) {
             if (isGoingToFast(event)) {
@@ -3631,6 +3630,11 @@ async function ai(api, event) {
         });
 
         if (!query.includes("@")) {
+            if (event.type == "message_reply") {
+                if (!isMyId(event.messageReply.senderID)) {
+                    return;
+                }
+            }
             someA(api, event, query, input);
         }
         reaction(api, event, query, input);
@@ -4163,4 +4167,8 @@ function secondsToTime(e){
     let m = Math.floor(e % 3600 / 60).toString().padStart(2,'0');
     let s = Math.floor(e % 60).toString().padStart(2,'0');
     return h + ':' + m + ':' + s;
+}
+
+function lowercaseFirstLetter(string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
 }
