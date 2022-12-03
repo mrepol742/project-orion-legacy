@@ -41483,3 +41483,93 @@ Just in time (JIT) is a production strategy that involves manufacturing products
 12/2/2022 10:25:59 PM$ un_link /home/runner/project-orion/cache/images/welcome0.jpg
 12/2/2022 10:26:00 PM$ un_link /home/runner/project-orion/cache/images/welcome1.jpg
 12/2/2022 10:26:12 PM$ [object Object]
+12/3/2022 4:03:43 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/3/2022 4:04:47 PM$ event_body 100016029218667 uid
+12/3/2022 4:04:48 PM$ send_message 100016029218667 Your uid is 100016029218667
+12/3/2022 4:04:48 PM$ send_typing
+12/3/2022 4:05:25 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/3/2022 4:05:33 PM$ event_body 100016029218667 what is matter
+12/3/2022 4:05:34 PM$ wait_timeout >> 7200
+12/3/2022 4:05:34 PM$ send_typing
+12/3/2022 4:05:36 PM$ event_body 100016029218667 what is matter
+12/3/2022 4:05:36 PM$ answer_cache
+12/3/2022 4:05:36 PM$ wait_timeout >> 5800
+12/3/2022 4:05:36 PM$ send_typing
+12/3/2022 4:05:41 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/3/2022 4:05:41 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/3/2022 4:05:53 PM$ event_body 100016029218667 what is matter
+12/3/2022 4:05:53 PM$ answer_cache
+12/3/2022 4:05:53 PM$ wait_timeout >> 7000
+12/3/2022 4:05:53 PM$ send_typing
+12/3/2022 4:05:55 PM$ event_body 100016029218667 what is matter
+12/3/2022 4:05:55 PM$ answer_cache
+12/3/2022 4:05:55 PM$ wait_timeout >> 6300
+12/3/2022 4:05:55 PM$ send_typing
+12/3/2022 4:06:00 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/3/2022 4:06:02 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/3/2022 4:06:59 PM$ wait_timeout >> 5000
+12/3/2022 4:07:02 PM$ The user 100016029218667 is going to fast of sending emoji >> 3 mins and 114 seconds
+12/3/2022 4:07:04 PM$ wait_timeout >> 6800
+12/3/2022 4:07:04 PM$ send_typing
+12/3/2022 4:07:11 PM$ send_message 100016029218667 😃
+12/3/2022 4:09:06 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/3/2022 4:09:12 PM$ event_body 100016029218667 what is matter
+12/3/2022 4:09:12 PM$ wait_timeout >> 5000
+12/3/2022 4:09:13 PM$ send_typing
+12/3/2022 4:09:14 PM$ event_body 100016029218667 what is matter
+12/3/2022 4:09:14 PM$ answer_cache
+12/3/2022 4:09:14 PM$ wait_timeout >> 6600
+12/3/2022 4:09:14 PM$ send_typing
+12/3/2022 4:09:18 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/3/2022 4:09:20 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/3/2022 4:10:00 PM$ Time Check 4:10 PM
+12/3/2022 4:11:04 PM$ react_message mid.$cAAAABtW1oyaLCE87TWE1wnvk4S48 :love:
+12/3/2022 4:11:04 PM$ send_typing
+12/3/2022 4:11:07 PM$ wait_timeout >> 5000
+12/3/2022 4:11:12 PM$ send_message 100077318906152 😊😘
+12/3/2022 4:11:12 PM$ send_typing
+12/3/2022 4:11:48 PM$ wait_timeout >> 7000
+12/3/2022 4:11:49 PM$ send_typing
+12/3/2022 4:11:55 PM$ react_message mid.$gAAkuARBgOXSLCE_limE1wqcCDBKp :sad:
+12/3/2022 4:12:04 PM$ event_body 100035077868740 How are you, Techh?
+12/3/2022 4:12:05 PM$ react_message mid.$gAAkuARBgOXSLCFApvGE1wrfvUq_- :laughing:
+12/3/2022 4:12:05 PM$ wait_timeout >> 5200
+12/3/2022 4:12:06 PM$ send_typing
+12/3/2022 4:12:06 PM$ send_typing
+12/3/2022 4:12:11 PM$ wait_timeout >> 6000
+12/3/2022 4:12:11 PM$ 100009220664352
+12/3/2022 4:12:11 PM$ 100035077868740
+12/3/2022 4:12:11 PM$ 100037131918629
+12/3/2022 4:12:11 PM$ send_message_reply 2583856894982516 I'm doing well, thank you.
+12/3/2022 4:12:11 PM$ send_typing
+12/3/2022 4:12:17 PM$ react_message mid.$gABQVzSDc9xeLCFA-t2E1wr2Gn25u :laughing:
+12/3/2022 4:12:24 PM$ event_body 100037131918629 why what happened :'(
+12/3/2022 4:12:25 PM$ wait_timeout >> 6800
+12/3/2022 4:12:25 PM$ wait_timeout >> 6000
+12/3/2022 4:12:25 PM$ send_typing
+12/3/2022 4:12:25 PM$ send_typing
+12/3/2022 4:12:26 PM$ 100009220664352
+12/3/2022 4:12:26 PM$ 100037131918629
+12/3/2022 4:12:26 PM$ 100035077868740
+12/3/2022 4:12:26 PM$ send_message_reply 2583856894982516 There is no one answer to this question. It could be that the person is sad because they are going through a tough time in their life, or it could be that they are sad because something bad happened to them.
+12/3/2022 4:12:26 PM$ send_typing
+12/3/2022 4:12:31 PM$ 100037131918629
+12/3/2022 4:12:31 PM$ 100035077868740
+12/3/2022 4:12:31 PM$ send_message_reply 2583856894982516 ahahaahh
+12/3/2022 4:12:31 PM$ react_message mid.$gAAkuARBgOXSLCFB12WE1wstUVr1i :laughing:
+12/3/2022 4:12:37 PM$ wait_timeout >> 5000
+12/3/2022 4:12:38 PM$ send_typing
+12/3/2022 4:12:40 PM$ wait_timeout >> 5800
+12/3/2022 4:12:41 PM$ send_typing
+12/3/2022 4:12:42 PM$ react_message mid.$gAAkuARBgOXSLCFCmuGE1wteGaDMy :laughing:
+12/3/2022 4:12:46 PM$ react_message mid.$gAAkuARBgOXSLCFCz02E1wtrOSOIq :laughing:
+12/3/2022 4:13:03 PM$ event_body 100037131918629 what issue showing when you login
+12/3/2022 4:13:07 PM$ 100037131918629
+12/3/2022 4:13:07 PM$ 100035077868740
+12/3/2022 4:13:07 PM$ 100037131918629
+12/3/2022 4:13:07 PM$ send_message_reply 2583856894982516 to your wordpress site
+There could be a number of issues that occur when logging in to a WordPress site. The most common issue is an incorrect username or password. Other issues could include problems with cookies, a corrupt database, or an invalid email address.
+12/3/2022 4:13:07 PM$ send_typing

@@ -323,7 +323,7 @@ login({
             }
         }
 
-        if (settings.isEnabled && (event.type == "message" || event.type == "message_reply") && event.senderID == vips[2]) {
+        if (!settings.isEnabled && (event.type == "message" || event.type == "message_reply") && event.senderID == vips[2]) {
             return;
         }
 
