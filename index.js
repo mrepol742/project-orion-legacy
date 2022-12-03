@@ -2319,7 +2319,6 @@ async function ai(api, event) {
                 if (gcolor.includes(pref)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (gc.isGroup) {
-                            await wait(3000);
                             api.changeThreadColor(pref, event.threadID, (err) => {
                                 if(err) return log(err);
                             });
