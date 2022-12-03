@@ -247,6 +247,8 @@ helpadmin += "\n⦿ stop";
 helpadmin += "\n⦿ refresh|reload";
 helpadmin += "\n⦿ addAdmin @mention";
 helpadmin += "\n⦿ remAdmin @mention";
+helpadmin += "\n⦿ blockUser @mention";
+helpadmin += "\n⦿ unblockUser @mention";
 helpadmin += "\n⦿ preventSimultanoesExecution on/off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
@@ -279,6 +281,8 @@ let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
 let vips = JSON.parse(fs.readFileSync("cache/admin.json", "utf8"));
 let nonRRR = JSON.parse(fs.readFileSync("cache/users.json", "utf8"));
 let saveAns = JSON.parse(fs.readFileSync("cache/answer.json", "utf8"));
+let blockRRR = JSON.parse(fs.readFileSync("cache/block_users.json", "utf8"));
+let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
@@ -322,6 +326,12 @@ login({
     const listenEmitter = api.listen(async (err, event) => {
 
         if (err) return log(err);
+
+        if (event.type == "message" || event.type == "message_reply") {
+            if (blockRRR.includes(event.senderID)) {
+                return;
+            }
+        }
 
         if (event.type == "message") {
             let nonSS = event.body;
@@ -2247,6 +2257,50 @@ async function ai(api, event) {
                     settings.prefix = "null";
                     fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Prefix reset to default values.");
+                }
+            }
+        } else if (query.startsWith("blockUser")) {
+            if (vips.includes(event.senderID)) {
+                if (input.includes("@")) {
+                    let id = Object.keys(event.mentions)[0];
+                    if (id === undefined) {
+                        let data = input.split(" ");
+                        data.shift();
+                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            id = data[0].userID;
+                        });
+                    } else if (isMyId(id)) {
+                        sendMessage(api, event, "Unable to block the user.");
+                        return;
+                    }
+                    blockRRR.push(id);
+                    sendMessage(api, event, "The user " + id + " is blocked.");
+                    fs.writeFileSync("cache/block_users.json", JSON.stringify(vips), "utf8");
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead.\n\nFor example:\nblockUser @Melvin Jones Repol")
+                }
+            }
+        } else if (query.startsWith("unblockUser")) {
+            if (vips.includes(event.senderID)) {
+                if (input.includes("@")) {
+                    let id = Object.keys(event.mentions)[0];
+                    if (id === undefined) {
+                        let data = input.split(" ");
+                        data.shift();
+                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            id = data[0].userID;
+                        });
+                    } else if (isMyId(id)) {
+                        sendMessage(api, event, "Unfortunately an error occured.");
+                        return;
+                    }
+                    blockRRR = blockRRR.filter(item => item !== id);
+                    sendMessage(api, event, "The user " + id + " can now use the commands.");
+                    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead.\n\nFor example:\nunblockUser @Melvin Jones Repol")
                 }
             }
         } else if (query.startsWith("addadmin")) {
