@@ -71,7 +71,6 @@ let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 
 let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
 let threads = ""
 let threadIdMV = {};
-let msgs = {};
 let cmd = {};
 let emo = {};
 let threadMaintenance = {};
@@ -283,10 +282,12 @@ let nonRRR = JSON.parse(fs.readFileSync("cache/users.json", "utf8"));
 let saveAns = JSON.parse(fs.readFileSync("cache/answer.json", "utf8"));
 let blockRRR = JSON.parse(fs.readFileSync("cache/block_users.json", "utf8"));
 let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
+let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
+    fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
     process.exit();
 });
 
@@ -304,6 +305,7 @@ login({
         mins = mins < 10 ? '0' + mins : mins;
         log("Time Check " + hours + ":" + mins + " " + ampm);
         fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
+        fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
     });
     
     cron.schedule('0 * * * *', () => {
