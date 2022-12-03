@@ -216,7 +216,7 @@ help5 += "\n⦿ time [timezone]";
 help5 += "\n⦿ ping";
 help5 += "\n⦿ summ [text]";
 help5 += "\n⦿ anime [category]";
-help5 += "\n   waifu, megumin, bully, cuddle,";
+help5 += "\n   waifu, megumin, bully, cuddle";
 help5 += "\n   hug, awoo, kiss, lick";
 help5 += "\n   pat, smug, bonk, yeet";
 help5 += "\n   blush, smile, wave, highfive";
@@ -225,6 +225,13 @@ help5 += "\n   kill, kick, happy, wink";
 help5 += "\n   pokedance, cringe, cry";
 
 let help6 = "\n⦿ conan";
+help6 += "\n⦿ addUser uid";
+help6 += "\n⦿ gphoto";
+help6 += "\n⦿ gcolor [theme]";
+help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
+help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
+help6 += "\n   Red, Yellow, TealBlue, Aqua";
+help6 += "\n   Mango, Berry, Citrus, Candy";
 help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob";
 
@@ -246,6 +253,7 @@ helpadmin += "\n⦿ stop";
 helpadmin += "\n⦿ refresh|reload";
 helpadmin += "\n⦿ addAdmin @mention";
 helpadmin += "\n⦿ remAdmin @mention";
+helpadmin += "\n⦿ kickUser @mention";
 helpadmin += "\n⦿ blockUser @mention";
 helpadmin += "\n⦿ unblockUser @mention";
 helpadmin += "\n⦿ preventSimultanoesExecution on/off";
@@ -283,6 +291,7 @@ let saveAns = JSON.parse(fs.readFileSync("cache/answer.json", "utf8"));
 let blockRRR = JSON.parse(fs.readFileSync("cache/block_users.json", "utf8"));
 let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
+let gcolor = JSON.parse(fs.readFileSync("cache/group_colors.json", "utf8"));
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
@@ -514,19 +523,12 @@ login({
                         break;
                     }
                     if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                        const {
-                            threadID,
-                            messageID,
-                            type,
-                            messageReply
-                        } = event;
-                        if (type != "message_reply") return
-                        if (messageReply.attachments.length < 1) {
+                        if (event.messageReply.attachments.length < 1) {
                             sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
-                        } else if (messageReply.attachments.length > 1) {
+                        } else if (event.messageReply.attachments.length > 1) {
                             sendMessage(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
-                        } else if ((messageReply.attachments.length === 1) && (messageReply.attachments[0].type == 'photo')) {
-                            const url = messageReply.attachments[0].url;
+                        } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                            const url = event.messageReply.attachments[0].url;
                             request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
                                 const inputPath = './cache/images/removebg.png';
                                 const formData = new FormData();
@@ -564,6 +566,29 @@ login({
                         sendMessage(api, event, "Hold on... There is still a request in progress.");
                     }
 
+                }
+                if (query == "gphoto") {
+                    if (isGoingToFast(event)) {
+                        break;
+                    }
+                    pi.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            if (event.messageReply.attachments.length < 1) {
+                                sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
+                            } else if (event.messageReply.attachments.length > 1) {
+                                sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
+                            } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                                const url = event.messageReply.attachments[0].url;
+                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto.png')).on('finish', () => {
+                                    await wait(3000);
+                                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto.png'), event.threadID, (err) => {
+                                        if(err) return console.error(err);
+                                    });
+                                    unLink(__dirname + '/cache/images/gphoto.png');
+                                })
+                            }
+                        }
+                    });
                 }
                 break;
             case "message_unsend":
@@ -2260,6 +2285,79 @@ async function ai(api, event) {
                     fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Prefix reset to default values.");
                 }
+            }
+        } else if (query.startsWith("addUser")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead.\n\nFor example:\naddUser 100024563636366");
+            } else {
+                data.shift();
+                let pref = data.join(" ");
+                if (pref.split("").length >= 15) {
+                    if (/^\d+$/.test(pref)) {
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (gc.isGroup) {
+                                await wait(3000);
+                                api.addUserToGroup(pref, event.threadID, (err) => {
+                                    if (err) log(err);
+                                    log("add_user " + event.threadID + " " + pref);
+                                });
+                            }
+                        })
+                    } else {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead.\n\nFor example:\naddUser 100024563636366");
+                    }
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead.\n\nFor example:\naddUser 100024563636366");
+                }
+            }
+        } else if (query.startsWith("gcolor")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nFor example:\ngcolor DefaultBlue");
+            } else {
+                data.shift();
+                let pref = data.join(" ");
+                if (gcolor.includes(pref)) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (gc.isGroup) {
+                            await wait(3000);
+                            api.changeThreadColor(pref, event.threadID, (err) => {
+                                if(err) return log(err);
+                            });
+                        }
+                    })
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nFor example:\ngcolor DefaultBlue");
+                }
+            }
+        } else if (query.startsWith("kickUser")) {
+            if (vips.includes(event.senderID)) {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (gc.isGroup) {
+                        if (input.includes("@")) {
+                            let id = Object.keys(event.mentions)[0];
+                            if (id === undefined) {
+                                let data = input.split(" ");
+                                data.shift();
+                                api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                    if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                    id = data[0].userID;
+                                });
+                            } else if (isMyId(id)) {
+                                sendMessage(api, event, "Unable to kick the user.");
+                                return;
+                            }
+                            await wait(3000);
+                            api.removeUserFromGroup(id, event.threadID, (err) => {
+                                if (err) log(err);
+                                log("user_remove " + event.threadID + " " + id);
+                            });
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead.\n\nFor example:\nkickUser @Melvin Jones Repol")
+                        }
+                    }
+                })
             }
         } else if (query.startsWith("blockUser")) {
             if (vips.includes(event.senderID)) {
