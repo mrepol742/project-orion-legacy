@@ -2296,7 +2296,6 @@ async function ai(api, event) {
                     if (/^\d+$/.test(pref)) {
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (gc.isGroup) {
-                                await wait(3000);
                                 api.addUserToGroup(pref, event.threadID, (err) => {
                                     if (err) log(err);
                                     log("add_user " + event.threadID + " " + pref);
