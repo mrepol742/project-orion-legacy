@@ -291,7 +291,9 @@ let saveAns = JSON.parse(fs.readFileSync("cache/answer.json", "utf8"));
 let blockRRR = JSON.parse(fs.readFileSync("cache/block_users.json", "utf8"));
 let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
-let gcolor = JSON.parse(fs.readFileSync("cache/group_colors.json", "utf8"));
+
+let gcolor = {"DefaultBlue": "196241301102133", "HotPink": "169463077092846", "AquaBlue": "2442142322678320", "BrightPurple": "234137870477637", "CoralPink": "980963458735625", "Orange": "175615189761153", "Green": "2136751179887052", "LavenderPurple": "2058653964378557", "Red": "2129984390566328", "Yellow": "174636906462322", "TealBlue": "1928399724138152", "Aqua": "417639218648241", "Mango": "930060997172551", "Berry": "164535220883264", "Citrus": "370940413392601", "Candy": "205488546921017"}
+let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink", "Orange", "Green", "LavenderPurple", "Red", "Yellow", "TealBlue", "Aqua", "Mango", "Berry": "164535220883264", "Citrus", "Candy"]
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
@@ -2316,10 +2318,10 @@ async function ai(api, event) {
             } else {
                 data.shift();
                 let pref = data.join(" ");
-                if (gcolor.includes(pref)) {
+                if (gcolorn.includes(pref)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (gc.isGroup) {
-                            api.changeThreadColor(pref, event.threadID, (err) => {
+                            api.changeThreadColor(gcolor[pref], event.threadID, (err) => {
                                 if(err) return log(err);
                             });
                         }
