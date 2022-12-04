@@ -229,6 +229,7 @@ help6 += "\n⦿ addUser uid";
 help6 += "\n⦿ gphoto";
 help6 += "\n⦿ encodeBinary [text]";
 help6 += "\n⦿ decodeBinary [text]";
+help6 += "\n⦿ ttsjap [text]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -2406,10 +2407,13 @@ async function ai(api, event) {
                             if (id === undefined) {
                                 let data = input.split(" ");
                                 data.shift();
+                                /*
                                 api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                     if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                     id = data[0].userID;
-                                });
+                                });*/
+                                id = getUserId(api, data.join(" ").replace("@", ""));
+                                console.log(id);
                             } else if (isMyId(id)) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
@@ -2693,6 +2697,60 @@ async function ai(api, event) {
                     sendMessage(api, event, "It is a valid domain.");
                 } else {
                     sendMessage(api, event, "It is not a valid domain.");
+                }
+            }
+        } else if (query.startsWith("lovetest")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno")
+            } else {
+                if ((input.split('@').length - 1) >= 2) {
+                    let id1 = Object.keys(event.mentions)[0];
+                    let id2 = Object.keys(event.mentions)[1];
+                    if (id1 === undefined || id2 === undefined) {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno")
+                        return;
+                    }
+                    if (isMyId(id1)) {
+                        id1 = event.senderID;
+                    } else if (isMyId(id2)) {
+                        id2 = event.senderID;
+                    }
+                    let name1, name2;
+                    api.getUserInfo(id1, (err, info) => {
+                        name1 = info[id1]['name'];
+                    });
+                    api.getUserInfo(id2, (err, info) => {
+                        name2 = info[id2]['name'];
+                    });
+                    const options = {
+                        method: 'GET',
+                        url: 'https://love-calculator.p.rapidapi.com/getPercentage',
+                        params: {
+                            sname: name2,
+                            fname: name1
+                        },
+                        headers: {
+                            'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com',
+                            'X-RapidAPI-Key': '04357fb2e1msh4dbe5919dc38cccp172823jsna0869f87acc3'
+                        }
+                    };
+                    axios.request(options).then(function({
+                        data
+                    }) {
+                        var name1 = data.fname;
+                        var name2 = data.sname;
+                        var percent = data.percentage + "%";
+                        var result = data.result;
+                        sendMessage(api, event, name1 + " ❤️ " + name2 + "\n⦿ Percentage: " + percent + "\n\n" + result);
+                    }).catch(function(error) {
+                        log(error);
+                    });
+                } else {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno");
                 }
             }
         } else if (query.startsWith("kiss")) {
@@ -4429,4 +4487,11 @@ function secondsToTime(e){
 
 function lowercaseFirstLetter(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
+}
+
+function getUserId(api, name) {
+    return api.getUserID(name, (err, data) => {
+        if (err) return log(err);
+        return data[0].userID;
+    });
 }
