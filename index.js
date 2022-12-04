@@ -230,6 +230,7 @@ help6 += "\n⦿ gphoto";
 help6 += "\n⦿ encodeBinary [text]";
 help6 += "\n⦿ decodeBinary [text]";
 help6 += "\n⦿ ttsjap [text]";
+help6 += "\n⦿ lovetest name1: name2";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -270,18 +271,16 @@ helpadmin += "\n⦿ setFrequencyPenalty [integer]";
 helpadmin += "\n⦿ setProbabilityMass [integer]";
 
 let apiKey = [
-    // phub api key
+    // manhict.tech/api
     "CcIDaVqu",
-    // graph for facebook access token
+    // graph.facebook.com
     "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
-    // urban dictionary api key
+    // mashape-community-urban-dictionary.p.rapidapi.com
     "bc23ad59e1mshdb14f6cce13bafap18cbc5jsn13348153e5cf",
-    // nlpcloudclient summarize api key
+    // NLPCloudClient summarize
     "5ab3c279e089139f63017eea409573731d5e8ce9",
      // open ai api key
-    "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",
-
-     "NMkYp5CF"
+    "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"
 ];
 
 let domains = [".aaa", ".abb", ".abc", ".ac", ".aco", ".ad", ".ads", ".ae", ".aeg", ".af", ".afl", ".ag", ".ai", ".aig", ".al", ".am", ".anz", ".ao", ".aol", ".app", ".aq", ".ar", ".art", ".as", ".at", ".au", ".aw", ".aws", ".ax", ".axa", ".az", ".ba", ".bar", ".bb", ".bbc", ".bbt", ".bcg", ".bcn", ".bd", ".be", ".bet", ".bf", ".bg", ".bh", ".bi", ".bid", ".bio", ".biz", ".bj", ".bm", ".bms", ".bmw", ".bn", ".bo", ".bom", ".boo", ".bot", ".box", ".br", ".bs", ".bt", ".buy", ".bv", ".bw", ".by", ".bz", ".bzh", ".ca", ".cab", ".cal", ".cam", ".car", ".cat", ".cba", ".cbn", ".cbs", ".cc", ".cd", ".ceb", ".ceo", ".cf", ".cfa", ".cfd", ".cg", ".ch", ".ci", ".ck", ".cl", ".cm", ".cn", ".co", ".com", ".cpa", ".cr", ".crs", ".csc", ".cu", ".cv", ".cw", ".cx", ".cy", ".cz", ".dad", ".day", ".dds", ".de", ".dev", ".dhl", ".diy", ".dj", ".dk", ".dm", ".dnp", ".do", ".dog", ".dot", ".dtv", ".dvr", ".dz", ".eat", ".ec", ".eco", ".edu", ".ee", ".eg", ".er", ".es", ".esq", ".et", ".eu", ".eus", ".fan", ".fi", ".fit", ".fj", ".fk", ".fly", ".fm", ".fo", ".foo", ".fox", ".fr", ".frl", ".ftr", ".fun", ".fyi", ".ga", ".gal", ".gap", ".gay", ".gb", ".gd", ".gdn", ".ge", ".gea", ".gf", ".gg", ".gh", ".gi", ".gl", ".gle", ".gm", ".gmo", ".gmx", ".gn", ".goo", ".gop", ".got", ".gov", ".gp", ".gq", ".gr", ".gs", ".gt", ".gu", ".gw", ".gy", ".hbo", ".hiv", ".hk", ".hkt", ".hm", ".hn", ".hot", ".how", ".hr", ".ht", ".hu", ".ibm", ".ice", ".icu", ".id", ".ie", ".ifm", ".il", ".im", ".in", ".inc", ".ing", ".ink", ".int", ".io", ".iq", ".ir", ".is", ".ist", ".it", ".itv", ".jcb", ".jcp", ".je", ".jio", ".jll", ".jm", ".jmp", ".jnj", ".jo", ".jot", ".joy", ".jp", ".ke", ".kfh", ".kg", ".kh", ".ki", ".kia", ".kim", ".km", ".kn", ".kp", ".kpn", ".kr", ".krd", ".kw", ".ky", ".kz", ".la", ".lat", ".law", ".lb", ".lc", ".lds", ".li", ".lk", ".llc", ".llp", ".lol", ".lpl", ".lr", ".ls", ".lt", ".ltd", ".lu", ".lv", ".ly", ".ma", ".man", ".map", ".mba", ".mc", ".md", ".me", ".med", ".men", ".mg", ".mh", ".mil", ".mit", ".mk", ".ml", ".mlb", ".mls", ".mm", ".mma", ".mn", ".mo", ".moe", ".moi", ".mom", ".mov", ".mp", ".mq", ".mr", ".ms", ".msd", ".mt", ".mtn", ".mtr", ".mu", ".mv", ".mw", ".mx", ".my", ".mz", ".na", ".nab", ".nba", ".nc", ".ne", ".nec", ".net", ".new", ".nf", ".nfl", ".ng", ".ngo", ".nhk", ".ni", ".nl", ".no", ".now", ".np", ".nr", ".nra", ".nrw", ".ntt", ".nu", ".nyc", ".nz", ".obi", ".off", ".om", ".one", ".ong", ".onl", ".ooo", ".org", ".ott", ".ovh", ".pa", ".pay", ".pe", ".pet", ".pf", ".pg", ".ph", ".phd", ".pid", ".pin", ".pk", ".pl", ".pm", ".pn", ".pnc", ".pr", ".pro", ".pru", ".ps", ".pt", ".pub", ".pw", ".pwc", ".py", ".qa", ".qvc", ".re", ".red", ".ren", ".ril", ".rio", ".rip", ".ro", ".rs", ".ru", ".run", ".rw", ".rwe", ".sa", ".sap", ".sas", ".sb", ".sbi", ".sbs", ".sc", ".sca", ".scb", ".sd", ".se", ".ses", ".sew", ".sex", ".sfr", ".sg", ".sh", ".si", ".sj", ".sk", ".ski", ".sky", ".sl", ".sm", ".sn", ".so", ".soy", ".sr", ".srl", ".ss", ".st", ".stc", ".su", ".sv", ".sx", ".sy", ".sz", ".tab", ".tax", ".tc", ".tci", ".td", ".tdk", ".tel", ".tf", ".tg", ".th", ".thd", ".tj", ".tjx", ".tk", ".tl", ".tm", ".tn", ".to", ".top", ".tr", ".trv", ".tt", ".tui", ".tv", ".tvs", ".tw", ".tz", ".ua", ".ubs", ".ug", ".uk", ".uno", ".uol", ".ups", ".us", ".uy", ".uz", ".va", ".vc", ".ve", ".vet", ".vg", ".vi", ".vig", ".vin", ".vip", ".vn", ".vu", ".wed", ".wf", ".win", ".wme", ".wow", ".ws", ".wtc", ".wtf", ".xin", ".xxx", ".xyz", ".ye", ".you", ".yt", ".yun", ".za", ".zip", ".zm", ".zw"];
@@ -297,6 +296,11 @@ let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 
 let gcolor = {"DefaultBlue": "196241301102133", "HotPink": "169463077092846", "AquaBlue": "2442142322678320", "BrightPurple": "234137870477637", "CoralPink": "980963458735625", "Orange": "175615189761153", "Green": "2136751179887052", "LavenderPurple": "2058653964378557", "Red": "2129984390566328", "Yellow": "174636906462322", "TealBlue": "1928399724138152", "Aqua": "417639218648241", "Mango": "930060997172551", "Berry": "164535220883264", "Citrus": "370940413392601", "Candy": "205488546921017"}
 let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink", "Orange", "Green", "LavenderPurple", "Red", "Yellow", "TealBlue", "Aqua", "Mango", "Berry", "Citrus", "Candy"]
+
+const config = new Configuration({
+    apiKey: apiKey[4],
+});
+const openai = new OpenAIApi(config);
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
@@ -1171,10 +1175,6 @@ async function ai(api, event) {
                                 return;
                             }
                         }
-                        const config = new Configuration({
-                            apiKey: apiKey[4],
-                        });
-                        const openai = new OpenAIApi(config);
                         const {
                             data
                         } = await openai.createCompletion(settings.text_complextion, {
@@ -1194,13 +1194,9 @@ async function ai(api, event) {
                         saveAns.push([text, finalDataCC2])
                         sendMessage(api, event, finalDataCC2);
                     } else {
-                        const config = new Configuration({
-                            apiKey: apiKey[5],
-                        });
-                        const ai = new OpenAIApi(config);
                         const {
                             data 
-                        } = await ai.createEdit("code-davinci-edit-001", {
+                        } = await openai.createEdit("code-davinci-edit-001", {
                             input:  text,
                             instruction: "",
                             temperature: 0,
@@ -1619,7 +1615,7 @@ async function ai(api, event) {
                     },
                     headers: {
                         'X-RapidAPI-Host': 'mashape-community-urban-dictionary.p.rapidapi.com',
-                        'X-RapidAPI-Key': apiKey[3]
+                        'X-RapidAPI-Key': apiKey[2]
                     }
                 };
                 axios.request(options).then(function({
@@ -1647,7 +1643,7 @@ async function ai(api, event) {
                 if (query.startsWith("summarize")) {
                     text = input.substring(11)
                 }
-                const client = new NLPCloudClient('bart-large-cnn', apiKey[4])
+                const client = new NLPCloudClient('bart-large-cnn', apiKey[3])
                 client.summarization(text).then(function({
                     data
                 }) {
@@ -2710,32 +2706,30 @@ async function ai(api, event) {
             } else {
                 let text = input;
                 text = text.substring(9).split(":");
-                 const options = {
-                        method: 'GET',
-                        url: 'https://love-calculator.p.rapidapi.com/getPercentage',
-                        params: {
-                            sname: text[0],
-                            fname: text[1]
-                        },
-                        headers: {
-                            'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com',
-                            'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74'
-                        }
-                    };
-                    
-                    axios.request(options).then(function({
-                        data
-                    }) {
-                        var name1 = data.fname;
-                        var name2 = data.sname;
-                        var percent = data.percentage + "%";
-                        var result = data.result;
-                        sendMessage(api, event, name1 + " ❤️ " + name2 + "\n\n⦿ Percentage: " + percent + "\n" + result);
-                    }).catch(function(error) {
-                        log(error);
-                        sendMessage(api, event, "An unknown error as been occured. Please try again later.")
-                    });
-       
+                const options = {
+                    method: 'GET',
+                    url: 'https://love-calculator.p.rapidapi.com/getPercentage',
+                    params: {
+                        sname: text[0],
+                        fname: text[1]
+                    },
+                    headers: {
+                        'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com',
+                        'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74'
+                    }
+                };
+                axios.request(options).then(function({
+                    data
+                }) {
+                    var name1 = data.fname;
+                    var name2 = data.sname;
+                    var percent = data.percentage + "%";
+                    var result = data.result;
+                    sendMessage(api, event, name1 + " ❤️ " + name2 + "\n\n⦿ Percentage: " + percent + "\n" + result);
+                }).catch(function(error) {
+                    log(error);
+                    sendMessage(api, event, "An unknown error as been occured. Please try again later.")
+                });
             }
         } else if (query.startsWith("kiss")) {
             if (isGoingToFast(event)) {
