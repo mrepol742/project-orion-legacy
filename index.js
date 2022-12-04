@@ -4136,7 +4136,7 @@ async function getResponseData(url) {
 }
 
 function getUserId(api, name) {
-    let id = api.getUserID(name.join(" ").replace("@", ""), (err, data) => {
+    let id = api.getUserID(name, (err, data) => {
         if (err) return null;
         return data[0].userID;
     });
