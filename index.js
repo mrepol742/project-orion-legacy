@@ -1214,7 +1214,8 @@ async function ai(api, event) {
                     } else {
                         const {
                             data 
-                        } = await openai.createEdit("code-davinci-002", {
+                        } = await openai.createEdit({
+                            model: "code-davinci-edit-001",
                             input:  text,
                             instruction: "",
                             temperature: 0,
