@@ -1214,8 +1214,7 @@ async function ai(api, event) {
                     } else {
                         const {
                             data 
-                        } = await openai.createCompletion({
-                            model: "code-davinci-002",
+                        } = await openai.createCompletion("code-davinci-002", {
                             prompt:  text,
                             temperature: 0,
                             max_tokens: 256,
