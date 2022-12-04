@@ -2361,7 +2361,7 @@ async function ai(api, event) {
                     if (id === undefined) {
                         let data = input.split(" ");
                         data.shift();
-                        let uid = getUserId(data.join(" ").replace("@", ""));
+                        let uid = getUserId(api, data.join(" ").replace("@", ""));
                         if (uid == null) {
                             sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             return;
@@ -4135,8 +4135,8 @@ async function getResponseData(url) {
     return data
 }
 
-function getUserId(name) {
-    let id = api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+function getUserId(api, name) {
+    let id = api.getUserID(name.join(" ").replace("@", ""), (err, data) => {
         if (err) return null;
         return data[0].userID;
     });
