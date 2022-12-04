@@ -730,7 +730,7 @@ login({
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
-                                                unLink(__dirname + "/cache/videos/unsend_vid_" + time + "".mp4");
+                                                unLink(__dirname + "/cache/videos/unsend_vid_" + time + ".mp4");
                                             })
                                         }
                                     });
