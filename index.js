@@ -1217,12 +1217,12 @@ async function ai(api, event) {
                         } = await openai.createEdit("code-davinci-edit-001", {
                             input:  text,
                             instruction: "",
-                            temperature: 2,
+                            temperature: 0,
                             top_p: 1,
                         });
-                        let data2 = data.choices[0].text;
-                        saveAns.push([text, data2])
-                        sendMessage(api, event, data2);
+                        let data1 = data.choices[0].text;
+                        saveAns.push([text, data1])
+                        sendMessage(api, event, data1);
                     }
                 }
             }
