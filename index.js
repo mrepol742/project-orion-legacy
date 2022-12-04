@@ -584,11 +584,12 @@ login({
                                 sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
                             } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
                                 const url = event.messageReply.attachments[0].url;
-                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto.png')).on('finish', () => {
-                                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto.png'), event.threadID, (err) => {
+                                let time = getTimestamp();
+                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
+                                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
                                         if(err) return log(err);
                                     });
-                                    unLink(__dirname + '/cache/images/gphoto.png');
+                                    unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
                                 })
                             }
                         } else {
@@ -615,11 +616,12 @@ login({
                                     gifResponse.pipe(file);
                                     file.on('finish', function() {
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img.jpg'),
+                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img_' + time + '.jpg'),
                                                         mentions: [{
                                                             tag: '@' + data[event.senderID]['name'],
                                                             id: event.senderID,
@@ -631,11 +633,11 @@ login({
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this photo. \n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img.jpg')
+                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_img_' + time + '.jpg')
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
-                                                unLink(__dirname + "/cache/images/unsend_img.jpg");
+                                                unLink(__dirname + "/cache/images/unsend_img_" + time + ".jpg");
                                             })
                                         }
                                     });
@@ -646,11 +648,12 @@ login({
                                     gifResponse.pipe(file);
                                     file.on('finish', function() {
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif.gif'),
+                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif_' + time + '.gif'),
                                                         mentions: [{
                                                             tag: '@' + data[event.senderID]['name'],
                                                             id: event.senderID,
@@ -661,11 +664,11 @@ login({
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this GIF. \n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif.gif')
+                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_gif_' + time + '.gif')
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
-                                                unLink(__dirname + "/cache/images/unsend_gif.gif");
+                                                unLink(__dirname + "/cache/images/unsend_gif_" + time + ".gif");
                                             })
                                         }
                                     });
@@ -676,11 +679,12 @@ login({
                                     gifResponse.pipe(file);
                                     file.on('finish', function() {
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker.png'),
+                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker_' + time + '.png'),
                                                         mentions: [{
                                                             tag: '@' + data[event.senderID]['name'],
                                                             id: event.senderID,
@@ -691,11 +695,11 @@ login({
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this sticker.\n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker.png')
+                                                        attachment: fs.createReadStream(__dirname + '/cache/images/unsend_sticker_' + time + '.png')
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
-                                                unLink(__dirname + "/cache/images/unsend_sticker.png");
+                                                unLink(__dirname + "/cache/images/unsend_sticker_" + time + ".png");
                                             })
                                         }
                                     });
@@ -706,11 +710,12 @@ login({
                                     gifResponse.pipe(file);
                                     file.on('finish', function() {
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid.mp4'),
+                                                        attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid_' + time + '.mp4'),
                                                         mentions: [{
                                                             tag: '@' + data[event.senderID]['name'],
                                                             id: event.senderID,
@@ -721,11 +726,11 @@ login({
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this video.\n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid.mp4')
+                                                        attachment: fs.createReadStream(__dirname + '/cache/videos/unsend_vid_' + time + '.mp4')
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
-                                                unLink(__dirname + "/cache/videos/unsend_vid.mp4");
+                                                unLink(__dirname + "/cache/videos/unsend_vid_" + time + "".mp4");
                                             })
                                         }
                                     });
@@ -736,11 +741,12 @@ login({
                                     gifResponse.pipe(file);
                                     file.on('finish', function() {
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                            let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm.mp3'),
+                                                        attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm_' + time + '.mp3'),
                                                         mentions: [{
                                                             tag: '@' + data[event.senderID]['name'],
                                                             id: event.senderID,
@@ -751,11 +757,11 @@ login({
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this voice message.\n",
-                                                        attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm.mp3')
+                                                        attachment: fs.createReadStream(__dirname + '/cache/audios/unsend_vm_' + time + '.mp3')
                                                     }
                                                     sendMessageOnly(api, event, message);
                                                 }
-                                                unLink(__dirname + "/cache/audios/unsend_vm.mp3");
+                                                unLink(__dirname + "/cache/audios/unsend_vm_" + time + ".mp3");
                                             })
                                         }
                                     });
@@ -828,19 +834,20 @@ login({
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
                                 let arr = gc.participantIDs;
                                 let Tmem = arr.length;
+                                let time = getTimestamp();
                                 let num = i;
-                                request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome.jpg"))
+                                request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
                                     .on('finish', () => {
                                     let message = {
                                         body: gret,
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome.jpg"),
+                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
                                             mentions: [{
                                                 tag: name,
                                                 id: id
                                         }]
                                     };
                                     sendMessageOnly(api, event, message);
-                                    unLink(__dirname + "/cache/images/welcome.jpg");
+                                    unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
                                 })
                             }
                         })
@@ -860,12 +867,13 @@ login({
                                             let gcn = gc.threadName;
                                             let arr = gc.participantIDs;
                                             let Tmem = arr.length;
+                                            let time = getTimestamp();
                                             let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Total+Members+" + Tmem + "&avatar=" + getProfilePic(prop);
                                             request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
                                                 .on('finish', () => {
                                                     let message = {
                                                         body: "Thank you for joining @" + data[prop].name + " but now you're leaving us.",
-                                                        attachment: fs.createReadStream(__dirname + "/cache/images/byebye.jpg"),
+                                                        attachment: fs.createReadStream(__dirname + "/cache/images/byebye_" + time + ".jpg"),
                                                         mentions: [{
                                                             tag: data[prop].name,
                                                             id: prop
@@ -873,7 +881,7 @@ login({
                                                     };
                                                     sendMessageOnly(api, event, message);
                                                     log("leave_member " + data[prop].name);
-                                                    unLink(__dirname + "/cache/images/byebye.jpg");
+                                                    unLink(__dirname + "/cache/images/byebye_" + time + ".jpg");
                                                 })
                                         }
                                     }
@@ -911,16 +919,17 @@ async function ai(api, event) {
                 try {
                     data.shift();
                     let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(data.join(" ")) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
-                    var file = fs.createWriteStream(__dirname + "/cache/audios/ttsjap.mp3");
+                    let time = getTimestamp();
+                    var file = fs.createWriteStream(__dirname + "/cache/audios/ttsjap_" + time + ".mp3");
                     var gifRequest = http.get(responses, function(gifResponse) {
                         gifResponse.pipe(file);
                         file.on('finish', function() {
                             log("Finish downloading audio file.");
                             var message = {
-                                attachment: fs.createReadStream(__dirname + "/cache/audios/ttsjap.mp3")
+                                attachment: fs.createReadStream(__dirname + "/cache/audios/ttsjap_" + time + ".mp3")
                                     .on("end", async () => {
-                                        if (fs.existsSync(__dirname + "/cache/audios/ttsjap.mp3")) {
-                                            unLink(__dirname + "/cache/audios/ttsjap.mp3");
+                                        if (fs.existsSync(__dirname + "/cache/audios/ttsjap_" + time + ".mp3")) {
+                                            unLink(__dirname + "/cache/audios/ttsjap_" + time + ".mp3");
                                         }
                                     })
                             }
@@ -945,14 +954,15 @@ async function ai(api, event) {
                     slow: false,
                     host: 'https://translate.google.com',
                 });
-                request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts.mp3'))
+                let time = getTimestamp();
+                request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
 
                         .on('finish', () => {
                             let message = {
-                                attachment: fs.createReadStream(__dirname + '/cache/audios/tts.mp3'),
+                                attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
                         };
                         sendMessage(api, event, message);
-                        unLink(__dirname + "/cache/audios/tts.mp3");
+                        unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
                 })
             }
         } else if (query == "ping") {
@@ -1109,12 +1119,13 @@ async function ai(api, event) {
                     api.getUserInfo(id, (err, info) => {
                         if (err) return reportIssue(api, event.threadID, err);
                         let name = info[id]['name'];
-                        request(encodeURI(getProfilePicFullHD(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam.png'))
+                        let time = getTimestamp();
+                        request(encodeURI(getProfilePicFullHD(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam_' + time + '.png'))
 
                         .on('finish', () => {
                             let message = {
                                 body: "You're " + name,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/whoiam.png'),
+                                attachment: fs.createReadStream(__dirname + '/cache/images/whoiam_' + time + '.png'),
                                 mentions: [{
                                     tag: '@' + name,
                                     id: id,
@@ -1122,7 +1133,7 @@ async function ai(api, event) {
                                 }]
                             };
                             sendMessage(api, event, message);
-                            unLink(__dirname + "/cache/images/whoiam.png");
+                            unLink(__dirname + "/cache/images/whoiam_" + time + ".png");
                         })
                     });
                 } else if (text1 == "whoownyou") {
@@ -1356,7 +1367,9 @@ async function ai(api, event) {
                             audioBitrate: '550',
                             fps: '30'
                         });
-                        stream.pipe(fs.createWriteStream(__dirname + '/cache/videos/video.mp4'));
+                        let time = getTimestamp();
+
+                        stream.pipe(fs.createWriteStream(__dirname + '/cache/videos/video_' + time '.mp4'));
 
                         stream.on('start', () => {
                             threadIdMV[event.threadID] = false;
@@ -1368,7 +1381,7 @@ async function ai(api, event) {
                         });
                         stream.on('end', () => {
                             let limit = 25 * 1024 * 1024;
-                            fs.readFile(__dirname + '/cache/videos/video.mp4', function(err, data) {
+                            fs.readFile(__dirname + '/cache/videos/video_' + time '.mp4', function(err, data) {
                                 if (err) log(err)
                                 if (data.length > limit) {
                                     log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
@@ -1377,12 +1390,12 @@ async function ai(api, event) {
                                     log("Done.");
                                     let message = {
                                         body: search.videos[0].title,
-                                        attachment: fs.createReadStream(__dirname + '/cache/videos/video.mp4')
+                                        attachment: fs.createReadStream(__dirname + '/cache/videos/video_' + time '.mp4')
                                     }
                                     sendMessage(api, event, message);
                                 }
                                 threadIdMV[event.threadID] = true;
-                                unLink(__dirname + '/cache/videos/video.mp4')
+                                unLink(__dirname + '/cache/videos/video_' + time '.mp4')
                             })
                         });
                         stream.on('error', (err) => reportIssue(api, event, err));
@@ -1420,8 +1433,9 @@ async function ai(api, event) {
                             loudnessDB: '20',
                             audioBitrate: '550'
                         });
+                        let time = getTimestamp();
 
-                        stream.pipe(fs.createWriteStream(__dirname + '/cache/audios/music.mp3'));
+                        stream.pipe(fs.createWriteStream(__dirname + '/cache/audios/music_' + time + '.mp3'));
 
                         stream.on('start', () => {
                             threadIdMV[event.threadID] = false;
@@ -1433,7 +1447,7 @@ async function ai(api, event) {
                         });
                         stream.on('end', () => {
                             let limit = 25 * 1024 * 1024;
-                            fs.readFile(__dirname + '/cache/audios/music.mp3', function(err, data) {
+                            fs.readFile(__dirname + '/cache/audios/music_' + time + '.mp3', function(err, data) {
                                 if (err) log(err)
                                 if (data.length > limit) {
                                     log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
@@ -1442,12 +1456,12 @@ async function ai(api, event) {
                                     log("Finish downloading music.");
                                     let message = {
                                         body: search.videos[0].title,
-                                        attachment: fs.createReadStream(__dirname + '/cache/audios/music.mp3')
+                                        attachment: fs.createReadStream(__dirname + '/cache/audios/music_' + time + '.mp3')
                                     }
                                     sendMessage(api, event, message);
                                 }
                                 threadIdMV[event.threadID] = true;
-                                unLink(__dirname + '/cache/audios/music.mp3');
+                                unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
                             })
                         });
                         stream.on('error', (err) => reportIssue(api, event, err));
@@ -1479,15 +1493,16 @@ async function ai(api, event) {
                         let image = response.image;
                         let artist = response.artist;
                         let lyrics = response.lyrics;
-                        request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/lyrics.png'))
+                        let time = getTimestamp();
+                        request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/lyrics_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: title + " " + artist + "\n\n" + lyrics,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/lyrics.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/lyrics_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/lyrics.png");
+                                unLink(__dirname + "/cache/images/lyrics_" + time + ".png");
                             })
                     }
                 });
@@ -1825,16 +1840,17 @@ async function ai(api, event) {
                         let private = ((response.result.private) ? "Yes" : "No");
                         let verified = ((response.result.verified) ? "Yes" : "No");
                         let profilepic = response.result.profilePicture;
+                        let time = getTimestamp();
 
-                        request(encodeURI(profilepic)).pipe(fs.createWriteStream(__dirname + '/cache/images/instaprofile.png'))
+                        request(encodeURI(profilepic)).pipe(fs.createWriteStream(__dirname + '/cache/images/instaprofile_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified + "\n\n" + biography,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/instaprofile.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/instaprofile_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/instaprofile.png");
+                                unLink(__dirname + "/cache/images/instaprofile_" + time + ".png");
                             })
                     }
                 });
@@ -1873,16 +1889,17 @@ async function ai(api, event) {
                         let video =  response.result.videoCount;
                         let digg = response.result.diggCount;
                         let avatar = response.result.avatar;
+                        let time = getTimestamp();
 
-                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/tiktok_avatar.png'))
+                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/tiktok_avatar_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: name + " @" + username + "\n⦿ Hearts: " + heart + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Videos: " + video + "\n⦿ Digg: " + digg + "\n\n" + bio,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/tiktok_avatar.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/tiktok_avatar_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/tiktok_avatar.png");
+                                unLink(__dirname + "/cache/images/tiktok_avatar_" + time + ".png");
                             })
                     }
                 });
@@ -1913,16 +1930,17 @@ async function ai(api, event) {
                         let trackCount = response.result['track_count'];
                         let permalinkUrl = response.result['permalink_url'];
                         let avatar = response.result['avatar_url'];
+                        let time = getTimestamp();
 
-                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/soundcloud_avatar.png'))
+                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/soundcloud_avatar_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: name + " @" + username + "\n⦿ Location: " + location + "\n⦿ Likes: " + likes + "\n⦿ Playlist: " + playlist + "\n⦿ Playlist Likes: " + playlistLikes + "\n⦿ Tracks: " + trackCount + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n\n" + bio + "\n" + permalinkUrl,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/soundcloud_avatar.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/soundcloud_avatar_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/soundcloud_avatar.png");
+                                unLink(__dirname + "/cache/images/soundcloud_avatar_" + time + ".png");
                             })
                     }
                 });
@@ -1955,20 +1973,21 @@ async function ai(api, event) {
                         let public_repos = response.public_repos;
                         let public_gists = response.public_gists;
                         let avatar = response.avatar;
+                        let time = getTimestamp();
 
                         if (bio == "No Bio") {
                             bio = "";
                         }
 
-                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/github_avatar.png'))
+                        request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/github_avatar_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: "⦿ Name: " + name + "\n⦿ Email: " + email + "\n⦿ Location: " + location + "\n⦿ Company: " + company + "\n⦿ Website: " + url + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Public Repository: " + public_repos + "\n⦿ Public Gists: " + public_gists + "\n\n" + bio + "\nhttps://github.com/" + userN,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/github_avatar.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/github_avatar_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/github_avatar.png");
+                                unLink(__dirname + "/cache/images/github_avatar_" + time + ".png");
                             })
                     }
                 });
@@ -1996,16 +2015,17 @@ async function ai(api, event) {
                         let discovered_by = response.discovered_by;
                         let image = response.image;
                         let summary = response.summary;
+                        let time = getTimestamp();
 
-                        request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/element.png'))
+                        request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/element_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/element.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/element_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/element.png");
+                                unLink(__dirname + "/cache/images/element_" + time + ".png");
                             })
                     }
                 });
@@ -2056,16 +2076,17 @@ async function ai(api, event) {
                         let description = response.description;
                         let banner = response.banner;
                         let price = response.price;
+                        let time = getTimestamp();
 
-                        request(encodeURI(banner)).pipe(fs.createWriteStream(__dirname + '/cache/images/steam.png'))
+                        request(encodeURI(banner)).pipe(fs.createWriteStream(__dirname + '/cache/images/steam_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/steam.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/steam_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/steam.png");
+                                unLink(__dirname + "/cache/images/steam_" + time + ".png");
                             })
                     }
                 });
@@ -2091,16 +2112,17 @@ async function ai(api, event) {
                         let poster = response.poster;
                         let genres = response.genres;
                         let plot = response.plot;
+                        let time = getTimestamp();
 
-                        request(encodeURI(poster)).pipe(fs.createWriteStream(__dirname + '/cache/images/imdb.png'))
+                        request(encodeURI(poster)).pipe(fs.createWriteStream(__dirname + '/cache/images/imdb_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/imdb.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/imdb_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/imdb.png");
+                                unLink(__dirname + "/cache/images/imdb_" + time + ".png");
                             })
                     }
                 });
@@ -2126,16 +2148,17 @@ async function ai(api, event) {
                         let length = response.length.replace('s', '');
                         let lenghtM = (Math.round((length / 60) * 100) / 100).toFixed(2);
                         let thumbnail = response.thumbnail;
+                        let time = getTimestamp();
 
-                        request(encodeURI(thumbnail)).pipe(fs.createWriteStream(__dirname + '/cache/images/itunes.png'))
+                        request(encodeURI(thumbnail)).pipe(fs.createWriteStream(__dirname + '/cache/images/itunes_' + time + '.png'))
 
                             .on('finish', () => {
                                 let message = {
                                     body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
-                                    attachment: fs.createReadStream(__dirname + '/cache/images/itunes.png')
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/itunes_' + time + '.png')
                                 };
                                 sendMessage(api, event, message);
-                                unLink(__dirname + "/cache/images/itunes.png");
+                                unLink(__dirname + "/cache/images/itunes_" + time + ".png");
                             })
                     }
                 });
@@ -2150,16 +2173,17 @@ async function ai(api, event) {
                 } else {
                     let image = response.image;
                     let title = response.title;
+                    let time = getTimestamp();
 
-                    request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/car.png'))
+                    request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/car_' + time + '.png'))
 
                         .on('finish', () => {
                             let message = {
                                 body: title,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/car.png')
+                                attachment: fs.createReadStream(__dirname + '/cache/images/car_' + time + '.png')
                             };
                             sendMessage(api, event, message);
-                            unLink(__dirname + "/cache/images/car.png");
+                            unLink(__dirname + "/cache/images/car_" + time + ".png");
                         })
                 }
             });
@@ -2174,16 +2198,17 @@ async function ai(api, event) {
                     let hex = response.hex;
                     let name = response.name;
                     let url = response.image;
+                    let time = getTimestamp();
 
-                    request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/color.png'))
+                    request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/color_' + time + '.png'))
 
                         .on('finish', () => {
                             let message = {
                                 body: name + " #" + hex,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/color.png')
+                                attachment: fs.createReadStream(__dirname + '/cache/images/color_' + time + '.png')
                             };
                             sendMessage(api, event, message);
-                            unLink(__dirname + "/cache/images/color.png");
+                            unLink(__dirname + "/cache/images/color_" + time + ".png");
                         })
                 }
             });
@@ -3250,7 +3275,8 @@ async function ai(api, event) {
                                 isBirthday
                             } = ret[prop]
                             let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + apiKey[1])
-                            let filename = __dirname + "/cache/images/facebook.jpg";
+                            let time = getTimestamp();
+                            let filename = __dirname + "/cache/images/facebook_" + time + ".jpg";
                             let msg = checkFound(name) + " @" + checkFound(vanity);
                             msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
                             msg += "\n⦿ Birthday: " + checkFound(isBirthday);
@@ -3333,16 +3359,17 @@ async function ai(api, event) {
                 } else {
                     let url = response.url;
                     let title = response.title;
+                    let time = getTimestamp();
 
-                    request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/coding.png'))
+                    request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/coding_' + time + '.png'))
 
                         .on('finish', () => {
                             let message = {
                                 body: title,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/coding.png')
+                                attachment: fs.createReadStream(__dirname + '/cache/images/coding_' + time + '.png')
                             };
                             sendMessage(api, event, message);
-                            unLink(__dirname + "/cache/images/coding.png");
+                            unLink(__dirname + "/cache/images/coding_" + time + ".png");
                         })
                 }
             });
@@ -3987,7 +4014,7 @@ function someR(api, event, query) {
 
 function parseImage(api, event, url, dir) {
     log("parse_image " + url);
-    request(url).pipe(fs.createWriteStream(dir))
+    request(encodeURI(url)).pipe(fs.createWriteStream(dir))
         .on('finish', () => {
             let limit = 25 * 1024 * 1024;
             fs.readFile(dir, function(err, data) {
@@ -4506,11 +4533,12 @@ function kiss(api, event, id) {
                             api.getUserInfo(id, (err, info) => {
                                 if (err) return reportIssue(api, event.threadID, err);
                                 let name = info[id]['name'];
-                                request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
+                                let time = getTimestamp();
+                                request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss_" + time + ".png"))
                                     .on('finish', () => {
                                         let image = {
                                             body: "@" + name,
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/kiss.png"),
+                                            attachment: fs.createReadStream(__dirname + "/cache/images/kiss_" + time + ".png"),
                                             mentions: [{
                                                 tag: '@' + name,
                                                 id: id,
@@ -4518,7 +4546,7 @@ function kiss(api, event, id) {
                                             }]
                                         };
                                         sendMessage(api, event, image);
-                                        unLink(__dirname + "/cache/images/kiss.png");
+                                        unLink(__dirname + "/cache/images/kiss_" + time + ".png");
                                     })
                             })
                         }
@@ -4526,61 +4554,66 @@ function kiss(api, event, id) {
 }
 
 function gun(api, event, id) {
+    /*
     request({ url: getProfilePicFullHD(id), followRedirect: false }, function (err, res, body) {
         console.log(encodeURIComponent(res.headers.location));
-        parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(res.headers.location), __dirname + "/cache/images/gun.png");
-     });
-   
+        parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(res.headers.location), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
+     });*/
+     parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
 }
 
 function wanted(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted.png");
+    parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
 }
 
 function clown(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown.png");
+    parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
 }
 
 function drip(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip.png");
+    parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
 }
 
 function communist(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist.png");
+    parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
 }
 
 function advert(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert.png");
+    parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
 }
 
 function uncover(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover.png");
+    parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
 }
 
 function jail(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail.png");
+    parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
 }
 
 function invert(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert.png");
+    parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
 }
 
 function pet(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet.png");
+    parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
 }
 
 function mnm(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm.png");
+    parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
 }
 
 function greyscale(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale.png");
+    parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
 }
 
 function jokeover(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover.png");
+    parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
 }
 
 function blur(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur.png");
+    parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
+}
+
+function getTimestamp() {
+    return Math.floor(Date.now() / 1000);
 }
