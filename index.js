@@ -2701,26 +2701,6 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("lovetest")) {
-            const options = {
-                method: 'GET',
-                url: 'https://love-calculator.p.rapidapi.com/getPercentage',
-                params: {sname: 'Alice', fname: 'John'},
-                headers: {
-                  'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74',
-                  'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com'
-                }
-              };
-              
-              axios.request(options).then(function (response) {
-                var name1 = response.data.fname;
-                var name2 = response.data.sname;
-                var percent = response.data.percentage + "%";
-                var result = response.data.result;
-                sendMessage(api, event, name1 + " ❤️ " + name2 + "\n⦿ Percentage: " + percent + "\n\n" + result);
-              }).catch(function (error) {
-                  console.error(error);
-              });
-            /*
             if (isGoingToFast(event)) {
                 return;
             }
@@ -2740,7 +2720,7 @@ async function ai(api, event) {
                     } else if (isMyId(id2)) {
                         id2 = event.senderID;
                     }
-                    let name1, name2;
+                    let name1 = "JOhm", name2 = "ane";
                     api.getUserInfo(id1, (err, info) => {
                         name1 = info[id1]['name'];
                     });
@@ -2767,7 +2747,7 @@ async function ai(api, event) {
                         var name2 = data.sname;
                         var percent = data.percentage + "%";
                         var result = data.result;
-                        sendMessage(api, event, name1 + " ❤️ " + name2 + "\n⦿ Percentage: " + percent + "\n\n" + result);
+                        sendMessage(api, event, name1 + " ❤️ " + name2 + "\n\n⦿ Percentage: " + percent + "\n" + result);
                     }).catch(function(error) {
                         log(error);
                         sendMessage(api, event, "An unknown error as been occured. Please try again later.")
@@ -2775,7 +2755,6 @@ async function ai(api, event) {
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno");
                 }
-            }*/
         } else if (query.startsWith("kiss")) {
             if (isGoingToFast(event)) {
                 return;
