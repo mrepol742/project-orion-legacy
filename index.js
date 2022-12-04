@@ -4526,7 +4526,11 @@ function kiss(api, event, id) {
 }
 
 function gun(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURI(getProfilePic(id)), __dirname + "/cache/images/gun.png");
+    request({ url: getProfilePic(id), followRedirect: false }, function (err, res, body) {
+        console.log(res.headers.location);
+        parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURI(res.headers.location), __dirname + "/cache/images/gun.png");
+     });
+   
 }
 
 function wanted(api, event, id) {
