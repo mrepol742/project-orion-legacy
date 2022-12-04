@@ -227,6 +227,8 @@ help5 += "\n   pokedance, cringe, cry";
 let help6 = "\n⦿ conan";
 help6 += "\n⦿ addUser uid";
 help6 += "\n⦿ gphoto";
+help6 += "\n⦿ encodeBinary [text]";
+help6 += "\n⦿ decodeBinary [text]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -894,7 +896,42 @@ async function ai(api, event) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
-        if (query2.startsWith("tts")) {
+
+        if (query.startsWith("ttsjap")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using ttsjap text instead.\nFor example:\nttsjap I am melvin jones repol")
+            } else {
+                try {
+                    data.shift();
+                    let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(data.join(" ")) + "&lang=ja&engine=g1&rate=0.5&key=0POmS5Y2&gender=female&pitch=0.5&volume=1";
+                    var file = fs.createWriteStream(__dirname + "/cache/audios/ttsjap.mp3");
+                    var gifRequest = http.get(responses, function(gifResponse) {
+                        gifResponse.pipe(file);
+                        file.on('finish', function() {
+                            log("download_complete of ttsjap");
+                            var message = {
+                                attachment: fs.createReadStream(__dirname + "/cache/audios/ttsjap.mp3")
+                                    .on("end", async () => {
+                                        if (fs.existsSync(__dirname + "/cache/audios/ttsjap.mp3")) {
+                                            unLink(__dirname + "/cache/audios/ttsjap.mp3");
+                                        }
+                                    })
+                            }
+                            api.sendMessage(message, event.threadID, event.messageID);
+                        });
+                    });
+                } catch {
+                    sendMessage(api, event, "Unfortunately an error occured,");
+                }
+            }
+        } else if (query2.startsWith("tts")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead.\nFor example:\ntts I am melvin jones repol")
@@ -1437,6 +1474,39 @@ async function ai(api, event) {
                     }
                 });
             }
+        } else if (input.startsWith("encodebinary")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            if (input.split(" ").length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using encodeBinary text instead.\nFor example:\nencodeBinary fundamentals in engineering")
+            } else {
+                var text = input;
+                text = text.substring(13)
+                var Input = text;
+                let output = '';
+                for (var i = 0; i < Input.length; i++) {
+                    output += Input[i].charCodeAt(0).toString(2) + ' ';
+                }
+                sendMessage(api, event, output);
+             }
+        } else if (input.startsWith("decodebinary")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            if (input.split(" ").length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using decodeBinary text instead.\nFor example:\ndecodeBinary 01100001 01100010 01100011")
+            } else {
+                var text = input;
+                text = text.substring(13)
+                var binary = text;
+                const binaryString = binary.split(' ');
+                let stringOutput = '';
+                for (let i = 0; i < binaryString.length; i++) {
+                    stringOutput += String.fromCharCode(parseInt(binaryString[i], 2));
+                }
+                sendMessage(api, event, stringOutput);
+            }
         } else if (query.startsWith("encode64")) {
             if (isGoingToFast(event)) {
                 return;
@@ -1455,7 +1525,7 @@ async function ai(api, event) {
                 return;
             }
             if (input.split(" ").length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead.\nFor example:\ndecode64 fundamentals in engineering")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead.\nFor example:\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n")
             } else {
                 let text = input;
                 text = text.substring(9)
@@ -2361,13 +2431,10 @@ async function ai(api, event) {
                     if (id === undefined) {
                         let data = input.split(" ");
                         data.shift();
-                        let uid = getUserId(api, data.join(" ").replace("@", ""));
-                        if (uid == null) {
-                            sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            return;
-                        } else {
-                            id = uid;
-                        }
+                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                            if (err) return log(err);
+                            id = data[0].userID;
+                        });
                     } else if (isMyId(id)) {
                         sendMessage(api, event, "Unable to block the user.");
                         return;
@@ -4133,14 +4200,6 @@ async function getResponseData(url) {
         return null
     });
     return data
-}
-
-function getUserId(api, name) {
-    let id = api.getUserID(name, (err, data) => {
-        if (err) return null;
-        id = data[0].userID;
-    });
-    return id;
 }
 
 function countWords(str) {
