@@ -1169,7 +1169,21 @@ async function ai(api, event) {
                     if (repeatOfNonWWW(event)) {
                         return;
                     }
-                    sendMessage(api, event, text + "?");
+                    if (text.startsWith("what")) {
+                        sendMessage(api, event, "what is it?");
+                    } else if (text.startsWith("when")) {
+                        sendMessage(api, event, "when is the?");
+                    } else if (text.startsWith("where")) {
+                        sendMessage(api, event, "where is it?");
+                    } else if (text.startsWith("how")) {
+                        sendMessage(api, event, "how what?");
+                    } else if (text.startsWith("which")) {
+                        sendMessage(api, event, "which of the?");
+                    } else if (text.endsWith("?")) {
+                        sendMessage(api, event, text);
+                    } else {
+                        sendMessage(api, event, text + "?");
+                    }
                 } else {
                     if (!query.startsWith("searchcode")) {
                         for (let i = 0; i < saveAns.length; i++) {
