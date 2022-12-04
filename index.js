@@ -591,6 +591,8 @@ login({
                                     unLink(__dirname + '/cache/images/gphoto.png');
                                 })
                             }
+                        } else {
+                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                         }
                     });
                 }
@@ -2390,6 +2392,8 @@ async function ai(api, event) {
                                     if (err) log(err);
                                     log("add_user " + event.threadID + " " + pref);
                                 });
+                            } else {
+                                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                             }
                         })
                     } else {
@@ -2436,6 +2440,8 @@ async function ai(api, event) {
                         } else {
                             sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead.\n\nFor example:\nkickUser @Melvin Jones Repol")
                         }
+                    } else {
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                     }
                 })
             }
@@ -4520,7 +4526,7 @@ function kiss(api, event, id) {
 }
 
 function gun(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun.png");
+    parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURI(getProfilePic(id)), __dirname + "/cache/images/gun.png");
 }
 
 function wanted(api, event, id) {
