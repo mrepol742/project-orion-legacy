@@ -104,7 +104,7 @@ help += "\n⦿ mj [text]";
 help += "\n⦿ search [text]"
 help += "\n⦿ searchincog [text]";
 help += "\n⦿ searchimg [text]";
-help += "\n⦿ pdf [text]";
+help += "\n⦿ gencode [text]";
 help += "\n⦿ dict [text]";
 help += "\n⦿ tts [text]";
 help += "\n⦿ baybayin [text]";
@@ -231,6 +231,7 @@ help6 += "\n⦿ encodeBinary [text]";
 help6 += "\n⦿ decodeBinary [text]";
 help6 += "\n⦿ ttsjap [text]";
 help6 += "\n⦿ lovetest name1: name2";
+help6 += "\n⦿ pdf [text]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -1019,7 +1020,7 @@ async function ai(api, event) {
                 });
             }
         } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
-            ((query.startsWith("search") || query.startsWith("searchcode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
+            ((query.startsWith("search") || query.startsWith("gencode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
                 otherQ(query2)) {
             if (event.type == "message_reply") {
@@ -1056,8 +1057,8 @@ async function ai(api, event) {
                     text = input.substring(25)
                 } else if (query.startsWith("melvinjones")) {
                     text = input.substring(12)
-                } else if (query.startsWith("searchcode")) {
-                    text = input.substring(11)
+                } else if (query.startsWith("gencode")) {
+                    text = input.substring(8)
                 } else if (query.startsWith("search")) {
                     text = input.substring(7)
                 } else if (input.startsWith(settings.prefix)) {
@@ -1192,7 +1193,7 @@ async function ai(api, event) {
                             return;
                         }
                     }
-                    if (!query.startsWith("searchcode")) {
+                    if (!query.startsWith("gencode")) {
                         const {
                             data
                         } = await openai.createCompletion(settings.text_complextion, {
