@@ -1214,12 +1214,11 @@ async function ai(api, event) {
                     } else {
                         const {
                             data 
-                        } = await openai.createCompletion("code-davinci-002", {
-                            prompt: text,
-                            temperature: 0.0,
-                            max_tokens: 1,
-                            top_p: 0,
-                            logprobs: 0,
+                        } = await openai.createEdit("code-davinci-002", {
+                            input:  text,
+                            instruction: "",
+                            temperature: 0,
+                            top_p: 1,
                         });
                         let data1 = data.choices[0].text;
                         saveAns.push([text, data1])
