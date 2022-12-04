@@ -2415,11 +2415,6 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("kickuser")) {
-            let data = input.split(" ");
-                                data.shift();
-                                let uid = await getUserId(api, data.join(" ").replace("@", ""));
-                                sendMessage(api, event, "your uid is " + uid);
-                                return;
             if (vips.includes(event.senderID)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
                     if (gc.isGroup) {
@@ -2428,17 +2423,21 @@ async function ai(api, event) {
                             if (id === undefined) {
                                 let data = input.split(" ");
                                 data.shift();
-                                let uid = getUserId(api, data.join(" ").replace("@", ""));
-                                id = uid;
-                                sendMessage(api, event, "your uid is " + uid);
+                                api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                    if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                    let userID = data[0].userID;
+                                    if (isMyId(userID)) {
+                                        sendMessage(api, event, "Unable to kick the user.");
+                                        return;
+                                    }
+                                    removeUser(api, event, userID);
+                                });
+                                return;
                             } else if (isMyId(id)) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
                             }
-                            api.removeUserFromGroup(id, event.threadID, (err) => {
-                                if (err) log(err);
-                                log("user_remove " + event.threadID + " " + id);
-                            });
+                            removeUser(api, event, id);
                         } else {
                             sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead.\n\nFor example:\nkickUser @Melvin Jones Repol")
                         }
@@ -4460,19 +4459,9 @@ function lowercaseFirstLetter(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
-let resolveUserID = (api, name) => {
-    return new Promise((resolve, reject) => {
-        api.getUserID(name, (err, data) => {
-            if (err) reject(err);
-            log("resolve_user_id " + data[0].userID)
-            resolve(data);
-        });
-    });
-}
-
-const getUserId = async (api, name) => {
-    resolveUserID(api, name).then(data => {
-        log("user_id " + data[0].userID);
-        return data[0].userID;
+function removeUser(api, event, id) {
+    api.removeUserFromGroup(id, event.threadID, (err) => {
+        if (err) log(err);
+        log("user_remove " + event.threadID + " " + id);
     });
 }
