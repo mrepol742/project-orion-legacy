@@ -576,7 +576,7 @@ login({
                     if (isGoingToFast(event)) {
                         break;
                     }
-                    pi.getThreadInfo(event.threadID, (err, gc) => {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
                         if (gc.isGroup) {
                             if (event.messageReply.attachments.length < 1) {
                                 sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
@@ -2579,27 +2579,6 @@ async function ai(api, event) {
                     sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             })
-        } else if (query.startsWith("gpool")) {
-            if (isGoingToFast(event)) {
-                return;
-            }
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (gc.isGroup) {
-                    let data = input.split(" ");
-                    if (data.length < 2) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using gpool title instead.\n\nFor example:\ngpool Who are the best")
-                    } else {
-                        data.shift()
-                        api.createPoll(data.join(' '), event.threadID, {
-                            "Choice 1": false
-                        }, (err) => {
-                            if(err) return log(err);
-                        });
-                    }
-                } else {
-                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                }
-            });
         } else if (query.startsWith("gname")) {
             if (isGoingToFast(event)) {
                 return;
