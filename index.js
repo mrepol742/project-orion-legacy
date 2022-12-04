@@ -2413,7 +2413,7 @@ async function ai(api, event) {
                                     id = data[0].userID;
                                 });*/
                                 id = getUserId(api, data.join(" ").replace("@", ""));
-                                console.log(id);
+                                console.log("id is" + id);
                             } else if (isMyId(id)) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
@@ -4489,9 +4489,10 @@ function lowercaseFirstLetter(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
-function getUserId(api, name) {
-    return api.getUserID(name, (err, data) => {
+async function getUserId(api, name) {
+    const userid = await api.getUserID(name, (err, data) => {
         if (err) return log(err);
         return data[0].userID;
     });
+    return userid;
 }
