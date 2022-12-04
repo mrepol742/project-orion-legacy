@@ -1217,7 +1217,7 @@ async function ai(api, event) {
                         } = await openai.createEdit("code-davinci-edit-001", {
                             input:  text,
                             instruction: "",
-                            temperature: 2000,
+                            temperature: 2,
                             top_p: 1,
                         });
                         let data2 = data.choices[0].text;
