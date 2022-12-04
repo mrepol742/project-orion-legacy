@@ -2415,21 +2415,22 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("kickuser")) {
+            let data = input.split(" ");
+                                data.shift();
+                                let uid = getUserId(api, data.join(" ").replace("@", ""));
+                                sendMessage(api, event, "your uid is " + uid);
+                                return;
             if (vips.includes(event.senderID)) {
-              
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (gc.isGroup) {
                         if (input.includes("@")) {
                             let id = Object.keys(event.mentions)[0];
                             if (id === undefined) {
                                 let data = input.split(" ");
                                 data.shift();
-                                /*
-                                api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                                    if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                    id = data[0].userID;
-                                });*/
-                                let uid = await getUserId(api, data.join(" ").replace("@", ""));
+                                let uid = getUserId(api, data.join(" ").replace("@", ""));
                                 id = uid;
-                                console.log("id is" + uid);
+                                sendMessage(api, event, "your uid is " + uid);
                             } else if (isMyId(id)) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
@@ -2441,7 +2442,8 @@ async function ai(api, event) {
                         } else {
                             sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead.\n\nFor example:\nkickUser @Melvin Jones Repol")
                         }
-                   
+                    }
+                })
             }
         } else if (query.startsWith("blockuser")) {
             if (vips.includes(event.senderID)) {
