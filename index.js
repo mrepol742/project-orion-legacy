@@ -1369,7 +1369,7 @@ async function ai(api, event) {
                         });
                         let time = getTimestamp();
 
-                        stream.pipe(fs.createWriteStream(__dirname + '/cache/videos/video_' + time '.mp4'));
+                        stream.pipe(fs.createWriteStream(__dirname + '/cache/videos/video_' + time + '.mp4'));
 
                         stream.on('start', () => {
                             threadIdMV[event.threadID] = false;
@@ -1381,7 +1381,7 @@ async function ai(api, event) {
                         });
                         stream.on('end', () => {
                             let limit = 25 * 1024 * 1024;
-                            fs.readFile(__dirname + '/cache/videos/video_' + time '.mp4', function(err, data) {
+                            fs.readFile(__dirname + '/cache/videos/video_' + time + '.mp4', function(err, data) {
                                 if (err) log(err)
                                 if (data.length > limit) {
                                     log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
@@ -1390,12 +1390,12 @@ async function ai(api, event) {
                                     log("Done.");
                                     let message = {
                                         body: search.videos[0].title,
-                                        attachment: fs.createReadStream(__dirname + '/cache/videos/video_' + time '.mp4')
+                                        attachment: fs.createReadStream(__dirname + '/cache/videos/video_' + time + '.mp4')
                                     }
                                     sendMessage(api, event, message);
                                 }
                                 threadIdMV[event.threadID] = true;
-                                unLink(__dirname + '/cache/videos/video_' + time '.mp4')
+                                unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
                             })
                         });
                         stream.on('error', (err) => reportIssue(api, event, err));
