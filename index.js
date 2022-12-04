@@ -3922,11 +3922,9 @@ async function ai(api, event) {
             });
         }
 
-        if (!query.includes("@")) {
-            if (event.type == "message_reply") {
-                if (!isMyId(event.messageReply.senderID)) {
-                    return;
-                }
+        if (event.type == "message_reply") {
+            if (!isMyId(event.messageReply.senderID)) {
+                return;
             }
             someA(api, event, query, input);
         }
