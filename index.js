@@ -1400,7 +1400,7 @@ async function ai(api, event) {
                                 unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
                             })
                         });
-                        stream.on('error', (err) => log(err););
+                        stream.on('error', (err) => log(err));
                     }
                 } else {
                     sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -1466,7 +1466,7 @@ async function ai(api, event) {
                                 unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
                             })
                         });
-                        stream.on('error', (err) => log(err););
+                        stream.on('error', (err) => log(err));
                     }
                 } else {
                     sendMessage(api, event, "Hold on... There is still a request in progress.");
