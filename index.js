@@ -2364,6 +2364,7 @@ async function ai(api, event) {
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                             if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             id = data[0].userID;
+                            log("user_id " + id + " " + data.join(" ").replace("@", ""))
                         });
                     } else if (isMyId(id)) {
                         sendMessage(api, event, "Unable to block the user.");
