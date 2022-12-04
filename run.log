@@ -48903,3 +48903,2795 @@ Example:
 12/4/2022 12:08:54 PM$ event_body 100016029218667 summ windows ismatter of Linux
 12/4/2022 12:09:04 PM$ send_message 100016029218667 windows ismatter of Linux. Windows is a matter of Linux, not of Windows. Windows can be used in any way it pleases, even if it doesn't look like Windows. It can also be used as a way to communicate with the outside world. For more information on Windows, visit Windows.windows.org.
 12/4/2022 12:09:04 PM$ send_typing
+12/4/2022 12:10:00 PM$ Time Check 12:10 PM
+12/4/2022 12:15:25 PM$ wait_timeout >> 5000
+12/4/2022 12:15:30 PM$ send_message 100037131918629 😓
+12/4/2022 12:15:31 PM$ send_typing
+12/4/2022 12:15:34 PM$ event_body 100037131918629 How name you getting?
+12/4/2022 12:15:36 PM$ send_message 100037131918629 im getting better.
+12/4/2022 12:15:36 PM$ send_typing
+12/4/2022 12:16:59 PM$ event_body 100037131918629 How you getting name
+12/4/2022 12:17:01 PM$ send_message 100037131918629 
+There are a few ways that people can get their name. People can be given a name at birth, they can choose a name for themselves, or they can have a nickname given to them by someone else.
+12/4/2022 12:17:02 PM$ send_typing
+12/4/2022 12:20:00 PM$ Time Check 12:20 PM
+12/4/2022 12:20:40 PM$ event_body 100078808031382 How are your health fine bro hahaha
+12/4/2022 12:20:42 PM$ wait_timeout >> 5400
+12/4/2022 12:20:42 PM$ wait_timeout >> 6300
+12/4/2022 12:20:42 PM$ send_typing
+12/4/2022 12:20:42 PM$ send_typing
+12/4/2022 12:20:47 PM$ send_message 100078808031382 im doing well, thanks for asking!
+12/4/2022 12:20:48 PM$ react_message mid.$cAAAABq1z4piLDKKozmE21-MuGDVt :laughing:
+12/4/2022 12:22:52 PM$ react_message mid.$cAAAB-HEI3yuLDKSq_2E219gr1Wz8 :laughing:
+12/4/2022 12:22:53 PM$ send_typing
+12/4/2022 12:26:33 PM$ event_body 100029315742680 Mj flairings parts of sniper 150
+12/4/2022 12:26:39 PM$ 100023508434853
+12/4/2022 12:26:39 PM$ 100023508434853
+12/4/2022 12:26:39 PM$ 100029315742680
+12/4/2022 12:26:39 PM$ send_message 5086613374774755 cc.
+1. The engine of the sniper 150cc is a 4-stroke, single-cylinder, air-cooled engine that can produce a maximum power of 14.12 bhp at 8500 rpm and a peak torque of 12.8 Nm at 6500 rpm.
+2. The engine is mated to a 5-speed manual gearbox that offers smooth and precise shifting.
+3. The bike comes with telescopic forks at the front and twin shock absorbers at the rear that offer good damping even on rough roads.
+4. It has disc brakes on both wheels for effective braking performance and comes with tubeless tyres for better grip on the road surface
+12/4/2022 12:26:39 PM$ send_typing
+12/4/2022 12:29:46 PM$ event_body 100037131918629 The data is from that function argument means callback
+12/4/2022 12:29:47 PM$ send_message 100037131918629 function.
+<code>function foo(callback) {
+    callback();
+}
+</code>
+12/4/2022 12:29:48 PM$ send_typing
+12/4/2022 12:30:00 PM$ Time Check 12:30 PM
+12/4/2022 12:32:10 PM$ react_message mid.$cAAAB-HEI3yuLDK0tEGE22fiN5ocx :laughing:
+12/4/2022 12:32:10 PM$ send_typing
+12/4/2022 12:32:46 PM$ event_body 100037131918629 If data js coming
+12/4/2022 12:32:52 PM$ send_message 100037131918629 from ajax
+<code>$(document).ready(function(){
+    $("#myform").submit(function(){
+        var data = $(this).serialize();
+        $.ajax({
+            type: "POST",
+            url: "your_url",  //action of form tag, where you want to post the data. 
+            data:data,   //data that you want to post in your action method. 
+            success: function (response) {   //success callback function, which is called when the server returns a response. 
+                alert("Success");    //alert message if successfull. 
+                },  
+             error: function (x
+12/4/2022 12:32:53 PM$ send_typing
+12/4/2022 12:40:00 PM$ Time Check 12:40 PM
+12/4/2022 12:40:37 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+id is[object Promise]
+12/4/2022 12:41:15 PM$ wait_timeout >> 5000
+12/4/2022 12:41:16 PM$ send_typing
+12/4/2022 12:41:20 PM$ react_message mid.$cAAAABq1z4piLDLWAZGE23Jlh_szO :laughing:
+12/4/2022 12:45:16 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 12:48:16 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+id is[object Promise]
+12/4/2022 12:48:28 PM$ user_id 100016029218667
+12/4/2022 12:50:00 PM$ Time Check 12:50 PM
+12/4/2022 12:56:25 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+id is[object Promise]
+12/4/2022 12:56:35 PM$ user_id 100016029218667
+12/4/2022 12:57:32 PM$ wait_timeout >> 7200
+12/4/2022 12:57:32 PM$ send_typing
+12/4/2022 12:57:39 PM$ react_message mid.$cAAAABq1z4piLDMRmq2E24FL8zGF- :laughing:
+12/4/2022 1:00:00 PM$ Time Check 1:00 PM
+12/4/2022 1:00:00 PM$ Project Orion Facebook State Refreshed
+12/4/2022 1:00:03 PM$ wait_timeout >> 5400
+12/4/2022 1:00:03 PM$ wait_timeout >> 5500
+12/4/2022 1:00:03 PM$ wait_timeout >> 6300
+12/4/2022 1:00:03 PM$ wait_timeout >> 6800
+12/4/2022 1:00:03 PM$ wait_timeout >> 6000
+12/4/2022 1:00:03 PM$ wait_timeout >> 6500
+12/4/2022 1:00:03 PM$ wait_timeout >> 5800
+12/4/2022 1:00:03 PM$ wait_timeout >> 5400
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:04 PM$ send_typing
+12/4/2022 1:00:08 PM$ react_message mid.$gABm9E9p_pl6LDMa072E24Fp6Klak :love:
+12/4/2022 1:00:08 PM$ react_message mid.$gABipy5K1RKyLDMa1BWE24Fp5dIBy :love:
+12/4/2022 1:00:09 PM$ send_message 6942091245864108 🥰😇
+12/4/2022 1:00:09 PM$ send_message 7244767385593438 🥰😇
+12/4/2022 1:00:10 PM$ react_message mid.$gABm9E9p_pl6LDMa072E24Fp6Klak :love:
+12/4/2022 1:00:10 PM$ 100087874545472
+12/4/2022 1:00:10 PM$ 100087874545472
+12/4/2022 1:00:10 PM$ send_message 6942091245864108 Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water.
+12/4/2022 1:00:10 PM$ react_message mid.$gABipy5K1RKyLDMa1BWE24Fp5dIBy :love:
+12/4/2022 1:00:11 PM$ 100068915176674
+12/4/2022 1:00:11 PM$ 100087874545472
+12/4/2022 1:00:11 PM$ send_message_reply 7244767385593438 Good afternoon too... It's quite hot now.. Always remember to stay hydrated.
+12/4/2022 1:03:29 PM$ event_body 100037131918629 If userInfo.name == name 
+      return id
+12/4/2022 1:03:34 PM$ send_message 100037131918629 end
+  end
+end
+def get_user_info(id)
+  response = HTTParty.get("https://api.spotify.com/v1/users/#{id}", headers: {"Authorization" => "Bearer #{@token}"})
+  return response["display_name"] || nil, response["images"][0]["url"] || nil, response["external_urls"]["spotify"] || nil, id || nil
+end
+12/4/2022 1:03:34 PM$ send_typing
+12/4/2022 1:04:21 PM$ wait_timeout >> 5200
+12/4/2022 1:04:22 PM$ send_typing
+12/4/2022 1:04:26 PM$ send_message 7244767385593438 It's currently 1:04 pm in the afternoon.
+12/4/2022 1:04:27 PM$ wait_timeout >> 6000
+12/4/2022 1:04:27 PM$ wait_timeout >> 5500
+12/4/2022 1:04:27 PM$ wait_timeout >> 6300
+12/4/2022 1:04:28 PM$ send_typing
+12/4/2022 1:04:28 PM$ send_typing
+12/4/2022 1:04:28 PM$ wait_timeout >> 5000
+12/4/2022 1:04:29 PM$ send_typing
+12/4/2022 1:04:32 PM$ wait_timeout >> 5800
+12/4/2022 1:04:33 PM$ send_typing
+12/4/2022 1:04:33 PM$ react_message mid.$gABm9E9p_pl6LDMq8QGE24V03P25X :love:
+12/4/2022 1:04:33 PM$ 100009220664352
+12/4/2022 1:04:33 PM$ 100009220664352
+12/4/2022 1:04:33 PM$ 100009220664352
+12/4/2022 1:04:33 PM$ send_message 7244767385593438 Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water.
+12/4/2022 1:04:33 PM$ wait_timeout >> 6600
+12/4/2022 1:04:34 PM$ send_message 7244767385593438 🥰😇
+12/4/2022 1:04:34 PM$ send_typing
+12/4/2022 1:04:38 PM$ react_message mid.$gABm9E9p_pl6LDMrQ5WE24WJKoSvp :sad:
+12/4/2022 1:04:40 PM$ send_message 7244767385593438 🥴
+12/4/2022 1:05:05 PM$ wait_timeout >> 5000
+12/4/2022 1:05:10 PM$ wait_timeout >> 7000
+12/4/2022 1:05:10 PM$ send_typing
+12/4/2022 1:05:17 PM$ send_message 5190020021066142 🦾
+12/4/2022 1:08:14 PM$ event_body 100078808031382 Mj
+Explain decorators and give example
+12/4/2022 1:08:20 PM$ wait_timeout >> 5400
+12/4/2022 1:08:21 PM$ send_typing
+12/4/2022 1:08:26 PM$ 100016029218667
+12/4/2022 1:08:26 PM$ 100016029218667
+12/4/2022 1:08:26 PM$ 100078808031382
+12/4/2022 1:08:26 PM$ send_message 2583856894982516 decorators are a way to dynamically alter a class or functions behavior. A decorator is a function that takes in a function and returns a new, altered function.
+For example, say we have a function that prints out "Hello, world!" We can create a decorator that makes this function print out "Goodbye, world!" instead:
+def goodbye_decorator(func): def wrapper(): print("Goodbye, world!") return wrapper @goodbye_decorator def hello(): print("Hello, world!") hello() # Prints "Goodbye, world!"
+12/4/2022 1:10:00 PM$ Time Check 1:10 PM
+12/4/2022 1:10:33 PM$ event_body 100064956826603 MJ, hey hello
+12/4/2022 1:10:33 PM$ wait_timeout >> 6600
+12/4/2022 1:10:33 PM$ send_typing
+12/4/2022 1:10:40 PM$ 100078808031382
+12/4/2022 1:10:40 PM$ 100064956826603
+12/4/2022 1:10:40 PM$ send_message_reply 2583856894982516 whats new?
+12/4/2022 1:11:07 PM$ event_body 100086564736703 Mj meaning of idchlitalaiwyigasomf.
+12/4/2022 1:11:08 PM$ wait_timeout >> 6300
+12/4/2022 1:11:09 PM$ send_typing
+12/4/2022 1:11:15 PM$ 100064956826603
+12/4/2022 1:11:15 PM$ 100064956826603
+12/4/2022 1:11:15 PM$ 100086564736703
+12/4/2022 1:11:15 PM$ send_message 2583856894982516 this is an acronym for "I Dont Care How Long It Takes, Ill Get There Someday."
+12/4/2022 1:11:32 PM$ wait_timeout >> 7200
+12/4/2022 1:11:32 PM$ send_typing
+12/4/2022 1:11:39 PM$ react_message mid.$gAAkuARBgOXSLDNE3GWE24vtxEd9i :love:
+12/4/2022 1:12:22 PM$ event_body 100064956826603 MJ, how to auto increment an ID in a database?
+12/4/2022 1:12:27 PM$ wait_timeout >> 5000
+12/4/2022 1:12:27 PM$ send_typing
+12/4/2022 1:12:32 PM$ 100086564736703
+12/4/2022 1:12:32 PM$ 100064956826603
+12/4/2022 1:12:32 PM$ send_message_reply 2583856894982516 i am trying to auto increment an ID in a database. I have tried using the AUTOINCREMENT keyword, but it does not work.
+<code>CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`,`password`,`id`,) USING BT
+12/4/2022 1:13:55 PM$ event_body 100064956826603 What if you're using netbeans?
+12/4/2022 1:13:56 PM$ wait_timeout >> 5500
+12/4/2022 1:13:57 PM$ send_typing
+12/4/2022 1:14:02 PM$ 100064956826603
+12/4/2022 1:14:02 PM$ 100064956826603
+12/4/2022 1:14:02 PM$ send_message 2583856894982516 if youre using NetBeans, you can use the "Projects" window to navigate your project files. Alternatively, you can use the "Files" window.
+12/4/2022 1:16:01 PM$ event_body 100080934841785 what
+12/4/2022 1:16:01 PM$ wait_timeout >> 5400
+12/4/2022 1:16:01 PM$ send_typing
+12/4/2022 1:16:07 PM$ 100087874545472
+12/4/2022 1:16:07 PM$ 100037131918629
+12/4/2022 1:16:07 PM$ 100080934841785
+12/4/2022 1:16:07 PM$ send_message_reply 7244767385593438 what?
+12/4/2022 1:20:00 PM$ Time Check 1:20 PM
+12/4/2022 1:20:36 PM$ wait_timeout >> 6000
+12/4/2022 1:20:36 PM$ send_typing
+12/4/2022 1:20:42 PM$ react_message mid.$gABJwS7O7mZ6LDNmEXmE25Q9_IvQi :laughing:
+12/4/2022 1:21:25 PM$ wait_timeout >> 5200
+12/4/2022 1:21:25 PM$ wait_timeout >> 7200
+12/4/2022 1:21:25 PM$ send_typing
+12/4/2022 1:21:25 PM$ send_typing
+12/4/2022 1:21:30 PM$ react_message mid.$gABJwS7O7mZ6LDNpEFWE25T9nk_Mv :laughing:
+12/4/2022 1:21:32 PM$ 100024267890975
+12/4/2022 1:21:32 PM$ 100029315742680
+12/4/2022 1:21:32 PM$ 100024267890975
+12/4/2022 1:21:32 PM$ send_message_reply 5190020021066142 😆😆
+12/4/2022 1:21:55 PM$ [object Object]
+12/4/2022 1:21:56 PM$ wait_timeout >> 5200
+12/4/2022 1:21:56 PM$ leave_member Elyza Ortacio Cedeño
+12/4/2022 1:21:56 PM$ wait_timeout >> 60000
+12/4/2022 1:21:57 PM$ send_typing
+12/4/2022 1:22:02 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 1:22:16 PM$ [object Object]
+12/4/2022 1:22:25 PM$ wait_timeout >> 5000
+12/4/2022 1:22:25 PM$ leave_member Facebook user
+12/4/2022 1:22:25 PM$ wait_timeout >> 60000
+12/4/2022 1:22:26 PM$ send_typing
+12/4/2022 1:22:30 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 1:22:43 PM$ wait_timeout >> 5500
+12/4/2022 1:22:43 PM$ wait_timeout >> 7000
+12/4/2022 1:22:44 PM$ send_typing
+12/4/2022 1:22:44 PM$ send_typing
+12/4/2022 1:22:49 PM$ react_message mid.$gABipy5K1RKyLDNt20mE25YuUPIKO :laughing:
+12/4/2022 1:22:51 PM$ 100087874545472
+12/4/2022 1:22:51 PM$ 100008911186485
+12/4/2022 1:22:51 PM$ send_message_reply 6942091245864108 🤣🤣hahaahhaha
+12/4/2022 1:22:56 PM$ [object Object]
+12/4/2022 1:22:56 PM$ un_link /home/runner/project-orion/cache/images/byebye.jpg
+12/4/2022 1:22:57 PM$ wait_timeout >> 6300
+12/4/2022 1:22:57 PM$ leave_member Joven Muñoz
+12/4/2022 1:22:57 PM$ wait_timeout >> 60000
+12/4/2022 1:24:08 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 1:24:20 PM$ new_member 100005200092094 John Marcrae Villanueva Hernandez
+12/4/2022 1:24:22 PM$ wait_timeout >> 6300
+12/4/2022 1:24:22 PM$ wait_timeout >> 60000
+12/4/2022 1:24:23 PM$ send_typing
+12/4/2022 1:24:28 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 1:25:22 PM$ un_link /home/runner/project-orion/cache/images/welcome.jpg
+12/4/2022 1:27:45 PM$ event_body 100080934841785 why
+12/4/2022 1:27:45 PM$ wait_timeout >> 6000
+12/4/2022 1:27:46 PM$ send_typing
+12/4/2022 1:27:52 PM$ 100087874545472
+12/4/2022 1:27:52 PM$ 100037131918629
+12/4/2022 1:27:52 PM$ 100080934841785
+12/4/2022 1:27:52 PM$ send_message_reply 7244767385593438 why?
+12/4/2022 1:28:01 PM$ wait_timeout >> 5200
+12/4/2022 1:28:02 PM$ send_typing
+12/4/2022 1:28:07 PM$ react_message mid.$gABipy5K1RKyLDOBRrWE25sJOt7qA :laughing:
+12/4/2022 1:28:23 PM$ wait_timeout >> 6500
+12/4/2022 1:28:24 PM$ send_typing
+12/4/2022 1:28:25 PM$ wait_timeout >> 7000
+12/4/2022 1:28:25 PM$ wait_timeout >> 5000
+12/4/2022 1:28:26 PM$ send_typing
+12/4/2022 1:28:26 PM$ send_typing
+12/4/2022 1:28:30 PM$ react_message mid.$gABipy5K1RKyLDOCnzmE25tfRvA9- :laughing:
+12/4/2022 1:28:31 PM$ react_message mid.$gABJwS7O7mZ6LDODEUWE25t0PrIzu :love:
+12/4/2022 1:28:31 PM$ 100008911186485
+12/4/2022 1:28:31 PM$ 100008911186485
+12/4/2022 1:28:31 PM$ 100066491994644
+12/4/2022 1:28:31 PM$ send_message 6942091245864108 haahaaa
+12/4/2022 1:28:31 PM$ send_typing
+12/4/2022 1:28:32 PM$ react_message mid.$gABipy5K1RKyLDOCuJWE25s_3fElE :laughing:
+12/4/2022 1:28:43 PM$ wait_timeout >> 5000
+12/4/2022 1:28:48 PM$ wait_timeout >> 5200
+12/4/2022 1:28:49 PM$ send_typing
+12/4/2022 1:28:53 PM$ send_message 5190020021066142 🦾
+12/4/2022 1:29:11 PM$ event_body 100087394793575 mj
+12/4/2022 1:29:11 PM$ wait_timeout >> 5800
+12/4/2022 1:29:12 PM$ send_typing
+12/4/2022 1:29:18 PM$ 100051224623613
+12/4/2022 1:29:18 PM$ 100087394793575
+12/4/2022 1:29:18 PM$ send_message_reply 7635291589846117 [object Object]
+12/4/2022 1:29:39 PM$ event_body 100087394793575 mj send a voice note
+12/4/2022 1:29:40 PM$ wait_timeout >> 5400
+12/4/2022 1:29:42 PM$ send_typing
+12/4/2022 1:29:47 PM$ 100087394793575
+12/4/2022 1:29:47 PM$ 100087394793575
+12/4/2022 1:29:47 PM$ send_message 7635291589846117 hey there! Heres the voice note you asked for. Let me know if you have any questions or if theres anything else I can do for you. Thanks!
+12/4/2022 1:30:00 PM$ Time Check 1:30 PM
+12/4/2022 1:30:07 PM$ event_body 100087394793575 where's is it
+12/4/2022 1:30:08 PM$ wait_timeout >> 7000
+12/4/2022 1:30:09 PM$ send_typing
+12/4/2022 1:30:16 PM$ 100087394793575
+12/4/2022 1:30:16 PM$ 100087394793575
+12/4/2022 1:30:16 PM$ send_message 7635291589846117 
+Its in the fridge.
+12/4/2022 1:31:34 PM$ wait_timeout >> 6800
+12/4/2022 1:31:35 PM$ send_typing
+12/4/2022 1:31:41 PM$ react_message mid.$gABipy5K1RKyLDOOQIGE255HrGYTd :laughing:
+12/4/2022 1:32:11 PM$ wait_timeout >> 5400
+12/4/2022 1:32:11 PM$ wait_timeout >> 6500
+12/4/2022 1:32:11 PM$ send_typing
+12/4/2022 1:32:12 PM$ send_typing
+12/4/2022 1:32:16 PM$ react_message mid.$gABipy5K1RKyLDOQe42E257Rk4QtB :laughing:
+12/4/2022 1:32:18 PM$ 100008911186485
+12/4/2022 1:32:18 PM$ 100023785687056
+12/4/2022 1:32:18 PM$ 100023785687056
+12/4/2022 1:32:18 PM$ send_message_reply 6942091245864108 😂😆
+12/4/2022 1:32:58 PM$ wait_timeout >> 7200
+12/4/2022 1:32:59 PM$ send_typing
+12/4/2022 1:33:06 PM$ react_message mid.$gABipy5K1RKyLDOTZtGE25-RHNhre :laughing:
+12/4/2022 1:40:00 PM$ Time Check 1:40 PM
+12/4/2022 1:41:49 PM$ event_body 100080934841785 when
+12/4/2022 1:41:49 PM$ wait_timeout >> 6500
+12/4/2022 1:41:50 PM$ send_typing
+12/4/2022 1:41:56 PM$ 100037131918629
+12/4/2022 1:41:56 PM$ 100037131918629
+12/4/2022 1:41:56 PM$ 100080934841785
+12/4/2022 1:41:56 PM$ send_message 7244767385593438 when?
+12/4/2022 1:50:00 PM$ Time Check 1:50 PM
+12/4/2022 1:50:29 PM$ event_body 100080934841785 where
+12/4/2022 1:50:29 PM$ wait_timeout >> 6300
+12/4/2022 1:50:29 PM$ send_typing
+12/4/2022 1:50:36 PM$ 100037131918629
+12/4/2022 1:50:36 PM$ 100080934841785
+12/4/2022 1:50:36 PM$ send_message_reply 7244767385593438 where?
+12/4/2022 1:52:32 PM$ event_body 100037131918629 if name is short you can't even gonna find by userInfo
+12/4/2022 1:52:39 PM$ send_message 100037131918629 if (name.length() < 3) {
+            return null;
+        }
+        //find by userInfo
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(name);
+        List<User> users = findByUser(userInfo);
+        //if not found, find by phoneNumber
+//		if (users == null || users.size() == 0) {
+//			return findByPhoneNumber(phoneNumber);
+//		} else {  //found by name, check the phone number is match or not? if not match, return null; otherwise return the result list.  TODO: should we just return one
+12/4/2022 1:52:39 PM$ send_typing
+12/4/2022 1:55:37 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 1:55:42 PM$ event_body 100016029218667 what
+12/4/2022 1:55:43 PM$ send_message 100016029218667 what is it?
+12/4/2022 1:55:43 PM$ send_typing
+12/4/2022 1:55:47 PM$ event_body 100016029218667 what if
+12/4/2022 1:55:47 PM$ The user 100016029218667 is going to fast of calling the command >> 0 mins and 55 seconds
+12/4/2022 1:55:59 PM$ event_body 100016029218667 what if
+12/4/2022 1:55:59 PM$ The user 100016029218667 is going to fast of calling the command >> 0 mins and 43 seconds
+12/4/2022 1:56:08 PM$ react_message mid.$cAAAB-HEI3yuLDPoQAGE27THhcvkF :laughing:
+12/4/2022 1:56:09 PM$ send_typing
+12/4/2022 1:58:05 PM$ event_body 100005770305875 Morse code ba to?  Or kung may deep message to?
+12/4/2022 1:58:05 PM$ response_data https://api.popcat.xyz/texttomorse?text=code ba to?  Or kung may deep message to?
+12/4/2022 1:58:05 PM$ wait_timeout >> 1000
+12/4/2022 1:58:06 PM$ wait_timeout >> 6000
+12/4/2022 1:58:07 PM$ send_typing
+12/4/2022 1:58:13 PM$ 100005770305875
+12/4/2022 1:58:13 PM$ 100005770305875
+12/4/2022 1:58:13 PM$ send_message 7244767385593438 -.-. --- -.. . / -... .- / - --- ..--.. / / --- .-. / -.- ..- -. --. / -- .- -.-- / -.. . . .--. / -- . ... ... .- --. . / - --- ..--..
+12/4/2022 2:00:15 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:00:21 PM$ event_body 100016029218667 what is matter
+12/4/2022 2:00:21 PM$ answer_cache
+12/4/2022 2:00:22 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/4/2022 2:00:22 PM$ send_typing
+12/4/2022 2:00:33 PM$ event_body 100016029218667 searchcode helloworld java
+12/4/2022 2:01:33 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:01:39 PM$ event_body 100016029218667 searchcode hello world in java
+12/4/2022 2:01:51 PM$ event_body 100016029218667 what is matter
+12/4/2022 2:01:51 PM$ answer_cache
+12/4/2022 2:01:51 PM$ send_message 100016029218667 Matter is anything that has mass and occupies space.
+12/4/2022 2:01:51 PM$ send_typing
+12/4/2022 2:02:00 PM$ event_body 100016029218667 searchcode hello world print in java
+12/4/2022 2:02:18 PM$ event_body 100016029218667 searchcode example of java source codes
+12/4/2022 2:03:38 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:03:53 PM$ event_body 100016029218667 searchcode examples of java source code
+12/4/2022 2:03:54 PM$ send_message 100016029218667 examples of java source code.
+
+12/4/2022 2:03:55 PM$ send_typing
+12/4/2022 2:10:00 PM$ Time Check 2:10 PM
+12/4/2022 2:12:00 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:12:13 PM$ event_body 100016029218667 searchcode hello print using java
+12/4/2022 2:13:08 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:13:14 PM$ event_body 100016029218667 searchcode hello print java
+12/4/2022 2:13:16 PM$ send_message 100016029218667 
+12/4/2022 2:13:16 PM$ send_typing
+12/4/2022 2:13:16 PM$ report_issue [object Object]
+12/4/2022 2:13:32 PM$ event_body 100016029218667 searchcode hello using java
+12/4/2022 2:13:34 PM$ send_typing
+12/4/2022 2:13:34 PM$ send_message 100016029218667 
+12/4/2022 2:13:34 PM$ report_issue [object Object]
+12/4/2022 2:20:00 PM$ Time Check 2:20 PM
+12/4/2022 2:24:59 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:25:14 PM$ event_body 100016029218667 searchcode hello world using java
+12/4/2022 2:30:36 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:30:52 PM$ event_body 100016029218667 searchcode hello world using java language
+12/4/2022 2:32:08 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:32:16 PM$ event_body 100016029218667 searchcode hello world java
+12/4/2022 2:32:28 PM$ send_message 100016029218667 ");
+																																																																																																																																																																																																																																																													
+12/4/2022 2:32:28 PM$ send_typing
+12/4/2022 2:32:44 PM$ event_body 100016029218667 searchcode print hello world using java
+12/4/2022 2:32:46 PM$ send_message 100016029218667 
++
++public class HelloWorld {
++
++	public static void main(String[] args) {
++		System.out.println("Hello World");
++	}
++
++}
+
+12/4/2022 2:32:47 PM$ send_typing
+12/4/2022 2:33:45 PM$ event_body 100016029218667 searchcode hello world using python
+12/4/2022 2:33:46 PM$ send_message 100016029218667 
+
+12/4/2022 2:33:46 PM$ report_issue [object Object]
+12/4/2022 2:33:46 PM$ send_typing
+12/4/2022 2:38:47 PM$ event_body 100078808031382 Mj 
+How to  setup and Configure  router in cisco
+12/4/2022 2:38:51 PM$ wait_timeout >> 6000
+12/4/2022 2:38:52 PM$ send_typing
+12/4/2022 2:38:58 PM$ 100064956826603
+12/4/2022 2:38:58 PM$ 100064956826603
+12/4/2022 2:38:58 PM$ 100078808031382
+12/4/2022 2:38:58 PM$ send_message 2583856894982516 packet tracer
+There is no one-size-fits-all answer to this question, as the best way to set up and configure a router in Cisco Packet Tracer will vary depending on the specific router model and the specific network environment. However, there are some general tips that can be followed when setting up any router in Cisco Packet Tracer:
+1. Choose the correct router model for your network environment.
+2. Connect all of the necessary cables to the router.
+3. Configure the routers basic settings, such as its hostname, IP address, and default gateway.
+4. Configure additional settings as needed for your specific network environment.
+12/4/2022 2:40:00 PM$ Time Check 2:40 PM
+12/4/2022 2:40:23 PM$ event_body 100081033288525 did you have sample code of fb bot using fca-unofficial using js?
+12/4/2022 2:40:25 PM$ wait_timeout >> 5400
+12/4/2022 2:40:26 PM$ send_typing
+12/4/2022 2:40:31 PM$ 100078808031382
+12/4/2022 2:40:31 PM$ 100081033288525
+12/4/2022 2:40:31 PM$ send_message_reply 2583856894982516 i dont have any sample code, but the fca-unofficial documentation has a section on creating bots using JavaScript.
+12/4/2022 2:40:56 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 2:41:05 PM$ event_body 100081033288525 the documentation doest work
+12/4/2022 2:41:06 PM$ wait_timeout >> 7000
+12/4/2022 2:41:07 PM$ send_typing
+12/4/2022 2:41:12 PM$ event_body 100016029218667 gencode javascript session examples
+12/4/2022 2:41:14 PM$ 100081033288525
+12/4/2022 2:41:14 PM$ 100081033288525
+12/4/2022 2:41:14 PM$ 100016029218667
+12/4/2022 2:41:14 PM$ send_message 2583856894982516 the documentation may not be working correctly. Try contacting the company or developer for help.
+12/4/2022 2:41:27 PM$ event_body 100086746322029 How can I do that? Since it seems like MySQL Cannot be downloaded It Comes With The Xaamp Server?
+12/4/2022 2:41:28 PM$ 100081033288525
+12/4/2022 2:41:28 PM$ 100016029218667
+12/4/2022 2:41:28 PM$ send_message_reply 2583856894982516 
+
+php session example
+
+php session variables
+
+php session login
+
+php session array
+
+php session id
+
+php session destroy
+
+php session timeout
+
+
+
+I am trying to create a session in PHP. I have a login page and a home page. I want to create a session when the user logs in and destroy the session when the user logs out.
+
+I have created a session in the login page and I am trying to destroy the session in the home page. But it is not working.
+
+Here is my code:
+
+login.php
+
+<?php session_start(); $username = $_POST['username']; $password = $_POST['password']; if($username&&$password) { $connect = mysql_connect("localhost","root","") or die("Couldn't connect!"); mysql_select_db("phplogin") or die("Couldn't find db"); $query = mysql_query("SELECT * FROM users WHERE username='$username'"); $numrows = mysql_num_rows($query); if($numrows!=0) { while($row = mysql_fetch_assoc($query)) { $dbusername = $row
+12/4/2022 2:41:28 PM$ send_typing
+12/4/2022 2:41:30 PM$ wait_timeout >> 5000
+12/4/2022 2:41:31 PM$ send_typing
+12/4/2022 2:41:35 PM$ send_message 100086746322029 i have tried to download MySQL from the official website but it seems like I cant.
+A:
+You can use phpmyadmin to manage your database. It comes with XAMPP by default.
+12/4/2022 2:42:29 PM$ event_body 100016029218667 gencode hello world using java
+12/4/2022 2:42:30 PM$ 100081033288525
+12/4/2022 2:42:30 PM$ 100016029218667
+12/4/2022 2:42:30 PM$ send_message_reply 2583856894982516 ");
+	}
+}
+12/4/2022 2:42:31 PM$ send_typing
+12/4/2022 2:43:00 PM$ event_body 100016029218667 gencode hello world using python
+12/4/2022 2:43:00 PM$ answer_cache
+12/4/2022 2:43:01 PM$ 100081033288525
+12/4/2022 2:43:01 PM$ 100016029218667
+12/4/2022 2:43:01 PM$ send_message_reply 2583856894982516 
+
+12/4/2022 2:43:01 PM$ send_typing
+12/4/2022 2:44:07 PM$ 100081033288525
+12/4/2022 2:44:07 PM$ 100016029218667
+12/4/2022 2:44:07 PM$ 100016029218667
+12/4/2022 2:44:07 PM$ send_message_reply 2583856894982516 Hello World
+12/4/2022 2:44:07 PM$ send_typing
+12/4/2022 2:50:00 PM$ Time Check 2:50 PM
+12/4/2022 2:50:39 PM$ wait_timeout >> 6600
+12/4/2022 2:50:39 PM$ send_typing
+12/4/2022 2:50:42 PM$ event_body 100081033288525 how
+12/4/2022 2:50:42 PM$ wait_timeout >> 7000
+12/4/2022 2:50:43 PM$ send_typing
+12/4/2022 2:50:45 PM$ react_message mid.$gAAkuARBgOXSLDSv1c2E2-aoTxS6B :laughing:
+12/4/2022 2:50:49 PM$ 100081033288525
+12/4/2022 2:50:49 PM$ 100081033288525
+12/4/2022 2:50:49 PM$ send_message 2583856894982516 how what?
+12/4/2022 2:51:42 PM$ event_body 100027934035680 Mj sweet love picture
+12/4/2022 2:51:47 PM$ wait_timeout >> 7200
+12/4/2022 2:51:47 PM$ wait_timeout >> 5400
+12/4/2022 2:51:47 PM$ send_typing
+12/4/2022 2:51:47 PM$ send_typing
+12/4/2022 2:51:52 PM$ react_message mid.$cAAAB-lXHTO6LDSzuCGE2-elGTO8p :love:
+12/4/2022 2:51:54 PM$ send_message 100027934035680 quotes for him
+I love you, not only for what you are, but for what I am when I am with you. I love you, not only for what you have made of yourself, but for what you are making of me. I love you because the entire universe conspired to bring us together. ~Paulo Coelho
+Sweet Love Quotes For Him: QUOTATION – Image : Quotes Of the day – Description Sweet Love Quotes For Him Sharing is Caring – Don’t forget to share this quote !
+12/4/2022 2:52:26 PM$ event_body 100027934035680 Cmd
+12/4/2022 2:52:26 PM$ wait_timeout >> 6600
+12/4/2022 2:52:27 PM$ send_typing
+12/4/2022 2:52:33 PM$ send_message 100027934035680 Project Orion 1 - 7
+
+⦿ cmd
+⦿ cmd [number]
+⦿ cmd all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ gencode [text]
+⦿ dict [text]
+⦿ tts [text]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ github [username]
+⦿ ig [username]
+⦿ tiktok [username]
+
+For a given material, the sample path length and concentration of the sample are directly proportional to the absorbance of the light.
+12/4/2022 2:52:34 PM$ event_body 100027934035680 Cmd all
+12/4/2022 2:52:34 PM$ wait_timeout >> 6500
+12/4/2022 2:52:34 PM$ send_typing
+12/4/2022 2:52:40 PM$ send_message 100027934035680 Project Orion
+
+⦿ cmd
+⦿ cmd [number]
+⦿ cmd all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ gencode [text]
+⦿ dict [text]
+⦿ tts [text]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ github [username]
+⦿ ig [username]
+⦿ tiktok [username]
+⦿ thoughts
+⦿ lulcat [text]
+⦿ gemoji [emoji]
+⦿ gname [text]
+⦿ wiki [text]
+⦿ urlshort [url]
+⦿ pickup
+⦿ landscape
+⦿ landscape [text]
+⦿ portrait
+⦿ portrait [text]
+⦿ problem [equation]
+⦿ pin add
+⦿ pin remove
+⦿ sadcat [text]
+⦿ biden [text]
+⦿ pika [text]
+⦿ god [text]
+⦿ website [url]
+⦿ qrcode [text]
+⦿ verse today
+⦿ verse random
+⦿ verse [book] [chapter]:[verse]
+⦿ animeqoute
+⦿ bgremove
+⦿ motivate
+⦿ inspiration
+⦿ advice
+⦿ alert [text]
+⦿ meme
+⦿ meme --reddit
+⦿ drake [text1]: [text2]
+⦿ pooh [text1]: [text2]
+⦿ oogway [text]
+⦿ caution [text]
+⦿ element [name]
+⦿ imdb [title]
+⦿ steam [name]
+⦿ npm [name]
+⦿ gname
+⦿ mnm @mention|@me
+⦿ facebook @mention|@me
+⦿ nickname @mention|@me [text]
+⦿ invert @mention|@me
+⦿ greyscale @mention|@me
+⦿ ship @mention @mention
+⦿ www @mention @mention
+⦿ jokeover @mention|@me
+⦿ translate [language] [text]
+⦿ kiss @mention|@me
+⦿ pet @mention|@me
+⦿ jail @mention|@me
+⦿ communist @mention|@me
+⦿ wanted @mention|@me
+⦿ gun @mention|@me
+⦿ drip @mention|@me
+⦿ clown @mention|@me
+⦿ uncover @mention|@me
+⦿ advert @mention|@me
+⦿ blur @mention|@me
+⦿ phub [text]
+⦿ morse [text]
+⦿ joke
+⦿ profilepic
+⦿ wyr
+⦿ 8ball
+⦿ gmember
+⦿ car
+⦿ color
+⦿ sip [text]
+⦿ trump [text]
+⦿ mock [text]
+⦿ reverse [text]
+⦿ itunes [title]
+⦿ coding
+⦿ newyear
+⦿ christmas
+⦿ barrier
+⦿ fact
+⦿ thoughts
+⦿ uid
+⦿ guid
+⦿ facts [text]
+⦿ doublestruck [text]
+⦿ count
+⦿ count --vowels
+⦿ count --consonants
+⦿ wfind [text]
+⦿ time
+⦿ time [timezone]
+⦿ ping
+⦿ summ [text]
+⦿ anime [category]
+   waifu, megumin, bully, cuddle
+   hug, awoo, kiss, lick
+   pat, smug, bonk, yeet
+   blush, smile, wave, highfive
+   handhold, nom, biteglomp, slap
+   kill, kick, happy, wink
+   pokedance, cringe, cry
+⦿ conan
+⦿ addUser uid
+⦿ gphoto
+⦿ encodeBinary [text]
+⦿ decodeBinary [text]
+⦿ ttsjap [text]
+⦿ lovetest name1: name2
+⦿ pdf [text]
+⦿ gcolor [theme]
+   DefaultBlue, HotPink, AquaBlue, BrightPurple
+   CoralPink, Orange, Green, LavenderPurple
+   Red, Yellow, TealBlue, Aqua
+   Mango, Berry, Citrus, Candy
+⦿ anime --nsfw [category]
+   waifu, neko, trap, blowjob
+
+The object will not change its motion unless a force acts on it.
+12/4/2022 2:53:33 PM$ event_body 100027934035680 alert whakee I love you
+12/4/2022 2:53:33 PM$ parse_image https://api.popcat.xyz/alert?text=whakee I love you
+12/4/2022 2:53:33 PM$ wait_timeout >> 5200
+12/4/2022 2:53:33 PM$ send_typing
+12/4/2022 2:53:37 PM$ wait_timeout >> 5500
+12/4/2022 2:53:37 PM$ wait_timeout >> 60000
+12/4/2022 2:53:38 PM$ send_typing
+12/4/2022 2:53:38 PM$ react_message mid.$cAAAB-lXHTO6LDS6da2E2-lUdYzf- :love:
+12/4/2022 2:53:43 PM$ send_message 100027934035680 [object Object]
+12/4/2022 2:54:37 PM$ un_link /home/runner/project-orion/cache/images/alert.png
+12/4/2022 2:56:15 PM$ event_body 100027934035680 portrait  Whakee I love you
+12/4/2022 2:56:15 PM$ parse_image https://source.unsplash.com/900x1600/? Whakee I love you
+12/4/2022 2:56:15 PM$ wait_timeout >> 6800
+12/4/2022 2:56:15 PM$ send_typing
+12/4/2022 2:56:16 PM$ wait_timeout >> 6600
+12/4/2022 2:56:16 PM$ wait_timeout >> 60000
+12/4/2022 2:56:17 PM$ send_typing
+12/4/2022 2:56:22 PM$ react_message mid.$cAAAB-lXHTO6LDTEW52E2-vOALZlP :love:
+12/4/2022 2:56:23 PM$ send_message 100027934035680 [object Object]
+12/4/2022 2:56:26 PM$ wait_timeout >> 7200
+12/4/2022 2:56:26 PM$ wait_timeout >> 60000
+12/4/2022 2:56:27 PM$ send_typing
+12/4/2022 2:56:33 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 2:57:07 PM$ event_body 100027934035680 gemoji love
+12/4/2022 2:57:07 PM$ wait_timeout >> 3000
+12/4/2022 2:57:10 PM$ wait_timeout >> 6300
+12/4/2022 2:57:11 PM$ report_issue [object Object]
+12/4/2022 2:57:11 PM$ send_typing
+12/4/2022 2:57:16 PM$ un_link /home/runner/project-orion/cache/images/portrait.png
+12/4/2022 2:57:17 PM$ react_message mid.$cAAAB-lXHTO6LDTHkA2E2-ybSdp36 :love:
+12/4/2022 2:57:26 PM$ un_link /home/runner/project-orion/cache/images/unsend_img.jpg
+12/4/2022 2:58:15 PM$ event_body 100027934035680 gemoji cool
+12/4/2022 2:58:15 PM$ wait_timeout >> 3000
+12/4/2022 2:58:19 PM$ report_issue [object Object]
+12/4/2022 3:00:00 PM$ Time Check 3:00 PM
+12/4/2022 3:00:00 PM$ Project Orion Facebook State Refreshed
+12/4/2022 3:10:00 PM$ Time Check 3:10 PM
+12/4/2022 3:12:58 PM$ event_body 100045819710001 The code in my server is separate from the code in my laptop, I edit the code in my laptop not the one in my server
+12/4/2022 3:13:04 PM$ wait_timeout >> 6300
+12/4/2022 3:13:05 PM$ send_typing
+12/4/2022 3:13:11 PM$ send_message 100045819710001 
+I have a folder in my server called <code>/var/www/html</code> and I have a folder in my laptop called <code>/home/myname/Documents</code>.
+I want to edit the code in my laptop and then save it to the server. How can I do that?
+A:
+You can use rsync for this.  It will copy files from one place to another, but only copy changed files, so its very efficient.  You can also use ssh with rsync so you dont need any other access methods (like ftp) set up on your server.  The command would look something like this:
+<code>rsync -
+12/4/2022 3:20:00 PM$ Time Check 3:20 PM
+12/4/2022 3:20:20 PM$ [object Object]
+12/4/2022 3:20:24 PM$ wait_timeout >> 5800
+12/4/2022 3:20:24 PM$ leave_member Reign Chryzel Balico
+12/4/2022 3:20:24 PM$ wait_timeout >> 60000
+12/4/2022 3:20:25 PM$ send_typing
+12/4/2022 3:20:30 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 3:21:24 PM$ un_link /home/runner/project-orion/cache/images/byebye.jpg
+12/4/2022 3:29:59 PM$ event_body 100081033288525 whats next?
+12/4/2022 3:29:59 PM$ wait_timeout >> 7000
+12/4/2022 3:30:00 PM$ send_typing
+12/4/2022 3:30:00 PM$ Time Check 3:30 PM
+12/4/2022 3:30:06 PM$ 100081033288525
+12/4/2022 3:30:06 PM$ 100081033288525
+12/4/2022 3:30:06 PM$ send_message 2583856894982516 what is it?
+12/4/2022 3:31:19 PM$ event_body 100081033288525 Whats next?
+12/4/2022 3:31:19 PM$ wait_timeout >> 5400
+12/4/2022 3:31:20 PM$ send_typing
+12/4/2022 3:31:25 PM$ 100081033288525
+12/4/2022 3:31:25 PM$ 100081033288525
+12/4/2022 3:31:25 PM$ send_message 2583856894982516 Whats next?
+12/4/2022 3:33:09 PM$ react_message mid.$gAAkuARBgOXSLDVLhsGE3A2Yq_4PA :laughing:
+12/4/2022 3:33:10 PM$ send_typing
+12/4/2022 3:33:30 PM$ event_body 100037131918629 in which you loggined you account
+12/4/2022 3:33:33 PM$ 100037131918629
+12/4/2022 3:33:33 PM$ 100037131918629
+12/4/2022 3:33:33 PM$ 100037131918629
+12/4/2022 3:33:33 PM$ send_message 2583856894982516 )
+2. Go to the "Settings" tab and click on "Edit Profile" button.
+3. In the opened window, select the "Account Information" tab and enter your new password in both fields (New Password and Confirm New Password). Then click on the "Save Changes" button.
+12/4/2022 3:33:34 PM$ send_typing
+12/4/2022 3:33:47 PM$ wait_timeout >> 7200
+12/4/2022 3:33:48 PM$ send_typing
+12/4/2022 3:33:54 PM$ react_message mid.$gABKoHelyx4-LDVN1B2E3A4r_hZa- :love:
+12/4/2022 3:34:42 PM$ [object Object]
+12/4/2022 3:34:43 PM$ wait_timeout >> 6500
+12/4/2022 3:34:43 PM$ leave_member Ara Mea Crisostomo Gonzales
+12/4/2022 3:34:43 PM$ wait_timeout >> 60000
+12/4/2022 3:34:44 PM$ send_typing
+12/4/2022 3:34:50 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 3:35:43 PM$ un_link /home/runner/project-orion/cache/images/byebye.jpg
+12/4/2022 3:36:30 PM$ wait_timeout >> 6800
+12/4/2022 3:36:31 PM$ send_typing
+12/4/2022 3:36:37 PM$ react_message mid.$gAAkuARBgOXSLDVXwUGE3BCiX6RjL :love:
+12/4/2022 3:37:27 PM$ wait_timeout >> 5200
+12/4/2022 3:37:28 PM$ send_typing
+12/4/2022 3:37:32 PM$ react_message mid.$gAAkuARBgOXSLDVbPUmE3BGBzH4Ly :love:
+12/4/2022 3:37:40 PM$ wait_timeout >> 7000
+12/4/2022 3:37:41 PM$ send_typing
+12/4/2022 3:37:47 PM$ react_message mid.$gABipy5K1RKyLDVcDr2E3BG7J1CFn :love:
+12/4/2022 3:37:57 PM$ wait_timeout >> 5200
+12/4/2022 3:37:58 PM$ send_typing
+12/4/2022 3:38:03 PM$ react_message mid.$gABipy5K1RKyLDVdHLmE3BH-pN_fC :love:
+12/4/2022 3:38:12 PM$ wait_timeout >> 5800
+12/4/2022 3:38:13 PM$ send_typing
+12/4/2022 3:38:18 PM$ react_message mid.$gAAkuARBgOXSLDVd_v2E3BIw-7_z4 :love:
+12/4/2022 3:40:00 PM$ Time Check 3:40 PM
+12/4/2022 3:40:09 PM$ event_body 100081033288525 is it right think todo?
+12/4/2022 3:40:10 PM$ wait_timeout >> 6600
+12/4/2022 3:40:11 PM$ send_typing
+12/4/2022 3:40:17 PM$ 100081033288525
+12/4/2022 3:40:17 PM$ 100081033288525
+12/4/2022 3:40:17 PM$ 100081033288525
+12/4/2022 3:40:17 PM$ send_message 2583856894982516 it is right to think that everyone is equal.
+12/4/2022 3:40:37 PM$ wait_timeout >> 7200
+12/4/2022 3:40:38 PM$ send_typing
+12/4/2022 3:40:44 PM$ react_message mid.$gAAkuARBgOXSLDVm1XmE3BRoAuF0b :laughing:
+12/4/2022 3:41:00 PM$ wait_timeout >> 5200
+12/4/2022 3:41:00 PM$ send_typing
+12/4/2022 3:41:05 PM$ react_message mid.$gAAkuARBgOXSLDVoOVGE3BTBMIk1I :laughing:
+12/4/2022 3:46:04 PM$ event_body 100081033288525 what version is required fro this?
+12/4/2022 3:46:06 PM$ wait_timeout >> 6500
+12/4/2022 3:46:07 PM$ send_typing
+12/4/2022 3:46:13 PM$ 100081033288525
+12/4/2022 3:46:13 PM$ 100081033288525
+12/4/2022 3:46:13 PM$ 100081033288525
+12/4/2022 3:46:13 PM$ send_message 2583856894982516 there is no specific version required for this.
+12/4/2022 3:47:24 PM$ wait_timeout >> 6800
+12/4/2022 3:47:24 PM$ send_typing
+12/4/2022 3:47:30 PM$ react_message mid.$gAAkuARBgOXSLDV_qwGE3BqeI-aV5 :love:
+12/4/2022 3:50:00 PM$ Time Check 3:50 PM
+12/4/2022 3:50:29 PM$ wait_timeout >> 6600
+12/4/2022 3:50:29 PM$ send_typing
+12/4/2022 3:50:35 PM$ react_message mid.$gAAkuARBgOXSLDWK9R2E3B1wktd9J :laughing:
+12/4/2022 3:52:22 PM$ event_body 100081033288525 is this a normal error?
+12/4/2022 3:52:27 PM$ wait_timeout >> 7200
+12/4/2022 3:52:28 PM$ send_typing
+12/4/2022 3:52:35 PM$ 100081033288525
+12/4/2022 3:52:35 PM$ 100081033288525
+12/4/2022 3:52:35 PM$ 100081033288525
+12/4/2022 3:52:35 PM$ send_message 2583856894982516 there is no definitive answer to this question since it can depend on the specific error and context in which it occurs. However, if you are seeing an error message frequently or it is preventing you from using a particular feature of your computer, then it is likely not normal. In these cases, you may want to contact your computers manufacturer or a technical support specialist for help resolving the issue.
+12/4/2022 3:52:53 PM$ event_body 100045819710001 The pho code is in yui-bot.ml folder
+12/4/2022 3:52:57 PM$ wait_timeout >> 5000
+12/4/2022 3:52:58 PM$ send_typing
+12/4/2022 3:53:02 PM$ send_message 100045819710001 
+The code is written in OCaml.
+To compile the code, you need to install OCaml and OPAM.
+After installing OCaml and OPAM, run "opam install yojson" to install the yojson library.
+Then run "ocamlbuild -use-ocamlfind -pkg yojson pho_bot.native" to compile the code.
+12/4/2022 3:53:33 PM$ wait_timeout >> 6600
+12/4/2022 3:53:33 PM$ send_typing
+12/4/2022 3:53:39 PM$ react_message mid.$gAAkuARBgOXSLDWWLw2E3CA-yB1qX :laughing:
+12/4/2022 3:56:43 PM$ wait_timeout >> 6600
+12/4/2022 3:56:43 PM$ wait_timeout >> 60000
+12/4/2022 3:56:43 PM$ send_typing
+12/4/2022 3:56:49 PM$ send_message 2583856894982516 [object Object]
+12/4/2022 3:57:35 PM$ wait_timeout >> 6300
+12/4/2022 3:57:35 PM$ send_typing
+12/4/2022 3:57:41 PM$ react_message mid.$gAAkuARBgOXSLDWk9c2E3CYiYbLzR :laughing:
+12/4/2022 3:57:43 PM$ un_link /home/runner/project-orion/cache/videos/unsend_vid.mp4
+12/4/2022 3:59:52 PM$ wait_timeout >> 6500
+12/4/2022 3:59:52 PM$ send_typing
+12/4/2022 3:59:58 PM$ react_message mid.$gAAkuARBgOXSLDWtUg2E3CYHtoz5D :laughing:
+12/4/2022 4:00:00 PM$ Time Check 4:00 PM
+12/4/2022 4:00:00 PM$ Project Orion Facebook State Refreshed
+12/4/2022 4:00:05 PM$ wait_timeout >> 5500
+12/4/2022 4:00:05 PM$ wait_timeout >> 6000
+12/4/2022 4:00:06 PM$ send_typing
+12/4/2022 4:00:06 PM$ send_typing
+12/4/2022 4:00:10 PM$ react_message mid.$gAAkuARBgOXSLDWuItWE3ChtlMjuq :laughing:
+12/4/2022 4:00:12 PM$ 100078808031382
+12/4/2022 4:00:12 PM$ 100078808031382
+12/4/2022 4:00:12 PM$ send_message 2583856894982516 ahahaahh
+12/4/2022 4:00:36 PM$ wait_timeout >> 5200
+12/4/2022 4:00:36 PM$ wait_timeout >> 5200
+12/4/2022 4:00:37 PM$ send_typing
+12/4/2022 4:00:37 PM$ send_typing
+12/4/2022 4:00:41 PM$ react_message mid.$gAAkuARBgOXSLDWwCFmE3CjnHExW0 :laughing:
+12/4/2022 4:00:42 PM$ 100078808031382
+12/4/2022 4:00:42 PM$ 100078808031382
+12/4/2022 4:00:42 PM$ send_message 2583856894982516 hhahahah😆
+12/4/2022 4:04:13 PM$ wait_timeout >> 5800
+12/4/2022 4:04:14 PM$ send_typing
+12/4/2022 4:04:19 PM$ react_message mid.$gAAkuARBgOXSLDW9S9WE3CoIQJBWd :laughing:
+12/4/2022 4:04:33 PM$ wait_timeout >> 7200
+12/4/2022 4:04:34 PM$ send_typing
+12/4/2022 4:04:41 PM$ 100067604706481
+12/4/2022 4:04:41 PM$ 100004155186653
+12/4/2022 4:04:41 PM$ 100063857651355
+12/4/2022 4:04:41 PM$ send_message_reply 7635291589846117 whats new?
+12/4/2022 4:04:49 PM$ wait_timeout >> 5500
+12/4/2022 4:04:49 PM$ send_typing
+12/4/2022 4:04:54 PM$ react_message mid.$gAAkuARBgOXSLDW_c4mE3CqPBL4ql :laughing:
+12/4/2022 4:05:12 PM$ event_body 100047255630413 Whats gud
+12/4/2022 4:05:12 PM$ wait_timeout >> 5200
+12/4/2022 4:05:13 PM$ send_typing
+12/4/2022 4:05:18 PM$ 100047255630413
+12/4/2022 4:05:18 PM$ 100047255630413
+12/4/2022 4:05:18 PM$ send_message 7635291589846117 Whats gud?
+12/4/2022 4:06:22 PM$ wait_timeout >> 6500
+12/4/2022 4:06:22 PM$ send_typing
+12/4/2022 4:06:28 PM$ react_message mid.$gABJwS7O7mZ6LDXFIimE3Cv-qbCrZ :laughing:
+12/4/2022 4:08:54 PM$ wait_timeout >> 5800
+12/4/2022 4:08:54 PM$ wait_timeout >> 60000
+12/4/2022 4:08:54 PM$ send_typing
+12/4/2022 4:09:00 PM$ send_message 5086613374774755 [object Object]
+12/4/2022 4:09:54 PM$ un_link /home/runner/project-orion/cache/images/unsend_img.jpg
+12/4/2022 4:10:00 PM$ Time Check 4:10 PM
+12/4/2022 4:10:45 PM$ event_body 100081033288525 which declaration type i may use for this?
+12/4/2022 4:10:46 PM$ wait_timeout >> 5200
+12/4/2022 4:10:47 PM$ send_typing
+12/4/2022 4:10:52 PM$ 100081033288525
+12/4/2022 4:10:52 PM$ 100081033288525
+12/4/2022 4:10:52 PM$ 100081033288525
+12/4/2022 4:10:52 PM$ send_message 2583856894982516 you may use a const declaration type for this.
+12/4/2022 4:11:48 PM$ event_body 100040726009962 mj
+12/4/2022 4:11:48 PM$ wait_timeout >> 7000
+12/4/2022 4:11:49 PM$ send_typing
+12/4/2022 4:11:56 PM$ 100040726009962
+12/4/2022 4:11:56 PM$ send_message_reply 5033985183388157 [object Object]
+12/4/2022 4:11:56 PM$ wait_timeout >> 6000
+12/4/2022 4:11:56 PM$ send_typing
+12/4/2022 4:12:02 PM$ react_message mid.$gAAkuARBgOXSLDXZgn2E3DESFtzNK :sad:
+12/4/2022 4:13:28 PM$ wait_timeout >> 5800
+12/4/2022 4:13:29 PM$ send_typing
+12/4/2022 4:13:34 PM$ react_message mid.$gAAkuARBgOXSLDXfIvmE3DJ7AqFix :love:
+12/4/2022 4:13:36 PM$ event_body 100040726009962 mj write a long descriptive Introduction of a ronin passing through a field of trees viewing its nature while making his way to the venue of where his opponent was to meet
+12/4/2022 4:13:41 PM$ wait_timeout >> 6300
+12/4/2022 4:13:41 PM$ send_typing
+12/4/2022 4:13:48 PM$ 100040726009962
+12/4/2022 4:13:48 PM$ 100040726009962
+12/4/2022 4:13:48 PM$ send_message 5033985183388157 him
+The ronin made his way through the field of trees, taking in the sights and sounds of nature as he went. The sun was shining and the birds were singing, and the ronin couldnt help but feel at peace. As he walked, he thought about his opponent and the upcoming fight. He knew that he had to be prepared, but he also knew that there was a chance he might not come out of it alive. The ronin was okay with that, though. He had been prepared to die ever since he had become a ronin. It was just part of the life he had chosen.
+12/4/2022 4:14:09 PM$ wait_timeout >> 5200
+12/4/2022 4:14:10 PM$ send_typing
+12/4/2022 4:14:14 PM$ react_message mid.$gAAkuARBgOXSLDXhp22E3DMbyouGH :laughing:
+12/4/2022 4:18:07 PM$ wait_timeout >> 6000
+12/4/2022 4:18:08 PM$ send_typing
+12/4/2022 4:18:13 PM$ react_message mid.$gAAkuARBgOXSLDXwM3GE3DbAG-Db7 :laughing:
+12/4/2022 4:19:08 PM$ wait_timeout >> 6500
+12/4/2022 4:19:08 PM$ wait_timeout >> 5000
+12/4/2022 4:19:08 PM$ send_typing
+12/4/2022 4:19:08 PM$ send_typing
+12/4/2022 4:19:13 PM$ 100029315742680
+12/4/2022 4:19:13 PM$ 100029315742680
+12/4/2022 4:19:13 PM$ 100024267890975
+12/4/2022 4:19:13 PM$ send_message 5086613374774755 hahahahhah
+12/4/2022 4:19:14 PM$ react_message mid.$gABISP3dQLeOLDXz5BWE3DepB3LaF :laughing:
+12/4/2022 4:19:32 PM$ react_message mid.$gABISP3dQLeOLDX1V92E3DgHonTNx :laughing:
+12/4/2022 4:19:32 PM$ event_body 100073212879856 Mj write a descriptive essay about a forest filled with life. With steady winds and sun shine
+12/4/2022 4:19:32 PM$ send_typing
+12/4/2022 4:19:38 PM$ wait_timeout >> 7000
+12/4/2022 4:19:38 PM$ send_typing
+12/4/2022 4:19:45 PM$ 100040726009962
+12/4/2022 4:19:45 PM$ 100073212879856
+12/4/2022 4:19:45 PM$ send_message_reply 5033985183388157 , the forest is always in a state of change. The leaves rustle and whisper secrets to one another, while the branches sway and provide a natural canopy. The ground is alive with insects, scurrying around in search of food. Birds sing from the treetops, their melodies drifting through the air. Small animals dart through the underbrush, their hearts pounding as they try to avoid becoming someones lunch. Even in the dead of winter, when the trees are bare and the ground is covered in snow, life persists. The forest is a place of wonder and beauty, filled with creatures great and small. Its a place where you can feel at peace with nature, and where you can forget all your troubles.
+12/4/2022 4:20:00 PM$ Time Check 4:20 PM
+12/4/2022 4:20:54 PM$ wait_timeout >> 5200
+12/4/2022 4:20:54 PM$ send_typing
+12/4/2022 4:20:59 PM$ react_message mid.$gAAkuARBgOXSLDX6V7mE3DlI_yfEd :laughing:
+12/4/2022 4:21:55 PM$ event_body 100073212879856 Mj write a descriptive essay of a ronin worry on a quest. But in his quest he will meet an opponent who he must now challenge
+12/4/2022 4:21:58 PM$ wait_timeout >> 5800
+12/4/2022 4:21:58 PM$ send_typing
+12/4/2022 4:22:04 PM$ 100073212879856
+12/4/2022 4:22:04 PM$ 100073212879856
+12/4/2022 4:22:04 PM$ send_message 5033985183388157 
+The ronin worry on a quest is a great story. It tells the tale of a man who is on a quest to find an opponent to challenge. The ronin worry on a quest is full of adventure and suspense. The reader will never know what is going to happen next.
+12/4/2022 4:22:54 PM$ event_body 100073212879856 Mj write a descriptive essay of a character who went to meet a opponent in forest.
+12/4/2022 4:23:00 PM$ wait_timeout >> 7000
+12/4/2022 4:23:00 PM$ send_typing
+12/4/2022 4:23:07 PM$ 100073212879856
+12/4/2022 4:23:07 PM$ 100073212879856
+12/4/2022 4:23:07 PM$ send_message 5033985183388157 the character I have in mind is a young woman, around 18 years old. Shes small and delicate-featured, with an air of fragility about her. Her hair is long and dark, cascading down her back in soft waves. Shes wearing a simple white dress that flutters around her ankles in the breeze. In her hand she carries a small dagger, its blade gleaming in the sunlight.
+She walks through the forest, her steps sure and confident despite the darkness that surrounds her. She knows her opponent is out there somewhere, waiting for her. Shes not afraid though; she knows shes capable of defeating him. After all, shes been training for this day for years.
+As
+12/4/2022 4:24:53 PM$ wait_timeout >> 6000
+12/4/2022 4:24:54 PM$ send_typing
+12/4/2022 4:24:59 PM$ react_message mid.$gABISP3dQLeOLDYI9umE3DzuBE7pG :laughing:
+12/4/2022 4:27:20 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:27:25 PM$ [object Promise]
+12/4/2022 4:29:58 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+id is[object Promise]
+12/4/2022 4:30:16 PM$ resolve_user_id 100037131918629
+12/4/2022 4:30:16 PM$ user_id 100037131918629
+12/4/2022 4:30:58 PM$ event_body 100010717127140 Mj 
+Exist a version of sketchware where i can set code manually?
+12/4/2022 4:31:00 PM$ wait_timeout >> 6800
+12/4/2022 4:31:01 PM$ send_typing
+12/4/2022 4:31:08 PM$ 100003456381355
+12/4/2022 4:31:08 PM$ 100010717127140
+12/4/2022 4:31:08 PM$ 100003456381355
+12/4/2022 4:31:08 PM$ send_message_reply 2583856894982516 i want to make a sketchware app where i can set the code manually. Is there any version of sketchware like that?
+A:
+No, Sketchware does not have an option to write code manually. It is a drag and drop interface for creating apps.
+12/4/2022 4:31:31 PM$ event_body 100003456381355 Website sqli
+12/4/2022 4:31:31 PM$ wait_timeout >> 5500
+12/4/2022 4:31:32 PM$ send_typing
+12/4/2022 4:31:37 PM$ 100010717127140
+12/4/2022 4:31:37 PM$ 100003456381355
+12/4/2022 4:31:37 PM$ 100081105052820
+12/4/2022 4:31:37 PM$ send_message_reply 2583856894982516 It looks like you send invalid url. Does it have https or http scheme?
+12/4/2022 4:32:40 PM$ event_body 100003456381355 Who is in
+12/4/2022 4:32:41 PM$ wait_timeout >> 5200
+12/4/2022 4:32:42 PM$ send_typing
+12/4/2022 4:32:47 PM$ wait_timeout >> 6800
+12/4/2022 4:32:47 PM$ 100003456381355
+12/4/2022 4:32:47 PM$ 100081033288525
+12/4/2022 4:32:47 PM$ 100081033288525
+12/4/2022 4:32:47 PM$ send_message_reply 2583856894982516 charge of the United States?
+The President of the United States is in charge of the country.
+12/4/2022 4:32:47 PM$ send_typing
+12/4/2022 4:32:53 PM$ react_message mid.$gAAkuARBgOXSLDYl2qWE3EQpGp7YG :laughing:
+12/4/2022 4:34:12 PM$ event_body 100029315742680 Mj T-test applies to data that are _____ distributed.
+12/4/2022 4:34:13 PM$ 100004473631433
+12/4/2022 4:34:13 PM$ 100024267890975
+12/4/2022 4:34:13 PM$ 100029315742680
+12/4/2022 4:34:13 PM$ send_message_reply 5086613374774755 normal
+12/4/2022 4:34:13 PM$ send_typing
+12/4/2022 4:34:48 PM$ wait_timeout >> 5500
+12/4/2022 4:34:49 PM$ wait_timeout >> 5000
+12/4/2022 4:34:49 PM$ send_typing
+12/4/2022 4:34:54 PM$ react_message mid.$gABISP3dQLeOLDYtTEWE3EYDaL9NL :laughing:
+12/4/2022 4:34:54 PM$ wait_timeout >> 6800
+12/4/2022 4:34:55 PM$ send_typing
+12/4/2022 4:35:01 PM$ send_message 6942091245864108 🍁
+12/4/2022 4:36:36 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+id isundefined
+12/4/2022 4:40:20 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 4:40:43 PM$ wait_timeout >> 7200
+12/4/2022 4:40:43 PM$ wait_timeout >> 5800
+12/4/2022 4:40:44 PM$ send_typing
+12/4/2022 4:40:44 PM$ send_typing
+12/4/2022 4:40:50 PM$ 100005200092094
+12/4/2022 4:40:50 PM$ 100047019199959
+12/4/2022 4:40:50 PM$ 100087874545472
+12/4/2022 4:40:50 PM$ send_message_reply 6942091245864108 😆😆
+12/4/2022 4:40:51 PM$ react_message mid.$gABipy5K1RKyLDZC8vmE3Et0Eqizt :laughing:
+12/4/2022 4:41:07 PM$ react_message mid.$gABISP3dQLeOLDZEaj2E3EvMBB4gF :laughing:
+12/4/2022 4:41:08 PM$ send_typing
+12/4/2022 4:43:37 PM$ event_body 100047019199959 $video
+12/4/2022 4:43:37 PM$ wait_timeout >> 5400
+12/4/2022 4:43:38 PM$ send_typing
+12/4/2022 4:43:43 PM$ 100047672973317
+12/4/2022 4:43:43 PM$ 100047019199959
+12/4/2022 4:43:43 PM$ 100087874545472
+12/4/2022 4:43:43 PM$ send_message_reply 6942091245864108 Opps! I didnt get it. You should try using video text instead.
+For example:
+video In The End by Linkin Park
+12/4/2022 4:43:49 PM$ event_body 100087874545472 🔎Searching for "buwan"...
+12/4/2022 4:43:49 PM$ answer_cache
+12/4/2022 4:43:49 PM$ wait_timeout >> 7000
+12/4/2022 4:43:50 PM$ send_typing
+12/4/2022 4:43:57 PM$ 100087874545472
+12/4/2022 4:43:57 PM$ 100087874545472
+12/4/2022 4:43:57 PM$ send_message 6942091245864108 buwan buwan buwan buwan buwan buwan
+buwán (Jawi spelling بوان‎, plural buwán-buwán) month; lunar month; moon
+12/4/2022 4:43:57 PM$ event_body 100047019199959 $video Naruto Vs Sasuke
+12/4/2022 4:43:59 PM$ downloading Naruto vs Sasuke final battle,Naruto and Sasuke fighting like gods make everything explode
+12/4/2022 4:43:59 PM$ Starting download of video file.
+12/4/2022 4:44:00 PM$ Unable to upload the video to the file limit. The file size is 27.466781616210938
+12/4/2022 4:44:00 PM$ wait_timeout >> 7000
+12/4/2022 4:44:00 PM$ wait_timeout >> 60000
+12/4/2022 4:44:00 PM$ send_typing
+12/4/2022 4:44:07 PM$ 100047019199959
+12/4/2022 4:44:07 PM$ 100087874545472
+12/4/2022 4:44:07 PM$ send_message_reply 6942091245864108 Unfortunately i cannot send your video due to the size restrictions on messenger platform.
+12/4/2022 4:45:00 PM$ un_link /home/runner/project-orion/cache/videos/video.mp4
+12/4/2022 4:46:15 PM$ event_body 100010717127140 Mj 
+Which apps i can use on android phone for mobile development and block logic?
+12/4/2022 4:46:20 PM$ wait_timeout >> 6600
+12/4/2022 4:46:20 PM$ send_typing
+12/4/2022 4:46:27 PM$ 100081033288525
+12/4/2022 4:46:27 PM$ 100010717127140
+12/4/2022 4:46:27 PM$ send_message_reply 2583856894982516 there are many apps that can be used for mobile development and block logic. Some of the more popular ones include:
+- Android Studio: This is the official IDE for Android development. It includes a powerful code editor, debugger, and emulator.
+- Eclipse: This is another popular IDE that can be used for developing Android applications. It includes many of the same features as Android Studio.
+- IntelliJ IDEA: This is a commercial IDE that offers a free trial version. It has many of the same features as Eclipse and Android Studio.
+12/4/2022 4:46:37 PM$ send_message 5086613374774755 [object Object]
+12/4/2022 4:46:37 PM$ wait_timeout >> 60000
+12/4/2022 4:46:38 PM$ send_typing
+12/4/2022 4:47:37 PM$ un_link /home/runner/project-orion/cache/images/unsend_img.jpg
+12/4/2022 4:47:50 PM$ wait_timeout >> 6500
+12/4/2022 4:47:50 PM$ wait_timeout >> 6000
+12/4/2022 4:47:50 PM$ send_typing
+12/4/2022 4:47:50 PM$ send_typing
+12/4/2022 4:47:56 PM$ react_message mid.$gAAkuARBgOXSLDZc-y2E3FH0JHfP6 :laughing:
+12/4/2022 4:47:56 PM$ 100081033288525
+12/4/2022 4:47:56 PM$ 100087185842116
+12/4/2022 4:47:56 PM$ send_message_reply 2583856894982516 hhahahah😆
+12/4/2022 4:50:00 PM$ Time Check 4:50 PM
+12/4/2022 4:51:01 PM$ wait_timeout >> 5500
+12/4/2022 4:51:02 PM$ send_typing
+12/4/2022 4:51:07 PM$ react_message mid.$gAAkuARBgOXSLDZoqL2E3FTdGNuDt :laughing:
+12/4/2022 4:51:11 PM$ event_body 100081033288525 why??
+12/4/2022 4:51:11 PM$ wait_timeout >> 5200
+12/4/2022 4:51:12 PM$ send_typing
+12/4/2022 4:51:17 PM$ 100081033288525
+12/4/2022 4:51:17 PM$ 100081033288525
+12/4/2022 4:51:17 PM$ send_message 2583856894982516 why??
+12/4/2022 4:52:43 PM$ wait_timeout >> 7000
+12/4/2022 4:52:44 PM$ send_typing
+12/4/2022 4:52:50 PM$ react_message mid.$gABipy5K1RKyLDZu5OGE3FZu7yfD4 :love:
+12/4/2022 4:53:26 PM$ wait_timeout >> 5800
+12/4/2022 4:53:26 PM$ wait_timeout >> 6800
+12/4/2022 4:53:26 PM$ send_typing
+12/4/2022 4:53:27 PM$ send_typing
+12/4/2022 4:53:31 PM$ react_message mid.$gABipy5K1RKyLDZxeLGE3FcVq7HY7 :laughing:
+12/4/2022 4:53:33 PM$ 100087874545472
+12/4/2022 4:53:33 PM$ 100005200092094
+12/4/2022 4:53:33 PM$ 100064068709620
+12/4/2022 4:53:33 PM$ send_message_reply 6942091245864108 🤣🤣🤣
+12/4/2022 4:54:34 PM$ new_member 100011171984778 Shiella May Marcelo
+12/4/2022 4:54:38 PM$ event_body 100016029218667 what is lambda
+12/4/2022 4:54:40 PM$ 100081033288525
+12/4/2022 4:54:40 PM$ 100016029218667
+12/4/2022 4:54:40 PM$ send_message_reply 2583856894982516 lambda is a programming language that is used to create serverless applications.
+12/4/2022 4:54:40 PM$ send_typing
+12/4/2022 4:54:56 PM$ wait_timeout >> 6300
+12/4/2022 4:54:56 PM$ wait_timeout >> 60000
+12/4/2022 4:54:57 PM$ send_typing
+12/4/2022 4:54:58 PM$ event_body 100016029218667 what is lambda expression
+12/4/2022 4:55:00 PM$ send_typing
+12/4/2022 4:55:01 PM$ 100016029218667
+12/4/2022 4:55:01 PM$ 100016029218667
+12/4/2022 4:55:01 PM$ send_message 2583856894982516 a lambda expression is an anonymous function that can be used to create delegates or expression tree types.
+12/4/2022 4:55:02 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 4:55:56 PM$ un_link /home/runner/project-orion/cache/images/welcome.jpg
+12/4/2022 4:56:11 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 4:56:18 PM$ resolve_user_id 100037131918629
+12/4/2022 4:56:18 PM$ user_id 100037131918629
+12/4/2022 4:56:18 PM$ 100016029218667
+12/4/2022 4:56:18 PM$ 100016029218667
+12/4/2022 4:56:18 PM$ send_message 2583856894982516 your uid is [object Promise]
+12/4/2022 4:56:19 PM$ send_typing
+12/4/2022 4:57:03 PM$ event_body 100037131918629 where you want data
+12/4/2022 4:57:09 PM$ send_message 100037131918629 to be stored)
+- [ ] Create a new database called `wdi_london`:
+  - `createdb wdi_london`
+- [ ] Connect to the database in psql:
+  - `psql wdi_london`
+  ![](https://i.imgur.com/q9vZ8XO.png)
+  - You should now see something like this, and you are ready to start writing SQL queries!
+    ![](https://i.imgur.com/VrYK5z7.png)
+12/4/2022 4:57:09 PM$ send_typing
+12/4/2022 4:59:05 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 4:59:16 PM$ resolve_user_id 100037131918629
+12/4/2022 4:59:16 PM$ user_id 100037131918629
+12/4/2022 4:59:17 PM$ 100081033288525
+12/4/2022 4:59:17 PM$ 100081033288525
+12/4/2022 4:59:17 PM$ 100016029218667
+12/4/2022 4:59:17 PM$ send_message 2583856894982516 your uid is undefined
+12/4/2022 4:59:17 PM$ send_typing
+12/4/2022 5:00:00 PM$ Time Check 5:00 PM
+12/4/2022 5:00:00 PM$ Project Orion Facebook State Refreshed
+12/4/2022 5:00:04 PM$ wait_timeout >> 6600
+12/4/2022 5:00:04 PM$ wait_timeout >> 6800
+12/4/2022 5:00:04 PM$ wait_timeout >> 5400
+12/4/2022 5:00:04 PM$ send_typing
+12/4/2022 5:00:04 PM$ send_typing
+12/4/2022 5:00:04 PM$ send_typing
+12/4/2022 5:00:09 PM$ send_message 5033985183388157 🥰😇
+12/4/2022 5:00:11 PM$ react_message mid.$gABHiYgKpEf2LDaJyuGE3F0fieya9 :love:
+12/4/2022 5:00:11 PM$ 100040726009962
+12/4/2022 5:00:11 PM$ 100078864715768
+12/4/2022 5:00:11 PM$ send_message_reply 5033985183388157 Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water.
+12/4/2022 5:02:29 PM$ wait_timeout >> 5200
+12/4/2022 5:02:30 PM$ send_typing
+12/4/2022 5:02:35 PM$ react_message mid.$gABipy5K1RKyLDaSrG2E3F9iusCLQ :laughing:
+12/4/2022 5:04:34 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 5:04:42 PM$ user_remove 2583856894982516 100037131918629
+12/4/2022 5:05:23 PM$ wait_timeout >> 5500
+12/4/2022 5:05:24 PM$ send_typing
+12/4/2022 5:05:29 PM$ 100082868910627
+12/4/2022 5:05:29 PM$ 100037994349066
+12/4/2022 5:05:29 PM$ 100037994349066
+12/4/2022 5:05:29 PM$ send_message_reply 5653470298044183 hey
+12/4/2022 5:05:30 PM$ add_user 2583856894982516 100037131918629
+12/4/2022 5:06:26 PM$ wait_timeout >> 5000
+12/4/2022 5:06:27 PM$ send_typing
+12/4/2022 5:06:31 PM$ react_message mid.$gABipy5K1RKyLDahIrmE3GL-hWLB9 :angry:
+12/4/2022 5:09:34 PM$ wait_timeout >> 5000
+12/4/2022 5:09:39 PM$ wait_timeout >> 6800
+12/4/2022 5:09:39 PM$ send_typing
+12/4/2022 5:09:44 PM$ wait_timeout >> 6000
+12/4/2022 5:09:44 PM$ unsend_message_group 100005200092094[object Object]
+12/4/2022 5:09:45 PM$ send_typing
+12/4/2022 5:09:45 PM$ send_message 6942091245864108 🍁
+12/4/2022 5:09:50 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 5:10:00 PM$ Time Check 5:10 PM
+12/4/2022 5:11:00 PM$ wait_timeout >> 6300
+12/4/2022 5:11:00 PM$ wait_timeout >> 6600
+12/4/2022 5:11:01 PM$ send_typing
+12/4/2022 5:11:01 PM$ send_typing
+12/4/2022 5:11:07 PM$ react_message mid.$gABipy5K1RKyLDax3MWE3GcuufYh2 :laughing:
+12/4/2022 5:11:08 PM$ 100064068709620
+12/4/2022 5:11:08 PM$ send_message_reply 6942091245864108 😆😆🤣
+12/4/2022 5:12:19 PM$ event_body 100031847151713 MJ where are you
+12/4/2022 5:12:20 PM$ wait_timeout >> 6300
+12/4/2022 5:12:21 PM$ react_message mid.$gABISP3dQLeOLDa2w6mE3Ghj6TaJW :love:
+12/4/2022 5:12:21 PM$ send_typing
+12/4/2022 5:12:21 PM$ send_typing
+12/4/2022 5:12:27 PM$ 100082863736348
+12/4/2022 5:12:27 PM$ 100087139068398
+12/4/2022 5:12:27 PM$ 100031847151713
+12/4/2022 5:12:27 PM$ send_message_reply 8386230691448919 from?
+Im from the United States.
+12/4/2022 5:12:29 PM$ react_message mid.$gABISP3dQLeOLDa3TbmE3GiGePdEu :love:
+12/4/2022 5:12:30 PM$ send_typing
+12/4/2022 5:12:32 PM$ event_body 100080774622908 Mj don die
+12/4/2022 5:12:32 PM$ wait_timeout >> 5500
+12/4/2022 5:12:32 PM$ send_typing
+12/4/2022 5:12:38 PM$ 100031847151713
+12/4/2022 5:12:38 PM$ 100080774622908
+12/4/2022 5:12:38 PM$ send_message_reply 8386230691448919 don die?
+12/4/2022 5:12:55 PM$ event_body 100080774622908 Mj search for questgig
+12/4/2022 5:12:56 PM$ wait_timeout >> 5200
+12/4/2022 5:12:57 PM$ send_typing
+12/4/2022 5:13:02 PM$ 100031847151713
+12/4/2022 5:13:02 PM$ 100080774622908
+12/4/2022 5:13:02 PM$ send_message_reply 8386230691448919 com
+The website questgig.com is a website that helps people find local service providers.
+12/4/2022 5:13:30 PM$ wait_timeout >> 7000
+12/4/2022 5:13:30 PM$ wait_timeout >> 5400
+12/4/2022 5:13:30 PM$ send_typing
+12/4/2022 5:13:31 PM$ send_typing
+12/4/2022 5:13:32 PM$ wait_timeout >> 5000
+12/4/2022 5:13:36 PM$ 100029315742680
+12/4/2022 5:13:36 PM$ 100024267890975
+12/4/2022 5:13:36 PM$ 100024267890975
+12/4/2022 5:13:36 PM$ send_message_reply 5086613374774755 😂😂🤣🤣
+12/4/2022 5:13:37 PM$ react_message mid.$gABISP3dQLeOLDa6_ZmE3GlvsPwl8 :laughing:
+12/4/2022 5:13:37 PM$ wait_timeout >> 5400
+12/4/2022 5:13:38 PM$ send_typing
+12/4/2022 5:13:43 PM$ send_message 5086613374774755 😹😹😹
+12/4/2022 5:13:45 PM$ event_body 100031847151713 MJ search for techx.com.ng
+12/4/2022 5:13:46 PM$ wait_timeout >> 5200
+12/4/2022 5:13:47 PM$ send_typing
+12/4/2022 5:13:52 PM$ 100080774622908
+12/4/2022 5:13:52 PM$ 100031847151713
+12/4/2022 5:13:52 PM$ send_message_reply 8386230691448919 the website techx.com.ng does not appear to be working properly at the moment.
+12/4/2022 5:14:05 PM$ wait_timeout >> 7000
+12/4/2022 5:14:05 PM$ send_typing
+12/4/2022 5:14:12 PM$ react_message mid.$gAB3LO31eSFeLDa9HrWE3Gn86PbwC :laughing:
+12/4/2022 5:17:03 PM$ 100037131918629
+12/4/2022 5:17:03 PM$ 100037131918629
+12/4/2022 5:17:03 PM$ send_message 2583856894982516 Unable to kick the user.
+12/4/2022 5:17:04 PM$ send_typing
+12/4/2022 5:17:17 PM$ 100037131918629
+12/4/2022 5:17:17 PM$ 100037131918629
+12/4/2022 5:17:17 PM$ send_message 2583856894982516 Unfortunately an error occured.
+12/4/2022 5:17:17 PM$ send_typing
+12/4/2022 5:17:35 PM$ send_typing
+12/4/2022 5:17:35 PM$ 100037131918629
+12/4/2022 5:17:35 PM$ 100037131918629
+12/4/2022 5:17:35 PM$ send_message 2583856894982516 Unfortunately an error occured.
+12/4/2022 5:17:49 PM$ 100037131918629
+12/4/2022 5:17:49 PM$ send_message_reply 2583856894982516 Admin permission removed.
+12/4/2022 5:17:49 PM$ send_typing
+12/4/2022 5:18:04 PM$ react_message mid.$gAAkuARBgOXSLDbLtyWE3G2k7QNDD :laughing:
+12/4/2022 5:18:05 PM$ send_typing
+12/4/2022 5:18:14 PM$ 100037131918629
+12/4/2022 5:18:14 PM$ 100037131918629
+12/4/2022 5:18:14 PM$ send_message 2583856894982516 Admin permission granted.
+12/4/2022 5:18:15 PM$ send_typing
+12/4/2022 5:20:00 PM$ Time Check 5:20 PM
+12/4/2022 5:22:25 PM$ wait_timeout >> 5400
+12/4/2022 5:22:25 PM$ wait_timeout >> 5800
+12/4/2022 5:22:26 PM$ send_typing
+12/4/2022 5:22:26 PM$ send_typing
+12/4/2022 5:22:31 PM$ react_message mid.$gABISP3dQLeOLDbbq92E3HGa7Geo0 :laughing:
+12/4/2022 5:22:32 PM$ 100024267890975
+12/4/2022 5:22:32 PM$ 100024267890975
+12/4/2022 5:22:32 PM$ send_message 5086613374774755 😂😂🤣🤣
+12/4/2022 5:23:06 PM$ send_message 5190020021066142 [object Object]
+12/4/2022 5:23:06 PM$ wait_timeout >> 60000
+12/4/2022 5:23:07 PM$ send_typing
+12/4/2022 5:24:06 PM$ un_link /home/runner/project-orion/cache/videos/unsend_vid.mp4
+12/4/2022 5:25:16 PM$ wait_timeout >> 5000
+12/4/2022 5:25:21 PM$ send_message 2583856894982516 💛
+12/4/2022 5:25:22 PM$ send_typing
+12/4/2022 5:28:09 PM$ wait_timeout >> 5000
+12/4/2022 5:28:14 PM$ send_message 2583856894982516 💛
+12/4/2022 5:28:14 PM$ send_typing
+12/4/2022 5:30:00 PM$ Time Check 5:30 PM
+12/4/2022 5:31:02 PM$ react_message mid.$gABJwS7O7mZ6LDb7OIWE3HmA_xHJv :love:
+12/4/2022 5:31:03 PM$ send_typing
+12/4/2022 5:31:29 PM$ wait_timeout >> 5000
+12/4/2022 5:31:34 PM$ wait_timeout >> 5400
+12/4/2022 5:31:35 PM$ send_typing
+12/4/2022 5:31:39 PM$ send_message 5190020021066142 🥹🥹🥹
+12/4/2022 5:32:10 PM$ wait_timeout >> 5000
+12/4/2022 5:32:15 PM$ send_message 5086613374774755 😆😆😆
+12/4/2022 5:32:15 PM$ send_typing
+12/4/2022 5:38:21 PM$ wait_timeout >> 5000
+12/4/2022 5:38:26 PM$ wait_timeout >> 6600
+12/4/2022 5:38:27 PM$ send_typing
+12/4/2022 5:38:32 PM$ send_message 5653470298044183 😹
+12/4/2022 5:40:00 PM$ Time Check 5:40 PM
+12/4/2022 5:40:25 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 5:40:42 PM$ event_body 100016029218667 meme --reddit
+12/4/2022 5:40:42 PM$ response_data https://meme-api.herokuapp.com/gimme
+12/4/2022 5:40:42 PM$ wait_timeout >> 1000
+12/4/2022 5:40:43 PM$ response_data_err Error: Request failed with status code 503
+12/4/2022 5:40:43 PM$ 100016029218667
+12/4/2022 5:40:43 PM$ 100016029218667
+12/4/2022 5:40:43 PM$ send_message 2583856894982516 Unfortunately there was an error occured.
+12/4/2022 5:40:44 PM$ send_typing
+12/4/2022 5:41:12 PM$ event_body 100016029218667 gun @Techh Jork
+12/4/2022 5:41:13 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100037131918629/picture?access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 5:41:14 PM$ wait_timeout >> 60000
+12/4/2022 5:41:15 PM$ 100016029218667
+12/4/2022 5:41:15 PM$ 100016029218667
+12/4/2022 5:41:15 PM$ send_message 2583856894982516 [object Object]
+12/4/2022 5:41:15 PM$ send_typing
+12/4/2022 5:42:14 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 5:45:48 PM$ event_body 100016029218667 website url
+12/4/2022 5:45:48 PM$ send_typing
+12/4/2022 5:45:48 PM$ send_message 100016029218667 It looks like you send invalid url. Does it have https or http scheme?
+12/4/2022 5:50:00 PM$ Time Check 5:50 PM
+12/4/2022 5:50:16 PM$ event_body 100016029218667 biden 😆😆
+12/4/2022 5:50:16 PM$ parse_image https://api.popcat.xyz/biden?text=😆😆
+12/4/2022 5:50:16 PM$ react_message mid.$cAAAB9Q9aNWWLDdBq8WE3IsiuHwlP :laughing:
+12/4/2022 5:50:17 PM$ send_typing
+12/4/2022 5:50:18 PM$ wait_timeout >> 60000
+12/4/2022 5:50:18 PM$ send_message 100016029218667 [object Object]
+12/4/2022 5:50:18 PM$ send_typing
+12/4/2022 5:50:36 PM$ event_body 100016029218667 trump hahahha 😆
+12/4/2022 5:50:36 PM$ parse_image https://un5vyw.deta.dev/tweet?text=hahahha 😆
+12/4/2022 5:50:36 PM$ react_message mid.$cAAAB9Q9aNWWLDdC4wGE3Itwgd1rn :laughing:
+12/4/2022 5:50:37 PM$ send_typing
+12/4/2022 5:50:40 PM$ wait_timeout >> 60000
+12/4/2022 5:50:40 PM$ send_message 100016029218667 [object Object]
+12/4/2022 5:50:41 PM$ send_typing
+12/4/2022 5:51:18 PM$ un_link /home/runner/project-orion/cache/images/biden.png
+12/4/2022 5:51:40 PM$ un_link /home/runner/project-orion/cache/images/trump.png
+12/4/2022 5:51:48 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 5:51:55 PM$ event_body 100016029218667 trump hahahah 😆
+12/4/2022 5:51:55 PM$ parse_image https://un5vyw.deta.dev/tweet?text=hahahah%20%F0%9F%98%86
+12/4/2022 5:51:55 PM$ react_message mid.$cAAAB9Q9aNWWLDdHsumE3Iyki6K5- :laughing:
+12/4/2022 5:51:56 PM$ send_typing
+12/4/2022 5:51:56 PM$ wait_timeout >> 60000
+12/4/2022 5:51:57 PM$ send_message 100016029218667 [object Object]
+12/4/2022 5:51:57 PM$ send_typing
+12/4/2022 5:52:56 PM$ un_link /home/runner/project-orion/cache/images/trump.png
+12/4/2022 5:53:38 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 5:53:43 PM$ event_body 100016029218667 trump hahahha 😆
+12/4/2022 5:53:43 PM$ parse_image https://un5vyw.deta.dev/tweet?text=hahahha%20%F0%9F%98%86
+12/4/2022 5:53:43 PM$ react_message mid.$cAAAB9Q9aNWWLDdOSgWE3I5KUKIfO :laughing:
+12/4/2022 5:53:44 PM$ send_typing
+12/4/2022 5:53:45 PM$ wait_timeout >> 60000
+12/4/2022 5:53:45 PM$ send_message 100016029218667 [object Object]
+12/4/2022 5:53:45 PM$ send_typing
+12/4/2022 5:54:45 PM$ un_link /home/runner/project-orion/cache/images/trump.png
+12/4/2022 5:55:00 PM$ event_body 100016029218667 website mrepol742.github.io
+12/4/2022 5:55:00 PM$ send_message 100016029218667 It looks like you send invalid url. Does it have https or http scheme?
+12/4/2022 5:55:01 PM$ send_typing
+12/4/2022 5:58:10 PM$ wait_timeout >> 7200
+12/4/2022 5:58:11 PM$ send_typing
+12/4/2022 5:58:13 PM$ event_body 100075837255046 If research work Po Ng management
+12/4/2022 5:58:16 PM$ wait_timeout >> 6300
+12/4/2022 5:58:16 PM$ unsend_message_group 100047672973317[object Object]
+12/4/2022 5:58:16 PM$ send_typing
+12/4/2022 5:58:18 PM$ 100075837255046
+12/4/2022 5:58:18 PM$ 100087874545472
+12/4/2022 5:58:18 PM$ 100008813820978
+12/4/2022 5:58:18 PM$ send_message_reply 6942091245864108 Hello World
+12/4/2022 5:58:19 PM$ wait_timeout >> 6500
+12/4/2022 5:58:20 PM$ send_typing
+12/4/2022 5:58:22 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 5:58:27 PM$ 100087874545472
+12/4/2022 5:58:27 PM$ 100087874545472
+12/4/2022 5:58:27 PM$ send_message 6942091245864108 of the company, it is possible to find a number of advantages and disadvantages.
+The main advantage of this system is that it allows you to manage your time more efficiently. You can plan your work in advance and know exactly when you need to do something. This can help you avoid wasting time on tasks that are not important.
+Another advantage of this system is that it can help you keep track of your progress. This can be useful if you want to see how well you are doing with your work. You can also use this system to monitor the performance of your employees. This can help you identify areas where they need improvement.
+The main disadvantage of this system is that it may be difficult to implement in some organizations. In
+12/4/2022 6:00:00 PM$ Time Check 6:00 PM
+12/4/2022 6:00:01 PM$ Project Orion Facebook State Refreshed
+12/4/2022 6:01:15 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:01:24 PM$ event_body 100016029218667 gpool wat is
+12/4/2022 6:01:25 PM$ send_message 100016029218667 Unfortunately this is a personal chat and not a group chat.
+12/4/2022 6:01:25 PM$ send_typing
+12/4/2022 6:01:36 PM$ event_body 100016029218667 gpool what is the language
+12/4/2022 6:01:37 PM$ [object Object]
+12/4/2022 6:05:30 PM$ event_body 100016029218667 gphoto
+12/4/2022 6:06:38 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:06:49 PM$ event_body 100016029218667 gname
+12/4/2022 6:06:49 PM$ 100037131918629
+12/4/2022 6:06:49 PM$ 100016029218667
+12/4/2022 6:06:49 PM$ 100016029218667
+12/4/2022 6:06:49 PM$ send_message_reply 2583856894982516 Opps! I didnt get it. You should try using gname text instead.
+
+For example:
+gname Hall of Codes
+12/4/2022 6:06:50 PM$ send_typing
+12/4/2022 6:06:59 PM$ event_body 100016029218667 gphoto
+12/4/2022 6:07:00 PM$ wait_timeout >> 60000
+12/4/2022 6:07:26 PM$ wait_timeout >> 6000
+12/4/2022 6:07:27 PM$ send_typing
+12/4/2022 6:07:32 PM$ react_message mid.$gABISP3dQLeOLDeAgqmE3JrRRANUe :laughing:
+12/4/2022 6:08:00 PM$ un_link /home/runner/project-orion/cache/images/gphoto.png
+12/4/2022 6:10:00 PM$ Time Check 6:10 PM
+12/4/2022 6:13:42 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:13:50 PM$ event_body 100016029218667 gun @Techh Jork
+12/4/2022 6:13:50 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100037131918629/picture?access_token=6628568379%257Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:13:50 PM$ wait_timeout >> 60000
+12/4/2022 6:13:51 PM$ 100087185842116
+12/4/2022 6:13:51 PM$ 100016029218667
+12/4/2022 6:13:51 PM$ send_message_reply 2583856894982516 [object Object]
+12/4/2022 6:13:51 PM$ send_typing
+12/4/2022 6:14:13 PM$ event_body 100016029218667 drip @me
+12/4/2022 6:14:13 PM$ parse_image https://api.popcat.xyz/drip?image=https://graph.facebook.com/100016029218667/picture?access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:14:14 PM$ wait_timeout >> 60000
+12/4/2022 6:14:14 PM$ send_message 100016029218667 [object Object]
+12/4/2022 6:14:15 PM$ send_typing
+12/4/2022 6:14:23 PM$ event_body 100037131918629 gun @Jacob Bernabe
+12/4/2022 6:14:23 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100001033442102/picture?access_token=6628568379%257Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:14:24 PM$ wait_timeout >> 60000
+12/4/2022 6:14:25 PM$ send_typing
+12/4/2022 6:14:25 PM$ 100016029218667
+12/4/2022 6:14:25 PM$ 100086564736703
+12/4/2022 6:14:25 PM$ 100037131918629
+12/4/2022 6:14:25 PM$ send_message_reply 2583856894982516 [object Object]
+12/4/2022 6:14:50 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:15:04 PM$ event_body 100037131918629 gun @Maryjane Dalas
+12/4/2022 6:15:04 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100054832716212/picture?access_token=6628568379%257Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:15:06 PM$ wait_timeout >> 60000
+12/4/2022 6:15:06 PM$ 100054832716212
+12/4/2022 6:15:06 PM$ 100037131918629
+12/4/2022 6:15:06 PM$ send_message_reply 2583856894982516 [object Object]
+12/4/2022 6:15:06 PM$ send_typing
+12/4/2022 6:15:14 PM$ un_link /home/runner/project-orion/cache/images/drip.png
+12/4/2022 6:15:24 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:15:25 PM$ event_body 100037131918629 gun @Maryjane Dalas
+12/4/2022 6:15:25 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100024859911182/picture?access_token=6628568379%257Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:15:26 PM$ wait_timeout >> 60000
+12/4/2022 6:15:27 PM$ 100037131918629
+12/4/2022 6:15:27 PM$ 100054832716212
+12/4/2022 6:15:27 PM$ send_message_reply 2583856894982516 [object Object]
+12/4/2022 6:15:27 PM$ send_typing
+12/4/2022 6:15:41 PM$ event_body 100087185842116 gun's and roses
+12/4/2022 6:15:41 PM$ wait_timeout >> 7200
+12/4/2022 6:15:42 PM$ send_typing
+12/4/2022 6:15:44 PM$ wait_timeout >> 5200
+12/4/2022 6:15:45 PM$ send_typing
+12/4/2022 6:15:49 PM$ 100087185842116
+12/4/2022 6:15:49 PM$ 100087185842116
+12/4/2022 6:15:49 PM$ 100037131918629
+12/4/2022 6:15:49 PM$ send_message 2583856894982516 Opps! I didnt get it. You should try using gun @mention instead.
+
+For example:
+gun @Melvin Jones Repol
+12/4/2022 6:15:49 PM$ react_message mid.$gAAkuARBgOXSLDee5tmE3KJt6mNkO :laughing:
+12/4/2022 6:16:00 PM$ event_body 100037131918629 gun me
+12/4/2022 6:16:00 PM$ 100037131918629
+12/4/2022 6:16:00 PM$ 100037131918629
+12/4/2022 6:16:00 PM$ send_message 2583856894982516 Opps! I didnt get it. You should try using gun @mention instead.
+
+For example:
+gun @Melvin Jones Repol
+12/4/2022 6:16:01 PM$ send_typing
+12/4/2022 6:16:06 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:16:12 PM$ event_body 100037131918629 gun @Joseph Victor
+12/4/2022 6:16:12 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100086564736703/picture?access_token=6628568379%257Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:16:19 PM$ wait_timeout >> 60000
+12/4/2022 6:16:19 PM$ 100086564736703
+12/4/2022 6:16:19 PM$ 100037131918629
+12/4/2022 6:16:19 PM$ send_message_reply 2583856894982516 [object Object]
+12/4/2022 6:16:20 PM$ send_typing
+12/4/2022 6:16:26 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:16:45 PM$ event_body 100010717127140 Why that new photo on group?
+12/4/2022 6:16:46 PM$ wait_timeout >> 6800
+12/4/2022 6:16:47 PM$ send_typing
+12/4/2022 6:16:54 PM$ 100086564736703
+12/4/2022 6:16:54 PM$ 100010717127140
+12/4/2022 6:16:54 PM$ send_message_reply 2583856894982516 im not sure.
+12/4/2022 6:17:19 PM$ Error: ENOENT: no such file or directory, unlink '/home/runner/project-orion/cache/images/gun.png'
+12/4/2022 6:17:49 PM$ event_body 100037131918629 @Melvin Jones Gallano Repol
+12/4/2022 6:17:50 PM$ 100010717127140
+12/4/2022 6:17:50 PM$ 100037131918629
+12/4/2022 6:17:50 PM$ 100037131918629
+12/4/2022 6:17:50 PM$ send_message_reply 2583856894982516 ol?
+12/4/2022 6:17:50 PM$ send_typing
+12/4/2022 6:18:04 PM$ event_body 100037131918629 @Melvin Jones Gallano Repol
+12/4/2022 6:18:04 PM$ The user 2583856894982516 is going to fast of calling the command >> 0 mins and 45 seconds
+12/4/2022 6:20:26 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:20:30 PM$ event_body 100016029218667 gun @me
+12/4/2022 6:21:48 PM$ event_body 100010717127140 Mj 
+Do you know another app like sketchware for mobile development?
+12/4/2022 6:21:50 PM$ wait_timeout >> 6000
+12/4/2022 6:21:51 PM$ send_typing
+12/4/2022 6:21:57 PM$ 100037131918629
+12/4/2022 6:21:57 PM$ 100037131918629
+12/4/2022 6:21:57 PM$ 100010717127140
+12/4/2022 6:21:57 PM$ send_message 2583856894982516 there are many apps like Sketchware, but we recommend using Android Studio for mobile development.
+12/4/2022 6:22:17 PM$ event_body 100037131918629 mj text to image api
+12/4/2022 6:22:20 PM$ 100010717127140
+12/4/2022 6:22:20 PM$ 100037131918629
+12/4/2022 6:22:20 PM$ send_message_reply 2583856894982516 the Text to Image API enables developers to convert text to images. This API can be used to generate images of text for display purposes or for use in machine learning applications. The API supports a variety of languages and can return images in a variety of formats, including PNG, JPEG, and GIF.
+12/4/2022 6:22:21 PM$ send_typing
+12/4/2022 6:22:43 PM$ event_body 100037131918629 mj list of text to image api
+12/4/2022 6:22:45 PM$ 100010717127140
+12/4/2022 6:22:45 PM$ 100037131918629
+12/4/2022 6:22:45 PM$ send_message_reply 2583856894982516 google Cloud Vision API
+-AWS Rekognition
+-Microsoft Azure Computer Vision API
+-IBM Watson Visual Recognition
+-Clarifai
+12/4/2022 6:22:45 PM$ send_typing
+12/4/2022 6:24:10 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:24:15 PM$ event_body 100016029218667 gun @me
+12/4/2022 6:25:03 PM$ event_body 100001033442102 gun @Techh Jork
+12/4/2022 6:25:23 PM$ event_body 100078808031382 Mj What is best in fullstack python or js?
+12/4/2022 6:25:26 PM$ wait_timeout >> 5200
+12/4/2022 6:25:27 PM$ send_typing
+12/4/2022 6:25:56 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:26:03 PM$ event_body 100016029218667 gun @me
+{
+  '100016029218667': {
+    name: 'Melvin Jones Repol',
+    firstName: 'Melvin Jones',
+    vanity: 'shinichikudo742',
+    thumbSrc: 'https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-1/315934570_1266279450583017_7651540698089807307_n.jpg?stp=c0.0.32.32a_cp0_dst-jpg_p32x32&_nc_cat=102&ccb=1-7&_nc_sid=0081f9&_nc_eui2=AeHW_HblDeSFcy3TaMlZiJgUlfhTXXt8MreV-FNde3wyt9kKNENoO4M5iQAp_rWUBHH00szbvWoRjoDn0GWhI0fd&_nc_ohc=3iUaViU-3K0AX9q6w0d&_nc_ht=scontent-ord5-2.xx&oh=00_AfDoGA42fPIR84l7_Ik4whwGTGRblrz9-h9btsPHNM09Og&oe=639123BD',
+    profileUrl: 'https://www.facebook.com/shinichikudo742',
+    gender: 2,
+    type: 'friend',
+    isFriend: true,
+    isBirthday: false
+  }
+}
+undefined
+12/4/2022 6:27:40 PM$ event_body 100010717127140 Mj 
+What are the best apps for android development on android phone?
+12/4/2022 6:27:42 PM$ wait_timeout >> 6000
+12/4/2022 6:27:43 PM$ send_typing
+12/4/2022 6:27:48 PM$ 100078808031382
+12/4/2022 6:27:48 PM$ 100001033442102
+12/4/2022 6:27:48 PM$ 100010717127140
+12/4/2022 6:27:48 PM$ send_message_reply 2583856894982516 there is no definitive answer to this question as the best apps for android development on android phone will vary depending on your needs and preferences. However, some popular apps for android development on android phone include Android Studio, Eclipse, and IntelliJ IDEA.
+12/4/2022 6:27:56 PM$ wait_timeout >> 5000
+12/4/2022 6:28:01 PM$ wait_timeout >> 5400
+12/4/2022 6:28:02 PM$ send_typing
+12/4/2022 6:28:07 PM$ send_message 7244767385593438 🥴
+12/4/2022 6:28:26 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:28:33 PM$ event_body 100016029218667 gun @me
+12/4/2022 6:28:33 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100016029218667/picture?access_token=6628568379%257Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:28:35 PM$ wait_timeout >> 60000
+12/4/2022 6:28:35 PM$ send_message 100016029218667 [object Object]
+12/4/2022 6:28:36 PM$ send_typing
+12/4/2022 6:29:29 PM$ event_body 100037131918629 gun @Jacob Bernabe
+12/4/2022 6:29:29 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100001033442102/picture?access_token=6628568379%257Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 6:29:30 PM$ wait_timeout >> 60000
+12/4/2022 6:29:31 PM$ 100037131918629
+12/4/2022 6:29:31 PM$ 100081033288525
+12/4/2022 6:29:31 PM$ 100037131918629
+12/4/2022 6:29:31 PM$ send_message_reply 2583856894982516 [object Object]
+12/4/2022 6:29:31 PM$ send_typing
+12/4/2022 6:29:35 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:30:00 PM$ Time Check 6:30 PM
+12/4/2022 6:30:04 PM$ wait_timeout >> 6000
+12/4/2022 6:30:05 PM$ send_typing
+12/4/2022 6:30:10 PM$ react_message mid.$gABm9E9p_pl6LDfTa3mE3K-M4LHbS :love:
+12/4/2022 6:30:30 PM$ Error: ENOENT: no such file or directory, unlink '/home/runner/project-orion/cache/images/gun.png'
+12/4/2022 6:31:02 PM$ event_body 100037131918629 mj fuck @Jacob Bernabe
+12/4/2022 6:31:09 PM$ 100001033442102
+12/4/2022 6:31:09 PM$ 100037131918629
+12/4/2022 6:31:09 PM$ 100037131918629
+12/4/2022 6:31:09 PM$ send_message_reply 2583856894982516 i @Mason Bernabei @Caleb Bernabei @Ethan Bernabei
+@Sydney Bierwirth @Mia Bierwirth @Hannah Bierwirth
+@Kaitlyn Blumhorst @Alyssa Blumhorst
+@Emily Boerger @Haley Boerger
+@Makenna Boland-Byrne, Makenna Boland-Byrne, Makenna Boland-Byrne, Makenna Boland-Byrne, Makenna Boland-Byrne, Makenna Boland-Byrne, Makenna Boland-Byrne, Makenna
+12/4/2022 6:31:09 PM$ send_typing
+12/4/2022 6:31:23 PM$ wait_timeout >> 5000
+12/4/2022 6:31:28 PM$ wait_timeout >> 7200
+12/4/2022 6:31:29 PM$ send_typing
+12/4/2022 6:31:35 PM$ send_message 7244767385593438 🥴
+12/4/2022 6:33:34 PM$ wait_timeout >> 5000
+12/4/2022 6:33:39 PM$ wait_timeout >> 5200
+12/4/2022 6:33:39 PM$ send_typing
+12/4/2022 6:33:44 PM$ send_message 2583856894982516 💛
+12/4/2022 6:38:59 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:39:07 PM$ event_body 100016029218667 gun @me
+https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-1/315934570_1266279450583017_7651540698089807307_n.jpg?stp=c0.0.50.50a_cp0_dst-jpg_p50x50&_nc_cat=102&ccb=1-7&_nc_sid=dbb9e7&_nc_ohc=3iUaViU-3K0AX9q6w0d&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent-ord5-2.xx&oh=00_AfARMUAGXK9oArJvZ4CfRZee1Ogm87S0D-DG4ICoqAfe0g&oe=639123BD
+12/4/2022 6:39:07 PM$ parse_image https://api.popcat.xyz/gun?image=https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-1/315934570_1266279450583017_7651540698089807307_n.jpg?stp=c0.0.50.50a_cp0_dst-jpg_p50x50&_nc_cat=102&ccb=1-7&_nc_sid=dbb9e7&_nc_ohc=3iUaViU-3K0AX9q6w0d&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent-ord5-2.xx&oh=00_AfARMUAGXK9oArJvZ4CfRZee1Ogm87S0D-DG4ICoqAfe0g&oe=639123BD
+12/4/2022 6:39:08 PM$ wait_timeout >> 60000
+12/4/2022 6:39:08 PM$ send_message 100016029218667 [object Object]
+12/4/2022 6:39:08 PM$ report_issue [object Object]
+12/4/2022 6:39:09 PM$ send_typing
+12/4/2022 6:40:00 PM$ Time Check 6:40 PM
+12/4/2022 6:40:08 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:41:07 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:41:15 PM$ event_body 100016029218667 gun @me
+https%3A%2F%2Fscontent-ord5-2.xx.fbcdn.net%2Fv%2Ft39.30808-1%2F315934570_1266279450583017_7651540698089807307_n.jpg%3Fstp%3Dc0.0.50.50a_cp0_dst-jpg_p50x50%26_nc_cat%3D102%26ccb%3D1-7%26_nc_sid%3Ddbb9e7%26_nc_ohc%3D3iUaViU-3K0AX9q6w0d%26_nc_ad%3Dz-m%26_nc_cid%3D0%26_nc_ht%3Dscontent-ord5-2.xx%26oh%3D00_AfARMUAGXK9oArJvZ4CfRZee1Ogm87S0D-DG4ICoqAfe0g%26oe%3D639123BD
+12/4/2022 6:41:15 PM$ parse_image https://api.popcat.xyz/gun?image=https%3A%2F%2Fscontent-ord5-2.xx.fbcdn.net%2Fv%2Ft39.30808-1%2F315934570_1266279450583017_7651540698089807307_n.jpg%3Fstp%3Dc0.0.50.50a_cp0_dst-jpg_p50x50%26_nc_cat%3D102%26ccb%3D1-7%26_nc_sid%3Ddbb9e7%26_nc_ohc%3D3iUaViU-3K0AX9q6w0d%26_nc_ad%3Dz-m%26_nc_cid%3D0%26_nc_ht%3Dscontent-ord5-2.xx%26oh%3D00_AfARMUAGXK9oArJvZ4CfRZee1Ogm87S0D-DG4ICoqAfe0g%26oe%3D639123BD
+12/4/2022 6:41:16 PM$ wait_timeout >> 60000
+12/4/2022 6:41:16 PM$ send_message 100016029218667 [object Object]
+12/4/2022 6:41:16 PM$ report_issue [object Object]
+12/4/2022 6:41:16 PM$ send_typing
+12/4/2022 6:41:31 PM$ wait_timeout >> 5500
+12/4/2022 6:41:32 PM$ send_typing
+12/4/2022 6:41:37 PM$ react_message mid.$gAAkuARBgOXSLDf9VLWE3LoK1Z96s :laughing:
+12/4/2022 6:42:05 PM$ wait_timeout >> 5000
+12/4/2022 6:42:06 PM$ send_typing
+12/4/2022 6:42:10 PM$ wait_timeout >> 6000
+12/4/2022 6:42:10 PM$ unsend_message_group 100009346974742[object Object]
+12/4/2022 6:42:10 PM$ react_message mid.$gABJwS7O7mZ6LDf_bZGE3LqW5HugD :angry:
+12/4/2022 6:42:11 PM$ send_typing
+12/4/2022 6:42:16 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:42:16 PM$ send_message 5190020021066142 [object Object]
+12/4/2022 6:43:38 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:43:42 PM$ event_body 100016029218667 gun @me
+https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-1/315934570_1266279450583017_7651540698089807307_n.jpg?stp=c0.0.612.612a_dst-jpg&_nc_cat=102&ccb=1-7&_nc_sid=0c64ff&_nc_ohc=3iUaViU-3K0AX9q6w0d&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent-ord5-2.xx&oh=00_AfCTYkMtAd5fXnQlnevfW63bnRdIqziroOOE_PYAk6hzhw&oe=639123BD
+12/4/2022 6:43:42 PM$ parse_image https://api.popcat.xyz/gun?image=https://scontent-ord5-2.xx.fbcdn.net/v/t39.30808-1/315934570_1266279450583017_7651540698089807307_n.jpg?stp=c0.0.612.612a_dst-jpg&_nc_cat=102&ccb=1-7&_nc_sid=0c64ff&_nc_ohc=3iUaViU-3K0AX9q6w0d&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent-ord5-2.xx&oh=00_AfCTYkMtAd5fXnQlnevfW63bnRdIqziroOOE_PYAk6hzhw&oe=639123BD
+12/4/2022 6:43:43 PM$ wait_timeout >> 60000
+12/4/2022 6:43:43 PM$ send_message 100016029218667 [object Object]
+12/4/2022 6:43:43 PM$ report_issue [object Object]
+12/4/2022 6:43:43 PM$ send_typing
+12/4/2022 6:44:21 PM$ wait_timeout >> 6500
+12/4/2022 6:44:21 PM$ unsend_message_group 100084145420981[object Object]
+12/4/2022 6:44:22 PM$ send_typing
+12/4/2022 6:44:28 PM$ send_message 5190020021066142 [object Object]
+12/4/2022 6:44:43 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:44:46 PM$ wait_timeout >> 5800
+12/4/2022 6:44:46 PM$ wait_timeout >> 60000
+12/4/2022 6:44:47 PM$ send_typing
+12/4/2022 6:44:52 PM$ send_message 5190020021066142 [object Object]
+12/4/2022 6:45:13 PM$ wait_timeout >> 7000
+12/4/2022 6:45:13 PM$ unsend_message_group 100023508434853[object Object]
+12/4/2022 6:45:14 PM$ send_typing
+12/4/2022 6:45:20 PM$ send_message 5190020021066142 [object Object]
+12/4/2022 6:45:38 PM$ wait_timeout >> 5400
+12/4/2022 6:45:39 PM$ send_typing
+12/4/2022 6:45:44 PM$ react_message mid.$gABJwS7O7mZ6LDgMbj2E3L3O4Yc-P :love:
+12/4/2022 6:45:46 PM$ un_link /home/runner/project-orion/cache/images/unsend_img.jpg
+12/4/2022 6:45:55 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:46:19 PM$ event_body 100016029218667 gun @me
+https%3A%2F%2Fscontent-ord5-2.xx.fbcdn.net%2Fv%2Ft39.30808-1%2F315934570_1266279450583017_7651540698089807307_n.jpg%3Fstp%3Dc0.0.612.612a_dst-jpg%26_nc_cat%3D102%26ccb%3D1-7%26_nc_sid%3D0c64ff%26_nc_ohc%3D3iUaViU-3K0AX9q6w0d%26_nc_ad%3Dz-m%26_nc_cid%3D0%26_nc_ht%3Dscontent-ord5-2.xx%26oh%3D00_AfCTYkMtAd5fXnQlnevfW63bnRdIqziroOOE_PYAk6hzhw%26oe%3D639123BD
+12/4/2022 6:46:19 PM$ parse_image https://api.popcat.xyz/gun?image=https%3A%2F%2Fscontent-ord5-2.xx.fbcdn.net%2Fv%2Ft39.30808-1%2F315934570_1266279450583017_7651540698089807307_n.jpg%3Fstp%3Dc0.0.612.612a_dst-jpg%26_nc_cat%3D102%26ccb%3D1-7%26_nc_sid%3D0c64ff%26_nc_ohc%3D3iUaViU-3K0AX9q6w0d%26_nc_ad%3Dz-m%26_nc_cid%3D0%26_nc_ht%3Dscontent-ord5-2.xx%26oh%3D00_AfCTYkMtAd5fXnQlnevfW63bnRdIqziroOOE_PYAk6hzhw%26oe%3D639123BD
+12/4/2022 6:46:19 PM$ wait_timeout >> 60000
+12/4/2022 6:46:19 PM$ send_message 100016029218667 [object Object]
+12/4/2022 6:46:20 PM$ report_issue [object Object]
+12/4/2022 6:46:20 PM$ send_typing
+12/4/2022 6:47:19 PM$ un_link /home/runner/project-orion/cache/images/gun.png
+12/4/2022 6:47:28 PM$ wait_timeout >> 6500
+12/4/2022 6:47:29 PM$ send_typing
+12/4/2022 6:47:35 PM$ react_message mid.$gABISP3dQLeOLDgTI5mE3L95eUau3 :laughing:
+12/4/2022 6:49:28 PM$ wait_timeout >> 6300
+12/4/2022 6:49:29 PM$ send_typing
+12/4/2022 6:49:35 PM$ 100023576719353
+12/4/2022 6:49:35 PM$ 100087874545472
+12/4/2022 6:49:35 PM$ 100087874545472
+12/4/2022 6:49:35 PM$ send_message_reply 7244767385593438 How are you?
+12/4/2022 6:50:00 PM$ Time Check 6:50 PM
+12/4/2022 6:50:40 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 6:50:45 PM$ event_body 100016029218667 gun @me
+https%3A%2F%2Fscontent-ord5-2.xx.fbcdn.net%2Fv%2Ft39.30808-1%2F315934570_1266279450583017_7651540698089807307_n.jpg%3Fstp%3Dc0.0.612.612a_dst-jpg%26_nc_cat%3D102%26ccb%3D1-7%26_nc_sid%3D0c64ff%26_nc_ohc%3D3iUaViU-3K0AX9q6w0d%26_nc_ad%3Dz-m%26_nc_cid%3D0%26_nc_ht%3Dscontent-ord5-2.xx%26oh%3D00_AfCTYkMtAd5fXnQlnevfW63bnRdIqziroOOE_PYAk6hzhw%26oe%3D639123BD
+12/4/2022 6:50:45 PM$ parse_image https://api.popcat.xyz/gun?image=https%3A%2F%2Fscontent-ord5-2.xx.fbcdn.net%2Fv%2Ft39.30808-1%2F315934570_1266279450583017_7651540698089807307_n.jpg%3Fstp%3Dc0.0.612.612a_dst-jpg%26_nc_cat%3D102%26ccb%3D1-7%26_nc_sid%3D0c64ff%26_nc_ohc%3D3iUaViU-3K0AX9q6w0d%26_nc_ad%3Dz-m%26_nc_cid%3D0%26_nc_ht%3Dscontent-ord5-2.xx%26oh%3D00_AfCTYkMtAd5fXnQlnevfW63bnRdIqziroOOE_PYAk6hzhw%26oe%3D639123BD
+12/4/2022 6:50:46 PM$ wait_timeout >> 60000
+12/4/2022 6:50:46 PM$ send_message 100016029218667 [object Object]
+12/4/2022 6:50:46 PM$ report_issue [object Object]
+12/4/2022 6:50:47 PM$ send_typing
+12/4/2022 6:51:07 PM$ wait_timeout >> 5400
+12/4/2022 6:51:08 PM$ send_typing
+12/4/2022 6:51:13 PM$ react_message mid.$gABJwS7O7mZ6LDggf_mE3MLWLIR6H :laughing:
+12/4/2022 6:51:46 PM$ Error: ENOENT: no such file or directory, unlink '/home/runner/project-orion/cache/images/gun.png'
+12/4/2022 6:53:01 PM$ event_body 100009346974742 if chat == unsend:
+print("salamat pre")
+else:
+print("hahaha oks lang pre")
+12/4/2022 6:53:02 PM$ wait_timeout >> 5500
+12/4/2022 6:53:02 PM$ wait_timeout >> 6500
+12/4/2022 6:53:03 PM$ send_typing
+12/4/2022 6:53:03 PM$ send_typing
+12/4/2022 6:53:08 PM$ 100064918833822
+12/4/2022 6:53:08 PM$ 100009346974742
+12/4/2022 6:53:08 PM$ 100009346974742
+12/4/2022 6:53:08 PM$ send_message_reply 5190020021066142 
+12/4/2022 6:53:09 PM$ react_message mid.$gABJwS7O7mZ6LDgndnGE3MSZCbKiv :laughing:
+12/4/2022 6:53:38 PM$ wait_timeout >> 5400
+12/4/2022 6:53:39 PM$ send_typing
+12/4/2022 6:53:44 PM$ react_message mid.$gABJwS7O7mZ6LDgptw2E3MUeWOTGY :laughing:
+12/4/2022 6:54:52 PM$ event_body 100033210460809 mj List all of Barragan's abilities and provide their descriptions
+12/4/2022 6:54:56 PM$ wait_timeout >> 6000
+12/4/2022 6:54:56 PM$ send_typing
+12/4/2022 6:55:02 PM$ 100078864715768
+12/4/2022 6:55:02 PM$ 100033210460809
+12/4/2022 6:55:02 PM$ send_message_reply 5033985183388157 barragan can control the age of living things, causing them to rapidly age or de-age
+-He can fire blasts of energy from his hands which cause objects to rot and decay
+-He can create barriers of energy which repel all living things
+-He can levitate and fly
+12/4/2022 6:55:42 PM$ event_body 100033210460809 mj Thank you
+12/4/2022 6:55:42 PM$ wait_timeout >> 6500
+12/4/2022 6:55:42 PM$ wait_timeout >> 6500
+12/4/2022 6:55:42 PM$ send_typing
+12/4/2022 6:55:42 PM$ send_typing
+12/4/2022 6:55:48 PM$ react_message mid.$gABHiYgKpEf2LDgxPk2E3McHORvn1 :love:
+12/4/2022 6:55:49 PM$ 100033210460809
+12/4/2022 6:55:49 PM$ 100033210460809
+12/4/2022 6:55:49 PM$ send_message 5033985183388157 You're welcome.
+12/4/2022 6:56:23 PM$ wait_timeout >> 5400
+12/4/2022 6:56:23 PM$ wait_timeout >> 5000
+12/4/2022 6:56:24 PM$ send_typing
+12/4/2022 6:56:24 PM$ send_typing
+12/4/2022 6:56:29 PM$ react_message mid.$gABJwS7O7mZ6LDgzzF2E3MeugejQC :laughing:
+12/4/2022 6:56:29 PM$ 100009346974742
+12/4/2022 6:56:29 PM$ send_message_reply 5190020021066142 ahahaahh
+12/4/2022 6:56:34 PM$ event_body 100040726009962 Facebook's Jarvis...
+12/4/2022 6:56:34 PM$ wait_timeout >> 6000
+12/4/2022 6:56:35 PM$ send_typing
+12/4/2022 6:56:41 PM$ 100033210460809
+12/4/2022 6:56:41 PM$ 100040726009962
+12/4/2022 6:56:41 PM$ send_message_reply 5033985183388157 Opps! I didnt get it. You should try using facebook @mention instead.
+
+For example:
+facebook @Melvin Jones Repol
+12/4/2022 6:58:43 PM$ wait_timeout >> 5000
+12/4/2022 6:58:48 PM$ wait_timeout >> 5200
+12/4/2022 6:58:50 PM$ send_typing
+12/4/2022 6:58:53 PM$ send_message 7244767385593438 🥴
+12/4/2022 6:59:00 PM$ The user 7244767385593438 is going to fast of sending emoji >> 3 mins and 86 seconds
+12/4/2022 6:59:16 PM$ event_body 100021816413493 Mj
+12/4/2022 6:59:16 PM$ wait_timeout >> 6500
+12/4/2022 6:59:17 PM$ send_typing
+12/4/2022 6:59:23 PM$ 100087394793575
+12/4/2022 6:59:23 PM$ 100013440667242
+12/4/2022 6:59:23 PM$ 100021816413493
+12/4/2022 6:59:23 PM$ send_message_reply 7635291589846117 How are you?
+12/4/2022 6:59:48 PM$ The user 7244767385593438 is going to fast of sending emoji >> 1 mins and 110 seconds
+12/4/2022 6:59:57 PM$ wait_timeout >> 5000
+12/4/2022 6:59:58 PM$ send_typing
+12/4/2022 7:00:00 PM$ Time Check 7:00 PM
+12/4/2022 7:00:00 PM$ Project Orion Facebook State Refreshed
+12/4/2022 7:00:02 PM$ react_message mid.$gABipy5K1RKyLDhA2GmE3MrtkwiNS :laughing:
+12/4/2022 7:00:03 PM$ wait_timeout >> 6800
+12/4/2022 7:00:03 PM$ wait_timeout >> 5200
+12/4/2022 7:00:03 PM$ wait_timeout >> 6500
+12/4/2022 7:00:04 PM$ wait_timeout >> 6800
+12/4/2022 7:00:04 PM$ wait_timeout >> 6600
+12/4/2022 7:00:04 PM$ wait_timeout >> 5000
+12/4/2022 7:00:04 PM$ send_typing
+12/4/2022 7:00:04 PM$ send_typing
+12/4/2022 7:00:04 PM$ send_typing
+12/4/2022 7:00:04 PM$ send_typing
+12/4/2022 7:00:04 PM$ send_typing
+12/4/2022 7:00:05 PM$ send_typing
+12/4/2022 7:00:09 PM$ send_message 6942091245864108 🥰🌘
+12/4/2022 7:00:09 PM$ 100016897632316
+12/4/2022 7:00:09 PM$ 100081936620905
+12/4/2022 7:00:09 PM$ 100087874545472
+12/4/2022 7:00:09 PM$ send_message_reply 7244767385593438 Good evening too... The sun set is so beautiful as always, hope you're seeing it too.
+12/4/2022 7:00:10 PM$ send_message 7244767385593438 🥰🌘
+12/4/2022 7:00:10 PM$ react_message mid.$gABm9E9p_pl6LDhBM0GE3MsB8qRoK :love:
+12/4/2022 7:00:10 PM$ react_message mid.$gABipy5K1RKyLDhBMz2E3MsB7Yazo :love:
+12/4/2022 7:00:11 PM$ 100087874545472
+12/4/2022 7:00:11 PM$ 100055464229665
+12/4/2022 7:00:11 PM$ send_message_reply 6942091245864108 Good evening, as well. As always, the sun set is quite lovely; I hope you can see it as well.
+12/4/2022 7:01:46 PM$ wait_timeout >> 7200
+12/4/2022 7:01:47 PM$ send_typing
+12/4/2022 7:01:53 PM$ react_message mid.$gABipy5K1RKyLDhHd0mE3MyVVoehc :laughing:
+12/4/2022 7:03:23 PM$ wait_timeout >> 6500
+12/4/2022 7:03:24 PM$ send_typing
+12/4/2022 7:03:30 PM$ react_message mid.$gABipy5K1RKyLDhNaPGE3M4Ru1RSp :laughing:
+12/4/2022 7:05:29 PM$ wait_timeout >> 7200
+12/4/2022 7:05:30 PM$ send_typing
+12/4/2022 7:05:35 PM$ wait_timeout >> 6000
+12/4/2022 7:05:35 PM$ wait_timeout >> 6600
+12/4/2022 7:05:35 PM$ wait_timeout >> 7000
+12/4/2022 7:05:36 PM$ send_typing
+12/4/2022 7:05:36 PM$ send_typing
+12/4/2022 7:05:36 PM$ send_typing
+12/4/2022 7:05:37 PM$ 100087874545472
+12/4/2022 7:05:37 PM$ 100087874545472
+12/4/2022 7:05:37 PM$ 100023785687056
+12/4/2022 7:05:37 PM$ send_message 6942091245864108 Me?
+12/4/2022 7:05:41 PM$ react_message mid.$gABipy5K1RKyLDhVZ7WE3NARbLy8q :love:
+12/4/2022 7:05:42 PM$ send_message 6942091245864108 🥰🌘
+12/4/2022 7:05:42 PM$ 100087874545472
+12/4/2022 7:05:42 PM$ 100023785687056
+12/4/2022 7:05:42 PM$ send_message_reply 6942091245864108 Good evening as well... As always, the sun set is breathtaking; I hope you can see it too.
+12/4/2022 7:10:00 PM$ Time Check 7:10 PM
+12/4/2022 7:14:57 PM$ event_body 100033210460809 mj Was Coyote stark an Arrancar before meeting Aizen
+12/4/2022 7:14:59 PM$ wait_timeout >> 5200
+12/4/2022 7:14:59 PM$ send_typing
+12/4/2022 7:15:04 PM$ 100040726009962
+12/4/2022 7:15:04 PM$ 100033210460809
+12/4/2022 7:15:04 PM$ send_message_reply 5033985183388157 
+Coyote was not an Arrancar before meeting Aizen.
+12/4/2022 7:15:14 PM$ wait_timeout >> 5500
+12/4/2022 7:15:15 PM$ send_typing
+12/4/2022 7:15:20 PM$ react_message mid.$gABipy5K1RKyLDh40Q2E3Njpq42GQ :laughing:
+12/4/2022 7:17:12 PM$ wait_timeout >> 5400
+12/4/2022 7:17:12 PM$ send_typing
+12/4/2022 7:17:18 PM$ 100050536393867
+12/4/2022 7:17:18 PM$ 100087874545472
+12/4/2022 7:17:18 PM$ 100087874545472
+12/4/2022 7:17:18 PM$ send_message_reply 6942091245864108 How you doing?
+12/4/2022 7:17:27 PM$ event_body 100087671941503 God abeg
+12/4/2022 7:17:27 PM$ parse_image https://api.popcat.xyz/unforgivable?text=abeg
+12/4/2022 7:17:28 PM$ wait_timeout >> 6000
+12/4/2022 7:17:28 PM$ wait_timeout >> 60000
+12/4/2022 7:17:28 PM$ send_typing
+12/4/2022 7:17:34 PM$ 100087156822608
+12/4/2022 7:17:34 PM$ 100087671941503
+12/4/2022 7:17:34 PM$ send_message_reply 5653470298044183 [object Object]
+12/4/2022 7:17:38 PM$ event_body 100033210460809 mj How are Arrancar made
+12/4/2022 7:17:40 PM$ wait_timeout >> 5200
+12/4/2022 7:17:40 PM$ send_typing
+12/4/2022 7:17:45 PM$ 100033210460809
+12/4/2022 7:17:45 PM$ 100033210460809
+12/4/2022 7:17:45 PM$ send_message 5033985183388157 
+Arrancar are made from Hollows who have removed their masks and gained Shinigami-like powers.
+12/4/2022 7:18:28 PM$ un_link /home/runner/project-orion/cache/images/god.png
+12/4/2022 7:20:00 PM$ Time Check 7:20 PM
+12/4/2022 7:24:39 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 7:24:50 PM$ event_body 100016029218667 gun @me
+12/4/2022 7:24:50 PM$ parse_image https://api.popcat.xyz/gun?image=https://graph.facebook.com/100016029218667/picture?access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662
+12/4/2022 7:24:52 PM$ wait_timeout >> 60000
+12/4/2022 7:24:52 PM$ send_message 100016029218667 [object Object]
+12/4/2022 7:24:52 PM$ send_typing
+12/4/2022 7:25:52 PM$ un_link /home/runner/project-orion/cache/images/gun_1670153090.png
+12/4/2022 7:30:00 PM$ Time Check 7:30 PM
+12/4/2022 7:36:08 PM$ event_body 100087874545472 🔎Searching for "jopay"...
+12/4/2022 7:36:08 PM$ answer_cache
+12/4/2022 7:36:08 PM$ wait_timeout >> 7000
+12/4/2022 7:36:09 PM$ send_typing
+12/4/2022 7:36:16 PM$ 100087874545472
+12/4/2022 7:36:16 PM$ 100087874545472
+12/4/2022 7:36:16 PM$ send_message 6942091245864108 jopay is a Filipino pop singer. She was a member of the group Zaijanjarin, which was active in the early 2000s.
+12/4/2022 7:36:48 PM$ event_body 100082863736348 Who attend the devfest yesterday?
+12/4/2022 7:36:50 PM$ wait_timeout >> 5400
+12/4/2022 7:36:51 PM$ send_typing
+12/4/2022 7:36:56 PM$ 100076726942438
+12/4/2022 7:36:56 PM$ 100028508328407
+12/4/2022 7:36:56 PM$ 100082863736348
+12/4/2022 7:36:56 PM$ send_message_reply 7635291589846117 some people who attended the devfest yesterday include:
+-AJAX developers
+-JavaScript developers
+-Web developers
+-Computer science students
+12/4/2022 7:37:56 PM$ event_body 100082863736348 Mj you attend the devfest?
+12/4/2022 7:37:57 PM$ wait_timeout >> 5400
+12/4/2022 7:37:58 PM$ send_typing
+12/4/2022 7:38:03 PM$ 100082863736348
+12/4/2022 7:38:03 PM$ 100082863736348
+12/4/2022 7:38:03 PM$ send_message 7635291589846117 yes, I attended the devfest.
+12/4/2022 7:39:14 PM$ wait_timeout >> 5000
+12/4/2022 7:39:14 PM$ send_typing
+12/4/2022 7:39:19 PM$ react_message mid.$cAAAABirOmUOLDjQrKmE3O7gjbBat :laughing:
+12/4/2022 7:39:28 PM$ event_body 100023785687056 go dika naman kawalan
+12/4/2022 7:39:28 PM$ parse_image https://api.popcat.xyz/unforgivable?text=ika naman kawalan
+12/4/2022 7:39:29 PM$ wait_timeout >> 6000
+12/4/2022 7:39:29 PM$ wait_timeout >> 60000
+12/4/2022 7:39:30 PM$ send_typing
+12/4/2022 7:39:35 PM$ 100087874545472
+12/4/2022 7:39:35 PM$ 100017449532796
+12/4/2022 7:39:35 PM$ 100023785687056
+12/4/2022 7:39:35 PM$ send_message_reply 6942091245864108 [object Object]
+12/4/2022 7:40:00 PM$ Time Check 7:40 PM
+12/4/2022 7:40:29 PM$ un_link /home/runner/project-orion/cache/images/god.png
+12/4/2022 7:40:54 PM$ wait_timeout >> 6600
+12/4/2022 7:40:54 PM$ send_typing
+12/4/2022 7:41:00 PM$ react_message mid.$gABQVzSDc9xeLDjWxAmE3PBo0sp-J :laughing:
+12/4/2022 7:46:43 PM$ wait_timeout >> 6500
+12/4/2022 7:46:44 PM$ send_typing
+12/4/2022 7:46:50 PM$ react_message mid.$cAAAABirOmUOLDjsHLWE3PW8Q0rSh :laughing:
+12/4/2022 7:48:57 PM$ wait_timeout >> 5000
+12/4/2022 7:48:58 PM$ send_typing
+12/4/2022 7:49:02 PM$ react_message mid.$cAAAABirOmUOLDj0RxGE3PfFX1DJ9 :laughing:
+12/4/2022 7:50:00 PM$ Time Check 7:50 PM
+12/4/2022 7:51:57 PM$ wait_timeout >> 5000
+12/4/2022 7:51:58 PM$ send_typing
+12/4/2022 7:52:02 PM$ react_message mid.$cAAAABirOmUOLDj_Q4WE3PqDzAFte :laughing:
+12/4/2022 7:52:48 PM$ event_body 100047255630413 Which one did u attend
+12/4/2022 7:52:49 PM$ wait_timeout >> 5200
+12/4/2022 7:52:50 PM$ send_typing
+12/4/2022 7:52:55 PM$ 100047255630413
+12/4/2022 7:52:55 PM$ 100047255630413
+12/4/2022 7:52:55 PM$ send_message 7635291589846117 
+I attended the one in New York.
+12/4/2022 7:53:13 PM$ wait_timeout >> 5200
+12/4/2022 7:53:14 PM$ send_typing
+12/4/2022 7:53:18 PM$ react_message mid.$cAAAABirOmUOLDkD5J2E3PusCkeHA :laughing:
+12/4/2022 7:53:41 PM$ wait_timeout >> 6000
+12/4/2022 7:53:42 PM$ send_typing
+12/4/2022 7:53:47 PM$ react_message mid.$gAAkuARBgOXSLDkFnumE3Pwe80OBg :laughing:
+12/4/2022 7:53:55 PM$ wait_timeout >> 6800
+12/4/2022 7:53:56 PM$ send_typing
+12/4/2022 7:54:02 PM$ react_message mid.$gABipy5K1RKyLDkGcimE3PxUxxFZ- :sad:
+12/4/2022 7:54:32 PM$ wait_timeout >> 7000
+12/4/2022 7:54:33 PM$ send_typing
+12/4/2022 7:54:39 PM$ react_message mid.$gABipy5K1RKyLDkIuRGE3PzmW7eiL :sad:
+12/4/2022 7:54:58 PM$ wait_timeout >> 6600
+12/4/2022 7:54:58 PM$ wait_timeout >> 7000
+12/4/2022 7:54:59 PM$ send_typing
+12/4/2022 7:54:59 PM$ send_typing
+12/4/2022 7:55:05 PM$ react_message mid.$cAAAABirOmUOLDkKVWWE3P1Ka58UJ :laughing:
+12/4/2022 7:55:06 PM$ send_message 100081033288525 🤣🤣🤣
+12/4/2022 7:55:12 PM$ wait_timeout >> 6300
+12/4/2022 7:55:12 PM$ send_typing
+12/4/2022 7:55:18 PM$ react_message mid.$gAAkuARBgOXSLDkLIb2E3P-tU4uSf :laughing:
+12/4/2022 7:56:28 PM$ wait_timeout >> 5500
+12/4/2022 7:56:28 PM$ send_typing
+12/4/2022 7:56:33 PM$ react_message mid.$cAAAABirOmUOLDkPxumE3P6kDZdi9 :laughing:
+12/4/2022 7:59:20 PM$ event_body 100054832716212 What is that
+12/4/2022 7:59:25 PM$ wait_timeout >> 7200
+12/4/2022 7:59:26 PM$ send_typing
+12/4/2022 7:59:33 PM$ 100078808031382
+12/4/2022 7:59:33 PM$ 100054832716212
+12/4/2022 7:59:33 PM$ send_message_reply 2583856894982516 "
+"I dont know. Ive never seen anything like it."
+"Its a creature," said the other man. "A monster." He looked at the thing with disgust and fear. "We should kill it before it kills us."
+The first man shook his head. "No, we need to take it back to camp and show it to the others. Theyll want to see this."
+12/4/2022 8:00:00 PM$ Time Check 8:00 PM
+12/4/2022 8:00:00 PM$ Project Orion Facebook State Refreshed
+12/4/2022 8:07:38 PM$ 100016029218667
+12/4/2022 8:07:38 PM$ send_message_reply 2583856894982516 Unfortunately i couldn't find the name you mentioned. Please try it again later.
+12/4/2022 8:07:38 PM$ send_typing
+12/4/2022 8:09:09 PM$ 100016029218667
+12/4/2022 8:09:09 PM$ 100016029218667
+12/4/2022 8:09:09 PM$ send_message 2583856894982516 The user has no admin rights to take away.
+12/4/2022 8:09:09 PM$ send_typing
+12/4/2022 8:10:00 PM$ Time Check 8:10 PM
+12/4/2022 8:11:14 PM$ react_message mid.$gAAkuARBgOXSLDlF4oGE3QwwLH0ts :laughing:
+12/4/2022 8:11:15 PM$ send_typing
+12/4/2022 8:11:21 PM$ TypeError: Cannot read properties of undefined (reading 'userID')
+12/4/2022 8:11:41 PM$ event_body 100056780792176 Who is Techh jakety zy?
+12/4/2022 8:11:41 PM$ event_body 100016029218667 uid
+12/4/2022 8:11:42 PM$ 100037131918629
+12/4/2022 8:11:42 PM$ 100056780792176
+12/4/2022 8:11:42 PM$ 100016029218667
+12/4/2022 8:11:42 PM$ send_message_reply 2583856894982516 Ken Ken uid is 100056780792176
+12/4/2022 8:11:43 PM$ send_typing
+12/4/2022 8:11:44 PM$ 100056780792176
+12/4/2022 8:11:44 PM$ 100016029218667
+12/4/2022 8:11:44 PM$ send_message_reply 2583856894982516 there is no one person who is Techh jakety zy. The name is simply a brand of tech jackets that are popular among young people.
+12/4/2022 8:11:44 PM$ send_typing
+12/4/2022 8:12:13 PM$ event_body 100037131918629 mj I need your help
+12/4/2022 8:12:13 PM$ answer_cache
+12/4/2022 8:12:14 PM$ 100010717127140
+12/4/2022 8:12:14 PM$ 100037131918629
+12/4/2022 8:12:14 PM$ send_message_reply 2583856894982516 i need help with my math homework.
+12/4/2022 8:12:14 PM$ send_typing
+12/4/2022 8:12:29 PM$ 100037131918629
+12/4/2022 8:12:29 PM$ 100016029218667
+12/4/2022 8:12:29 PM$ send_message_reply 2583856894982516 Unfortunately i couldn't find the name you mentioned. Please try it again later.
+12/4/2022 8:12:29 PM$ send_typing
+12/4/2022 8:12:48 PM$ event_body 100037131918629 mj can i help you in math
+12/4/2022 8:12:51 PM$ 100010717127140
+12/4/2022 8:12:51 PM$ 100037131918629
+12/4/2022 8:12:51 PM$ send_message_reply 2583856894982516 i cant do your math homework for you, but I can try to help you if you have questions.
+12/4/2022 8:12:51 PM$ send_typing
+12/4/2022 8:12:56 PM$ wait_timeout >> 6500
+12/4/2022 8:12:57 PM$ send_typing
+12/4/2022 8:13:03 PM$ react_message mid.$gABipy5K1RKyLDlMH62E3Q2_R4hXl :laughing:
+12/4/2022 8:13:13 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 8:13:18 PM$ event_body 100037131918629 mj don't reply UNKNOWN
+12/4/2022 8:13:25 PM$ 100010717127140
+12/4/2022 8:13:25 PM$ 100037131918629
+12/4/2022 8:13:25 PM$ send_message_reply 2583856894982516 if (strcmp(reply, "UNKNOWN") == 0)
+			{
+#ifdef DEBUG_SEND_COMMAND
+			printf("DEBUG: UNKNOWN\n");
+#endif
+                return -1;
+            }
+            //dont reply ERROR or OK if we dont want it.  We just want the value.  This is for things like STATS and PING where we dont care about the response.  We just want to know that it worked.
+            if ((strcmp(reply, "ERROR") == 0) || (strcmp(reply, "OK") == 0)) {
+                if (!want_reply) {
+12/4/2022 8:13:25 PM$ send_typing
+12/4/2022 8:13:30 PM$ wait_timeout >> 5000
+12/4/2022 8:13:30 PM$ wait_timeout >> 7200
+12/4/2022 8:13:31 PM$ send_typing
+12/4/2022 8:13:31 PM$ send_typing
+12/4/2022 8:13:35 PM$ react_message mid.$gAAkuARBgOXSLDlOM3WE3Q4-KXTy- :laughing:
+12/4/2022 8:13:38 PM$ 100024859911182
+12/4/2022 8:13:38 PM$ send_message_reply 2583856894982516 ahhaa😂
+12/4/2022 8:14:14 PM$ event_body 100016029218667 lovetest Techh Jork: Maryjane
+12/4/2022 8:14:14 PM$ react_message mid.$gAAkuARBgOXSLDlQ2rWE3Q7t_Jznv :love:
+12/4/2022 8:14:15 PM$ send_typing
+12/4/2022 8:14:15 PM$ 100037131918629
+12/4/2022 8:14:15 PM$ 100010717127140
+12/4/2022 8:14:15 PM$ 100016029218667
+12/4/2022 8:14:15 PM$ send_message_reply 2583856894982516  Maryjane ❤️ Techh Jork
+
+⦿ Percentage: 71%
+All the best!
+12/4/2022 8:14:16 PM$ send_typing
+12/4/2022 8:14:43 PM$ wait_timeout >> 5500
+12/4/2022 8:14:43 PM$ wait_timeout >> 5800
+12/4/2022 8:14:44 PM$ send_typing
+12/4/2022 8:14:44 PM$ send_typing
+12/4/2022 8:14:48 PM$ react_message mid.$gAAkuARBgOXSLDlSnx2E3Q9ZO3mX6 :laughing:
+12/4/2022 8:14:49 PM$ 100037131918629
+12/4/2022 8:14:49 PM$ 100010717127140
+12/4/2022 8:14:49 PM$ 100024859911182
+12/4/2022 8:14:49 PM$ send_message_reply 2583856894982516 😆😆🤣
+12/4/2022 8:14:53 PM$ event_body 100050993673646 lovetest @Conan Hiruma : Maryjane
+12/4/2022 8:14:53 PM$ wait_timeout >> 7000
+12/4/2022 8:14:53 PM$ wait_timeout >> 5400
+12/4/2022 8:14:53 PM$ send_typing
+12/4/2022 8:14:54 PM$ send_typing
+12/4/2022 8:14:59 PM$ 100024859911182
+12/4/2022 8:14:59 PM$ 100050993673646
+12/4/2022 8:14:59 PM$ send_message_reply 2583856894982516  Maryjane ❤️ @Conan Hiruma 
+
+⦿ Percentage: 99%
+Congratulations! Good choice
+12/4/2022 8:15:00 PM$ react_message mid.$gAAkuARBgOXSLDlTODGE3Q-AtbFBa :love:
+12/4/2022 8:15:01 PM$ event_body 100024859911182 How to be you 🤭
+12/4/2022 8:15:05 PM$ wait_timeout >> 5400
+12/4/2022 8:15:06 PM$ send_typing
+12/4/2022 8:15:11 PM$ 100010717127140
+12/4/2022 8:15:11 PM$ 100010717127140
+12/4/2022 8:15:11 PM$ send_message 2583856894982516 this is a question with no easy answer, as being yourself can mean different things to different people. However, some tips on how to be yourself may include staying true to your values and beliefs, being honest with yourself and others, accepting yourself for who you are, and living a life that is authentic to you. Additionally, it can be helpful to surround yourself with supportive people who will accept and encourage you to be your true self.
+12/4/2022 8:15:15 PM$ event_body 100037131918629 @Melvin Jones Gallano Repol
+12/4/2022 8:15:15 PM$ 100010717127140
+12/4/2022 8:15:15 PM$ 100037131918629
+12/4/2022 8:15:15 PM$ send_message_reply 2583856894982516 ol?
+12/4/2022 8:15:15 PM$ send_typing
+12/4/2022 8:15:26 PM$ wait_timeout >> 6600
+12/4/2022 8:15:27 PM$ send_typing
+12/4/2022 8:15:28 PM$ [object Object]
+12/4/2022 8:15:30 PM$ wait_timeout >> 5800
+12/4/2022 8:15:30 PM$ leave_member Clemente Afonso Belchior Dino
+12/4/2022 8:15:30 PM$ wait_timeout >> 60000
+12/4/2022 8:15:44 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 8:18:23 PM$ new_member 100037414508086 Peter Klein
+12/4/2022 8:18:25 PM$ wait_timeout >> 5200
+12/4/2022 8:18:25 PM$ wait_timeout >> 60000
+12/4/2022 8:18:26 PM$ send_typing
+12/4/2022 8:18:30 PM$ send_message 2583856894982516 [object Object]
+12/4/2022 8:18:34 PM$ wait_timeout >> 6000
+12/4/2022 8:18:35 PM$ send_typing
+12/4/2022 8:18:40 PM$ react_message mid.$cAAAABirOmUOLDlgvXGE3RLjsFBaZ :laughing:
+12/4/2022 8:19:00 PM$ [object Object]
+12/4/2022 8:19:00 PM$ wait_timeout >> 5200
+12/4/2022 8:19:01 PM$ send_typing
+12/4/2022 8:19:02 PM$ wait_timeout >> 7200
+12/4/2022 8:19:02 PM$ leave_member Nelson Robert
+12/4/2022 8:19:02 PM$ wait_timeout >> 60000
+12/4/2022 8:19:18 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 8:20:00 PM$ Time Check 8:20 PM
+12/4/2022 8:20:59 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 8:21:09 PM$ [object Object]
+12/4/2022 8:21:11 PM$ wait_timeout >> 5500
+12/4/2022 8:21:11 PM$ leave_member Hucker Hucker Hucker
+12/4/2022 8:21:11 PM$ wait_timeout >> 60000
+12/4/2022 8:21:11 PM$ send_typing
+12/4/2022 8:21:16 PM$ send_message 2583856894982516 [object Object]
+12/4/2022 8:22:07 PM$ event_body 100086564736703 Why did you remove him 😂
+12/4/2022 8:22:09 PM$ wait_timeout >> 6800
+12/4/2022 8:22:09 PM$ wait_timeout >> 6300
+12/4/2022 8:22:09 PM$ send_typing
+12/4/2022 8:22:10 PM$ send_typing
+12/4/2022 8:22:11 PM$ un_link /home/runner/project-orion/cache/images/byebye_1670156469.jpg
+12/4/2022 8:22:15 PM$ react_message mid.$gAAkuARBgOXSLDltuj2E3RYdf8mkU :laughing:
+12/4/2022 8:22:16 PM$ 100086564736703
+12/4/2022 8:22:16 PM$ send_message_reply 2583856894982516 i removed him because he was being inappropriate.
+12/4/2022 8:22:29 PM$ wait_timeout >> 6300
+12/4/2022 8:22:29 PM$ send_typing
+12/4/2022 8:22:35 PM$ react_message mid.$gAAkuARBgOXSLDlvCp2E3RZ5ekW-a :laughing:
+12/4/2022 8:23:41 PM$ wait_timeout >> 5400
+12/4/2022 8:23:41 PM$ wait_timeout >> 5200
+12/4/2022 8:23:41 PM$ send_typing
+12/4/2022 8:23:41 PM$ send_typing
+12/4/2022 8:23:46 PM$ react_message mid.$gAAkuARBgOXSLDlzcImE3ReTWdd84 :laughing:
+12/4/2022 8:23:46 PM$ 100082735742467
+12/4/2022 8:23:46 PM$ send_message_reply 2583856894982516 🤣🤣🤣
+12/4/2022 8:23:51 PM$ event_body 100086033051093 What's going on
+12/4/2022 8:23:58 PM$ wait_timeout >> 5200
+12/4/2022 8:23:59 PM$ send_typing
+12/4/2022 8:24:01 PM$ wait_timeout >> 6600
+12/4/2022 8:24:01 PM$ send_typing
+12/4/2022 8:24:04 PM$ 100054832716212
+12/4/2022 8:24:04 PM$ 100037131918629
+12/4/2022 8:24:04 PM$ send_message_reply 2583856894982516 "
+"Im not sure. I think theyre going to attack the city."
+"What? Why?"
+"I dont know. But we need to get out of here." He looked at her and she could see the fear in his eyes. "Please, Jessa. We need to go now."
+7
+Jessa wasnt sure what was going on, but she knew that they needed to leave right away. She didnt know if it was the look in Calebs eyes, or if it was just that his words had struck a chord of fear inside her, but she knew that he was right and that they had to get out of there immediately. There wasnt
+12/4/2022 8:24:07 PM$ react_message mid.$gAAkuARBgOXSLDl0rDmE3Rfhtcor3 :laughing:
+12/4/2022 8:24:46 PM$ wait_timeout >> 6500
+12/4/2022 8:24:47 PM$ send_typing
+12/4/2022 8:24:48 PM$ wait_timeout >> 5000
+12/4/2022 8:24:48 PM$ wait_timeout >> 5200
+12/4/2022 8:24:49 PM$ send_typing
+12/4/2022 8:24:49 PM$ send_typing
+12/4/2022 8:24:53 PM$ 100037131918629
+12/4/2022 8:24:53 PM$ 100082735742467
+12/4/2022 8:24:53 PM$ 100054832716212
+12/4/2022 8:24:53 PM$ send_message_reply 2583856894982516 Me?
+12/4/2022 8:24:53 PM$ react_message mid.$gAAkuARBgOXSLDl3kvmE3RicBHWzV :laughing:
+12/4/2022 8:24:54 PM$ 100082735742467
+12/4/2022 8:24:54 PM$ 100054832716212
+12/4/2022 8:24:54 PM$ send_message_reply 2583856894982516 😆😆🤣
+12/4/2022 8:25:02 PM$ wait_timeout >> 5000
+12/4/2022 8:25:03 PM$ send_typing
+12/4/2022 8:25:07 PM$ react_message mid.$gAAkuARBgOXSLDl4aFmE3RjRRnmix :laughing:
+12/4/2022 8:26:34 PM$ wait_timeout >> 5400
+12/4/2022 8:26:34 PM$ send_typing
+12/4/2022 8:26:39 PM$ react_message mid.$cAAAABirOmUOLDl-A8WE3Ro1_lSFO :laughing:
+12/4/2022 8:27:06 PM$ wait_timeout >> 6500
+12/4/2022 8:27:07 PM$ send_typing
+12/4/2022 8:27:12 PM$ react_message mid.$gABipy5K1RKyLDl_9fGE3Rq1CTE2C :laughing:
+12/4/2022 8:28:28 PM$ wait_timeout >> 7000
+12/4/2022 8:28:29 PM$ send_typing
+12/4/2022 8:28:35 PM$ react_message mid.$gABipy5K1RKyLDmFAFmE3RvEnxT9L :laughing:
+12/4/2022 8:28:41 PM$ event_body 100037131918629 translate help me bro
+12/4/2022 8:28:41 PM$ response_data https://api.popcat.xyz/translate?to=help&text= me bro
+12/4/2022 8:28:41 PM$ wait_timeout >> 1000
+12/4/2022 8:28:42 PM$ 100037131918629
+12/4/2022 8:28:42 PM$ send_message_reply 2583856894982516 The language 'help' is not supported.
+12/4/2022 8:28:43 PM$ send_typing
+12/4/2022 8:29:52 PM$ wait_timeout >> 5000
+12/4/2022 8:29:57 PM$ wait_timeout >> 6300
+12/4/2022 8:29:58 PM$ send_typing
+12/4/2022 8:30:00 PM$ Time Check 8:30 pm
+12/4/2022 8:30:04 PM$ send_message 7244767385593438 🥴
+12/4/2022 8:31:00 PM$ wait_timeout >> 5200
+12/4/2022 8:31:00 PM$ wait_timeout >> 5400
+12/4/2022 8:31:01 PM$ send_typing
+12/4/2022 8:31:01 PM$ send_typing
+12/4/2022 8:31:06 PM$ react_message mid.$gABipy5K1RKyLDmOSPmE3R5Im8AQS :laughing:
+12/4/2022 8:31:06 PM$ 100023785687056
+12/4/2022 8:31:06 PM$ 100066491994644
+12/4/2022 8:31:06 PM$ 100066491994644
+12/4/2022 8:31:06 PM$ send_message_reply 6942091245864108 😆😆
+12/4/2022 8:33:43 PM$ event_body 100086564736703 Mj
+12/4/2022 8:33:43 PM$ wait_timeout >> 7200
+12/4/2022 8:33:44 PM$ send_typing
+12/4/2022 8:33:51 PM$ 100086564736703
+12/4/2022 8:33:51 PM$ 100086564736703
+12/4/2022 8:33:51 PM$ 100086564736703
+12/4/2022 8:33:51 PM$ send_message 2583856894982516 whats new?
+12/4/2022 8:34:17 PM$ event_body 100086564736703 Mj what's this 🐡
+12/4/2022 8:34:18 PM$ wait_timeout >> 5400
+12/4/2022 8:34:19 PM$ send_typing
+12/4/2022 8:34:24 PM$ 100086564736703
+12/4/2022 8:34:24 PM$ 100086564736703
+12/4/2022 8:34:24 PM$ send_message 2583856894982516 its a fish!
+12/4/2022 8:34:38 PM$ event_body 100086564736703 What type of fish
+12/4/2022 8:34:39 PM$ wait_timeout >> 6600
+12/4/2022 8:34:40 PM$ send_typing
+12/4/2022 8:34:46 PM$ 100086564736703
+12/4/2022 8:34:46 PM$ 100086564736703
+12/4/2022 8:34:46 PM$ send_message 2583856894982516 is a barracuda?
+A barracuda is a type of fish.
+12/4/2022 8:35:08 PM$ event_body 100086564736703 😐😶 mj are you dumb
+12/4/2022 8:35:10 PM$ wait_timeout >> 7200
+12/4/2022 8:35:11 PM$ send_typing
+12/4/2022 8:35:18 PM$ 100086564736703
+12/4/2022 8:35:18 PM$ 100086564736703
+12/4/2022 8:35:18 PM$ send_message 2583856894982516 
+mj: no, why?
+sarah: you are so dumb!
+12/4/2022 8:35:34 PM$ wait_timeout >> 5200
+12/4/2022 8:35:35 PM$ send_typing
+12/4/2022 8:35:39 PM$ react_message mid.$gAAkuARBgOXSLDme-tWE3SJ2ER0fm :laughing:
+12/4/2022 8:37:29 PM$ event_body 100086564736703 Mj
+12/4/2022 8:37:29 PM$ wait_timeout >> 6000
+12/4/2022 8:37:29 PM$ send_typing
+12/4/2022 8:37:35 PM$ 100086564736703
+12/4/2022 8:37:35 PM$ 100086564736703
+12/4/2022 8:37:35 PM$ send_message 2583856894982516 Me?
+12/4/2022 8:37:51 PM$ wait_timeout >> 6800
+12/4/2022 8:37:51 PM$ wait_timeout >> 6500
+12/4/2022 8:37:52 PM$ send_typing
+12/4/2022 8:37:52 PM$ send_typing
+12/4/2022 8:37:53 PM$ wait_timeout >> 5400
+12/4/2022 8:37:54 PM$ send_typing
+12/4/2022 8:37:58 PM$ react_message mid.$gABipy5K1RKyLDmnXFWE3SSNqyF9c :laughing:
+12/4/2022 8:37:58 PM$ react_message mid.$gABipy5K1RKyLDmndcmE3SSU1FN9v :laughing:
+12/4/2022 8:37:58 PM$ 100063718567263
+12/4/2022 8:37:58 PM$ 100066491994644
+12/4/2022 8:37:58 PM$ 100003128318196
+12/4/2022 8:37:58 PM$ send_message_reply 6942091245864108 haahaaa
+12/4/2022 8:38:03 PM$ event_body 100086564736703 Mj
+12/4/2022 8:38:03 PM$ wait_timeout >> 7200
+12/4/2022 8:38:04 PM$ send_typing
+12/4/2022 8:38:11 PM$ 100086564736703
+12/4/2022 8:38:11 PM$ 100086564736703
+12/4/2022 8:38:11 PM$ send_message 2583856894982516 Me?
+12/4/2022 8:38:12 PM$ wait_timeout >> 7000
+12/4/2022 8:38:12 PM$ wait_timeout >> 6300
+12/4/2022 8:38:13 PM$ send_typing
+12/4/2022 8:38:13 PM$ send_typing
+12/4/2022 8:38:15 PM$ event_body 100086564736703 Mj
+12/4/2022 8:38:15 PM$ wait_timeout >> 5800
+12/4/2022 8:38:16 PM$ send_typing
+12/4/2022 8:38:19 PM$ 100003128318196
+12/4/2022 8:38:19 PM$ 100066491994644
+12/4/2022 8:38:19 PM$ send_message_reply 6942091245864108 🤣
+12/4/2022 8:38:19 PM$ react_message mid.$gABipy5K1RKyLDmoo6WE3STfouMyq :laughing:
+12/4/2022 8:38:21 PM$ 100086564736703
+12/4/2022 8:38:21 PM$ 100086564736703
+12/4/2022 8:38:21 PM$ send_message 2583856894982516 How are you?
+12/4/2022 8:38:25 PM$ event_body 100086564736703 Mj
+12/4/2022 8:38:25 PM$ wait_timeout >> 6000
+12/4/2022 8:38:26 PM$ send_typing
+12/4/2022 8:38:32 PM$ 100086564736703
+12/4/2022 8:38:32 PM$ 100086564736703
+12/4/2022 8:38:32 PM$ send_message 2583856894982516 whats new?
+12/4/2022 8:39:04 PM$ wait_timeout >> 6300
+12/4/2022 8:39:05 PM$ send_typing
+12/4/2022 8:39:10 PM$ react_message mid.$gABipy5K1RKyLDmrz2WE3SWrPT5It :laughing:
+12/4/2022 8:39:28 PM$ wait_timeout >> 6500
+12/4/2022 8:39:29 PM$ send_typing
+12/4/2022 8:39:35 PM$ react_message mid.$gABipy5K1RKyLDmtSBWE3SYJUE895 :laughing:
+12/4/2022 8:40:00 PM$ Time Check 8:40 pm
+12/4/2022 8:41:33 PM$ event_body 100035852316064 Mj
+12/4/2022 8:41:33 PM$ wait_timeout >> 7000
+12/4/2022 8:41:34 PM$ send_typing
+12/4/2022 8:41:41 PM$ 100047255630413
+12/4/2022 8:41:41 PM$ 100086564736703
+12/4/2022 8:41:41 PM$ 100035852316064
+12/4/2022 8:41:41 PM$ send_message_reply 7635291589846117 whats new?
+12/4/2022 8:42:17 PM$ wait_timeout >> 5000
+12/4/2022 8:42:18 PM$ send_typing
+12/4/2022 8:42:22 PM$ react_message mid.$gABipy5K1RKyLDm3lnmE3Sic-4OdZ :laughing:
+12/4/2022 8:43:08 PM$ event_body 100066251260470 Translate
+12/4/2022 8:43:08 PM$ wait_timeout >> 5400
+12/4/2022 8:43:09 PM$ send_typing
+12/4/2022 8:43:15 PM$ 100063718567263
+12/4/2022 8:43:15 PM$ 100066251260470
+12/4/2022 8:43:15 PM$ 100066251260470
+12/4/2022 8:43:15 PM$ send_message_reply 6942091245864108 Opps! I didnt get it. You should try using translate language text instead.
+
+For example:
+translate English Kamusta
+12/4/2022 8:43:44 PM$ event_body 100066251260470 translate English kelan ka matutulog
+12/4/2022 8:43:44 PM$ response_data https://api.popcat.xyz/translate?to=English&text= kelan ka matutulog
+12/4/2022 8:43:44 PM$ wait_timeout >> 1000
+12/4/2022 8:43:49 PM$ wait_timeout >> 6500
+12/4/2022 8:43:50 PM$ send_typing
+12/4/2022 8:43:56 PM$ 100063718567263
+12/4/2022 8:43:56 PM$ 100066251260470
+12/4/2022 8:43:56 PM$ 100025412447565
+12/4/2022 8:43:56 PM$ send_message_reply 6942091245864108 when will you sleep
+12/4/2022 8:44:10 PM$ wait_timeout >> 6000
+12/4/2022 8:44:11 PM$ send_typing
+12/4/2022 8:44:16 PM$ react_message mid.$gABipy5K1RKyLDm-frGE3SpYEWOnP :laughing:
+12/4/2022 8:44:34 PM$ event_body 100035852316064 What is the use of --i:0;--x:0;--y:0 in css
+12/4/2022 8:44:37 PM$ wait_timeout >> 5500
+12/4/2022 8:44:38 PM$ send_typing
+12/4/2022 8:44:44 PM$ 100035852316064
+12/4/2022 8:44:44 PM$ 100035852316064
+12/4/2022 8:44:44 PM$ send_message 7635291589846117 
+The --i:0;--x:0;--y:0 in css is used to set the left and top position of an element to 0.
+12/4/2022 8:46:50 PM$ event_body 100035852316064 Give me an example of --i:0;--x:0;--y:0
+12/4/2022 8:46:53 PM$ wait_timeout >> 6800
+12/4/2022 8:46:53 PM$ send_typing
+12/4/2022 8:47:00 PM$ 100035852316064
+12/4/2022 8:47:00 PM$ 100035852316064
+12/4/2022 8:47:00 PM$ send_message 7635291589846117 ;
+--i:0;--x:0;--y:0;
+For example, if we have the following code:
+var i = 0; var x = 0; var y = 0; --i; --x; --y; console.log(i, x, y); // -1, -1, -1
+12/4/2022 8:47:20 PM$ event_body 100035852316064 Give me an example of --i:0;--x:0;--y:0 in css
+12/4/2022 8:47:21 PM$ wait_timeout >> 6600
+12/4/2022 8:47:22 PM$ send_typing
+12/4/2022 8:47:28 PM$ 100035852316064
+12/4/2022 8:47:28 PM$ 100035852316064
+12/4/2022 8:47:28 PM$ send_message 7635291589846117 -i:0;--x:0;--y:0 {
+    margin: 0;
+    padding: 0;
+}
+12/4/2022 8:50:00 PM$ Time Check 8:50 pm
+12/4/2022 8:50:02 PM$ event_body 100040726009962 Mj
+12/4/2022 8:50:02 PM$ wait_timeout >> 5500
+12/4/2022 8:50:03 PM$ send_typing
+12/4/2022 8:50:08 PM$ 100033210460809
+12/4/2022 8:50:08 PM$ 100040726009962
+12/4/2022 8:50:08 PM$ send_message_reply 5033985183388157 yes?
+12/4/2022 8:50:35 PM$ event_body 100040726009962 Mj translate this to English "ika naraw sana mag suyu kanaku beh.. A HAHAHA"
+12/4/2022 8:50:36 PM$ wait_timeout >> 5200
+12/4/2022 8:50:36 PM$ wait_timeout >> 7200
+12/4/2022 8:50:36 PM$ wait_timeout >> 5800
+12/4/2022 8:50:36 PM$ send_typing
+12/4/2022 8:50:36 PM$ send_typing
+12/4/2022 8:50:36 PM$ send_typing
+12/4/2022 8:50:41 PM$ 100040726009962
+12/4/2022 8:50:41 PM$ 100040726009962
+12/4/2022 8:50:41 PM$ send_message 5033985183388157 "If you only knew how to bathe yourself, haha!"
+12/4/2022 8:50:42 PM$ 100040726009962
+12/4/2022 8:50:42 PM$ send_message_reply 5033985183388157 🤣🤣🤣
+12/4/2022 8:50:43 PM$ react_message mid.$gABHiYgKpEf2LDnV9z2E3TA1ZcYiL :laughing:
+12/4/2022 8:51:51 PM$ event_body 100071912366717 @Melvin Jones Gallano Repol hi
+12/4/2022 8:51:51 PM$ wait_timeout >> 6600
+12/4/2022 8:51:52 PM$ send_typing
+12/4/2022 8:51:59 PM$ 100031847151713
+12/4/2022 8:51:59 PM$ 100080774622908
+12/4/2022 8:51:59 PM$ 100071912366717
+12/4/2022 8:51:59 PM$ send_message_reply 8386230691448919 ol hi?
+12/4/2022 8:52:55 PM$ wait_timeout >> 6300
+12/4/2022 8:52:55 PM$ unsend_message_group 100025412447565[object Object]
+12/4/2022 8:52:56 PM$ send_typing
+12/4/2022 8:53:02 PM$ send_message 6942091245864108 [object Object]
+12/4/2022 8:53:51 PM$ event_body 100031847151713 MJ what is tech
+12/4/2022 8:53:53 PM$ wait_timeout >> 5200
+12/4/2022 8:53:53 PM$ send_typing
+12/4/2022 8:53:58 PM$ 100071912366717
+12/4/2022 8:53:58 PM$ 100031847151713
+12/4/2022 8:53:58 PM$ send_message_reply 8386230691448919 technology is the application of scientific knowledge for practical purposes, especially in industry.
+12/4/2022 8:54:16 PM$ event_body 100031847151713 MJ how do I make money without moving
+12/4/2022 8:54:19 PM$ wait_timeout >> 6500
+12/4/2022 8:54:19 PM$ send_typing
+12/4/2022 8:54:26 PM$ 100082863736348
+12/4/2022 8:54:26 PM$ 100031847151713
+12/4/2022 8:54:26 PM$ send_message_reply 8386230691448919 there are a few ways to make money without moving. One way is to start a business online. You can also do freelance work or sell products and services online. Finally, you can participate in online surveys or sign up for paid focus groups.
+12/4/2022 8:55:04 PM$ event_body 100031847151713 MJ how do I make money by eating
+12/4/2022 8:55:07 PM$ wait_timeout >> 5200
+12/4/2022 8:55:08 PM$ send_typing
+12/4/2022 8:55:13 PM$ 100031847151713
+12/4/2022 8:55:13 PM$ 100031847151713
+12/4/2022 8:55:13 PM$ send_message 8386230691448919 there is no one definitive answer to this question. Some people may advocate for starting a food blog and writing about recipes, while others may suggest working as a food critic or starting a catering business. Ultimately, the best way to make money by eating will vary depending on your skillset and interests.
+12/4/2022 8:55:16 PM$ event_body 100082863736348 Mj what is RC?
+12/4/2022 8:55:18 PM$ wait_timeout >> 7200
+12/4/2022 8:55:18 PM$ send_typing
+12/4/2022 8:55:25 PM$ 100031847151713
+12/4/2022 8:55:25 PM$ 100082863736348
+12/4/2022 8:55:25 PM$ send_message_reply 8386230691448919 rC is an abbreviation for "radio controlled." RC refers to the control of a model or toy vehicle using a radio transmitter.
+12/4/2022 8:55:50 PM$ event_body 100031847151713 MJ play balabulubala by Tinubu
+12/4/2022 8:55:51 PM$ wait_timeout >> 7200
+12/4/2022 8:55:51 PM$ wait_timeout >> 6500
+12/4/2022 8:55:51 PM$ wait_timeout >> 6300
+12/4/2022 8:55:51 PM$ send_typing
+12/4/2022 8:55:51 PM$ send_typing
+12/4/2022 8:55:51 PM$ send_typing
+12/4/2022 8:55:53 PM$ wait_timeout >> 6300
+12/4/2022 8:55:54 PM$ send_typing
+12/4/2022 8:55:57 PM$ send_message 7244767385593438 🥰🌘
+12/4/2022 8:55:58 PM$ 100013123092880
+12/4/2022 8:55:58 PM$ 100008813820978
+12/4/2022 8:55:58 PM$ send_message_reply 7244767385593438 Good evening too... The sun set is so beautiful as always, hope you're seeing it too.
+12/4/2022 8:55:58 PM$ react_message mid.$gABm9E9p_pl6LDnpOsGE3TUGSsdcg :love:
+12/4/2022 8:56:00 PM$ event_body 100081105052820 Who?
+12/4/2022 8:56:00 PM$ wait_timeout >> 6600
+12/4/2022 8:56:01 PM$ 100031847151713
+12/4/2022 8:56:01 PM$ 100071912366717
+12/4/2022 8:56:01 PM$ send_message_reply 8386230691448919 balabulubala by Tinubu is a fun and addicting game that will keep you entertained for hours on end. The objective of the game is to score as many points as possible by matching three or more of the same colored balls. There are power-ups and bonuses that you can collect along the way to help you boost your score.
+12/4/2022 8:56:01 PM$ send_typing
+12/4/2022 8:56:07 PM$ 100081105052820
+12/4/2022 8:56:07 PM$ 100081105052820
+12/4/2022 8:56:07 PM$ send_message 2583856894982516 Who?
+12/4/2022 8:56:29 PM$ wait_timeout >> 6800
+12/4/2022 8:56:29 PM$ send_typing
+12/4/2022 8:56:35 PM$ wait_timeout >> 5500
+12/4/2022 8:56:35 PM$ react_message mid.$gAB3LO31eSFeLDnrkYWE3TWae1EkG :laughing:
+12/4/2022 8:56:36 PM$ send_typing
+12/4/2022 8:56:38 PM$ event_body 100081105052820 What?
+12/4/2022 8:56:38 PM$ The user 2583856894982516 is going to fast of calling the command >> 0 mins and 22 seconds
+12/4/2022 8:56:41 PM$ react_message mid.$gABipy5K1RKyLDnr9C2E3TWyaLzSp :laughing:
+12/4/2022 8:57:04 PM$ event_body 100071912366717 Do you know how to create it
+12/4/2022 8:57:05 PM$ wait_timeout >> 6800
+12/4/2022 8:57:06 PM$ send_typing
+12/4/2022 8:57:13 PM$ 100071912366717
+12/4/2022 8:57:13 PM$ 100071912366717
+12/4/2022 8:57:13 PM$ 100031847151713
+12/4/2022 8:57:13 PM$ send_message 8386230691448919 
+Yes, I do.
+12/4/2022 8:58:07 PM$ wait_timeout >> 5500
+12/4/2022 8:58:08 PM$ send_typing
+12/4/2022 8:58:09 PM$ event_body 100031847151713 MJ where can I sell you
+12/4/2022 8:58:10 PM$ wait_timeout >> 6300
+12/4/2022 8:58:11 PM$ send_typing
+12/4/2022 8:58:12 PM$ event_body 100082863736348 Mj how do i create a play console account
+12/4/2022 8:58:13 PM$ react_message mid.$gABipy5K1RKyLDnxlGWE3TcaucROH :laughing:
+12/4/2022 8:58:16 PM$ wait_timeout >> 5800
+12/4/2022 8:58:17 PM$ send_typing
+12/4/2022 8:58:17 PM$ 100082863736348
+12/4/2022 8:58:17 PM$ 100031847151713
+12/4/2022 8:58:17 PM$ 100082863736348
+12/4/2022 8:58:17 PM$ send_message_reply 8386230691448919 i can sell you a car, a house, or a piece of land.
+12/4/2022 8:58:22 PM$ 100031847151713
+12/4/2022 8:58:22 PM$ 100082863736348
+12/4/2022 8:58:22 PM$ send_message_reply 8386230691448919 there is no one-size-fits-all answer to this question, as the process for creating a play console account may vary depending on the specific platform or service that you are using. However, in general, you will likely need to provide some basic information such as your name, email address, and a password in order to create an account. Once you have registered for an account, you may then be able to access additional features and options depending on the platform or service.
+12/4/2022 8:58:25 PM$ wait_timeout >> 7000
+12/4/2022 8:58:26 PM$ send_typing
+12/4/2022 8:58:32 PM$ react_message mid.$gABipy5K1RKyLDnyr02E3TddAIWwE :laughing:
+12/4/2022 8:59:45 PM$ wait_timeout >> 6500
+12/4/2022 8:59:46 PM$ send_typing
+12/4/2022 8:59:52 PM$ 100039443710272
+12/4/2022 8:59:52 PM$ 100087874545472
+12/4/2022 8:59:52 PM$ 100087874545472
+12/4/2022 8:59:52 PM$ send_message_reply 7244767385593438 Sup
+12/4/2022 9:00:00 PM$ Time Check 9:00 pm
+12/4/2022 9:00:00 PM$ Project Orion Facebook State Refreshed
+12/4/2022 9:00:34 PM$ wait_timeout >> 7200
+12/4/2022 9:00:35 PM$ send_typing
+12/4/2022 9:00:41 PM$ react_message mid.$gABm9E9p_pl6LDn6itGE3TlVvBBCt :laughing:
+12/4/2022 9:00:55 PM$ event_body 100082863736348 Mj is apple console account a one time purchase?
+12/4/2022 9:00:56 PM$ wait_timeout >> 7200
+12/4/2022 9:00:57 PM$ send_typing
+12/4/2022 9:01:04 PM$ 100082863736348
+12/4/2022 9:01:04 PM$ 100031847151713
+12/4/2022 9:01:04 PM$ 100082863736348
+12/4/2022 9:01:04 PM$ send_message_reply 8386230691448919 no, an Apple console account is not a one-time purchase.
+12/4/2022 9:01:39 PM$ event_body 100082863736348 How long does apple console account last after purchase
+12/4/2022 9:01:40 PM$ wait_timeout >> 5400
+12/4/2022 9:01:40 PM$ send_typing
+12/4/2022 9:01:46 PM$ 100082863736348
+12/4/2022 9:01:46 PM$ 100082863736348
+12/4/2022 9:01:46 PM$ send_message 8386230691448919 
+The apple console account lasts for one year after purchase.
+12/4/2022 9:01:59 PM$ wait_timeout >> 6000
+12/4/2022 9:01:59 PM$ send_typing
+12/4/2022 9:02:05 PM$ react_message mid.$gABipy5K1RKyLDn_si2E3TqMHlavg :laughing:
+12/4/2022 9:02:43 PM$ wait_timeout >> 5500
+12/4/2022 9:02:44 PM$ send_typing
+12/4/2022 9:02:48 PM$ react_message mid.$gABm9E9p_pl6LDoCaDWE3TtNJhqrt :laughing:
+12/4/2022 9:03:23 PM$ wait_timeout >> 6600
+12/4/2022 9:03:23 PM$ wait_timeout >> 5400
+12/4/2022 9:03:24 PM$ send_typing
+12/4/2022 9:03:24 PM$ send_typing
+12/4/2022 9:03:30 PM$ 100023785687056
+12/4/2022 9:03:30 PM$ 100023785687056
+12/4/2022 9:03:30 PM$ send_message 6942091245864108 😂😂🤣🤣
+12/4/2022 9:03:30 PM$ react_message mid.$gABipy5K1RKyLDoE4L2E3Tvs4t4BV :laughing:
+12/4/2022 9:03:47 PM$ event_body 100071912366717 What type of emoji be this?😩
+12/4/2022 9:03:48 PM$ wait_timeout >> 5500
+12/4/2022 9:03:49 PM$ send_typing
+12/4/2022 9:03:54 PM$ 100082863736348
+12/4/2022 9:03:54 PM$ 100071912366717
+12/4/2022 9:03:54 PM$ 100071912366717
+12/4/2022 9:03:54 PM$ send_message_reply 8386230691448919 this is a pensive emoji.
+12/4/2022 9:04:05 PM$ event_body 100071912366717 What's the use?
+12/4/2022 9:04:06 PM$ wait_timeout >> 6300
+12/4/2022 9:04:07 PM$ send_typing
+12/4/2022 9:04:13 PM$ 100071912366717
+12/4/2022 9:04:13 PM$ 100071912366717
+12/4/2022 9:04:13 PM$ send_message 8386230691448919 there is no use.
+12/4/2022 9:04:19 PM$ wait_timeout >> 5500
+12/4/2022 9:04:20 PM$ send_typing
+12/4/2022 9:04:25 PM$ react_message mid.$gABipy5K1RKyLDoITG2E3TzKl96Gl :laughing:
+12/4/2022 9:04:31 PM$ event_body 100082863736348 Mj what is drone camera
+12/4/2022 9:04:32 PM$ wait_timeout >> 5800
+12/4/2022 9:04:33 PM$ send_typing
+12/4/2022 9:04:34 PM$ wait_timeout >> 7000
+12/4/2022 9:04:34 PM$ wait_timeout >> 7000
+12/4/2022 9:04:35 PM$ send_typing
+12/4/2022 9:04:35 PM$ send_typing
+12/4/2022 9:04:39 PM$ 100071912366717
+12/4/2022 9:04:39 PM$ 100082863736348
+12/4/2022 9:04:39 PM$ send_message_reply 8386230691448919 a drone camera is a type of unmanned aerial vehicle (UAV) that is used to take photographs or video footage.
+12/4/2022 9:04:41 PM$ wait_timeout >> 5800
+12/4/2022 9:04:41 PM$ react_message mid.$gABipy5K1RKyLDoJLqmE3T0DKPfFP :laughing:
+12/4/2022 9:04:41 PM$ send_typing
+12/4/2022 9:04:42 PM$ 100023785687056
+12/4/2022 9:04:42 PM$ 100023785687056
+12/4/2022 9:04:42 PM$ send_message 6942091245864108 ahhaa😂
+12/4/2022 9:04:46 PM$ react_message mid.$gABipy5K1RKyLDoJlSWE3T0cx_8Yw :laughing:
+12/4/2022 9:04:55 PM$ wait_timeout >> 6500
+12/4/2022 9:04:56 PM$ send_typing
+12/4/2022 9:05:02 PM$ react_message mid.$cAAAABirOmUOLDoKfn2E3T1UbwNhp :laughing:
+12/4/2022 9:05:07 PM$ wait_timeout >> 7200
+12/4/2022 9:05:08 PM$ send_typing
+12/4/2022 9:05:14 PM$ react_message mid.$cAAAABirOmUOLDoLM02E3T2B8nAbX :laughing:
+12/4/2022 9:05:34 PM$ wait_timeout >> 6300
+12/4/2022 9:05:35 PM$ send_typing
+12/4/2022 9:05:41 PM$ react_message mid.$gABipy5K1RKyLDoM3JWE3T3ui_aRH :laughing:
+12/4/2022 9:05:47 PM$ event_body 100082863736348 Mj what is blackhole
+12/4/2022 9:05:48 PM$ wait_timeout >> 6500
+12/4/2022 9:05:48 PM$ send_typing
+12/4/2022 9:05:50 PM$ wait_timeout >> 6800
+12/4/2022 9:05:50 PM$ send_typing
+12/4/2022 9:05:54 PM$ react_message mid.$cAAAABirOmUOLDoNr_2E3T4hVq9IL :laughing:
+12/4/2022 9:05:57 PM$ 100082863736348
+12/4/2022 9:05:57 PM$ 100082863736348
+12/4/2022 9:05:57 PM$ send_message 8386230691448919 a black hole is a region of spacetime where the gravitational field is so strong that nothing—not even electromagnetic radiation such as light—can escape from it.
+12/4/2022 9:05:58 PM$ wait_timeout >> 5500
+12/4/2022 9:05:59 PM$ send_typing
+12/4/2022 9:06:04 PM$ react_message mid.$cAAAABirOmUOLDoOUrGE3T5J_hCKD :laughing:
+12/4/2022 9:06:58 PM$ wait_timeout >> 5200
+12/4/2022 9:06:59 PM$ send_typing
+12/4/2022 9:07:03 PM$ react_message mid.$gABipy5K1RKyLDoR-m2E3T8zaS99t :laughing:
+12/4/2022 9:07:49 PM$ wait_timeout >> 5200
+12/4/2022 9:07:49 PM$ send_typing
+12/4/2022 9:07:53 PM$ event_body 100082863736348 Mj can game controller be attached to pc
+12/4/2022 9:07:54 PM$ react_message mid.$cAAAABirOmUOLDoVE5GE3T_5i3_vw :laughing:
+12/4/2022 9:07:54 PM$ wait_timeout >> 5400
+12/4/2022 9:07:55 PM$ send_typing
+12/4/2022 9:08:00 PM$ 100082863736348
+12/4/2022 9:08:00 PM$ 100082863736348
+12/4/2022 9:08:00 PM$ send_message 8386230691448919 yes, a game controller can be attached to a PC.
+12/4/2022 9:08:07 PM$ wait_timeout >> 6600
+12/4/2022 9:08:07 PM$ wait_timeout >> 60000
+12/4/2022 9:08:33 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 9:09:29 PM$ event_body 100028335675079 Mj give me a random number
+12/4/2022 9:09:30 PM$ wait_timeout >> 6500
+12/4/2022 9:09:30 PM$ send_typing
+12/4/2022 9:09:37 PM$ 100081105052820
+12/4/2022 9:09:37 PM$ 100028335675079
+12/4/2022 9:09:37 PM$ send_message_reply 2583856894982516 42
+12/4/2022 9:10:00 PM$ Time Check 9:10 pm
+12/4/2022 9:10:55 PM$ wait_timeout >> 6800
+12/4/2022 9:10:55 PM$ unsend_message 100081033288525[object Object]
+12/4/2022 9:10:56 PM$ send_typing
+12/4/2022 9:11:02 PM$ send_message 100081033288525 [object Object]
+12/4/2022 9:11:03 PM$ event_body 100082863736348 Mj give me the best pickup line for flirting
+12/4/2022 9:11:04 PM$ wait_timeout >> 6300
+12/4/2022 9:11:05 PM$ send_typing
+12/4/2022 9:11:10 PM$ 100082863736348
+12/4/2022 9:11:10 PM$ 100082863736348
+12/4/2022 9:11:10 PM$ send_message 8386230691448919 you have a really pretty smile.
+12/4/2022 9:11:25 PM$ event_body 100078808031382 Mj design a class that can
+Insert , add,  and remove a value.  There will be no duplicate of that value
+12/4/2022 9:11:28 PM$ wait_timeout >> 7000
+12/4/2022 9:11:29 PM$ send_typing
+12/4/2022 9:11:36 PM$ 100028335675079
+12/4/2022 9:11:36 PM$ 100078808031382
+12/4/2022 9:11:36 PM$ send_message_reply 2583856894982516 public class MyClass {
+    private Set<Integer> set;
+    public MyClass() {
+        set = new HashSet<>();
+    }
+    public void insert(int value) {
+        set.add(value);
+    }
+12/4/2022 9:11:41 PM$ event_body 100082863736348 Mj give me 10 best pickup line for flirting
+12/4/2022 9:11:45 PM$ wait_timeout >> 6800
+12/4/2022 9:11:46 PM$ send_typing
+12/4/2022 9:11:49 PM$ wait_timeout >> 6800
+12/4/2022 9:11:50 PM$ send_typing
+12/4/2022 9:11:52 PM$ 100082863736348
+12/4/2022 9:11:52 PM$ 100082863736348
+12/4/2022 9:11:52 PM$ send_message 8386230691448919 1. I woke up thinking today was just another boring Monday, and then I saw you.
+2. Do you mind if I walk you home? My mother always told me to follow my dreams.
+3. What’s a perfect gentleman like myself doing without your phone number?
+4. On a lazy Sunday: Netflix all day, getting lost in a museum, or cuddling with me?
+5. Are you my appendix? Because this feeling in my stomach makes me want to take you out.
+6. Are we, like, married now?
+7. Damn, you have a dog! Does that mean I’ll never win the “best ever cuddler” title?
+12/4/2022 9:11:56 PM$ react_message mid.$cAAAABirOmUOLDojv0WE3UOh_3jTg :laughing:
+12/4/2022 9:12:10 PM$ wait_timeout >> 6000
+12/4/2022 9:12:11 PM$ send_typing
+12/4/2022 9:12:16 PM$ react_message mid.$cAAAABirOmUOLDolBlWE3UP2U5y0a :laughing:
+12/4/2022 9:12:39 PM$ event_body 100078808031382 Mj what is a hashmap?
+12/4/2022 9:12:42 PM$ wait_timeout >> 5800
+12/4/2022 9:12:43 PM$ send_typing
+12/4/2022 9:12:44 PM$ event_body 100067604706481 MJ
+12/4/2022 9:12:44 PM$ wait_timeout >> 5000
+12/4/2022 9:12:45 PM$ send_typing
+12/4/2022 9:12:48 PM$ 100078808031382
+12/4/2022 9:12:48 PM$ 100078808031382
+12/4/2022 9:12:48 PM$ send_message 2583856894982516 a hashmap is a data structure that stores key-value pairs. It uses a hash function to map keys to values, which makes it efficient for retrieving values based on keys.
+12/4/2022 9:12:49 PM$ 100035852316064
+12/4/2022 9:12:49 PM$ 100067604706481
+12/4/2022 9:12:49 PM$ send_message_reply 7635291589846117 yes?
+12/4/2022 9:12:59 PM$ event_body 100067604706481 How are you?
+12/4/2022 9:13:00 PM$ wait_timeout >> 5000
+12/4/2022 9:13:01 PM$ send_typing
+12/4/2022 9:13:05 PM$ 100067604706481
+12/4/2022 9:13:05 PM$ 100067604706481
+12/4/2022 9:13:05 PM$ send_message 7635291589846117 im doing well, thank you.
+12/4/2022 9:13:15 PM$ wait_timeout >> 6300
+12/4/2022 9:13:15 PM$ send_typing
+12/4/2022 9:13:21 PM$ react_message mid.$gABsgQdr4JGWLDoo9BWE3UT0QdP5c :heart:
+12/4/2022 9:13:26 PM$ event_body 100078808031382 Mj give an example of a class using hashmap in python with explanation
+12/4/2022 9:13:29 PM$ wait_timeout >> 6000
+12/4/2022 9:13:30 PM$ send_typing
+12/4/2022 9:13:36 PM$ 100078808031382
+12/4/2022 9:13:36 PM$ 100078808031382
+12/4/2022 9:13:36 PM$ send_message 2583856894982516 class MyClass:
+    def __init__(self):
+        self.d = {}
+    def add_key_value(self, key, value):
+        self.d[key] = value
+    def get_value(self, key):
+        return self.d[key]
+12/4/2022 9:16:12 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+>> http://localhost:6000
+12/4/2022 9:16:20 PM$ wait_timeout >> 5800
+12/4/2022 9:16:21 PM$ send_typing
+12/4/2022 9:16:26 PM$ react_message mid.$cAAAABirOmUOLDo0TomE3UfHxTLKg :laughing:
+12/4/2022 9:16:54 PM$ send_message 100016029218667 [object Object]
+12/4/2022 9:16:54 PM$ wait_timeout >> 60000
+12/4/2022 9:16:54 PM$ send_typing
+12/4/2022 9:17:13 PM$ event_body 100078808031382 Mj 
+Differentiate the syntax of 
+Python and c++
+12/4/2022 9:17:18 PM$ wait_timeout >> 5200
+12/4/2022 9:17:19 PM$ send_typing
+12/4/2022 9:17:24 PM$ 100078808031382
+12/4/2022 9:17:24 PM$ 100078808031382
+12/4/2022 9:17:24 PM$ send_message 2583856894982516 python is a high-level, interpreted, general-purpose programming language, created on December 3, 1989, by Guido van Rossum, with a design philosophy entitled, "Theres only one way to do it, and thats why it works."
+C++ is a middle-level programming language with object-oriented features. It was developed by Bjarne Stroustrup starting in 1979 at Bell Labs.
+12/4/2022 9:17:54 PM$ un_link /home/runner/project-orion/cache/images/unsend_img_1670159813.jpg
+12/4/2022 9:19:21 PM$ event_body 100073422433874 $motivation
+12/4/2022 9:19:21 PM$ response_data https://zenquotes.io/api/random
+12/4/2022 9:19:21 PM$ wait_timeout >> 1000
+12/4/2022 9:19:22 PM$ wait_timeout >> 7200
+12/4/2022 9:19:23 PM$ send_typing
+12/4/2022 9:19:30 PM$ 100087874545472
+12/4/2022 9:19:30 PM$ 100073422433874
+12/4/2022 9:19:30 PM$ 100087874545472
+12/4/2022 9:19:30 PM$ send_message_reply 6942091245864108 Better the cottage where one is merry than the palace where one weeps.
+
+by Chinese Proverb
+12/4/2022 9:19:52 PM$ 100016029218667
+12/4/2022 9:19:52 PM$ send_message_reply 2583856894982516 The user 100037131918629 is blocked.
+12/4/2022 9:19:53 PM$ send_typing
+12/4/2022 9:20:00 PM$ Time Check 9:20 pm
+12/4/2022 9:20:05 PM$ 100016029218667
+12/4/2022 9:20:05 PM$ 100016029218667
+12/4/2022 9:20:05 PM$ send_message 2583856894982516 The user 100037131918629 can now use the commands.
+12/4/2022 9:20:06 PM$ send_typing
+12/4/2022 9:21:37 PM$ wait_timeout >> 6800
+12/4/2022 9:21:37 PM$ send_typing
+12/4/2022 9:21:43 PM$ react_message mid.$gABISP3dQLeOLDpHmoGE3Uyaoxdpa :laughing:
+12/4/2022 9:22:00 PM$ wait_timeout >> 5500
+12/4/2022 9:22:00 PM$ wait_timeout >> 6300
+12/4/2022 9:22:01 PM$ send_typing
+12/4/2022 9:22:01 PM$ send_typing
+12/4/2022 9:22:06 PM$ react_message mid.$gABISP3dQLeOLDpJD7GE3Uz4Bb6I1 :laughing:
+12/4/2022 9:22:07 PM$ 100029315742680
+12/4/2022 9:22:07 PM$ 100023508434853
+12/4/2022 9:22:07 PM$ 100023508434853
+12/4/2022 9:22:07 PM$ send_message_reply 5086613374774755 🤣
+12/4/2022 9:23:08 PM$ wait_timeout >> 5400
+12/4/2022 9:23:09 PM$ send_typing
+12/4/2022 9:23:13 PM$ react_message mid.$gABipy5K1RKyLDpNK0WE3U3_0v5ha :love:
+12/4/2022 9:24:08 PM$ react_message mid.$gABISP3dQLeOLDpQ3o2E3U7rwwNCo :laughing:
+12/4/2022 9:24:09 PM$ send_typing
