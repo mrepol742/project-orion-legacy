@@ -2428,7 +2428,7 @@ async function ai(api, event) {
                                     if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                     id = data[0].userID;
                                 });*/
-                                let uid = getUserId(api, data.join(" ").replace("@", ""));
+                                let uid = await getUserId(api, data.join(" ").replace("@", ""));
                                 id = uid;
                                 console.log("id is" + uid);
                             } else if (isMyId(id)) {
