@@ -583,7 +583,7 @@ login({
                                 const url = event.messageReply.attachments[0].url;
                                 request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto.png')).on('finish', () => {
                                     api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto.png'), event.threadID, (err) => {
-                                        if(err) return console.error(err);
+                                        if(err) return log(err);
                                     });
                                     unLink(__dirname + '/cache/images/gphoto.png');
                                 })
@@ -970,7 +970,7 @@ async function ai(api, event) {
                 data.shift()
                 getResponseData('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1').then((response) => {
                     if (response == null) {
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
+                        sendMessage(api, event, "Unfortunately threturnere was an error occured.");
                     } else {
                         sendMessage(api, event, response.Abstract);
                     }
@@ -4138,7 +4138,7 @@ async function getResponseData(url) {
 function getUserId(api, name) {
     let id = api.getUserID(name, (err, data) => {
         if (err) return null;
-        return data[0].userID;
+        id = data[0].userID;
     });
     return id;
 }
