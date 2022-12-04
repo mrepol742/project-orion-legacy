@@ -3525,7 +3525,7 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead.\nFor example:\ntrump bug is not an error");
             } else {
-                parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + encodeURI(text), __dirname + '/cache/images/trump.png');
+                parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + encodeURIComponent(text), __dirname + '/cache/images/trump.png');
             }
         } else if (query.startsWith("qrcode")) {
             if (isGoingToFast(event)) {
