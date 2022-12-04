@@ -1185,14 +1185,14 @@ async function ai(api, event) {
                         sendMessage(api, event, text + "?");
                     }
                 } else {
-                    if (!query.startsWith("searchcode")) {
-                        for (let i = 0; i < saveAns.length; i++) {
-                            if (saveAns[i][0] == text) {
-                                log("answer_cache");
-                                sendMessage(api, event, saveAns[i][1]);
-                                return;
-                            }
+                    for (let i = 0; i < saveAns.length; i++) {
+                        if (saveAns[i][0] == text) {
+                            log("answer_cache");
+                            sendMessage(api, event, saveAns[i][1]);
+                            return;
                         }
+                    }
+                    if (!query.startsWith("searchcode")) {
                         const {
                             data
                         } = await openai.createCompletion(settings.text_complextion, {
@@ -1217,10 +1217,12 @@ async function ai(api, event) {
                         } = await openai.createEdit("code-davinci-edit-001", {
                             input:  text,
                             instruction: "",
-                            temperature: 0,
+                            temperature: 2000,
                             top_p: 1,
                         });
-                        sendMessage(api, event, data.choices[0].text);
+                        let data = data.choices[0].text;
+                        saveAns.push([text, data])
+                        sendMessage(api, event, data);
                     }
                 }
             }
