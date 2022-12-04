@@ -2755,6 +2755,7 @@ async function ai(api, event) {
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno");
                 }
+            }
         } else if (query.startsWith("kiss")) {
             if (isGoingToFast(event)) {
                 return;
