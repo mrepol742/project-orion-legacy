@@ -2287,7 +2287,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Prefix reset to default values.");
                 }
             }
-        } else if (query.startsWith("addUser")) {
+        } else if (query.startsWith("adduser")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead.\n\nFor example:\naddUser 100024563636366");
@@ -2319,18 +2319,15 @@ async function ai(api, event) {
                 data.shift();
                 let pref = data.join(" ");
                 if (gcolorn.includes(pref)) {
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (gc.isGroup) {
-                            api.changeThreadColor(gcolor[pref], event.threadID, (err) => {
-                                if(err) return log(err);
-                            });
-                        }
-                    })
+                    api.changeThreadColor(gcolor[pref], event.threadID, (err) => {
+                        if(err) return log(err);
+                    });
+                    log("change_color " + event.threadID + " " + gcolor[pref]);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nFor example:\ngcolor DefaultBlue");
                 }
             }
-        } else if (query.startsWith("kickUser")) {
+        } else if (query.startsWith("kickuser")) {
             if (vips.includes(event.senderID)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
                     if (gc.isGroup) {
@@ -2357,7 +2354,7 @@ async function ai(api, event) {
                     }
                 })
             }
-        } else if (query.startsWith("blockUser")) {
+        } else if (query.startsWith("blockuser")) {
             if (vips.includes(event.senderID)) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
@@ -2379,7 +2376,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead.\n\nFor example:\nblockUser @Melvin Jones Repol")
                 }
             }
-        } else if (query.startsWith("unblockUser")) {
+        } else if (query.startsWith("unblockuser")) {
             if (vips.includes(event.senderID)) {
                 if (input.includes("@")) {
                     let id = Object.keys(event.mentions)[0];
