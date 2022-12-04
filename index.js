@@ -278,7 +278,7 @@ let apiKey = [
     // mashape-community-urban-dictionary.p.rapidapi.com
     "bc23ad59e1mshdb14f6cce13bafap18cbc5jsn13348153e5cf",
     // NLPCloudClient summarize
-    "5ab3c279e089139f63017eea409573731d5e8ce9",
+    "40286240a47c02b2948a8c61276be7bd481b0b14",
      // open ai api key
     "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"
 ];
