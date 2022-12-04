@@ -2738,13 +2738,12 @@ async function ai(api, event) {
                             'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74'
                         }
                     };
-                    axios.request(options).then(function({
-                        data
-                    }) {
-                        var name1 = data.fname;
-                        var name2 = data.sname;
-                        var percent = data.percentage + "%";
-                        var result = data.result;
+                    
+                    axios.request(options).then(function(response) {
+                        var name1 = response.fname;
+                        var name2 = response.sname;
+                        var percent = response.percentage + "%";
+                        var result = response.result;
                         sendMessage(api, event, name1 + " ❤️ " + name2 + "\n⦿ Percentage: " + percent + "\n\n" + result);
                     }).catch(function(error) {
                         log(error);
