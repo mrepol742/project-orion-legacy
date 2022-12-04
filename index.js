@@ -3987,7 +3987,7 @@ function someR(api, event, query) {
 
 function parseImage(api, event, url, dir) {
     log("parse_image " + url);
-    request(encodeURI(url)).pipe(fs.createWriteStream(dir))
+    request(url).pipe(fs.createWriteStream(dir))
         .on('finish', () => {
             let limit = 25 * 1024 * 1024;
             fs.readFile(dir, function(err, data) {
