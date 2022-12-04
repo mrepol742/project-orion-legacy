@@ -2712,7 +2712,11 @@ async function ai(api, event) {
               };
               
               axios.request(options).then(function (response) {
-                  console.log(response.data);
+                var name1 = response.data.fname;
+                var name2 = datresponse.data.sname;
+                var percent = response.data.percentage + "%";
+                var result = response.data.result;
+                sendMessage(api, event, name1 + " ❤️ " + name2 + "\n⦿ Percentage: " + percent + "\n\n" + result);
               }).catch(function (error) {
                   console.error(error);
               });
