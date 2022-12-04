@@ -2413,8 +2413,9 @@ async function ai(api, event) {
                                     if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                     id = data[0].userID;
                                 });*/
-                                id = getUserId(api, data.join(" ").replace("@", ""));
-                                console.log("id is" + id);
+                                let uid = getUserId(api, data.join(" ").replace("@", ""));
+                                id = uid[0].userID;
+                                console.log("id is" + uid + " " uid[0].userID);
                             } else if (isMyId(id)) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
@@ -4475,7 +4476,7 @@ let resolveUserID = (api, name) => {
     return new Promise((resolve, reject) => {
         api.getUserID(name, (err, data) => {
             if (err) reject(err);
-            resolve(data[0].userID);
+            resolve(data);
         });
     });
 }
