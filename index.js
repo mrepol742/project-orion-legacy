@@ -4479,7 +4479,7 @@ function blockUser(api, event, id) {
 function unblockUser(api, event, id) {
     if (isMyId(id)) {
         return;
-    }Kalu?rank=1531&page=16
+    }
     blockRRR = blockRRR.filter(item => item !== id);
     sendMessage(api, event, "The user " + id + " can now use the commands.");
     fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
