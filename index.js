@@ -151,7 +151,7 @@ help2 += "\n⦿ inspiration";
 help2 += "\n⦿ advice";
 help2 += "\n⦿ alert [text]";
 help2 += "\n⦿ meme";
-help2 += "\n⦿ meme --reddit";
+help2 += "\n⦿ lovetest name1: name2";
 help2 += "\n⦿ drake [text1]: [text2]";
 help2 += "\n⦿ pooh [text1]: [text2]";
 help2 += "\n⦿ oogway [text]";
@@ -231,7 +231,6 @@ help6 += "\n⦿ gphoto";
 help6 += "\n⦿ encodeBinary [text]";
 help6 += "\n⦿ decodeBinary [text]";
 help6 += "\n⦿ ttsjap [text]";
-help6 += "\n⦿ lovetest name1: name2";
 help6 += "\n⦿ pdf [text]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
@@ -3451,17 +3450,6 @@ async function ai(api, event) {
                     parseImage(api, event, response.image, __dirname + '/cache/images/meme.png');
                 }
             });
-        } else if (query == "memereddit") {
-            if (isGoingToFast(event)) {
-                return;
-            }
-            getResponseData("https://meme-api.herokuapp.com/gimme").then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
-                } else {
-                    parseImage(api, event, response.url, __dirname + '/cache/images/meme.png');
-                }
-            });
         } else if (query.startsWith("conan")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3537,7 +3525,7 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead.\nFor example:\ntrump bug is not an error");
             } else {
-                parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + '/cache/images/trump.png');
+                parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + encodeURI(text), __dirname + '/cache/images/trump.png');
             }
         } else if (query.startsWith("qrcode")) {
             if (isGoingToFast(event)) {
@@ -3598,7 +3586,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using website url instead.\nFor example:\nwebsite https://mrepol742.github.io");
             } else {
                 if (text.startsWith("https://") || text.startsWith("http://")) {
-                    parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + text, __dirname + '/cache/images/website.png');
+                    parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + encodeURI(text), __dirname + '/cache/images/website.png');
                 } else {
                     sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
                 }
