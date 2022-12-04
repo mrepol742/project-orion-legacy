@@ -2417,7 +2417,7 @@ async function ai(api, event) {
         } else if (query.startsWith("kickuser")) {
             let data = input.split(" ");
                                 data.shift();
-                                let uid = getUserId(api, data.join(" ").replace("@", ""));
+                                let uid = await getUserId(api, data.join(" ").replace("@", ""));
                                 sendMessage(api, event, "your uid is " + uid);
                                 return;
             if (vips.includes(event.senderID)) {
