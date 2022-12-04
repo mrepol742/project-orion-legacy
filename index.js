@@ -1052,10 +1052,14 @@ async function ai(api, event) {
                     text = input.substring(3)
                 } else if (query.startsWith("melvinjonesrepol")) {
                     text = input.substring(17)
-                } else if (query.startsWith("search")) {
-                    text = input.substring(7)
+                } else if (query.startsWith("melvinjonesgallanorepol")) {
+                    text = input.substring(25)
+                } else if (query.startsWith("melvinjones")) {
+                    text = input.substring(12)
                 } else if (query.startsWith("searchcode")) {
                     text = input.substring(11)
+                } else if (query.startsWith("search")) {
+                    text = input.substring(7)
                 } else if (input.startsWith(settings.prefix)) {
                     text = input.substring(settings.prefix.length);
                 }
@@ -1641,7 +1645,7 @@ async function ai(api, event) {
             } else {
                 let text = input.substring(5);
                 if (query.startsWith("summarize")) {
-                    text = input.substring(11)
+                    text = input.substring(10)
                 }
                 const client = new NLPCloudClient('bart-large-cnn', apiKey[3])
                 client.summarization(text).then(function({
