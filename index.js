@@ -2735,7 +2735,7 @@ async function ai(api, event) {
                         },
                         headers: {
                             'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com',
-                            'X-RapidAPI-Key': '04357fb2e1msh4dbe5919dc38cccp172823jsna0869f87acc3'
+                            'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74'
                         }
                     };
                     axios.request(options).then(function({
