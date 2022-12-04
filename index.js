@@ -2361,11 +2361,13 @@ async function ai(api, event) {
                     if (id === undefined) {
                         let data = input.split(" ");
                         data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            id = data[0].userID;
-                            log("user_id " + id + " " + data.join(" ").replace("@", ""))
-                        });
+                        let uid = getUserId(data.join(" ").replace("@", ""));
+                        if (uid == null) {
+                            sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            return;
+                        } else {
+                            id = uid;
+                        }
                     } else if (isMyId(id)) {
                         sendMessage(api, event, "Unable to block the user.");
                         return;
@@ -4131,6 +4133,14 @@ async function getResponseData(url) {
         return null
     });
     return data
+}
+
+function getUserId(name) {
+    let id = api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+        if (err) return null;
+        return data[0].userID;
+    });
+    return id;
 }
 
 function countWords(str) {
