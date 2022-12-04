@@ -2206,7 +2206,9 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead.\n\nFor example:\ngemoji 😂")
             } else {
                 data.shift()
-                await wait(3000);
+                if (!pictographic.test(data.join(" "))) {
+                    sendMessage(api, event, "Unable to set the chat quick reaction. Invalid emoji.");
+                }
                 api.changeThreadEmoji(data.join(" "), event.threadID, (err) => {
                     if (err) return reportIssue(api, event.threadID, err);
                 });
@@ -2425,16 +2427,10 @@ async function ai(api, event) {
                                 data.shift();
                                 api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                     if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                    let userID = data[0].userID;
-                                    if (isMyId(userID)) {
-                                        sendMessage(api, event, "Unable to kick the user.");
-                                        return;
-                                    }
-                                    removeUser(api, event, userID);
+                                    removeUser(api, event, data[0].userID);
                                 });
                                 return;
                             } else if (isMyId(id)) {
-                                sendMessage(api, event, "Unable to kick the user.");
                                 return;
                             }
                             removeUser(api, event, id);
@@ -2453,15 +2449,13 @@ async function ai(api, event) {
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                             if (err) return log(err);
-                            id = data[0].userID;
+                            blockUser(api, event, data[0].userID);
                         });
+                        return;
                     } else if (isMyId(id)) {
-                        sendMessage(api, event, "Unable to block the user.");
                         return;
                     }
-                    blockRRR.push(id);
-                    sendMessage(api, event, "The user " + id + " is blocked.");
-                    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+                    blockUser(api, event, id)
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead.\n\nFor example:\nblockUser @Melvin Jones Repol")
                 }
@@ -2475,15 +2469,13 @@ async function ai(api, event) {
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                             if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            id = data[0].userID;
+                            unblockUser(api, event, data[0].userID);
                         });
+                        return;
                     } else if (isMyId(id)) {
-                        sendMessage(api, event, "Unfortunately an error occured.");
                         return;
                     }
-                    blockRRR = blockRRR.filter(item => item !== id);
-                    sendMessage(api, event, "The user " + id + " can now use the commands.");
-                    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+                    unblockUser(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead.\n\nFor example:\nunblockUser @Melvin Jones Repol")
                 }
@@ -2497,15 +2489,13 @@ async function ai(api, event) {
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                             if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            id = data[0].userID;
+                            addAdmin(api, event, data[0].userID);
                         });
+                        return;
                     } else if (isMyId(id)) {
-                        sendMessage(api, event, "This account is already an admin.");
                         return;
                     }
-                    vips.push(id);
-                    sendMessage(api, event, "Admin permission granted.");
-                    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                    addAdmin(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead.\n\nFor example:\naddAdmin @Melvin Jones Repol")
                 }
@@ -2519,15 +2509,13 @@ async function ai(api, event) {
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                             if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            id = data[0].userID;
+                            remAdmin(api, event, data[0].userID);
                         });
+                        return;
                     } else if (isMyId(id)) {
-                        sendMessage(api, event, "Unfortunately an error occured.");
                         return;
                     }
-                    vips = vips.filter(item => item !== id);
-                    sendMessage(api, event, "Admin permission removed.");
-                    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+                    remAdmin(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead.\n\nFor example:\nremAdmin @Melvin Jones Repol")
                 }
@@ -2588,6 +2576,8 @@ async function ai(api, event) {
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
                     sendMessage(api, event, "This group has about " + arr.length +" members.")
+                } else {
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             })
         } else if (query.startsWith("gname")) {
@@ -2606,6 +2596,8 @@ async function ai(api, event) {
                             if (err) return console.error(err);
                         });
                     }
+                } else {
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             })
         } else if (query == "gname") {
@@ -2615,6 +2607,8 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     sendMessage(api, event, gc.threadName);
+                } else {
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             })
         } else if (query == "groupid" || query == "guid" || query == "uid") {
@@ -2752,37 +2746,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                kiss(api, event, data[0].userID)
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    let sender = event.send
-                    getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
-                        if (response == null) {
-                            sendMessage(api, event, "Unfortunately there was an error occured.");
-                        } else {
-                            api.getUserInfo(id, (err, info) => {
-                                if (err) return reportIssue(api, event.threadID, err);
-                                let name = info[id]['name'];
-                                request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
-                                    .on('finish', () => {
-                                        let image = {
-                                            body: "@" + name,
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/kiss.png"),
-                                            mentions: [{
-                                                tag: '@' + name,
-                                                id: id,
-                                                fromIndex: 0
-                                            }]
-                                        };
-                                        sendMessage(api, event, image);
-                                        unLink(__dirname + "/cache/images/kiss.png");
-                                    })
-                            })
-                        }
-                    });
+                    kiss(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor example:\nkiss @Melvin Jones Repol")
                 }
@@ -2804,13 +2775,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                gun(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun.png");
+                    gun(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor example:\ngun @Melvin Jones Repol")
                 }
@@ -2832,13 +2804,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                wanted(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted.png");
+                    wanted(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor example:\nwanted @Melvin Jones Repol")
                 }
@@ -2860,13 +2833,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                clown(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown.png");
+                    clown(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor example:\nclown @Melvin Jones Repol")
                 }
@@ -2888,13 +2862,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                drip(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip.png");
+                    drip(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor example:\ndrip @Melvin Jones Repol")
                 }
@@ -2916,13 +2891,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                communist(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist.png");
+                    communist(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor example:\ncommunist @Melvin Jones Repol")
                 }
@@ -2944,13 +2920,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                advert(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert.png");
+                    advert(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor example:\nadvert @Melvin Jones Repol")
                 }
@@ -2972,13 +2949,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                uncover(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover.png");
+                    uncover(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor example:\nuncover @Melvin Jones Repol")
                 }
@@ -3000,13 +2978,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                jail(api, event, id = data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail.png");
+                    jail(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor example:\njail @Melvin Jones Repol")
                 }
@@ -3028,13 +3007,13 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                invert(api, event, data[0].userID);
                             });
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert.png");
+                    invert(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor example:\ninvert @Melvin Jones Repol")
                 }
@@ -3106,13 +3085,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                pet(api, event, id);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet.png");
+                    pet(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor example:\npet @Melvin Jones Repol")
                 }
@@ -3134,13 +3114,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                mnm(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm.png");
+                    mnm(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor example:\nmnm @Melvin Jones Repol")
                 }
@@ -3162,13 +3143,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                greyscale(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale.png");
+                    greyscale(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor example:\ngreyscale @Melvin Jones Repol")
                 }
@@ -3190,13 +3172,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                jokeover(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover.png");
+                    jokeover(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor example:\njokeover @Melvin Jones Repol")
                 }
@@ -3218,13 +3201,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                blur(api, event, data[0].userID);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur.png");
+                    blur(api, event, id);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor example:\nblur @Melvin Jones Repol")
                 }
@@ -3420,25 +3404,14 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                id = data[0].userID;
+                                changeNickname(api, event, data[0].userID, text);
                             });
+                            return;
                         }
                     } else if (isMyId(id)) {
                         id = event.senderID;
                     }
-                    api.getUserInfo(id, (err, info) => {
-                        if (err) return reportIssue(api, event.threadID, err);
-                        let name = info[id]['name'];
-                        let inp;
-                        if (text.startsWith("@me")) {
-                            inp = text.substring(4);
-                        } else {
-                            text.substring(name.length + 2);
-                        }
-                        api.changeNickname(inp, event.threadID, id, (err) => {
-                            if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
-                        });
-                    })
+                    changeNickname(api, event, id, text);
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor example:\nnickname @mrepol742 melvinjonesrepol");
                 }
@@ -3478,7 +3451,7 @@ async function ai(api, event) {
                     parseImage(api, event, response.image, __dirname + '/cache/images/meme.png');
                 }
             });
-        } else if (query == "meme--reddit") {
+        } else if (query == "memereddit") {
             if (isGoingToFast(event)) {
                 return;
             }
@@ -4460,8 +4433,157 @@ function lowercaseFirstLetter(string) {
 }
 
 function removeUser(api, event, id) {
+    if (isMyId(id)) {
+        return;
+    }
     api.removeUserFromGroup(id, event.threadID, (err) => {
         if (err) log(err);
         log("user_remove " + event.threadID + " " + id);
     });
+}
+
+function blockUser(api, event, id) {
+    if (isMyId(id)) {
+        return;
+    }
+    blockRRR.push(id);
+    sendMessage(api, event, "The user " + id + " is blocked.");
+    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+}
+
+function unblockUser(api, event, id) {
+    if (isMyId(id)) {
+        return;
+    }
+    blockRRR = blockRRR.filter(item => item !== id);
+    sendMessage(api, event, "The user " + id + " can now use the commands.");
+    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+}
+
+function addAdmin(api, event, id) {
+    if (isMyId(id)) {
+        return;
+    }
+    if (vips.includes(id)) {
+        sendMessage(api, event, "Admin permission is already granted.");
+        return;
+    }
+    vips.push(id);
+    sendMessage(api, event, "Admin permission granted.");
+    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+}
+
+function remAdmin(api, event, id) {
+    if (isMyId(id)) {
+        return;
+    }
+    if (!vips.includes(id)) {
+        sendMessage(api, event, "The user has no admin rights to take away.");
+        return;
+    }
+    vips = vips.filter(item => item !== id);
+    sendMessage(api, event, "Admin permission removed.");
+    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+}
+
+function changeNickname(api, event, id, text) {
+    if (isMyId(id)) {
+        return;
+    }
+    api.getUserInfo(id, (err, info) => {
+        if (err) return reportIssue(api, event.threadID, err);
+        let name = info[id]['name'];
+        let inp;
+        if (text.startsWith("@me")) {
+            inp = text.substring(4);
+        } else {
+            text.substring(name.length + 2);
+        }
+        api.changeNickname(inp, event.threadID, id, (err) => {
+            if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
+        });
+    })
+}
+
+function kiss(api, event, id) {
+    getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
+                        if (response == null) {
+                            sendMessage(api, event, "Unfortunately there was an error occured.");
+                        } else {
+                            api.getUserInfo(id, (err, info) => {
+                                if (err) return reportIssue(api, event.threadID, err);
+                                let name = info[id]['name'];
+                                request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss.png"))
+                                    .on('finish', () => {
+                                        let image = {
+                                            body: "@" + name,
+                                            attachment: fs.createReadStream(__dirname + "/cache/images/kiss.png"),
+                                            mentions: [{
+                                                tag: '@' + name,
+                                                id: id,
+                                                fromIndex: 0
+                                            }]
+                                        };
+                                        sendMessage(api, event, image);
+                                        unLink(__dirname + "/cache/images/kiss.png");
+                                    })
+                            })
+                        }
+                    });
+}
+
+function gun(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun.png");
+}
+
+function wanted(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted.png");
+}
+
+function clown(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown.png");
+}
+
+function drip(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip.png");
+}
+
+function communist(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist.png");
+}
+
+function advert(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert.png");
+}
+
+function uncover(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover.png");
+}
+
+function jail(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail.png");
+}
+
+function invert(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert.png");
+}
+
+function pet(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet.png");
+}
+
+function mnm(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm.png");
+}
+
+function greyscale(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale.png");
+}
+
+function jokeover(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover.png");
+}
+
+function blur(api, event, id) {
+    parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur.png");
 }
