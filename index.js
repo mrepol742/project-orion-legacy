@@ -2705,34 +2705,17 @@ async function ai(api, event) {
                 return;
             }
             let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno")
+            if (data.length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest name:name instead.\n\nFor example:\nlovetest Melvin Jones Repol:Alexa Guno")
             } else {
-                if ((input.split('@').length - 1) >= 2) {
-                    let id1 = Object.keys(event.mentions)[0];
-                    let id2 = Object.keys(event.mentions)[1];
-                    if (id1 === undefined || id2 === undefined) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno")
-                        return;
-                    }
-                    if (isMyId(id1)) {
-                        id1 = event.senderID;
-                    } else if (isMyId(id2)) {
-                        id2 = event.senderID;
-                    }
-                    let name1 = "JOhm", name2 = "ane";
-                    api.getUserInfo(id1, (err, info) => {
-                        name1 = info[id1]['name'];
-                    });
-                    api.getUserInfo(id2, (err, info) => {
-                        name2 = info[id2]['name'];
-                    });
-                    const options = {
+                let text = input;
+                text = text.substring(9).split(":");
+                 const options = {
                         method: 'GET',
                         url: 'https://love-calculator.p.rapidapi.com/getPercentage',
                         params: {
-                            sname: name2,
-                            fname: name1
+                            sname: text[0],
+                            fname: text[1]
                         },
                         headers: {
                             'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com',
@@ -2752,9 +2735,7 @@ async function ai(api, event) {
                         log(error);
                         sendMessage(api, event, "An unknown error as been occured. Please try again later.")
                     });
-                } else {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno");
-                }
+       
             }
         } else if (query.startsWith("kiss")) {
             if (isGoingToFast(event)) {
