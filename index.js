@@ -2414,8 +2414,8 @@ async function ai(api, event) {
                                     id = data[0].userID;
                                 });*/
                                 let uid = getUserId(api, data.join(" ").replace("@", ""));
-                                id = uid[0].userID;
-                                console.log("id is" + uid + " " + uid[0].userID);
+                                id = uid;
+                                console.log("id is" + uid);
                             } else if (isMyId(id)) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
@@ -4483,5 +4483,6 @@ let resolveUserID = (api, name) => {
 
 const getUserId = async (api, name) => {
     let data = await resolveUserID(api, name);
-    return data;
+    log("user_id " + data[0].userID);
+    return data[0].userID;
 }
