@@ -1276,6 +1276,7 @@ async function ai(api, event) {
                 }) {
                     sendMessage(api, event, data.result_url);
                 }).catch(function(error) {
+                    log(error);
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.")
                 });
             }
@@ -1632,7 +1633,7 @@ async function ai(api, event) {
                     sendMessage(api, event, def + "\n\nExample: \n" + sample);
                 }).catch(function(error) {
                     reportIssue(api, event.threadID, error);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                    sendMessage(api, event, "An unknown error as been occured. Please try again later.")
                 });
             }
         } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
@@ -2700,6 +2701,22 @@ async function ai(api, event) {
                 }
             }
         } else if (query.startsWith("lovetest")) {
+            const options = {
+                method: 'GET',
+                url: 'https://love-calculator.p.rapidapi.com/getPercentage',
+                params: {sname: 'Alice', fname: 'John'},
+                headers: {
+                  'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74',
+                  'X-RapidAPI-Host': 'love-calculator.p.rapidapi.com'
+                }
+              };
+              
+              axios.request(options).then(function (response) {
+                  console.log(response.data);
+              }).catch(function (error) {
+                  console.error(error);
+              });
+            /*
             if (isGoingToFast(event)) {
                 return;
             }
@@ -2739,19 +2756,22 @@ async function ai(api, event) {
                         }
                     };
                     
-                    axios.request(options).then(function(response) {
-                        var name1 = response.fname;
-                        var name2 = response.sname;
-                        var percent = response.percentage + "%";
-                        var result = response.result;
+                    axios.request(options).then(function({
+                        data
+                    }) {
+                        var name1 = data.fname;
+                        var name2 = data.sname;
+                        var percent = data.percentage + "%";
+                        var result = data.result;
                         sendMessage(api, event, name1 + " ❤️ " + name2 + "\n⦿ Percentage: " + percent + "\n\n" + result);
                     }).catch(function(error) {
                         log(error);
+                        sendMessage(api, event, "An unknown error as been occured. Please try again later.")
                     });
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @mention @mention instead.\n\nFor example:\nlovetest @Melvin Jones Repol @Alexa Guno");
                 }
-            }
+            }*/
         } else if (query.startsWith("kiss")) {
             if (isGoingToFast(event)) {
                 return;
