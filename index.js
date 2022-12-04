@@ -1219,7 +1219,7 @@ async function ai(api, event) {
                             temperature: 0.0,
                             max_tokens: 1,
                             top_p: 0,
-                            longprobs: 0,
+                            logprobs: 0,
                         });
                         let data1 = data.choices[0].text;
                         saveAns.push([text, data1])
