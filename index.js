@@ -371,12 +371,6 @@ login({
             return;
         }
 
-        let i = true;
-        if (i) {
-        log(getUserIdA(api, "Test"))
-        i = false;
-        }
-
         if (settings.isDebugEnabled) {
             if (event.type == "message" || event.type == "message_reply") {
                 let input = event.body;
@@ -4470,6 +4464,7 @@ let resolveUserID = (api, name) => {
     return new Promise((resolve, reject) => {
         api.getUserID(name, (err, data) => {
             if (err) reject(err);
+            log("resolve_user_id " + data[0].userID)
             resolve(data);
         });
     });
@@ -4480,13 +4475,4 @@ const getUserId = async (api, name) => {
         log("user_id " + data[0].userID);
         return data[0].userID;
     });
-}
-
-async function getUserIdA(api, name) {
-    let data1;
-    await api.getUserID(name, (err, data) => {
-        if (err) log(err);
-        data1 = data[0].userID;
-    });
-    return data1;
 }
