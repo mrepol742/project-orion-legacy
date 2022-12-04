@@ -2416,8 +2416,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("kickuser")) {
             if (vips.includes(event.senderID)) {
-                api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (gc.isGroup) {
+              
                         if (input.includes("@")) {
                             let id = Object.keys(event.mentions)[0];
                             if (id === undefined) {
@@ -2442,8 +2441,7 @@ async function ai(api, event) {
                         } else {
                             sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead.\n\nFor example:\nkickUser @Melvin Jones Repol")
                         }
-                    }
-                })
+                   
             }
         } else if (query.startsWith("blockuser")) {
             if (vips.includes(event.senderID)) {
