@@ -4471,10 +4471,16 @@ function lowercaseFirstLetter(string) {
     return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
-async function getUserId(api, name) {
-    const userid = await api.getUserID(name, (err, data) => {
-        if (err) return log(err);
-        return data[0].userID;
+let resolveUserID = (api, name) => {
+    return new Promise((resolve, reject) => {
+        api.getUserID(name, (err, data) => {
+            if (err) reject(err);
+            resolve(data[0].userID);
+        });
     });
-    return userid;
+}
+
+const getUserId = async (api, name) => {
+    let data = await resolveUserID(api, name);
+    return data;
 }
