@@ -4482,7 +4482,8 @@ let resolveUserID = (api, name) => {
 }
 
 const getUserId = async (api, name) => {
-    let data = await resolveUserID(api, name);
-    log("user_id " + data[0].userID);
-    return data[0].userID;
+    resolveUserID(api, name).then(data => {
+        log("user_id " + data[0].userID);
+        return data[0].userID;
+    });
 }
