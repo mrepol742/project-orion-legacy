@@ -311,13 +311,7 @@ login({
     if (err) return reportIssue(api, event.threadID, err);
 
     cron.schedule('*/10 * * * *', () => {
-        let hours = date("Asia/Manila").getHours()
-        let mins = date("Asia/Manila").getMinutes()
-        let ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        mins = mins < 10 ? '0' + mins : mins;
-        log("Time Check " + hours + ":" + mins + " " + ampm);
+        log("Time Check " + formateDate("Asia/Manila"));
         fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
         fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
     });
@@ -868,12 +862,13 @@ login({
                                             let arr = gc.participantIDs;
                                             let Tmem = arr.length;
                                             let time = getTimestamp();
+                                            let filename = __dirname + "/cache/images/byebye_" + time + ".jpg";
                                             let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Total+Members+" + Tmem + "&avatar=" + getProfilePic(prop);
-                                            request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + "/cache/images/byebye.jpg"))
+                                            request(encodeURI(url)).pipe(fs.createWriteStream(filename))
                                                 .on('finish', () => {
                                                     let message = {
                                                         body: "Thank you for joining @" + data[prop].name + " but now you're leaving us.",
-                                                        attachment: fs.createReadStream(__dirname + "/cache/images/byebye_" + time + ".jpg"),
+                                                        attachment: fs.createReadStream(filename),
                                                         mentions: [{
                                                             tag: data[prop].name,
                                                             id: prop
@@ -881,7 +876,7 @@ login({
                                                     };
                                                     sendMessageOnly(api, event, message);
                                                     log("leave_member " + data[prop].name);
-                                                    unLink(__dirname + "/cache/images/byebye_" + time + ".jpg");
+                                                    unLink(filename);
                                                 })
                                         }
                                     }
@@ -1263,7 +1258,7 @@ async function ai(api, event) {
             }
         }
         if (event.type == "message") {
-            if (query == "bgremove") {
+            if (query == "bgremove" || query == "gphoto") {
                 sendMessage(api, event, "You need to reply to an image in order to work.");
             } else if (query == "count") {
                 sendMessage(api, event, "You need to reply to a message to count its words.");
@@ -2645,7 +2640,7 @@ async function ai(api, event) {
                 return;
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return cosole.log(err);
+                if (err) return log(err);
                 else {
                     if (event.type == "message_reply") {
                         api.getUserInfo(event.messageReply.senderID, (err, info) => {
@@ -4261,19 +4256,6 @@ function countConsonants(str) {
     return (countConsonants);
 }
 
-function isFileExists(path) {
-    let bool;
-    fs.access(path, fs.F_OK, (err) => {
-        if (err) {
-            console.error(err)
-            bool = false;
-            return;
-        }
-        bool = true;
-    })
-    return bool;
-}
-
 function nsfw(text) {
     return (text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") ||
         text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny") ||
@@ -4394,29 +4376,34 @@ function getWelcomeImage(name, gname, Tmem, id) {
 }
 
 async function getImages(api, event, images) {
+    let time = getTimestamp();
     for (let i = 0;
         (i < 6 && i < images.length); i++) {
         await wait(1000);
-        request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/findimg" + i + ".png"))
+        request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/findimg" + i + "_" + time + ".png"))
     }
     await wait(1000);
     let message = {
         attachment: [
-            fs.createReadStream(__dirname + "/cache/images/findimg0.png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg1.png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg2.png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg3.png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg4.png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg5.png")
+            fs.createReadStream(__dirname + "/cache/images/findimg0_" + time + ".png"),
+            fs.createReadStream(__dirname + "/cache/images/findimg1_" + time + ".png"),
+            fs.createReadStream(__dirname + "/cache/images/findimg2_" + time + ".png"),
+            fs.createReadStream(__dirname + "/cache/images/findimg3_" + time + ".png"),
+            fs.createReadStream(__dirname + "/cache/images/findimg4_" + time + ".png"),
+            fs.createReadStream(__dirname + "/cache/images/findimg5_" + time + ".png")
         ]
     };
     api.sendMessage(message, event.threadID, (err, done) => {
-        unLink(__dirname + "/cache/images/findimg0.png")
-        unLink(__dirname + "/cache/images/findimg1.png")
-        unLink(__dirname + "/cache/images/findimg2.png")
-        unLink(__dirname + "/cache/images/findimg3.png")
-        unLink(__dirname + "/cache/images/findimg4.png")
-        unLink(__dirname + "/cache/images/findimg5.png")
+        if (err) {
+            log(err);
+            sendMessage(api, event, "Seem's like i am having an issue finding your query.");
+        }
+        unLink(__dirname + "/cache/images/findimg0_" + time + ".png")
+        unLink(__dirname + "/cache/images/findimg1_" + time + ".png")
+        unLink(__dirname + "/cache/images/findimg2_" + time + ".png")
+        unLink(__dirname + "/cache/images/findimg3_" + time + ".png")
+        unLink(__dirname + "/cache/images/findimg4_" + time + ".png")
+        unLink(__dirname + "/cache/images/findimg5_" + time + ".png")
     }, event.messageID)
 }
 
