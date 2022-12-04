@@ -1220,9 +1220,9 @@ async function ai(api, event) {
                             temperature: 2000,
                             top_p: 1,
                         });
-                        let data = data.choices[0].text;
-                        saveAns.push([text, data])
-                        sendMessage(api, event, data);
+                        let data2 = data.choices[0].text;
+                        saveAns.push([text, data2])
+                        sendMessage(api, event, data2);
                     }
                 }
             }
