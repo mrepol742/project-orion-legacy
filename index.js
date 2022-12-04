@@ -2371,7 +2371,7 @@ async function ai(api, event) {
                     }
                     blockRRR.push(id);
                     sendMessage(api, event, "The user " + id + " is blocked.");
-                    fs.writeFileSync("cache/block_users.json", JSON.stringify(vips), "utf8");
+                    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
                 } else {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead.\n\nFor example:\nblockUser @Melvin Jones Repol")
                 }
