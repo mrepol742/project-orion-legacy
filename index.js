@@ -2415,7 +2415,7 @@ async function ai(api, event) {
                                 });*/
                                 let uid = getUserId(api, data.join(" ").replace("@", ""));
                                 id = uid[0].userID;
-                                console.log("id is" + uid + " " uid[0].userID);
+                                console.log("id is" + uid + " " + uid[0].userID);
                             } else if (isMyId(id)) {
                                 sendMessage(api, event, "Unable to kick the user.");
                                 return;
