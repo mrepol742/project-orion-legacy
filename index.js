@@ -1039,7 +1039,7 @@ async function ai(api, event) {
                 return;
             }
             if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
-                if (nonRRR.includes(event.senderID)) {
+                if (!nonRRR.includes(event.senderID)) {
                     let message = {
                         body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ cmd\n\nhttps://mrepol742.github.io/project-orion/",
                         attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
