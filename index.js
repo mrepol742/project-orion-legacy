@@ -2579,11 +2579,31 @@ async function ai(api, event) {
                     sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             })
+        } else if (query.startsWith("gpool")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (gc.isGroup) {
+                    let data = input.split(" ");
+                    if (data.length < 2) {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using gpool title instead.\n\nFor example:\ngpool Who are the best")
+                    } else {
+                        data.shift()
+                        api.createPoll(data.join(' '), event.threadID, {
+                            "Choice 1": false
+                        }, (err) => {
+                            if(err) return log(err);
+                        });
+                    }
+                } else {
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                }
+            });
         } else if (query.startsWith("gname")) {
             if (isGoingToFast(event)) {
                 return;
             }
-            await wait(3000);
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (gc.isGroup) {
                     let data = input.split(" ");
@@ -3525,7 +3545,7 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead.\nFor example:\ntrump bug is not an error");
             } else {
-                parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + encodeURIComponent(text), __dirname + '/cache/images/trump.png');
+                parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + '/cache/images/trump.png');
             }
         } else if (query.startsWith("qrcode")) {
             if (isGoingToFast(event)) {
