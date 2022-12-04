@@ -907,12 +907,12 @@ async function ai(api, event) {
             } else {
                 try {
                     data.shift();
-                    let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(data.join(" ")) + "&lang=ja&engine=g1&rate=0.5&key=0POmS5Y2&gender=female&pitch=0.5&volume=1";
+                    let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(data.join(" ")) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
                     var file = fs.createWriteStream(__dirname + "/cache/audios/ttsjap.mp3");
                     var gifRequest = http.get(responses, function(gifResponse) {
                         gifResponse.pipe(file);
                         file.on('finish', function() {
-                            log("download_complete of ttsjap");
+                            log("Finish downloading audio file.");
                             var message = {
                                 attachment: fs.createReadStream(__dirname + "/cache/audios/ttsjap.mp3")
                                     .on("end", async () => {
