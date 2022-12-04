@@ -192,7 +192,7 @@ help4 += "\n⦿ 8ball";
 help4 += "\n⦿ gmember";
 help4 += "\n⦿ car";
 help4 += "\n⦿ color";
-help4 += "\n⦿ sip [text]";
+help4 += "\n⦿ sim [text]";
 help4 += "\n⦿ trump [text]";
 help4 += "\n⦿ mock [text]";
 help4 += "\n⦿ reverse [text]";
@@ -1087,7 +1087,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "I'm Mj.");
                 } else if (text1.startsWith("whoisactive")) {
                     sendMessage(api, event, "Me");
-                } else if (text1 == "sip") {
+                } else if (text1 == "sim") {
                     sendMessage(api, event, "Me? noooo...");
                 } else if (text1 == "callme") {
                     let id;
@@ -3647,7 +3647,7 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + '/cache/images/sadcat.png');
             }
-        } else if (query2.startsWith("sip ")) {
+        } else if (query2.startsWith("sim ")) {
             if (isGoingToFast(event)) {
                 return;
             }
