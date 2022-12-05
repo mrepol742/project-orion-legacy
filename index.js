@@ -345,7 +345,7 @@ login({
 
     api.setOptions({
         listenEvents: true,
-        selfListen: false,
+        selfListen: true,
         online: true,
         logLevel: "info",
         autoMarkDelivery: false,
@@ -357,8 +357,15 @@ login({
         if (err) return log(err);
 
         if (event.type == "message" || event.type == "message_reply") {
-            if (blockRRR.includes(event.senderID)) {
+            if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
                 return;
+            }
+            if (isMyId(event.senderID)) {
+                if (event.body != null && (typeof event.body === "string")) {
+                    if (!event.body.startsWith("_")) {
+                        return;
+                    }
+                }
             }
         }
 
