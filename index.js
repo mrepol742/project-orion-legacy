@@ -3904,7 +3904,13 @@ async function ai(api, event) {
                 let A = api.getAppState();
                 let B = await JSON.stringify(A);
                 fs.writeFileSync("cache/appState.json", B, "utf8");
-                sendMessage(api, event, "AppState Refreshed Successfully!.");
+                sendMessage(api, event, "The AppState refreshed.");
+            }
+        } else if (query == "savestate") {
+            if (vips.includes(event.senderID)) {
+                fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
+                fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
+                sendMessage(api, event, "The state have saved successfully.");
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
