@@ -274,6 +274,11 @@ helpadmin += "\n⦿ remAdmin @mention";
 helpadmin += "\n⦿ kickUser @mention";
 helpadmin += "\n⦿ blockUser @mention";
 helpadmin += "\n⦿ unblockUser @mention";
+helpadmin += "\n⦿ blockGroup";
+helpadmin += "\n⦿ unblockGroup";
+helpadmin += "\n⦿ listblocks";
+helpadmin += "\n⦿ listadmins";
+helpadmin += "\n⦿ listmuted";
 helpadmin += "\n⦿ preventSimultanoesExecution on/off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
@@ -303,6 +308,7 @@ let vips = JSON.parse(fs.readFileSync("cache/admin.json", "utf8"));
 let nonRRR = JSON.parse(fs.readFileSync("cache/users.json", "utf8"));
 let saveAns = JSON.parse(fs.readFileSync("cache/answer.json", "utf8"));
 let blockRRR = JSON.parse(fs.readFileSync("cache/block_users.json", "utf8"));
+let blockSSS = JSON.parse(fs.readFileSync("cache/block_groups.json", "utf8"));
 let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 
@@ -2657,6 +2663,38 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead.\n\nFor instance:\nblockUser @Zero Two")
                 }
             }
+        } else if (query.startsWith("blockgroup")) {
+            if (vips.includes(event.senderID)) {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (gc.isGroup) {
+                        blockGroup(api, event, event.threadID);
+                    } else {
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
+                })
+            }
+        } else if (query.startsWith("unblockgroup")) {
+            if (vips.includes(event.senderID)) {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (gc.isGroup) {
+                        unblockGroup(api, event, event.threadID);
+                    } else {
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
+                })
+            }
+        } else if (query.startsWith("listadmins")) {
+            if (vips.includes(event.senderID)) {
+                sendMessage(api, event, vips);
+            }
+        } else if (query.startsWith("listblocks")) {
+            if (vips.includes(event.senderID)) {
+                sendMessage(api, event, "Users:\n" + blockRRR + "\n\nGroups:\n" + blockSSS);
+            }
+        } else if (query.startsWith("listmuted")) {
+            if (vips.includes(event.senderID)) {
+                sendMessage(api, event, "");
+            }
         } else if (query.startsWith("unblockuser")) {
             if (vips.includes(event.senderID)) {
                 if (input.includes("@")) {
@@ -2865,6 +2903,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The Project Orion 7~7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmdadmin") {
             if (isGoingToFast(event)) {
+                return;
+            }
+            if (!vips.includes(event.senderID)) {
                 return;
             }
             sendMessage(api, event, "The Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
@@ -4648,6 +4689,18 @@ function blockUser(api, event, id) {
     blockRRR.push(id);
     sendMessage(api, event, "The user " + id + " is blocked.");
     fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+}
+
+function blockGroup(api, event, id) {
+    blockSSS.push(id);
+    sendMessage(api, event, "The group " + id + " is blocked.");
+    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockRRR), "utf8");
+}
+
+function unblockGroup(api, event, id) {
+    blockSSS = blockSSS.filter(item => item !== id);
+    sendMessage(api, event, "The group " + id + " can now use the commands.");
+    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockRRR), "utf8");
 }
 
 function unblockUser(api, event, id) {
