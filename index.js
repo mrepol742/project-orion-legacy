@@ -133,13 +133,13 @@ help1 += "\n⦿ landscape [text]";
 help1 += "\n⦿ portrait";
 help1 += "\n⦿ portrait [text]";
 help1 += "\n⦿ problem [equation]";
+help1 += "\n⦿ roi [revenue] [cost]";
 help1 += "\n⦿ pin add";
 help1 += "\n⦿ pin remove";
 help1 += "\n⦿ sadcat [text]";
 help1 += "\n⦿ biden [text]";
 help1 += "\n⦿ pika [text]";
 help1 += "\n⦿ god [text]";
-help1 += "\n⦿ website [url]";
 help1 += "\n⦿ qrcode [text]";
 
 let help2 = "\n⦿ verse today";
@@ -234,6 +234,7 @@ help6 += "\n⦿ decodeBinary [text]";
 help6 += "\n⦿ ttsjap [text]";
 help6 += "\n⦿ pdf [text]";
 help6 += "\n⦿ sendReport [text]";
+help6 += "\n⦿ website [url]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -1239,6 +1240,17 @@ async function ai(api, event) {
                         sendMessage(api, event, data1);
                     }
                 }
+            }
+        } else if (query.startsWith("mean")) {
+            if (input.split(" ").length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead.\nFor instance:\nmean 4 5 6 3 6 7 3 5")
+            } else {
+                let arr = input.substring(5).split(" ");
+                let total = 0;
+                for (let i = 0; i < arr.length; i++) {
+                  total += arr[i];
+                }
+                sendMessage(api, event, "The mean value is " + (total / arr.length));
             }
         } else if (query.startsWith("roi")) {
             if (input.split(" ").length < 3) {
