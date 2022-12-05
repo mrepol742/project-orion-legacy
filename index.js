@@ -491,7 +491,6 @@ login({
                             }
                         }
                     }
-                }
 
                 if (query == "bgremove") {
                     if (isGoingToFast(event)) {
@@ -567,6 +566,7 @@ login({
                         }
                     });
                 }
+            }
                 break;
             case "message_unsend":
                 if (vips.includes(event.senderID)) {
