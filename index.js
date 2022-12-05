@@ -1268,9 +1268,10 @@ async function ai(api, event) {
                 let length = arr.lenght;
                 arr.sort((a, b) => a - b);
                 if (length % 2 === 0) {
-                    return (arr[length / 2 - 1] + arr[length / 2]) / 2;
+                    sendMessage(api, event, "The median value is " + ((arr[length / 2 - 1] + arr[length / 2]) / 2));
+                    return;
                 }
-                sendMessage(api, event, "The median value is " + arr[(length - 1) / 2]);
+                sendMessage(api, event, "The median value is " + (arr[(length - 1) / 2]));
             }
         } else if (query.startsWith("roi")) {
             if (input.split(" ").length < 3) {
