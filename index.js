@@ -1245,10 +1245,14 @@ async function ai(api, event) {
             if (input.split(" ").length < 3) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead.\nFor instance:\nmean 4 5 6 3 6 7 3 5")
             } else {
+                if (!/^\d+$/.test(query.substring(4)) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
                 let arr = input.substring(5).split(" ");
                 let total = 0;
                 for (let i = 0; i < arr.length; i++) {
-                  total += arr[i];
+                    total += parseInt(arr[i]);
                 }
                 sendMessage(api, event, "The mean value is " + (total / arr.length));
             }
