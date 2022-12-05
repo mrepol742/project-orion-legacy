@@ -240,6 +240,10 @@ help6 += "\n⦿ mean [numbers]";
 help6 += "\n⦿ median [numbers]";
 help6 += "\n⦿ mode [numbers]";
 help6 += "\n⦿ range [numbers]";
+help6 += "\n⦿ cdfnormal [x] [μ] [σ]";
+help6 += "\n⦿ divisible [number] [number]";
+help6 += "\n⦿ factorial [number]";
+help6 += "\n⦿ findGCD [number]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -1316,6 +1320,43 @@ async function ai(api, event) {
                 let arr = input.substring(6).split(" ").map(Number);
                 arr.sort((a, b) => a - b);
                 sendMessage(api, event, "The range value is " + [arr[0], arr[arr.length - 1]]);
+            }
+        } else if (query.startsWith("divisible")) {
+            if (input.split(" ").length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using divisible number number instead.\nFor instance:\ndivisible 5 8")
+            } else {
+                if (!/^\d+$/.test(query.substring(9))) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
+                let arr = input.substring(10).split(" ").map(Number);
+                if (arr[1] % arr[2] == 0) {
+                    sendMessage(api, event, arr[1] + " is divisible by " + arr[2]);
+                } else {
+                    sendMessage(api, event, arr[1] + " is not divisible by " + arr[2]);
+                }
+            }
+        } else if (query.startsWith("factorial")) {
+            if (input.split(" ").length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using factorial number instead.\nFor instance:\nfactorial 5")
+            } else {
+                if (!/^\d+$/.test(query.substring(10))) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
+                let num = input.substring(11).map(Number);
+                sendMessage(api, event, "The factorial of " + num + " is " + factorial(num));
+            }
+        } else if (query.startsWith("findgcd")) {
+            if (input.split(" ").length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead.\nFor instance:\nfindGCD 5")
+            } else {
+                if (!/^\d+$/.test(query.substring(7))) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
+                let num = input.substring(8).map(Number);
+                sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
             }
         } else if (query.startsWith("roi")) {
             if (input.split(" ").length < 3) {
@@ -2831,7 +2872,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
             if (isGoingToFast(event)) {
                 return;
@@ -4775,4 +4816,19 @@ function welcomeUser(api, event, name, gname, Tmem, id) {
 
 function cdfNormal (x, mean, standardDeviation) {
     return (1 - mathjs.erf((mean - x ) / (Math.sqrt(2) * standardDeviation))) / 2
-  }
+}
+
+function factorial(num) {
+    if (num == 0 || num == 1) {
+        return 1;
+    }
+    return num * factorial(num-1);
+}
+
+
+function findGCD(i, i2) {
+    if (i2 == 0) {
+        return i;
+    }
+    return findGCD(i2, i % i2);
+}
