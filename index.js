@@ -912,7 +912,7 @@ function wait(ms) {
 }
 
 async function ai(api, event) {
-    if (event.body != null && (typeof event.body === "string")) {
+    if (event.body != null && (typeof event.body === "string") && (event.type == "message" || event.type == "message_reply")) {
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
