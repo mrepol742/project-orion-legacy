@@ -1260,11 +1260,11 @@ async function ai(api, event) {
             if (input.split(" ").length < 3) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using median numbers instead.\nFor instance:\nmedian 4 5 6 3 6 7 3 5")
             } else {
-                if (!/^\d+$/.test(query.substring(4))) {
+                if (!/^\d+$/.test(query.substring(6))) {
                     sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                     return;
                 }
-                let arr = input.substring(5).split(" ");
+                let arr = input.substring(7).split(" ");
                 let length = arr.lenght;
                 arr.sort((a, b) => a - b);
                 if (length % 2 === 0) {
