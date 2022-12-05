@@ -1256,6 +1256,22 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, "The mean value is " + (total / arr.length));
             }
+        } else if (query.startsWith("median")) {
+            if (input.split(" ").length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using median numbers instead.\nFor instance:\nmedian 4 5 6 3 6 7 3 5")
+            } else {
+                if (!/^\d+$/.test(query.substring(4))) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
+                let arr = input.substring(5).split(" ");
+                let length = arr.lenght;
+                arr.sort((a, b) => a - b);
+                if (length % 2 === 0) {
+                    return (arr[length / 2 - 1] + arr[length / 2]) / 2;
+                }
+                sendMessage(api, event, "The median value is " + arr[(length - 1) / 2]);
+            }
         } else if (query.startsWith("roi")) {
             if (input.split(" ").length < 3) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead.\nFor instance:\nroi 23000 6000")
