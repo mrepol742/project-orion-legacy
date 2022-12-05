@@ -1240,6 +1240,15 @@ async function ai(api, event) {
                     }
                 }
             }
+        } else if (query.startsWith("roi")) {
+            if (input.split(" ").length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead.\nFor instance:\nroi 23000 6000")
+            } else {
+                let revenue = input.split(" ")[1];
+                let cost = input.split(" ")[2];
+                let calcu = (revenue - cost) / cost;
+                sendMessage(api, event, "The return of investment is " + calcu);
+            }
         } else if (query.startsWith("problem")) {
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor instance:\nproblem 5*5/9")
@@ -2735,7 +2744,7 @@ async function ai(api, event) {
                 return;
             }
             sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(4))) {
+        } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
             if (isGoingToFast(event)) {
                 return;
             }
