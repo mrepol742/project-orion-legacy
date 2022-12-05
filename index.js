@@ -595,7 +595,7 @@ login({
                 }
                 break;
             case "message_unsend":
-                if (event.senderID == getMyId()) {
+                if (vips.includes(event.senderID)) {
                     break;
                 }
                 let d = msgs[event.messageID];
