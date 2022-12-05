@@ -42,6 +42,7 @@ const NetworkSpeed = require('network-speed')
 const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const gis = require('g-i-s');
+const mathjs = require('mathjs')
 
 log("The Project Orion is now active and waiting for commands execution. ONLINE")
 
@@ -235,6 +236,10 @@ help6 += "\n⦿ ttsjap [text]";
 help6 += "\n⦿ pdf [text]";
 help6 += "\n⦿ sendReport [text]";
 help6 += "\n⦿ website [url]";
+help6 += "\n⦿ mean [numbers]";
+help6 += "\n⦿ median [numbers]";
+help6 += "\n⦿ mode [numbers]";
+help6 += "\n⦿ range [numbers]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -1320,6 +1325,17 @@ async function ai(api, event) {
                 let cost = input.split(" ")[2];
                 let calcu = (revenue - cost) / cost;
                 sendMessage(api, event, "The return of investment is " + calcu);
+            }
+        } else if (query.startsWith("cdfnormal")) {
+            if (input.split(" ").length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using cdfnormal x μ σ instead.\nFor instance:\ncdfnormal 5 30 25")
+            } else {
+                lif (!/^\d+$/.test(query.substring(9))) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
+                let arr = input.split(" ");
+                sendMessage(api, event, "The normal distribution is " + cdfNormal(arr[1], arr[2], arr[3]);
             }
         } else if (query.startsWith("problem")) {
             if (input.split(" ").length < 2) {
@@ -4756,3 +4772,7 @@ function welcomeUser(api, event, name, gname, Tmem, id) {
         unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
     })
 }
+
+function cdfNormal (x, mean, standardDeviation) {
+    return (1 - mathjs.erf((mean - x ) / (Math.sqrt(2) * standardDeviation))) / 2
+  }
