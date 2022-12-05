@@ -1266,7 +1266,7 @@ async function ai(api, event) {
                 }
                 let arr = input.substring(7).split(" ");
                 let length = arr.lenght;
-                arr.sort((a, b) => a - b);
+                arr.sort((a, b) => parseInt(a) - parseInt(b));
                 if (length % 2 === 0) {
                     sendMessage(api, event, "The median value is " + ((arr[length / 2 - 1] + arr[length / 2]) / 2));
                     return;
