@@ -360,7 +360,7 @@ login({
             if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
                 return;
             }
-            if (isMyId(event.senderID)) {
+            if (event.senderID == getMyId()) {
                 if (event.body != null && (typeof event.body === "string")) {
                     if (!event.body.startsWith("_")) {
                         return;
@@ -4157,13 +4157,13 @@ async function ai(api, event) {
 }
 
 function someA(api, event, query, input) {
-    if (query == "sup" || query == "wassup" || query == "whatsup") {
+    if (query.startsWith("sup") || query.startsWith("wassup") || query.startsWith("whatsup")) {
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
-    } else if (query == "hi" || query == "hello" || query.startsWith("hey")) {
+    } else if (query.startsWith("hi") || query.startsWith("hello") || query.startsWith("hey")) {
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
-    } else if (query == "okay") {
+    } else if (query.startsWith("okay")) {
         sendMessage(api, event, "Yup");
         return true;
     } else if (nsfw(query)) {
