@@ -308,7 +308,7 @@ process.on('SIGINT', function() {
 });
 
 login({
-    appState: JSON.parse(fs.readFileSync('fb.json', 'utf8'))
+    appState: JSON.parse(fs.readFileSync('cache/appState.json', 'utf8'))
 }, (err, api) => {
     if (err) return log(err);
 
@@ -321,7 +321,7 @@ login({
     cron.schedule('0 * * * *', () => {
         let A = api.getAppState();
         let B = JSON.stringify(A);
-        fs.writeFileSync("fb.json", B, "utf8");
+        fs.writeFileSync("/cache/appState.json", B, "utf8");
         api.sendMessage("Project Orion Facebook State Refreshed", getMyId())
         log("fb_save_state")
     });
@@ -3877,7 +3877,7 @@ async function ai(api, event) {
             if (vips.includes(event.senderID)) {
                 let A = api.getAppState();
                 let B = await JSON.stringify(A);
-                fs.writeFileSync("fb.json", B, "utf8");
+                fs.writeFileSync("cache/appState.json", B, "utf8");
                 sendMessage(api, event, "AppState Refreshed Successfully!.");
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
