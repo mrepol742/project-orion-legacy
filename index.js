@@ -1249,10 +1249,10 @@ async function ai(api, event) {
                     sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                     return;
                 }
-                let arr = input.substring(5).split(" ");
+                let arr = input.substring(5).split(" ").map(Number);
                 let total = 0;
                 for (let i = 0; i < arr.length; i++) {
-                    total += parseInt(arr[i]);
+                    total += arr[i];
                 }
                 sendMessage(api, event, "The mean value is " + (total / arr.length));
             }
@@ -1264,14 +1264,53 @@ async function ai(api, event) {
                     sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                     return;
                 }
-                let arr = input.substring(7).split(" ");
+                let arr = input.substring(7).split(" ").map(Number);
                 let length = arr.length;
-                arr.sort((a, b) => parseInt(a) - parseInt(b));
+                arr.sort((a, b) => a - b);
                 if (length % 2 === 0) {
                     sendMessage(api, event, "The median value is " + ((arr[length / 2 - 1] + arr[length / 2]) / 2));
                     return;
                 }
                 sendMessage(api, event, "The median value is " + (arr[(length - 1) / 2]));
+            }
+        } else if (query.startsWith("mode")) {
+            if (input.split(" ").length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using mode numbers instead.\nFor instance:\nmode 4 5 6 3 6 7 3 5")
+            } else {
+                if (!/^\d+$/.test(query.substring(4))) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
+                let arr = input.substring(5).split(" ").map(Number);
+                
+                const mode = {};
+                let max = 0, count = 0;
+                for (let i = 0; i < arr.length; i++) {
+                    const item = arr[i];
+                    if (mode[item]) {
+                        mode[item]++;
+                    } else {
+                        mode[item] = 1;
+                    }
+                    if (count < mode[item]) {
+                        max = item;
+                        count = mode[item];
+                    }
+                }
+
+                sendMessage(api, event, "The mode value is " + max);
+            }
+        } else if (query.startsWith("range")) {
+            if (input.split(" ").length < 3) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using range numbers instead.\nFor instance:\nrange 4 5 6 3 6 7 3 5")
+            } else {
+                if (!/^\d+$/.test(query.substring(5))) {
+                    sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
+                    return;
+                }
+                let arr = input.substring(6).split(" ").map(Number);
+                arr.sort((a, b) => a - b);
+                sendMessage(api, event, "The range value is " + [arr[0], arr[arr.length - 1]]);
             }
         } else if (query.startsWith("roi")) {
             if (input.split(" ").length < 3) {
