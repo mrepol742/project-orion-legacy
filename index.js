@@ -1335,7 +1335,7 @@ async function ai(api, event) {
                     return;
                 }
                 let arr = input.split(" ");
-                sendMessage(api, event, "The normal distribution is " + cdfNormal(arr[1], arr[2], arr[3]);
+                sendMessage(api, event, "The normal distribution is " + cdfNormal(arr[1], arr[2], arr[3]));
             }
         } else if (query.startsWith("problem")) {
             if (input.split(" ").length < 2) {
