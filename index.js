@@ -2685,7 +2685,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("listadmins")) {
             if (vips.includes(event.senderID)) {
-                sendMessage(api, event, vips);
+                sendMessage(api, event, "Admins:\n" + vips);
             }
         } else if (query.startsWith("listblocks")) {
             if (vips.includes(event.senderID)) {
