@@ -1,0 +1,83 @@
+[
+    {
+        "key": "dbln",
+        "value": "%7B%22100071743848974%22%3A%22hOBpj8qk%22%7D",
+        "domain": "facebook.com",
+        "path": "/login/device-based/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.944Z",
+        "lastAccessed": "2022-12-05T07:29:19.945Z"
+    },
+    {
+        "key": "sb",
+        "value": "ivgEYzHzzCO2rmNYNF2gtHb0",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    },
+    {
+        "key": "dpr",
+        "value": "0.8999999761581421",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    },
+    {
+        "key": "locale",
+        "value": "en_US",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    },
+    {
+        "key": "wd",
+        "value": "1517x725",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    },
+    {
+        "key": "c_user",
+        "value": "100071743848974",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    },
+    {
+        "key": "xs",
+        "value": "44%3AQQ1o5t39PSt-wA%3A2%3A1670225344%3A-1%3A3222%3A%3AAcU0rwyl2LwUwB7trckFZisOyMQ5w8zvzbf_qejpHw",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    },
+    {
+        "key": "fr",
+        "value": "0lC4msAxjlUIuJpDX.AWWKignY1HDiGToUuqhyCiH1kDs.BjjZ3F.yC.AAA.0.0.BjjZ3F.AWUS2uD0wVE",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    },
+    {
+        "key": "datr",
+        "value": "wp2NY4IKc5TdI1r4-l_YdcpG",
+        "domain": "facebook.com",
+        "path": "/",
+        "hostOnly": false,
+        "creation": "2022-12-05T07:29:19.946Z",
+        "lastAccessed": "2022-12-05T07:29:19.946Z"
+    }
+]
