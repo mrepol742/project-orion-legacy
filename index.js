@@ -61,7 +61,7 @@ let goodmo = ["Good morning too... Have a great day ahead, and always don't forg
 let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
 let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
 let tips = ["Be detailed but brief", "Ask me like Who are you?", "Ask me like How to do this?"]
-let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe"];
+let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify"];
 let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 let happyEE = ['haha', 'ahah', 'ahha', 'funny ', 'insane ', 'lol', 'lmao', 'lmfao', 'silly ', 'laugh ', 'laughable', 'humorous', 'amusing', 'hilarious', 'absurd', 'ridicolous', 'ludicrous', 'entertaining']
@@ -2446,6 +2446,32 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nFor instance:\ngcolor DefaultBlue");
                 }
             }
+        } else if (query.startsWith("welcomeuser")) {
+            if (vips.includes(event.senderID)) {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (gc.isGroup) {
+                        if (input.includes("@")) {
+                            let id = Object.keys(event.mentions)[0];
+                            if (id === undefined) {
+                                let data = input.split(" ");
+                                data.shift();
+                                api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                                    if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                    removeUser(api, event, data[0].userID);
+                                });
+                                return;
+                            } else if (isMyId(id)) {
+                                return;
+                            }
+                            removeUser(api, event, id);
+                        } else {
+                            sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead.\n\nFor instance:\nwelcomeuser @Zero Two")
+                        }
+                    } else {
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
+                })
+            }
         } else if (query.startsWith("kickuser")) {
             if (vips.includes(event.senderID)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
@@ -4619,4 +4645,21 @@ function blur(api, event, id) {
 
 function getTimestamp() {
     return Math.floor(Date.now() / 1000);
+}
+
+function welcomeUser(api, event, name, gname, Tmem, id) {
+    let time = getTimestamp();
+    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
+       .on('finish', () => {
+        let message = {
+            body: gre"Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd"t,
+            attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
+            mentions: [{
+                tag: name,
+                id: id
+            }]
+        };
+        sendMessageOnly(api, event, message);
+        unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
+    })
 }
