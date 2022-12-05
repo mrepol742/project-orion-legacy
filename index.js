@@ -4658,7 +4658,7 @@ function welcomeUser(api, event, name, gname, Tmem, id) {
     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
        .on('finish', () => {
         let message = {
-            body: gre"Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd"t,
+            body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
             attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
             mentions: [{
                 tag: name,
