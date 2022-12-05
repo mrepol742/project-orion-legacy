@@ -1330,7 +1330,7 @@ async function ai(api, event) {
             if (input.split(" ").length < 3) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using cdfnormal x μ σ instead.\nFor instance:\ncdfnormal 5 30 25")
             } else {
-                lif (!/^\d+$/.test(query.substring(9))) {
+                if (!/^\d+$/.test(query.substring(9))) {
                     sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                     return;
                 }
