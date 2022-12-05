@@ -412,76 +412,26 @@ login({
 
         switch (event.type) {
             case "message":
-                if (event.attachments.length != 0) {
-                    if (event.attachments[0].type == "photo") {
-                        msgs[event.messageID] = ['img', event.attachments[0].url]
-                    } else if (event.attachments[0].type == "animated_image") {
-                        msgs[event.messageID] = ['gif', event.attachments[0].url]
-                    } else if (event.attachments[0].type == "sticker") {
-                        msgs[event.messageID] = ['sticker', event.attachments[0].url]
-                    } else if (event.attachments[0].type == "video") {
-                        msgs[event.messageID] = ['vid', event.attachments[0].url]
-                    } else if (event.attachments[0].type == "audio") {
-                        msgs[event.messageID] = ['vm', event.attachments[0].url]
-                    }
-                } else {
-                    msgs[event.messageID] = event.body;
-                    let nonSS = event.body;
-                    if (nonSS == "debugon") {
-                        if (vips.includes(event.senderID)) {
-                            settings.isDebugEnabled = true;
-                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                            sendMessage(api, event, "Debug mode enabled.");
-                        }
-                    } else if (nonSS == "debugoff") {
-                        if (vips.includes(event.senderID)) {
-                            settings.isDebugEnabled = false;
-                            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                            sendMessage(api, event, "Konnichiwa i am back.");
-                        }
-                    } else if (nonSS == "sleepon") {
-                        if (vips.includes(event.senderID)) {
-                            api.muteThread(message.threadID, -1);
-                            sendMessage(api, event, "Konbanwa. I'm sleepy now...");
-                        }
-                    } else if (nonSS == "sleepoff") {
-                        if (vips.includes(event.senderID)) {
-                            api.muteThread(message.threadID, 0);
-                            sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
-                        }
-                    } else if (nonSS == "stop") {
-                        sendMessage(api, event, "Goodbye...");
-                        return listenEmitter.stopListening();
-                    }
-                    if (!nonSS.replace(pictographic, '').length) {
-                        if (isGoingToFastResendingOfEmo(event)) {
-                            break;
-                        }
-                        await wait(5000);
-                        sendMessageOnly(api, event, nonSS);
-                        break;
-                    }
-                    ai(api, event);
-                }
+                saveEvent(event);
+                ai(api, event);
                 break;
             case "message_reply":
-                let msgid = event.messageID;
-                let input = event.body;
-                let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
-                msgs[msgid] = input;
+                saveEvent(event);
+                ai(api, event);
 
-                if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
-                    if (vips.includes(event.senderID)) {
-                        if (event.messageReply.senderID != api.getCurrentUserID()) {
-                            sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
-                        } else {
-                            api.unsendMessage(event.messageReply.messageID);
+                if (event.body != null && (typeof event.body === "string")) {
+                    let input = event.body;
+                    let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
+
+                    if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
+                        if (vips.includes(event.senderID)) {
+                            if (event.messageReply.senderID != api.getCurrentUserID()) {
+                                sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
+                            } else {
+                                api.unsendMessage(event.messageReply.messageID);
+                            }
                         }
                     }
-                }
-
-                if (event.attachments.length == 0) {
-                    ai(api, event);
 
                     if (query == "pinadd") {
                         if (isGoingToFast(event)) {
@@ -934,6 +884,38 @@ async function ai(api, event) {
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
 
+        if (input == "debugon") {
+            if (vips.includes(event.senderID)) {
+                settings.isDebugEnabled = true;
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessage(api, event, "Debug mode enabled.");
+            }
+        } else if (input == "debugoff") {
+            if (vips.includes(event.senderID)) {
+                settings.isDebugEnabled = false;
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessage(api, event, "Konnichiwa i am back.");
+            }
+        } else if (input == "sleepon") {
+            if (vips.includes(event.senderID)) {
+                api.muteThread(message.threadID, -1);
+                sendMessage(api, event, "Konbanwa. I'm sleepy now...");
+            }
+        } else if (input == "sleepoff") {
+            if (vips.includes(event.senderID)) {
+                api.muteThread(message.threadID, 0);
+                sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
+            }
+        } else if (input == "stop") {
+            sendMessage(api, event, "Goodbye...");
+            return listenEmitter.stopListening();
+        }
+        if (!input.replace(pictographic, '').length) {
+            if (!isGoingToFastResendingOfEmo(event)) {
+                await wait(5000);
+                sendMessageOnly(api, event, nonSS);
+            }
+        } 
         if (query.startsWith("ttsjap")) {
             if (isGoingToFast(event)) {
                 return;
@@ -4891,4 +4873,22 @@ function findGCD(i, i2) {
         return i;
     }
     return findGCD(i2, i % i2);
+}
+
+function saveEvent(event) {
+    if (event.attachments.length != 0) {
+        if (event.attachments[0].type == "photo") {
+            msgs[event.messageID] = ['img', event.attachments[0].url]
+        } else if (event.attachments[0].type == "animated_image") {
+            msgs[event.messageID] = ['gif', event.attachments[0].url]
+        } else if (event.attachments[0].type == "sticker") {
+            msgs[event.messageID] = ['sticker', event.attachments[0].url]
+        } else if (event.attachments[0].type == "video") {
+            msgs[event.messageID] = ['vid', event.attachments[0].url]
+        } else if (event.attachments[0].type == "audio") {
+            msgs[event.messageID] = ['vm', event.attachments[0].url]
+        }
+    } else {
+        msgs[event.messageID] = event.body;
+    }
 }
