@@ -257,7 +257,8 @@ helpadmin += "\n⦿ enable on|off";
 helpadmin += "\n⦿ debug on|off";
 helpadmin += "\n⦿ sleep on|off";
 helpadmin += "\n⦿ stop";
-helpadmin += "\n⦿ refresh|reload";
+helpadmin += "\n⦿ refreshState";
+helpadmin += "\n⦿ saveState";
 helpadmin += "\n⦿ addAdmin @mention";
 helpadmin += "\n⦿ remAdmin @mention";
 helpadmin += "\n⦿ kickUser @mention";
@@ -2693,47 +2694,52 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 1 - 7\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 1~7\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd2") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 2 - 7\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 2~7\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd3") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 3 - 7\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 3~7\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd4") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 4 - 7\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 4~7\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd5") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 5 - 7\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 5~7\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd6") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 6 - 7\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 6~7\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd7") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion 7 - 7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 7~7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmdadmin") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmdall") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(4))) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
         } else if (query.startsWith("wiki")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3899,7 +3905,7 @@ async function ai(api, event) {
                     }
                 })
             }
-        } else if (query == "refresh" || query == "reload") {
+        } else if (query == "refreshstate") {
             if (vips.includes(event.senderID)) {
                 let A = api.getAppState();
                 let B = await JSON.stringify(A);
