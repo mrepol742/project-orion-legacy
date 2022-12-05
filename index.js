@@ -1334,7 +1334,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                     return;
                 }
-                let arr = input.split(" ");
+                let arr = input.split(" ").map(Number);
                 sendMessage(api, event, "The normal distribution is " + cdfNormal(arr[1], arr[2], arr[3]));
             }
         } else if (query.startsWith("problem")) {
