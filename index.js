@@ -1330,21 +1330,21 @@ async function ai(api, event) {
                     return;
                 }
                 let arr = input.substring(10).split(" ").map(Number);
-                if (arr[1] % arr[2] == 0) {
-                    sendMessage(api, event, arr[1] + " is divisible by " + arr[2]);
+                if (arr[0] % arr[1] == 0) {
+                    sendMessage(api, event, arr[0] + " is divisible by " + arr[1]);
                 } else {
-                    sendMessage(api, event, arr[1] + " is not divisible by " + arr[2]);
+                    sendMessage(api, event, arr[0] + " is not divisible by " + arr[1]);
                 }
             }
         } else if (query.startsWith("factorial")) {
             if (input.split(" ").length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using factorial number instead.\nFor instance:\nfactorial 5")
             } else {
-                if (!/^\d+$/.test(query.substring(10))) {
+                if (!/^\d+$/.test(query.substring(9))) {
                     sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                     return;
                 }
-                let num = input.substring(11).map(Number);
+                let num = parseInt(input.substring(10));
                 sendMessage(api, event, "The factorial of " + num + " is " + factorial(num));
             }
         } else if (query.startsWith("findgcd")) {
@@ -1355,7 +1355,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                     return;
                 }
-                let num = input.substring(8).map(Number);
+                let num = parseInt(input.substring(8));
                 sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
             }
         } else if (query.startsWith("roi")) {
