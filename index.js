@@ -1064,7 +1064,7 @@ async function ai(api, event) {
             if (!(typeof event.body === "string")) {
                 return;
             }
-            if (smartRRR.includes(event.threadID) && event.type == "message_reply") {
+            if (!smartRRR.includes(event.threadID) && event.type == "message_reply") {
                 if (!isMyId(event.messageReply.senderID)) {
                     return;
                 }
@@ -4959,7 +4959,7 @@ function saveEvent(event) {
             case "photo":
                 msgs[event.messageID] = ['photo', event.attachments[0].url]
                 for (let i = 0; i < 25; i++) {
-                    if (!(event.attachments[i].url === undefined)) {
+                    if (!(event.attachments[i] === undefined)) {
                         log("photo_" + i + " " + event.attachments[i].url);
                     }
                 }
