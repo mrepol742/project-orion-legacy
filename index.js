@@ -96,6 +96,8 @@ let emo = {};
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
 let nwww = {};
+let messagesD;
+let fb_stateD;
 
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
@@ -274,6 +276,7 @@ help7 += "\n⦿ costplay";
 help7 += "\n⦿ motor";
 help7 += "\n⦿ darkjoke";
 help7 += "\n⦿ blackpink";
+help7 += "\n⦿ hololive";
 
 let categorySFW = ['waifu', 'megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet',
     'blush', 'smile', 'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill', 'kick', 'happy', 'wink',
@@ -356,6 +359,7 @@ login({
         log("save_state");
         fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
         fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
+        messagesD = getFormattedDate();
     });
 
     cron.schedule('0 * * * *', () => {
@@ -363,6 +367,7 @@ login({
         api.sendMessage("Project Orion Facebook State Refreshed", getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
+        fb_stateD = getFormattedDate();
         log("fb_save_state")
     });
 
@@ -994,7 +999,7 @@ async function ai(api, event) {
                     },
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps");
+                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
@@ -2464,7 +2469,7 @@ async function ai(api, event) {
                     }
                 }
             }
-        } else if (query.startsWith("setTextComplextion")) {
+        } else if (query.startsWith("settextcomplextion")) {
             if (vips.includes(event.senderID)) {
                 let data = input.split(" ");
                 if (data.length < 2) {
@@ -3734,6 +3739,27 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using anime --nsfw category instead.\nFor instance:\nanime --nsfw waifu");
                 }
             }
+        } else if (query == "hololive") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            getResponseData("https://zenzapis.xyz/randomanime/hololive?apikey=9c4c44db3725").then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    let time = getTimestamp();
+                    request(encodeURI(response.result.image)).pipe(fs.createWriteStream(__dirname + "/cache/images/hololive_" + time + ".png"))
+                        .on('finish', () => {
+                            let message = {
+                                body: response.result.caption,
+                                attachment: [
+                                    fs.createReadStream(__dirname + "/cache/images/hololive_" + time + ".png")
+                                ]
+                            }
+                            sendMessage(api, event, message);
+                        });
+                }
+            });
         } else if (query == "animecouples") {
             if (isGoingToFast(event)) {
                 return;
@@ -4128,12 +4154,14 @@ async function ai(api, event) {
             if (vips.includes(event.senderID)) {
                 fs.writeFileSync("cache/appState.json", JSON.stringify(api.getAppState()), "utf8");
                 sendMessage(api, event, "The AppState refreshed.");
+                fb_stateD = getFormattedDate();
             }
         } else if (query == "savestate") {
             if (vips.includes(event.senderID)) {
                 fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
                 fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
                 sendMessage(api, event, "The state have saved successfully.");
+                messagesD = getFormattedDate();
             }
         } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
             sendMessage(api, event, "Hello World");
@@ -4378,10 +4406,13 @@ function formatQuery(string) {
 }
 
 function log(data) {
-    let date = new Date().toLocaleString("en-US", {
+    console.log(getFormattedDate() + "$ " + data);
+}
+
+function getFormattedDate() {
+    return new Date().toLocaleString("en-US", {
         timeZone: "Asia/Singapore"
     }).replace(",", "");
-    console.log(date + "$ " + data);
 }
 
 function containsAny(str, substrings) {
@@ -4692,7 +4723,7 @@ async function unLink(dir) {
     fs.unlink(dir, (err => {
         if (err) log(err);
         else {
-            log("un_link " + dir);
+          log("un_link " + dir);
         }
     }));
 }
@@ -4712,7 +4743,10 @@ function secondsToTime(e) {
     let h = Math.floor(e / 3600).toString().padStart(2, '0');
     let m = Math.floor(e % 3600 / 60).toString().padStart(2, '0');
     let s = Math.floor(e % 60).toString().padStart(2, '0');
-    return h + ':' + m + ':' + s;
+    if (h != "00") {
+        return h + 'h' + m + 'm and ' + s + 's';
+    }
+    return m + 'm and' + s;
 }
 
 function lowercaseFirstLetter(string) {
