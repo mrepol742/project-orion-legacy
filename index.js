@@ -50,7 +50,7 @@ const testNetworkSpeed = new NetworkSpeed();
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 
-let sleep = [5000, 6000, 5500, 6500, 7000, 6800, 5800, 5200, 7200, 6600, 5200, 6300, 5400]
+let sleep = [4000, 5000, 4500, 5500, 6000, 5800, 4800, 4200, 6200, 5600, 4200, 5300, 4400]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
@@ -823,22 +823,7 @@ login({
                                 let name = event.logMessageData.addedParticipants[0].fullName;
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
                                 let arr = gc.participantIDs;
-                                let Tmem = arr.length;
-                                let time = getTimestamp();
-                                let num = i;
-                                request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
-                                    .on('finish', () => {
-                                        let message = {
-                                            body: gret,
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
-                                            mentions: [{
-                                                tag: name,
-                                                id: id
-                                            }]
-                                        };
-                                        sendMessageOnly(api, event, message);
-                                        unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
-                                    })
+                                welcomeUser(api, event, name, gname, arr.length, id);
                             }
                         })
                         break;
@@ -855,24 +840,7 @@ login({
                                         if (data.hasOwnProperty(prop) && data[prop].name) {
                                             let gcn = gc.threadName;
                                             let arr = gc.participantIDs;
-                                            let Tmem = arr.length;
-                                            let time = getTimestamp();
-                                            let filename = __dirname + "/cache/images/byebye_" + time + ".jpg";
-                                            let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + data[prop].name + "&text2=Bye bye, Sayonara&text3=Total+Members+" + Tmem + "&avatar=" + getProfilePic(prop);
-                                            request(encodeURI(url)).pipe(fs.createWriteStream(filename))
-                                                .on('finish', () => {
-                                                    let message = {
-                                                        body: "Thank you for joining @" + data[prop].name + " but now you're leaving us.",
-                                                        attachment: fs.createReadStream(filename),
-                                                        mentions: [{
-                                                            tag: data[prop].name,
-                                                            id: prop
-                                                        }]
-                                                    };
-                                                    sendMessageOnly(api, event, message);
-                                                    log("leave_member " + data[prop].name);
-                                                    unLink(filename);
-                                                })
+                                            byebyeUser(api, event, data[prop].name, gcn, arr.length, prop);
                                         }
                                     }
                                 }
@@ -1064,7 +1032,10 @@ async function ai(api, event) {
             if (!(typeof event.body === "string")) {
                 return;
             }
-            if (!smartRRR.includes(event.threadID) && event.type == "message_reply") {
+            if (event.type == "message_reply") {
+                if (!smartRRR.includes(event.threadID)) {
+                    return;
+                }
                 if (!isMyId(event.messageReply.senderID)) {
                     return;
                 }
@@ -2617,13 +2588,13 @@ async function ai(api, event) {
                                 data.shift();
                                 api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                     if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                    removeUser(api, event, data[0].userID);
+                                     
                                 });
                                 return;
                             } else if (isMyId(id)) {
                                 return;
                             }
-                            removeUser(api, event, id);
+                             
                         } else {
                             sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead.\n\nFor instance:\nwelcomeuser @Zero Two")
                         }
@@ -4920,18 +4891,21 @@ function welcomeUser(api, event, name, gname, Tmem, id) {
 
 function byebyeUser(api, event, name, gname, Tmem, id) {
     let time = getTimestamp();
-    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
+    let filename = __dirname + "/cache/images/byebye_" + time + ".jpg";
+    let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + name + "&text2=Bye bye, Sayonara&text3=Total+Members+" + Tmem + "&avatar=" + getProfilePic(id);
+    request(encodeURI(url)).pipe(fs.createWriteStream(filename))
         .on('finish', () => {
             let message = {
-                body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
-                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
+                body: "Thank you for joining prop@" + name+ " but now you're leaving us.",
+                attachment: fs.createReadStream(filename),
                 mentions: [{
                     tag: name,
                     id: id
                 }]
             };
             sendMessageOnly(api, event, message);
-            unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
+            log("leave_member " + name);
+            unLink(filename);
         })
 }
 
