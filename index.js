@@ -49,9 +49,9 @@ const testNetworkSpeed = new NetworkSpeed();
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 
-let sleep = [4000, 5000, 4500, 5500, 6000, 5800, 4800, 4200, 6200, 5600, 4200, 5300, 4400]
+let sleep = [3000, 4000, 3000, 5000, 4500, 3500, 4500, 3000, 5500, 5000, 3200, 4200, 4500, 6000];
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
-let hey = ["Sup", "Hey :D", "hey", "Me?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?"];
+let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
 let idknow = ["Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.", "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.", "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do."]
 let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
@@ -269,6 +269,8 @@ help6 += "\n   Mango, Berry, Citrus, Candy";
 help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob";
 
+let help7 = "\n⦿ conan";
+
 let categorySFW = ['waifu', 'megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet',
     'blush', 'smile', 'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill', 'kick', 'happy', 'wink',
     'poke', 'dance', 'cringe'
@@ -376,7 +378,7 @@ login({
             if (err) log(err);
         });
 
-        if (event.type == "message" || event.type == "message_reply") {
+        if (event.type == "message" || (event.type == "message_reply" && event.senderID != getMyId())) {
             if (event.body == "unblockgroup") {
                 if (vips.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -861,7 +863,7 @@ function wait(ms) {
 
 async function ai(api, event) {
     if (event.body != null && (typeof event.body === "string") && (event.type == "message" || event.type == "message_reply")) {
-        if (event.type == "message_reply") {
+        if ((event.type == "message_reply" && event.senderID != getMyId())) {
             if (!isMyId(event.messageReply.senderID)) {
                 return;
             }
@@ -1031,7 +1033,7 @@ async function ai(api, event) {
             if (!(typeof event.body === "string")) {
                 return;
             }
-            if (event.type == "message_reply") {
+            if ((event.type == "message_reply" && event.senderID != getMyId())) {
                 if (!smartRRR.includes(event.threadID)) {
                     return;
                 }
@@ -1095,7 +1097,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Me? noooo...");
                 } else if (text1 == "callme") {
                     let id;
-                    if (event.type == "message_reply") {
+                    if ((event.type == "message_reply" && event.senderID != getMyId())) {
                         id = event.messageReply.senderID;
                     } else if (event.type == "message") {
                         id = event.senderID;
@@ -1115,7 +1117,7 @@ async function ai(api, event) {
                     });
                 } else if (text1 == "whoami" || text1 == "whatsmyname" || text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis") {
                     let id;
-                    if (event.type == "message_reply") {
+                    if ((event.type == "message_reply" && event.senderID != getMyId())) {
                         id = event.messageReply.senderID;
                     } else if (event.type == "message") {
                         id = event.senderID;
@@ -1142,7 +1144,7 @@ async function ai(api, event) {
                     });
                 } else if (text1 == "whoownyou") {
                     sendMessage(api, event, "Melvin Jones Repol.")
-                } else if (text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou")) {
+                } else if (text1.startsWith("whomadeyou") || text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou")) {
                     sendMessage(api, event, "Melvin Jones Repol created me.");
                 } else if (text1.startsWith("howoldareyou") || text1.startsWith("howyoungareyou")) {
                     sendMessage(api, event, "I'm 20 years old.");
@@ -1343,6 +1345,7 @@ async function ai(api, event) {
                 let num = parseInt(input.substring(8));
                 sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
             }
+
         } else if (query.startsWith("roi")) {
             if (input.split(" ").length < 3) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead.\nFor instance:\nroi 23000 6000")
@@ -1988,7 +1991,7 @@ async function ai(api, event) {
                 return;
             }
             let id;
-            if (event.type == "message_reply") {
+            if ((event.type == "message_reply" && event.senderID != getMyId())) {
                 id = event.messageReply.senderID;
             } else {
                 id = event.senderID;
@@ -2836,7 +2839,7 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 else {
-                    if (event.type == "message_reply") {
+                    if ((event.type == "message_reply" && event.senderID != getMyId())) {
                         api.getUserInfo(event.messageReply.senderID, (err, info) => {
                             if (err) return log(err);
                             let name = info[event.messageReply.senderID]['name'];
@@ -2853,37 +2856,42 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion 1~7\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd2") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion 2~7\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 2~8\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd3") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion 3~7\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 3~8\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd4") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion 4~7\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 4~8\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd5") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion 5~7\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 5~8\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd6") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion 6~7\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 6~8\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmd7") {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion 7~7\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion 7~8\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        } else if (query == "cmd8") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            sendMessage(api, event, "The Project Orion 8~8\n" + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query == "cmdadmin") {
             if (isGoingToFast(event)) {
                 return;
@@ -2896,7 +2904,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6  + help7+ "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
             if (isGoingToFast(event)) {
                 return;
@@ -4106,7 +4114,7 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
-                    if (event.type == "message_reply") {
+                    if ((event.type == "message_reply" && event.senderID != getMyId())) {
                         if (event.messageReply.senderID == getMyId()) {
                             someR(api, event, query);
                         }
@@ -4121,7 +4129,7 @@ async function ai(api, event) {
             });
         }
 
-        if (event.type == "message_reply") {
+        if ((event.type == "message_reply" && event.senderID != getMyId())) {
             if (!isMyId(event.messageReply.senderID)) {
                 return;
             }
@@ -4596,7 +4604,7 @@ function getMyId() {
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
-    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + name + "&text2=Welcome+To+" + gname + "&text3=You're the " + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
+    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + name + "&text2=" + gname + "&text3=" + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
 }
 
 async function getImages(api, event, images) {
@@ -4871,31 +4879,14 @@ function welcomeUser(api, event, name, gname, Tmem, id) {
         })
 }
 
-function welcomeUser(api, event, name, gname, Tmem, id) {
-    let time = getTimestamp();
-    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
-        .on('finish', () => {
-            let message = {
-                body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
-                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
-                mentions: [{
-                    tag: name,
-                    id: id
-                }]
-            };
-            sendMessageOnly(api, event, message);
-            unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
-        })
-}
-
 function byebyeUser(api, event, name, gname, Tmem, id) {
     let time = getTimestamp();
     let filename = __dirname + "/cache/images/byebye_" + time + ".jpg";
-    let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + name + "&text2=Bye bye, Sayonara&text3=Total+Members+" + Tmem + "&avatar=" + getProfilePic(id);
+    let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + name + "&text2=" + gname + "&text3=" + Tmem + " Member&avatar=" + getProfilePic(id);
     request(encodeURI(url)).pipe(fs.createWriteStream(filename))
         .on('finish', () => {
             let message = {
-                body: "Thank you for joining prop@" + name+ " but now you're leaving us.",
+                body: "Thank you for joining @" + name + " but now you're leaving us.",
                 attachment: fs.createReadStream(filename),
                 mentions: [{
                     tag: name,
