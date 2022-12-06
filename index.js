@@ -3904,6 +3904,46 @@ async function ai(api, event) {
             } else {
                 parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
             }
+        } else if (query == "costplay") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            parseImage(api, event, "https://zenzapis.xyz/randomimage/cosplay?apikey=9c4c44db3725", __dirname + "/cache/images/costplay_" + getTimestamp() + ".png");
+        } else if (query == "darkjoke") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            parseImage(api, event, "https://zenzapis.xyz/randomimage/darkjoke?apikey=9c4c44db3725", __dirname + "/cache/images/darkjoke_" + getTimestamp() + ".png");
+        } else if (query == "blackpink") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            parseImage(api, event, "https://zenzapis.xyz/randomimage/blackpink?apikey=9c4c44db3725", __dirname + "/cache/images/blackpink_" + getTimestamp() + ".png");
+        } else if (query == "motor") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            parseImage(api, event, "https://zenzapis.xyz/randomimage/motor?apikey=9c4c44db3725", __dirname + "/cache/images/motor_" + getTimestamp() + ".png");
+        } else if (query == "animecouples") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    let time = getTimestamp();
+                    request(encodeURI(response.result.male)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"));
+                    request(encodeURI(response.result.female)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_female_" + time + ".png"));
+                    let message = {
+                        attachment: [
+                            fs.createReadStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"),
+                            fs.createReadStream(__dirname + "/cache/images/animecouple_female_" + time + ".png")
+                        ]
+                    }
+                    sendMessage(api, event, message);
+                }
+            });
         } else if (query.startsWith("portrait")) {
             if (isGoingToFast(event)) {
                 return;
@@ -4412,7 +4452,6 @@ function repeatOfNonWWW(event) {
         return false;
     }
 }
-
 
 function isGoingToFastReporting(api, event) {
     if (!(event.threadID in userWhoSendDamnReports)) {
