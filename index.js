@@ -1203,6 +1203,9 @@ async function ai(api, event) {
                         }
                     }
                     if (!query.startsWith("gencode")) {
+                        if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
+                            text += ".";
+                        }
                         const {
                             data
                         } = await openai.createCompletion(settings.text_complextion, {
