@@ -3743,15 +3743,19 @@ async function ai(api, event) {
                     sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
                     let time = getTimestamp();
-                    request(encodeURI(response.result.male)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"));
-                    request(encodeURI(response.result.female)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_female_" + time + ".png"));
-                    let message = {
-                        attachment: [
-                            fs.createReadStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"),
-                            fs.createReadStream(__dirname + "/cache/images/animecouple_female_" + time + ".png")
-                        ]
-                    }
-                    sendMessage(api, event, message);
+                    request(encodeURI(response.result.male)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"))
+                        .on('finish', () => {
+                            request(encodeURI(response.result.female)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_female_" + time + ".png"))
+                            .on('finish', () => {
+                                let message = {
+                                    attachment: [
+                                        fs.createReadStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"),
+                                        fs.createReadStream(__dirname + "/cache/images/animecouple_female_" + time + ".png")
+                                    ]
+                                }
+                                sendMessage(api, event, message);
+                            });
+                        });
                 }
             });
         } else if (query.startsWith("anime")) {
