@@ -334,7 +334,7 @@ login({
     });
     
     cron.schedule('0 * * * *', () => {
-        fs.writeFileSync("/cache/appState.json", JSON.stringify(api.getAppState()), "utf8");
+        fs.writeFileSync("cache/appState.json", JSON.stringify(api.getAppState()), "utf8");
         api.sendMessage("Project Orion Facebook State Refreshed", getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
@@ -381,7 +381,7 @@ login({
                         }
                         let message = {
                             body: "Hold on a moment this system is currently under maintenance...\nhttps://mrepol742.github.io/project-orion/",
-                            attachment: fs.createReadStream(__dirname + '/cache/maintenance.jpg')
+                            attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
                         };
                         sendMessage(api, event, message);
                     }
@@ -3604,7 +3604,7 @@ async function ai(api, event) {
             }
             let message = {
                 body: "Anti horny barrier activated.",
-                attachment: fs.createReadStream(__dirname + '/cache/barrier.jpg')
+                attachment: fs.createReadStream(__dirname + '/cache/assets/barrier.jpg')
             };
             sendMessage(api, event, message);
         } else if (query == "fact") {
@@ -4012,7 +4012,7 @@ async function ai(api, event) {
             let seconds = Math.floor((count % (1000 * 60)) / 1000);
             let message = {
                 body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
-                attachment: fs.createReadStream(__dirname + '/cache/newyear.gif')
+                attachment: fs.createReadStream(__dirname + '/cache/assets/newyear.gif')
             };
             sendMessage(api, event, message)
         } else if (query == "christmas") {
@@ -4029,7 +4029,7 @@ async function ai(api, event) {
             let seconds = Math.floor((count % (1000 * 60)) / 1000);
             let message = {
                 body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
-                attachment: fs.createReadStream(__dirname + '/cache/Christmas.gif')
+                attachment: fs.createReadStream(__dirname + '/cache/assets/Christmas.gif')
             };
             sendMessage(api, event, message)
         } else if (query == "verserandom") {
