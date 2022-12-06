@@ -4586,7 +4586,8 @@ function getSuffix(i) {
 
 function otherQ(query) {
     for (let i = 0; i < sqq.length; i++) {
-        if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 3 || (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
+        if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2 || 
+            (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
             return true;
         }
     }
