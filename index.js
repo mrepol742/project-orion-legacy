@@ -378,6 +378,14 @@ login({
             if (err) log(err);
         });
 
+        if (event.senderID == getMyId()) {
+            if (event.body != null && (typeof event.body === "string")) {
+                if (!event.body.startsWith("_")) {
+                    return;
+                }
+            }
+        }
+
         if (event.type == "message" || (event.type == "message_reply" && event.senderID != getMyId())) {
             if (event.body == "unblockgroup") {
                 if (vips.includes(event.senderID)) {
@@ -393,13 +401,6 @@ login({
             }
             if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
                 return;
-            }
-            if (event.senderID == getMyId()) {
-                if (event.body != null && (typeof event.body === "string")) {
-                    if (!event.body.startsWith("_")) {
-                        return;
-                    }
-                }
             }
             if (settings.isDebugEnabled) {
                 let input = event.body;
