@@ -1064,7 +1064,7 @@ async function ai(api, event) {
             if (!(typeof event.body === "string")) {
                 return;
             }
-            if (smartRRR.includes(threadID) && event.type == "message_reply") {
+            if (smartRRR.includes(event.threadID) && event.type == "message_reply") {
                 if (!isMyId(event.messageReply.senderID)) {
                     return;
                 }
