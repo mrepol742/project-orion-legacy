@@ -67,12 +67,29 @@ let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 let happyEE = ['haha', 'ahah', 'ahha', 'funny ', 'insane ', 'lol', 'lmao', 'lmfao', 'silly ', 'laugh ', 'laughable', 'humorous', 'amusing', 'hilarious', 'absurd', 'ridicolous', 'ludicrous', 'entertaining']
 let sadEE = ['pain', 'painful', 'cry ', 'crying ', 'unhappy', 'sad ', 'tired', 'sick ', 'dejected', 'regretful', 'depressed', 'downcast', 'miserable ', 'downhearted', 'heartbroken', 'wretched', 'doleful', 'low-spirited', 'sorry', 'disgraceful', 'regrettable', 'sorrowful', 'upsetting', 'traumatic', 'truma', 'pitiful', 'depressing', 'depress', 'unfortunate', 'awful', 'miserable', 'grievous', 'cheerless'];
-let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed' , 'fury ', 'rage ', 'ire ', 'wrath']
+let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed', 'fury ', 'rage ', 'ire ', 'wrath']
 let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 'regards', 'respects', 'dear', 'darling', 'boyfriend', 'girlfriend', 'sweetheart', 'angel', 'honey', 'adore', 'treasure', 'prize', 'devotion', 'friend']
 let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
-let gcolor = {"DefaultBlue": "196241301102133", "HotPink": "169463077092846", "AquaBlue": "2442142322678320", "BrightPurple": "234137870477637", "CoralPink": "980963458735625", "Orange": "175615189761153", "Green": "2136751179887052", "LavenderPurple": "2058653964378557", "Red": "2129984390566328", "Yellow": "174636906462322", "TealBlue": "1928399724138152", "Aqua": "417639218648241", "Mango": "930060997172551", "Berry": "164535220883264", "Citrus": "370940413392601", "Candy": "205488546921017"}
+let gcolor = {
+    "DefaultBlue": "196241301102133",
+    "HotPink": "169463077092846",
+    "AquaBlue": "2442142322678320",
+    "BrightPurple": "234137870477637",
+    "CoralPink": "980963458735625",
+    "Orange": "175615189761153",
+    "Green": "2136751179887052",
+    "LavenderPurple": "2058653964378557",
+    "Red": "2129984390566328",
+    "Yellow": "174636906462322",
+    "TealBlue": "1928399724138152",
+    "Aqua": "417639218648241",
+    "Mango": "930060997172551",
+    "Berry": "164535220883264",
+    "Citrus": "370940413392601",
+    "Candy": "205488546921017"
+}
 let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink", "Orange", "Green", "LavenderPurple", "Red", "Yellow", "TealBlue", "Aqua", "Mango", "Berry", "Citrus", "Candy"]
-let timeZones =['Europe/Andorra','Asia/Dubai','Asia/Kabul','Europe/Tirane','Asia/Yerevan','Antarctica/Casey','Antarctica/Davis','Antarctica/DumontDUrville','Antarctica/Mawson','Antarctica/Palmer','Antarctica/Rothera','Antarctica/Syowa','Antarctica/Troll','Antarctica/Vostok','America/Argentina/Buenos_Aires','America/Argentina/Cordoba','America/Argentina/Salta','America/Argentina/Jujuy','America/Argentina/Tucuman','America/Argentina/Catamarca','America/Argentina/La_Rioja','America/Argentina/San_Juan','America/Argentina/Mendoza','America/Argentina/San_Luis','America/Argentina/Rio_Gallegos','America/Argentina/Ushuaia','Pacific/Pago_Pago','Europe/Vienna','Australia/Lord_Howe','Antarctica/Macquarie','Australia/Hobart','Australia/Currie','Australia/Melbourne','Australia/Sydney','Australia/Broken_Hill','Australia/Brisbane','Australia/Lindeman','Australia/Adelaide','Australia/Darwin','Australia/Perth','Australia/Eucla','Asia/Baku','America/Barbados','Asia/Dhaka','Europe/Brussels','Europe/Sofia','Atlantic/Bermuda','Asia/Brunei','America/La_Paz','America/Noronha','America/Belem','America/Fortaleza','America/Recife','America/Araguaina','America/Maceio','America/Bahia','America/Sao_Paulo','America/Campo_Grande','America/Cuiaba','America/Santarem','America/Porto_Velho','America/Boa_Vista','America/Manaus','America/Eirunepe','America/Rio_Branco','America/Nassau','Asia/Thimphu','Europe/Minsk','America/Belize','America/St_Johns','America/Halifax','America/Glace_Bay','America/Moncton','America/Goose_Bay','America/Blanc-Sablon','America/Toronto','America/Nipigon','America/Thunder_Bay','America/Iqaluit','America/Pangnirtung','America/Atikokan','America/Winnipeg','America/Rainy_River','America/Resolute','America/Rankin_Inlet','America/Regina','America/Swift_Current','America/Edmonton','America/Cambridge_Bay','America/Yellowknife','America/Inuvik','America/Creston','America/Dawson_Creek','America/Fort_Nelson','America/Vancouver','America/Whitehorse','America/Dawson','Indian/Cocos','Europe/Zurich','Africa/Abidjan','Pacific/Rarotonga','America/Santiago','America/Punta_Arenas','Pacific/Easter','Asia/Shanghai','Asia/Urumqi','America/Bogota','America/Costa_Rica','America/Havana','Atlantic/Cape_Verde','America/Curacao','Indian/Christmas','Asia/Nicosia','Asia/Famagusta','Europe/Prague','Europe/Berlin','Europe/Copenhagen','America/Santo_Domingo','Africa/Algiers','America/Guayaquil','Pacific/Galapagos','Europe/Tallinn','Africa/Cairo','Africa/El_Aaiun','Europe/Madrid','Africa/Ceuta','Atlantic/Canary','Europe/Helsinki','Pacific/Fiji','Atlantic/Stanley','Pacific/Chuuk','Pacific/Pohnpei','Pacific/Kosrae','Atlantic/Faroe','Europe/Paris','Europe/London','Asia/Tbilisi','America/Cayenne','Africa/Accra','Europe/Gibraltar','America/Godthab','America/Danmarkshavn','America/Scoresbysund','America/Thule','Europe/Athens','Atlantic/South_Georgia','America/Guatemala','Pacific/Guam','Africa/Bissau','America/Guyana','Asia/Hong_Kong','America/Tegucigalpa','America/Port-au-Prince','Europe/Budapest','Asia/Jakarta','Asia/Pontianak','Asia/Makassar','Asia/Jayapura','Europe/Dublin','Asia/Jerusalem','Asia/Kolkata','Indian/Chagos','Asia/Baghdad','Asia/Tehran','Atlantic/Reykjavik','Europe/Rome','America/Jamaica','Asia/Amman','Asia/Tokyo','Africa/Nairobi','Asia/Bishkek','Pacific/Tarawa','Pacific/Enderbury','Pacific/Kiritimati','Asia/Pyongyang','Asia/Seoul','Asia/Almaty','Asia/Qyzylorda','Asia/Qostanay','Asia/Aqtobe','Asia/Aqtau','Asia/Atyrau','Asia/Oral','Asia/Beirut','Asia/Colombo','Africa/Monrovia','Europe/Vilnius','Europe/Luxembourg','Europe/Riga','Africa/Tripoli','Africa/Casablanca','Europe/Monaco','Europe/Chisinau','Pacific/Majuro','Pacific/Kwajalein','Asia/Yangon','Asia/Ulaanbaatar','Asia/Hovd','Asia/Choibalsan','Asia/Macau','America/Martinique','Europe/Malta','Indian/Mauritius','Indian/Maldives','America/Mexico_City','America/Cancun','America/Merida','America/Monterrey','America/Matamoros','America/Mazatlan','America/Chihuahua','America/Ojinaga','America/Hermosillo','America/Tijuana','America/Bahia_Banderas','Asia/Kuala_Lumpur','Asia/Kuching','Africa/Maputo','Africa/Windhoek','Pacific/Noumea','Pacific/Norfolk','Africa/Lagos','America/Managua','Europe/Amsterdam','Europe/Oslo','Asia/Kathmandu','Pacific/Nauru','Pacific/Niue','Pacific/Auckland','Pacific/Chatham','America/Panama','America/Lima','Pacific/Tahiti','Pacific/Marquesas','Pacific/Gambier','Pacific/Port_Moresby','Pacific/Bougainville','Asia/Manila','Asia/Karachi','Europe/Warsaw','America/Miquelon','Pacific/Pitcairn','America/Puerto_Rico','Asia/Gaza','Asia/Hebron','Europe/Lisbon','Atlantic/Madeira','Atlantic/Azores','Pacific/Palau','America/Asuncion','Asia/Qatar','Indian/Reunion','Europe/Bucharest','Europe/Belgrade','Europe/Kaliningrad','Europe/Moscow','Europe/Simferopol','Europe/Kirov','Europe/Astrakhan','Europe/Volgograd','Europe/Saratov','Europe/Ulyanovsk','Europe/Samara','Asia/Yekaterinburg','Asia/Omsk','Asia/Novosibirsk','Asia/Barnaul','Asia/Tomsk','Asia/Novokuznetsk','Asia/Krasnoyarsk','Asia/Irkutsk','Asia/Chita','Asia/Yakutsk','Asia/Khandyga','Asia/Vladivostok','Asia/Ust-Nera','Asia/Magadan','Asia/Sakhalin','Asia/Srednekolymsk','Asia/Kamchatka','Asia/Anadyr','Asia/Riyadh','Pacific/Guadalcanal','Indian/Mahe','Africa/Khartoum','Europe/Stockholm','Asia/Singapore','America/Paramaribo','Africa/Juba','Africa/Sao_Tome','America/El_Salvador','Asia/Damascus','America/Grand_Turk','Africa/Ndjamena','Indian/Kerguelen','Asia/Bangkok','Asia/Dushanbe','Pacific/Fakaofo','Asia/Dili','Asia/Ashgabat','Africa/Tunis','Pacific/Tongatapu','Europe/Istanbul','America/Port_of_Spain','Pacific/Funafuti','Asia/Taipei','Europe/Kiev','Europe/Uzhgorod','Europe/Zaporozhye','Pacific/Wake','America/New_York','America/Detroit','America/Kentucky/Louisville','America/Kentucky/Monticello','America/Indiana/Indianapolis','America/Indiana/Vincennes','America/Indiana/Winamac','America/Indiana/Marengo','America/Indiana/Petersburg','America/Indiana/Vevay','America/Chicago','America/Indiana/Tell_City','America/Indiana/Knox','America/Menominee','America/North_Dakota/Center','America/North_Dakota/New_Salem','America/North_Dakota/Beulah','America/Denver','America/Boise','America/Phoenix','America/Los_Angeles','America/Anchorage','America/Juneau','America/Sitka','America/Metlakatla','America/Yakutat','America/Nome','America/Adak','Pacific/Honolulu','America/Montevideo','Asia/Samarkand','Asia/Tashkent','America/Caracas','Asia/Ho_Chi_Minh','Pacific/Efate','Pacific/Wallis','Pacific/Apia','Africa/Johannesburg'];
+let timeZones = ['Europe/Andorra', 'Asia/Dubai', 'Asia/Kabul', 'Europe/Tirane', 'Asia/Yerevan', 'Antarctica/Casey', 'Antarctica/Davis', 'Antarctica/DumontDUrville', 'Antarctica/Mawson', 'Antarctica/Palmer', 'Antarctica/Rothera', 'Antarctica/Syowa', 'Antarctica/Troll', 'Antarctica/Vostok', 'America/Argentina/Buenos_Aires', 'America/Argentina/Cordoba', 'America/Argentina/Salta', 'America/Argentina/Jujuy', 'America/Argentina/Tucuman', 'America/Argentina/Catamarca', 'America/Argentina/La_Rioja', 'America/Argentina/San_Juan', 'America/Argentina/Mendoza', 'America/Argentina/San_Luis', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Ushuaia', 'Pacific/Pago_Pago', 'Europe/Vienna', 'Australia/Lord_Howe', 'Antarctica/Macquarie', 'Australia/Hobart', 'Australia/Currie', 'Australia/Melbourne', 'Australia/Sydney', 'Australia/Broken_Hill', 'Australia/Brisbane', 'Australia/Lindeman', 'Australia/Adelaide', 'Australia/Darwin', 'Australia/Perth', 'Australia/Eucla', 'Asia/Baku', 'America/Barbados', 'Asia/Dhaka', 'Europe/Brussels', 'Europe/Sofia', 'Atlantic/Bermuda', 'Asia/Brunei', 'America/La_Paz', 'America/Noronha', 'America/Belem', 'America/Fortaleza', 'America/Recife', 'America/Araguaina', 'America/Maceio', 'America/Bahia', 'America/Sao_Paulo', 'America/Campo_Grande', 'America/Cuiaba', 'America/Santarem', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Manaus', 'America/Eirunepe', 'America/Rio_Branco', 'America/Nassau', 'Asia/Thimphu', 'Europe/Minsk', 'America/Belize', 'America/St_Johns', 'America/Halifax', 'America/Glace_Bay', 'America/Moncton', 'America/Goose_Bay', 'America/Blanc-Sablon', 'America/Toronto', 'America/Nipigon', 'America/Thunder_Bay', 'America/Iqaluit', 'America/Pangnirtung', 'America/Atikokan', 'America/Winnipeg', 'America/Rainy_River', 'America/Resolute', 'America/Rankin_Inlet', 'America/Regina', 'America/Swift_Current', 'America/Edmonton', 'America/Cambridge_Bay', 'America/Yellowknife', 'America/Inuvik', 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson', 'America/Vancouver', 'America/Whitehorse', 'America/Dawson', 'Indian/Cocos', 'Europe/Zurich', 'Africa/Abidjan', 'Pacific/Rarotonga', 'America/Santiago', 'America/Punta_Arenas', 'Pacific/Easter', 'Asia/Shanghai', 'Asia/Urumqi', 'America/Bogota', 'America/Costa_Rica', 'America/Havana', 'Atlantic/Cape_Verde', 'America/Curacao', 'Indian/Christmas', 'Asia/Nicosia', 'Asia/Famagusta', 'Europe/Prague', 'Europe/Berlin', 'Europe/Copenhagen', 'America/Santo_Domingo', 'Africa/Algiers', 'America/Guayaquil', 'Pacific/Galapagos', 'Europe/Tallinn', 'Africa/Cairo', 'Africa/El_Aaiun', 'Europe/Madrid', 'Africa/Ceuta', 'Atlantic/Canary', 'Europe/Helsinki', 'Pacific/Fiji', 'Atlantic/Stanley', 'Pacific/Chuuk', 'Pacific/Pohnpei', 'Pacific/Kosrae', 'Atlantic/Faroe', 'Europe/Paris', 'Europe/London', 'Asia/Tbilisi', 'America/Cayenne', 'Africa/Accra', 'Europe/Gibraltar', 'America/Godthab', 'America/Danmarkshavn', 'America/Scoresbysund', 'America/Thule', 'Europe/Athens', 'Atlantic/South_Georgia', 'America/Guatemala', 'Pacific/Guam', 'Africa/Bissau', 'America/Guyana', 'Asia/Hong_Kong', 'America/Tegucigalpa', 'America/Port-au-Prince', 'Europe/Budapest', 'Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura', 'Europe/Dublin', 'Asia/Jerusalem', 'Asia/Kolkata', 'Indian/Chagos', 'Asia/Baghdad', 'Asia/Tehran', 'Atlantic/Reykjavik', 'Europe/Rome', 'America/Jamaica', 'Asia/Amman', 'Asia/Tokyo', 'Africa/Nairobi', 'Asia/Bishkek', 'Pacific/Tarawa', 'Pacific/Enderbury', 'Pacific/Kiritimati', 'Asia/Pyongyang', 'Asia/Seoul', 'Asia/Almaty', 'Asia/Qyzylorda', 'Asia/Qostanay', 'Asia/Aqtobe', 'Asia/Aqtau', 'Asia/Atyrau', 'Asia/Oral', 'Asia/Beirut', 'Asia/Colombo', 'Africa/Monrovia', 'Europe/Vilnius', 'Europe/Luxembourg', 'Europe/Riga', 'Africa/Tripoli', 'Africa/Casablanca', 'Europe/Monaco', 'Europe/Chisinau', 'Pacific/Majuro', 'Pacific/Kwajalein', 'Asia/Yangon', 'Asia/Ulaanbaatar', 'Asia/Hovd', 'Asia/Choibalsan', 'Asia/Macau', 'America/Martinique', 'Europe/Malta', 'Indian/Mauritius', 'Indian/Maldives', 'America/Mexico_City', 'America/Cancun', 'America/Merida', 'America/Monterrey', 'America/Matamoros', 'America/Mazatlan', 'America/Chihuahua', 'America/Ojinaga', 'America/Hermosillo', 'America/Tijuana', 'America/Bahia_Banderas', 'Asia/Kuala_Lumpur', 'Asia/Kuching', 'Africa/Maputo', 'Africa/Windhoek', 'Pacific/Noumea', 'Pacific/Norfolk', 'Africa/Lagos', 'America/Managua', 'Europe/Amsterdam', 'Europe/Oslo', 'Asia/Kathmandu', 'Pacific/Nauru', 'Pacific/Niue', 'Pacific/Auckland', 'Pacific/Chatham', 'America/Panama', 'America/Lima', 'Pacific/Tahiti', 'Pacific/Marquesas', 'Pacific/Gambier', 'Pacific/Port_Moresby', 'Pacific/Bougainville', 'Asia/Manila', 'Asia/Karachi', 'Europe/Warsaw', 'America/Miquelon', 'Pacific/Pitcairn', 'America/Puerto_Rico', 'Asia/Gaza', 'Asia/Hebron', 'Europe/Lisbon', 'Atlantic/Madeira', 'Atlantic/Azores', 'Pacific/Palau', 'America/Asuncion', 'Asia/Qatar', 'Indian/Reunion', 'Europe/Bucharest', 'Europe/Belgrade', 'Europe/Kaliningrad', 'Europe/Moscow', 'Europe/Simferopol', 'Europe/Kirov', 'Europe/Astrakhan', 'Europe/Volgograd', 'Europe/Saratov', 'Europe/Ulyanovsk', 'Europe/Samara', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk', 'Asia/Barnaul', 'Asia/Tomsk', 'Asia/Novokuznetsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Chita', 'Asia/Yakutsk', 'Asia/Khandyga', 'Asia/Vladivostok', 'Asia/Ust-Nera', 'Asia/Magadan', 'Asia/Sakhalin', 'Asia/Srednekolymsk', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Riyadh', 'Pacific/Guadalcanal', 'Indian/Mahe', 'Africa/Khartoum', 'Europe/Stockholm', 'Asia/Singapore', 'America/Paramaribo', 'Africa/Juba', 'Africa/Sao_Tome', 'America/El_Salvador', 'Asia/Damascus', 'America/Grand_Turk', 'Africa/Ndjamena', 'Indian/Kerguelen', 'Asia/Bangkok', 'Asia/Dushanbe', 'Pacific/Fakaofo', 'Asia/Dili', 'Asia/Ashgabat', 'Africa/Tunis', 'Pacific/Tongatapu', 'Europe/Istanbul', 'America/Port_of_Spain', 'Pacific/Funafuti', 'Asia/Taipei', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye', 'Pacific/Wake', 'America/New_York', 'America/Detroit', 'America/Kentucky/Louisville', 'America/Kentucky/Monticello', 'America/Indiana/Indianapolis', 'America/Indiana/Vincennes', 'America/Indiana/Winamac', 'America/Indiana/Marengo', 'America/Indiana/Petersburg', 'America/Indiana/Vevay', 'America/Chicago', 'America/Indiana/Tell_City', 'America/Indiana/Knox', 'America/Menominee', 'America/North_Dakota/Center', 'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah', 'America/Denver', 'America/Boise', 'America/Phoenix', 'America/Los_Angeles', 'America/Anchorage', 'America/Juneau', 'America/Sitka', 'America/Metlakatla', 'America/Yakutat', 'America/Nome', 'America/Adak', 'Pacific/Honolulu', 'America/Montevideo', 'Asia/Samarkand', 'Asia/Tashkent', 'America/Caracas', 'Asia/Ho_Chi_Minh', 'Pacific/Efate', 'Pacific/Wallis', 'Pacific/Apia', 'Africa/Johannesburg'];
 let threads = ""
 let threadIdMV = {};
 let cmd = {};
@@ -244,6 +261,7 @@ help6 += "\n⦿ cdfnormal [x] [μ] [σ]";
 help6 += "\n⦿ divisible [number] [number]";
 help6 += "\n⦿ factorial [number]";
 help6 += "\n⦿ findGCD [number]";
+help6 += "\n⦿ smartReply on|off";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
@@ -278,7 +296,7 @@ helpadmin += "\n⦿ unblockGroup";
 helpadmin += "\n⦿ listblocks";
 helpadmin += "\n⦿ listadmins";
 helpadmin += "\n⦿ listmuted";
-helpadmin += "\n⦿ preventSimultanoesExecution on/off";
+helpadmin += "\n⦿ simultaneousexecution on/off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
 helpadmin += "\n⦿ setTimezone [timezone]";
@@ -297,7 +315,7 @@ let apiKey = [
     "bc23ad59e1mshdb14f6cce13bafap18cbc5jsn13348153e5cf",
     // NLPCloudClient summarize
     "40286240a47c02b2948a8c61276be7bd481b0b14",
-     // open ai api key
+    // open ai api key
     "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"
 ];
 
@@ -310,6 +328,7 @@ let blockRRR = JSON.parse(fs.readFileSync("cache/block_users.json", "utf8"));
 let blockSSS = JSON.parse(fs.readFileSync("cache/block_groups.json", "utf8"));
 let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
+let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
 
 const config = new Configuration({
     apiKey: apiKey[4],
@@ -324,7 +343,8 @@ process.on('SIGINT', function() {
 });
 
 login({
-    appState: JSON.parse(fs.readFileSync('cache/appState.json', 'utf8'))}, (err, api) => {
+    appState: JSON.parse(fs.readFileSync('cache/appState.json', 'utf8'))
+}, (err, api) => {
     if (err) return log(err);
 
     cron.schedule('*/10 * * * *', () => {
@@ -332,7 +352,7 @@ login({
         fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
         fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
     });
-    
+
     cron.schedule('0 * * * *', () => {
         fs.writeFileSync("cache/appState.json", JSON.stringify(api.getAppState()), "utf8");
         api.sendMessage("Project Orion Facebook State Refreshed", getMyId(), (err, messageInfo) => {
@@ -358,6 +378,18 @@ login({
         });
 
         if (event.type == "message" || event.type == "message_reply") {
+            if (event.body == "unblockgroup") {
+                if (vips.includes(event.senderID)) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (err) return log(err);
+                        if (gc.isGroup) {
+                            unblockGroup(api, event, event.threadID);
+                        } else {
+                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                        }
+                    })
+                }
+            }
             if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
                 return;
             }
@@ -368,10 +400,7 @@ login({
                     }
                 }
             }
-        }
-
-        if (settings.isDebugEnabled) {
-            if (event.type == "message" || event.type == "message_reply") {
+            if (settings.isDebugEnabled) {
                 let input = event.body;
                 let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 if (!(vips.includes(event.senderID))) {
@@ -472,84 +501,80 @@ login({
                                 sendMessage(api, event, "I cannot found any apperance of your search term on the message.");
                             }
                         }
-                    }
-
-                if (query == "bgremove") {
-                    if (isGoingToFast(event)) {
-                        break;
-                    }
-                    if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                        if (event.messageReply.attachments.length < 1) {
-                            sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
-                        } else if (event.messageReply.attachments.length > 1) {
-                            sendMessage(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
-                        } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
-                            const url = event.messageReply.attachments[0].url;
-                            request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
-                                const inputPath = './cache/images/removebg.png';
-                                const formData = new FormData();
-                                formData.append('size', 'auto');
-                                formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
-
-                                axios({
-                                        method: 'post',
-                                        url: 'https://api.remove.bg/v1.0/removebg',
-                                        data: formData,
-                                        responseType: 'arraybuffer',
-                                        headers: {
-                                            ...formData.getHeaders(),
-                                            'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
-                                        },
-                                        encoding: null
-                                    })
-                                    .then((res) => {
-                                        if (res.status != 200) return
-                                        console.error('Error:', res.status, res.statusText);
-                                        fs.writeFileSync("./cache/images/removebg.png", res.data);
-                                        let message = {
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
-                                        }
-                                        sendMessage(api, event, message);
-                                        unLink(__dirname + "/cache/images/removebg.png");
-                                    })
-                                    .catch((error) => {
-                                        sendMessage(api, event, "An unknown error as been occured. Please try again later.");
-                                        return log(err);
-                                    });
-                            })
+                    } else if (query == "bgremove") {
+                        if (isGoingToFast(event)) {
+                            break;
                         }
-                    } else {
-                        sendMessage(api, event, "Hold on... There is still a request in progress.");
-                    }
-
-                }
-                if (query == "gphoto") {
-                    if (isGoingToFast(event)) {
-                        break;
-                    }
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return log(err);
-                        if (gc.isGroup) {
+                        if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                             if (event.messageReply.attachments.length < 1) {
-                                sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
+                                sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
                             } else if (event.messageReply.attachments.length > 1) {
-                                sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
+                                sendMessage(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
                             } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
                                 const url = event.messageReply.attachments[0].url;
-                                let time = getTimestamp();
-                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
-                                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
-                                        if(err) return log(err);
-                                    });
-                                    unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
+                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
+                                    const inputPath = './cache/images/removebg.png';
+                                    const formData = new FormData();
+                                    formData.append('size', 'auto');
+                                    formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
+
+                                    axios({
+                                            method: 'post',
+                                            url: 'https://api.remove.bg/v1.0/removebg',
+                                            data: formData,
+                                            responseType: 'arraybuffer',
+                                            headers: {
+                                                ...formData.getHeaders(),
+                                                'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
+                                            },
+                                            encoding: null
+                                        })
+                                        .then((res) => {
+                                            if (res.status != 200) return
+                                            console.error('Error:', res.status, res.statusText);
+                                            fs.writeFileSync("./cache/images/removebg.png", res.data);
+                                            let message = {
+                                                attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
+                                            }
+                                            sendMessage(api, event, message);
+                                            unLink(__dirname + "/cache/images/removebg.png");
+                                        })
+                                        .catch((error) => {
+                                            sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                                            return log(err);
+                                        });
                                 })
                             }
                         } else {
-                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                            sendMessage(api, event, "Hold on... There is still a request in progress.");
                         }
-                    });
+                    } else if (query == "gphoto") {
+                        if (isGoingToFast(event)) {
+                            break;
+                        }
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (err) return log(err);
+                            if (gc.isGroup) {
+                                if (event.messageReply.attachments.length < 1) {
+                                    sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
+                                } else if (event.messageReply.attachments.length > 1) {
+                                    sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
+                                } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                                    const url = event.messageReply.attachments[0].url;
+                                    let time = getTimestamp();
+                                    request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
+                                        api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
+                                            if (err) return log(err);
+                                        });
+                                        unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
+                                    })
+                                }
+                            } else {
+                                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                            }
+                        });
+                    }
                 }
-            }
                 break;
             case "message_unsend":
                 if (vips.includes(event.senderID)) {
@@ -564,8 +589,8 @@ login({
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
                         else {
-                            if (d[0] == "img") {
-                                let filename = __dirname + '/cache/images/unsend_img_' + time + '.jpg'
+                            if (d[0] == "photo") {
+                                let filename = __dirname + '/cache/images/unsend_photo_' + time + '.jpg'
                                 let file = fs.createWriteStream(filename);
                                 let gifRequest = http.get(d[1], function(gifResponse) {
                                     gifResponse.pipe(file);
@@ -584,7 +609,7 @@ login({
                                                         }]
                                                     }
                                                     sendMessageOnly(api, event, message);
-                                                    
+
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this photo. \n",
@@ -597,7 +622,7 @@ login({
                                         }
                                     });
                                 });
-                            } else if (d[0] == "gif") {
+                            } else if (d[0] == "animated_images") {
                                 let filename = __dirname + '/cache/images/unsend_gif_' + time + '.gif'
                                 let file = fs.createWriteStream(filename);
                                 let gifRequest = http.get(d[1], function(gifResponse) {
@@ -663,8 +688,8 @@ login({
                                         }
                                     });
                                 });
-                            } else if (d[0] == "vid") {
-                                let filename = __dirname + '/cache/videos/unsend_vid_' + time + '.mp4'
+                            } else if (d[0] == "video") {
+                                let filename = __dirname + '/cache/videos/unsend_video_' + time + '.mp4'
                                 let file = fs.createWriteStream(filename);
                                 let gifRequest = http.get(d[1], function(gifResponse) {
                                     gifResponse.pipe(file);
@@ -696,8 +721,8 @@ login({
                                         }
                                     });
                                 });
-                            } else if (d[0] == "vm") {
-                                let filename = __dirname + '/cache/audios/unsend_vm_' + time + '.mp3'
+                            } else if (d[0] == "audio") {
+                                let filename = __dirname + '/cache/audios/unsend_audio_' + time + '.mp3'
                                 let file = fs.createWriteStream(filename);
                                 let gifRequest = http.get(d[1], function(gifResponse) {
                                     gifResponse.pipe(file);
@@ -784,9 +809,9 @@ login({
                                     gret = "Welcome ";
                                     for (let a = 0; a < names.length; a++) {
                                         if (a == names.length - 1) {
-                                           gret += "and @" + names[a][1] + " ";
+                                            gret += "and @" + names[a][1] + " ";
                                         } else {
-                                           gret += "@" + names[a][1] + ", ";
+                                            gret += "@" + names[a][1] + ", ";
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
@@ -803,17 +828,17 @@ login({
                                 let num = i;
                                 request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
                                     .on('finish', () => {
-                                    let message = {
-                                        body: gret,
+                                        let message = {
+                                            body: gret,
                                             attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
                                             mentions: [{
                                                 tag: name,
                                                 id: id
-                                        }]
-                                    };
-                                    sendMessageOnly(api, event, message);
-                                    unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
-                                })
+                                            }]
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                        unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
+                                    })
                             }
                         })
                         break;
@@ -913,7 +938,7 @@ async function ai(api, event) {
                 await wait(5000);
                 sendMessageOnly(api, event, input);
             }
-        } 
+        }
         if (query.startsWith("ttsjap")) {
             if (isGoingToFast(event)) {
                 return;
@@ -963,13 +988,13 @@ async function ai(api, event) {
                 let time = getTimestamp();
                 request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
 
-                        .on('finish', () => {
-                            let message = {
-                                attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
+                    .on('finish', () => {
+                        let message = {
+                            attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
                         };
                         sendMessage(api, event, message);
                         unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
-                })
+                    })
             }
         } else if (query == "ping") {
             if (isGoingToFast(event)) {
@@ -1033,14 +1058,17 @@ async function ai(api, event) {
                 });
             }
         } else if (event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
-            ((query.startsWith("search") || query.startsWith("gencode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
+            ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
-                otherQ(query2)) {
-                    if (event.type == "message_reply") {
-                        if (!isMyId(event.messageReply.senderID)) {
-                            return;
-                        }
-                    }
+            otherQ(query2)) {
+            if (!(typeof event.body === "string")) {
+                return;
+            }
+            if (smartRRR.includes(threadID) && event.type == "message_reply") {
+                if (!isMyId(event.messageReply.senderID)) {
+                    return;
+                }
+            }
             if (isGoingToFast(event)) {
                 return;
             }
@@ -1065,11 +1093,11 @@ async function ai(api, event) {
                 } else if (query.startsWith("mj")) {
                     text = input.substring(3)
                 } else if (query.startsWith("melvinjonesrepol")) {
-                    text = input.substring(17)
+                    text = input.substring(19)
                 } else if (query.startsWith("melvinjonesgallanorepol")) {
-                    text = input.substring(25)
+                    text = input.substring(28)
                 } else if (query.startsWith("melvinjones")) {
-                    text = input.substring(12)
+                    text = input.substring(13)
                 } else if (query.startsWith("gencode")) {
                     text = input.substring(8)
                 } else if (query.startsWith("search")) {
@@ -1128,19 +1156,19 @@ async function ai(api, event) {
                         let time = getTimestamp();
                         request(encodeURI(getProfilePicFullHD(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam_' + time + '.png'))
 
-                        .on('finish', () => {
-                            let message = {
-                                body: "You're " + name,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/whoiam_' + time + '.png'),
-                                mentions: [{
-                                    tag: '@' + name,
-                                    id: id,
-                                    fromIndex: 0
-                                }]
-                            };
-                            sendMessage(api, event, message);
-                            unLink(__dirname + "/cache/images/whoiam_" + time + ".png");
-                        })
+                            .on('finish', () => {
+                                let message = {
+                                    body: "You're " + name,
+                                    attachment: fs.createReadStream(__dirname + '/cache/images/whoiam_' + time + '.png'),
+                                    mentions: [{
+                                        tag: '@' + name,
+                                        id: id,
+                                        fromIndex: 0
+                                    }]
+                                };
+                                sendMessage(api, event, message);
+                                unLink(__dirname + "/cache/images/whoiam_" + time + ".png");
+                            })
                     });
                 } else if (text1 == "whoownyou") {
                     sendMessage(api, event, "Melvin Jones Repol.")
@@ -1168,7 +1196,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Yeahh..");
                 } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
                     sendMessage(api, event, "huhhhhhhhhh uh.");
-                } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" || 
+                } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" ||
                     (text1.startsWith("whois") && isMe(text2))) {
                     sendMessage(api, event, "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\nhttps://mrepol742.github.io");
                 } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
@@ -1176,8 +1204,8 @@ async function ai(api, event) {
                     sendMessage(api, event, mss);
                 } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead.\nFor instance:\ncmd 2");
-                //} else if (text1.split('').length < 10) {
-                //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    //} else if (text1.split('').length < 10) {
+                    //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                 } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
                     return;
                 } else if (!query.startsWith("search") && (text.split(" ").length < 3 || text.indexOf(" ") == -1)) {
@@ -1207,43 +1235,33 @@ async function ai(api, event) {
                             return;
                         }
                     }
-                    if (!query.startsWith("gencode")) {
-                        if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
-                            text += ".";
-                        }
-                        const {
-                            data
-                        } = await openai.createCompletion(settings.text_complextion, {
-                            prompt: text,
-                            temperature: parseInt(settings.temperature),
-                            max_tokens: parseInt(settings.max_tokens),
-                            top_p: parseInt(settings.probability_mass),
-                            frequency_penalty: parseInt(settings.frequency_penalty),
-                            presence_penalty: parseInt(settings.presence_penalty),
-                        });
-                        let finish = data.choices[0].text;
-                        let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
-                        if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
-                            finalDataCC = finalDataCC.slice(1);
-                        }
-                        let finalDataCC2 = lowercaseFirstLetter(finalDataCC.replaceAll("'", ""));
-                        saveAns.push([text, finalDataCC2])
-                        sendMessage(api, event, finalDataCC2);
-                    } else {
-                        const {
-                            data 
-                        } = await openai.createCompletion("code-davinci-002", {
-                            prompt:  text,
-                            temperature: 0,
-                            max_tokens: 256,
-                            top_p: 1,
-                            frequency_penalty: 0,
-                            presence_penalty: 0,
-                        });
-                        let data1 = data.choices[0].text;
-                        saveAns.push([text, data1])
-                        sendMessage(api, event, data1);
+                    if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
+                        text += ".";
                     }
+                    let maxTokens;
+                    if (!query.startsWith("gencode")) {
+                        maxTokens = parseInt(settings.max_tokens);
+                    } else {
+                        maxTokens = 1000;
+                    }
+                    const {
+                        data
+                    } = await openai.createCompletion(settings.text_complextion, {
+                        prompt: text,
+                        temperature: parseInt(settings.temperature),
+                        max_tokens: parseInt(settings.max_tokens),
+                        top_p: parseInt(settings.probability_mass),
+                        frequency_penalty: parseInt(settings.frequency_penalty),
+                        presence_penalty: parseInt(settings.presence_penalty),
+                    });
+                    let finish = data.choices[0].text;
+                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
+                    if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
+                        finalDataCC = finalDataCC.slice(1);
+                    }
+                    let finalDataCC2 = lowercaseFirstLetter(finalDataCC.replaceAll("'", ""));
+                    saveAns.push([text, finalDataCC2])
+                    sendMessage(api, event, finalDataCC2);
                 }
             }
         } else if (query.startsWith("mean")) {
@@ -1287,9 +1305,10 @@ async function ai(api, event) {
                     return;
                 }
                 let arr = input.substring(5).split(" ").map(Number);
-                
+
                 const mode = {};
-                let max = 0, count = 0;
+                let max = 0,
+                    count = 0;
                 for (let i = 0; i < arr.length; i++) {
                     const item = arr[i];
                     if (mode[item]) {
@@ -1659,7 +1678,7 @@ async function ai(api, event) {
                     output += Input[i].charCodeAt(0).toString(2) + ' ';
                 }
                 sendMessage(api, event, output);
-             }
+            }
         } else if (input.startsWith("decodebinary")) {
             if (isGoingToFast(event)) {
                 return;
@@ -2025,7 +2044,7 @@ async function ai(api, event) {
                         let followers = response.result.followerCount;
                         let following = response.result.followingCount;
                         let heart = response.result.heartCount;
-                        let video =  response.result.videoCount;
+                        let video = response.result.videoCount;
                         let digg = response.result.diggCount;
                         let avatar = response.result.avatar;
                         let time = getTimestamp();
@@ -2579,7 +2598,7 @@ async function ai(api, event) {
                 let pref = data.join(" ");
                 if (gcolorn.includes(pref)) {
                     api.changeThreadColor(gcolor[pref], event.threadID, (err) => {
-                        if(err) return log(err);
+                        if (err) return log(err);
                     });
                     log("change_color " + event.threadID + " " + gcolor[pref]);
                 } else {
@@ -2671,17 +2690,10 @@ async function ai(api, event) {
                     }
                 })
             }
-        } else if (query.startsWith("unblockgroup")) {
-            if (vips.includes(event.senderID)) {
-                api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (err) return log(err);
-                    if (gc.isGroup) {
-                        unblockGroup(api, event, event.threadID);
-                    } else {
-                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                    }
-                })
-            }
+        } else if (query.startsWith("smartreplyon")) {
+            enableSmartReply(api, event, event.threadID);
+        } else if (query.startsWith("smartreplyoff")) {
+            disableSmartReply(api, event, event.threadID);
         } else if (query.startsWith("listadmins")) {
             if (vips.includes(event.senderID)) {
                 sendMessage(api, event, "Admins:\n" + vips);
@@ -2790,13 +2802,13 @@ async function ai(api, event) {
                 fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Not Safe For Work is been disabled.");
             }
-        } else if ((query == "preventsimultaneousexecutionon") && !settings.preventSimultaneousExecution) {
+        } else if ((query == "simultaneousexecutionon") && !settings.preventSimultaneousExecution) {
             if (vips.includes(event.senderID)) {
                 settings.preventSimultaneousExecution = true
                 fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
             }
-        } else if ((query == "preventsimultaneousexecutionoff") && settings.preventSimultaneousExecution) {
+        } else if ((query == "simultaneousexecutionoff") && settings.preventSimultaneousExecution) {
             if (vips.includes(event.senderID)) {
                 settings.preventSimultaneousExecution = false
                 fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
@@ -2810,7 +2822,7 @@ async function ai(api, event) {
                 if (err) return log(err);
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
-                    sendMessage(api, event, "This group has about " + arr.length +" members.")
+                    sendMessage(api, event, "This group has about " + arr.length + " members.")
                 } else {
                     sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
@@ -4113,10 +4125,10 @@ async function ai(api, event) {
         } else if (query == "license") {
             let message = {
                 body: "/* Copyright (C) MREPOL742 - All Rights Reserved\n" +
-                "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
-                "* Proprietary and confidential\n" +
-                "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
-                "*/",
+                    "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
+                    "* Proprietary and confidential\n" +
+                    "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
+                    "*/",
                 attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
             }
             sendMessage(api, event, message);
@@ -4165,7 +4177,7 @@ function someA(api, event, query, input) {
     } else if (query == "idk") {
         sendMessage(api, event, "I dont know too...");
         return true;
-    } 
+    }
     return false;
 }
 
@@ -4299,7 +4311,7 @@ async function sendMessage(api, event, message) {
     });
 }
 
-async function sendMessageOnly(api, event, message) { 
+async function sendMessageOnly(api, event, message) {
     let sendTyping = api.sendTypingIndicator(event.threadID, (err) => {
         if (err) log(err);
         log("send_typing");
@@ -4339,23 +4351,25 @@ function formatQuery(string) {
 }
 
 function log(data) {
-    let date = new Date().toLocaleString("en-US", {timeZone: "Asia/Singapore"}).replace(",", "");
+    let date = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Singapore"
+    }).replace(",", "");
     console.log(date + "$ " + data);
 }
 
 function containsAny(str, substrings) {
     for (var i = 0; i != substrings.length; i++) {
-       var substring = substrings[i];
-       if (str.indexOf(substring) != - 1) {
-         return true;
-       }
+        var substring = substrings[i];
+        if (str.indexOf(substring) != -1) {
+            return true;
+        }
     }
-    return false; 
+    return false;
 }
 
 function isGoingToFast(event) {
     log("event_body " + event.senderID + " " + event.body);
-    if (!settings.preventSimultanoesExecution) {
+    if (!settings.preventSimultaneousExecution) {
         return false;
     }
     if (!(vips.includes(event.senderID))) {
@@ -4389,7 +4403,6 @@ function isGoingToFastResendingOfEmo(event) {
         return false;
     }
 }
-
 
 function isGoingToFastCallingTheCommand(event) {
     if (!(event.threadID in threadMaintenance)) {
@@ -4503,7 +4516,7 @@ function countConsonants(str) {
 function nsfw(text) {
     return (text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") ||
         text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny") ||
-        text.includes("blowjob") || text.includes("lolli")) && !settings.onNsfw;
+        text.includes("blowjob") || text.includes("lolli ") || text.includes("sex ")) && !settings.onNsfw;
 }
 
 function getProfilePic(id) {
@@ -4574,7 +4587,9 @@ function getMonth(tz) {
 }
 
 function getTimeDate(tz) {
-    return new Date(new Date().toLocaleString("en-US", {timeZone: tz}))
+    return new Date(new Date().toLocaleString("en-US", {
+        timeZone: tz
+    }))
 }
 
 function getSuffix(i) {
@@ -4594,18 +4609,12 @@ function getSuffix(i) {
 
 function otherQ(query) {
     for (let i = 0; i < sqq.length; i++) {
-        if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2 || 
+        if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2 ||
             (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
             return true;
         }
     }
     return false;
-}
-
-function nonNN(api, event, query) {
-    if (event.type == "message" || (event.type == "message_reply" && (isMyId(event.messageReply.senderID)))) {
-        
-    }
 }
 
 function isMyId(id) {
@@ -4657,7 +4666,7 @@ async function unLink(dir) {
     fs.unlink(dir, (err => {
         if (err) log(err);
         else {
-          log("un_link " + dir);
+            log("un_link " + dir);
         }
     }));
 }
@@ -4673,10 +4682,10 @@ const convertBytes = function(bytes) {
     return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizesM[i]
 }
 
-function secondsToTime(e){
-    let h = Math.floor(e / 3600).toString().padStart(2,'0');
-    let m = Math.floor(e % 3600 / 60).toString().padStart(2,'0');
-    let s = Math.floor(e % 60).toString().padStart(2,'0');
+function secondsToTime(e) {
+    let h = Math.floor(e / 3600).toString().padStart(2, '0');
+    let m = Math.floor(e % 3600 / 60).toString().padStart(2, '0');
+    let s = Math.floor(e % 60).toString().padStart(2, '0');
     return h + ':' + m + ':' + s;
 }
 
@@ -4713,6 +4722,19 @@ function unblockGroup(api, event, id) {
     blockSSS = blockSSS.filter(item => item !== id);
     sendMessage(api, event, "The group " + id + " can now use the commands.");
     fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockRRR), "utf8");
+}
+
+
+function enableSmartReply(api, event, id) {
+    smartRRR.push(id);
+    sendMessage(api, event, "Smart Reply is turn on for thread " + id);
+    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(blockRRR), "utf8");
+}
+
+function disableSmartReply(api, event, id) {
+    smartRRR = smartRRR.filter(item => item !== id);
+    sendMessage(api, event, "Smart Reply is turn off for thread " + id);
+    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(blockRRR), "utf8");
 }
 
 function unblockUser(api, event, id) {
@@ -4771,30 +4793,30 @@ function changeNickname(api, event, id, text) {
 
 function kiss(api, event, id) {
     getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
-                        if (response == null) {
-                            sendMessage(api, event, "Unfortunately there was an error occured.");
-                        } else {
-                            api.getUserInfo(id, (err, info) => {
-                                if (err) return log(err);
-                                let name = info[id]['name'];
-                                let time = getTimestamp();
-                                request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss_" + time + ".png"))
-                                    .on('finish', () => {
-                                        let image = {
-                                            body: "@" + name,
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/kiss_" + time + ".png"),
-                                            mentions: [{
-                                                tag: '@' + name,
-                                                id: id,
-                                                fromIndex: 0
-                                            }]
-                                        };
-                                        sendMessage(api, event, image);
-                                        unLink(__dirname + "/cache/images/kiss_" + time + ".png");
-                                    })
-                            })
-                        }
-                    });
+        if (response == null) {
+            sendMessage(api, event, "Unfortunately there was an error occured.");
+        } else {
+            api.getUserInfo(id, (err, info) => {
+                if (err) return log(err);
+                let name = info[id]['name'];
+                let time = getTimestamp();
+                request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss_" + time + ".png"))
+                    .on('finish', () => {
+                        let image = {
+                            body: "@" + name,
+                            attachment: fs.createReadStream(__dirname + "/cache/images/kiss_" + time + ".png"),
+                            mentions: [{
+                                tag: '@' + name,
+                                id: id,
+                                fromIndex: 0
+                            }]
+                        };
+                        sendMessage(api, event, image);
+                        unLink(__dirname + "/cache/images/kiss_" + time + ".png");
+                    })
+            })
+        }
+    });
 }
 
 function gun(api, event, id) {
@@ -4803,7 +4825,7 @@ function gun(api, event, id) {
         console.log(encodeURIComponent(res.headers.location));
         parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(res.headers.location), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
      });*/
-     parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
+    parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
 }
 
 function wanted(api, event, id) {
@@ -4865,31 +4887,64 @@ function getTimestamp() {
 function welcomeUser(api, event, name, gname, Tmem, id) {
     let time = getTimestamp();
     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
-       .on('finish', () => {
-        let message = {
-            body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
-            attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
-            mentions: [{
-                tag: name,
-                id: id
-            }]
-        };
-        sendMessageOnly(api, event, message);
-        unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
-    })
+        .on('finish', () => {
+            let message = {
+                body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
+                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
+                mentions: [{
+                    tag: name,
+                    id: id
+                }]
+            };
+            sendMessageOnly(api, event, message);
+            unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
+        })
 }
 
-function cdfNormal (x, mean, standardDeviation) {
-    return (1 - mathjs.erf((mean - x ) / (Math.sqrt(2) * standardDeviation))) / 2
+function welcomeUser(api, event, name, gname, Tmem, id) {
+    let time = getTimestamp();
+    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
+        .on('finish', () => {
+            let message = {
+                body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
+                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
+                mentions: [{
+                    tag: name,
+                    id: id
+                }]
+            };
+            sendMessageOnly(api, event, message);
+            unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
+        })
+}
+
+function byebyeUser(api, event, name, gname, Tmem, id) {
+    let time = getTimestamp();
+    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
+        .on('finish', () => {
+            let message = {
+                body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
+                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
+                mentions: [{
+                    tag: name,
+                    id: id
+                }]
+            };
+            sendMessageOnly(api, event, message);
+            unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
+        })
+}
+
+function cdfNormal(x, mean, standardDeviation) {
+    return (1 - mathjs.erf((mean - x) / (Math.sqrt(2) * standardDeviation))) / 2
 }
 
 function factorial(num) {
     if (num == 0 || num == 1) {
         return 1;
     }
-    return num * factorial(num-1);
+    return num * factorial(num - 1);
 }
-
 
 function findGCD(i, i2) {
     if (i2 == 0) {
@@ -4900,16 +4955,38 @@ function findGCD(i, i2) {
 
 function saveEvent(event) {
     if (event.attachments.length != 0) {
-        if (event.attachments[0].type == "photo") {
-            msgs[event.messageID] = ['img', event.attachments[0].url]
-        } else if (event.attachments[0].type == "animated_image") {
-            msgs[event.messageID] = ['gif', event.attachments[0].url]
-        } else if (event.attachments[0].type == "sticker") {
-            msgs[event.messageID] = ['sticker', event.attachments[0].url]
-        } else if (event.attachments[0].type == "video") {
-            msgs[event.messageID] = ['vid', event.attachments[0].url]
-        } else if (event.attachments[0].type == "audio") {
-            msgs[event.messageID] = ['vm', event.attachments[0].url]
+        switch (event.attachments[0].type) {
+            case "photo":
+                msgs[event.messageID] = ['photo', event.attachments[0].url]
+                for (let i = 0; i < 25; i++) {
+                    if (!(event.attachments[i].url === undefined)) {
+                        log("photo_" + i + " " + event.attachments[i].url);
+                    }
+                }
+                /*
+
+                let images = [];
+                for (let i = 0; i < 25; i++) {
+                    if (!(event.attachments[i].url === undefined)) {
+                        images[i] = event.attachments[i].url;
+                        log("photo_" + i + " " + event.attachments[i].url);
+                    }
+                }
+                msgs[event.messageID] = ['photo', images];
+                */
+                break;
+            case "animated_images":
+                msgs[event.messageID] = ['animated_images', event.attachments[0].url]
+                break;
+            case "sticker":
+                msgs[event.messageID] = ['sticker', event.attachments[0].url]
+                break;
+            case "video":
+                msgs[event.messageID] = ['video', event.attachments[0].url]
+                break;
+            case "audio":
+                msgs[event.messageID] = ['audio', event.attachments[0].url]
+                break;
         }
     } else {
         msgs[event.messageID] = event.body;
