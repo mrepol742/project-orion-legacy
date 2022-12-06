@@ -869,6 +869,11 @@ function wait(ms) {
 
 async function ai(api, event) {
     if (event.body != null && (typeof event.body === "string") && (event.type == "message" || event.type == "message_reply")) {
+        if (event.type == "message_reply") {
+            if (!isMyId(event.messageReply.senderID)) {
+                return;
+            }
+        }
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
         let query2 = formatQuery(input.toLowerCase());
@@ -1027,15 +1032,15 @@ async function ai(api, event) {
                     }
                 });
             }
-        } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
+        } else if (event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") || query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
             ((query.startsWith("search") || query.startsWith("gencode")|| query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
                 query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
                 otherQ(query2)) {
-            if (event.type == "message_reply") {
-                if (!isMyId(event.messageReply.senderID)) {
-                    return;
-                }
-            }
+                    if (event.type == "message_reply") {
+                        if (!isMyId(event.messageReply.senderID)) {
+                            return;
+                        }
+                    }
             if (isGoingToFast(event)) {
                 return;
             }
