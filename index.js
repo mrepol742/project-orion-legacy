@@ -4699,13 +4699,13 @@ function unblockGroup(api, event, id) {
 function enableSmartReply(api, event, id) {
     smartRRR.push(id);
     sendMessage(api, event, "Smart Reply is turn on for thread " + id);
-    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(smartRRR), "utf8");
 }
 
 function disableSmartReply(api, event, id) {
     smartRRR = smartRRR.filter(item => item !== id);
     sendMessage(api, event, "Smart Reply is turn off for thread " + id);
-    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(smartRRR), "utf8");
 }
 
 function unblockUser(api, event, id) {
