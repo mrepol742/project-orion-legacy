@@ -4686,13 +4686,13 @@ function blockUser(api, event, id) {
 function blockGroup(api, event, id) {
     blockSSS.push(id);
     sendMessage(api, event, "The group " + id + " is blocked.");
-    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
 function unblockGroup(api, event, id) {
     blockSSS = blockSSS.filter(item => item !== id);
     sendMessage(api, event, "The group " + id + " can now use the commands.");
-    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
 
