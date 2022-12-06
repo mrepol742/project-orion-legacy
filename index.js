@@ -263,7 +263,6 @@ let helpadmin = "\n⦿ unsend";
 helpadmin += "\n⦿ unsend on|off";
 helpadmin += "\n⦿ delay on|off";
 helpadmin += "\n⦿ nsfw on|off";
-helpadmin += "\n⦿ enable on|off";
 helpadmin += "\n⦿ debug on|off";
 helpadmin += "\n⦿ sleep on|off";
 helpadmin += "\n⦿ stop";
@@ -325,8 +324,7 @@ process.on('SIGINT', function() {
 });
 
 login({
-    appState: JSON.parse(fs.readFileSync('cache/appState.json', 'utf8'))
-}, (err, api) => {
+    appState: JSON.parse(fs.readFileSync('cache/appState.json', 'utf8'))}, (err, api) => {
     if (err) return log(err);
 
     cron.schedule('*/10 * * * *', () => {
@@ -336,10 +334,10 @@ login({
     });
     
     cron.schedule('0 * * * *', () => {
-        let A = api.getAppState();
-        let B = JSON.stringify(A);
-        fs.writeFileSync("/cache/appState.json", B, "utf8");
-        api.sendMessage("Project Orion Facebook State Refreshed", getMyId())
+        fs.writeFileSync("/cache/appState.json", JSON.stringify(api.getAppState()), "utf8");
+        api.sendMessage("Project Orion Facebook State Refreshed", getMyId(), (err, messageInfo) => {
+            if (err) log(err);
+        })
         log("fb_save_state")
     });
 
@@ -348,13 +346,16 @@ login({
         selfListen: true,
         online: true,
         logLevel: "info",
-        autoMarkDelivery: false,
         userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18"
     });
 
     const listenEmitter = api.listen(async (err, event) => {
 
         if (err) return log(err);
+
+        api.markAsRead(event.threadID, (err) => {
+            if (err) log(err);
+        });
 
         if (event.type == "message" || event.type == "message_reply") {
             if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
@@ -367,27 +368,6 @@ login({
                     }
                 }
             }
-        }
-
-        if (event.type == "message") {
-            let nonSS = event.body;
-            if (nonSS == "enableon") {
-                if (vips.includes(event.senderID)) {
-                    settings.isEnabled = true;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(api, event, "Hello");
-                    }
-            } else if (nonSS == "enableoff") {
-                if (vips.includes(event.senderID)) {
-                    settings.isEnabled = false;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(api, event, "Bye bye.");
-                }
-            }
-        }
-
-        if (!settings.isEnabled && (event.type == "message" || event.type == "message_reply") && event.senderID == vips[2]) {
-            return;
         }
 
         if (settings.isDebugEnabled) {
@@ -428,7 +408,9 @@ login({
                             if (event.messageReply.senderID != api.getCurrentUserID()) {
                                 sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
                             } else {
-                                api.unsendMessage(event.messageReply.messageID);
+                                api.unsendMessage(event.messageReply.messageID, (err) => {
+                                    if (err) log(err);
+                                });
                             }
                         }
                     }
@@ -546,6 +528,7 @@ login({
                         break;
                     }
                     api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (err) return log(err);
                         if (gc.isGroup) {
                             if (event.messageReply.attachments.length < 1) {
                                 sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
@@ -589,6 +572,7 @@ login({
                                     file.on('finish', function() {
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
                                             api.getThreadInfo(event.threadID, (err, gc) => {
+                                                if (err) return log(err);
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
@@ -622,6 +606,7 @@ login({
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
                                             let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
+                                                if (err) return log(err);
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
@@ -654,6 +639,7 @@ login({
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
                                             let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
+                                                if (err) return log(err);
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
@@ -686,6 +672,7 @@ login({
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
                                             let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
+                                                if (err) return log(err);
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
@@ -718,6 +705,7 @@ login({
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
                                             let time = getTimestamp();
                                             api.getThreadInfo(event.threadID, (err, gc) => {
+                                                if (err) return log(err);
                                                 if (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
@@ -750,6 +738,7 @@ login({
                         else {
                             if (settings.onUnsend && !threads.includes(event.threadID)) {
                                 api.getThreadInfo(event.threadID, (err, gc) => {
+                                    if (err) return log(err);
                                     if (gc.isGroup) {
                                         let message = {
                                             body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + msgs[event.messageID],
@@ -778,6 +767,7 @@ login({
                 switch (event.logMessageType) {
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (err) return log(err);
                             if (gc.isGroup) {
                                 let gname = gc.threadName;
                                 let i = 0;
@@ -831,12 +821,11 @@ login({
                     case "log:unsubscribe":
                         let id = event.logMessageData.leftParticipantFbId;
                         api.getThreadInfo(event.threadID, (err, gc) => {
-                            if (err) done(err);
+                            if (err) log(err);
                             api.getUserInfo(parseInt(id), (err, data) => {
                                 if (err) {
                                     log(err)
                                 } else {
-                                    log(data)
                                     for (let prop in data) {
                                         if (data.hasOwnProperty(prop) && data[prop].name) {
                                             let gcn = gc.threadName;
@@ -898,12 +887,16 @@ async function ai(api, event) {
             }
         } else if (input == "sleepon") {
             if (vips.includes(event.senderID)) {
-                api.muteThread(message.threadID, -1);
+                api.muteThread(message.threadID, -1, (err) => {
+                    if (err) log(err);
+                });
                 sendMessage(api, event, "Konbanwa. I'm sleepy now...");
             }
         } else if (input == "sleepoff") {
             if (vips.includes(event.senderID)) {
-                api.muteThread(message.threadID, 0);
+                api.muteThread(message.threadID, 0, (err) => {
+                    if (err) log(err);
+                });
                 sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
             }
         } else if (input == "stop") {
@@ -941,7 +934,7 @@ async function ai(api, event) {
                                         }
                                     })
                             }
-                            api.sendMessage(message, event.threadID, event.messageID);
+                            sendMessage(api, event, message);
                         });
                     });
                 } catch {
@@ -1732,6 +1725,7 @@ async function ai(api, event) {
             let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
             if (pinned.pin.message[event.threadID] == undefined) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return log(err);
                     if (gc.isGroup) {
                         sendMessage(api, event, "There is no pinned message on this group chat.");
                     } else {
@@ -1740,6 +1734,7 @@ async function ai(api, event) {
                 })
             } else {
                 api.getUserInfo(pinned.pin.sender[event.threadID], (err, data) => {
+                    if (err) return log(err);
                     sendMessage(api, event, pinned.pin.message[event.threadID]);
                 });
             }
@@ -2384,7 +2379,9 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead.\n\nFor instance:\nsendReport There is a problem in ______ that cause ______.")
             } else {
                 data.shift()
-                api.sendMessage(data.join(" "), getMyId());
+                api.sendMessage(data.join(" "), getMyId(), (err, messageInfo) => {
+                    if (err) log(err);
+                });
             }
         } else if (query.startsWith("setmaxtokens")) {
             if (vips.includes(event.senderID)) {
@@ -2548,6 +2545,7 @@ async function ai(api, event) {
                 if (pref.split("").length >= 15) {
                     if (/^\d+$/.test(pref)) {
                         api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (err) return log(err);
                             if (gc.isGroup) {
                                 api.addUserToGroup(pref, event.threadID, (err) => {
                                     if (err) log(err);
@@ -2583,6 +2581,7 @@ async function ai(api, event) {
         } else if (query.startsWith("welcomeuser")) {
             if (vips.includes(event.senderID)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return log(err);
                     if (gc.isGroup) {
                         if (input.includes("@")) {
                             let id = Object.keys(event.mentions)[0];
@@ -2609,6 +2608,7 @@ async function ai(api, event) {
         } else if (query.startsWith("kickuser")) {
             if (vips.includes(event.senderID)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return log(err);
                     if (gc.isGroup) {
                         if (input.includes("@")) {
                             let id = Object.keys(event.mentions)[0];
@@ -2655,6 +2655,7 @@ async function ai(api, event) {
         } else if (query.startsWith("blockgroup")) {
             if (vips.includes(event.senderID)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return log(err);
                     if (gc.isGroup) {
                         blockGroup(api, event, event.threadID);
                     } else {
@@ -2665,6 +2666,7 @@ async function ai(api, event) {
         } else if (query.startsWith("unblockgroup")) {
             if (vips.includes(event.senderID)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return log(err);
                     if (gc.isGroup) {
                         unblockGroup(api, event, event.threadID);
                     } else {
@@ -2797,6 +2799,7 @@ async function ai(api, event) {
                 return;
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
+                if (err) return log(err);
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
                     sendMessage(api, event, "This group has about " + arr.length +" members.")
@@ -2809,6 +2812,7 @@ async function ai(api, event) {
                 return;
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
+                if (err) return log(err);
                 if (gc.isGroup) {
                     let data = input.split(" ");
                     if (data.length < 2) {
@@ -2816,7 +2820,7 @@ async function ai(api, event) {
                     } else {
                         data.shift()
                         api.setTitle(data.join(" "), event.threadID, (err, obj) => {
-                            if (err) return console.error(err);
+                            if (err) return log(err);
                         });
                     }
                 } else {
@@ -2828,6 +2832,7 @@ async function ai(api, event) {
                 return;
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
+                if (err) return log(err);
                 if (gc.isGroup) {
                     sendMessage(api, event, gc.threadName);
                 } else {
@@ -2844,7 +2849,6 @@ async function ai(api, event) {
                     if (event.type == "message_reply") {
                         api.getUserInfo(event.messageReply.senderID, (err, info) => {
                             if (err) return log(err);
-
                             let name = info[event.messageReply.senderID]['name'];
                             sendMessage(api, event, name + " uid is " + event.messageReply.senderID);
                         });
@@ -4075,9 +4079,7 @@ async function ai(api, event) {
             }
         } else if (query == "refreshstate") {
             if (vips.includes(event.senderID)) {
-                let A = api.getAppState();
-                let B = await JSON.stringify(A);
-                fs.writeFileSync("cache/appState.json", B, "utf8");
+                fs.writeFileSync("cache/appState.json", JSON.stringify(api.getAppState()), "utf8");
                 sendMessage(api, event, "The AppState refreshed.");
             }
         } else if (query == "savestate") {
@@ -4112,6 +4114,7 @@ async function ai(api, event) {
             sendMessage(api, event, message);
         } else {
             api.getThreadInfo(event.threadID, (err, gc) => {
+                if (err) return log(err);
                 if (gc.isGroup) {
                     if (event.type == "message_reply") {
                         if (event.messageReply.senderID == getMyId()) {
@@ -4250,10 +4253,11 @@ async function sendMessage(api, event, message) {
         }
     }
     api.getThreadInfo(event.threadID, (err, gc) => {
+        if (err) return log(err);
         if (gc.isGroup) {
             let ts = undefined;
             api.getThreadHistory(event.threadID, 3, ts, (err, history) => {
-                if (err) return console.error(err);
+                if (err) return log(err);
                 if (ts != undefined) history.pop();
                 let test = [];
                 for (let i = 0; i < history.length; i++) {
@@ -4267,16 +4271,22 @@ async function sendMessage(api, event, message) {
                 let filtered = test.filter(elm => elm);
                 if (filtered[0] != filtered[1]) {
                     log("send_message_reply " + event.threadID + " " + message);
-                    api.sendMessage(message, event.threadID, event.messageID).catch((err) => log(err));
+                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                        if (err) log(err);
+                    }, event.messageID);
                 } else {
                     log("send_message " + event.threadID + " " + message);
-                    api.sendMessage(message, event.threadID).catch((err) => log(err));
+                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                        if (err) log(err);
+                    });
                 }
                 ts = history[0].timestamp;
             });
         } else {
             log("send_message " + event.threadID + " " + message);
-            api.sendMessage(message, event.threadID).catch((err) => log(err));
+            api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                if (err) log(err);
+            });
         }
     });
 }
@@ -4293,7 +4303,9 @@ async function sendMessageOnly(api, event, message) {
         }
     }
     log("send_message " + event.threadID + " " + message);
-    api.sendMessage(message, event.threadID).catch((err) => log(err));
+    api.sendMessage(message, event.threadID, (err, messageInfo) => {
+        if (err) log(err);
+    });
 }
 
 async function reactMessage(api, event, reaction) {
@@ -4308,7 +4320,9 @@ async function reactMessage(api, event, reaction) {
         }
     }
     log("react_message " + event.messageID + " " + reaction);
-    api.setMessageReaction(reaction, event.messageID).catch((err) => log(err));
+    api.setMessageReaction(reaction, event.messageID, (err) => {
+        if (err) log(err);
+    });
 }
 
 function formatQuery(string) {
@@ -4615,7 +4629,7 @@ async function getImages(api, event, images) {
             fs.createReadStream(__dirname + "/cache/images/findimg5_" + time + ".png")
         ]
     };
-    api.sendMessage(message, event.threadID, (err, done) => {
+    api.sendMessage(message, event.threadID, (err, messageInfo) => {
         if (err) {
             log(err);
             sendMessage(api, event, "Seem's like i am having an issue finding your query.");
