@@ -906,7 +906,7 @@ async function ai(api, event) {
         if (!input.replace(pictographic, '').length) {
             if (!isGoingToFastResendingOfEmo(event)) {
                 await wait(5000);
-                sendMessageOnly(api, event, nonSS);
+                sendMessageOnly(api, event, input);
             }
         } 
         if (query.startsWith("ttsjap")) {
