@@ -41,7 +41,6 @@ const os = require('os');
 const NetworkSpeed = require('network-speed')
 const process_p = require('process');
 const googleTTS = require('google-tts-api');
-const gis = require('g-i-s');
 const mathjs = require('mathjs')
 
 log("The Project Orion is now active and waiting for commands execution. ONLINE")
