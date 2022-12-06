@@ -269,7 +269,11 @@ help6 += "\n   Mango, Berry, Citrus, Candy";
 help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob";
 
-let help7 = "\n⦿ conan";
+let help7 = "\n⦿ animecouples";
+help7 += "\n⦿ costplay";
+help7 += "\n⦿ motor";
+help7 += "\n⦿ darkjoke";
+help7 += "\n⦿ blackpink";
 
 let categorySFW = ['waifu', 'megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet',
     'blush', 'smile', 'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill', 'kick', 'happy', 'wink',
@@ -3730,6 +3734,26 @@ async function ai(api, event) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using anime --nsfw category instead.\nFor instance:\nanime --nsfw waifu");
                 }
             }
+        } else if (query == "animecouples") {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
+                } else {
+                    let time = getTimestamp();
+                    request(encodeURI(response.result.male)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"));
+                    request(encodeURI(response.result.female)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_female_" + time + ".png"));
+                    let message = {
+                        attachment: [
+                            fs.createReadStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"),
+                            fs.createReadStream(__dirname + "/cache/images/animecouple_female_" + time + ".png")
+                        ]
+                    }
+                    sendMessage(api, event, message);
+                }
+            });
         } else if (query.startsWith("anime")) {
             if (isGoingToFast(event)) {
                 return;
@@ -3924,26 +3948,6 @@ async function ai(api, event) {
                 return;
             }
             parseImage(api, event, "https://zenzapis.xyz/randomimage/motor?apikey=9c4c44db3725", __dirname + "/cache/images/motor_" + getTimestamp() + ".png");
-        } else if (query == "animecouples") {
-            if (isGoingToFast(event)) {
-                return;
-            }
-            getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "Unfortunately there was an error occured.");
-                } else {
-                    let time = getTimestamp();
-                    request(encodeURI(response.result.male)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"));
-                    request(encodeURI(response.result.female)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_female_" + time + ".png"));
-                    let message = {
-                        attachment: [
-                            fs.createReadStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"),
-                            fs.createReadStream(__dirname + "/cache/images/animecouple_female_" + time + ".png")
-                        ]
-                    }
-                    sendMessage(api, event, message);
-                }
-            });
         } else if (query.startsWith("portrait")) {
             if (isGoingToFast(event)) {
                 return;
