@@ -4714,6 +4714,7 @@ async function getImages(api, event, images) {
     for (let i = 0;
         (i < 6 && i < images.length); i++) {
         await wait(1000);
+        log(images[i].url);
         request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/findimg" + i + "_" + time + ".png"))
     }
     await wait(1000);
@@ -4721,7 +4722,10 @@ async function getImages(api, event, images) {
     for (let i = 0; i < 6; i++) {
         let name = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
         if (isImage(name)) {
+            log("Added")
             accm.push(fs.createReadStream(name));
+        } else {
+            log("Not added")
         }
     }
     let message = {
