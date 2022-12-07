@@ -41,7 +41,7 @@ const NetworkSpeed = require('network-speed')
 const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
-const mime = require('mime-types')
+const isCorrupted = require('is-corrupted-jpeg');
 const dns = require("dns");
 
 const testNetworkSpeed = new NetworkSpeed();
@@ -4720,8 +4720,7 @@ async function getImages(api, event, images) {
     let accm = [];
     for (let i = 0; i < 6; i++) {
         let name = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
-        let mimeType = mime.lookup(name)
-        if (mimeType == "image/png" || mimeType == "image/jpg" || mimeType == "image/jpeg") {
+        if (isCorrupted(name)) {
             accm.push(fs.createReadStream(name));
         }
     }
