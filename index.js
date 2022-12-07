@@ -958,7 +958,7 @@ async function ai(api, event) {
                 if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
                     finalDataCC = finalDataCC.slice(1);
                 }
-                sendMessage(api, event, finalfinalDataCC.replaceAll("'", ""));
+                sendMessage(api, event, finalDataCC.replaceAll("'", ""));
             }
         }
     }
