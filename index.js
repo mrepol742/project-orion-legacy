@@ -1035,7 +1035,7 @@ async function ai(api, event) {
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
                 const used = process.memoryUsage().heapTotal;
-                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nMJ INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateDping" + "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "Uptime is " + seconds_con + " seconds.\n\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateDping" + "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
@@ -1135,7 +1135,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
                 } else if (text1.startsWith("whocreatedwebvium")) {
                     sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
-                } else if (text1.startsWith("whoareyou")) {
+                } else if (text1.startsWith("whoareyou") || text1.startsWith("whatisyourname")) {
                     sendMessage(api, event, "I'm Mj.");
                 } else if (text1.startsWith("whoisactive")) {
                     sendMessage(api, event, "Me");
@@ -4203,23 +4203,23 @@ async function ai(api, event) {
             sendMessage(api, event, "Hello World");
         } else if (query == "about") {
             let message = {
-                body: "Hi there, i am Mj. \n\nIf you need help i am always be here. For list of commands type cmd. Melvin Jones Repol created me on Nov 2022.",
+                body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `Mj how to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ cmd all ⦿ license",
                 attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
             }
             sendMessage(api, event, message);
         } else if (query == "copyright") {
             let message = {
-                body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. Project Orion is a Closed Source Project.",
+                body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2022. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd   ⦿ about\n⦿ cmd all ⦿ license",
                 attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
             }
             sendMessage(api, event, message);
         } else if (query == "license") {
             let message = {
-                body: "/* Copyright (C) MREPOL742 - All Rights Reserved\n" +
+                body: "/*\n* Copyright Ⓒ MREPOL742 - All Rights Reserved\n" +
                     "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
                     "* Proprietary and confidential\n" +
                     "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
-                    "*/",
+                    "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2022.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd   ⦿ copyright\n⦿ cmd all ⦿ about",
                 attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
             }
             sendMessage(api, event, message);
