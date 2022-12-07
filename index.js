@@ -1017,6 +1017,8 @@ async function ai(api, event) {
                     },
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
+                const used = process.memoryUsage().heapUsed / 1024 / 1024;
+console.log(`The script uses approximately ${convertBytes(used)} MB`);
                 sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
             })();
         } else if (query.startsWith("searchimg")) {
@@ -4763,11 +4765,11 @@ function secondsToTime(e) {
     let m = Math.floor(e % 3600 / 60).toString().padStart(2, '0');
     let s = Math.floor(e % 60).toString().padStart(2, '0');
     if (h != "00") {
-        return h + 'h' + m + 'm and ' + s + 's';
+        return h + ' hours ' + m + ' minutes and ' + s;
     } else if (m != "00") {
-        return m + 'm and ' + s;
+        return m + ' minutes and ' + s;
     }
-    return s + 's'
+    return s;
 }
 
 function lowercaseFirstLetter(string) {
