@@ -4246,7 +4246,7 @@ function someA(api, event, query, input) {
     return false;
 }
 
-function reaction(api, event, query, input) {
+async function reaction(api, event, query, input) {
     if (!input.replace(pictographic, '').length) {
         if (!isGoingToFastResendingOfEmo(event)) {
             await wait(5000);
