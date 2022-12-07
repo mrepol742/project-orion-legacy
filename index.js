@@ -1035,7 +1035,7 @@ async function ai(api, event) {
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
                 const used = process.memoryUsage().heapTotal;
-                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
+                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nMJ INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateDping" + "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
@@ -2950,7 +2950,7 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6  + help7+ "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6  + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
             if (isGoingToFast(event)) {
                 return;
@@ -4781,7 +4781,7 @@ function secondsToTime(e) {
     let m = parseInt(Math.floor(e % 3600 / 60).toString().padStart(2, '0'), 10);
     let s = parseInt(Math.floor(e % 60).toString().padStart(2, '0'), 10);
     if (h != "0") {
-        return h + ' hours ' + m + ' minutes and ' + s;
+        return h + ' hours, ' + m + ' minutes and ' + s;
     } else if (m != "0") {
         return m + ' minutes and ' + s;
     }
