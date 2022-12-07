@@ -1035,7 +1035,6 @@ async function ai(api, event) {
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
                 const used = process.memoryUsage().heapTotal;
-console.log(`The script uses approximately ${convertBytes(used)} MB`);
                 sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
             })();
         } else if (query.startsWith("searchimg")) {
@@ -4778,12 +4777,12 @@ const convertBytes = function(bytes) {
 }
 
 function secondsToTime(e) {
-    let h = Math.floor(e / 3600).toString().padStart(2, '0');
-    let m = Math.floor(e % 3600 / 60).toString().padStart(2, '0');
-    let s = Math.floor(e % 60).toString().padStart(2, '0');
-    if (h != "00") {
+    let h = parseInt(Math.floor(e / 3600).toString().padStart(2, '0'), 10);
+    let m = parseInt(Math.floor(e % 3600 / 60).toString().padStart(2, '0'), 10);
+    let s = parseInt(Math.floor(e % 60).toString().padStart(2, '0'), 10);
+    if (h != "0") {
         return h + ' hours ' + m + ' minutes and ' + s;
-    } else if (m != "00") {
+    } else if (m != "0") {
         return m + ' minutes and ' + s;
     }
     return s;
