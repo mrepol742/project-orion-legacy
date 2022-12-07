@@ -4719,9 +4719,10 @@ async function getImages(api, event, images) {
     await wait(1000);
     let accm = [];
     for (let i = 0; i < 6; i++) {
-        let mimeType = mime.lookup(__dirname + "/cache/images/findimg" + i + "_" + time + ".png")
+        let name = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
+        let mimeType = mime.lookup(name)
         if (mimeType == "image/png" || mimeType == "image/jpg" || mimeType == "image/jpeg") {
-            accm.push(fs.createReadStream(__dirname + "/cache/images/findimg" + i + "_" + time + ".png"));
+            accm.push(fs.createReadStream(name));
         }
     }
     let message = {
