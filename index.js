@@ -96,8 +96,8 @@ let emo = {};
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
 let nwww = {};
-let messagesD;
-let fb_stateD;
+let messagesD = "N/A";
+let fb_stateD = "N/A";
 
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
@@ -4745,8 +4745,10 @@ function secondsToTime(e) {
     let s = Math.floor(e % 60).toString().padStart(2, '0');
     if (h != "00") {
         return h + 'h' + m + 'm and ' + s + 's';
+    } else if (m != "00") {
+        return m + 'm and ' + s;
     }
-    return m + 'm and' + s;
+    return s + 's'
 }
 
 function lowercaseFirstLetter(string) {
