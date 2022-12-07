@@ -756,7 +756,42 @@ async function ai(api, event) {
     let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
     let query2 = formatQuery(input.toLowerCase());
     reaction(api, event, query, input);
-    if (event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
+    if (query.startsWith("searchimg")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using searchimg text instead.\nFor instance:\nsearchimg melvin jones repol")
+        } else {
+            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+                let imgtext = input.substring(10);
+                let client = new GoogleImages('a2fab60364a8448d4', 'AIzaSyBSajn0E5NNIMFG1oMk6AXlRwHTPgnW_m8');
+                client.search(imgtext).then(images => {
+                    getImages(api, event, images);
+                });
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
+            }
+        }
+    } else if (query.startsWith("searchincog")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using searchincog text instead.\n\nFor instance:\nsearchincog Who is Melvin Jones Repol")
+        } else {
+            data.shift()
+            getResponseData('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1').then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "Unfortunately threturnere was an error occured.");
+                } else {
+                    sendMessage(api, event, response.Abstract);
+                }
+            });
+        }
+    } else if (event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
         query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
         ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
@@ -1231,41 +1266,6 @@ async function ai(api, event) {
                 "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD +
                 "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         })();
-    } else if (query.startsWith("searchimg")) {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using searchimg text instead.\nFor instance:\nsearchimg melvin jones repol")
-        } else {
-            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                let imgtext = input.substring(10);
-                let client = new GoogleImages('a2fab60364a8448d4', 'AIzaSyBSajn0E5NNIMFG1oMk6AXlRwHTPgnW_m8');
-                client.search(imgtext).then(images => {
-                    getImages(api, event, images);
-                });
-            } else {
-                sendMessage(api, event, "Hold on... There is still a request in progress.");
-            }
-        }
-    } else if (query.startsWith("searchincog")) {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using searchincog text instead.\n\nFor instance:\nsearchincog Who is Melvin Jones Repol")
-        } else {
-            data.shift()
-            getResponseData('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1').then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "Unfortunately threturnere was an error occured.");
-                } else {
-                    sendMessage(api, event, response.Abstract);
-                }
-            });
-        }
     } else if (query.startsWith("mean")) {
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead.\nFor instance:\nmean 4 5 6 3 6 7 3 5")
@@ -4725,9 +4725,7 @@ async function getImages(api, event, images) {
         }
     }
     let message = {
-        attachment: [
-            accm
-        ]
+        attachment: accm
     };
     api.sendMessage(message, event.threadID, (err, messageInfo) => {
         if (err) {
