@@ -41,7 +41,6 @@ const NetworkSpeed = require('network-speed')
 const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
-const isImage = require('is-image');
 const dns = require("dns");
 
 const testNetworkSpeed = new NetworkSpeed();
@@ -4711,22 +4710,21 @@ function getWelcomeImage(name, gname, Tmem, id) {
 
 async function getImages(api, event, images) {
     let time = getTimestamp();
+    let name = [];
     for (let i = 0;
         (i < 6 && i < images.length); i++) {
         await wait(1000);
-        log(images[i].url);
-        request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/findimg" + i + "_" + time + ".png"))
+        let url = images[i].url;
+        if (url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".png") || url.endsWith(".jpeg")) {
+            let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
+            request(encodeURI(url)).pipe(fs.createWriteStream(name));
+            name.push(fname);
+        }
     }
     await wait(1000);
     let accm = [];
-    for (let i = 0; i < 6; i++) {
-        let name = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
-        if (isImage(name)) {
-            log("Added")
-            accm.push(fs.createReadStream(name));
-        } else {
-            log("Not added")
-        }
+    for (let i = 0; i < name.length; i++) {
+        accm.push(fs.createReadStream(name[i]));
     }
     let message = {
         attachment: accm
