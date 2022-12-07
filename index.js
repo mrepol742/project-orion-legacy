@@ -1017,7 +1017,7 @@ async function ai(api, event) {
                     },
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-                const used = process.memoryUsage().heapUsed / 1024 / 1024;
+                const used = process.memoryUsage().heapUsed;
 console.log(`The script uses approximately ${convertBytes(used)} MB`);
                 sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
             })();
