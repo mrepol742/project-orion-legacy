@@ -362,6 +362,23 @@ dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
   }
 });
 
+  process.on('beforeExit', (code) => {
+  log('Process beforeExit event with code: ' + code);
+});
+
+process.on('exit', (code) => {
+ log('Process exit event with code: ' + code);
+});
+
+process.on('uncaughtException', (err, origin) => {
+  log(`Caught exception: ${err}\n` +
+    `Exception origin: ${origin}`);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  log('Unhandled Rejection at:' + promise + ' reason: '+ reason);
+});
+
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     fs.writeFileSync("cache/answer.json", JSON.stringify(saveAns), "utf8");
@@ -1017,9 +1034,9 @@ async function ai(api, event) {
                     },
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-                const used = process.memoryUsage().heapUsed;
+                const used = process.memoryUsage().heapTotal;
 console.log(`The script uses approximately ${convertBytes(used)} MB`);
-                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
+                sendMessage(api, event, "Uptime is " + seconds_con + " seconds\n\nSERVER INFO\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {

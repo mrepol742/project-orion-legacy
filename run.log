@@ -71957,3 +71957,462 @@ The Project Orion is now active and waiting for commands execution. ONLINE
 12/7/2022 11:02:25 AM$ send_typing
 12/7/2022 11:02:28 AM$ send_message 3885961401427464 
 12/7/2022 11:02:29 AM$ [object Object]
+12/7/2022 11:10:00 AM$ save_state
+12/7/2022 11:11:16 AM$ new_member 100050196167568 Francisco Fetapi
+12/7/2022 11:11:18 AM$ wait_timeout >> 3000
+12/7/2022 11:11:18 AM$ wait_timeout >> 60000
+12/7/2022 11:11:19 AM$ send_typing
+12/7/2022 11:11:21 AM$ send_message 7635291589846117 [object Object]
+12/7/2022 11:12:18 AM$ un_link /home/runner/project-orion/cache/images/welcome_1670382676.jpg
+12/7/2022 11:20:00 AM$ save_state
+12/7/2022 11:22:40 AM$ event_body 100064956826603 Mjjjj
+12/7/2022 11:22:40 AM$ wait_timeout >> 3200
+12/7/2022 11:22:41 AM$ send_typing
+12/7/2022 11:22:44 AM$ 100064956826603
+12/7/2022 11:22:44 AM$ send_message_reply 2583856894982516 jj?
+12/7/2022 11:23:34 AM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/317910972_671652184452700_8397397937828968053_n.jpg?stp=dst-jpg_p480x480&_nc_cat=100&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGbm_hO8iJWFaJ0de0Piapjljk5pMlGk7CWOTmkyUaTsC74UVBwxBIPQrJk8eD2ndsPcrJk_XFcEg3Nsrf18ZGM&_nc_ohc=LGCQYCEoeBIAX8yAXMp&_nc_oc=AQmuyidnd44hyrglS5rAHRISzKrUAhqXDmGCBFQruEbbzH9NWzfyZe4Gboog2_ZaYH4&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdSoE8tu0oe4U2RYFa3aj9pTU6G4kL85233Mf6144VPU4Q&oe=63B77053
+12/7/2022 11:23:34 AM$ wait_timeout >> 5000
+12/7/2022 11:23:39 AM$ wait_timeout >> 3500
+12/7/2022 11:23:40 AM$ send_typing
+12/7/2022 11:23:42 AM$ send_message 2583856894982516 
+12/7/2022 11:23:43 AM$ [object Object]
+12/7/2022 11:23:51 AM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318563114_677237220479972_4426676563760350916_n.jpg?stp=dst-jpg_p480x480&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHYEkHTblWCbE8dMEn548TOJdua9F1ya0Ul25r0XXJrRZFsybahQgvLM4JOqqOSTagSfWyyxhQWZzcC-tQd-loA&_nc_ohc=3BGZMNJo1jcAX8RYFHs&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdSwD7B-cPI0OKrBULNwRbD1nCv1snmun6YQPj1aznROAg&oe=63B76B7D
+12/7/2022 11:23:51 AM$ The user 2583856894982516 is going to fast of sending emoji >> 3 mins and 86 seconds
+12/7/2022 11:23:57 AM$ wait_timeout >> 3000
+12/7/2022 11:23:58 AM$ send_typing
+12/7/2022 11:24:00 AM$ react_message mid.$gAAkuARBgOXSLG-HP2WE6pyC2a951 :laughing:
+12/7/2022 11:24:41 AM$ event_body 100064956826603 Hmm wait tignan q
+12/7/2022 11:24:42 AM$ wait_timeout >> 5500
+12/7/2022 11:24:43 AM$ send_typing
+12/7/2022 11:24:48 AM$ 100087185842116
+12/7/2022 11:24:48 AM$ 100064956826603
+12/7/2022 11:24:48 AM$ send_message_reply 2583856894982516 ano ang tanong mo?
+12/7/2022 11:25:14 AM$ 100064956826603
+12/7/2022 11:25:14 AM$ send_message_reply 2583856894982516 Smart Reply is turn off for thread 2583856894982516
+12/7/2022 11:25:14 AM$ send_typing
+12/7/2022 11:28:09 AM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318017333_3287023128293696_3278389066943436156_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHfZ3sj0yXutqT5dwnngaMesk5_5KaPqHayTn_kpo-odp8MVKNhPIf-0gQO85JqW_eUn5H8XOG6vSQXLkosub4P&_nc_ohc=G-uei3f4e2sAX9jumGL&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdSY_oFsz9r_cm6kSOXtCU1j1lY3cwH4MZ3ZsgwusN7iZA&oe=63B792A8
+12/7/2022 11:28:09 AM$ wait_timeout >> 5000
+12/7/2022 11:28:14 AM$ wait_timeout >> 3200
+12/7/2022 11:28:15 AM$ send_typing
+12/7/2022 11:28:17 AM$ send_message 2583856894982516 
+12/7/2022 11:28:17 AM$ [object Object]
+12/7/2022 11:30:00 AM$ save_state
+12/7/2022 11:33:17 AM$ wait_timeout >> 3000
+12/7/2022 11:33:17 AM$ wait_timeout >> 5000
+12/7/2022 11:33:18 AM$ send_typing
+12/7/2022 11:33:18 AM$ send_typing
+12/7/2022 11:33:20 AM$ react_message mid.$gAAkuARBgOXSLG-paZGE6qUNa6-KW :laughing:
+12/7/2022 11:33:23 AM$ 100064956826603
+12/7/2022 11:33:23 AM$ 100087185842116
+12/7/2022 11:33:23 AM$ send_message_reply 2583856894982516 ahahaahh
+12/7/2022 11:36:25 AM$ wait_timeout >> 5000
+12/7/2022 11:36:26 AM$ send_typing
+12/7/2022 11:36:30 AM$ react_message mid.$gAAkuARBgOXSLG-03_mE6qWqgNvfi :laughing:
+12/7/2022 11:38:54 AM$ wait_timeout >> 5000
+12/7/2022 11:38:54 AM$ wait_timeout >> 5000
+12/7/2022 11:38:55 AM$ send_typing
+12/7/2022 11:38:55 AM$ send_typing
+12/7/2022 11:38:59 AM$ react_message mid.$gAAkuARBgOXSLG-9-o2E6qoxlaEjG :laughing:
+12/7/2022 11:39:00 AM$ 100087185842116
+12/7/2022 11:39:00 AM$ 100087185842116
+12/7/2022 11:39:00 AM$ send_message 2583856894982516 haahaaa
+12/7/2022 11:39:42 AM$ wait_timeout >> 4000
+12/7/2022 11:39:42 AM$ wait_timeout >> 6000
+12/7/2022 11:39:43 AM$ send_typing
+12/7/2022 11:39:43 AM$ send_typing
+12/7/2022 11:39:46 AM$ react_message mid.$gAAkuARBgOXSLG_A64mE6qrtev9Ol :laughing:
+12/7/2022 11:39:49 AM$ 100087185842116
+12/7/2022 11:39:49 AM$ 100087185842116
+12/7/2022 11:39:49 AM$ send_message 2583856894982516 hhahahah😆
+12/7/2022 11:40:00 AM$ save_state
+12/7/2022 11:40:20 AM$ wait_timeout >> 4500
+12/7/2022 11:40:20 AM$ wait_timeout >> 3000
+12/7/2022 11:40:20 AM$ send_typing
+12/7/2022 11:40:20 AM$ send_typing
+12/7/2022 11:40:23 AM$ 100064956826603
+12/7/2022 11:40:23 AM$ 100087185842116
+12/7/2022 11:40:23 AM$ send_message_reply 2583856894982516 🤣🤣🤣
+12/7/2022 11:40:24 AM$ react_message mid.$gAAkuARBgOXSLG_DMxWE6qt_hbju- :laughing:
+12/7/2022 11:43:19 AM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318205777_3362788697329636_825231727310825776_n.jpg?stp=dst-jpg_p480x480&_nc_cat=108&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeE_R-RZ8MHGQTmOC8U92z9hu1cSFA5wL3S7VxIUDnAvdG34Te5LTiiGGAwhBbHdcEdVVJWnp2Dqm9sQB3mS2QCu&_nc_ohc=wW_WF5wcz24AX9ExdPU&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdTB8G8KT1qKVdtPPpth8Uv_d8qqk5kzLazPPTqMq4Zpjw&oe=63B792C3
+12/7/2022 11:43:19 AM$ wait_timeout >> 5000
+12/7/2022 11:43:24 AM$ wait_timeout >> 3200
+12/7/2022 11:43:24 AM$ send_typing
+12/7/2022 11:43:27 AM$ send_message 2583856894982516 
+12/7/2022 11:43:27 AM$ [object Object]
+12/7/2022 11:45:21 AM$ wait_timeout >> 4500
+12/7/2022 11:45:21 AM$ wait_timeout >> 3500
+12/7/2022 11:45:22 AM$ send_typing
+12/7/2022 11:45:22 AM$ send_typing
+12/7/2022 11:45:25 AM$ 100064956826603
+12/7/2022 11:45:25 AM$ 100087185842116
+12/7/2022 11:45:25 AM$ 100087185842116
+12/7/2022 11:45:25 AM$ send_message_reply 2583856894982516 ahahaahh
+12/7/2022 11:45:26 AM$ react_message mid.$gAAkuARBgOXSLG_VlxWE6rAY1sw7M :laughing:
+12/7/2022 11:45:45 AM$ wait_timeout >> 3200
+12/7/2022 11:45:45 AM$ wait_timeout >> 4200
+12/7/2022 11:45:46 AM$ send_typing
+12/7/2022 11:45:46 AM$ send_typing
+12/7/2022 11:45:48 AM$ react_message mid.$gAAkuARBgOXSLG_XBx2E6rBzHwRGx :laughing:
+12/7/2022 11:45:49 AM$ 100087185842116
+12/7/2022 11:45:49 AM$ 100087185842116
+12/7/2022 11:45:49 AM$ send_message 2583856894982516 😂😂🤣🤣
+12/7/2022 11:45:57 AM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/317717361_1168838497101267_3328699299146887814_n.jpg?stp=dst-jpg_p480x480&_nc_cat=108&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGP25spoGItWervyeTg6dFleoHYS-FPniZ6gdhL4U-eJr4iWPzmT1oqj84hN2AMHPEInZik50UA_3AQ1a-q7vXt&_nc_ohc=6xrXbUdTPRUAX_bgd1h&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRtVkfysyErcASDFkQTzsB7iv88dRqV6SyFA7mAE8IjKA&oe=63B77075
+12/7/2022 11:45:57 AM$ wait_timeout >> 5000
+12/7/2022 11:46:02 AM$ wait_timeout >> 3000
+12/7/2022 11:46:03 AM$ send_typing
+12/7/2022 11:46:05 AM$ send_message 2583856894982516 
+12/7/2022 11:46:06 AM$ [object Object]
+12/7/2022 11:46:37 AM$ wait_timeout >> 4500
+12/7/2022 11:46:37 AM$ wait_timeout >> 4500
+12/7/2022 11:46:38 AM$ send_typing
+12/7/2022 11:46:38 AM$ send_typing
+12/7/2022 11:46:42 AM$ react_message mid.$gAAkuARBgOXSLG_aO9GE6rFA_cHCS :laughing:
+12/7/2022 11:46:42 AM$ 100064956826603
+12/7/2022 11:46:42 AM$ 100064956826603
+12/7/2022 11:46:42 AM$ 100087185842116
+12/7/2022 11:46:42 AM$ send_message 2583856894982516 😂😆
+12/7/2022 11:50:00 AM$ save_state
+12/7/2022 11:50:22 AM$ wait_timeout >> 5000
+12/7/2022 11:50:27 AM$ send_message 2583856894982516 🤣🤣
+12/7/2022 11:50:27 AM$ react_message mid.$gAAkuARBgOXSLG_n-n2E6rSy9EEHH :laughing:
+12/7/2022 11:50:28 AM$ send_typing
+12/7/2022 11:50:28 AM$ send_typing
+12/7/2022 11:50:41 AM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/315528194_5495960803847514_2943547835889946711_n.jpg?stp=dst-jpg_p480x480&_nc_cat=104&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHBWO-SZuz7_lNCEbq9d8_9u0Sx3vvIIoq7RLHe-8giinQZSeIOt2HgIVZD1YhkcoOZDDMF98nbW7zOteume0Y0&_nc_ohc=eOAJXpYfz-gAX85bU-t&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQkIsQeuJZwAzjzbx9Yv_MkceJbpc-Ny0NejWZZJIi1hQ&oe=63B79A8A
+12/7/2022 11:50:41 AM$ The user 2583856894982516 is going to fast of sending emoji >> 3 mins and 82 seconds
+12/7/2022 11:51:57 AM$ react_message mid.$gAAkuARBgOXSLG_tvPmE6rYjmzoVV :laughing:
+12/7/2022 11:51:57 AM$ send_typing
+12/7/2022 11:54:14 AM$ wait_timeout >> 3000
+12/7/2022 11:54:14 AM$ wait_timeout >> 4000
+12/7/2022 11:54:15 AM$ send_typing
+12/7/2022 11:54:15 AM$ send_typing
+12/7/2022 11:54:17 AM$ react_message mid.$gAAkuARBgOXSLG_2JY2E6rg8BvrtI :laughing:
+12/7/2022 11:54:19 AM$ 100087185842116
+12/7/2022 11:54:19 AM$ 100087185842116
+12/7/2022 11:54:19 AM$ 100064956826603
+12/7/2022 11:54:19 AM$ send_message 2583856894982516 ahahaahh
+12/7/2022 11:56:04 AM$ wait_timeout >> 4500
+12/7/2022 11:56:05 AM$ send_typing
+12/7/2022 11:56:08 AM$ react_message mid.$gAAkuARBgOXSLG_81CWE6rm4fjS8f :laughing:
+12/7/2022 11:57:08 AM$ wait_timeout >> 3000
+12/7/2022 11:57:08 AM$ send_typing
+12/7/2022 11:57:11 AM$ react_message mid.$gAAkuARBgOXSLHAAuNWE6rigJYD3M :laughing:
+12/7/2022 11:58:04 AM$ wait_timeout >> 6000
+12/7/2022 11:58:04 AM$ wait_timeout >> 4500
+12/7/2022 11:58:05 AM$ send_typing
+12/7/2022 11:58:05 AM$ send_typing
+12/7/2022 11:58:09 AM$ 100087185842116
+12/7/2022 11:58:09 AM$ 100064956826603
+12/7/2022 11:58:09 AM$ send_message_reply 2583856894982516 🤣
+12/7/2022 11:58:10 AM$ react_message mid.$gAAkuARBgOXSLHAEKTWE6ru9IxYtx :laughing:
+12/7/2022 12:00:00 PM$ save_state
+12/7/2022 12:00:00 PM$ fb_save_state
+12/7/2022 12:01:38 PM$ wait_timeout >> 5000
+12/7/2022 12:01:38 PM$ wait_timeout >> 3200
+12/7/2022 12:01:39 PM$ send_typing
+12/7/2022 12:01:39 PM$ send_typing
+12/7/2022 12:01:42 PM$ 100087185842116
+12/7/2022 12:01:42 PM$ send_message_reply 2583856894982516 😂😂🤣🤣
+12/7/2022 12:01:43 PM$ react_message mid.$gAAkuARBgOXSLHARPTWE6r8B_axL5 :laughing:
+12/7/2022 12:04:16 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/317826950_479389207667428_1866719865269124770_n.jpg?stp=dst-jpg_p480x480&_nc_cat=101&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGmz9WePjJX_cHHrt4lHZjApuB7u_hmOw2m4Hu7-GY7DQsKISpLvSA7cXZZ3wLZmBzeAwqWYA22QRNi4lpW6QDC&_nc_ohc=sJDafZbsohYAX8C7YMy&_nc_oc=AQlrGLKfUQLoLQUbV4cKAh2tLUgudMKCjONYjq_P-8sXxq5SVSAw35Sy8nRxgN3-FsM&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdTRomTE-2ThrJe5vz4R4BfWgQ-1AWe_HO7GVNJm5j67MQ&oe=63B78CDE
+12/7/2022 12:04:16 PM$ wait_timeout >> 5000
+12/7/2022 12:04:21 PM$ wait_timeout >> 3000
+12/7/2022 12:04:22 PM$ wait_timeout >> 4500
+12/7/2022 12:04:22 PM$ wait_timeout >> 5000
+12/7/2022 12:04:22 PM$ send_typing
+12/7/2022 12:04:23 PM$ send_typing
+12/7/2022 12:04:23 PM$ send_typing
+12/7/2022 12:04:24 PM$ send_message 2583856894982516 
+12/7/2022 12:04:25 PM$ [object Object]
+12/7/2022 12:04:27 PM$ react_message mid.$gAAkuARBgOXSLHAbO12E6sGB2LLel :laughing:
+12/7/2022 12:04:28 PM$ 100037131918629
+12/7/2022 12:04:28 PM$ 100087185842116
+12/7/2022 12:04:28 PM$ 100087185842116
+12/7/2022 12:04:28 PM$ send_message_reply 2583856894982516 😆😆
+12/7/2022 12:05:39 PM$ wait_timeout >> 6000
+12/7/2022 12:05:40 PM$ send_typing
+12/7/2022 12:05:45 PM$ react_message mid.$gABJwS7O7mZ6LHAf7m2E6sKw2Dhwe :laughing:
+12/7/2022 12:07:33 PM$ new_member 100070775902920 Ma Yen Dump
+12/7/2022 12:07:34 PM$ new_member 100050993673646 Nerfe Guno
+12/7/2022 12:07:35 PM$ new_member 100019166085231 John Paul Tahum
+12/7/2022 12:07:35 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/316472635_545883060233847_969307189967480702_n.jpg?stp=dst-jpg_p480x480&_nc_cat=104&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGs9uegSYsV2jrqT7xfCqu0K5JpM5YEW90rkmkzlgRb3WcpMfvwlTGgib4pA8u4DktfowoJOqMMQl7e9I0dYYFN&_nc_ohc=0FMFTLDi3RQAX-XlIyF&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQHjsikBXZ3I1oqt_SNLE3pQT-E9Mjaxa20cGjthxZTLw&oe=63B7891D
+12/7/2022 12:07:36 PM$ wait_timeout >> 4500
+12/7/2022 12:07:36 PM$ wait_timeout >> 60000
+12/7/2022 12:07:36 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/316472635_545883060233847_969307189967480702_n.jpg?stp=dst-jpg_p480x480&_nc_cat=104&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGs9uegSYsV2jrqT7xfCqu0K5JpM5YEW90rkmkzlgRb3WcpMfvwlTGgib4pA8u4DktfowoJOqMMQl7e9I0dYYFN&_nc_ohc=0FMFTLDi3RQAX-XlIyF&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQHjsikBXZ3I1oqt_SNLE3pQT-E9Mjaxa20cGjthxZTLw&oe=63B7891D
+12/7/2022 12:07:36 PM$ wait_timeout >> 5000
+12/7/2022 12:07:36 PM$ wait_timeout >> 60000
+12/7/2022 12:07:37 PM$ wait_timeout >> 4500
+12/7/2022 12:07:37 PM$ wait_timeout >> 60000
+12/7/2022 12:07:37 PM$ send_typing
+12/7/2022 12:07:37 PM$ send_typing
+12/7/2022 12:07:38 PM$ send_typing
+12/7/2022 12:07:40 PM$ send_message 6942091245864108 [object Object]
+12/7/2022 12:07:41 PM$ send_message 6942091245864108 [object Object]
+12/7/2022 12:07:41 PM$ send_message 6942091245864108 [object Object]
+12/7/2022 12:08:36 PM$ un_link /home/runner/project-orion/cache/images/welcome_1670386053.jpg
+12/7/2022 12:08:36 PM$ un_link /home/runner/project-orion/cache/images/welcome_1670386054.jpg
+12/7/2022 12:08:37 PM$ un_link /home/runner/project-orion/cache/images/welcome_1670386055.jpg
+12/7/2022 12:10:00 PM$ save_state
+12/7/2022 12:10:29 PM$ wait_timeout >> 3500
+12/7/2022 12:10:29 PM$ send_typing
+12/7/2022 12:10:32 PM$ react_message mid.$gABJwS7O7mZ6LHAxmm2E6scYt_uHe :laughing:
+12/7/2022 12:11:44 PM$ wait_timeout >> 5500
+12/7/2022 12:11:45 PM$ send_typing
+12/7/2022 12:11:50 PM$ react_message mid.$gABJwS7O7mZ6LHA2NnGE6sg_28-SE :laughing:
+12/7/2022 12:11:53 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318289212_1816269752065298_6365345484675869444_n.jpg?stp=dst-jpg_p480x480&_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeEXmyEd7Z9HYkVm0Og284hCODHGJ8dhD904McYnx2EP3fPTpK5TYp8iRVnaUE9PJw8mIyop5L1z7NjnB0qpuyRQ&_nc_ohc=6vO53yrz_XgAX8gEa9y&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdROJJqJgbPTP4ieJNF3oPX_T9BIrQIF5N84dhAtmeBEAg&oe=63B77BC1
+12/7/2022 12:11:53 PM$ wait_timeout >> 5000
+12/7/2022 12:11:58 PM$ wait_timeout >> 4000
+12/7/2022 12:11:58 PM$ send_typing
+12/7/2022 12:12:02 PM$ send_message 5190020021066142 
+12/7/2022 12:12:02 PM$ [object Object]
+12/7/2022 12:13:40 PM$ wait_timeout >> 3500
+12/7/2022 12:13:40 PM$ send_typing
+12/7/2022 12:13:43 PM$ react_message mid.$gABJwS7O7mZ6LHA9Q7WE6soDNrUVJ :laughing:
+12/7/2022 12:15:40 PM$ wait_timeout >> 5000
+12/7/2022 12:15:45 PM$ wait_timeout >> 6000
+12/7/2022 12:15:46 PM$ send_typing
+12/7/2022 12:15:51 PM$ send_message 2583856894982516 
+12/7/2022 12:15:51 PM$ [object Object]
+12/7/2022 12:20:00 PM$ save_state
+12/7/2022 12:20:07 PM$ wait_timeout >> 3000
+12/7/2022 12:20:07 PM$ wait_timeout >> 3500
+12/7/2022 12:20:08 PM$ send_typing
+12/7/2022 12:20:08 PM$ send_typing
+12/7/2022 12:20:10 PM$ react_message mid.$gABJwS7O7mZ6LHBU6WWE6s_v51ZAZ :laughing:
+12/7/2022 12:20:11 PM$ 100023508434853
+12/7/2022 12:20:11 PM$ 100023508434853
+12/7/2022 12:20:11 PM$ 100034699924333
+12/7/2022 12:20:11 PM$ send_message 5190020021066142 😆😆🤣
+12/7/2022 12:22:54 PM$ wait_timeout >> 4000
+12/7/2022 12:22:54 PM$ wait_timeout >> 3500
+12/7/2022 12:22:54 PM$ send_typing
+12/7/2022 12:22:54 PM$ send_typing
+12/7/2022 12:22:58 PM$ react_message mid.$gABJwS7O7mZ6LHBfFKGE6tJ4qm14i :laughing:
+12/7/2022 12:22:58 PM$ 100043689518000
+12/7/2022 12:22:58 PM$ 100008673251056
+12/7/2022 12:22:58 PM$ 100008673251056
+12/7/2022 12:22:58 PM$ send_message_reply 5190020021066142 🤣🤣🤣
+12/7/2022 12:24:28 PM$ event_body 100047672973317 cmd
+12/7/2022 12:24:28 PM$ wait_timeout >> 3000
+12/7/2022 12:24:29 PM$ send_typing
+12/7/2022 12:24:31 PM$ 100047672973317
+12/7/2022 12:24:31 PM$ send_message_reply 6942091245864108 The Project Orion 1~8
+
+⦿ cmd
+⦿ cmd [number]
+⦿ cmd all
+⦿ mj [text]
+⦿ search [text]
+⦿ searchincog [text]
+⦿ searchimg [text]
+⦿ gencode [text]
+⦿ dict [text]
+⦿ tts [text]
+⦿ baybayin [text]
+⦿ weather [location]
+⦿ music [text]
+⦿ video [text]
+⦿ lyrics [text]
+⦿ encode64 [text]
+⦿ decode64 [text]
+⦿ github [username]
+⦿ ig [username]
+⦿ tiktok [username]
+
+The molar flux due to diffusion is proportional to the concentration gradient.
+12/7/2022 12:30:00 PM$ save_state
+12/7/2022 12:32:28 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/317912426_912703310098523_6381609270720447826_n.jpg?stp=dst-jpg_p480x480&_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHWz39TIZiXkt_tesjbp-3ZOpuGuQ09RuE6m4a5DT1G4WSq580AVWGyf6jm8lGMqM3rCQcB6ub8CJ-HGCD_Cg8M&_nc_ohc=l2Cb-SX6fRcAX84QLkb&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdSGTWiniFcC3c9V0GgbY7HPWibYAn270GD-wtQTzR1vkg&oe=63B79682
+12/7/2022 12:32:28 PM$ photo_1 https://scontent.xx.fbcdn.net/v/t1.15752-9/317503602_849255906494367_5560006699118496948_n.jpg?stp=dst-jpg_p480x480&_nc_cat=107&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeESpeW6cnpiJD3G8VaJEHP2A6c4RDK4pnwDpzhEMrimfHDzjL_eJytA_5K3Jc55niaFfzXmI3OZyyMu_TxpA6ky&_nc_ohc=GP3_tkF8DbwAX9tvojt&_nc_oc=AQm2B2QGSYQ1rslc_IqRuNXdWvrJYlgpYt8l6i80PI6PiWgiU_tC8TYA4VQyhvVIT40&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQThHcyMXSbP_fNZWjBx7JjEsM3fZoqCKcHfyEZl9zUxw&oe=63B77F7D
+12/7/2022 12:32:28 PM$ photo_2 https://scontent.xx.fbcdn.net/v/t1.15752-9/317843921_504338671660753_3809638544184525899_n.jpg?stp=dst-jpg_p480x480&_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGvAzY9M2HEukIN-ergP8n0SbN-prCBMr5Js36msIEyvjGRA3CePqROktly4lXf1K6ovuJPwMQ_NhDR-n-ua6xo&_nc_ohc=dTl1wVo9jEUAX94RHQb&_nc_oc=AQlmyCmARnG-n0E48lpYu64-lhGhCvKdIc4BN-rgfW8rZL6dzH5yTCCLZIpxihdM5Ic&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdR2yyJFwSeZfGKy8tA0tJOcGdSO2hJ-RuM2lQuFPePmvA&oe=63B79012
+12/7/2022 12:32:28 PM$ wait_timeout >> 5000
+12/7/2022 12:32:33 PM$ send_message 7244767385593438 
+12/7/2022 12:32:34 PM$ [object Object]
+12/7/2022 12:32:34 PM$ send_typing
+12/7/2022 12:35:30 PM$ wait_timeout >> 4000
+12/7/2022 12:35:31 PM$ send_typing
+12/7/2022 12:35:34 PM$ react_message mid.$gABJwS7O7mZ6LHCNPh2E6t4FE01P_ :laughing:
+12/7/2022 12:35:54 PM$ wait_timeout >> 3000
+12/7/2022 12:35:55 PM$ send_typing
+12/7/2022 12:35:57 PM$ react_message mid.$gABJwS7O7mZ6LHCOvbGE6t5czGnev :laughing:
+12/7/2022 12:40:00 PM$ save_state
+12/7/2022 12:45:15 PM$ wait_timeout >> 5000
+12/7/2022 12:45:20 PM$ send_message 2583856894982516 💛
+12/7/2022 12:45:21 PM$ send_typing
+12/7/2022 12:50:00 PM$ save_state
+12/7/2022 12:50:13 PM$ wait_timeout >> 5000
+12/7/2022 12:50:13 PM$ wait_timeout >> 3200
+12/7/2022 12:50:14 PM$ send_typing
+12/7/2022 12:50:14 PM$ send_typing
+12/7/2022 12:50:17 PM$ 100087185842116
+12/7/2022 12:50:17 PM$ send_message_reply 2583856894982516 🤣🤣hahaahhaha
+12/7/2022 12:50:18 PM$ react_message mid.$gAAkuARBgOXSLHDDKlWE6ut9xHZs2 :laughing:
+12/7/2022 12:51:34 PM$ wait_timeout >> 5500
+12/7/2022 12:51:34 PM$ wait_timeout >> 5000
+12/7/2022 12:51:34 PM$ send_typing
+12/7/2022 12:51:34 PM$ send_typing
+12/7/2022 12:51:39 PM$ react_message mid.$gAAkuARBgOXSLHDIDkmE6uy2SuOxe :laughing:
+12/7/2022 12:51:39 PM$ 100087185842116
+12/7/2022 12:51:39 PM$ send_message_reply 2583856894982516 ahahaahh
+12/7/2022 12:52:21 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318180185_903140307735971_1673311678986659754_n.jpg?stp=dst-jpg_p480x480&_nc_cat=109&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeEFtQf0H_xy35n7ZwR3HFvv9wkip0ogYvT3CSKnSiBi9G0LX0sM0Bx017DBF3aJvRn9rWHBAwpfEoIark6Cdh9-&_nc_ohc=YYL91n0DBMIAX95Q0Qp&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQ4bcCuCC5uiq7_5WYqP9WZpKb_jP3KhFZeF8cOjVXd5w&oe=63B79503
+12/7/2022 12:52:21 PM$ wait_timeout >> 5000
+12/7/2022 12:52:26 PM$ wait_timeout >> 5500
+12/7/2022 12:52:27 PM$ send_typing
+12/7/2022 12:52:27 PM$ wait_timeout >> 4200
+12/7/2022 12:52:28 PM$ send_typing
+12/7/2022 12:52:31 PM$ react_message mid.$gABJwS7O7mZ6LHDLT02E6u2LJQ9ai :laughing:
+12/7/2022 12:52:32 PM$ send_message 5190020021066142 
+12/7/2022 12:52:32 PM$ [object Object]
+12/7/2022 12:57:43 PM$ wait_timeout >> 5000
+12/7/2022 12:57:44 PM$ send_typing
+12/7/2022 12:57:48 PM$ react_message mid.$gAAkuARBgOXSLHDencmE6vJeRHei9 :laughing:
+12/7/2022 12:59:29 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318306197_2003402456536709_5940737292908780191_n.jpg?stp=dst-jpg_p480x480&_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGtEuJi9C2iTuN3-A7rPXRFi9PDd1vZC-2L08N3W9kL7SBZ3mkkIwFHbsoDdM85DGNU3c_MO6QMkRw-b2AWoqf2&_nc_ohc=WXZx-GbUcb8AX9Wz_PH&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQI45xL77Sl_9WLLQT_dVoXc94ojBfRmmaXQrRd6PMGVw&oe=63B7A2BF
+12/7/2022 12:59:29 PM$ wait_timeout >> 5000
+12/7/2022 12:59:34 PM$ wait_timeout >> 4500
+12/7/2022 12:59:34 PM$ send_typing
+12/7/2022 12:59:37 PM$ wait_timeout >> 4500
+12/7/2022 12:59:38 PM$ send_typing
+12/7/2022 12:59:38 PM$ send_message 5190020021066142 
+12/7/2022 12:59:39 PM$ [object Object]
+12/7/2022 12:59:42 PM$ react_message mid.$gABJwS7O7mZ6LHDll8GE6vQdRMCKX :laughing:
+12/7/2022 1:00:00 PM$ save_state
+12/7/2022 1:00:00 PM$ fb_save_state
+12/7/2022 1:01:02 PM$ react_message mid.$gABm9E9p_pl6LHDquQGE6vVlrmjSH :laughing:
+12/7/2022 1:01:02 PM$ send_typing
+12/7/2022 1:02:45 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/317499675_484836510296933_2071735395394514500_n.jpg?stp=dst-jpg_p480x480&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGwZ-HV-lyEKd7W3p6bolOPL2NuQ2YClGAvY25DZgKUYKZMqGj-TgrGKOfHdjWLKGoAAPuGpyPobS5Nodz0jWkk&_nc_ohc=TnP3jWlnG2YAX9KkmaZ&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdSg0ZnN06CmVHzpu-tUOd9Uk383NcMCIWh7_VIpKS5PQA&oe=63B7931E
+12/7/2022 1:02:45 PM$ wait_timeout >> 5000
+12/7/2022 1:02:50 PM$ send_message 7244767385593438 
+12/7/2022 1:02:51 PM$ [object Object]
+12/7/2022 1:02:51 PM$ send_typing
+12/7/2022 1:04:40 PM$ event_body 100061632526048 Mj ano ang jabol?
+12/7/2022 1:04:40 PM$ 100061632526048
+12/7/2022 1:04:40 PM$ 100061632526048
+12/7/2022 1:04:40 PM$ send_message 2583856894982516 Shhhhhhh watch your mouth.
+12/7/2022 1:04:40 PM$ send_typing
+12/7/2022 1:08:34 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318193238_514439000743768_7644254833288313926_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGsEL7dcVQOVbI8zVTBXJfQIXB0r-DeBRAhcHSv4N4FEI0dxekvtRFa-xPco4rm1M2zQENb3Pb23S3-4u_CSrwc&_nc_ohc=_Dpc58RGFDgAX8vsAJ9&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQRWcp9oFz2jGUO0jFEN8y4CLCiaP07INr3Rdm6X1qm8Q&oe=63B79DE4
+12/7/2022 1:08:34 PM$ wait_timeout >> 5000
+12/7/2022 1:08:39 PM$ send_message 7244767385593438 
+12/7/2022 1:08:39 PM$ [object Object]
+12/7/2022 1:08:40 PM$ send_typing
+12/7/2022 1:10:00 PM$ save_state
+12/7/2022 1:18:27 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/317039423_474117204795407_3373644491390483762_n.jpg?stp=dst-jpg_p480x480&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeEiueezwnUUHhjhwEGnPE1BoZdxoxX2dpmhl3GjFfZ2mcsKK3vIPv616lrjScZ20KXwOeC7eDetY27ZOUcQip0O&_nc_ohc=7BUr-1tLIjQAX-bQ9YF&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRpO3sk_x8B7k3OiMgWfmdWmj0vB-bgPe-soQidq2B12A&oe=63B7A503
+12/7/2022 1:18:27 PM$ wait_timeout >> 5000
+12/7/2022 1:18:32 PM$ wait_timeout >> 3200
+12/7/2022 1:18:33 PM$ send_typing
+12/7/2022 1:18:35 PM$ send_message 5190020021066142 
+12/7/2022 1:18:36 PM$ [object Object]
+12/7/2022 1:20:00 PM$ save_state
+12/7/2022 1:20:08 PM$ wait_timeout >> 4000
+12/7/2022 1:20:08 PM$ unsend_message_group 100015660821716[object Object]
+12/7/2022 1:20:09 PM$ send_typing
+12/7/2022 1:20:12 PM$ send_message 6942091245864108 [object Object]
+12/7/2022 1:27:25 PM$ new_member 100031853288424 Enechukwu Chibuike
+12/7/2022 1:27:28 PM$ wait_timeout >> 3200
+12/7/2022 1:27:28 PM$ wait_timeout >> 60000
+12/7/2022 1:27:30 PM$ send_typing
+12/7/2022 1:27:31 PM$ send_message 7635291589846117 [object Object]
+12/7/2022 1:28:28 PM$ un_link /home/runner/project-orion/cache/images/welcome_1670390845.jpg
+12/7/2022 1:30:00 PM$ save_state
+12/7/2022 1:34:49 PM$ wait_timeout >> 5500
+12/7/2022 1:34:50 PM$ send_typing
+12/7/2022 1:34:55 PM$ react_message mid.$gAA3OQuTxZgiLHFmfpmE6xRWjtk9K :laughing:
+12/7/2022 1:40:00 PM$ save_state
+12/7/2022 1:41:22 PM$ event_body 100071743848974 _ping
+12/7/2022 1:41:23 PM$ send_message 100071743848974 Uptime is 02h40m and 01s seconds
+
+SERVER INFO
+⦿ RAM: 54.8 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 266.67 mbps
+⦿ Upload Speed: 12.86 mbps
+⦿ Save State: 12/7/2022 1:40:00 PM
+⦿ Fb State: 12/7/2022 1:00:00 PM
+12/7/2022 1:41:23 PM$ send_typing
+12/7/2022 1:42:21 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/317329412_538790558111267_5921463536984923962_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGbdM2JiWptuTD5j8ZTLbLYZXbuQLsiA_Zldu5AuyID9s2i68hqOe93V4kHUWby8qqBMmKaedoul-Gb-m-fzfS6&_nc_ohc=iFz8q2dfmvYAX8PRmR-&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQJBjVvWK_k6L7B-ikB59_BRwDeB_22vB9e0kkjAgHByw&oe=63B78E7F
+12/7/2022 1:42:21 PM$ wait_timeout >> 5000
+12/7/2022 1:42:26 PM$ wait_timeout >> 3000
+12/7/2022 1:42:27 PM$ send_typing
+12/7/2022 1:42:29 PM$ send_message 5653470298044183 
+12/7/2022 1:42:29 PM$ [object Object]
+12/7/2022 1:50:00 PM$ save_state
+The Project Orion is now active and waiting for commands execution. ONLINE
+12/7/2022 1:58:56 PM$ url https://project-orion.mrepol742.repl.co
+12/7/2022 1:58:56 PM$ ip_address 34.110.138.177
+12/7/2022 1:59:09 PM$ event_body 100071743848974 _ping
+The script uses approximately 84.50145721435547 Bytes MB
+12/7/2022 1:59:09 PM$ send_message 100071743848974 Uptime is 13 seconds
+
+SERVER INFO
+⦿ RAM: 52.9 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 250.00 mbps
+⦿ Upload Speed: 18.43 mbps
+⦿ Save State: N/A
+⦿ Fb State: N/A
+12/7/2022 1:59:10 PM$ send_typing
+12/7/2022 2:00:00 PM$ save_state
+12/7/2022 2:00:00 PM$ fb_save_state
+12/7/2022 2:02:06 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/316874719_647383323833880_6777177945354380636_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeE3hb7rWGOmW5mnjFsNjwyxkF_-_K1tnkyQX_78rW2eTLgCd8Vw5fgyiBdU6Dh_AMnOQiA9ktmFZS99lUkOXzeq&_nc_ohc=pSHE9IbTgIIAX8IEpTj&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQ113uqccWYkl6aYJ79NRCZ5bz3ezqPrP_rL3Yio7036Q&oe=63B792D3
+12/7/2022 2:02:06 PM$ wait_timeout >> 5000
+12/7/2022 2:02:11 PM$ send_message 2583856894982516 
+12/7/2022 2:02:11 PM$ [object Object]
+12/7/2022 2:02:11 PM$ send_typing
+The Project Orion is now active and waiting for commands execution. ONLINE
+12/7/2022 2:02:25 PM$ url https://project-orion.mrepol742.repl.co
+12/7/2022 2:02:25 PM$ ip_address 34.110.138.177
+12/7/2022 2:02:34 PM$ event_body 100071743848974 _ping
+The script uses approximately 84.3 MB MB
+12/7/2022 2:02:34 PM$ send_message 100071743848974 Uptime is 09 seconds
+
+SERVER INFO
+⦿ RAM: 53.2 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 250.00 mbps
+⦿ Upload Speed: 14.34 mbps
+⦿ Save State: N/A
+⦿ Fb State: N/A
+12/7/2022 2:02:35 PM$ send_typing
+The Project Orion is now active and waiting for commands execution. ONLINE
+12/7/2022 2:06:40 PM$ url https://project-orion.mrepol742.repl.co
+12/7/2022 2:06:40 PM$ ip_address 34.110.138.177
+12/7/2022 2:06:52 PM$ event_body 100071743848974 _ping
+The script uses approximately 111.1 MB MB
+12/7/2022 2:06:53 PM$ send_message 100071743848974 Uptime is 13 seconds
+
+SERVER INFO
+⦿ RAM: 53.9 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 266.67 mbps
+⦿ Upload Speed: 14.49 mbps
+⦿ Save State: N/A
+⦿ Fb State: N/A
+12/7/2022 2:06:54 PM$ send_typing
+12/7/2022 2:07:19 PM$ event_body 100071743848974 _ping
+The script uses approximately 94.5 MB MB
+12/7/2022 2:07:20 PM$ send_message 100071743848974 Uptime is 40 seconds
+
+SERVER INFO
+⦿ RAM: 53.9 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 266.67 mbps
+⦿ Upload Speed: 12.66 mbps
+⦿ Save State: N/A
+⦿ Fb State: N/A
+12/7/2022 2:07:21 PM$ send_typing
+12/7/2022 2:10:00 PM$ save_state
+12/7/2022 2:13:40 PM$ wait_timeout >> 5500
+12/7/2022 2:13:42 PM$ send_typing
+12/7/2022 2:13:46 PM$ 100013123092880
+12/7/2022 2:13:46 PM$ 100087874545472
+12/7/2022 2:13:46 PM$ 100013123092880
+12/7/2022 2:13:46 PM$ send_message_reply 7244767385593438 Hello World
+12/7/2022 2:14:15 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/318009681_480315457502101_1029741686247787109_n.jpg?stp=dst-jpg_p480x480&_nc_cat=102&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeF_3Qmb6T2P33PXwI70_12H7I6O30-oAEDsjo7fT6gAQBCUZltjnwdrvkMPqBfMYA1_BADMjh3lpuC8IP9IV4bs&_nc_ohc=MEprhLHkMJgAX89SJeQ&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQ3-JEGsUPslxrKN6_4FZzXTZl5naal1Onzy9Hxrxv5tg&oe=63B7A6EB
+12/7/2022 2:14:15 PM$ wait_timeout >> 5000
+12/7/2022 2:14:20 PM$ wait_timeout >> 5500
+12/7/2022 2:14:21 PM$ send_typing
+12/7/2022 2:14:26 PM$ send_message 2583856894982516 
+12/7/2022 2:14:26 PM$ [object Object]
+The Project Orion is now active and waiting for commands execution. ONLINE
+12/7/2022 2:15:30 PM$ url https://project-orion.mrepol742.repl.co
+12/7/2022 2:15:30 PM$ ip_address 34.110.138.177
+The Project Orion is now active and waiting for commands execution. ONLINE
+12/7/2022 2:15:50 PM$ url https://project-orion.mrepol742.repl.co
+12/7/2022 2:15:50 PM$ ip_address 34.110.138.177
