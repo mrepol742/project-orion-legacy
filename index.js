@@ -4718,6 +4718,8 @@ async function getImages(api, event, images) {
         log("get_images " + url);
         if (!url.endsWith(".svg.png") && !url.endsWith(".png") && !url.includes("lookaside.fbsbx.com")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
+            log("fname " + fname);
+            log("accepted_url " + url);
             request(encodeURI(url)).pipe(fs.createWriteStream(fname));
             name.push(fname);
         }
@@ -4725,6 +4727,7 @@ async function getImages(api, event, images) {
     await wait(1000);
     let accm = [];
     for (let i = 0; i < name.length; i++) {
+        log("push_url " + name[i]);
         accm.push(fs.createReadStream(name[i]));
     }
     let message = {
