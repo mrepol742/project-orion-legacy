@@ -986,7 +986,7 @@ async function ai(api, event) {
 
         if (query == "pinadd") {
             if (isGoingToFast(event)) {
-                break;
+                return;
             }
             if (event.messageReply.body == "") {
                 sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
@@ -998,7 +998,7 @@ async function ai(api, event) {
             }
         } else if (query == "count") {
             if (isGoingToFast(event)) {
-                break;
+                return;
             }
             if (event.messageReply.body == "") {
                 sendMessage(api, event, "You need to reply count to a message.");
@@ -1007,7 +1007,7 @@ async function ai(api, event) {
             }
         } else if (query == "countvowels") {
             if (isGoingToFast(event)) {
-                break;
+                return;
             }
             if (event.messageReply.body == "") {
                 sendMessage(api, event, "You need to reply count --vowels to a message.");
@@ -1016,7 +1016,7 @@ async function ai(api, event) {
             }
         } else if (query == "countconsonants") {
             if (isGoingToFast(event)) {
-                break;
+                return;
             }
             if (event.messageReply.body == "") {
                 sendMessage(api, event, "You need to reply count --consonants to a message.");
@@ -1025,7 +1025,7 @@ async function ai(api, event) {
             }
         } else if (query.startsWith("wfind")) {
             if (isGoingToFast(event)) {
-                break;
+                return;
             }
             let data = input.split(" ");
             if (data.length < 2) {
@@ -1043,7 +1043,7 @@ async function ai(api, event) {
             }
         } else if (query == "bgremove") {
             if (isGoingToFast(event)) {
-                break;
+                return;
             }
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 if (event.messageReply.attachments.length < 1) {
@@ -1090,7 +1090,7 @@ async function ai(api, event) {
             }
         } else if (query == "gphoto") {
             if (isGoingToFast(event)) {
-                break;
+                return;
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
