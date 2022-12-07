@@ -4716,7 +4716,7 @@ async function getImages(api, event, images) {
         await wait(1000);
         let url = images[i].url;
         log("get_images " + url);
-        if (!url.endsWith(".svg.png") && !url.endsWith(".png") && !url.includes("lookaside.fbsbx.com")) {
+        if (!url.endsWith(".gif") && !url.endsWith(".svg.png") && !url.endsWith(".svg") && !url.includes("lookaside.fbsbx.com")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             log("fname " + fname);
             log("accepted_url " + url);
