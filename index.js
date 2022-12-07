@@ -413,7 +413,7 @@ login({
 
     const listenEmitter = api.listen(async (err, event) => {
 
-        if (err) return log(err);
+        if (err) return log("err " + err);
 
         if (event.body == null && !(typeof event.body === "string")) {
             return;
@@ -969,7 +969,7 @@ async function ai(api, event) {
                 if (!query.startsWith("gencode")) {
                     maxTokens = parseInt(settings.max_tokens);
                 } else {
-                    maxTokens = 1000;
+                    maxTokens = 4000;
                 }
                 const {
                     data
