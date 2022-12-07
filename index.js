@@ -41,6 +41,7 @@ const NetworkSpeed = require('network-speed')
 const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
+const mime = require('mime-types')
 const dns = require("dns");
 
 const testNetworkSpeed = new NetworkSpeed();
@@ -486,7 +487,6 @@ login({
                 if (typeof(d) == "object") {
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
-                        else {
                             if (d[0] == "photo") {
                                 let filename = __dirname + '/cache/images/unsend_photo_' + time + '.jpg'
                                 let file = fs.createWriteStream(filename);
@@ -507,7 +507,6 @@ login({
                                                         }]
                                                     }
                                                     sendMessageOnly(api, event, message);
-
                                                 } else {
                                                     let message = {
                                                         body: "You deleted this photo. \n",
@@ -653,35 +652,32 @@ login({
                                     });
                                 });
                             }
-                        }
                     });
                 } else {
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
-                        else {
-                            if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                api.getThreadInfo(event.threadID, (err, gc) => {
-                                    if (err) return log(err);
-                                    if (gc.isGroup) {
-                                        let message = {
-                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + msgs[event.messageID],
-                                            mentions: [{
-                                                tag: '@' + data[event.senderID]['name'],
-                                                id: event.senderID,
-                                                fromIndex: 0
-                                            }]
-                                        }
-                                        sendMessageOnly(api, event, message);
-                                        log("unsend_message_group " + event.senderID + message);
-                                    } else {
-                                        let message = {
-                                            body: "You deleted the following.\n\n" + msgs[event.messageID]
-                                        }
-                                        sendMessageOnly(api, event, message);
-                                        log("unsend_message " + event.senderID + message);
+                        if (settings.onUnsend && !threads.includes(event.threadID)) {
+                            api.getThreadInfo(event.threadID, (err, gc) => {
+                                if (err) return log(err);
+                                if (gc.isGroup) {
+                                    let message = {
+                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + msgs[event.messageID],
+                                        mentions: [{
+                                            tag: '@' + data[event.senderID]['name'],
+                                            id: event.senderID,
+                                            fromIndex: 0
+                                        }]
                                     }
-                                })
-                            }
+                                    sendMessageOnly(api, event, message);
+                                    log("unsend_message_group " + event.senderID + message);
+                                } else {
+                                    let message = {
+                                        body: "You deleted the following.\n\n" + msgs[event.messageID]
+                                    }
+                                    sendMessageOnly(api, event, message);
+                                    log("unsend_message " + event.senderID + message);
+                                }
+                            })
                         }
                     });
                 }
@@ -731,15 +727,12 @@ login({
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) log(err);
                             api.getUserInfo(parseInt(id), (err, data) => {
-                                if (err) {
-                                    log(err)
-                                } else {
-                                    for (let prop in data) {
-                                        if (data.hasOwnProperty(prop) && data[prop].name) {
-                                            let gcn = gc.threadName;
-                                            let arr = gc.participantIDs;
-                                            byebyeUser(api, event, data[prop].name, gcn, arr.length, prop);
-                                        }
+                                if (err) return log(err);
+                                for (let prop in data) {
+                                    if (data.hasOwnProperty(prop) && data[prop].name) {
+                                        let gcn = gc.threadName;
+                                        let arr = gc.participantIDs;
+                                        byebyeUser(api, event, data[prop].name, gcn, arr.length, prop);
                                     }
                                 }
                             })
@@ -1144,12 +1137,6 @@ async function ai(api, event) {
     } else if (input == "stop") {
         sendMessage(api, event, "Goodbye...");
         return listenEmitter.stopListening();
-    }
-    if (!input.replace(pictographic, '').length) {
-        if (!isGoingToFastResendingOfEmo(event)) {
-            await wait(5000);
-            sendMessageOnly(api, event, input);
-        }
     }
     if (query.startsWith("ttsjap")) {
         if (isGoingToFast(event)) {
@@ -4260,6 +4247,12 @@ function someA(api, event, query, input) {
 }
 
 function reaction(api, event, query, input) {
+    if (!input.replace(pictographic, '').length) {
+        if (!isGoingToFastResendingOfEmo(event)) {
+            await wait(5000);
+            sendMessageOnly(api, event, input);
+        }
+    }
     if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
@@ -4280,39 +4273,39 @@ function reaction(api, event, query, input) {
 
 function someR(api, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
         if (isEvening(settings.timezone)) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
             sendMessageOnly(api, event, "🥰🌘");
         } else {
-            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
         if (isMorning(settings.timezone)) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
             sendMessageOnly(api, event, "🥰☀️");
         } else {
-            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
         if (isNight(settings.timezone)) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
             sendMessageOnly(api, event, "🥰😴");
         } else {
-            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
+        reactMessage(api, event, ":love:");
+        sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
         if (isAfternoon(settings.timezone)) {
-            reactMessage(api, event, ":love:");
-            sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
             sendMessageOnly(api, event, "🥰😇");
         } else {
-            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + ".");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
     }
@@ -4461,15 +4454,15 @@ function isGoingToFast(event) {
     }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (10);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (15);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
             log("The user " + event.senderID + " is going to fast of executing commands >> " +
-                Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 10) + " mins and " +
-                (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 10 + " seconds");
+                Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 15) + " mins and " +
+                (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 15 + " seconds");
             return true;
         } else {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (10);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (15);
             return false;
         }
     }
@@ -4542,7 +4535,7 @@ let download = async function(uri, filename, callback) {
 };
 
 const checkFound = (text) => {
-    return text ? text : "unknown"
+    return text ? text : "N/A"
 }
 
 async function weathersearch(location) {
@@ -4724,14 +4717,16 @@ async function getImages(api, event, images) {
         request(encodeURI(images[i].url)).pipe(fs.createWriteStream(__dirname + "/cache/images/findimg" + i + "_" + time + ".png"))
     }
     await wait(1000);
+    let accm = [];
+    for (let i = 0; i < 6; i++) {
+        let mimeType = mime.lookup(__dirname + "/cache/images/findimg" + i + "_" + time + ".png")
+        if (mimeType == "image/png" || mimeType == "image/jpg" || mimeType == "image/jpeg") {
+            accm.push(fs.createReadStream(__dirname + "/cache/images/findimg" + i + "_" + time + ".png"));
+        }
+    }
     let message = {
         attachment: [
-            fs.createReadStream(__dirname + "/cache/images/findimg0_" + time + ".png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg1_" + time + ".png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg2_" + time + ".png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg3_" + time + ".png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg4_" + time + ".png"),
-            fs.createReadStream(__dirname + "/cache/images/findimg5_" + time + ".png")
+            accm
         ]
     };
     api.sendMessage(message, event.threadID, (err, messageInfo) => {
