@@ -4720,7 +4720,7 @@ async function getImages(api, event, images) {
     let accm = [];
     for (let i = 0; i < 6; i++) {
         let name = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
-        if (isCorrupted(name)) {
+        if (!isCorrupted(name)) {
             accm.push(fs.createReadStream(name));
         }
     }
