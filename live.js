@@ -20,8 +20,8 @@ const app = express();
 
 const port = process.env.PORT || 6000;
 
-app.get('/', (req, res) => res.send("Orion is online and waiting for commands."));
+app.get('/', (req, res) => res.send("The Project Orion is now active and waiting for commands execution. ONLINE."));
 
 app.listen(port, () =>
-	console.log(`>> http://localhost:${port}`)
+	console.log(`The Project Orion is now active and waiting for commands execution. ONLINE`)
 );

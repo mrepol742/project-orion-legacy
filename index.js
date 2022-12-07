@@ -42,8 +42,7 @@ const NetworkSpeed = require('network-speed')
 const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
-
-log("The Project Orion is now active and waiting for commands execution. ONLINE")
+const dns = require("dns");
 
 const testNetworkSpeed = new NetworkSpeed();
 const pictographic = /\p{Extended_Pictographic}/ug;
@@ -337,11 +336,31 @@ let blockSSS = JSON.parse(fs.readFileSync("cache/block_groups.json", "utf8"));
 let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
+let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
 
 const config = new Configuration({
     apiKey: apiKey[4],
 });
 const openai = new OpenAIApi(config);
+
+dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
+  if (err) {
+    log(err);
+    return;
+  }
+  log("url https://project-orion.mrepol742.repl.co");
+  if (ipaddress.length == 0) {
+    ipaddress.push(addresses[0]);
+    fs.writeFileSync("cache/ip_address.json", JSON.stringify(ipaddress), "utf8");
+    log("new_ip_address " + addresses[0]);
+  } else if (ipaddress.includes(addresses[0])) {
+    log("ip_address " + addresses[0]);
+  } else {
+     ipaddress.push(addresses[0]);
+    fs.writeFileSync("cache/ip_address.json", JSON.stringify(ipaddress), "utf8");
+    log("ip_changes_to_address " + addresses[0]);
+  }
+});
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
