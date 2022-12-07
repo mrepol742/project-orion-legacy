@@ -4717,7 +4717,7 @@ async function getImages(api, event, images) {
         let url = images[i].url;
         if (url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".png") || url.endsWith(".jpeg")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
-            request(encodeURI(url)).pipe(fs.createWriteStream(name));
+            request(encodeURI(url)).pipe(fs.createWriteStream(fname));
             name.push(fname);
         }
     }
