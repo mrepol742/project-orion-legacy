@@ -4715,6 +4715,7 @@ async function getImages(api, event, images) {
         (i < 6 && i < images.length); i++) {
         await wait(1000);
         let url = images[i].url;
+        log("get_images " + url);
         if (!url.endsWith(".svg.png")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             request(encodeURI(url)).pipe(fs.createWriteStream(fname));
