@@ -305,6 +305,7 @@ helpadmin += "\n⦿ listmuted";
 helpadmin += "\n⦿ simultaneousexecution on/off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
+helpadmin += "\n⦿ setMaxImage [integer]";
 helpadmin += "\n⦿ setTimezone [timezone]";
 helpadmin += "\n⦿ setTextComplextion [complextion]"
 helpadmin += "\n⦿ setMaxTokens [integer]";
@@ -2499,6 +2500,19 @@ async function ai(api, event) {
                 settings.text_complextion = num;
                 fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Text Complextion is now set to " + num);
+            }
+        }
+    } else if (query.startsWith("setmaximage")) {
+        if (vips.includes(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it.")
+            } else {
+                data.shift();
+                let num = data.join(" ");
+                settings.max_image = num;
+                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                sendMessage(api, event, "Max Image is now set to " + num);
             }
         }
     } else if (query.startsWith("setprobabilitymass")) {
@@ -4712,7 +4726,7 @@ async function getImages(api, event, images) {
     let time = getTimestamp();
     let name = [];
     for (let i = 0;
-        (i < 6 && i < images.length); i++) {
+        (i < parseInt(settings.max_image) && i < images.length); i++) {
         await wait(1000);
         let url = images[i].url;
         log("get_images " + url);
