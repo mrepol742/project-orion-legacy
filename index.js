@@ -861,9 +861,9 @@ login({
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ cmd";
+                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ ping";
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd";
+                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ ping";
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -1034,8 +1034,17 @@ async function ai(api, event) {
                     },
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-                const used = process.memoryUsage().heapTotal;
-                sendMessage(api, event, "Uptime is " + seconds_con + " seconds.\n\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD + "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                const rss = convertBytes(process.memoryUsage().rss);
+                const heapTotal = convertBytes(process.memoryUsage().heapTotal);
+                const heapUsed = convertBytes(process.memoryUsage().heapUsed);
+                const external = convertBytes(process.memoryUsage().external);
+                const arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
+                sendMessage(api, event, "Uptime is " + seconds_con + " seconds.\n\n⦿ RAM: " + osFreeMem + 
+                "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + 
+                " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal + 
+                "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers + 
+                "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD + 
+                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
@@ -1093,7 +1102,7 @@ async function ai(api, event) {
             if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
                 if (!nonRRR.includes(event.senderID)) {
                     let message = {
-                        body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ cmd\n\nhttps://mrepol742.github.io/project-orion/",
+                        body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ ping\n\nhttps://mrepol742.github.io/project-orion/",
                         attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
                     }
                     sendMessage(api, event, message);
@@ -1273,7 +1282,7 @@ async function ai(api, event) {
                         presence_penalty: parseInt(settings.presence_penalty),
                     });
                     let finish = data.choices[0].text;
-                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").trim();
+                    let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").replaceAll("The United States of America", "The Philippines").trim();
                     if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
                         finalDataCC = finalDataCC.slice(1);
                     }
@@ -4203,13 +4212,13 @@ async function ai(api, event) {
             sendMessage(api, event, "Hello World");
         } else if (query == "about") {
             let message = {
-                body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `Mj how to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ cmd all ⦿ license",
+                body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `Mj how to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ ping ⦿ license",
                 attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
             }
             sendMessage(api, event, message);
         } else if (query == "copyright") {
             let message = {
-                body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2022. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd   ⦿ about\n⦿ cmd all ⦿ license",
+                body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2022. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd   ⦿ about\n⦿ ping ⦿ license",
                 attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
             }
             sendMessage(api, event, message);
@@ -4219,7 +4228,7 @@ async function ai(api, event) {
                     "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
                     "* Proprietary and confidential\n" +
                     "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
-                    "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2022.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd   ⦿ copyright\n⦿ cmd all ⦿ about",
+                    "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2022.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd   ⦿ copyright\n⦿ ping ⦿ about",
                 attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
             }
             sendMessage(api, event, message);
