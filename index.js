@@ -1035,7 +1035,7 @@ async function ai(api, event) {
                 };
                 let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
                 const used = process.memoryUsage().heapTotal;
-                sendMessage(api, event, "Uptime is " + seconds_con + " seconds.\n\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateDping" + "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "Uptime is " + seconds_con + " seconds.\n\n⦿ RAM: " + osFreeMem + "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps + " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ Heap: " + convertBytes(used) + "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD + "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
             })();
         } else if (query.startsWith("searchimg")) {
             if (isGoingToFast(event)) {
