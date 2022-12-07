@@ -4715,7 +4715,8 @@ async function getImages(api, event, images) {
         (i < 6 && i < images.length); i++) {
         await wait(1000);
         let url = images[i].url;
-        if (url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".png") || url.endsWith(".jpeg")) {
+        console.log(url);
+        if (url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".png") || url.toLowerCase().endsWith(".jpeg")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             request(encodeURI(url)).pipe(fs.createWriteStream(fname));
             name.push(fname);
