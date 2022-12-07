@@ -267,9 +267,9 @@ help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
 help6 += "\n   Red, Yellow, TealBlue, Aqua";
-help6 += "\n   Mango, Berry, Citrus, Candy";
+help6 += "\n   Mango, Berry, Citrus, Candy, etc..";
 help6 += "\n⦿ anime --nsfw [category]";
-help6 += "\n   waifu, neko, trap, blowjob";
+help6 += "\n   waifu, neko, trap, blowjob, etc..";
 
 let help7 = "\n⦿ animecouples";
 help7 += "\n⦿ costplay";
@@ -609,7 +609,7 @@ login({
                                         if (settings.onUnsend && !threads.includes(event.threadID)) {
                                             api.getThreadInfo(event.threadID, (err, gc) => {
                                                 if (err) return log(err);
-                                                if (gc.isGroup) {
+                                                if  (gc.isGroup) {
                                                     let message = {
                                                         body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
                                                         attachment: fs.createReadStream(filename),
@@ -4573,7 +4573,8 @@ function countConsonants(str) {
 function nsfw(text) {
     return (text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") ||
         text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny") ||
-        text.includes("blowjob") || text.includes("lolli ") || text.includes("sex ")) && !settings.onNsfw;
+        text.includes("blowjob") || text.includes("lolli ") || text.includes("sex ")|| text.includes("jakol ") || 
+        text.includes("kantot ") || text.includes("jabol ") || text.includes("porn ") || text.includes("sex ")) && !settings.onNsfw;
 }
 
 function getProfilePic(id) {
