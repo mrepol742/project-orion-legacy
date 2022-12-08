@@ -2670,7 +2670,7 @@ async function ai(api, event) {
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
                     log( JSON.stringify(gc.adminIDs));
-                    if (!gc.adminIDs.id.includes(getMyId())) {
+                    if (!gc.adminIDs.id.toString().includes(getMyId())) {
                         sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
                         return;
                     }
