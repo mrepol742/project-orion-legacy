@@ -2912,16 +2912,18 @@ async function ai(api, event) {
                 sendMessage(api, event, "Your uid is " + event.senderID);
             }
         });
+    } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
+        sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(event)) {
             return;
         }
-        switch (query.substring(3)) {
-            case "":
-            case "0":
-            case "1":
-                sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+        let num = query.substring(3);
+        if (num < 0) {
+            sendMessage(api, event, "There is no such thing as negative command list only negative humans.");
+            return;
+        }
+        switch (num) {
             case "2":
                 sendMessage(api, event, "The Project Orion 2~8\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
             break;
@@ -2947,48 +2949,6 @@ async function ai(api, event) {
                 sendMessage(api, event, "Seem's like that's too far from the command list pages.");
             break;
         }
-        /*
-    } else if (query == "cmd" || query == "cmd1") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-    } else if (query == "cmd2") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 2~8\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-    } else if (query == "cmd3") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 3~8\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-    } else if (query == "cmd4") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 4~8\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-    } else if (query == "cmd5") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 5~8\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-    } else if (query == "cmd6") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 6~8\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-    } else if (query == "cmd7") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 7~8\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-    } else if (query == "cmd8") {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        sendMessage(api, event, "The Project Orion 8~8\n" + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-        */
     } else if (query == "cmdadmin") {
         if (isGoingToFast(event)) {
             return;
