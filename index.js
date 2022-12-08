@@ -420,12 +420,12 @@ login({
             return;
         }
 
-        if (event.type == "message" && !welcomeA.includes(event.senderID) && settings.smartreply) {
+        if (event.type == "message" && !welcomeA.includes(event.threadID) && settings.smartreply) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (!gc.isGroup) {
                     sendMessageOnly("It looks like Mj was not active for few momemts. I am an Artificial Inteligence. How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ ping")
-                    welcomeA.push(event.senderID);
+                    welcomeA.push(event.threadID);
                     return;
                 }
             })
