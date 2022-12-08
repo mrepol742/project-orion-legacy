@@ -2895,20 +2895,56 @@ async function ai(api, event) {
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
-            else {
-                if ((event.type == "message_reply" && event.senderID != getMyId())) {
-                    api.getUserInfo(event.messageReply.senderID, (err, info) => {
-                        if (err) return log(err);
-                        let name = info[event.messageReply.senderID]['name'];
-                        sendMessage(api, event, name + " uid is " + event.messageReply.senderID);
-                    });
-                } else if (gc.isGroup) {
-                    sendMessage(api, event, "The " + gc.threadName + " guid is " + event.threadID);
-                } else if (event.type == "message") {
-                    sendMessage(api, event, "Your uid is " + event.senderID);
+            if (event.type == "message" && gc.isGroup && (query == "guid" || query == "groupid")) {
+                sendMessage(api, event, "The " + gc.threadName + " guid is " + event.threadID);
+            } else if (event.type == "message_reply") {
+                let id;
+                if (isMyId(id)) {
+                    id = event.senderID;
+                } else {
+                    id = event.messageReply.senderID;
                 }
+                api.getUserInfo(id, (err, info) => {
+                    if (err) return log(err);
+                    sendMessage(api, event, info[id]['name'] + " uid is " + id);
+                });
+            } else {
+                sendMessage(api, event, "Your uid is " + event.senderID);
             }
         });
+    } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        switch (query.substring(3)) {
+            case "":
+            case "0":
+            case "1":
+                sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+            case "2":
+                sendMessage(api, event, "The Project Orion 2~8\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+            case "3":
+                sendMessage(api, event, "The Project Orion 3~8\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+            case "4":
+                sendMessage(api, event, "The Project Orion 4~8\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+            case "5":
+                sendMessage(api, event, "The Project Orion 5~8\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+            case "6":
+                sendMessage(api, event, "The Project Orion 6~8\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+            case "7":
+                sendMessage(api, event, "The Project Orion 7~8\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+            case "8":
+                sendMessage(api, event, "The Project Orion 8~8\n" + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+            break;
+        }
+        /*
     } else if (query == "cmd" || query == "cmd1") {
         if (isGoingToFast(event)) {
             return;
@@ -2949,6 +2985,7 @@ async function ai(api, event) {
             return;
         }
         sendMessage(api, event, "The Project Orion 8~8\n" + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        */
     } else if (query == "cmdadmin") {
         if (isGoingToFast(event)) {
             return;
