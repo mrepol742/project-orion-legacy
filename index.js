@@ -2630,7 +2630,6 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("welcomeuser")) {
-        log(event);
         if (vips.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
@@ -2665,12 +2664,12 @@ async function ai(api, event) {
             })
         }
     } else if (query.startsWith("kickuser")) {
-        log(event);
         if (vips.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
+                    log(gc.adminIDs);
                     if (!gc.adminIDs.includes(getMyId())) {
                         sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
                         return;
