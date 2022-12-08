@@ -336,6 +336,7 @@ let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
 let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
+let welcomeA = [];
 
 const config = new Configuration({
     apiKey: apiKey[4],
@@ -417,6 +418,17 @@ login({
 
         if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
             return;
+        }
+
+        if (event.type == "message" && !welcomeA.includes(event.senderID) && settings.smartreply) {
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (err) return log(err);
+                if (!gc.isGroup) {
+                    sendMessageOnly("It looks like Mj was not active for few momemts. I am an Artificial Inteligence. How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ ping")
+                    welcomeA.push(event.senderID);
+                    return;
+                }
+            })
         }
 
         if (event.senderID == getMyId()) {
@@ -809,7 +821,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
+    } else if ((event.type == "message" && settings.smartreply && !event.isGroup) || event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
         query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
         ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
@@ -2595,7 +2607,7 @@ async function ai(api, event) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
                         if (gc.isGroup) {
-                            if (gc.approvalMode && gc.adminIDs.includes(getMyId())) {
+                            if (!JSON.stringify(gc.adminIDs).includes(getMyId()) && gc.approvalMode) {
                                 sendMessage("The user " + pref + " has been added and its on member approval lists.");
                             }
                             api.addUserToGroup(pref, event.threadID, (err) => {
@@ -2647,7 +2659,7 @@ async function ai(api, event) {
                                     welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
                                 });
                             });
-                            return;byebye
+                            return;
                         } else if (isMyId(id)) {
                             return;
                         }
