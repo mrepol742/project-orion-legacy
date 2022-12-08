@@ -2943,6 +2943,9 @@ async function ai(api, event) {
             case "8":
                 sendMessage(api, event, "The Project Orion 8~8\n" + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
             break;
+            default:
+                sendMessage(api, event, "Seem's like that's too far from the command list pages.");
+            break;
         }
         /*
     } else if (query == "cmd" || query == "cmd1") {
