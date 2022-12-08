@@ -415,7 +415,7 @@ login({
 
         if (err) return log("err " + err);
 
-        if (event.body == null && !(typeof event.body === "string")) {
+        if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
             return;
         }
 
@@ -755,6 +755,10 @@ async function ai(api, event) {
     let input = event.body;
     let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
     let query2 = formatQuery(input.toLowerCase());
+    if (nsfw(query)) {
+        sendMessage(api, event, "Shhhhhhh watch your mouth.");
+        return;
+    }
     reaction(api, event, query, input);
     if (query.startsWith("searchimg")) {
         if (isGoingToFast(event)) {
@@ -2409,9 +2413,12 @@ async function ai(api, event) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead.\n\nFor instance:\nsendReport There is a problem in ______ that cause ______.")
         } else {
             data.shift()
-            api.sendMessage(data.join(" "), getMyId(), (err, messageInfo) => {
+            let report = "report " + event.senderID + " " + data.join(" ");
+            log(report);
+            api.sendMessage(report, getMyId(), (err, messageInfo) => {
                 if (err) log(err);
             });
+            sendMessage(api, event, "The engineers have been notified.");
         }
     } else if (query.startsWith("setmaxtokens")) {
         if (vips.includes(event.senderID)) {
@@ -2590,6 +2597,9 @@ async function ai(api, event) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
                         if (gc.isGroup) {
+                            if (gc.approvalMode && gc.adminIDs.includes(getMyId())) {
+                                sendMessage("The user " + pref + " has been added and its on member approval lists.");
+                            }
                             api.addUserToGroup(pref, event.threadID, (err) => {
                                 if (err) log(err);
                                 log("add_user " + event.threadID + " " + pref);
@@ -2653,6 +2663,10 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
+                    if (!gc.adminIDs.includes(getMyId())) {
+                        sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
+                        return;
+                    }
                     if (input.includes("@")) {
                         let id = Object.keys(event.mentions)[0];
                         if (id === undefined) {
@@ -4248,9 +4262,6 @@ function someA(api, event, query, input) {
         return true;
     } else if (query.startsWith("okay")) {
         sendMessage(api, event, "Yup");
-        return true;
-    } else if (nsfw(query)) {
-        sendMessage(api, event, "Shhhhhhh watch your mouth.");
         return true;
     } else if (query == "idk") {
         sendMessage(api, event, "I dont know too...");
