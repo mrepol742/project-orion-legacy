@@ -241,7 +241,7 @@ help5 += "\n   pat, smug, bonk, yeet";
 help5 += "\n   blush, smile, wave, highfive";
 help5 += "\n   handhold, nom, biteglomp, slap";
 help5 += "\n   kill, kick, happy, wink";
-help5 += "\n   pokedance, cringe, cry";
+help5 += "\n   pokedance, cringe, cry, etc..";
 
 let help6 = "\n⦿ conan";
 help6 += "\n⦿ addUser uid";
@@ -265,7 +265,7 @@ help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
 help6 += "\n   Red, Yellow, TealBlue, Aqua";
-help6 += "\n   Mango, Berry, Citrus, Candy, etc..";
+help6 += "\n   Mango, Berry, Citrus, Candy";
 help6 += "\n⦿ anime --nsfw [category]";
 help6 += "\n   waifu, neko, trap, blowjob, etc..";
 
@@ -302,7 +302,7 @@ helpadmin += "\n⦿ unblockGroup";
 helpadmin += "\n⦿ listblocks";
 helpadmin += "\n⦿ listadmins";
 helpadmin += "\n⦿ listmuted";
-helpadmin += "\n⦿ simultaneousexecution on/off";
+helpadmin += "\n⦿ simultaneousExecution on/off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
 helpadmin += "\n⦿ setMaxImage [integer]";
@@ -721,7 +721,6 @@ login({
                             }
                         })
                         break;
-
                     case "log:unsubscribe":
                         let id = event.logMessageData.leftParticipantFbId;
                         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -760,6 +759,21 @@ async function ai(api, event) {
         return;
     }
     reaction(api, event, query, input);
+    if (event.type == "message") {
+        if (query == "bgremove" || query == "gphoto") {
+            sendMessage(api, event, "You need to reply to an image in order to work.");
+        } else if (query == "count") {
+            sendMessage(api, event, "You need to reply to a message to count its words.");
+        } else if (query == "countvowels") {
+            sendMessage(api, event, "You need to reply to a message to count its vowels.");
+        } else if (query == "countconsonants") {
+            sendMessage(api, event, "You need to reply to a message to count its consonants.");
+        } else if (query.startsWith("wfind")) {
+            sendMessage(api, event, "You need to reply to a message to find a word from a message.");
+        } else if (query == "pinadd") {
+            sendMessage(api, event, "You need to reply to a message to pin a message.");
+        }
+    }
     if (query.startsWith("searchimg")) {
         if (isGoingToFast(event)) {
             return;
@@ -1379,7 +1393,6 @@ async function ai(api, event) {
             let num = parseInt(input.substring(8));
             sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
         }
-
     } else if (query.startsWith("roi")) {
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead.\nFor instance:\nroi 23000 6000")
@@ -1423,21 +1436,6 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, res + "");
             }
-        }
-    }
-    if (event.type == "message") {
-        if (query == "bgremove" || query == "gphoto") {
-            sendMessage(api, event, "You need to reply to an image in order to work.");
-        } else if (query == "count") {
-            sendMessage(api, event, "You need to reply to a message to count its words.");
-        } else if (query == "countvowels") {
-            sendMessage(api, event, "You need to reply to a message to count its vowels.");
-        } else if (query == "countconsonants") {
-            sendMessage(api, event, "You need to reply to a message to count its consonants.");
-        } else if (query.startsWith("wfind")) {
-            sendMessage(api, event, "You need to reply to a message to find a word from a message.");
-        } else if (query == "pinadd") {
-            sendMessage(api, event, "You need to reply to a message to pin a message.");
         }
     }
     if (query.startsWith("urlshort")) {
@@ -2636,6 +2634,7 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
+                    let arr = gc.participantIDs;
                     if (input.includes("@")) {
                         let id = Object.keys(event.mentions)[0];
                         if (id === undefined) {
@@ -2643,13 +2642,19 @@ async function ai(api, event) {
                             data.shift();
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-
+                                api.getUserInfo(data[0].userID, (err, data1) => {
+                                    if (err) return log(err);
+                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
+                                });
                             });
                             return;
                         } else if (isMyId(id)) {
                             return;
                         }
-
+                        api.getUserInfo(id, (err, data1) => {
+                            if (err) return log(err);
+                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id);
+                        });
                     } else {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead.\n\nFor instance:\nwelcomeuser @Zero Two")
                     }
@@ -2663,6 +2668,7 @@ async function ai(api, event) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
+                    let arr = gc.participantIDs;
                     if (!gc.adminIDs.includes(getMyId())) {
                         sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
                         return;
@@ -2675,12 +2681,20 @@ async function ai(api, event) {
                             api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 removeUser(api, event, data[0].userID);
+                                api.getUserInfo(data[0].userID, (err, data1) => {
+                                    if (err) return log(err);
+                                    byebyeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
+                                });
                             });
                             return;
                         } else if (isMyId(id)) {
                             return;
                         }
                         removeUser(api, event, id);
+                        api.getUserInfo(id, (err, data1) => {
+                            if (err) return log(err);
+                            byebyeUser(api, event, data1.name, gc.threadName, arr.length, id);
+                        });
                     } else {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead.\n\nFor instance:\nkickUser @Zero Two")
                     }
@@ -2919,10 +2933,6 @@ async function ai(api, event) {
             return;
         }
         let num = query.substring(3);
-        if (num < 0) {
-            sendMessage(api, event, "There is no such thing as negative command list only negative humans.");
-            return;
-        }
         switch (num) {
             case "2":
                 sendMessage(api, event, "The Project Orion 2~8\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
@@ -4254,10 +4264,10 @@ async function ai(api, event) {
 }
 
 function someA(api, event, query, input) {
-    if (query.startsWith("sup") || query.startsWith("wassup") || query.startsWith("whatsup")) {
+    if (input.startsWith("sup") || input.startsWith("wassup") || input.startsWith("whatsup")) {
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
-    } else if (query.startsWith("hi") || query.startsWith("hello") || query.startsWith("hey")) {
+    } else if (input.startsWith("hi ") || input.startsWith("hello ") || input.startsWith("hey ")) {
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
     } else if (query.startsWith("okay")) {
