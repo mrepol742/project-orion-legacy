@@ -2630,6 +2630,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("welcomeuser")) {
+        log(event);
         if (vips.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
@@ -2647,7 +2648,7 @@ async function ai(api, event) {
                                     welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
                                 });
                             });
-                            return;
+                            return;byebye
                         } else if (isMyId(id)) {
                             return;
                         }
@@ -2664,6 +2665,7 @@ async function ai(api, event) {
             })
         }
     } else if (query.startsWith("kickuser")) {
+        log(event);
         if (vips.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
