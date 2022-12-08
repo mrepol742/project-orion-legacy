@@ -362,20 +362,20 @@ dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
 });
 
 process.on('beforeExit', (code) => {
-    log('Process beforeExit event with code: ' + code);
+    log('process_before_exit ' + code);
 });
 
 process.on('exit', (code) => {
-    log('Process exit event with code: ' + code);
+    log('process_exit ' + code);
 });
 
 process.on('uncaughtException', (err, origin) => {
-    log(`Caught exception: ${err}\n` +
-        `Exception origin: ${origin}`);
+    log(`caught_exception ${err}\n` +
+        `exception_origin ${origin}`);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-    log('Unhandled Rejection at:' + promise + ' reason: ' + reason);
+    log('unhandled_rejection ' + promise + ' reason ' + reason);
 });
 
 process.on('SIGINT', function() {
