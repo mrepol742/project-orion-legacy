@@ -5061,8 +5061,6 @@ function saveEvent(event) {
     if (event.attachments.length != 0) {
         switch (event.attachments[0].type) {
             case "photo":
-                msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, event.attachments[0].url]]
-            /*
                 let images = [];
                 for (let i = 0; i < 25; i++) {
                     if (!(event.attachments[i].url === undefined)) {
@@ -5071,7 +5069,6 @@ function saveEvent(event) {
                     }
                 }
                 msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, images];
-                */
                 break;
             case "animated_images":
                 msgs[event.messageID] = ['animated_images', [getFormattedDate(), event.senderID, event.attachments[0].url]]
