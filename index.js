@@ -4724,7 +4724,7 @@ async function getImages(api, event, images) {
     }, event.messageID)
 }
 
-function unsendPhoto(api, event, d, data) {
+async function unsendPhoto(api, event, d, data) {
     let time = getTimestamp();
     let arr = d[1][3];
     let images = []
