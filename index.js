@@ -422,7 +422,7 @@ login({
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (!gc.isGroup) {
-                    sendMessageOnly(api, event, "It seems like Mj was inactive. How are you btw? If you needed assistance you can call me for list of commands type cmd. I am an Artificial Intelligence. \n⦿ About    ⦿ License\n⦿ Copyright )
+                    sendMessageOnly(api, event, "It seems like Mj was inactive. How are you btw? If you needed assistance you can call me for list of commands type cmd. I am an Artificial Intelligence. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ Ping")
                     welcomeA.push(event.threadID);
                     return;
                 }
