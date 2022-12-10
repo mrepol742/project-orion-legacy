@@ -461,23 +461,6 @@ login({
             if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
                 return;
             }
-            if (settings.isDebugEnabled) {
-                let input = event.body;
-                let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
-                if (!(vips.includes(event.senderID))) {
-                    if (query.startsWith("mj") || query.startsWith("repol") || query == "melvinjones" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query.startsWith("mrepol742")) {
-                        if (isGoingToFastCallingTheCommand(event)) {
-                            return;
-                        }
-                        let message = {
-                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.\n\nhttps://mrepol742.github.io/project-orion/",
-                            attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
-                        };
-                        sendMessage(api, event, message);
-                    }
-                    return;
-                }
-            }
         }
 
         if (event.senderID != getMyId()) {
@@ -4503,6 +4486,19 @@ function containsAny(str, substrings) {
 
 function isGoingToFast(event) {
     log("event_body " + event.senderID + " " + event.body);
+    if (settings.isDebugEnabled) {
+        if (!(vips.includes(event.senderID))) {
+            if (isGoingToFastCallingTheCommand(event)) {
+                return;
+            }
+            let message = {
+                body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+            };
+            sendMessage(api, event, message);
+            return;
+        }
+    }
     if (!settings.preventSimultaneousExecution) {
         return false;
     }
