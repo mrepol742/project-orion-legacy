@@ -5065,7 +5065,7 @@ function saveEvent(event) {
                 let images = [];
                 for (let i = 0; i < 25; i++) {
                     if (!(event.attachments[i].url === undefined)) {
-                        images[i] = event.attachments[i].url;
+                        images.push(event.attachments[i].url);
                         log("photo_" + i + " " + event.attachments[i].url);
                     }
                 }
