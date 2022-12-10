@@ -719,9 +719,9 @@ login({
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ;
+                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping");
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ;
+                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ Ping");
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
