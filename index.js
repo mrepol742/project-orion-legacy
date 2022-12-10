@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 const express = require('express');
 const fs = require("fs");
 const login = require("fca-unofficial");
@@ -338,7 +337,7 @@ const openai = new OpenAIApi(config);
 app.get('/', (req, res) => res.send("The Project Orion is now active and waiting for commands execution. ONLINE."));
 
 app.listen(port, () =>
-	log(`The Project Orion is now active and waiting for commands execution. ONLINE`)
+    log(`The Project Orion is now active and waiting for commands execution. ONLINE`)
 );
 
 dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
@@ -381,13 +380,13 @@ login({
 
     process.on('uncaughtException', (err, origin) => {
         let a = `caught_exception ${err}\n` +
-        `exception_origin ${origin}`;
+            `exception_origin ${origin}`;
         log(a);
         api.sendMessage(a, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
     });
-    
+
     process.on('unhandledRejection', (reason, promise) => {
         let a = 'unhandled_rejection ' + promise + ' reason ' + reason;
         log(a);
@@ -426,15 +425,10 @@ login({
             return;
         }
 
-        if (event.type == "message" && !welcomeA.includes(event.threadID) && settings.smartreply) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (!gc.isGroup) {
-                    sendMessageOnly(api, event, "It seems like Mj was inactive. How are you btw? If you needed assistance you can call me for list of commands type cmd. I am an Artificial Intelligence. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ Ping")
-                    welcomeA.push(event.threadID);
-                    return;
-                }
-            })
+        if (event.type == "message" && !welcomeA.includes(event.threadID) && settings.smartreply && event.isGroup) {
+            sendMessageOnly(api, event, "It seems like Mj was inactive. How are you btw? If you needed assistance you can call me for list of commands type cmd. I am an Artificial Intelligence. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ Ping")
+            welcomeA.push(event.threadID);
+            return;
         }
 
         if (event.senderID == getMyId()) {
@@ -448,14 +442,11 @@ login({
         if (event.type == "message" || (event.type == "message_reply" && event.senderID != getMyId())) {
             if (event.body == "unblockgroup") {
                 if (vips.includes(event.senderID)) {
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return log(err);
-                        if (gc.isGroup) {
-                            unblockGroup(api, event, event.threadID);
-                        } else {
-                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                        }
-                    })
+                    if (event.isGroup) {
+                        unblockGroup(api, event, event.threadID);
+                    } else {
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
                 }
             }
             if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
@@ -485,213 +476,162 @@ login({
                     break;
                 }
                 let time = getTimestamp();
-                if (typeof(d) == "object") {
-                    api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return log(err);
-                            if (d[0] == "photo") {
-                                let filename = __dirname + '/cache/images/unsend_photo_' + time + '.jpg'
-                                let file = fs.createWriteStream(filename);
-                                let gifRequest = http.get(d[1][2], function(gifResponse) {
-                                    gifResponse.pipe(file);
-                                    file.on('finish', function() {
-                                        if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                            api.getThreadInfo(event.threadID, (err, gc) => {
-                                                if (err) return log(err);
-                                                if (gc.isGroup) {
-                                                    let message = {
-                                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(filename),
-                                                        mentions: [{
-                                                            tag: '@' + data[event.senderID]['name'],
-                                                            id: event.senderID,
-                                                            fromIndex: 0
-                                                        }]
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_photo_group " + d[1][0] + " " + filename);
-                                                } else {
-                                                    let message = {
-                                                        body: "You deleted this photo. \n",
-                                                        attachment: fs.createReadStream(filename)
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_photo " + d[1][0] + " " + filename);
-                                                }
-                                                unLink(filename);
-                                            })
+                api.getUserInfo(event.senderID, (err, data) => {
+                    if (err) return log(err);
+                    if (d[0] == "photo") {
+                        unsendPhoto(api, event, d, data);
+                    } else if (d[0] == "animated_images") {
+                        let filename = __dirname + '/cache/images/unsend_gif_' + time + '.gif'
+                        let file = fs.createWriteStream(filename);
+                        let gifRequest = http.get(d[1][2], function(gifResponse) {
+                            gifResponse.pipe(file);
+                            file.on('finish', function() {
+                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                    let time = getTimestamp();
+                                    if (event.isGroup) {
+                                        let message = {
+                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                            attachment: fs.createReadStream(filename),
+                                            mentions: [{
+                                                tag: '@' + data[event.senderID]['name'],
+                                                id: event.senderID,
+                                                fromIndex: 0
+                                            }]
                                         }
-                                    });
-                                });
-                            } else if (d[0] == "animated_images") {
-                                let filename = __dirname + '/cache/images/unsend_gif_' + time + '.gif'
-                                let file = fs.createWriteStream(filename);
-                                let gifRequest = http.get(d[1][2], function(gifResponse) {
-                                    gifResponse.pipe(file);
-                                    file.on('finish', function() {
-                                        if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                            let time = getTimestamp();
-                                            api.getThreadInfo(event.threadID, (err, gc) => {
-                                                if (err) return log(err);
-                                                if (gc.isGroup) {
-                                                    let message = {
-                                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(filename),
-                                                        mentions: [{
-                                                            tag: '@' + data[event.senderID]['name'],
-                                                            id: event.senderID,
-                                                            fromIndex: 0
-                                                        }]
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_gif_group " + d[1][0] + " " + filename);
-                                                } else {
-                                                    let message = {
-                                                        body: "You deleted this GIF. \n",
-                                                        attachment: fs.createReadStream(filename)
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_gif_group " + d[1][0] + " " + filename);
-                                                }
-                                                unLink(filename);
-                                            })
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_gif_group " + d[1][0] + " " + filename);
+                                    } else {
+                                        let message = {
+                                            body: "You deleted this GIF. \n",
+                                            attachment: fs.createReadStream(filename)
                                         }
-                                    });
-                                });
-                            } else if (d[0] == "sticker") {
-                                let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
-                                let file = fs.createWriteStream(filename);
-                                let gifRequest = http.get(d[1][2], function(gifResponse) {
-                                    gifResponse.pipe(file);
-                                    file.on('finish', function() {
-                                        if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                            let time = getTimestamp();
-                                            api.getThreadInfo(event.threadID, (err, gc) => {
-                                                if (err) return log(err);
-                                                if (gc.isGroup) {
-                                                    let message = {
-                                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(filename),
-                                                        mentions: [{
-                                                            tag: '@' + data[event.senderID]['name'],
-                                                            id: event.senderID,
-                                                            fromIndex: 0
-                                                        }]
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_sticker_group " + d[1][0] + " " + filename);
-                                                } else {
-                                                    let message = {
-                                                        body: "You deleted this sticker.\n",
-                                                        attachment: fs.createReadStream(filename)
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_sticker " + d[1][0] + " " + filename);
-                                                }
-                                                unLink(filename);
-                                            })
-                                        }
-                                    });
-                                });
-                            } else if (d[0] == "video") {
-                                let filename = __dirname + '/cache/videos/unsend_video_' + time + '.mp4'
-                                let file = fs.createWriteStream(filename);
-                                let gifRequest = http.get(d[1][2], function(gifResponse) {
-                                    gifResponse.pipe(file);
-                                    file.on('finish', function() {
-                                        if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                            let time = getTimestamp();
-                                            api.getThreadInfo(event.threadID, (err, gc) => {
-                                                if (err) return log(err);
-                                                if (gc.isGroup) {
-                                                    let message = {
-                                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(filename),
-                                                        mentions: [{
-                                                            tag: '@' + data[event.senderID]['name'],
-                                                            id: event.senderID,
-                                                            fromIndex: 0
-                                                        }]
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_video_group " + d[1][0] + " " + filename);
-                                                } else {
-                                                    let message = {
-                                                        body: "You deleted this video.\n",
-                                                        attachment: fs.createReadStream(filename)
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_video " + d[1][0] + " " + filename);
-                                                }
-                                                unLink(filename);
-                                            })
-                                        }
-                                    });
-                                });
-                            } else if (d[0] == "audio") {
-                                let filename = __dirname + '/cache/audios/unsend_audio_' + time + '.mp3'
-                                let file = fs.createWriteStream(filename);
-                                let gifRequest = http.get(d[1][2], function(gifResponse) {
-                                    gifResponse.pipe(file);
-                                    file.on('finish', function() {
-                                        if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                            let time = getTimestamp();
-                                            api.getThreadInfo(event.threadID, (err, gc) => {
-                                                if (err) return log(err);
-                                                if (gc.isGroup) {
-                                                    let message = {
-                                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                        attachment: fs.createReadStream(filename),
-                                                        mentions: [{
-                                                            tag: '@' + data[event.senderID]['name'],
-                                                            id: event.senderID,
-                                                            fromIndex: 0
-                                                        }]
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_audio_group " + d[1][0] + " " + filename);
-                                                } else {
-                                                    let message = {
-                                                        body: "You deleted this voice message.\n",
-                                                        attachment: fs.createReadStream(filename)
-                                                    }
-                                                    sendMessageOnly(api, event, message);
-                                                    log("unsend_audio " + d[1][0] + " " + filename);
-                                                }
-                                                unLink(filename);
-                                            })
-                                        }
-                                    });
-                                });
-                            } else {
-                                api.getUserInfo(event.senderID, (err, data) => {
-                                    if (err) return log(err);
-                                    if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                        api.getThreadInfo(event.threadID, (err, gc) => {
-                                            if (err) return log(err);
-                                            if (gc.isGroup) {
-                                                let message = {
-                                                    body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
-                                                    mentions: [{
-                                                        tag: '@' + data[event.senderID]['name'],
-                                                        id: event.senderID,
-                                                        fromIndex: 0
-                                                    }]
-                                                }
-                                                sendMessageOnly(api, event, message);
-                                                log("unsend_message_group " + d[0] + " " + message);
-                                            } else {
-                                                let message = "You deleted the following.\n\n" + d[2];
-                                                sendMessageOnly(api, event, message);
-                                                log("unsend_message " + d[0] + " " + message);
-                                            }
-                                        })
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_gif_group " + d[1][0] + " " + filename);
                                     }
-                                });
+                                    unLink(filename);
+                                }
+                            });
+                        });
+                    } else if (d[0] == "sticker") {
+                        let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
+                        let file = fs.createWriteStream(filename);
+                        let gifRequest = http.get(d[1][2], function(gifResponse) {
+                            gifResponse.pipe(file);
+                            file.on('finish', function() {
+                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                    let time = getTimestamp();
+                                    if (event.isGroup) {
+                                        let message = {
+                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                            attachment: fs.createReadStream(filename),
+                                            mentions: [{
+                                                tag: '@' + data[event.senderID]['name'],
+                                                id: event.senderID,
+                                                fromIndex: 0
+                                            }]
+                                        }
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_sticker_group " + d[1][0] + " " + filename);
+                                    } else {
+                                        let message = {
+                                            body: "You deleted this sticker.\n",
+                                            attachment: fs.createReadStream(filename)
+                                        }
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_sticker " + d[1][0] + " " + filename);
+                                    }
+                                    unLink(filename);
+                                }
+                            });
+                        });
+                    } else if (d[0] == "video") {
+                        let filename = __dirname + '/cache/videos/unsend_video_' + time + '.mp4'
+                        let file = fs.createWriteStream(filename);
+                        let gifRequest = http.get(d[1][2], function(gifResponse) {
+                            gifResponse.pipe(file);
+                            file.on('finish', function() {
+                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                    let time = getTimestamp();
+                                    if (event.isGroup) {
+                                        let message = {
+                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                            attachment: fs.createReadStream(filename),
+                                            mentions: [{
+                                                tag: '@' + data[event.senderID]['name'],
+                                                id: event.senderID,
+                                                fromIndex: 0
+                                            }]
+                                        }
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_video_group " + d[1][0] + " " + filename);
+                                    } else {
+                                        let message = {
+                                            body: "You deleted this video.\n",
+                                            attachment: fs.createReadStream(filename)
+                                        }
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_video " + d[1][0] + " " + filename);
+                                    }
+                                    unLink(filename);
+                                }
+                            });
+                        });
+                    } else if (d[0] == "audio") {
+                        let filename = __dirname + '/cache/audios/unsend_audio_' + time + '.mp3'
+                        let file = fs.createWriteStream(filename);
+                        let gifRequest = http.get(d[1][2], function(gifResponse) {
+                            gifResponse.pipe(file);
+                            file.on('finish', function() {
+                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                    let time = getTimestamp();
+                                    if (event.isGroup) {
+                                        let message = {
+                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                            attachment: fs.createReadStream(filename),
+                                            mentions: [{
+                                                tag: '@' + data[event.senderID]['name'],
+                                                id: event.senderID,
+                                                fromIndex: 0
+                                            }]
+                                        }
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_audio_group " + d[1][0] + " " + filename);
+                                    } else {
+                                        let message = {
+                                            body: "You deleted this voice message.\n",
+                                            attachment: fs.createReadStream(filename)
+                                        }
+                                        sendMessageOnly(api, event, message);
+                                        log("unsend_audio " + d[1][0] + " " + filename);
+                                    }
+                                    unLink(filename);
+                                }
+                            });
+                        });
+                    } else {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return log(err);
+                            if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                if (event.isGroup) {
+                                    let message = {
+                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
+                                        mentions: [{
+                                            tag: '@' + data[event.senderID]['name'],
+                                            id: event.senderID,
+                                            fromIndex: 0
+                                        }]
+                                    }
+                                    sendMessageOnly(api, event, message);
+                                    log("unsend_message_group " + d[0] + " " + message);
+                                } else {
+                                    let message = "You deleted the following.\n\n" + d[2];
+                                    sendMessageOnly(api, event, message);
+                                    log("unsend_message " + d[0] + " " + message);
+                                }
                             }
-                    });
-                } else {
-   
-                }
+                        });
+                    }
+                });
                 break;
             case "event":
                 switch (event.logMessageType) {
@@ -1156,27 +1096,24 @@ async function ai(api, event) {
             if (isGoingToFast(event)) {
                 return;
             }
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (gc.isGroup) {
-                    if (event.messageReply.attachments.length < 1) {
-                        sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
-                    } else if (event.messageReply.attachments.length > 1) {
-                        sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
-                    } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
-                        const url = event.messageReply.attachments[0].url;
-                        let time = getTimestamp();
-                        request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
-                            api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
-                                if (err) return log(err);
-                            });
-                            unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
-                        })
-                    }
-                } else {
-                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+            if (event.isGroup) {
+                if (event.messageReply.attachments.length < 1) {
+                    sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
+                } else if (event.messageReply.attachments.length > 1) {
+                    sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
+                } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                    const url = event.messageReply.attachments[0].url;
+                    let time = getTimestamp();
+                    request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
+                        api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
+                            if (err) return log(err);
+                        });
+                        unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
+                    })
                 }
-            });
+            } else {
+                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+            }
         }
     }
     if (input == "debugon") {
@@ -1775,19 +1712,13 @@ async function ai(api, event) {
         }
         let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
         if (pinned.pin.message[event.threadID] == undefined) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (gc.isGroup) {
-                    sendMessage(api, event, "There is no pinned message on this group chat.");
-                } else {
-                    sendMessage(api, event, "There is no pinned message on this chat.");
-                }
-            })
+            if (event.isGroup) {
+                sendMessage(api, event, "There is no pinned message on this group chat.");
+            } else {
+                sendMessage(api, event, "There is no pinned message on this chat.");
+            }
         } else {
-            api.getUserInfo(pinned.pin.sender[event.threadID], (err, data) => {
-                if (err) return log(err);
-                sendMessage(api, event, pinned.pin.message[event.threadID]);
-            });
+            sendMessage(api, event, pinned.pin.message[event.threadID]);
         }
     } else if (query.startsWith("pdf")) {
         if (isGoingToFast(event)) {
@@ -2744,14 +2675,11 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("blockgroup")) {
         if (vips.includes(event.senderID)) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (gc.isGroup) {
-                    blockGroup(api, event, event.threadID);
-                } else {
-                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                }
-            })
+            if (event.isGroup) {
+                blockGroup(api, event, event.threadID);
+            } else {
+                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+            }
         }
     } else if (query.startsWith("smartreplyon")) {
         enableSmartReply(api, event, event.threadID);
@@ -2894,22 +2822,19 @@ async function ai(api, event) {
         if (isGoingToFast(event)) {
             return;
         }
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return log(err);
-            if (gc.isGroup) {
-                let data = input.split(" ");
-                if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3")
-                } else {
-                    data.shift()
-                    api.setTitle(data.join(" "), event.threadID, (err, obj) => {
-                        if (err) return log(err);
-                    });
-                }
+        if (event.isGroup) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3")
             } else {
-                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                data.shift()
+                api.setTitle(data.join(" "), event.threadID, (err, obj) => {
+                    if (err) return log(err);
+                });
             }
-        })
+        } else {
+            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
     } else if (query == "gname") {
         if (isGoingToFast(event)) {
             return;
@@ -2963,28 +2888,28 @@ async function ai(api, event) {
         switch (num) {
             case "2":
                 sendMessage(api, event, "The Project Orion 2~8\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+                break;
             case "3":
                 sendMessage(api, event, "The Project Orion 3~8\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+                break;
             case "4":
                 sendMessage(api, event, "The Project Orion 4~8\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+                break;
             case "5":
                 sendMessage(api, event, "The Project Orion 5~8\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+                break;
             case "6":
                 sendMessage(api, event, "The Project Orion 6~8\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+                break;
             case "7":
                 sendMessage(api, event, "The Project Orion 7~8\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+                break;
             case "8":
                 sendMessage(api, event, "The Project Orion 8~8\n" + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
-            break;
+                break;
             default:
                 sendMessage(api, event, "Seem's like that's too far from the command list pages.");
-            break;
+                break;
         }
     } else if (query == "cmdadmin") {
         if (isGoingToFast(event)) {
@@ -4263,22 +4188,19 @@ async function ai(api, event) {
         }
         sendMessage(api, event, message);
     } else {
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return log(err);
-            if (gc.isGroup) {
-                if ((event.type == "message_reply" && event.senderID != getMyId())) {
-                    if (event.messageReply.senderID == getMyId()) {
-                        someR(api, event, query);
-                    }
-                } else {
-                    if (isMyId(Object.keys(event.mentions)[0]) || (query.includes("@") && isMe(query2)) || !query.includes("@")) {
-                        someR(api, event, query);
-                    }
+        if (event.isGroup) {
+            if ((event.type == "message_reply" && event.senderID != getMyId())) {
+                if (event.messageReply.senderID == getMyId()) {
+                    someR(api, event, query);
                 }
             } else {
-                someR(api, event, query);
+                if (isMyId(Object.keys(event.mentions)[0]) || (query.includes("@") && isMe(query2)) || !query.includes("@")) {
+                    someR(api, event, query);
+                }
             }
-        });
+        } else {
+            someR(api, event, query);
+        }
     }
 }
 
@@ -4392,43 +4314,40 @@ async function sendMessage(api, event, message) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
-    api.getThreadInfo(event.threadID, (err, gc) => {
-        if (err) return log(err);
-        if (gc.isGroup) {
-            let ts = undefined;
-            api.getThreadHistory(event.threadID, 3, ts, (err, history) => {
-                if (err) return log(err);
-                if (ts != undefined) history.pop();
-                let test = [];
-                for (let i = 0; i < history.length; i++) {
-                    if (history[i].senderID != getMyId()) {
-                        test[i] = history[i].senderID;
-                        log(test[i])
-                    } else {
-                        test[i] = undefined;
-                    }
-                }
-                let filtered = test.filter(elm => elm);
-                if (filtered[0] != filtered[1]) {
-                    log("send_message_reply " + event.threadID + " " + message);
-                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                        if (err) log(err);
-                    }, event.messageID);
+    if (event.isGroup) {
+        let ts = undefined;
+        api.getThreadHistory(event.threadID, 3, ts, (err, history) => {
+            if (err) return log(err);
+            if (ts != undefined) history.pop();
+            let test = [];
+            for (let i = 0; i < history.length; i++) {
+                if (history[i].senderID != getMyId()) {
+                    test[i] = history[i].senderID;
+                    log(test[i])
                 } else {
-                    log("send_message " + event.threadID + " " + message);
-                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                        if (err) log(err);
-                    });
+                    test[i] = undefined;
                 }
-                ts = history[0].timestamp;
-            });
-        } else {
-            log("send_message " + event.threadID + " " + message);
-            api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                if (err) log(err);
-            });
-        }
-    });
+            }
+            let filtered = test.filter(elm => elm);
+            if (filtered[0] != filtered[1]) {
+                log("send_message_reply " + event.threadID + " " + message);
+                api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                    if (err) log(err);
+                }, event.messageID);
+            } else {
+                log("send_message " + event.threadID + " " + message);
+                api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                    if (err) log(err);
+                });
+            }
+            ts = history[0].timestamp;
+        });
+    } else {
+        log("send_message " + event.threadID + " " + message);
+        api.sendMessage(message, event.threadID, (err, messageInfo) => {
+            if (err) log(err);
+        });
+    }
 }
 
 async function sendMessageOnly(api, event, message) {
@@ -4799,13 +4718,65 @@ async function getImages(api, event, images) {
             log(err);
             sendMessage(api, event, "Seem's like i am having an issue finding it.");
         }
-        unLink(__dirname + "/cache/images/findimg0_" + time + ".png")
-        unLink(__dirname + "/cache/images/findimg1_" + time + ".png")
-        unLink(__dirname + "/cache/images/findimg2_" + time + ".png")
-        unLink(__dirname + "/cache/images/findimg3_" + time + ".png")
-        unLink(__dirname + "/cache/images/findimg4_" + time + ".png")
-        unLink(__dirname + "/cache/images/findimg5_" + time + ".png")
+        for (let i = 0; i < name.length; i++) {
+            unLink(name[i])
+        }
     }, event.messageID)
+}
+
+function unsendPhoto(api, event, d, data) {
+    let time = getTimestamp();
+    let arr = d[1][3];
+    let images = []
+    for (let i = 0; i < arr.length; i++) {
+        await wait(1000);
+        let fname = __dirname + "/cache/images/unsend_photo_" + i + "_" + time + ".png";
+        request(arr[i]).pipe(fs.createWriteStream(fname));
+        images.push(fname);
+    }
+    let accm = [];
+    for (let i = 0; i < images.length; i++) {
+        accm.push(fs.createReadStream(images[i]));
+    }
+    let message = {
+        attachment: accm
+    };
+    if (settings.onUnsend && !threads.includes(event.threadID)) {
+        if (event.isGroup) {
+            let message1 = {
+                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                attachment: message,
+                mentions: [{
+                    tag: '@' + data[event.senderID]['name'],
+                    id: event.senderID,
+                    fromIndex: 0
+                }]
+            }
+            api.sendMessage(message1, event.threadID, (err, messageInfo) => {
+                if (err) {
+                    log(err);
+                }
+                for (let i = 0; i < images.length; i++) {
+                    unLink(images[i])
+                }
+            }, event.messageID)
+            log("unsend_photo_group " + d[1][0]);
+        } else {
+            let message1 = {
+                body: "You deleted this photo. \n",
+                attachment: message
+            }
+            api.sendMessage(message1, event.threadID, (err, messageInfo) => {
+                if (err) {
+                    log(err);
+                }
+                for (let i = 0; i < images.length; i++) {
+                    unLink(images[i])
+                }
+            })
+            log("unsend_photo " + d[1][0]);
+        }
+    }
 }
 
 async function unLink(dir) {
@@ -5091,13 +5062,7 @@ function saveEvent(event) {
         switch (event.attachments[0].type) {
             case "photo":
                 msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, event.attachments[0].url]]
-                /*
-                for (let i = 0; i < 25; i++) {
-                    if (!(event.attachments[i] === undefined)) {
-                        log("photo_" + i + " " + event.attachments[i].url);
-                    }
-                }
-
+            /*
                 let images = [];
                 for (let i = 0; i < 25; i++) {
                     if (!(event.attachments[i].url === undefined)) {
@@ -5105,7 +5070,7 @@ function saveEvent(event) {
                         log("photo_" + i + " " + event.attachments[i].url);
                     }
                 }
-                msgs[event.messageID] = ['photo', images];
+                msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, images];
                 */
                 break;
             case "animated_images":
