@@ -369,12 +369,20 @@ process.on('exit', (code) => {
 });
 
 process.on('uncaughtException', (err, origin) => {
-    log(`caught_exception ${err}\n` +
-        `exception_origin ${origin}`);
+    let a = `caught_exception ${err}\n` +
+    `exception_origin ${origin}`;
+    log(a);
+    api.sendMessage(a, getMyId(), (err, messageInfo) => {
+        if (err) log(err);
+    })
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-    log('unhandled_rejection ' + promise + ' reason ' + reason);
+    let a = 'unhandled_rejection ' + promise + ' reason ' + reason;
+    log(a);
+    api.sendMessage(a, getMyId(), (err, messageInfo) => {
+        if (err) log(err);
+    })
 });
 
 process.on('SIGINT', function() {
@@ -412,7 +420,7 @@ login({
 
     const listenEmitter = api.listen(async (err, event) => {
 
-        if (err) return log("err " + err);
+        if (err) return log(err);
 
         if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
             return;
@@ -462,7 +470,7 @@ login({
                             return;
                         }
                         let message = {
-                            body: "Hold on a moment this system is currently under maintenance...\nhttps://mrepol742.github.io/project-orion/",
+                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.\n\nhttps://mrepol742.github.io/project-orion/",
                             attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
                         };
                         sendMessage(api, event, message);
@@ -767,6 +775,13 @@ async function ai(api, event) {
     if (nsfw(query)) {
         sendMessage(api, event, "Shhhhhhh watch your mouth.");
         return;
+    }
+    if (!input.replace(pictographic, '').length) {
+        if (!isGoingToFastResendingOfEmo(event)) {
+            await wait(5000);
+            sendMessageOnly(api, event, input);
+            return;
+        }
     }
     reaction(api, event, query, input);
     if (event.type == "message") {
@@ -2931,7 +2946,15 @@ async function ai(api, event) {
                 }
                 api.getUserInfo(id, (err, info) => {
                     if (err) return log(err);
-                    sendMessage(api, event, info[id]['name'] + " uid is " + id);
+                    let message = {
+                        body: info[id]['name'] + " uid is " + id,
+                        mentions: [{
+                            tag: '@' + info[id]['name'],
+                            id: id,
+                            fromIndex: 0
+                        }]
+                    }
+                    sendMessage(api, event, message);
                 });
             } else {
                 sendMessage(api, event, "Your uid is " + event.senderID);
@@ -4284,12 +4307,6 @@ function someA(api, event, query, input) {
 }
 
 async function reaction(api, event, query, input) {
-    if (!input.replace(pictographic, '').length) {
-        if (!isGoingToFastResendingOfEmo(event)) {
-            await wait(5000);
-            sendMessageOnly(api, event, input);
-        }
-    }
     if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
