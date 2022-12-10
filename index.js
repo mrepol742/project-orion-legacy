@@ -835,8 +835,8 @@ async function ai(api, event) {
             }
             let text1 = formatQuery(text.replace(/\s+/g, '').toLowerCase());
             let text2 = formatQuery(text.toLowerCase());
-            if (/^[0-9]+$/.test(text1)) {
-                sendMessage(api, event, "You know.. One thing i hate is numbers.... if you wanna calculate a problem use can the problem command like this:\nproblem 55(4*5/3)")
+            if (/^[0-9]+$/.test(input.replace(/\s+/g, '').toLowerCase())) {
+                sendMessage(api, event, "What do you want me to do with " + input + "?");
             } else if (!/[a-z0-9]/gi.test(text1)) {
                 sendMessage(api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
             } else if (nsfw(text1)) {
@@ -940,17 +940,17 @@ async function ai(api, event) {
                 if (repeatOfNonWWW(event)) {
                     return;
                 }
-                if (text.startsWith("what")) {
+                if (text1.startsWith("what")) {
                     sendMessage(api, event, "what is it?");
-                } else if (text.startsWith("when")) {
+                } else if (text1.startsWith("when")) {
                     sendMessage(api, event, "when is the?");
-                } else if (text.startsWith("where")) {
+                } else if (text1.startsWith("where")) {
                     sendMessage(api, event, "where is it?");
-                } else if (text.startsWith("how")) {
+                } else if (text1.startsWith("how")) {
                     sendMessage(api, event, "how what?");
-                } else if (text.startsWith("which")) {
+                } else if (text1.startsWith("which")) {
                     sendMessage(api, event, "which of the?");
-                } else if (text.endsWith("?")) {
+                } else if (text1.endsWith("?")) {
                     sendMessage(api, event, text);
                 } else {
                     sendMessage(api, event, text + "?");
