@@ -4726,13 +4726,13 @@ async function getImages(api, event, images) {
 
 async function unsendPhoto(api, event, d, data) {
     let time = getTimestamp();
-    let arr = d[1][3];
+    let arr = d[1][2];
     log(JSON.stringify(d));
     let images = []
     for (let i = 0; i < arr.length; i++) {
         await wait(1000);
         let fname = __dirname + "/cache/images/unsend_photo_" + i + "_" + time + ".png";
-        request(d[1][3][i]).pipe(fs.createWriteStream(fname));
+        request(d[1][2][i]).pipe(fs.createWriteStream(fname));
         images.push(fname);
     }
     let accm = [];
