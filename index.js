@@ -2936,21 +2936,21 @@ async function ai(api, event) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (event.type == "message" && gc.isGroup && (query == "guid" || query == "groupid")) {
-                sendMessage(api, event, "The " + gc.threadName + " guid is " + event.threadID);
+                sendMessage(api, event, "The @" + gc.threadName + " guid is " + event.threadID);
             } else if (event.type == "message_reply") {
-                let id;
-                if (isMyId(id)) {
-                    id = event.senderID;
+                let id1;
+                if (isMyId(id1)) {
+                    id1 = event.senderID;
                 } else {
-                    id = event.messageReply.senderID;
+                    id1 = event.messageReply.senderID;
                 }
-                api.getUserInfo(id, (err, info) => {
+                api.getUserInfo(id1, (err, info) => {
                     if (err) return log(err);
                     let message = {
-                        body: info[id]['name'] + " uid is " + id,
+                        body: info[id1]['name'] + " uid is " + id1,
                         mentions: [{
-                            tag: '@' + info[id]['name'],
-                            id: id,
+                            tag: '@' + info[id1]['name'],
+                            id: id1,
                             fromIndex: 0
                         }]
                     }
