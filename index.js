@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+const express = require('express');
 const fs = require("fs");
 const login = require("fca-unofficial");
 const http = require('https');
@@ -24,9 +26,6 @@ const {
     OpenAIApi
 } = require("openai");
 const NLPCloudClient = require('nlpcloud');
-const {
-    live
-} = require("./live.js");
 const cron = require('node-cron');
 const axios = require("axios");
 const weatherjs = require("weather-js")
@@ -42,9 +41,9 @@ const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
 const dns = require("dns");
 
-const testNetworkSpeed = new NetworkSpeed();
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
+const port = process.env.PORT || 6000;
 
 let sleep = [3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000];
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
@@ -337,10 +336,18 @@ let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
 let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
 let welcomeA = [];
 
+const testNetworkSpeed = new NetworkSpeed();
+const app = express();
 const config = new Configuration({
     apiKey: apiKey[4],
 });
 const openai = new OpenAIApi(config);
+
+app.get('/', (req, res) => res.send("The Project Orion is now active and waiting for commands execution. ONLINE."));
+
+app.listen(port, () =>
+	console.log(`The Project Orion is now active and waiting for commands execution. ONLINE`)
+);
 
 dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
     if (err) {
