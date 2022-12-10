@@ -4735,18 +4735,17 @@ async function unsendPhoto(api, event, d, data) {
         request(d[1][2][i]).pipe(fs.createWriteStream(fname));
         images.push(fname);
     }
+   await wait(1000);
     let accm = [];
     for (let i = 0; i < images.length; i++) {
         accm.push(fs.createReadStream(images[i]));
     }
-    let message = {
-        attachment: accm
-    };
+
     if (settings.onUnsend && !threads.includes(event.threadID)) {
         if (event.isGroup) {
             let message1 = {
                 body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                attachment: message,
+                attachment: accm,
                 mentions: [{
                     tag: '@' + data[event.senderID]['name'],
                     id: event.senderID,
@@ -4765,7 +4764,7 @@ async function unsendPhoto(api, event, d, data) {
         } else {
             let message1 = {
                 body: "You deleted this photo. \n",
-                attachment: message
+                attachment: accm
             }
             api.sendMessage(message1, event.threadID, (err, messageInfo) => {
                 if (err) {
