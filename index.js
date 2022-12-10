@@ -2947,7 +2947,7 @@ async function ai(api, event) {
                 api.getUserInfo(id1, (err, info) => {
                     if (err) return log(err);
                     let message = {
-                        body: info[id1]['name'] + " uid is " + id1,
+                        body: "@" + info[id1]['name'] + " uid is " + id1,
                         mentions: [{
                             tag: '@' + info[id1]['name'],
                             id: id1,
