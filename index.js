@@ -663,34 +663,34 @@ login({
                                     });
                                 });
                             } else {
-                                log("unsend_message " + d[0] + " " + message);
+                                api.getUserInfo(event.senderID, (err, data) => {
+                                    if (err) return log(err);
+                                    if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                        api.getThreadInfo(event.threadID, (err, gc) => {
+                                            if (err) return log(err);
+                                            if (gc.isGroup) {
+                                                let message = {
+                                                    body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
+                                                    mentions: [{
+                                                        tag: '@' + data[event.senderID]['name'],
+                                                        id: event.senderID,
+                                                        fromIndex: 0
+                                                    }]
+                                                }
+                                                sendMessageOnly(api, event, message);
+                                                log("unsend_message_group " + d[0] + " " + message);
+                                            } else {
+                                                let message = "You deleted the following.\n\n" + d[2];
+                                                sendMessageOnly(api, event, message);
+                                                log("unsend_message " + d[0] + " " + message);
+                                            }
+                                        })
+                                    }
+                                });
                             }
                     });
                 } else {
-                    api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return log(err);
-                        if (settings.onUnsend && !threads.includes(event.threadID)) {
-                            api.getThreadInfo(event.threadID, (err, gc) => {
-                                if (err) return log(err);
-                                if (gc.isGroup) {
-                                    let message = {
-                                        body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
-                                        mentions: [{
-                                            tag: '@' + data[event.senderID]['name'],
-                                            id: event.senderID,
-                                            fromIndex: 0
-                                        }]
-                                    }
-                                    sendMessageOnly(api, event, message);
-                                    log("unsend_message_group " + d[0] + " " + message);
-                                } else {
-                                    let message = "You deleted the following.\n\n" + d[2];
-                                    sendMessageOnly(api, event, message);
-                                    log("unsend_message " + d[0] + " " + message);
-                                }
-                            })
-                        }
-                    });
+   
                 }
                 break;
             case "event":
