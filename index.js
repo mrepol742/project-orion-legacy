@@ -936,7 +936,7 @@ async function ai(api, event) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
             } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
                 return;
-            } else if (!query.startsWith("search") && (text.split(" ").length < 3 || text.indexOf(" ") == -1)) {
+            } else if (!query.startsWith("search") && (text.split(" ").length < 3 || text.indexOf(" ") == -1) && !/^[0-9]+$/.test(text1)) {
                 if (repeatOfNonWWW(event)) {
                     return;
                 }
