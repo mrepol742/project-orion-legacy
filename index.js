@@ -65,6 +65,7 @@ let sadEE = ['pain', 'painful', 'cry ', 'crying ', 'unhappy', 'sad ', 'tired', '
 let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed', 'fury ', 'rage ', 'ire ', 'wrath']
 let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 'regards', 'respects', 'dear', 'darling', 'boyfriend', 'girlfriend', 'sweetheart', 'angel', 'honey', 'adore', 'treasure', 'prize', 'devotion', 'friend']
 let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
+let example = ["For instance:", "For example:", "Like:", "Suppose that:", "e.g:", "In particular:", "To give you an idea:", "Let's say:", "Example:"];
 let gcolor = {
     "DefaultBlue": "196241301102133",
     "HotPink": "169463077092846",
@@ -167,7 +168,7 @@ help2 += "\n⦿ inspiration";
 help2 += "\n⦿ advice";
 help2 += "\n⦿ alert [text]";
 help2 += "\n⦿ meme";
-help2 += "\n⦿ lovetest name1: name2";
+help2 += "\n⦿ lovetest [name1]: [name2]";
 help2 += "\n⦿ drake [text1]: [text2]";
 help2 += "\n⦿ pooh [text1]: [text2]";
 help2 += "\n⦿ oogway [text]";
@@ -242,7 +243,7 @@ help5 += "\n   kill, kick, happy, wink";
 help5 += "\n   pokedance, cringe, cry, etc..";
 
 let help6 = "\n⦿ conan";
-help6 += "\n⦿ addUser uid";
+help6 += "\n⦿ addUser [uid]";
 help6 += "\n⦿ gphoto";
 help6 += "\n⦿ encodeBinary [text]";
 help6 += "\n⦿ decodeBinary [text]";
@@ -258,14 +259,13 @@ help6 += "\n⦿ cdfnormal [x] [μ] [σ]";
 help6 += "\n⦿ divisible [number] [number]";
 help6 += "\n⦿ factorial [number]";
 help6 += "\n⦿ findGCD [number]";
-help6 += "\n⦿ smartReply on|off";
+help6 += "\n⦿ smartReply [on|off]";
 help6 += "\n⦿ gcolor [theme]";
 help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
 help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
 help6 += "\n   Red, Yellow, TealBlue, Aqua";
 help6 += "\n   Mango, Berry, Citrus, Candy";
 help6 += "\n⦿ anime --nsfw [category]";
-help6 += "\n   waifu, neko, trap, blowjob, etc..";
 
 let help7 = "\n⦿ animecouples";
 help7 += "\n⦿ costplay";
@@ -274,19 +274,13 @@ help7 += "\n⦿ darkjoke";
 help7 += "\n⦿ blackpink";
 help7 += "\n⦿ hololive";
 
-let categorySFW = ['waifu', 'megumin', 'bully', 'cuddle', 'cry', 'hug', 'awoo', 'kiss', 'lick', 'pat', 'smug', 'bonk', 'yeet',
-    'blush', 'smile', 'wave', 'highfive', 'handhold', 'nom', 'bite', 'glomp', 'slap', 'kill', 'kick', 'happy', 'wink',
-    'poke', 'dance', 'cringe'
-];
-
-let categoryNSFW = ['waifu', 'neko', 'trap', 'blowjob'];
-
 let helpadmin = "\n⦿ unsend";
-helpadmin += "\n⦿ unsend on|off";
-helpadmin += "\n⦿ delay on|off";
-helpadmin += "\n⦿ nsfw on|off";
-helpadmin += "\n⦿ debug on|off";
-helpadmin += "\n⦿ sleep on|off";
+helpadmin += "\n⦿ unsend [on|off]";
+helpadmin += "\n⦿ delay [on|off]";
+helpadmin += "\n⦿ nsfw [on|off]";
+helpadmin += "\n⦿ debug [on|off]";
+helpadmin += "\n⦿ sleep [on|off]";
+helpadmin += "\n⦿ simultaneousExecution [on/off]";
 helpadmin += "\n⦿ stop";
 helpadmin += "\n⦿ refreshState";
 helpadmin += "\n⦿ saveState";
@@ -300,7 +294,6 @@ helpadmin += "\n⦿ unblockGroup";
 helpadmin += "\n⦿ listblocks";
 helpadmin += "\n⦿ listadmins";
 helpadmin += "\n⦿ listmuted";
-helpadmin += "\n⦿ simultaneousExecution on/off";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
 helpadmin += "\n⦿ setMaxImage [integer]";
@@ -336,7 +329,6 @@ let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
 let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
 let welcomeA = [];
 
-const testNetworkSpeed = new NetworkSpeed();
 const app = express();
 const config = new Configuration({
     apiKey: apiKey[4],
@@ -346,7 +338,7 @@ const openai = new OpenAIApi(config);
 app.get('/', (req, res) => res.send("The Project Orion is now active and waiting for commands execution. ONLINE."));
 
 app.listen(port, () =>
-	console.log(`The Project Orion is now active and waiting for commands execution. ONLINE`)
+	log(`The Project Orion is now active and waiting for commands execution. ONLINE`)
 );
 
 dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
@@ -430,7 +422,7 @@ login({
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (!gc.isGroup) {
-                    sendMessageOnly(api, event, "It looks like Mj was not active for few momemts. I am an Artificial Inteligence. How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ ping")
+                    sendMessageOnly(api, event, "It seems like Mj was inactive. How are you btw? If you needed assistance you can call me for list of commands type cmd. I am an Artificial Intelligence. \n⦿ About    ⦿ License\n⦿ Copyright )
                     welcomeA.push(event.threadID);
                     return;
                 }
@@ -727,9 +719,9 @@ login({
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ ping";
+                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ;
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ ping";
+                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ;
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -798,7 +790,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using searchimg text instead.\nFor instance:\nsearchimg melvin jones repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using searchimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchimg melvin jones repol")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 let imgtext = input.substring(10);
@@ -816,7 +808,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using searchincog text instead.\n\nFor instance:\nsearchincog Who is Melvin Jones Repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using searchincog text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchincog Who is Melvin Jones Repol")
         } else {
             data.shift()
             getResponseData('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1').then((response) => {
@@ -845,7 +837,7 @@ async function ai(api, event) {
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
-                    body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ ping\n\nhttps://mrepol742.github.io/project-orion/",
+                    body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping\n\nhttps://mrepol742.github.io/project-orion/",
                     attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
                 }
                 sendMessage(api, event, message);
@@ -973,7 +965,7 @@ async function ai(api, event) {
                 let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\nhttps://0x3ef8.github.io";
                 sendMessage(api, event, mss);
             } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead.\nFor instance:\ncmd 2");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncmd 2");
                 //} else if (text1.split('').length < 10) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
             } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
@@ -1093,7 +1085,7 @@ async function ai(api, event) {
             }
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using wfind text instead.\nFor instance:\nwfind my name")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
             } else {
                 data.shift();
                 let se = data.join(" ");
@@ -1215,7 +1207,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using ttsjap text instead.\nFor instance:\nttsjap I am melvin jones repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using ttsjap text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nttsjap I am melvin jones repol")
         } else {
             try {
                 data.shift();
@@ -1247,7 +1239,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead.\nFor instance:\ntts I am melvin jones repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntts I am melvin jones repol")
         } else {
             data.shift();
             const url = googleTTS.getAudioUrl(data.join(" "), {
@@ -1271,6 +1263,7 @@ async function ai(api, event) {
             return;
         }
         (async () => {
+            const testNetworkSpeed = new NetworkSpeed();
             let osFreeMemm = os.freemem();
             let osFreeMem = convertBytes(osFreeMemm);
             let osTotalMemm = os.totalmem();
@@ -1304,7 +1297,7 @@ async function ai(api, event) {
         })();
     } else if (query.startsWith("mean")) {
         if (input.split(" ").length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead.\nFor instance:\nmean 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmean 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(4))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1319,7 +1312,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("median")) {
         if (input.split(" ").length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using median numbers instead.\nFor instance:\nmedian 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using median numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmedian 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(6))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1336,7 +1329,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("mode")) {
         if (input.split(" ").length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using mode numbers instead.\nFor instance:\nmode 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mode numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmode 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(4))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1364,7 +1357,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("range")) {
         if (input.split(" ").length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using range numbers instead.\nFor instance:\nrange 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using range numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrange 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(5))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1376,7 +1369,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("divisible")) {
         if (input.split(" ").length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using divisible number number instead.\nFor instance:\ndivisible 5 8")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using divisible number number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndivisible 5 8")
         } else {
             if (!/^\d+$/.test(query.substring(9))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1391,7 +1384,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("factorial")) {
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using factorial number instead.\nFor instance:\nfactorial 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using factorial number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfactorial 5")
         } else {
             if (!/^\d+$/.test(query.substring(9))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1402,7 +1395,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("findgcd")) {
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead.\nFor instance:\nfindGCD 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfindGCD 5")
         } else {
             if (!/^\d+$/.test(query.substring(7))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1413,7 +1406,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("roi")) {
         if (input.split(" ").length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead.\nFor instance:\nroi 23000 6000")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nroi 23000 6000")
         } else {
             let revenue = input.split(" ")[1];
             let cost = input.split(" ")[2];
@@ -1422,7 +1415,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("cdfnormal")) {
         if (input.split(" ").length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using cdfnormal x μ σ instead.\nFor instance:\ncdfnormal 5 30 25")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using cdfnormal x μ σ instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncdfnormal 5 30 25")
         } else {
             if (!/^\d+$/.test(query.substring(9))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
@@ -1433,7 +1426,7 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("problem")) {
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead.\nFor instance:\nproblem 5*5/9")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nproblem 5*5/9")
         } else {
             let text = input;
             text = text.substring(8)
@@ -1462,7 +1455,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using linkshort url instead.\nFor instance:\nlink https://mrepol742.github.io")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using linkshort url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlink https://mrepol742.github.io")
         } else {
             let text = input.substring(9)
             let encodedParams = new URLSearchParams();
@@ -1505,7 +1498,7 @@ async function ai(api, event) {
             let name = info[id]['name'];
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using phub text instead.\nFor instance:\nphub why i am here again.");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using phub text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nphub why i am here again.");
             } else {
                 data.shift()
                 let phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + apiKey[0];
@@ -1520,14 +1513,14 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor instance:\nvideo In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead.\nFor instance:\nvideo In The End by Linkin Park")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -1589,14 +1582,14 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor instance:\nmusic In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Innertube();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead.\nFor instance:\nmusic In The End by Linkin Park")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -1655,7 +1648,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using lyrics text instead.\nFor instance:\nlyrics In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using lyrics text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlyrics In The End by Linkin Park")
         } else {
             data.shift();
             let text = data.join(" ");
@@ -1691,7 +1684,7 @@ async function ai(api, event) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using encodeBinary text instead.\nFor instance:\nencodeBinary fundamentals in engineering")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using encodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencodeBinary fundamentals in engineering")
         } else {
             var text = input;
             text = text.substring(13)
@@ -1707,7 +1700,7 @@ async function ai(api, event) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using decodeBinary text instead.\nFor instance:\ndecodeBinary 01100001 01100010 01100011")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using decodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecodeBinary 01100001 01100010 01100011")
         } else {
             var text = input;
             text = text.substring(13)
@@ -1724,7 +1717,7 @@ async function ai(api, event) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 text instead.\nFor instance:\nencode64 fundamentals in engineering")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencode64 fundamentals in engineering")
         } else {
             let text = input;
             text = text.substring(9)
@@ -1737,7 +1730,7 @@ async function ai(api, event) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead.\nFor instance:\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n")
         } else {
             let text = input;
             text = text.substring(9)
@@ -1750,7 +1743,7 @@ async function ai(api, event) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using reverse text instead.\nFor instance:\nreverse fundamentals in engineering")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using reverse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nreverse fundamentals in engineering")
         } else {
             let text = input;
             text = text.substring(8)
@@ -1794,7 +1787,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using pdf text instead.\nFor instance:\npdf fundamentals in engineering")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using pdf text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npdf fundamentals in engineering")
         } else {
             try {
                 data.shift()
@@ -1815,7 +1808,7 @@ async function ai(api, event) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using dict text instead.\nFor instance:\ndict computer");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using dict text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndict computer");
         } else {
             let text = input.substring(17)
             if (query.startsWith("dictionary")) {
@@ -1853,7 +1846,7 @@ async function ai(api, event) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead.\n\nFor instance:\nsumm this sentence meant to be summarized.");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
             let text = input.substring(5);
             if (query.startsWith("summarize")) {
@@ -1877,7 +1870,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using baybayin text instead.\n\nFor instance:\nbaybayin ako ay filipino")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using baybayin text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbaybayin ako ay filipino")
         } else {
             data.shift()
             getResponseData('https://api-baybayin-transliterator.vercel.app/?text=' + data.join(" ")).then((response) => {
@@ -1894,7 +1887,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using doublestruck text instead.\n\nFor instance:\ndoublestruck Hello World")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using doublestruck text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndoublestruck Hello World")
         } else {
             data.shift()
             getResponseData('https://api.popcat.xyz/doublestruck?text=' + data.join(" ")).then((response) => {
@@ -1911,7 +1904,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using translate language text instead.\n\nFor instance:\ntranslate English Kamusta")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using translate language text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate English Kamusta")
         } else {
             let text = input.substring(10);
             let lang = text.split(" ");
@@ -1930,7 +1923,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using weather location instead.\n\nFor instance:\nweather caloocan city")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using weather location instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nweather caloocan city")
         } else {
             data.shift()
             let weather = await weathersearch("weather " + data.join(" "))
@@ -1967,7 +1960,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using facts text instead.\n\nFor instance:\nfacts computer")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using facts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacts computer")
         } else {
             data.shift()
             let url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
@@ -2001,7 +1994,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead.\n\nFor instance:\ninstagram melvinjonesrepol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninstagram melvinjonesrepol")
         } else {
             data.shift()
             let userN = data.join(" ");
@@ -2053,7 +2046,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok username instead.\n\nFor instance:\ntiktok mrepol742")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntiktok mrepol742")
         } else {
             data.shift()
             let userN = data.join(" ");
@@ -2091,7 +2084,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using soundcloud username instead.\n\nFor instance:\nsoundcloud Denvau")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using soundcloud username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsoundcloud Denvau")
         } else {
             data.shift()
             let userN = data.join(" ");
@@ -2132,7 +2125,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using github username instead.\n\nFor instance:\ngithub mrepol742")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using github username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngithub mrepol742")
         } else {
             data.shift()
             let userN = data.join(" ");
@@ -2179,7 +2172,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using element name instead.\n\nFor instance:\nelement hydrogen")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using element name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nelement hydrogen")
         } else {
             data.shift()
             let symbol = data.join(" ");
@@ -2217,7 +2210,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using npm name instead.\n\nFor instance:\nnpm mrepol742")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using npm name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnpm mrepol742")
         } else {
             data.shift()
             let name = data.join(" ");
@@ -2243,7 +2236,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using steam name instead.\n\nFor instance:\nsteam minecraft")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using steam name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsteam minecraft")
         } else {
             data.shift()
             let name = data.join(" ");
@@ -2278,7 +2271,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using imdb name instead.\n\nFor instance:\nimdb iron man")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using imdb name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nimdb iron man")
         } else {
             data.shift()
             let name = data.join(" ");
@@ -2314,7 +2307,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using itunes title instead.\n\nFor instance:\nitunes in the end")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using itunes title instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nitunes in the end")
         } else {
             data.shift()
             let name = data.join(" ");
@@ -2410,7 +2403,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead.\n\nFor instance:\ngemoji 😂")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngemoji 😂")
         } else {
             data.shift()
             if (!pictographic.test(data.join(" "))) {
@@ -2426,7 +2419,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead.\n\nFor instance:\nsendReport There is a problem in ______ that cause ______.")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsendReport There is a problem in ______ that cause ______.")
         } else {
             data.shift()
             let report = "report " + event.senderID + " " + data.join(" ");
@@ -2440,7 +2433,7 @@ async function ai(api, event) {
         if (vips.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using setMaxTokens [integer] instead.\n\nFor instance:\nsetMaxTokens 1000.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setMaxTokens [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetMaxTokens 1000.")
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -2459,7 +2452,7 @@ async function ai(api, event) {
         if (vips.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using setTemperature [integer] instead.\n\nFor instance:\nsetTemperature 0.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setTemperature [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTemperature 0.")
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -2478,7 +2471,7 @@ async function ai(api, event) {
         if (vips.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using setFrequencyPenalty [integer] instead.\n\nFor instance:\nsetFrequencyPenalty 1.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setFrequencyPenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetFrequencyPenalty 1.")
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -2497,7 +2490,7 @@ async function ai(api, event) {
         if (vips.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using setPresencePenalty [integer] instead.\n\nFor instance:\nsetPresencePenalty 1.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setPresencePenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPresencePenalty 1.")
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -2542,7 +2535,7 @@ async function ai(api, event) {
         if (vips.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using setProbabilityMass [integer] instead.\n\nFor instance:\nsetProbabilityMass 0.1.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setProbabilityMass [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetProbabilityMass 0.1.")
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -2561,7 +2554,7 @@ async function ai(api, event) {
         if (vips.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead.\n\nFor instance:\nsetTimezone Asia/Singapore")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTimezone Asia/Singapore")
             } else {
                 data.shift();
                 let pref = data.join(" ");
@@ -2579,7 +2572,7 @@ async function ai(api, event) {
         if (vips.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using setPrefix prefix instead.\n\nFor instance:\nsetPrefix $")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setPrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPrefix $")
             } else {
                 data.shift();
                 let pref = data.join(" ");
@@ -2604,7 +2597,7 @@ async function ai(api, event) {
     } else if (query.startsWith("adduser")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead.\n\nFor instance:\naddUser 100024563636366");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
         } else {
             data.shift();
             let pref = data.join(" ");
@@ -2625,16 +2618,16 @@ async function ai(api, event) {
                         }
                     })
                 } else {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead.\n\nFor instance:\naddUser 100024563636366");
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
                 }
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead.\n\nFor instance:\naddUser 100024563636366");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
             }
         }
     } else if (query.startsWith("gcolor")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nFor instance:\ngcolor DefaultBlue");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
         } else {
             data.shift();
             let pref = data.join(" ");
@@ -2644,7 +2637,7 @@ async function ai(api, event) {
                 });
                 log("change_color " + event.threadID + " " + gcolor[pref]);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nFor instance:\ngcolor DefaultBlue");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
             }
         }
     } else if (query.startsWith("welcomeuser")) {
@@ -2674,7 +2667,7 @@ async function ai(api, event) {
                             welcomeUser(api, event, data1.name, gc.threadName, arr.length, id);
                         });
                     } else {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead.\n\nFor instance:\nwelcomeuser @Zero Two")
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
                     }
                 } else {
                     sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -2714,7 +2707,7 @@ async function ai(api, event) {
                             byebyeUser(api, event, data1.name, gc.threadName, arr.length, id);
                         });
                     } else {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead.\n\nFor instance:\nkickUser @Zero Two")
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two")
                     }
                 } else {
                     sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -2738,7 +2731,7 @@ async function ai(api, event) {
                 }
                 blockUser(api, event, id)
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead.\n\nFor instance:\nblockUser @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblockUser @Zero Two")
             }
         }
     } else if (query.startsWith("blockgroup")) {
@@ -2785,7 +2778,7 @@ async function ai(api, event) {
                 }
                 unblockUser(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead.\n\nFor instance:\nunblockUser @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two")
             }
         }
     } else if (query.startsWith("addadmin")) {
@@ -2805,7 +2798,7 @@ async function ai(api, event) {
                 }
                 addAdmin(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead.\n\nFor instance:\naddAdmin @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
             }
         }
     } else if (query.startsWith("remadmin")) {
@@ -2825,7 +2818,7 @@ async function ai(api, event) {
                 }
                 remAdmin(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead.\n\nFor instance:\nremAdmin @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two")
             }
         }
     } else if ((query == "unsendon") && !settings.onUnsend) {
@@ -2898,7 +2891,7 @@ async function ai(api, event) {
             if (gc.isGroup) {
                 let data = input.split(" ");
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using gname text instead.\n\nFor instance:\ngname Darling in the Franxx >3")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3")
                 } else {
                     data.shift()
                     api.setTitle(data.join(" "), event.threadID, (err, obj) => {
@@ -3001,7 +2994,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead.\n\nFor instance:\nwiki Google")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwiki Google")
         } else {
             let txt = input.substring("5");
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + txt).then((response) => {
@@ -3018,7 +3011,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest name:name instead.\n\nFor instance:\nlovetest Edogawa Conan: Ran Mouri")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest name:name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest Edogawa Conan: Ran Mouri")
         } else {
             let text = input;
             text = text.substring(9).split(":");
@@ -3053,7 +3046,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor instance:\nkiss @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3073,7 +3066,7 @@ async function ai(api, event) {
                 }
                 kiss(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead.\n\nFor instance:\nkiss @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two")
             }
         }
     } else if (query.startsWith("gun")) {
@@ -3082,7 +3075,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor instance:\ngun @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3102,7 +3095,7 @@ async function ai(api, event) {
                 }
                 gun(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead.\n\nFor instance:\ngun @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two")
             }
         }
     } else if (query.startsWith("wanted")) {
@@ -3111,7 +3104,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor instance:\nwanted @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3131,7 +3124,7 @@ async function ai(api, event) {
                 }
                 wanted(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead.\n\nFor instance:\nwanted @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two")
             }
         }
     } else if (query.startsWith("clown")) {
@@ -3140,7 +3133,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor instance:\nclown @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3160,7 +3153,7 @@ async function ai(api, event) {
                 }
                 clown(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead.\n\nFor instance:\nclown @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two")
             }
         }
     } else if (query.startsWith("drip")) {
@@ -3169,7 +3162,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor instance:\ndrip @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3189,7 +3182,7 @@ async function ai(api, event) {
                 }
                 drip(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead.\n\nFor instance:\ndrip @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two")
             }
         }
     } else if (query.startsWith("communist")) {
@@ -3198,7 +3191,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor instance:\ncommunist @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3218,7 +3211,7 @@ async function ai(api, event) {
                 }
                 communist(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead.\n\nFor instance:\ncommunist @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two")
             }
         }
     } else if (query.startsWith("advert")) {
@@ -3227,7 +3220,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor instance:\nadvert @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3247,7 +3240,7 @@ async function ai(api, event) {
                 }
                 advert(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead.\n\nFor instance:\nadvert @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two")
             }
         }
     } else if (query.startsWith("uncover")) {
@@ -3256,7 +3249,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor instance:\nuncover @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3276,7 +3269,7 @@ async function ai(api, event) {
                 }
                 uncover(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead.\n\nFor instance:\nuncover @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two")
             }
         }
     } else if (query.startsWith("jail")) {
@@ -3285,7 +3278,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor instance:\njail @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3305,7 +3298,7 @@ async function ai(api, event) {
                 }
                 jail(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead.\n\nFor instance:\njail @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two")
             }
         }
     } else if (query.startsWith("invert")) {
@@ -3314,7 +3307,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor instance:\ninvert @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3333,7 +3326,7 @@ async function ai(api, event) {
                 }
                 invert(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead.\n\nFor instance:\ninvert @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two")
             }
         }
     } else if (query.startsWith("ship")) {
@@ -3342,13 +3335,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor instance:\nship @Edogawa Conan @Ran Mouri")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
         } else {
             if ((input.split('@').length - 1) >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor instance:\nship @Edogawa Conan @Ran Mouri")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
                     return;
                 }
                 if (isMyId(id1)) {
@@ -3358,7 +3351,7 @@ async function ai(api, event) {
                 }
                 parseImage(api, event, "https://api.popcat.xyz/ship?user1=" + getProfilePic(id1) + "&user2=" + getProfilePic(id2), __dirname + "/cache/images/ship_" + getTimestamp() + ".png");
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead.\n\nFor instance:\nship @Edogawa Conan @Ran Mouri")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
             }
         }
     } else if (query.startsWith("www")) {
@@ -3367,13 +3360,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor instance:\nwww @Edogawa Conan @Ran Mouri")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
         } else {
             if ((input.split('@').length - 1) >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor instance:\nwww @Edogawa Conan @Ran Mouri")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
                     return;
                 }
                 if (isMyId(id1)) {
@@ -3383,7 +3376,7 @@ async function ai(api, event) {
                 }
                 parseImage(api, event, "https://api.popcat.xyz/whowouldwin?image1=" + getProfilePic(id1) + "&image2=" + getProfilePic(id2), __dirname + "/cache/images/www_" + getTimestamp() + ".png");
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead.\n\nFor instance:\nwww @Edogawa Conan @Ran Mouri")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
             }
         }
     } else if (query.startsWith("pet")) {
@@ -3392,7 +3385,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor instance:\npet @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3412,7 +3405,7 @@ async function ai(api, event) {
                 }
                 pet(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead.\n\nFor instance:\npet @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
             }
         }
     } else if (query.startsWith("mnm")) {
@@ -3421,7 +3414,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor instance:\nmnm @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3441,7 +3434,7 @@ async function ai(api, event) {
                 }
                 mnm(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead.\n\nFor instance:\nmnm @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two")
             }
         }
     } else if (query.startsWith("greyscale")) {
@@ -3450,7 +3443,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor instance:\ngreyscale @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3470,7 +3463,7 @@ async function ai(api, event) {
                 }
                 greyscale(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead.\n\nFor instance:\ngreyscale @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two")
             }
         }
     } else if (query.startsWith("jokeover")) {
@@ -3479,7 +3472,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor instance:\njokeover @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3499,7 +3492,7 @@ async function ai(api, event) {
                 }
                 jokeover(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead.\n\nFor instance:\njokeover @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two")
             }
         }
     } else if (query.startsWith("blur")) {
@@ -3508,7 +3501,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor instance:\nblur @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3528,7 +3521,7 @@ async function ai(api, event) {
                 }
                 blur(api, event, id);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead.\n\nFor instance:\nblur @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two")
             }
         }
     } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
@@ -3537,7 +3530,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor instance:\nfacebook @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -3581,7 +3574,7 @@ async function ai(api, event) {
                     }
                 });
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead.\n\nFor instance:\nfacebook @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
             }
         }
     } else if (query.startsWith("morse")) {
@@ -3592,7 +3585,7 @@ async function ai(api, event) {
         text = text.substring(6)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using morse text instead.\nFor instance:\nmorse .... . .-.. .-.. ---");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using morse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmorse .... . .-.. .-.. ---");
         } else {
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + text).then((response) => {
                 if (response == null) {
@@ -3610,7 +3603,7 @@ async function ai(api, event) {
         text = text.substring(7)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat text instead.\nFor instance:\nlulcat meowww");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlulcat meowww");
         } else {
             getResponseData("https://api.popcat.xyz/lulcat?text=" + text).then((response) => {
                 if (response == null) {
@@ -3628,7 +3621,7 @@ async function ai(api, event) {
         text = text.substring(5)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using mock text instead.\nFor instance:\nmock i have no idea");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mock text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmock i have no idea");
         } else {
             getResponseData("https://api.popcat.xyz/mock?text=" + text).then((response) => {
                 if (response == null) {
@@ -3712,7 +3705,7 @@ async function ai(api, event) {
         text = text.substring(9)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor instance:\nnickname @Zero Two Darling");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
         } else {
             if (input.includes("@")) {
                 await wait(3000);
@@ -3733,7 +3726,7 @@ async function ai(api, event) {
                 }
                 changeNickname(api, event, id, text);
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead.\nFor instance:\nnickname @Zero Two Darling");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
             }
         }
     } else if (query.startsWith("drake")) {
@@ -3744,7 +3737,7 @@ async function ai(api, event) {
         text = text.substring(6).split(":");
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead.\nFor instance:\ndrake error: bug");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrake error: bug");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/drake_" + getTimestamp() + ".png");
         }
@@ -3756,7 +3749,7 @@ async function ai(api, event) {
         text = text.substring(5);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using pika text instead.\nFor instance:\npika hayssss");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using pika text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npika hayssss");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + text, __dirname + "/cache/images/pika_" + getTimestamp() + ".png");
         }
@@ -3784,7 +3777,7 @@ async function ai(api, event) {
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using oogway text instead.\nFor instance:\noogway bug is not an error");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using oogway text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\noogway bug is not an error");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + text, __dirname + "/cache/images/oogway_" + getTimestamp() + ".png");
         }
@@ -3800,19 +3793,15 @@ async function ai(api, event) {
         text = text.substring(13);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using anime --nsfw category instead.\nFor instance:\nanime --nsfw waifu");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using anime --nsfw category instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanime --nsfw waifu");
         } else {
-            if (!(text in categoryNSFW)) {
-                getResponseData("https://api.waifu.pics/nsfw/" + text).then((response) => {
-                    if (response == null) {
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
-                    } else {
-                        parseImage(api, event, response.url, __dirname + "/cache/images/animensfw_" + getTimestamp() + ".png");
-                    }
-                });
-            } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using anime --nsfw category instead.\nFor instance:\nanime --nsfw waifu");
-            }
+            getResponseData("https://api.waifu.pics/nsfw/" + text).then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + text);
+                } else {
+                    parseImage(api, event, response.url, __dirname + "/cache/images/animensfw_" + getTimestamp() + ".png");
+                }
+            });
         }
     } else if (query == "hololive") {
         if (isGoingToFast(event)) {
@@ -3867,19 +3856,15 @@ async function ai(api, event) {
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using anime category instead.\nFor instance:\nanime waifu");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using anime category instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanime waifu");
         } else {
-            if (!(text in categorySFW)) {
-                getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
-                    if (response == null) {
-                        sendMessage(api, event, "Unfortunately there was an error occured.");
-                    } else {
-                        parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
-                    }
-                });
-            } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using anime category instead.\nFor instance:\nanime waifu");
-            }
+            getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + text);
+                } else {
+                    parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
+                }
+            });
         }
     } else if (query.startsWith("trump")) {
         if (isGoingToFast(event)) {
@@ -3889,7 +3874,7 @@ async function ai(api, event) {
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead.\nFor instance:\ntrump bug is not an error");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntrump bug is not an error");
         } else {
             parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + "/cache/images/trump_" + getTimestamp() + ".png");
         }
@@ -3901,7 +3886,7 @@ async function ai(api, event) {
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using qrcode text instead.\nFor instance:\nqrcode https://mrepol742.github.io");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using qrcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nqrcode https://mrepol742.github.io");
         } else {
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + text, __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
         }
@@ -3913,7 +3898,7 @@ async function ai(api, event) {
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using alert text instead.\nFor instance:\nalert hello world");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using alert text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nalert hello world");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + text, __dirname + "/cache/images/alert_" + getTimestamp() + ".png");
         }
@@ -3925,7 +3910,7 @@ async function ai(api, event) {
         text = text.substring(8);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using caution text instead.\nFor instance:\ncaution bug is not an error");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using caution text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncaution bug is not an error");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + text, __dirname + "/cache/images/caution_" + getTimestamp() + ".png");
         }
@@ -3937,7 +3922,7 @@ async function ai(api, event) {
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using biden text instead.\nFor instance:\nbiden i am leaving twitter");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using biden text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbiden i am leaving twitter");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/biden?text=" + text, __dirname + "/cache/images/biden_" + getTimestamp() + ".png");
         }
@@ -3949,7 +3934,7 @@ async function ai(api, event) {
         text = text.substring(8);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using website url instead.\nFor instance:\nwebsite https://mrepol742.github.io");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using website url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwebsite https://mrepol742.github.io");
         } else {
             if (text.startsWith("https://") || text.startsWith("http://")) {
                 parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + encodeURI(text), __dirname + "/cache/images/website_" + getTimestamp() + ".png");
@@ -3965,7 +3950,7 @@ async function ai(api, event) {
         text = text.substring(4);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using god text instead.\nFor instance:\ngod explicit content");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using god text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngod explicit content");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + text, __dirname + "/cache/images/god_" + getTimestamp() + ".png");
         }
@@ -3977,7 +3962,7 @@ async function ai(api, event) {
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat text instead.\nFor instance:\nsadcat meoww");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsadcat meoww");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
         }
@@ -4007,7 +3992,7 @@ async function ai(api, event) {
         text = text.substring(5).split(":");
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead.\nFor instance:\npooh color: colour");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npooh color: colour");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/pooh_" + getTimestamp() + ".png");
         }
@@ -4029,7 +4014,7 @@ async function ai(api, event) {
         text = text.substring(10);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using landscape text instead.\nFor instance:\nlandscape night");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using landscape text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlandscape night");
         } else {
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
         }
@@ -4061,7 +4046,7 @@ async function ai(api, event) {
         text = text.substring(9);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using portrait text instead.\nFor instance:\nportrait rgb");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using portrait text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nportrait rgb");
         } else {
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
         }
@@ -4097,13 +4082,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead.\nFor instance:\ntime Asia/Singapore");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Singapore");
         } else {
             let body = input.substring(5);
             if (timeZones.includes(body)) {
                 sendMessage(api, event, "It's " + getMonth(body) + " " + getDayN(body) + ", " + getDay(body) + " " + formateDate(body));
             } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead.\nFor instance:\ntime Asia/Singapore");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Singapore");
             }
         }
     } else if (query == "time") {
@@ -4208,13 +4193,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor instance:\nverse Job 4:9");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
         } else {
             data.shift()
             let body = data.join(" ");
             getResponseData("http://labs.bible.org/api/?passage=" + body + "&type=json").then((r) => {
                 if (r == null) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead.\nFor instance:\nverse Job 4:9");
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
                 } else {
                     let result = ""
                     let total = r.length
@@ -4241,13 +4226,13 @@ async function ai(api, event) {
         sendMessage(api, event, "Hello World");
     } else if (query == "about") {
         let message = {
-            body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `Mj how to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ ping ⦿ license",
+            body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `Mj how to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ Ping ⦿ license",
             attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
         }
         sendMessage(api, event, message);
     } else if (query == "copyright") {
         let message = {
-            body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2022. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd   ⦿ about\n⦿ ping ⦿ license",
+            body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2022. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd   ⦿ about\n⦿ Ping ⦿ license",
             attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
         }
         sendMessage(api, event, message);
@@ -4257,7 +4242,7 @@ async function ai(api, event) {
                 "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
-                "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2022.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd   ⦿ copyright\n⦿ ping ⦿ about",
+                "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2022.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd   ⦿ copyright\n⦿ Ping ⦿ about",
             attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
         }
         sendMessage(api, event, message);
