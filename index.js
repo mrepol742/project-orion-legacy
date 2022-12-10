@@ -5068,7 +5068,7 @@ function saveEvent(event) {
                         log("photo_" + i + " " + event.attachments[i].url);
                     }
                 }
-                msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, images];
+                msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, images]];
                 break;
             case "animated_images":
                 msgs[event.messageID] = ['animated_images', [getFormattedDate(), event.senderID, event.attachments[0].url]]
