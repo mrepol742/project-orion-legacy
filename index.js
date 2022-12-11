@@ -686,7 +686,7 @@ login({
                                 let name = event.logMessageData.addedParticipants[0].fullName;
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
                                 let arr = gc.participantIDs;
-                                welcomeUser(api, event, name, gname, arr.length, id);
+                                welcomeUser(api, event, name, gname, arr.length, id, gret);
                             }
                         })
                         break;
@@ -803,7 +803,7 @@ async function ai(api, event) {
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
-                    body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping\n\nhttps://mrepol742.github.io/project-orion/",
+                    body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd.\nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help.\n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping\n\nhttps://mrepol742.github.io/project-orion/",
                     attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
                 }
                 sendMessage(api, event, message);
@@ -2618,7 +2618,7 @@ async function ai(api, event) {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 api.getUserInfo(data[0].userID, (err, data1) => {
                                     if (err) return log(err);
-                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
+                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "Welcome @" + data1.name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd");
                                 });
                             });
                             return;
@@ -2627,7 +2627,7 @@ async function ai(api, event) {
                         }
                         api.getUserInfo(id, (err, data1) => {
                             if (err) return log(err);
-                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id);
+                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "Welcome @" + data1.name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd");
                         });
                     } else {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
@@ -4197,7 +4197,7 @@ async function ai(api, event) {
         sendMessage(api, event, "Hello World");
     } else if (query == "about") {
         let message = {
-            body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `Mj how to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ Ping ⦿ license",
+            body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ Ping ⦿ license",
             attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
         }
         sendMessage(api, event, message);
@@ -5041,12 +5041,12 @@ function getTimestamp() {
     return Math.floor(Date.now() / 1000);
 }
 
-function welcomeUser(api, event, name, gname, Tmem, id) {
+function welcomeUser(api, event, name, gname, Tmem, id, message) {
     let time = getTimestamp();
     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
         .on('finish', () => {
             let message = {
-                body: "Welcome @" + name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ cmd",
+                body: message,
                 attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
                 mentions: [{
                     tag: name,
