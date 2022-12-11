@@ -5041,12 +5041,12 @@ function getTimestamp() {
     return Math.floor(Date.now() / 1000);
 }
 
-function welcomeUser(api, event, name, gname, Tmem, id, message) {
+function welcomeUser(api, event, name, gname, Tmem, id, message1) {
     let time = getTimestamp();
     request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
         .on('finish', () => {
             let message = {
-                body: message,
+                body: message1,
                 attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
                 mentions: [{
                     tag: name,
