@@ -996,7 +996,7 @@ async function ai(api, event) {
     if (event.type == "message_reply") {
         if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
             if (vips.includes(event.senderID)) {
-                if (event.messageReply.senderID != api.getCurrentUserID()) {
+                if (event.messageReply.senderID != getMyId()) {
                     sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
                 } else {
                     api.unsendMessage(event.messageReply.messageID, (err) => {
@@ -1004,9 +1004,7 @@ async function ai(api, event) {
                     });
                 }
             }
-        }
-
-        if (query == "pinadd") {
+        } else if (query == "pinadd") {
             if (isGoingToFast(event)) {
                 return;
             }
