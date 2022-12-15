@@ -425,13 +425,13 @@ login({
             return;
         }
 
-        if (event.type == "message" && !welcomeA.includes(event.threadID) && settings.smartreply && event.isGroup) {
+        if (event.type == "message" && !welcomeA.includes(event.threadID) && settings.smartreply) {
             sendMessageOnly(api, event, "It seems like Mj was inactive. How are you btw? If you needed assistance you can call me for list of commands type cmd. I am an Artificial Intelligence. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ Ping")
             welcomeA.push(event.threadID);
             return;
         }
 
-        if (event.senderID == getMyId()) {
+        if (event.senderID == getMyId() || (event.type == "message_reply" && event.messageReply.senderID == getMyId())) {
             if (!event.body.startsWith("_")) {
                 return;
             } else {
@@ -439,7 +439,7 @@ login({
             }
         }
 
-        if (event.type == "message" || (event.type == "message_reply" && event.senderID != getMyId())) {
+        if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
             if (event.body == "unblockgroup") {
                 if (vips.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -748,7 +748,7 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
-        }
+        } 
     }
     if (query.startsWith("searchimg")) {
         if (isGoingToFast(event)) {
@@ -785,12 +785,12 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if ((event.type == "message" && settings.smartreply && !event.isGroup) || event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
+    } else if ((event.type == "message" && settings.smartreply) || event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
         query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
         ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
         otherQ(query2)) {
-        if ((event.type == "message_reply" && event.senderID != getMyId())) {
+        if ((event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
             if (!smartRRR.includes(event.threadID)) {
                 return;
             } else if (!isMyId(event.messageReply.senderID)) {
@@ -804,7 +804,7 @@ async function ai(api, event) {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
                     body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd.\nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help.\n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping\n\nhttps://mrepol742.github.io/project-orion/",
-                    attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+                    attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
                 }
                 sendMessage(api, event, message);
                 nonRRR.push(event.senderID);
@@ -4196,13 +4196,13 @@ async function ai(api, event) {
     } else if (query == "about") {
         let message = {
             body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help.\n\n⦿ cmd   ⦿ copyright\n⦿ Ping ⦿ license",
-            attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else if (query == "copyright") {
         let message = {
             body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2022. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd   ⦿ about\n⦿ Ping ⦿ license",
-            attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else if (query == "license") {
@@ -4212,7 +4212,7 @@ async function ai(api, event) {
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
                 "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2022.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd   ⦿ copyright\n⦿ Ping ⦿ about",
-            attachment: [fs.createReadStream(__dirname + "/cache/welcome_img/hello" + Math.floor(Math.random() * 8) + ".jpg")]
+            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else {
@@ -5041,18 +5041,18 @@ function getTimestamp() {
 
 function welcomeUser(api, event, name, gname, Tmem, id, message1) {
     let time = getTimestamp();
-    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_" + time + ".jpg"))
+    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/assets/project-orion.gif"))
         .on('finish', () => {
             let message = {
                 body: message1,
-                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_" + time + ".jpg"),
+                attachment: fs.createReadStream(__dirname + "/cache/assets/project-orion.gif"),
                 mentions: [{
                     tag: name,
                     id: id
                 }]
             };
             sendMessageOnly(api, event, message);
-            unLink(__dirname + "/cache/images/welcome_" + time + ".jpg");
+            unLink(__dirname + "/cache/assets/project-orion.gif");
         })
 }
 
