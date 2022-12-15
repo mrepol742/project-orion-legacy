@@ -984,12 +984,6 @@ async function ai(api, event) {
             }
         }
     }
-    if (event.type == "message_reply" && event.senderID != getMyId()) {
-        if (!isMyId(event.messageReply.senderID)) {
-            return;
-        }
-        someA(api, event, query, input);
-    }
     if (event.type == "message") {
         someA(api, event, query, input);
     }
@@ -1134,6 +1128,12 @@ async function ai(api, event) {
                 }
             });
         }
+    }
+    if (event.type == "message_reply" && event.senderID != getMyId()) {
+        if (!isMyId(event.messageReply.senderID)) {
+            return;
+        }
+        someA(api, event, query, input);
     }
     if (input == "debugon") {
         if (vips.includes(event.senderID)) {
