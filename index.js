@@ -425,7 +425,7 @@ login({
             return;
         }
 
-        if (event.senderID == getMyId() || (event.type == "message_reply" && event.messageReply.senderID == getMyId())) {
+        if (event.senderID == getMyId() || event.type == "message_reply") {
             if (!event.body.startsWith("_")) {
                 return;
             } else {
@@ -790,7 +790,7 @@ async function ai(api, event) {
                 }
             }
         if (event.type == "message_reply") {
-           if (event.senderID == getMyId() || !isMyId(event.messageReply.senderID)) {
+           if (!isMyId(event.messageReply.senderID)) {
                 return;
             }
         }
