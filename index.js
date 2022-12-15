@@ -789,17 +789,16 @@ async function ai(api, event) {
                      return;
                  }
              }
-            if (!(settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
-            query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
-            ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
-                query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
-            otherQ(query2)) {
-            if (event.type == "message") {
-                if (!smartRRR.includes(event.threadID)) {
+
+            if (event.type == "message" || event.type == "message_reply") {
+                if (smartRRR.includes(event.threadID)) {
+                    if (event.senderID == getMyId() ) {
+return;
+                    }
+                } else {
                     return;
                 }
             }
-    }
         if (isGoingToFast(event)) {
             return;
         }
