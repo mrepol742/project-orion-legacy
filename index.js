@@ -4863,18 +4863,30 @@ function blockUser(api, event, id) {
     if (isMyId(id)) {
         return;
     }
+    if (blockRRR.includes(id)) {
+        sendMessage(api, event, "User is already blocked.");
+        return;
+    }
     blockRRR.push(id);
     sendMessage(api, event, "The user " + id + " is blocked.");
     fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
 }
 
 function blockGroup(api, event, id) {
+    if (blockSSS.includes(id)) {
+        sendMessage(api, event, "Group is already blocked.");
+        return;
+    }
     blockSSS.push(id);
     sendMessage(api, event, "The group " + id + " is blocked.");
     fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
 function unblockGroup(api, event, id) {
+    if (!blockSSS.includes(id)) {
+        sendMessage(api, event, "The group is not blocked.");
+        return;
+    }
     blockSSS = blockSSS.filter(item => item !== id);
     sendMessage(api, event, "The group " + id + " can now use the commands.");
     fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockSSS), "utf8");
@@ -4894,6 +4906,10 @@ function disableSmartReply(api, event, id) {
 
 function unblockUser(api, event, id) {
     if (isMyId(id)) {
+        return;
+    }
+    if (!blockRRR.includes(id)) {
+        sendMessage(api, event, "The user has no admin rights to take away.");
         return;
     }
     blockRRR = blockRRR.filter(item => item !== id);
