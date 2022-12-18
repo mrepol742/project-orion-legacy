@@ -5114,9 +5114,8 @@ function saveEvent(event) {
             case "audio":
                 msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
                 break;
-            case "share":
-                msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.body]]
-                log("BODY BODY" + event.body);
+            default:
+                msgs[event.messageID] = [getFormattedDate(), event.senderID, event.body];
                 break;
         }
     } else {
