@@ -785,7 +785,8 @@ async function ai(api, event) {
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
         otherQ(query2)) {
             if (event.type == "message_reply") {
-                if (!isMyId(event.messageReply.senderID)) {
+                if (!isMyId(event.messageReply.senderID) && !((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
+                query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol"))) {
                      return;
                  }
              }
