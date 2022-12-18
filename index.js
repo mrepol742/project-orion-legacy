@@ -790,6 +790,8 @@ async function ai(api, event) {
                      return;
                  }
              }
+            
+
         if (isGoingToFast(event)) {
             return;
         }
