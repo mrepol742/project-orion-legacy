@@ -720,7 +720,7 @@ async function ai(api, event) {
         sendMessage(api, event, "Shhhhhhh watch your mouth.");
         return;
     }
-    if (pictographic.test(input)) {
+    if (!input.replace(pictographic, '').length) {
         if (!isGoingToFastResendingOfEmo(event)) {
             await wait(5000);
             sendMessageOnly(api, event, input);
@@ -741,9 +741,7 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
-        } else if (query == "unsend" || query == "unsent" || query == "delete" || query == "remove") {
-           sendMessage(api, event, "You need to reply to my message to remove it.");
-        }
+        } 
     }
     if (query.startsWith("searchimg")) {
         if (isGoingToFast(api, event)) {
@@ -4430,11 +4428,7 @@ function formatQuery(string) {
 }
 
 function log(data) {
-  if (typeof data === "string") {
     console.log(getFormattedDate() + "$ " + data);
-  } else {
-     console.log(getFormattedDate() + "$ " + JSON.stringify(data));
-  }
 }
 
 function getFormattedDate() {
@@ -4908,6 +4902,9 @@ function unblockUser(api, event, id) {
 }
 
 function addAdmin(api, event, id) {
+    if (isMyId(id)) {
+        return;
+    }
     if (vips.includes(id)) {
         sendMessage(api, event, "Admin permission is already granted.");
         return;
@@ -5044,11 +5041,11 @@ function getTimestamp() {
 
 function welcomeUser(api, event, name, gname, Tmem, id, message1) {
     let time = getTimestamp();
-    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/assets/project-orion.gif"))
+    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_img_" + time + ".png"))
         .on('finish', () => {
             let message = {
                 body: message1,
-                attachment: fs.createReadStream(__dirname + "/cache/assets/project-orion.gif"),
+                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_img_" + time + ".png"),
                 mentions: [{
                     tag: name,
                     id: id
