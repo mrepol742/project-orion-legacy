@@ -432,7 +432,7 @@ login({
             return;
         }
 
-        if (event.senderID == getMyId() && event.type == "message_reply") {
+        if (event.senderID == getMyId() && event.type == "message") {
             if (!event.body.startsWith("_")) {
                 return;
             } else {
