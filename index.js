@@ -5091,6 +5091,7 @@ function findGCD(i, i2) {
 function saveEvent(event) {
     if (event.attachments.length != 0) {
         switch (event.attachments[0].type) {
+            log("attachments_type " + event.attachments[0].type);
             case "photo":
                 let images = [];
                 for (let i = 0; i < 25; i++) {
