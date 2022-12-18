@@ -745,7 +745,7 @@ async function ai(api, event) {
         } 
     }
     if (query.startsWith("searchimg")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -763,7 +763,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("searchincog")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -792,7 +792,7 @@ async function ai(api, event) {
              }
             
 
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
@@ -994,7 +994,7 @@ async function ai(api, event) {
                 }
             }
         } else if (query == "pinadd") {
-            if (isGoingToFast(event)) {
+            if (isGoingToFast(api, event)) {
                 return;
             }
             if (event.messageReply.body == "") {
@@ -1006,7 +1006,7 @@ async function ai(api, event) {
                 fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
             }
         } else if (query == "count") {
-            if (isGoingToFast(event)) {
+            if (isGoingToFast(api, event)) {
                 return;
             }
             if (event.messageReply.body == "") {
@@ -1015,7 +1015,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
             }
         } else if (query == "countvowels") {
-            if (isGoingToFast(event)) {
+            if (isGoingToFast(api, event)) {
                 return;
             }
             if (event.messageReply.body == "") {
@@ -1024,7 +1024,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
             }
         } else if (query == "countconsonants") {
-            if (isGoingToFast(event)) {
+            if (isGoingToFast(api, event)) {
                 return;
             }
             if (event.messageReply.body == "") {
@@ -1033,7 +1033,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
             }
         } else if (query.startsWith("wfind")) {
-            if (isGoingToFast(event)) {
+            if (isGoingToFast(api, event)) {
                 return;
             }
             let data = input.split(" ");
@@ -1051,7 +1051,7 @@ async function ai(api, event) {
                 }
             }
         } else if (query == "bgremove") {
-            if (isGoingToFast(event)) {
+            if (isGoingToFast(api, event)) {
                 return;
             }
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
@@ -1098,7 +1098,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         } else if (query == "gphoto") {
-            if (isGoingToFast(event)) {
+            if (isGoingToFast(api, event)) {
                 return;
             }
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1161,7 +1161,7 @@ async function ai(api, event) {
         return listenEmitter.stopListening();
     }
     if (query.startsWith("ttsjap")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -1193,7 +1193,7 @@ async function ai(api, event) {
             }
         }
     } else if (query2.startsWith("tts")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -1218,7 +1218,7 @@ async function ai(api, event) {
                 })
         }
     } else if (query == "ping") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         (async () => {
@@ -1409,7 +1409,7 @@ async function ai(api, event) {
         }
     }
     if (query.startsWith("urlshort")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -1439,7 +1439,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let id;
@@ -1467,7 +1467,7 @@ async function ai(api, event) {
         })
 
     } else if (query.startsWith("video")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -1536,7 +1536,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("music")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -1602,7 +1602,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("lyrics")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -1639,7 +1639,7 @@ async function ai(api, event) {
             });
         }
     } else if (input.startsWith("encodebinary")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1655,7 +1655,7 @@ async function ai(api, event) {
             sendMessage(api, event, output);
         }
     } else if (input.startsWith("decodebinary")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1672,7 +1672,7 @@ async function ai(api, event) {
             sendMessage(api, event, stringOutput);
         }
     } else if (query.startsWith("encode64")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1685,7 +1685,7 @@ async function ai(api, event) {
             sendMessage(api, event, base64data);
         }
     } else if (query.startsWith("decode64")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1698,7 +1698,7 @@ async function ai(api, event) {
             sendMessage(api, event, base642text);
         }
     } else if (query.startsWith("reverse")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1712,7 +1712,7 @@ async function ai(api, event) {
             sendMessage(api, event, joinArray);
         }
     } else if (query == "pinremove") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
@@ -1721,7 +1721,7 @@ async function ai(api, event) {
         sendMessage(api, event, "Pinned message removed.");
         fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
     } else if (query == "pin") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
@@ -1738,7 +1738,7 @@ async function ai(api, event) {
             sendMessage(api, event, pinned.pin.message[event.threadID]);
         }
     } else if (query.startsWith("pdf")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -1760,7 +1760,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1798,7 +1798,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1821,7 +1821,7 @@ async function ai(api, event) {
     }
 
     if (query.startsWith("baybayin")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -1838,7 +1838,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("doublestruck")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -1855,7 +1855,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("translate")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -1874,7 +1874,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("weather")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -1911,7 +1911,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("facts")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -1923,7 +1923,7 @@ async function ai(api, event) {
             parseImage(api, event, url, __dirname + "/cache/images/facts_" + getTimestamp() + ".png");
         }
     } else if (query == "wyr" || query == "wouldyourather") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/wyr").then((response) => {
@@ -1934,7 +1934,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "8ball") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/8ball").then((response) => {
@@ -1945,7 +1945,7 @@ async function ai(api, event) {
             }
         });
     } else if (query.startsWith("instagram") || query2.startsWith("ig ")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -1986,7 +1986,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("profilepic")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let id;
@@ -1997,7 +1997,7 @@ async function ai(api, event) {
         }
         parseImage(api, event, getProfilePicFullHD(id), __dirname + "/cache/images/profilepic_" + getTimestamp() + ".png");
     } else if (query.startsWith("tiktok")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -2035,7 +2035,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("soundcloud")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -2076,7 +2076,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("github")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -2123,7 +2123,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("element")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -2161,7 +2161,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("npm")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -2187,7 +2187,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("steam")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -2222,7 +2222,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("imdb")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -2258,7 +2258,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("itunes")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -2294,7 +2294,7 @@ async function ai(api, event) {
             });
         }
     } else if (query == "car") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/car").then((response) => {
@@ -2318,7 +2318,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "color") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
@@ -2343,7 +2343,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "pickup") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
@@ -2354,7 +2354,7 @@ async function ai(api, event) {
             }
         });
     } else if (query.startsWith("gemoji")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -2826,7 +2826,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -2839,7 +2839,7 @@ async function ai(api, event) {
             }
         })
     } else if (query.startsWith("gname")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -2859,7 +2859,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "gname") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -2871,7 +2871,7 @@ async function ai(api, event) {
             }
         })
     } else if (query == "groupid" || query == "guid" || query == "uid") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -2904,7 +2904,7 @@ async function ai(api, event) {
     } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
         sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let num = query.substring(3);
@@ -2935,7 +2935,7 @@ async function ai(api, event) {
                 break;
         }
     } else if (query == "cmdadmin") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         if (!vips.includes(event.senderID)) {
@@ -2943,17 +2943,17 @@ async function ai(api, event) {
         }
         sendMessage(api, event, "The Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdall") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         sendMessage(api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
     } else if (query.startsWith("wiki")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -2970,7 +2970,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("lovetest")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3005,7 +3005,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("kiss")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3034,7 +3034,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("gun")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3063,7 +3063,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("wanted")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3092,7 +3092,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("clown")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3121,7 +3121,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("drip")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3150,7 +3150,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("communist")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3179,7 +3179,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("advert")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3208,7 +3208,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("uncover")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3237,7 +3237,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("jail")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3266,7 +3266,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("invert")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3294,7 +3294,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("ship")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3319,7 +3319,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("www")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3344,7 +3344,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("pet")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3373,7 +3373,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("mnm")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3402,7 +3402,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("greyscale")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3431,7 +3431,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("jokeover")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3460,7 +3460,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("blur")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3489,7 +3489,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3542,7 +3542,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("morse")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3560,7 +3560,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("lulcat")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3578,7 +3578,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("mock")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3596,7 +3596,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("coding")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
@@ -3620,7 +3620,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "joke") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/joke").then((response) => {
@@ -3631,7 +3631,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "barrier") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let message = {
@@ -3640,7 +3640,7 @@ async function ai(api, event) {
         };
         sendMessage(api, event, message);
     } else if (query == "fact") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/fact").then((response) => {
@@ -3651,7 +3651,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "thoughts") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
@@ -3662,7 +3662,7 @@ async function ai(api, event) {
             }
         });
     } else if (query.startsWith("nickname")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3694,7 +3694,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("drake")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3706,7 +3706,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/drake_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("pika")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3718,7 +3718,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + text, __dirname + "/cache/images/pika_" + getTimestamp() + ".png");
         }
     } else if (query == "meme") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
@@ -3729,12 +3729,12 @@ async function ai(api, event) {
             }
         });
     } else if (query.startsWith("conan")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/images/conan_" + getTimestamp() + ".png");
     } else if (query.startsWith("oogway")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3750,7 +3750,7 @@ async function ai(api, event) {
             sendMessage(api, event, "There are kids!!!");
             return;
         }
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3768,7 +3768,7 @@ async function ai(api, event) {
             });
         }
     } else if (query == "hololive") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://zenzapis.xyz/randomanime/hololive?apikey=9c4c44db3725").then((response) => {
@@ -3789,7 +3789,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "animecouples") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
@@ -3813,7 +3813,7 @@ async function ai(api, event) {
             }
         });
     } else if (query.startsWith("anime")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3831,7 +3831,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("trump")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3843,7 +3843,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + "/cache/images/trump_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("qrcode")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3855,7 +3855,7 @@ async function ai(api, event) {
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + text, __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("alert")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3867,7 +3867,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + text, __dirname + "/cache/images/alert_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("caution")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3879,7 +3879,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + text, __dirname + "/cache/images/caution_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("biden")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3891,7 +3891,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/biden?text=" + text, __dirname + "/cache/images/biden_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("website")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3907,7 +3907,7 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("god")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3919,7 +3919,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + text, __dirname + "/cache/images/god_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("sadcat")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3931,7 +3931,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
         }
     } else if (query2.startsWith("sim ")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
@@ -3949,7 +3949,7 @@ async function ai(api, event) {
             });
         }
     } else if (query.startsWith("pooh")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3961,17 +3961,17 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/pooh_" + getTimestamp() + ".png");
         }
     } else if (query == "landscape") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
     } else if (query == "portrait") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
     } else if (query.startsWith("landscape")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -3983,27 +3983,27 @@ async function ai(api, event) {
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
         }
     } else if (query == "costplay") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/cosplay?apikey=9c4c44db3725", __dirname + "/cache/images/costplay_" + getTimestamp() + ".png");
     } else if (query == "darkjoke") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/darkjoke?apikey=9c4c44db3725", __dirname + "/cache/images/darkjoke_" + getTimestamp() + ".png");
     } else if (query == "blackpink") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/blackpink?apikey=9c4c44db3725", __dirname + "/cache/images/blackpink_" + getTimestamp() + ".png");
     } else if (query == "motor") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/motor?apikey=9c4c44db3725", __dirname + "/cache/images/motor_" + getTimestamp() + ".png");
     } else if (query.startsWith("portrait")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let text = input;
@@ -4015,7 +4015,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("animequote")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://animechan.vercel.app/api/random").then((response) => {
@@ -4026,7 +4026,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "advice") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -4041,7 +4041,7 @@ async function ai(api, event) {
             }
         });
     } else if (query2.startsWith("time ")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -4058,7 +4058,7 @@ async function ai(api, event) {
     } else if (query == "time") {
         sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
     } else if (query.startsWith("inspiration")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -4073,7 +4073,7 @@ async function ai(api, event) {
             }
         });
     } else if (query.startsWith("motivation") || query.startsWith("motivate")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -4088,7 +4088,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "newyear") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let yr = new Date().getFullYear() + 1;
@@ -4105,7 +4105,7 @@ async function ai(api, event) {
         };
         sendMessage(api, event, message)
     } else if (query == "christmas") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let yr = new Date().getFullYear();
@@ -4122,7 +4122,7 @@ async function ai(api, event) {
         };
         sendMessage(api, event, message)
     } else if (query == "verserandom") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
@@ -4137,7 +4137,7 @@ async function ai(api, event) {
             }
         });
     } else if (query == "versetoday") {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
@@ -4152,7 +4152,7 @@ async function ai(api, event) {
             }
         });
     } else if (query.startsWith("verse")) {
-        if (isGoingToFast(event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ")
@@ -4442,7 +4442,7 @@ function containsAny(str, substrings) {
     return false;
 }
 
-function isGoingToFast(event) {
+function isGoingToFast(api, event) {
     log("event_body " + event.senderID + " " + event.body);
     if (settings.isDebugEnabled) {
         if (!(vips.includes(event.senderID))) {
