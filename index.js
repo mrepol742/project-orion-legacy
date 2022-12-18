@@ -4730,7 +4730,7 @@ async function getImages(api, event, images) {
         await wait(1000);
         let url = images[i].url;
         log("get_images " + url);
-        if (url.endsWith(".jpeg") || url.endsWith(".jpg") || url.endsWith(".png")) {
+        if (!url.endsWith(".gif") && !url.endsWith(".svg.png") && !url.endsWith(".svg") && !url.includes("lookaside.fbsbx.com")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             log("fname " + fname);
             log("accepted_url " + url);
@@ -4772,12 +4772,6 @@ async function unsendPhoto(api, event, d, data) {
     await wait(1000);
     let accm = [];
     for (let i = 0; i < images.length; i++) {
-        let fs = fs.createReadStream(images[i]);
-        if (!fs.replace(pictographic, '').length) {
-            log("IS PICTURE " + images[i]);
-        } else {
-            log("IS NOT PICTURE " + images[i]);
-        }
         accm.push(fs.createReadStream(images[i]));
     }
 
