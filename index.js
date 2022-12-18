@@ -4447,14 +4447,14 @@ function isGoingToFast(api, event) {
     if (settings.isDebugEnabled) {
         if (!(vips.includes(event.senderID))) {
             if (isGoingToFastCallingTheCommand(event)) {
-                return;
+                return false;
             }
             let message = {
                 body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
                 attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
             };
             sendMessage(api, event, message);
-            return;
+            return false;
         }
     }
     if (!settings.preventSimultaneousExecution) {
