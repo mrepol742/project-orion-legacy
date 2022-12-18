@@ -326,7 +326,6 @@ let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
 let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
-let welcomeA = [];
 
 const app = express();
 const config = new Configuration({
@@ -2482,9 +2481,15 @@ async function ai(api, event) {
             } else {
                 data.shift();
                 let num = data.join(" ");
-                settings.max_image = num;
-                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
-                sendMessage(api, event, "Max Image is now set to " + num);
+                if (num > 25) {
+                    sendMessage(api, event, "Opps! the limit is 25.");
+                } else if (num < 1) {
+                    sendMessage(api, event, "Opps! the minimum value is 1.");
+                } else {
+                    settings.max_image = num;
+                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    sendMessage(api, event, "Max Image is now set to " + num);
+                }
             }
         }
     } else if (query.startsWith("setprobabilitymass")) {
@@ -2498,7 +2503,7 @@ async function ai(api, event) {
                 if (num > 1) {
                     sendMessage(api, event, "Opps! the limit is 1.");
                 } else if (num < -0) {
-                    sendMessage(api, event, "Opps! the minimum value 0");
+                    sendMessage(api, event, "Opps! the minimum value is 0.");
                 } else {
                     settings.probability_mass = num;
                     fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
@@ -4725,7 +4730,7 @@ async function getImages(api, event, images) {
         await wait(1000);
         let url = images[i].url;
         log("get_images " + url);
-        if (!url.endsWith(".gif") && !url.endsWith(".svg.png") && !url.endsWith(".svg") && !url.includes("lookaside.fbsbx.com")) {
+        if (url.endsWith(".jpeg") || url.endsWith(".jpg") || url.endsWith(".png")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             log("fname " + fname);
             log("accepted_url " + url);
@@ -4767,6 +4772,12 @@ async function unsendPhoto(api, event, d, data) {
     await wait(1000);
     let accm = [];
     for (let i = 0; i < images.length; i++) {
+        let fs = fs.createReadStream(images[i]);
+        if (!fs.replace(pictographic, '').length) {
+            log("IS PICTURE " + images[i]);
+        } else {
+            log("IS NOT PICTURE " + images[i]);
+        }
         accm.push(fs.createReadStream(images[i]));
     }
 
