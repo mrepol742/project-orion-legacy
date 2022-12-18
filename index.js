@@ -720,7 +720,7 @@ async function ai(api, event) {
         sendMessage(api, event, "Shhhhhhh watch your mouth.");
         return;
     }
-    if (!input.replace(pictographic, '').length) {
+    if (pictographic.test(input)) {
         if (!isGoingToFastResendingOfEmo(event)) {
             await wait(5000);
             sendMessageOnly(api, event, input);
@@ -741,7 +741,9 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
-        } 
+        } else if (query == "unsend" || query == "unsent" || query == "delete" || query == "remove") {
+           sendMessage(api, event, "You need to reply to my message to remove it.");
+        }
     }
     if (query.startsWith("searchimg")) {
         if (isGoingToFast(api, event)) {
@@ -4428,7 +4430,11 @@ function formatQuery(string) {
 }
 
 function log(data) {
+  if (typeof data === "string") {
     console.log(getFormattedDate() + "$ " + data);
+  } else {
+     console.log(getFormattedDate() + "$ " + JSON.stringify(data));
+  }
 }
 
 function getFormattedDate() {
@@ -4902,9 +4908,6 @@ function unblockUser(api, event, id) {
 }
 
 function addAdmin(api, event, id) {
-    if (isMyId(id)) {
-        return;
-    }
     if (vips.includes(id)) {
         sendMessage(api, event, "Admin permission is already granted.");
         return;
