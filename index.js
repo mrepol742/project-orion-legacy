@@ -5047,7 +5047,6 @@ function welcomeUser(api, event, name, gname, Tmem, id, message1) {
                 }]
             };
             sendMessageOnly(api, event, message);
-            unLink(__dirname + "/cache/assets/project-orion.gif");
         })
 }
 
