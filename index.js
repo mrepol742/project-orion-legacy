@@ -5115,7 +5115,7 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
                 break;
             case "share":
-                log(JSON.stringify(event.attachments[0]));
+                msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.attachments[0].source]]
                 break;
         }
     } else {
