@@ -445,7 +445,7 @@ login({
                     });
                 }
             }
-            if (blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) {
+            if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) && event.type != "message_unsend") {
                 return;
             }
         }
