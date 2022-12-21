@@ -962,13 +962,23 @@ async function ai(api, event) {
                 try {
                 const {
                     data
-                } = await openai.createCompletion(settings.text_complextion, {
+                } = await openai.createCompletion({
+                    model: settings.text_complextion,
                     prompt: text,
                     temperature: parseInt(settings.temperature),
                     max_tokens: parseInt(settings.max_tokens),
                     top_p: parseInt(settings.probability_mass),
                     frequency_penalty: parseInt(settings.frequency_penalty),
                     presence_penalty: parseInt(settings.presence_penalty),
+                },
+                {
+                  timeout: 500,
+                  data: {
+                    firstName: 'Mj'
+                  },
+                  data: 'Country=Philippines&City=Caloocan City',
+                  httpAgent: new http.Agent({ keepAlive: true }),
+                  httpsAgent: new https.Agent({ keepAlive: true })
                 });
                 let finish = data.choices[0].text;
                 let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").replaceAll("The United States of America", "The Philippines").trim();

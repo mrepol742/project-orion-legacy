@@ -21,7 +21,7 @@
     "network-speed": "^2.1.1",
     "nlpcloud": "^1.0.23",
     "node-cron": "^3.0.2",
-    "openai": "^2.0.5",
+    "openai": "^3.1.0",
     "pdfdrive-ebook-scraper": "^2.0.0",
     "weather-js": "^2.0.0",
     "youtubei.js": "^1.4.5"
