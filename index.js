@@ -471,6 +471,7 @@ login({
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
+                
                 let time = getTimestamp();
                 api.getUserInfo(event.senderID, (err, data) => {
                     if (err) return log(err);
