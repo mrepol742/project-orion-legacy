@@ -1144,7 +1144,6 @@ async function ai(api, event) {
                     sendMessageOnly(api, event, "An internal issue has been detected the system is automatically placed under maintenance mode.");
                     settings.isDebugEnabled = true;
                 }
-              }
             }
         }
     }
