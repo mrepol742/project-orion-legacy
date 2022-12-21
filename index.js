@@ -794,6 +794,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
+        
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
