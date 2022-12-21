@@ -1131,6 +1131,7 @@ async function ai(api, event) {
                     finalDataCC = finalDataCC.slice(1);
                 }
                 sendMessage(api, event, finalDataCC.replaceAll("'", ""));
+                }
             } catch (error) {
                 if (error.response) {
                   log(error.response.status);
