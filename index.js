@@ -993,7 +993,7 @@ async function ai(api, event) {
                 } else {
                  log(error.message);
                 }
-                sendMessageOnly(api, event, "It looks like i am having issues understanding your message.");
+                sendMessageOnly(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
               }
             }
         }
