@@ -421,7 +421,7 @@ login({
 
         if (err) return log(err);
 
-        if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
+        if (event.body == null && !(typeof event.body === "string")) {
             return;
         }
 
@@ -720,7 +720,7 @@ async function ai(api, event) {
     let query2 = formatQuery(input.toLowerCase());
     if (nsfw(query)) {
         let message = {
-            attachment: fs.createReadStream(__dirname + '/cache/assets/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
+            attachment: fs.createReadStream(__dirname + '/cache/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
         };
         sendMessage(api, event, message);
         return;
