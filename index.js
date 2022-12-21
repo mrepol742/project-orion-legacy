@@ -466,6 +466,9 @@ login({
             case "message_reply":
                 saveEvent(event);
                 ai(api, event);
+                let input = event.body;
+                let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
+                let query2 = formatQuery(input.toLowerCase());
                 if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
                     if (vips.includes(event.senderID)) {
                         if (event.messageReply.senderID != getMyId()) {
