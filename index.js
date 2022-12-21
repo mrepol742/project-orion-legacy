@@ -313,7 +313,7 @@ let apiKey = [
     // NLPCloudClient summarize
     "40286240a47c02b2948a8c61276be7bd481b0b14",
     // open ai api key
-    "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"
+    "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"
 ];
 
 let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
@@ -333,7 +333,7 @@ const config = new Configuration({
 });
 const openai = new OpenAIApi(config);
 
-app.get('/', (req, res) => res.send("The Project Orion is now active and waiting for commands execution. ONLINE."));
+app.get('/', (req, res) => res.send("<html><head><meta http-equiv=\"refresh\" content=\"1; url = https://mrepol742.github.io/project-orion\" /><title>Project Orion</title></head><body><center>The project orion is active.</center></body></html>"));
 
 app.listen(port, () =>
     log(`The Project Orion is now active and waiting for commands execution. ONLINE`)
@@ -797,7 +797,7 @@ async function ai(api, event) {
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
-                    body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd.\nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help.\n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping\n\nhttps://mrepol742.github.io/project-orion/",
+                    body: "Moshi moshi... \n\nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd.\nYou can ask on me as normal human would do such as `What is matter` or by calling me `How to do _____` i would be grateful to help.\n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping\n\nhttps://project-orion.mrepol742.repl.co",
                     attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
                 }
                 sendMessage(api, event, message);
@@ -970,15 +970,6 @@ async function ai(api, event) {
                     top_p: parseInt(settings.probability_mass),
                     frequency_penalty: parseInt(settings.frequency_penalty),
                     presence_penalty: parseInt(settings.presence_penalty),
-                },
-                {
-                  timeout: 500,
-                  data: {
-                    firstName: 'Mj'
-                  },
-                  data: 'Country=Philippines&City=Caloocan City',
-                  httpAgent: new http.Agent({ keepAlive: true }),
-                  httpsAgent: new https.Agent({ keepAlive: true })
                 });
                 let finish = data.choices[0].text;
                 let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").replaceAll("The United States of America", "The Philippines").trim();
@@ -1271,7 +1262,7 @@ async function ai(api, event) {
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
                 "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD +
-                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\nhttps://project-orion.mrepol742.repl.co\n" + qot[Math.floor(Math.random() * qot.length)]);
         })();
     } else if (query.startsWith("mean")) {
         if (input.split(" ").length < 3) {
@@ -4472,14 +4463,14 @@ function isGoingToFast(api, event) {
     if (settings.isDebugEnabled) {
         if (!(vips.includes(event.senderID))) {
             if (isGoingToFastCallingTheCommand(event)) {
-                return false;
+                return true;
             }
             let message = {
                 body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
                 attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
             };
             sendMessage(api, event, message);
-            return false;
+          return true;
         }
     }
     if (!settings.preventSimultaneousExecution) {
