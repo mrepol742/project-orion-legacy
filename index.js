@@ -2773,9 +2773,7 @@ async function ai(api, event) {
                         addAdmin(api, event, data[0].userID);
                     });
                     return;
-                } else if (isMyId(id)) {
-                    return;
-                }
+                } 
                 addAdmin(api, event, id);
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
