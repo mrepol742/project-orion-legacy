@@ -959,6 +959,7 @@ async function ai(api, event) {
                 } else {
                     maxTokens = 4000;
                 }
+                try {
                 const {
                     data
                 } = await openai.createCompletion(settings.text_complextion, {
@@ -975,6 +976,15 @@ async function ai(api, event) {
                     finalDataCC = finalDataCC.slice(1);
                 }
                 sendMessage(api, event, finalDataCC.replaceAll("'", ""));
+            } catch (error) {
+                if (error.response) {
+                  log(error.response.status);
+                  log(error.response.data);
+                } else {
+                 log(error.message);
+                }
+                sendMessageOnly(api, event, "It looks like i am having issues understanding your message.");
+              }
             }
         }
     }
