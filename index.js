@@ -44,7 +44,7 @@ const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 const port = process.env.PORT || 6000;
 
-let sleep = [3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000, 3000];
+let sleep = [4000, 3000, 5000, 4500, 6000, 5500, 3300, 4400, 5050, 4000, 5000, 6500, 4500, 3600];
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
@@ -326,6 +326,7 @@ let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
 let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
+let unsend_msgs = JSON.parse(fs.readFileSync("cache/unsend_msgs.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
@@ -463,15 +464,15 @@ login({
                 ai(api, event);
                 break;
             case "message_unsend":
-                if (vips.includes(event.senderID)) {
-                    break;
-                }
                 let d = msgs[event.messageID];
                 if (d === undefined) {
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
-                
+                unsend_msgs[event.messageID] = d;
+                if (vips.includes(event.senderID)) {
+                    break;
+                }
                 let time = getTimestamp();
                 api.getUserInfo(event.senderID, (err, data) => {
                     if (err) return log(err);
@@ -718,7 +719,10 @@ async function ai(api, event) {
     let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
     let query2 = formatQuery(input.toLowerCase());
     if (nsfw(query)) {
-        sendMessage(api, event, "Shhhhhhh watch your mouth.");
+        let message = {
+            attachment: fs.createReadStream(__dirname + '/cache/assets/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
+        };
+        sendMessage(api, event, message);
         return;
     }
     if (!input.replace(pictographic, '').length) {
@@ -742,7 +746,9 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
-        } 
+        } else if (query == "remove" || query == "unsent" || query == "delete" || query == "unsend") {
+            sendMessage(api, event, "You need to reply to my message to unsend it.");
+        }
     }
     if (query.startsWith("searchimg")) {
         if (isGoingToFast(api, event)) {
@@ -4918,9 +4924,6 @@ function disableSmartReply(api, event, id) {
 }
 
 function unblockUser(api, event, id) {
-    if (isMyId(id)) {
-        return;
-    }
     if (!blockRRR.includes(id)) {
         sendMessage(api, event, "The user has no admin rights to take away.");
         return;
@@ -4931,9 +4934,6 @@ function unblockUser(api, event, id) {
 }
 
 function addAdmin(api, event, id) {
-    if (isMyId(id)) {
-        return;
-    }
     if (vips.includes(id)) {
         sendMessage(api, event, "Admin permission is already granted.");
         return;
