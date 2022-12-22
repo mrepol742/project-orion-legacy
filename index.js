@@ -424,7 +424,7 @@ login({
 
         if (err) return log(err);
 
-        if (event.body === undefined && !(typeof event.body === "string") && (event.type == "message" || event.type == "message_reply")) {
+        if (event.body === undefined && (event.type == "message" || event.type == "message_reply")) {
             return;
         }
 
