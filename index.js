@@ -422,7 +422,7 @@ login({
 
         if (err) return log(err);
 
-        if (event.body == null && !(typeof event.body === "string")) {
+        if (event.body == null && !(typeof event.body === "string") && (event.type == "message" || event.type == "message_reply")) {
             return;
         }
 
@@ -880,6 +880,9 @@ async function ai(api, event) {
         }
     }
     reaction(api, event, query, input);
+    if (event.type == "message_reply" && event.messageReply.senderID != getMyId()) {
+        return;
+    }
     if (event.type == "message") {
         if (query == "bgremove" || query == "gphoto") {
             sendMessage(api, event, "You need to reply to an image in order to work.");
@@ -926,24 +929,18 @@ async function ai(api, event) {
             data.shift()
             getResponseData('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1').then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately threturnere was an error occured.");
+                    sendMessage(api, event, "Unfortunately there was an error occured.");
                 } else {
+                    log(JSON.stringify(response));
                     sendMessage(api, event, response.Abstract);
                 }
             });
         }
-    } else if (event.type == "message_reply" || (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
+    } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
         query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
         ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
         otherQ(query2)) {
-            if (event.type == "message_reply") {
-                if (!isMyId(event.messageReply.senderID) && !((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
-                query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol"))) {
-                     return;
-                 }
-             }
-            
 
         if (isGoingToFast(api, event)) {
             return;
