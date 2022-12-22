@@ -39,6 +39,7 @@ const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
 const dns = require("dns");
+const ping = require('ping');
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
@@ -371,6 +372,7 @@ process.on('exit', (code) => {
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
+    fs.writeFileSync("cache/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
     process.exit();
 });
 
@@ -1242,7 +1244,7 @@ async function ai(api, event) {
                     unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
                 })
         }
-    } else if (query == "ping") {
+    } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1277,9 +1279,33 @@ async function ai(api, event) {
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
                 "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD +
-                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\nhttps://project-orion.mrepol742.repl.co\n" + qot[Math.floor(Math.random() * qot.length)]);
+                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\nLink: https://project-orion.mrepol742.repl.co\nIP: " + addresses[0]);
         })();
+    } else if (query.startsWith("ping")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using ping url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nping google.com")
+        } else {
+try {
+            data.shift();
+            let host = [data.join(" ")];
+            hosts.forEach(function (host) {
+                ping.promise.probe(host)
+                    .then(function (res) {
+                        sendMessage(api, event, res.output);
+                    });
+            });
+        } catch (a) {
+            sendMessage(api, event, "Unfortunately an error occured please check your parameters for errors.");
+        }
+        }
     } else if (query.startsWith("mean")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmean 4 5 6 3 6 7 3 5")
         } else {
@@ -1295,6 +1321,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The mean value is " + (total / arr.length));
         }
     } else if (query.startsWith("median")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using median numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmedian 4 5 6 3 6 7 3 5")
         } else {
@@ -1312,6 +1341,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The median value is " + (arr[(length - 1) / 2]));
         }
     } else if (query.startsWith("mode")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using mode numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmode 4 5 6 3 6 7 3 5")
         } else {
@@ -1340,6 +1372,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The mode value is " + max);
         }
     } else if (query.startsWith("range")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using range numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrange 4 5 6 3 6 7 3 5")
         } else {
@@ -1352,6 +1387,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The range value is " + [arr[0], arr[arr.length - 1]]);
         }
     } else if (query.startsWith("divisible")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using divisible number number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndivisible 5 8")
         } else {
@@ -1367,6 +1405,9 @@ async function ai(api, event) {
             }
         }
     } else if (query.startsWith("factorial")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using factorial number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfactorial 5")
         } else {
@@ -1378,6 +1419,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The factorial of " + num + " is " + factorial(num));
         }
     } else if (query.startsWith("findgcd")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfindGCD 5")
         } else {
@@ -1389,6 +1433,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
         }
     } else if (query.startsWith("roi")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nroi 23000 6000")
         } else {
@@ -1398,6 +1445,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The return of investment is " + calcu);
         }
     } else if (query.startsWith("cdfnormal")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using cdfnormal x μ σ instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncdfnormal 5 30 25")
         } else {
@@ -1409,6 +1459,9 @@ async function ai(api, event) {
             sendMessage(api, event, "The normal distribution is " + cdfNormal(arr[1], arr[2], arr[3]));
         }
     } else if (query.startsWith("problem")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nproblem 5*5/9")
         } else {
@@ -4212,6 +4265,7 @@ async function ai(api, event) {
     } else if (query == "savestate") {
         if (vips.includes(event.senderID)) {
             fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
+            fs.writeFileSync("cache/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
             sendMessage(api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
         }
