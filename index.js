@@ -1293,7 +1293,7 @@ async function ai(api, event) {
 try {
             data.shift();
             let hosts = [data.join(" ")];
-            hosts.forEach(function (host) {
+           await  hosts.forEach(function (host) {
                 ping.promise.probe(host)
                     .then(function (res) {
                         sendMessage(api, event, res.output);
@@ -5183,6 +5183,9 @@ function findGCD(i, i2) {
 }
 
 function saveEvent(event) {
+    if (event.senderID == getMyId()) {
+        return;
+    }
     if (event.attachments.length != 0) {
         log("attachments_type " + event.attachments[0].type);
         switch (event.attachments[0].type) {
