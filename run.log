@@ -61331,3 +61331,543 @@ IP: 34.110.138.177
 12/22/2022 1:40:00 PM$ save_state
 12/22/2022 1:40:34 PM$ 100016029218667
 12/22/2022 1:40:34 PM$ send_message_reply 2583856894982516 The state have saved successfully.
+12/22/2022 1:42:28 PM$ event_body 100003456381355 cmd admin
+12/22/2022 1:50:00 PM$ save_state
+12/22/2022 1:59:34 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 1:59:34 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 1:59:34 PM$ ip_address 34.110.138.177
+12/22/2022 2:00:00 PM$ save_state
+12/22/2022 2:00:00 PM$ fb_save_state
+12/22/2022 2:07:48 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 2:07:48 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 2:07:48 PM$ ip_address 34.110.138.177
+12/22/2022 2:10:00 PM$ save_state
+12/22/2022 2:11:17 PM$ event_body 100086430836689 Mj, lyrics "lord you don't need me"
+12/22/2022 2:11:21 PM$ wait_timeout >> 4500
+12/22/2022 2:11:22 PM$ send_typing
+12/22/2022 2:11:26 PM$ 100085564844788
+12/22/2022 2:11:26 PM$ 100085797086737
+12/22/2022 2:11:26 PM$ 100086430836689
+12/22/2022 2:11:26 PM$ send_message_reply 5236303659784142 Verse 1:
+Lord, You dont need me, but I need You
+Your grace and mercy are all I can do
+Youve given me life and a purpose to serve
+And Im so thankful for all that Youve done for me. 
+Chorus: 
+Lord, You dont need me, but I need You 
+Your love is enough to carry me through 
+Im here to serve and honor Your name 
+For without You Lord, nothing would be the same. 
+Verse 2: 
+Lord, You dont need me but I want to be near  
+To worship in spirit and truth with no fear  
+My heart is open wide as my hands reach up high  
+To thank you for all that you do in my life.
+12/22/2022 2:12:52 PM$ event_body 100086430836689 Mj lyrics "lord you don't need me but somehow you want me"
+12/22/2022 2:12:54 PM$ wait_timeout >> 5050
+12/22/2022 2:12:55 PM$ send_typing
+12/22/2022 2:13:00 PM$ 100086430836689
+12/22/2022 2:13:00 PM$ 100086430836689
+12/22/2022 2:13:00 PM$ send_message 5236303659784142 Lord, You dont need me
+But somehow You want me
+You take away my fear and doubt
+And fill my heart with love and grace
+Your mercy is so deep and wide
+It reaches to the depths of my soul 
+Your love is like a river that never runs dry 
+Its a blessing I cant deny
+12/22/2022 2:16:52 PM$ event_body 100086430836689 MJ, lyrics "with you" by khaiid
+12/22/2022 2:16:58 PM$ wait_timeout >> 3300
+12/22/2022 2:16:58 PM$ send_typing
+12/22/2022 2:17:01 PM$ 100086430836689
+12/22/2022 2:17:01 PM$ 100086430836689
+12/22/2022 2:17:01 PM$ send_message 5236303659784142 Verse 1:
+Im so in love with you, I cant explain it
+The way you make me feel, its like a dream come true
+Your touch is like a fire that burns inside of me
+And I just cant get enough of your sweet embrace 
+Chorus: 
+With you, Im alive and free 
+You make my heart beat faster than the speed of light 
+With you, Im never alone 
+Youre the one who makes me feel so strong and whole  
+Verse 2: 
+Every time we kiss, its like a spark igniting us both 
+Our love is something that will never be lost or broken down  							    And when we look into each others eyes, all our worries disappear   We know that together well always be here  
+Chorus:  With you, Im alive and free  You make my heart beat faster
+12/22/2022 2:18:09 PM$ event_body 100086430836689 Mj, lyrics "with you" by nigerian singer khaiid
+12/22/2022 2:18:15 PM$ wait_timeout >> 6500
+12/22/2022 2:18:16 PM$ send_typing
+12/22/2022 2:18:22 PM$ 100086430836689
+12/22/2022 2:18:22 PM$ 100086430836689
+12/22/2022 2:18:22 PM$ send_message 5236303659784142 Verse 1:
+Im in love with you, I cant deny it
+Your love is like a river, never ending
+You make me feel so alive and Im grateful for it
+Your touch is like a fire thats burning inside of me 
+And I just cant get enough of you, no matter what they say 
+Chorus: 
+With you, Im never alone 
+With you, my heart will always be home 
+No matter where we go or what we do 
+Ill always be with you  
+Verse 2: 
+Youre the one who makes me smile when everything else fades away  
+The one who holds my hand when life gets hard to face  
+The one who brings out the best in me and helps me find my way  
+And no matter how far apart we are, our hearts will stay connected forevermore.   
+Chorus:  With you, Im never alone
+12/22/2022 2:19:18 PM$ wait_timeout >> 4500
+12/22/2022 2:19:18 PM$ leave_member Ugochukwu Nomeh
+12/22/2022 2:19:18 PM$ wait_timeout >> 60000
+12/22/2022 2:19:19 PM$ send_typing
+12/22/2022 2:19:23 PM$ send_message 7635291589846117 [object Object]
+12/22/2022 2:19:23 PM$ TypeError: Cannot convert undefined or null to object
+12/22/2022 2:19:33 PM$ event_body 100086430836689 Mj, "I just wanna be with you" lyrics by khaiid
+12/22/2022 2:19:38 PM$ wait_timeout >> 5500
+12/22/2022 2:19:39 PM$ send_typing
+12/22/2022 2:19:44 PM$ 100086430836689
+12/22/2022 2:19:44 PM$ 100086430836689
+12/22/2022 2:19:44 PM$ send_message 5236303659784142 Verse 1:
+I just wanna be with you, 
+No matter what we do, 
+Just as long as Im with you, 
+Thats all that matters to me. 
+Chorus: 
+I dont care where we go, 
+As long as Im with you, I know,  
+We can make it through anything together.  
+Verse 2:  
+We can take a walk in the park or stay in and watch a movie.  
+It doesnt matter what we do cause when Im with you its always so easy.   
+Bridge:   
+You make me feel so alive and free;    								    You bring out the best in me;    	                            All I want is to be by your side forevermore.
+12/22/2022 2:20:00 PM$ save_state
+12/22/2022 2:20:18 PM$ un_link /home/runner/project-orion/cache/images/byebye_1671689928.jpg
+12/22/2022 2:30:00 PM$ save_state
+12/22/2022 2:40:00 PM$ save_state
+12/22/2022 2:49:02 PM$ wait_timeout >> 4500
+12/22/2022 2:49:02 PM$ send_typing
+12/22/2022 2:49:06 PM$ react_message mid.$gABQVzSDc9xeLadzzJGFOJepySpDN :laughing:
+12/22/2022 2:50:00 PM$ save_state
+12/22/2022 2:53:11 PM$ wait_timeout >> 4000
+12/22/2022 2:53:11 PM$ send_typing
+12/22/2022 2:53:15 PM$ react_message mid.$gABQVzSDc9xeLaeDAeGFOJt3dQeWC :laughing:
+12/22/2022 2:59:19 PM$ wait_timeout >> 5000
+12/22/2022 2:59:19 PM$ send_typing
+12/22/2022 2:59:24 PM$ react_message mid.$gABQVzSDc9xeLaeZd-mFOKES1RFSU :laughing:
+12/22/2022 3:00:00 PM$ save_state
+12/22/2022 3:00:00 PM$ fb_save_state
+12/22/2022 3:01:10 PM$ wait_timeout >> 3000
+12/22/2022 3:01:11 PM$ send_typing
+12/22/2022 3:01:13 PM$ react_message mid.$gABQVzSDc9xeLaegRf2FOKLG9Wh6f :laughing:
+12/22/2022 3:07:05 PM$ event_body 100088579996534 Mj
+12/22/2022 3:07:05 PM$ wait_timeout >> 4000
+12/22/2022 3:07:05 PM$ send_typing
+12/22/2022 3:07:09 PM$ 100027452631981
+12/22/2022 3:07:09 PM$ 100088579996534
+12/22/2022 3:07:09 PM$ send_message_reply 7635291589846117 [object Object]
+12/22/2022 3:07:34 PM$ process_exit 1
+12/22/2022 3:42:34 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 3:42:34 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 3:42:34 PM$ ip_address 34.110.138.177
+12/22/2022 3:45:46 PM$ event_body 100087341722958 Mj, what's NPC ?
+12/22/2022 3:45:48 PM$ wait_timeout >> 5000
+12/22/2022 3:45:48 PM$ send_typing
+12/22/2022 3:45:53 PM$ send_message 100087341722958 NPC stands for Non-Player Character. It is a character in a video game, book, or movie that is not controlled by a real person.
+12/22/2022 3:47:43 PM$ event_body 100040726009962 Mj het
+12/22/2022 3:47:43 PM$ wait_timeout >> 3000
+12/22/2022 3:47:43 PM$ send_typing
+12/22/2022 3:47:46 PM$ 100040726009962
+12/22/2022 3:47:46 PM$ 100040726009962
+12/22/2022 3:47:46 PM$ 100040726009962
+12/22/2022 3:47:46 PM$ send_message 5033985183388157 het?
+12/22/2022 3:49:31 PM$ wait_timeout >> 4000
+12/22/2022 3:49:31 PM$ leave_member Yasha Gamuzai
+12/22/2022 3:49:31 PM$ wait_timeout >> 60000
+12/22/2022 3:49:31 PM$ send_typing
+12/22/2022 3:49:35 PM$ send_message 5033985183388157 [object Object]
+12/22/2022 3:49:35 PM$ TypeError: Cannot convert undefined or null to object
+12/22/2022 3:49:42 PM$ event_body 100087341722958 Mj, code examples of NPC variable in Cpp?
+12/22/2022 3:49:45 PM$ wait_timeout >> 6000
+12/22/2022 3:49:45 PM$ send_typing
+12/22/2022 3:49:51 PM$ send_message 100087341722958 1. int npcHealth = 100; 
+2. bool npcIsFriendly = true; 
+3. float npcSpeed = 2.5f; 
+4. char npcName[20] = "Bob"; 
+5. string npcDialogue[50] = "Hello there!";
+12/22/2022 3:49:57 PM$ wait_timeout >> 4000
+12/22/2022 3:49:57 PM$ leave_member Yasha Gamuzai
+12/22/2022 3:49:57 PM$ wait_timeout >> 60000
+12/22/2022 3:49:58 PM$ send_typing
+12/22/2022 3:50:00 PM$ event_body 100040726009962 Why brpers gotta be so damn dramatic and emotional.... This ain't anime
+12/22/2022 3:50:00 PM$ save_state
+12/22/2022 3:50:01 PM$ send_message 3885961401427464 [object Object]
+12/22/2022 3:50:02 PM$ TypeError: Cannot convert undefined or null to object
+12/22/2022 3:50:02 PM$ wait_timeout >> 4000
+12/22/2022 3:50:02 PM$ send_typing
+12/22/2022 3:50:06 PM$ 100083649858580
+12/22/2022 3:50:06 PM$ 100083649858580
+12/22/2022 3:50:06 PM$ 100040726009962
+12/22/2022 3:50:06 PM$ send_message 3885961401427464 Its true that some people can be overly dramatic and emotional, but its important to remember that everyone expresses themselves differently. Its also important to remember that everyone has their own unique experiences and perspectives, so its natural for them to react differently than you might expect. Ultimately, its best to try and be understanding of others feelings and reactions.
+12/22/2022 3:50:31 PM$ un_link /home/runner/project-orion/cache/images/byebye_1671695340.jpg
+12/22/2022 3:50:43 PM$ event_body 100073212879856 Mj what is deaf, dumb and blind but always tells the truth?
+12/22/2022 3:50:43 PM$ wait_timeout >> 4000
+12/22/2022 3:50:44 PM$ send_typing
+12/22/2022 3:50:48 PM$ 100083649858580
+12/22/2022 3:50:48 PM$ 100073212879856
+12/22/2022 3:50:48 PM$ send_message_reply 5033985183388157 A mirror.
+12/22/2022 3:50:57 PM$ un_link /home/runner/project-orion/cache/images/byebye_1671695367.jpg
+12/22/2022 3:51:25 PM$ event_body 100040726009962 Mj what does MTN stand for
+12/22/2022 3:51:26 PM$ wait_timeout >> 3300
+12/22/2022 3:51:27 PM$ send_typing
+12/22/2022 3:51:30 PM$ 100073212879856
+12/22/2022 3:51:30 PM$ 100040726009962
+12/22/2022 3:51:30 PM$ send_message_reply 5033985183388157 MTN stands for Mobile Telephone Network.
+12/22/2022 3:53:26 PM$ event_body 100073212879856 Mj I cannot be other than what I am, until the man who made me dies. Power and glory will fall to me, only when he last closes his eyes. Who am I?
+12/22/2022 3:53:27 PM$ wait_timeout >> 4500
+12/22/2022 3:53:28 PM$ send_typing
+12/22/2022 3:53:32 PM$ 100040726009962
+12/22/2022 3:53:32 PM$ 100073212879856
+12/22/2022 3:53:32 PM$ send_message_reply 5033985183388157 You are the son of the man who made you.
+12/22/2022 3:54:01 PM$ react_message mid.$cAAAABtW1oyaLahhyrmFONMikMBUI :laughing:
+12/22/2022 3:54:01 PM$ send_typing
+12/22/2022 3:54:58 PM$ wait_timeout >> 5000
+12/22/2022 3:55:03 PM$ send_message 100077318906152 😘😘😘
+12/22/2022 3:55:04 PM$ send_typing
+12/22/2022 3:56:16 PM$ send_message 100077318906152 Yup
+12/22/2022 3:56:16 PM$ send_typing
+12/22/2022 3:57:08 PM$ process_exit 1
+12/22/2022 4:01:11 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 4:01:11 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 4:01:11 PM$ ip_address 34.110.138.177
+12/22/2022 4:01:29 PM$ react_message mid.$cAAAABtW1oyaLah9KIGFONoDr6mJa :laughing:
+12/22/2022 4:01:30 PM$ send_typing
+12/22/2022 4:01:57 PM$ new_member 100058139125561 Ace Norman
+12/22/2022 4:02:28 PM$ wait_timeout >> 6000
+12/22/2022 4:02:29 PM$ send_typing
+12/22/2022 4:02:34 PM$ send_message 5033985183388157 [object Object]
+12/22/2022 4:02:34 PM$ TypeError: Cannot convert undefined or null to object
+12/22/2022 4:02:37 PM$ 100087185842116
+12/22/2022 4:02:37 PM$ 100037131918629
+12/22/2022 4:02:37 PM$ 100037131918629
+12/22/2022 4:02:37 PM$ send_message_reply 2583856894982516 Houston! I cannot unsent messages didn't come from me. sorry.
+12/22/2022 4:02:37 PM$ send_typing
+12/22/2022 4:02:53 PM$ event_body 100087341722958 Mj, how to write a npc code in cpp?
+12/22/2022 4:02:59 PM$ wait_timeout >> 6500
+12/22/2022 4:03:00 PM$ send_typing
+12/22/2022 4:03:06 PM$ send_message 100087341722958 The following is an example of a basic NPC code written in C++:
+#include <iostream> 
+using namespace std; 
+// Class for NPC 
+class NPC { 
+    // Private members of class 
+    private: 
+        string name; // Name of the character  
+    public: 
+        // Constructor to initialize data members  
+        NPC(string n) { name = n; }  
+        void greet() { cout << "Hello, my name is " << name << endl; }  						// Function to greet the player.     };      int main() {      // Create an instance of the class      NPC npc("Bob");       // Call member function      npc.greet();       return 0; }
+12/22/2022 4:06:08 PM$ wait_timeout >> 5000
+12/22/2022 4:06:13 PM$ send_message 2583856894982516 😔
+12/22/2022 4:06:14 PM$ send_typing
+12/22/2022 4:08:28 PM$ react_message mid.$gAAkuARBgOXSLaiWuMWFOOBj7667M :laughing:
+12/22/2022 4:08:29 PM$ send_typing
+12/22/2022 4:09:19 PM$ react_message mid.$gAAkuARBgOXSLaiZy3WFOOEoqKI_E :laughing:
+12/22/2022 4:09:19 PM$ send_typing
+12/22/2022 4:10:00 PM$ save_state
+12/22/2022 4:10:07 PM$ attachments_type photo
+12/22/2022 4:10:07 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/320253344_1316771579173768_1922034071136063730_n.jpg?stp=dst-jpg_p480x480&_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeEUy3BP0siuBI4yJWrR5w2uQyhXw7MC8vdDKFfDswLy99XyGsqvOmgC9D_TC3asWzXTx124qHsE49Lv77ESdM8K&_nc_ohc=Z0aVRZM6i8oAX8X1Clh&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRyUBZKuCvSsldDEA_BCDjd7RJ2PzX4oVG5f9yL7g-F0w&oe=63CB87E6
+12/22/2022 4:10:07 PM$ wait_timeout >> 5000
+12/22/2022 4:10:12 PM$ send_message 2583856894982516 
+12/22/2022 4:10:13 PM$ [object Object]
+12/22/2022 4:10:13 PM$ send_typing
+12/22/2022 4:11:00 PM$ wait_timeout >> 4500
+12/22/2022 4:11:00 PM$ leave_member Melvin Jones Gallano Repol
+12/22/2022 4:11:00 PM$ wait_timeout >> 60000
+12/22/2022 4:11:00 PM$ send_typing
+12/22/2022 4:11:04 PM$ send_message 5713865278728285 [object Object]
+12/22/2022 4:11:04 PM$ TypeError: Cannot convert undefined or null to object
+12/22/2022 4:11:11 PM$ wait_timeout >> 5050
+12/22/2022 4:11:11 PM$ leave_member Melvin Jones Gallano Repol
+12/22/2022 4:11:11 PM$ wait_timeout >> 60000
+12/22/2022 4:11:11 PM$ send_typing
+12/22/2022 4:11:13 PM$ 100037131918629
+12/22/2022 4:11:13 PM$ 100037131918629
+12/22/2022 4:11:13 PM$ send_message 2583856894982516 [object Object]
+12/22/2022 4:11:13 PM$ send_typing
+12/22/2022 4:11:16 PM$ send_message 5119237738177809 [object Object]
+12/22/2022 4:11:16 PM$ TypeError: Cannot convert undefined or null to object
+12/22/2022 4:11:28 PM$ process_exit 1
+12/22/2022 4:42:36 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 4:42:39 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 4:42:39 PM$ ip_address 34.110.138.177
+12/22/2022 4:42:42 PM$ process_exit 1
+12/22/2022 5:31:19 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 5:31:19 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 5:31:19 PM$ ip_address 34.110.138.177
+12/22/2022 5:31:33 PM$ event_body 100061632526048 Pdf sex position
+12/22/2022 5:31:36 PM$ 100061632526048
+12/22/2022 5:31:36 PM$ 100037131918629
+12/22/2022 5:31:36 PM$ send_message_reply 2583856894982516 126 Sex Positions Guaranteed to Spice up Your Bedroom: Increase Your Sex Education With Sexual Positions for Couples - PDF Drive
+
+https://www.pdfdrive.com/download.pdf?id=196748910&h=516535515604b994e4da4563ee4b7515
+12/22/2022 5:31:36 PM$ send_typing
+12/22/2022 5:31:48 PM$ react_message mid.$gAAkuARBgOXSLanH6eGFOSywDIwES :laughing:
+12/22/2022 5:31:49 PM$ send_typing
+12/22/2022 5:31:56 PM$ event_body 100071743848974 uptime
+12/22/2022 5:31:57 PM$ 100054832716212
+12/22/2022 5:31:57 PM$ send_message_reply 2583856894982516 Uptime is 39 seconds.
+
+⦿ RAM: 43.7 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 190.48 mbps
+⦿ Upload Speed: 11.63 mbps
+⦿ RSS: 169.5 MB
+⦿ Heap Total: 104.9 MB
+⦿ Heap Used: 67.7 MB
+⦿ External: 1.7 MB
+⦿ Array Buffers: 2.1 MB
+⦿ Save State: N/A
+⦿ Fb State: N/A
+
+⦿ sendReport [text]
+   To send report to the author if there is any issue.
+
+Link: https://project-orion.mrepol742.repl.co
+IP: 34.110.138.177
+12/22/2022 5:32:01 PM$ react_message mid.$gAAkuARBgOXSLanIqI2FOSzf3HG3G :laughing:
+12/22/2022 5:32:02 PM$ send_typing
+12/22/2022 5:32:22 PM$ event_body 100070347314340 How much is 1 euro in niara
+12/22/2022 5:32:24 PM$ wait_timeout >> 4500
+12/22/2022 5:32:24 PM$ send_typing
+12/22/2022 5:32:28 PM$ 100032176462107
+12/22/2022 5:32:28 PM$ 100070347314340
+12/22/2022 5:32:28 PM$ send_message_reply 5953398644698119 1 euro is currently equal to 590.45 Nigerian Naira.
+12/22/2022 5:32:45 PM$ event_body 100058139125561 Mj what's a fetish
+12/22/2022 5:32:47 PM$ wait_timeout >> 5000
+12/22/2022 5:32:47 PM$ send_typing
+12/22/2022 5:32:52 PM$ 100040726009962
+12/22/2022 5:32:52 PM$ 100040726009962
+12/22/2022 5:32:52 PM$ 100058139125561
+12/22/2022 5:32:52 PM$ send_message 5033985183388157 A fetish is a strong or obsessive interest in an object, activity, or body part that someone finds sexually arousing. It can involve the use of objects, materials, activities, and body parts to achieve sexual gratification.
+12/22/2022 5:33:22 PM$ event_body 100058139125561 Mj types of fetishs
+12/22/2022 5:33:28 PM$ wait_timeout >> 5000
+12/22/2022 5:33:29 PM$ send_typing
+12/22/2022 5:33:31 PM$ process_exit 1
+12/22/2022 5:43:22 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 5:43:22 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 5:43:22 PM$ ip_address 34.110.138.177
+12/22/2022 5:44:46 PM$ event_body 100027431556488 How much is 1 dollar in naira
+12/22/2022 5:44:47 PM$ wait_timeout >> 4000
+12/22/2022 5:44:48 PM$ send_typing
+12/22/2022 5:44:52 PM$ 100070347314340
+12/22/2022 5:44:52 PM$ 100027431556488
+12/22/2022 5:44:52 PM$ send_message_reply 5953398644698119 1 US Dollar is currently equal to 380.50 Nigerian Naira.
+12/22/2022 5:45:26 PM$ wait_timeout >> 6500
+12/22/2022 5:45:26 PM$ unsend_message_group 12/22/2022 5:45:16 PM [object Object]
+12/22/2022 5:45:26 PM$ send_typing
+12/22/2022 5:45:32 PM$ send_message 4519553508169533 [object Object]
+12/22/2022 5:45:51 PM$ event_body 100027431556488 Mj what’s the price  of an Ezoic account
+12/22/2022 5:45:53 PM$ wait_timeout >> 6000
+12/22/2022 5:45:53 PM$ send_typing
+12/22/2022 5:45:59 PM$ 100027431556488
+12/22/2022 5:45:59 PM$ 100027431556488
+12/22/2022 5:45:59 PM$ send_message 4519553508169533 The cost of an Ezoic account varies depending on the features and services you choose. The basic plan starts at $49/month, while the premium plan is $249/month.
+12/22/2022 5:47:02 PM$ event_body 100070347314340 Mj is giving outdated details
+12/22/2022 5:47:04 PM$ wait_timeout >> 4500
+12/22/2022 5:47:05 PM$ send_typing
+12/22/2022 5:47:09 PM$ 100027431556488
+12/22/2022 5:47:09 PM$ 100070347314340
+12/22/2022 5:47:09 PM$ 100070347314340
+12/22/2022 5:47:09 PM$ send_message_reply 5953398644698119 The best way to ensure that you have the most up-to-date information is to check with the source directly. This could mean visiting a website, calling a customer service line, or speaking with someone in person.
+12/22/2022 5:47:57 PM$ event_body 100087394793575 mj is sleeping bro
+12/22/2022 5:47:59 PM$ wait_timeout >> 4500
+12/22/2022 5:48:00 PM$ send_typing
+12/22/2022 5:48:04 PM$ 100083438258495
+12/22/2022 5:48:04 PM$ 100021816413493
+12/22/2022 5:48:04 PM$ 100087394793575
+12/22/2022 5:48:04 PM$ send_message_reply 7635291589846117 No, its not appropriate to say "sleeping bro" in most situations. It is a slang term that is often used among friends or family members, but it would be considered inappropriate in most other contexts.
+12/22/2022 5:48:28 PM$ wait_timeout >> 5000
+12/22/2022 5:48:33 PM$ wait_timeout >> 6500
+12/22/2022 5:48:33 PM$ event_body 100087394793575 mj 😂😂
+12/22/2022 5:48:33 PM$ wait_timeout >> 3000
+12/22/2022 5:48:33 PM$ wait_timeout >> 5500
+12/22/2022 5:48:34 PM$ send_typing
+12/22/2022 5:48:34 PM$ send_typing
+12/22/2022 5:48:34 PM$ send_typing
+12/22/2022 5:48:36 PM$ 100087394793575
+12/22/2022 5:48:36 PM$ 100087394793575
+12/22/2022 5:48:36 PM$ send_message 7635291589846117 yup?
+12/22/2022 5:48:39 PM$ send_message 7635291589846117 😂😂
+12/22/2022 5:48:39 PM$ react_message mid.$gABsgQdr4JGWLaoFNgWFOTwE21c0h :laughing:
+12/22/2022 5:49:53 PM$ event_body 100087394793575 Mj what year were u created
+12/22/2022 5:49:54 PM$ wait_timeout >> 4500
+12/22/2022 5:49:55 PM$ send_typing
+12/22/2022 5:49:59 PM$ 100087394793575
+12/22/2022 5:49:59 PM$ send_message_reply 7635291589846117 I was created in 2020.
+12/22/2022 5:50:00 PM$ save_state
+12/22/2022 5:50:33 PM$ new_member 100087646771553 Jursh Wrld
+12/22/2022 5:51:04 PM$ wait_timeout >> 4500
+12/22/2022 5:51:05 PM$ send_typing
+12/22/2022 5:51:09 PM$ send_message 7635291589846117 [object Object]
+12/22/2022 5:51:09 PM$ TypeError: Cannot convert undefined or null to object
+12/22/2022 5:51:14 PM$ event_body 100087394793575 mj I need your help
+12/22/2022 5:51:15 PM$ wait_timeout >> 5050
+12/22/2022 5:51:15 PM$ send_typing
+12/22/2022 5:51:20 PM$ 100087394793575
+12/22/2022 5:51:20 PM$ 100087394793575
+12/22/2022 5:51:20 PM$ 100087394793575
+12/22/2022 5:51:20 PM$ send_message 7635291589846117 What kind of help do you need?
+12/22/2022 5:51:24 PM$ event_body 100087039951817 Mj is it necessary to buy Xmas clothes
+12/22/2022 5:51:26 PM$ wait_timeout >> 4000
+12/22/2022 5:51:26 PM$ send_typing
+12/22/2022 5:51:30 PM$ 100087394793575
+12/22/2022 5:51:30 PM$ 100087039951817
+12/22/2022 5:51:30 PM$ send_message_reply 7635291589846117 No, it is not necessary to buy Christmas clothes. You can wear whatever you like for the holiday season.
+12/22/2022 5:54:08 PM$ react_message mid.$gAAkuARBgOXSLaoZqQGFOUEh96Lg- :laughing:
+12/22/2022 5:54:08 PM$ attachments_type photo
+12/22/2022 5:54:08 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/316958763_586351596830878_4113123677984441143_n.png?_nc_cat=107&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGAg9mnRdjsQzLMO8ExiSs2POkwcR4qVCQ86TBxHipUJPS7HCjMZ2SA0B2qO58a35i9-72bT4R04ALfRIWSRA3f&_nc_ohc=e0Y7vRN4XTQAX_p3Lmi&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQr4OPoDiulj03hXSwXoydIc9KwrjOi1E0LFkieN1l5yw&oe=63CB948A
+12/22/2022 5:54:08 PM$ wait_timeout >> 5000
+12/22/2022 5:54:08 PM$ send_typing
+12/22/2022 5:54:13 PM$ send_message 2583856894982516 
+12/22/2022 5:54:13 PM$ [object Object]
+12/22/2022 5:54:14 PM$ send_typing
+12/22/2022 5:55:44 PM$ event_body 100087646771553 Mj
+12/22/2022 5:55:44 PM$ wait_timeout >> 4000
+12/22/2022 5:55:45 PM$ send_typing
+12/22/2022 5:55:49 PM$ 100087394793575
+12/22/2022 5:55:49 PM$ 100087039951817
+12/22/2022 5:55:49 PM$ 100087646771553
+12/22/2022 5:55:49 PM$ send_message_reply 7635291589846117 [object Object]
+12/22/2022 5:55:56 PM$ event_body 100087646771553 Mj
+12/22/2022 5:55:56 PM$ The user 100087646771553 is going to fast of executing commands >> 0 mins and 3 seconds
+12/22/2022 5:57:44 PM$ process_exit 1
+12/22/2022 6:27:40 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 6:27:40 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 6:27:40 PM$ ip_address 34.110.138.177
+12/22/2022 6:27:45 PM$ process_exit 1
+12/22/2022 6:32:34 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 6:32:34 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 6:32:34 PM$ ip_address 34.110.138.177
+12/22/2022 6:32:57 PM$ process_exit 1
+12/22/2022 6:41:21 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 6:41:21 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 6:41:21 PM$ ip_address 34.110.138.177
+12/22/2022 6:41:46 PM$ attachments_type photo
+12/22/2022 6:41:46 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/320221657_2215059458696598_9206067827470604037_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHY4l3mQUnBRXTv_SjyM5uXke0zVbBqCNeR7TNVsGoI1zOJl7cbJdtbPOVCr-ynbV25YxLDGRiLogciuIB81OjW&_nc_ohc=hw0QQRbT3bQAX-UA4YG&_nc_oc=AQmeaUYlhx5J7-pEQVMvJsCyfeq4GszCihKeSL2mWo2B2KN77GGDj_gswsn9S75b_KY&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdTUYka3Cc9hkuGg-urYO3ieuOE3P92h4EGwiC5-5LWZdw&oe=63CBA7A7
+12/22/2022 6:41:46 PM$ wait_timeout >> 5000
+12/22/2022 6:41:51 PM$ wait_timeout >> 5000
+12/22/2022 6:41:52 PM$ send_typing
+12/22/2022 6:41:56 PM$ send_message 7244767385593438 
+12/22/2022 6:41:57 PM$ [object Object]
+12/22/2022 6:42:00 PM$ attachments_type photo
+12/22/2022 6:42:00 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/320514663_914792739899567_6106349353239124617_n.png?stp=dst-png_p480x480&_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGZZ4qW6TOm9HRnzLar-AWDxTNhqojigovFM2GqiOKCi6UKUPNppFdc_gTZ-2tc8NguLMlv7WtoKAZf7WwgFfGN&_nc_ohc=_VnLp5TlA0YAX-H2y5i&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdSnFlZxUNKhiAk12kZecpCjdFS6Y3J9rGQVMqsvZVWXAw&oe=63CBB328
+12/22/2022 6:42:00 PM$ The user 7244767385593438 is going to fast of sending emoji >> 3 mins and 92 seconds
+12/22/2022 6:42:00 PM$ wait_timeout >> 4500
+12/22/2022 6:42:01 PM$ send_typing
+12/22/2022 6:42:05 PM$ react_message mid.$gABm9E9p_pl6LarI-UmFOWz1sk2eQ :laughing:
+12/22/2022 6:42:32 PM$ wait_timeout >> 4000
+12/22/2022 6:42:33 PM$ send_typing
+12/22/2022 6:42:36 PM$ react_message mid.$gABm9E9p_pl6LarK8WWFOW1z40TJf :sad:
+12/22/2022 6:43:13 PM$ react_message mid.$gABm9E9p_pl6LarNZEWFOW4RpG1yC :laughing:
+12/22/2022 6:43:13 PM$ send_typing
+12/22/2022 6:43:13 PM$ attachments_type photo
+12/22/2022 6:43:13 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/320595413_1615007258913645_5048304462046486132_n.png?_nc_cat=104&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeFeNw7dC-ISICPjgUpy4lYHMLogffAwd10wuiB98DB3XWHMAxIVM8ZUaH2dw8zWPBbxTewzn1Gpd8QicNnuQukJ&_nc_ohc=QCxr-n6ygbAAX8JNTxT&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRykWi4QDzqfpaACwAz0t1COz5X4rLLm0xV0gqPPUyPBA&oe=63CB9DE6
+12/22/2022 6:43:13 PM$ The user 7244767385593438 is going to fast of sending emoji >> 1 mins and 66 seconds
+12/22/2022 6:43:29 PM$ process_exit 1
+12/22/2022 6:43:45 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 6:43:45 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 6:43:45 PM$ ip_address 34.110.138.177
+12/22/2022 6:44:02 PM$ process_exit 1
+12/22/2022 6:51:08 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 6:51:08 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 6:51:08 PM$ ip_address 34.110.138.177
+12/22/2022 6:51:12 PM$ attachments_type photo
+12/22/2022 6:51:12 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/319716191_1136857297194391_7990566595792704898_n.png?stp=dst-png_p480x480&_nc_cat=103&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHshOpY_Y3WekETpkUUf0pvsc3n4a4iSsaxzefhriJKxuo6iPUKdqWbmwvsAfayYW4vhgZw8fvYy-dqtiNzgtsc&_nc_ohc=osvppuDU3UoAX8V-3GF&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQ_R58d0FFkFws90qg60VRUuJFqfJghyTO97qBtQZTuNg&oe=63CB94A5
+12/22/2022 6:51:12 PM$ wait_timeout >> 5000
+12/22/2022 6:51:17 PM$ send_message 7244767385593438 
+12/22/2022 6:51:17 PM$ [object Object]
+12/22/2022 6:51:18 PM$ send_typing
+12/22/2022 6:51:37 PM$ unsend_undefined mid.$gAAkuARBgOXSLarr2iWFOXWrg3N76
+12/22/2022 6:51:52 PM$ unsend_undefined mid.$gAAkuARBgOXSLarszuWFOXXozhuJW
+12/22/2022 6:52:10 PM$ send_message 2583856894982516 Hello World
+12/22/2022 6:52:10 PM$ wait_timeout >> 6500
+12/22/2022 6:52:11 PM$ send_typing
+12/22/2022 6:52:16 PM$ attachments_type photo
+12/22/2022 6:52:16 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/320390655_880557939643441_984904471128472913_n.jpg?stp=dst-jpg_p480x480&_nc_cat=105&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHZMLv-KV9SlhWoVZtb_favtkMX9FMx7Iu2Qxf0UzHsi4p9Z1qgTSAWg3MdJOPNL23DVuvcFlErUkzJvYi4bptH&_nc_ohc=xNuiai3dpmoAX-JixFr&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdQoRjolix7ICDr-1U_pTFYOfWquLHprcZm1bYHPSi4XnA&oe=63CBBE28
+12/22/2022 6:52:16 PM$ photo_1 https://scontent.xx.fbcdn.net/v/t1.15752-9/319889031_3471069409788722_239014907591250503_n.jpg?stp=dst-jpg_p480x480&_nc_cat=109&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeHkoLQKTlSv6O-9wzN5pCmQXzd228ggdSFfN3bbyCB1IXunjdSmDYrLf9sdPy7IyQMjpCEJBSyhr_LZwsoRHACQ&_nc_ohc=mjr84RKIe8AAX-OJVOB&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdShlAlQ5aMkvue-6SwiL6N76V9gpzZwa5IXn4rEJD4oYQ&oe=63CBA53E
+12/22/2022 6:52:16 PM$ photo_2 https://scontent.xx.fbcdn.net/v/t1.15752-9/320354260_2406029366212364_8742117618521517526_n.jpg?stp=dst-jpg_p480x480&_nc_cat=100&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeG_BzAVzIG5wAllY4szG6p2D6fVpWAMqyQPp9WlYAyrJAWB4Dd2p6CRhf0QKa3VXK99qQ4WchQR2WxO-hqjr0Cf&_nc_ohc=E3GpzHNAJeMAX90n38h&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdThRjAMce8pDVmdkrPngUo8mQUxFIt5Ptr-UcXAgQ-C7A&oe=63CBB776
+12/22/2022 6:52:16 PM$ photo_3 https://scontent.xx.fbcdn.net/v/t1.15752-9/320482536_1493877207775881_2451195738286945525_n.jpg?stp=dst-jpg_p480x480&_nc_cat=106&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeGlGV7xnm4bJnC73RkTzOZuEdmvTkwvlbsR2a9OTC-Vu5UYtB1qgN8TOSKnQSJy7hYvomxNK_Rx-zvxvb24RPn5&_nc_ohc=bxZCjQ2869EAX_iAMeU&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRUjQ5VOkXydJ_oH1rAwtjKK6fbyN2rdfthQQLsMo92mw&oe=63CBABC1
+12/22/2022 6:52:16 PM$ wait_timeout >> 5000
+12/22/2022 6:52:17 PM$ 100081936620905
+12/22/2022 6:52:17 PM$ 100080934841785
+12/22/2022 6:52:17 PM$ 100080934841785
+12/22/2022 6:52:17 PM$ send_message_reply 6942091245864108 Hello World
+12/22/2022 6:52:21 PM$ send_message 6942091245864108 
+12/22/2022 6:52:21 PM$ [object Object]
+12/22/2022 6:52:22 PM$ send_typing
+12/22/2022 6:54:13 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 6:54:13 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 6:54:13 PM$ ip_address 34.110.138.177
+12/22/2022 6:54:26 PM$ unsend_undefined mid.$gAAkuARBgOXSLar2Kg2FOXg_WiR-t
+12/22/2022 6:54:30 PM$ event_body 100081936620905 why 😒
+12/22/2022 6:54:30 PM$ wait_timeout >> 6500
+12/22/2022 6:54:31 PM$ wait_timeout >> 5500
+12/22/2022 6:54:31 PM$ wait_timeout >> 3300
+12/22/2022 6:54:31 PM$ send_typing
+12/22/2022 6:54:32 PM$ send_typing
+12/22/2022 6:54:32 PM$ send_typing
+12/22/2022 6:54:35 PM$ 100023785687056
+12/22/2022 6:54:35 PM$ 100081936620905
+12/22/2022 6:54:35 PM$ 100023785687056
+12/22/2022 6:54:35 PM$ send_message_reply 6942091245864108 😂😆
+12/22/2022 6:54:36 PM$ react_message mid.$gABipy5K1RKyLar2ye2FOXhEcLvVT :laughing:
+12/22/2022 6:54:37 PM$ 100081936620905
+12/22/2022 6:54:37 PM$ 100037131918629
+12/22/2022 6:54:37 PM$ 100081936620905
+12/22/2022 6:54:37 PM$ send_message_reply 7244767385593438 why 😒?
+12/22/2022 6:54:55 PM$ wait_timeout >> 4000
+12/22/2022 6:54:56 PM$ send_typing
+12/22/2022 6:54:59 PM$ react_message mid.$gABipy5K1RKyLar4Q6WFOXjIDV9iP :laughing:
+12/22/2022 6:56:29 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+12/22/2022 6:56:29 PM$ url https://project-orion.mrepol742.repl.co
+12/22/2022 6:56:29 PM$ ip_address 34.110.138.177
+12/22/2022 6:56:50 PM$ event_body 100071743848974 what is matter
+12/22/2022 6:56:52 PM$ send_message 2583856894982516 Matter is anything that has mass and takes up space. It can be solid, liquid, or gas. Examples of matter include rocks, water, air, and living things.
+12/22/2022 6:57:25 PM$ wait_timeout >> 6500
+12/22/2022 6:57:25 PM$ wait_timeout >> 4000
+12/22/2022 6:57:25 PM$ send_typing
+12/22/2022 6:57:25 PM$ send_typing
+12/22/2022 6:57:29 PM$ 100006171793243
+12/22/2022 6:57:29 PM$ 100023785687056
+12/22/2022 6:57:29 PM$ 100023785687056
+12/22/2022 6:57:29 PM$ send_message_reply 6942091245864108 hahahahhah
+12/22/2022 6:57:31 PM$ react_message mid.$gABipy5K1RKyLasBZlWFOXrrSEn8C :laughing:
+12/22/2022 6:57:46 PM$ attachments_type photo
+12/22/2022 6:57:46 PM$ photo_0 https://scontent.xx.fbcdn.net/v/t1.15752-9/320455603_885319232606572_686999050289095635_n.jpg?stp=dst-jpg_p480x480&_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_eui2=AeH5sTi1o22YWrYqW7n2nqJyKXAEsE2VvLcpcASwTZW8t0lhiWXbqgtKOQrCKx1Yx-_gdlHrYS3aanGyG1MXIdNK&_nc_ohc=q9YDFYh-0CgAX_nJ6Vk&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdSOYEIN8oWm_6FzXtMt2lQiunXQ6qQTQrLFWFjR3kDJhQ&oe=63CBBB9E
+12/22/2022 6:57:46 PM$ wait_timeout >> 5000
+12/22/2022 6:57:51 PM$ send_message 2583856894982516 
+12/22/2022 6:57:51 PM$ [object Object]
+12/22/2022 6:57:51 PM$ send_typing
+12/22/2022 6:57:52 PM$ event_body 100081144393297 _what is matter
+12/22/2022 6:57:54 PM$ wait_timeout >> 5500
+12/22/2022 6:57:55 PM$ send_typing
+12/22/2022 6:57:56 PM$ wait_timeout >> 5000
+12/22/2022 6:57:57 PM$ send_typing
+12/22/2022 6:58:00 PM$ 100061632526048
+12/22/2022 6:58:00 PM$ 100081144393297
+12/22/2022 6:58:00 PM$ send_message_reply 2583856894982516 Matter is anything that has mass and takes up space. It includes all physical objects, such as rocks, plants, animals, and people. It also includes energy and forces like gravity.
+12/22/2022 6:58:01 PM$ react_message mid.$gABipy5K1RKyLasDTcWFOXuKsmK9z :laughing:
+12/22/2022 6:58:23 PM$ react_message mid.$gAAkuARBgOXSLasE88WFOXvzRNwS1 :sad:
+12/22/2022 6:58:24 PM$ send_typing
+12/22/2022 6:58:42 PM$ wait_timeout >> 4400
+12/22/2022 6:58:42 PM$ wait_timeout >> 5000
+12/22/2022 6:58:43 PM$ send_typing
+12/22/2022 6:58:43 PM$ send_typing
+12/22/2022 6:58:46 PM$ react_message mid.$gABipy5K1RKyLasGHj2FOXwZjhA_M :laughing:
+12/22/2022 6:58:47 PM$ 100006171793243
+12/22/2022 6:58:47 PM$ 100023785687056
+12/22/2022 6:58:47 PM$ 100023785687056
+12/22/2022 6:58:47 PM$ send_message_reply 6942091245864108 ahahaahh
+12/22/2022 6:59:34 PM$ attachments_type share

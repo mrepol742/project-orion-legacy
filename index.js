@@ -424,17 +424,8 @@ login({
 
         if (err) return log(err);
 
-        if (event.body === undefined && (event.type == "message" || event.type == "message_reply")) {
+        if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
             return;
-        }
-
-        if (event.senderID == getMyId()) {
-          let body = event.body;
-            if (!body.startsWith("_")) {
-                return;
-            } else {
-                event.body = body.slice(1);
-            }
         }
 
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
@@ -459,6 +450,15 @@ login({
             api.markAsRead(event.threadID, (err) => {
                 if (err) log(err);
             });
+        }
+
+         if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
+          let body = event.body;
+            if (!body.startsWith("_")) {
+                return;
+            } else {
+                event.body = body.slice(1);
+            }
         }
 
         switch (event.type) {
@@ -614,15 +614,15 @@ login({
                 }
                 break;
             case "message_unsend":
+                if (vips.includes(event.senderID)) {
+                    break;
+                }
                 let d = msgs[event.messageID];
                 if (d === undefined) {
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
-                unsend_msgs[event.messageID] = d;
-                if (vips.includes(event.senderID)) {
-                    break;
-                }
+             unsend_msgs[event.messageID] = d;
                 let time = getTimestamp();
                 api.getUserInfo(event.senderID, (err, data) => {
                     if (err) return log(err);
