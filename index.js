@@ -424,7 +424,7 @@ login({
 
         if (err) return log(err);
 
-        if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
+        if (event.body == null && !(typeof event.body === "string")) {
             return;
         }
 
