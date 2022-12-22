@@ -1280,7 +1280,7 @@ async function ai(api, event) {
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
                 "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD +
-                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\nLink: https://project-orion.mrepol742.repl.co\nIP: " + addresses[0]);
+                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\nLink: https://project-orion.mrepol742.repl.co\nIP: " + ipaddress[0]);
         })();
     } else if (query.startsWith("ping")) {
         if (isGoingToFast(api, event)) {
@@ -1292,7 +1292,7 @@ async function ai(api, event) {
         } else {
 try {
             data.shift();
-            let host = [data.join(" ")];
+            let hosts = [data.join(" ")];
             hosts.forEach(function (host) {
                 ping.promise.probe(host)
                     .then(function (res) {
