@@ -380,7 +380,7 @@ login({
     appState: JSON.parse(fs.readFileSync('cache/app_state.json', 'utf8'))
 }, (err, api) => {
     if (err) return log(err);
-
+/*
     process.on('uncaughtException', (err, origin) => {
         let a = `caught_exception ${err}\n` +
             `exception_origin ${origin}`;
@@ -396,7 +396,7 @@ login({
         api.sendMessage(a, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
-    });
+    });*/
 
     cron.schedule('*/10 * * * *', () => {
         log("save_state");
@@ -424,15 +424,16 @@ login({
 
         if (err) return log(err);
 
-        if (event.body == null && !(typeof event.body === "string") && (event.type == "message" || event.type == "message_reply")) {
+        if (event.body === undefined && !(typeof event.body === "string") && (event.type == "message" || event.type == "message_reply")) {
             return;
         }
 
-        if (event.senderID == getMyId() || event.type == "message_reply") {
-            if (!event.body.startsWith("_")) {
+        if (event.senderID == getMyId()) {
+          let body = event.body;
+            if (!body.startsWith("_")) {
                 return;
             } else {
-                event.body = event.body.slice(1);
+                event.body = body.slice(1);
             }
         }
 

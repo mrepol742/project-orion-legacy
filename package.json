@@ -23,6 +23,7 @@
     "node-cron": "^3.0.2",
     "openai": "^3.1.0",
     "pdfdrive-ebook-scraper": "^2.0.0",
+    "ping": "^0.4.2",
     "weather-js": "^2.0.0",
     "youtubei.js": "^1.4.5"
   }
