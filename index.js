@@ -463,7 +463,7 @@ login({
             }
         }
 
-        if (event.body == "stop") {
+        if ((event.type == "message" || event.type == "message_reply") && event.body == "stop") {
             if (vips.includes(event.senderID)) {
                 sendMessage(api, event, "Goodbye...");
                 return listenEmitter.stopListening();
