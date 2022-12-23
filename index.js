@@ -668,7 +668,7 @@ login({
                             });
                         });
                     } else if (d[0] == "file") {   
-                        let filename = __dirname + '/cache/files/unsend_file_' + time + "." + d[1][2];
+                        let filename = __dirname + '/cache/files/unsend_file_' + time + "_" + d[1][2];
                         let file = fs.createWriteStream(filename);
                         let gifRequest = http.get(d[1][3], function(gifResponse) {
                             gifResponse.pipe(file);
@@ -5382,7 +5382,7 @@ function saveEvent(event) {
                 break;
             case "file":
                 log(JSON.stringify(event.attachments[0]))
-                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].contentType, event.attachments[0].url]];
+                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url]];
                 break;
             case "location":
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
