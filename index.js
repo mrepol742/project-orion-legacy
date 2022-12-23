@@ -4534,7 +4534,7 @@ function isGoingToFast(api, event) {
         cmd1[event.threadID] = Math.floor(Date.now() / 1000) + (120);
         return false;
     } else if (Math.floor(Date.now() / 1000) < cmd1[event.threadID]) {
-        let seconds = (cmd1[event.senderID] - Math.floor(Date.now() / 1000)) % 120;
+        let seconds = (cmd1[event.threadID] - Math.floor(Date.now() / 1000)) % 120;
         sendMessageOnly(api, event, "It looks like you guys are going to fast of calling this AI commands. Please wait " + seconds + " seconds.");
         log("The ThreadID is temporarily blocked for " + seconds + " seconds");
         return true;
@@ -4550,7 +4550,7 @@ function isGoingToFastResendingOfEmo(event) {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
     } else if (Math.floor(Date.now() / 1000) < emo[event.threadID]) {
-        let seconds = (threadMaintenance[event.senderID] - Math.floor(Date.now() / 1000)) % (60 * 2);
+        let seconds = (threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 2);
         log("The ThreadID is temporarily blocked from resending of emoji for " + seconds + " seconds.");
         return true;
     } else {
@@ -4564,7 +4564,7 @@ function isGoingToFastCallingTheCommand(event) {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
         return false;
     } else if (Math.floor(Date.now() / 1000) < threadMaintenance[event.threadID]) {
-        let seconds = (threadMaintenance[event.senderID] - Math.floor(Date.now() / 1000)) % (60 * 5);
+        let seconds = (threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 5);
         log("The ThreadID is temporarily blocked from sending the Maintenance message for " + seconds + " seconds.");
         return true;
     } else {
@@ -4578,7 +4578,7 @@ function repeatOfNonWWW(event) {
         nwww[event.threadID] = Math.floor(Date.now() / 1000) + (60);
         return false;
     } else if (Math.floor(Date.now() / 1000) < nwww[event.threadID]) {
-        let seconds = (nwww[event.senderID] - Math.floor(Date.now() / 1000)) % 60;
+        let seconds = (nwww[event.threadID] - Math.floor(Date.now() / 1000)) % 60;
         log("The ThreadID is temporarily blocked from resending AI Query for " + seconds + " seconds.")
         return true;
     } else {
@@ -4592,7 +4592,7 @@ function isGoingToFastReporting(api, event) {
         userWhoSendDamnReports[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 10);
         return false;
     } else if (Math.floor(Date.now() / 1000) < userWhoSendDamnReports[event.threadID]) {
-        let seconds = (userWhoSendDamnReports[event.senderID] - Math.floor(Date.now() / 1000)) % (60 * 10);
+        let seconds = (userWhoSendDamnReports[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 10);
         sendMessage(api, event, "Please wait " + seconds + " seconds. Before sending another report.");
         log("The ThreadID is temporarily blocked from using sendReport for " + seconds + " seconds.");
         return true;
