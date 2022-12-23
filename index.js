@@ -89,6 +89,7 @@ let timeZones = ['Europe/Andorra', 'Asia/Dubai', 'Asia/Kabul', 'Europe/Tirane', 
 let threads = ""
 let threadIdMV = {};
 let cmd = {};
+let cmd1 = {};
 let emo = {};
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
@@ -232,7 +233,7 @@ help5 += "\n⦿ count --consonants";
 help5 += "\n⦿ wfind [text]";
 help5 += "\n⦿ time";
 help5 += "\n⦿ time [timezone]";
-help5 += "\n⦿ ping";
+help5 += "\n⦿ uptime";
 help5 += "\n⦿ summ [text]";
 help5 += "\n⦿ anime [category]";
 help5 += "\n   waifu, megumin, bully, cuddle";
@@ -380,7 +381,7 @@ login({
     appState: JSON.parse(fs.readFileSync('cache/app_state.json', 'utf8'))
 }, (err, api) => {
     if (err) return log(err);
-/*
+
     process.on('uncaughtException', (err, origin) => {
         let a = `caught_exception ${err}\n` +
             `exception_origin ${origin}`;
@@ -396,7 +397,7 @@ login({
         api.sendMessage(a, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
-    });*/
+    });
 
     cron.schedule('*/10 * * * *', () => {
         log("save_state");
@@ -424,7 +425,7 @@ login({
 
         if (err) return log(err);
 
-        if (event.body == null && !(typeof event.body === "string")) {
+        if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
             return;
         }
 
@@ -622,47 +623,16 @@ login({
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
-             unsend_msgs[event.messageID] = d;
+                unsend_msgs[event.messageID] = d;
                 let time = getTimestamp();
                 api.getUserInfo(event.senderID, (err, data) => {
                     if (err) return log(err);
                     if (d[0] == "photo") {
                         unsendPhoto(api, event, d, data);
                     } else if (d[0] == "animated_images") {
-                        let filename = __dirname + '/cache/images/unsend_gif_' + time + '.gif'
-                        let file = fs.createWriteStream(filename);
-                        let gifRequest = http.get(d[1][2], function(gifResponse) {
-                            gifResponse.pipe(file);
-                            file.on('finish', function() {
-                                if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                    let time = getTimestamp();
-                                    api.getThreadInfo(event.threadID, (err, gc) => {
-                                        if (err) return log(err);
-                                        if (gc.isGroup) {
-                                            let message = {
-                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
-                                                attachment: fs.createReadStream(filename),
-                                                mentions: [{
-                                                    tag: '@' + data[event.senderID]['name'],
-                                                    id: event.senderID,
-                                                    fromIndex: 0
-                                                }]
-                                            }
-                                            sendMessageOnly(api, event, message);
-                                            log("unsend_gif_group " + d[1][0] + " " + filename);
-                                        } else {
-                                            let message = {
-                                                body: "You deleted this GIF. \n",
-                                                attachment: fs.createReadStream(filename)
-                                            }
-                                            sendMessageOnly(api, event, message);
-                                            log("unsend_gif_group " + d[1][0] + " " + filename);
-                                        }
-                                    });
-                                    unLink(filename);
-                                }
-                            });
-                        });
+                        unsendGif(api, event, d, data);
+                    } else if (d[0] == "file") {   
+                    } else if (d[0] == "location") {
                     } else if (d[0] == "sticker") {
                         let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
                         let file = fs.createWriteStream(filename);
@@ -1588,6 +1558,7 @@ try {
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
                         log("downloading " + info.video_details.title);
+                        reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
                         let limit = 25 * 1024 * 1024;
@@ -1654,6 +1625,7 @@ try {
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
                         log("downloading " + info.video_details.title);
+                        reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
                         let limit = 25 * 1024 * 1024;
@@ -4549,14 +4521,26 @@ function isGoingToFast(api, event) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (15);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
-            log("The user " + event.senderID + " is going to fast of executing commands >> " +
-                Math.floor((cmd[event.senderID] - Math.floor(Date.now() / 1000)) / 15) + " mins and " +
-                (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 15 + " seconds");
+            let seconds = (cmd1[event.senderID] - Math.floor(Date.now() / 1000)) % 15;
+            sendMessage(api, event, "Hold on for " + seconds + " seconds.");
+            log("The UserID is temporarily blocked for " + seconds + " seconds.");
             return true;
         } else {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (15);
             return false;
         }
+    }
+    if (!(event.threadID in cmd1)) {
+        cmd1[event.threadID] = Math.floor(Date.now() / 1000) + (120);
+        return false;
+    } else if (Math.floor(Date.now() / 1000) < cmd1[event.threadID]) {
+        let seconds = (cmd1[event.senderID] - Math.floor(Date.now() / 1000)) % 120;
+        sendMessageOnly(api, event, "It looks like you guys are going to fast of calling this AI commands. Please wait " + seconds + " seconds.");
+        log("The ThreadID is temporarily blocked for " + seconds + " seconds");
+        return true;
+    } else {
+        cmd1[event.threadID] = Math.floor(Date.now() / 1000) + (120);
+        return false;
     }
     return false;
 }
@@ -4566,9 +4550,8 @@ function isGoingToFastResendingOfEmo(event) {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
     } else if (Math.floor(Date.now() / 1000) < emo[event.threadID]) {
-        log("The user " + event.threadID + " is going to fast of sending emoji >> " +
-            Math.floor((emo[event.threadID] - Math.floor(Date.now() / 1000)) / 60 * 2) + " mins and " +
-            (emo[event.threadID] - Math.floor(Date.now() / 1000)) % 60 * 2 + " seconds");
+        let seconds = (threadMaintenance[event.senderID] - Math.floor(Date.now() / 1000)) % (60 * 2);
+        log("The ThreadID is temporarily blocked from resending of emoji for " + seconds + " seconds.");
         return true;
     } else {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
@@ -4581,9 +4564,8 @@ function isGoingToFastCallingTheCommand(event) {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
         return false;
     } else if (Math.floor(Date.now() / 1000) < threadMaintenance[event.threadID]) {
-        log("The user " + event.threadID + " is going to fast of calling the command >> " +
-            Math.floor((threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) / 60 * 5) + " mins and " +
-            (threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) % 60 * 5 + " seconds");
+        let seconds = (threadMaintenance[event.senderID] - Math.floor(Date.now() / 1000)) % (60 * 5);
+        log("The ThreadID is temporarily blocked from sending the Maintenance message for " + seconds + " seconds.");
         return true;
     } else {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
@@ -4596,9 +4578,8 @@ function repeatOfNonWWW(event) {
         nwww[event.threadID] = Math.floor(Date.now() / 1000) + (60);
         return false;
     } else if (Math.floor(Date.now() / 1000) < nwww[event.threadID]) {
-        log("The user " + event.threadID + " is going to fast of calling the command >> " +
-            Math.floor((nwww[event.threadID] - Math.floor(Date.now() / 1000)) / 60) + " mins and " +
-            (nwww[event.threadID] - Math.floor(Date.now() / 1000)) % 60 + " seconds");
+        let seconds = (nwww[event.senderID] - Math.floor(Date.now() / 1000)) % 60;
+        log("The ThreadID is temporarily blocked from resending AI Query for " + seconds + " seconds.")
         return true;
     } else {
         nwww[event.threadID] = Math.floor(Date.now() / 1000) + (60);
@@ -4611,9 +4592,9 @@ function isGoingToFastReporting(api, event) {
         userWhoSendDamnReports[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 10);
         return false;
     } else if (Math.floor(Date.now() / 1000) < userWhoSendDamnReports[event.threadID]) {
-        let min = Math.floor((userWhoSendDamnReports[event.threadID] - Math.floor(Date.now() / 1000)) / 60 * 10);
-        let sec = (userWhoSendDamnReports[event.threadID] - Math.floor(Date.now() / 1000)) % 60 * 10;
-        sendMessage(api, event, "Please wait " + min + " min and " + sec + " seconds before sending another report.");
+        let seconds = (userWhoSendDamnReports[event.senderID] - Math.floor(Date.now() / 1000)) % (60 * 10);
+        sendMessage(api, event, "Please wait " + seconds + " seconds. Before sending another report.");
+        log("The ThreadID is temporarily blocked from using sendReport for " + seconds + " seconds.");
         return true;
     } else {
         userWhoSendDamnReports[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 10);
@@ -4840,7 +4821,6 @@ async function getImages(api, event, images) {
 async function unsendPhoto(api, event, d, data) {
     let time = getTimestamp();
     let arr = d[1][2];
-    log(JSON.stringify(d));
     let images = []
     for (let i = 0; i < arr.length; i++) {
         await wait(1000);
@@ -4895,8 +4875,65 @@ async function unsendPhoto(api, event, d, data) {
     }
 }
 
+async function unsendGif(api, event, d, data) {
+    let time = getTimestamp();
+    let arr = d[1][2];
+    let images = []
+    for (let i = 0; i < arr.length; i++) {
+        await wait(1000);
+        let fname = __dirname + "/cache/images/unsend_gif_" + i + "_" + time + ".png";
+        request(d[1][2][i]).pipe(fs.createWriteStream(fname));
+        images.push(fname);
+    }
+    await wait(1000);
+    let accm = [];
+    for (let i = 0; i < images.length; i++) {
+        accm.push(fs.createReadStream(images[i]));
+    }
+
+    if (settings.onUnsend && !threads.includes(event.threadID)) {
+        api.getThreadInfo(event.threadID, (err, gc) => {
+            if (err) return log(err);
+            if (gc.isGroup) {
+                let message1 = {
+                    body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                    attachment: accm,
+                    mentions: [{
+                        tag: '@' + data[event.senderID]['name'],
+                        id: event.senderID,
+                        fromIndex: 0
+                    }]
+                }
+                api.sendMessage(message1, event.threadID, (err, messageInfo) => {
+                    if (err) {
+                        log(err);
+                    }
+                    for (let i = 0; i < images.length; i++) {
+                        unLink(images[i])
+                    }
+                }, event.messageID)
+                log("unsend_gif_group " + d[1][0]);
+            } else {
+                let message1 = {
+                    body: "You deleted this photo. \n",
+                    attachment: accm
+                }
+                api.sendMessage(message1, event.threadID, (err, messageInfo) => {
+                    if (err) {
+                        log(err);
+                    }
+                    for (let i = 0; i < images.length; i++) {
+                        unLink(images[i])
+                    }
+                })
+                log("unsend_gif " + d[1][0]);
+            }
+        });
+    }
+}
+
 async function unLink(dir) {
-    await wait(60000);
+    await wait(1000*120);
     fs.unlink(dir, (err => {
         if (err) log(err);
         else {
@@ -5190,17 +5227,24 @@ function saveEvent(event) {
         log("attachments_type " + event.attachments[0].type);
         switch (event.attachments[0].type) {
             case "photo":
-                let images = [];
+                let photo = [];
                 for (let i = 0; i < 25; i++) {
                     if (!(event.attachments[i] === undefined)) {
-                        images.push(event.attachments[i].url);
+                        photo.push(event.attachments[i].url);
                         log("photo_" + i + " " + event.attachments[i].url);
                     }
                 }
-                msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, images]];
+                msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, photo]];
                 break;
             case "animated_images":
-                msgs[event.messageID] = ['animated_images', [getFormattedDate(), event.senderID, event.attachments[0].url]]
+                let animated_images = [];
+                for (let i = 0; i < 25; i++) {
+                    if (!(event.attachments[i] === undefined)) {
+                        animated_images.push(event.attachments[i].url);
+                        log("animated_images_" + i + " " + event.attachments[i].url);
+                    }
+                }
+                msgs[event.messageID] = ['animated_images', [getFormattedDate(), event.senderID, animated_images]];
                 break;
             case "sticker":
                 msgs[event.messageID] = ['sticker', [getFormattedDate(), event.senderID, event.attachments[0].url]]
@@ -5210,6 +5254,12 @@ function saveEvent(event) {
                 break;
             case "audio":
                 msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
+                break;
+            case "file":
+                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, fileevent.attachments[0].filename, event.attachments[0].url]];
+                break;
+            case "location":
+                msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
                 break;
             default:
                 msgs[event.messageID] = [getFormattedDate(), event.senderID, event.body];
