@@ -284,6 +284,7 @@ helpadmin += "\n⦿ debug [on|off]";
 helpadmin += "\n⦿ sleep [on|off]";
 helpadmin += "\n⦿ simultaneousExecution [on/off]";
 helpadmin += "\n⦿ stop";
+helpadmin += "\n⦿ clearCache";
 helpadmin += "\n⦿ refreshState";
 helpadmin += "\n⦿ saveState";
 helpadmin += "\n⦿ addAdmin @mention";
@@ -1128,7 +1129,39 @@ async function ai(api, event) {
         }
         someA(api, event, query, input);
     }
-    if (input == "debugon") {
+    if (input == "clearcache") {
+        if (vips.includes(event.senderID)) {
+            let count = 0;
+            fs.readdir(__dirname + "/audios/", function (err, files) {
+                if (err) {
+                    return log(err);
+                }
+                files.forEach(function (file) {
+                    log(file); 
+                    count++;
+                });
+            });
+            fs.readdir(__dirname + "/images/", function (err, files) {
+                if (err) {
+                    return log(err);
+                }
+                files.forEach(function (file) {
+                    log(file); 
+                    count++;
+                });
+            });
+            fs.readdir(__dirname + "/videos/", function (err, files) {
+                if (err) {
+                    return log(err);
+                }
+                files.forEach(function (file) {
+                    log(file); 
+                    count++;
+                });
+            });
+            sendMessage(api, event, "Cache cleared " + count + " files freed.");
+        }
+    } else if (input == "debugon") {
         if (vips.includes(event.senderID)) {
             settings.isDebugEnabled = true;
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
@@ -1155,8 +1188,10 @@ async function ai(api, event) {
             sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
         }
     } else if (input == "stop") {
-        sendMessage(api, event, "Goodbye...");
-        return listenEmitter.stopListening();
+        if (vips.includes(event.senderID)) {
+            sendMessage(api, event, "Goodbye...");
+            return listenEmitter.stopListening();
+        }
     }
     if (query.startsWith("ttsjap")) {
         if (isGoingToFast(api, event)) {
