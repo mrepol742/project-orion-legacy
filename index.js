@@ -677,7 +677,13 @@ login({
                     } else if (d[0] == "file") {   
                         let filename = __dirname + '/cache/files/unsend_file_' + time + "_" + d[1][2];
                         let file = fs.createWriteStream(filename);
-                        log(d[1][3])
+                        
+                    request(d[1][3]).pipe(fs.createWriteStream(__dirname + '/cache/files/' + d[1][2]))
+
+                    .on('finish', () => {
+                       
+                    });
+
                         let gifRequest = http.get(d[1][3], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
@@ -713,7 +719,7 @@ login({
                     } else if (d[0] == "location") {
                         sendMessageOnly(api, event, "Unsupported action. Please wait a while.");
                     } else if (d[0] == "sticker") {
-                        let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.gif';
+                        let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
                         let file = fs.createWriteStream(filename);
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
@@ -736,7 +742,7 @@ login({
                                             log("unsend_sticker_group " + d[1][0] + " " + filename);
                                         } else {
                                             let message = {
-                                                body: "You deleted this sticker.\n",
+                                              //  body: "You deleted this sticker.\n",
                                                 attachment: fs.createReadStream(filename)
                                             }
                                             sendMessageOnly(api, event, message);
