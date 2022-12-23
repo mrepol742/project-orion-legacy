@@ -1129,7 +1129,7 @@ async function ai(api, event) {
         }
         someA(api, event, query, input);
     }
-    if (input == "clearcache") {
+    if (query == "clearcache") {
         if (vips.includes(event.senderID)) {
             let count = 0;
             fs.readdir(__dirname + "/audios/", function (err, files) {
@@ -1161,33 +1161,33 @@ async function ai(api, event) {
             });
             sendMessage(api, event, "Cache cleared " + count + " files freed.");
         }
-    } else if (input == "debugon") {
+    } else if (query == "debugon") {
         if (vips.includes(event.senderID)) {
             settings.isDebugEnabled = true;
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Debug mode enabled.");
         }
-    } else if (input == "debugoff") {
+    } else if (query == "debugoff") {
         if (vips.includes(event.senderID)) {
             settings.isDebugEnabled = false;
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Konnichiwa i am back.");
         }
-    } else if (input == "sleepon") {
+    } else if (query == "sleepon") {
         if (vips.includes(event.senderID)) {
             api.muteThread(message.threadID, -1, (err) => {
                 if (err) log(err);
             });
             sendMessage(api, event, "Konbanwa. I'm sleepy now...");
         }
-    } else if (input == "sleepoff") {
+    } else if (query == "sleepoff") {
         if (vips.includes(event.senderID)) {
             api.muteThread(message.threadID, 0, (err) => {
                 if (err) log(err);
             });
             sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
         }
-    } else if (input == "stop") {
+    } else if (query == "stop") {
         if (vips.includes(event.senderID)) {
             sendMessage(api, event, "Goodbye...");
             return listenEmitter.stopListening();
