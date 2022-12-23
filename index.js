@@ -1140,8 +1140,8 @@ async function ai(api, event) {
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
-                        unLink(file);
                         count++;
+                        unLink(file);
                     }
                 });
             });
@@ -1151,8 +1151,8 @@ async function ai(api, event) {
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
-                        unLink(file);
                         count1++;
+                        unLink(file);
                     }
                 });
             });
@@ -1162,8 +1162,8 @@ async function ai(api, event) {
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
-                        unLink(file);
                         count2++;
+                        unLink(file);
                     }
                 });
             });
