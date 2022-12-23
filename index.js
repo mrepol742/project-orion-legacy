@@ -4917,7 +4917,8 @@ async function getImages(api, event, images) {
         await wait(1000);
         let url = images[i].url;
         log("get_images " + url);
-        if (images[i].type.equals("image/png") || images[i].type.equals("image/jpg") || images[i].type.equals("image/jpeg")) {
+        let type = images[i].type;
+        if (type.equals("image/png") || type.equals("image/jpg") || type.equals("image/jpeg")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             log("fname " + fname);
             log("accepted_url " + url);
