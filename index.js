@@ -125,7 +125,7 @@ help += "\n⦿ search [text]"
 help += "\n⦿ searchincog [text]";
 help += "\n⦿ searchimg [text]";
 help += "\n⦿ gencode [text]";
-help += "\n⦿ dict [text]";
+help += "\n⦿ dictionary [text]";
 help += "\n⦿ tts [text]";
 help += "\n⦿ baybayin [text]";
 help += "\n⦿ weather [location]";
@@ -281,9 +281,7 @@ helpadmin += "\n⦿ unsend [on|off]";
 helpadmin += "\n⦿ delay [on|off]";
 helpadmin += "\n⦿ nsfw [on|off]";
 helpadmin += "\n⦿ debug [on|off]";
-helpadmin += "\n⦿ sleep [on|off]";
 helpadmin += "\n⦿ simultaneousExecution [on/off]";
-helpadmin += "\n⦿ stop";
 helpadmin += "\n⦿ clearCache";
 helpadmin += "\n⦿ refreshState";
 helpadmin += "\n⦿ saveState";
@@ -299,13 +297,16 @@ helpadmin += "\n⦿ listadmins";
 helpadmin += "\n⦿ listmuted";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
-helpadmin += "\n⦿ setMaxImage [integer]";
-helpadmin += "\n⦿ setTimezone [timezone]";
-helpadmin += "\n⦿ setTextComplextion [complextion]"
-helpadmin += "\n⦿ setMaxTokens [integer]";
-helpadmin += "\n⦿ setTemperature [integer]";
-helpadmin += "\n⦿ setFrequencyPenalty [integer]";
-helpadmin += "\n⦿ setProbabilityMass [integer]";
+
+let helproot = "\n⦿ stop";
+helproot += "\n⦿ notify";
+helproot += "\n⦿ setMaxImage [integer]";
+helproot += "\n⦿ setTimezone [timezone]";
+helproot += "\n⦿ setTextComplextion [complextion]"
+helproot += "\n⦿ setMaxTokens [integer]";
+helproot += "\n⦿ setTemperature [integer]";
+helproot += "\n⦿ setFrequencyPenalty [integer]";
+helproot += "\n⦿ setProbabilityMass [integer]";
 
 let apiKey = [
     // manhict.tech/api
@@ -404,6 +405,10 @@ login({
         log("save_state");
         fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
         messagesD = getFormattedDate();
+    },
+    {
+        scheduled: true,
+        timezone: "Asia/Manila"
     });
 
     cron.schedule('0 * * * *', () => {
@@ -413,6 +418,10 @@ login({
         })
         fb_stateD = getFormattedDate();
         log("fb_save_state")
+    },
+    {
+        scheduled: true,
+        timezone: "Asia/Manila"
     });
 
     api.setOptions({
@@ -464,7 +473,7 @@ login({
         }
 
         if ((event.type == "message" || event.type == "message_reply") && event.body == "stop") {
-            if (vips.includes(event.senderID)) {
+            if (isMyId(event.senderID)) {
                 sendMessage(api, event, "Goodbye...");
                 return listenEmitter.stopListening();
             }
@@ -481,7 +490,15 @@ login({
                 let input = event.body;
                 let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 let query2 = formatQuery(input.toLowerCase());
-                if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
+                if (query == "notify") {
+                    if (isMyId(event.senderID)) {
+                        if (event.messageReply.body == "") {
+                            sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
+                        } else {
+                            sendMessageToAll(api, event.messageReply.body);
+                        }
+                    }
+                } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
                     if (vips.includes(event.senderID)) {
                         if (event.messageReply.senderID != getMyId()) {
                             sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
@@ -1260,20 +1277,6 @@ async function ai(api, event) {
             settings.isDebugEnabled = false;
             fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Konnichiwa i am back.");
-        }
-    } else if (query == "sleepon") {
-        if (vips.includes(event.senderID)) {
-            api.muteThread(message.threadID, -1, (err) => {
-                if (err) log(err);
-            });
-            sendMessage(api, event, "Konbanwa. I'm sleepy now...");
-        }
-    } else if (query == "sleepoff") {
-        if (vips.includes(event.senderID)) {
-            api.muteThread(message.threadID, 0, (err) => {
-                if (err) log(err);
-            });
-            sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
         }
     }
     if (query.startsWith("ttsjap")) {
@@ -2555,7 +2558,7 @@ try {
             sendMessage(api, event, "The engineers have been notified.");
         }
     } else if (query.startsWith("setmaxtokens")) {
-        if (vips.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setMaxTokens [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetMaxTokens 1000.")
@@ -2574,7 +2577,7 @@ try {
             }
         }
     } else if (query.startsWith("settemperature")) {
-        if (vips.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setTemperature [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTemperature 0.")
@@ -2593,7 +2596,7 @@ try {
             }
         }
     } else if (query.startsWith("setfrequencypenalty")) {
-        if (vips.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setFrequencyPenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetFrequencyPenalty 1.")
@@ -2612,7 +2615,7 @@ try {
             }
         }
     } else if (query.startsWith("setpresencepenalty")) {
-        if (vips.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setPresencePenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPresencePenalty 1.")
@@ -2631,7 +2634,7 @@ try {
             }
         }
     } else if (query.startsWith("settextcomplextion")) {
-        if (vips.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it.")
@@ -2644,7 +2647,7 @@ try {
             }
         }
     } else if (query.startsWith("setmaximage")) {
-        if (vips.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it.")
@@ -2663,7 +2666,7 @@ try {
             }
         }
     } else if (query.startsWith("setprobabilitymass")) {
-        if (vips.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setProbabilityMass [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetProbabilityMass 0.1.")
@@ -3108,13 +3111,15 @@ try {
                 break;
         }
     } else if (query == "cmdadmin") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
         if (!vips.includes(event.senderID)) {
             return;
         }
         sendMessage(api, event, "The Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+    } else if (query == "cmdroot") {
+        if (!isMyId(event.senderID)) {
+            return;
+        }
+        sendMessage(api, event, "The Project Orion Root\n" + helproot + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdall") {
         if (isGoingToFast(api, event)) {
             return;
@@ -5389,4 +5394,14 @@ function saveEvent(event) {
     } else {
         msgs[event.messageID] = [getFormattedDate(), event.senderID, event.body];
     }
+}
+
+async function sendMessageToAll(api, message) {
+    api.getThreadList(5, null, ['INBOX'], (err, data) => {
+        if (err) return log(err);
+        for (let i = 0; i <= data.length; i++) {
+            await wait(2000);
+            api.sendMessage(message + "\n\n\nID: " + ((i * 742) * 13) + "\nTID: " + data.threadID + "\n\nThis is Project Orion AI/NLP. All Rights Reserved.", data.threadID);
+        } 
+    });
 }
