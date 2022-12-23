@@ -463,6 +463,13 @@ login({
             }
         }
 
+        if (event.body == "stop") {
+            if (vips.includes(event.senderID)) {
+                sendMessage(api, event, "Goodbye...");
+                return listenEmitter.stopListening();
+            }
+        }
+
         switch (event.type) {
             case "message":
                 saveEvent(event);
@@ -1278,11 +1285,6 @@ async function ai(api, event) {
                 if (err) log(err);
             });
             sendMessage(api, event, "Konnichiwa. I'm back now. How may i help you?");
-        }
-    } else if (query == "stop") {
-        if (vips.includes(event.senderID)) {
-            sendMessage(api, event, "Goodbye...");
-            return listenEmitter.stopListening();
         }
     }
     if (query.startsWith("ttsjap")) {
