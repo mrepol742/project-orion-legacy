@@ -4854,7 +4854,7 @@ async function unsendPhoto(api, event, d, data) {
                     for (let i = 0; i < images.length; i++) {
                         unLink(images[i])
                     }
-                }, event.messageID)
+                })
                 log("unsend_photo_group " + d[1][0]);
             } else {
                 let message1 = {
@@ -4911,7 +4911,7 @@ async function unsendGif(api, event, d, data) {
                     for (let i = 0; i < images.length; i++) {
                         unLink(images[i])
                     }
-                }, event.messageID)
+                })
                 log("unsend_gif_group " + d[1][0]);
             } else {
                 let message1 = {
