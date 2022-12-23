@@ -668,7 +668,7 @@ login({
                             });
                         });
                     } else if (d[0] == "file") {   
-                        let filename = __dirname + '/cache/images/unsend_file_' + time + "." + d[1][2];
+                        let filename = __dirname + '/cache/files/unsend_file_' + time + "." + d[1][2];
                         let file = fs.createWriteStream(filename);
                         let gifRequest = http.get(d[1][3], function(gifResponse) {
                             gifResponse.pipe(file);
