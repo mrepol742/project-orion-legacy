@@ -5236,7 +5236,7 @@ function saveEvent(event) {
                 }
                 msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, photo]];
                 break;
-            case "animated_images":
+            case "animated_image":
                 let animated_images = [];
                 for (let i = 0; i < 25; i++) {
                     if (!(event.attachments[i] === undefined)) {
