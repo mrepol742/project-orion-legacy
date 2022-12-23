@@ -1132,34 +1132,42 @@ async function ai(api, event) {
     if (query == "clearcache") {
         if (vips.includes(event.senderID)) {
             let count = 0;
-            fs.readdir(__dirname + "/audios/", function (err, files) {
+            let count1 = 0;
+            let count2 = 0;
+            fs.readdir(__dirname + "/cache/audios/", function (err, files) {
                 if (err) {
                     return log(err);
                 }
                 files.forEach(function (file) {
-                    log(file); 
-                    count++;
+                    if (!file.endsWith(".gitkeep")) {
+                        unLink(file);
+                        count++;
+                    }
                 });
             });
-            fs.readdir(__dirname + "/images/", function (err, files) {
+            fs.readdir(__dirname + "/cache/images/", function (err, files) {
                 if (err) {
                     return log(err);
                 }
                 files.forEach(function (file) {
-                    log(file); 
-                    count++;
+                    if (!file.endsWith(".gitkeep")) {
+                        unLink(file);
+                        count1++;
+                    }
                 });
             });
-            fs.readdir(__dirname + "/videos/", function (err, files) {
+            fs.readdir(__dirname + "/cache/videos/", function (err, files) {
                 if (err) {
                     return log(err);
                 }
                 files.forEach(function (file) {
-                    log(file); 
-                    count++;
+                    if (!file.endsWith(".gitkeep")) {
+                        unLink(file);
+                        count2++;
+                    }
                 });
             });
-            sendMessage(api, event, "Cache cleared " + count + " files freed.");
+            sendMessage(api, event, "Cache cleared.\n\n⦿ Cache 1: " + count + " files\n⦿ Cache 2: " + count1 + " files\n⦿ Cache 3: " + count2 + " files\n\nThey are now scheduled for deletion.");
         }
     } else if (query == "debugon") {
         if (vips.includes(event.senderID)) {
