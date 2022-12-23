@@ -91,10 +91,6 @@ let threadIdMV = {};
 let cmd = {};
 let cmd1 = {};
 let emo = {};
-let cacheI = {};
-let cacheV = {};
-let cacheA = {};
-let cacheF = {};
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
 let nwww = {};
@@ -1134,6 +1130,10 @@ async function ai(api, event) {
         someA(api, event, query, input);
     }
     if (query == "clearcache") {
+      let count = 0;
+      let count1 = 0;
+      let count2 = 0;
+      let count3 = 0;
         if (vips.includes(event.senderID)) {
             fs.readdir(__dirname + "/cache/audios/", function (err, files) {
                 if (err) {
@@ -1141,7 +1141,7 @@ async function ai(api, event) {
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
-                        cacheA.push(file);
+                      count++;
                         unLink(__dirname + "/cache/audios/" + file);
                     }
                 });
@@ -1152,7 +1152,7 @@ async function ai(api, event) {
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
-                        cacheI.push(file);
+                     count1++;
                         unLink(__dirname + "/cache/images/" + file);
                     }
                 });
@@ -1163,7 +1163,7 @@ async function ai(api, event) {
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
-                        cacheV.push(file);
+                      count2++;
                         unLink(__dirname + "/cache/videos/" + file);
                     }
                 });
@@ -1174,12 +1174,13 @@ async function ai(api, event) {
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
-                        cacheF.push(file);
+                      count3++;
                         unLink(__dirname + "/cache/files/" + file);
                     }
                 });
             });
-            sendMessage(api, event, "Cache cleared.\n\n⦿ Cache 1: " + JSON.stringify(cacheA) + "\n\n⦿ Cache 2: " + JSON.stringify(cacheF) + "\n\n⦿ Cache 3: " + JSON.stringify(cacheI) + "\n\n⦿ Cache 4: " + JSON.stringify(cacheV) + "\n\nThey are now scheduled for deletion.");
+           await wait(2000);
+            sendMessage(api, event, "Cache cleared.\n\n⦿ Cache 1: " + count + " files\n⦿ Cache 2: " + count1 + " files\n⦿ Cache 3: " + count2 + " files\n⦿ Cache 4: " + count3 + " files\n\nThey are now scheduled for deletion.");
         }
     } else if (query == "debugon") {
         if (vips.includes(event.senderID)) {
