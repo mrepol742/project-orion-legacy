@@ -713,7 +713,7 @@ login({
                     } else if (d[0] == "location") {
                         sendMessageOnly(api, event, "Unsupported action. Please wait a while.");
                     } else if (d[0] == "sticker") {
-                        let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
+                        let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.gif';
                         let file = fs.createWriteStream(filename);
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
