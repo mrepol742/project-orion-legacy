@@ -670,6 +670,7 @@ login({
                     } else if (d[0] == "file") {   
                         let filename = __dirname + '/cache/files/unsend_file_' + time + "_" + d[1][2];
                         let file = fs.createWriteStream(filename);
+                        log(d[1][3])
                         let gifRequest = http.get(d[1][3], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
@@ -703,6 +704,7 @@ login({
                             });
                         });
                     } else if (d[0] == "location") {
+                        sendMessageOnly(api, event, "Unsupported action. Please wait a while.");
                     } else if (d[0] == "sticker") {
                         let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
                         let file = fs.createWriteStream(filename);
@@ -4915,7 +4917,7 @@ async function getImages(api, event, images) {
         await wait(1000);
         let url = images[i].url;
         log("get_images " + url);
-        if (!url.endsWith(".gif") && !url.endsWith(".svg.png") && !url.endsWith(".svg") && !url.includes("lookaside.fbsbx.com")) {
+        if (images[i].type.equals("image/png") || images[i].type.equals("image/jpg") || images[i].type.equals("image/jpeg")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             log("fname " + fname);
             log("accepted_url " + url);
@@ -5381,7 +5383,6 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
                 break;
             case "file":
-                log(JSON.stringify(event.attachments[0]))
                 msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url]];
                 break;
             case "location":
