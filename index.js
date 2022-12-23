@@ -4918,7 +4918,7 @@ async function getImages(api, event, images) {
         let url = images[i].url;
         log("get_images " + url);
         let type = images[i].type;
-        if (type == "image/png" || type == "image/jpg" || type == "image/jpeg") {
+        if ((type == "image/png" || type == "image/jpg" || type == "image/jpeg") && !url.endsWith(".svg.png")) {
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             log("fname " + fname);
             log("accepted_url " + url);
