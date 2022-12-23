@@ -5312,13 +5312,14 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
                 break;
             case "file":
-                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, fileevent.attachments[0].filename, event.attachments[0].url]];
+                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url]];
                 break;
             case "location":
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
                 break;
-            default:
-                msgs[event.messageID] = [getFormattedDate(), event.senderID, event.body];
+            case "share":
+                log(event.attachments[0]);
+                msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.body, event.attachments[0].image]]
                 break;
         }
     } else {
