@@ -644,7 +644,7 @@ login({
                                         if (err) return log(err);
                                         if (gc.isGroup) {
                                             let message = {
-                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n" + d[1][2],
+                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
                                                     tag: '@' + data[event.senderID]['name'],
@@ -656,7 +656,7 @@ login({
                                             log("unsend_share_group " + d[1][0] + " " + filename);
                                         } else {
                                             let message = {
-                                                body: "You deleted this url.\n" + d[1][2],
+                                                body: "You deleted this url.\n\n" + d[1][2],
                                                 attachment: fs.createReadStream(filename)
                                             }
                                             sendMessageOnly(api, event, message);
@@ -668,6 +668,40 @@ login({
                             });
                         });
                     } else if (d[0] == "file") {   
+                        let filename = __dirname + '/cache/images/unsend_file_' + time + "." + d[1][2];
+                        let file = fs.createWriteStream(filename);
+                        let gifRequest = http.get(d[1][3], function(gifResponse) {
+                            gifResponse.pipe(file);
+                            file.on('finish', function() {
+                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                    let time = getTimestamp();
+                                    api.getThreadInfo(event.threadID, (err, gc) => {
+                                        if (err) return log(err);
+                                        if (gc.isGroup) {
+                                            let message = {
+                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                                attachment: fs.createReadStream(filename),
+                                                mentions: [{
+                                                    tag: '@' + data[event.senderID]['name'],
+                                                    id: event.senderID,
+                                                    fromIndex: 0
+                                                }]
+                                            }
+                                            sendMessageOnly(api, event, message);
+                                            log("unsend_file_group " + d[1][0] + " " + filename);
+                                        } else {
+                                            let message = {
+                                                body: "You deleted this file.\n",
+                                                attachment: fs.createReadStream(filename)
+                                            }
+                                            sendMessageOnly(api, event, message);
+                                            log("unsend_file " + d[1][0] + " " + filename);
+                                        }
+                                    });
+                                    unLink(filename);
+                                }
+                            });
+                        });
                     } else if (d[0] == "location") {
                     } else if (d[0] == "sticker") {
                         let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
@@ -5347,7 +5381,8 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
                 break;
             case "file":
-                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url]];
+                log(JSON.stringify(event.attachments[0]))
+                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].contentType, event.attachments[0].url]];
                 break;
             case "location":
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
