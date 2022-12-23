@@ -4650,7 +4650,7 @@ function isGoingToFast(api, event) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (15);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
-            let seconds = (cmd1[event.senderID] - Math.floor(Date.now() / 1000)) % 15;
+            let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 15;
             sendMessage(api, event, "Hold on for " + seconds + " seconds.");
             log("The UserID is temporarily blocked for " + seconds + " seconds.");
             return true;
@@ -4659,6 +4659,7 @@ function isGoingToFast(api, event) {
             return false;
         }
     }
+    /*
     if (!(event.threadID in cmd1)) {
         cmd1[event.threadID] = Math.floor(Date.now() / 1000) + (120);
         return false;
@@ -4671,6 +4672,7 @@ function isGoingToFast(api, event) {
         cmd1[event.threadID] = Math.floor(Date.now() / 1000) + (120);
         return false;
     }
+    */
     return false;
 }
 
@@ -4679,7 +4681,7 @@ function isGoingToFastResendingOfEmo(event) {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
         return false;
     } else if (Math.floor(Date.now() / 1000) < emo[event.threadID]) {
-        let seconds = (threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 2);
+        let seconds = (emo[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 2);
         log("The ThreadID is temporarily blocked from resending of emoji for " + seconds + " seconds.");
         return true;
     } else {
