@@ -4374,6 +4374,7 @@ try {
         if (vips.includes(event.senderID)) {
             fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
             fs.writeFileSync("cache/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+            fs.writeFileSync("cache/group.json", JSON.stringify(group), "utf8");
             sendMessage(api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
         }
