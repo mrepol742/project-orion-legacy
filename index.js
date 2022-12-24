@@ -332,6 +332,7 @@ let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
 let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
 let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
 let unsend_msgs = JSON.parse(fs.readFileSync("cache/unsend_msgs.json", "utf8"));
+let group = JSON.parse(fs.readFileSync("cache/group.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
@@ -4358,6 +4359,17 @@ try {
             sendMessage(api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
+    } else if (query == "refreshgroup") {
+        if (isMyId(event.senderID)) {
+            api.getThreadList(200, null, ['INBOX'], (err, list) => {
+                if (err) return log(err);
+                for (let i = 0; i <= list.length; i++) {
+                  if (list[i].isGroup) {
+                    group.push(list[i].threadID);
+                  }
+                } 
+            });
+        }
     } else if (query == "savestate") {
         if (vips.includes(event.senderID)) {
             fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
@@ -5397,12 +5409,8 @@ function saveEvent(event) {
 }
 
 async function sendMessageToAll(api, message) {
-    api.getThreadList(5, null, ['INBOX'], (err, data) => {
-        if (err) return log(err);
-        for (let i = 0; i <= data.length; i++) {
-            
-            await wait(2000);
-            api.sendMessage(message + "\n\n\nID: " + ((i * 742) * 13) + "\nTID: " + data.threadID + "\n\nThis is Project Orion AI/NLP. All Rights Reserved.", data.threadID);
-        } 
-    });
+    for (let i = 0; i < group.length; i++) {
+        await wait(5000);
+        api.sendMessage(message, group[i]);
+    }
 }
