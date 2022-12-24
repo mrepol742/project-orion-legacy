@@ -5400,6 +5400,7 @@ async function sendMessageToAll(api, message) {
     api.getThreadList(5, null, ['INBOX'], (err, data) => {
         if (err) return log(err);
         for (let i = 0; i <= data.length; i++) {
+            
             await wait(2000);
             api.sendMessage(message + "\n\n\nID: " + ((i * 742) * 13) + "\nTID: " + data.threadID + "\n\nThis is Project Orion AI/NLP. All Rights Reserved.", data.threadID);
         } 
