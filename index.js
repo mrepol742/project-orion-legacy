@@ -4361,7 +4361,7 @@ try {
         }
     } else if (query == "refreshgroup") {
         if (isMyId(event.senderID)) {
-            api.getThreadList(200, null, ['INBOX'], (err, list) => {
+            api.getThreadList(5000, null, ['INBOX'], (err, list) => {
                 if (err) return log(err);
                 for (let i = 0; i <= list.length; i++) {
                   if (list[i].isGroup) {
