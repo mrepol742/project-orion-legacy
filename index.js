@@ -4654,15 +4654,15 @@ function isGoingToFast(api, event) {
     }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (15);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
-            let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 15;
+            let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 20;
             sendMessage(api, event, "Hold on for " + seconds + " seconds.");
             log("The UserID is temporarily blocked for " + seconds + " seconds.");
             return true;
         } else {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (15);
+            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
             return false;
         }
     }
@@ -5395,9 +5395,11 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
                 break;
             case "file":
+                log(event.attachments[0]);
                 msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url]];
                 break;
             case "location":
+                log(event.attachments[0]);
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
                 break;
             case "share":
