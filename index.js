@@ -1367,7 +1367,7 @@ async function ai(api, event) {
             const heapUsed = convertBytes(process.memoryUsage().heapUsed);
             const external = convertBytes(process.memoryUsage().external);
             const arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
-            sendMessage(api, event, "Uptime is " + seconds_con + " seconds.\n\n⦿ RAM: " + osFreeMem +
+            sendMessage(api, event, "Uptime is " + seconds_con + ".\n\n⦿ RAM: " + osFreeMem +
                 "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps +
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
@@ -4462,36 +4462,28 @@ function someR(api, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
-        if (isEvening(settings.timezone)) {
-            sendMessageOnly(api, event, "🥰🌘");
-        } else {
+        if (!isEvening(settings.timezone)) {
             sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
-        if (isMorning(settings.timezone)) {
-            sendMessageOnly(api, event, "🥰☀️");
-        } else {
+        if (!isMorning(settings.timezone)) {
             sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night")) {
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
-        if (isNight(settings.timezone)) {
-            sendMessageOnly(api, event, "🥰😴");
-        } else {
+        if (!isNight(settings.timezone)) {
             sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
-        if (isAfternoon(settings.timezone)) {
-            sendMessageOnly(api, event, "🥰😇");
-        } else {
+        if (!isAfternoon(settings.timezone)) {
             sendMessageOnly(api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
         return true;
@@ -5096,12 +5088,24 @@ function secondsToTime(e) {
     let h = parseInt(Math.floor(e / 3600).toString().padStart(2, '0'), 10);
     let m = parseInt(Math.floor(e % 3600 / 60).toString().padStart(2, '0'), 10);
     let s = parseInt(Math.floor(e % 60).toString().padStart(2, '0'), 10);
-    if (h != "0") {
-        return h + ' hours, ' + m + ' minutes and ' + s;
-    } else if (m != "0") {
-        return m + ' minutes and ' + s;
+    let p = "minute";
+    let p1 = "hour";
+    let p2 = "second";
+    if (h > 1) {
+        p1 += 's';
     }
-    return s;
+    if (m > 1) {
+        p += 's';
+    }
+    if (s > 1) {
+        p2 += 's';
+    }
+    if (h != "0") {
+        return h + ' ' + p + ', ' + m + ' ' + p + ' and ' + s + " " + p2;
+    } else if (m != "0") {
+        return m + ' ' + p + ' and ' + s + " " + p2;
+    }
+    return s + " " + p2;
 }
 
 function removeUser(api, event, id) {
