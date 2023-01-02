@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2022 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
+ * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
  *
  * License under the Mrepol742 License, version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -270,7 +270,7 @@ help6 += "\n   Mango, Berry, Citrus, Candy";
 help6 += "\n⦿ anime --nsfw [category]";
 
 let help7 = "\n⦿ animecouples";
-help7 += "\n⦿ costplay";
+help7 += "\n⦿ cosplay";
 help7 += "\n⦿ motor";
 help7 += "\n⦿ darkjoke";
 help7 += "\n⦿ blackpink";
@@ -1372,7 +1372,7 @@ async function ai(api, event) {
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
                 "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD +
-                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\nLink: https://project-orion.mrepol742.repl.co\nIP: " + ipaddress[0]);
+                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n⦿ Link: https://project-orion.mrepol742.repl.co\n⦿ IP: " + ipaddress[0]);
         })();
     } else if (query.startsWith("ping")) {
         if (isGoingToFast(api, event)) {
@@ -1395,7 +1395,7 @@ try {
             sendMessage(api, event, "Unfortunately an error occured please check your parameters for errors.");
         }
         }
-    } else if (query.startsWith("mean")) {
+    } else if (query2.startsWith("mean ")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1433,7 +1433,7 @@ try {
             }
             sendMessage(api, event, "The median value is " + (arr[(length - 1) / 2]));
         }
-    } else if (query.startsWith("mode")) {
+    } else if (query2.startsWith("mode ")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1525,7 +1525,7 @@ try {
             let num = parseInt(input.substring(8));
             sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
         }
-    } else if (query.startsWith("roi")) {
+    } else if (query2.startsWith("roi ")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4085,7 +4085,7 @@ try {
                 sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
-    } else if (query.startsWith("god")) {
+    } else if (query2.startsWith("god ")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4127,7 +4127,7 @@ try {
                 }
             });
         }
-    } else if (query.startsWith("pooh")) {
+    } else if (query2.startsWith("pooh ")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4161,7 +4161,7 @@ try {
         } else {
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
         }
-    } else if (query == "costplay") {
+    } else if (query == "cosplay") {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4378,7 +4378,7 @@ try {
             sendMessage(api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
         }
-    } else if (query.startsWith("test") || query.startsWith("hello world") || query.startsWith("hi world")) {
+    } else if (query == "test" || query == "hello world" || query == "hi world") {
         sendMessage(api, event, "Hello World");
     } else if (query == "about") {
         let message = {
@@ -4388,7 +4388,7 @@ try {
         sendMessage(api, event, message);
     } else if (query == "copyright") {
         let message = {
-            body: "Melvin Jones Repol Ⓒ 2022. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2022. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
+            body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
             attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
@@ -4398,7 +4398,7 @@ try {
                 "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
-                "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2022.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
+                "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2023.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
             attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
