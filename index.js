@@ -879,9 +879,9 @@ login({
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ About     ⦿ License\n⦿ Copyright ⦿ Ping";
+                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ about     ⦿ license\n⦿ copyright ⦿ uptime";
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ About    ⦿ License\n⦿ Copyright ⦿ Ping";
+                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ about    ⦿ license\n⦿ copyright ⦿ uptime";
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -1196,10 +1196,11 @@ async function ai(api, event) {
                  log(error.message);
                 }
                 sendMessageOnly(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                err400++;
                 if (err400 > 5) {
                     sendMessageOnly(api, event, "An internal issue has been detected the system is automatically placed under maintenance mode.");
                     settings.isDebugEnabled = true;
+                } else {
+                    err400++;
                 }
               }
             }
@@ -1337,7 +1338,7 @@ async function ai(api, event) {
                     unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
                 })
         }
-    } else if (query == "uptime") {
+    } else if (query == "uptime" || query == "status") {
         if (isGoingToFast(api, event)) {
             return;
         }
