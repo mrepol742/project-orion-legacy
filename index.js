@@ -4424,10 +4424,10 @@ try {
 }
 
 function someA(api, event, query, input) {
-    if (input.startsWith("sup") || input.startsWith("wassup") || input.startsWith("whatsup")) {
+    if (query == "sup" || query == "wassup") {
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
-    } else if (input.startsWith("hi ") || input.startsWith("hello ") || input.startsWith("hey ")) {
+    } else if (query == "hi" || query == "hello" || query == "hey") {
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
     } else if (query.startsWith("okay")) {
@@ -4651,7 +4651,7 @@ function isGoingToFast(api, event) {
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
             let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 20;
-            sendMessage(api, event, "Hold on for " + seconds + " seconds.");
+            //sendMessage(api, event, "Hold on for " + seconds + " seconds.");
             log("The UserID is temporarily blocked for " + seconds + " seconds.");
             return true;
         } else {
