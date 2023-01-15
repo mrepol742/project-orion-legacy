@@ -392,6 +392,16 @@ login({
         api.sendMessage(a, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
+        if (err400 > 10) {
+            let message = {
+                body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
+                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+            };
+            sendMessage(api, event, message);
+            settings.crash = true;
+        } else {
+            err400++;
+        }
     });
 
     process.on('unhandledRejection', (reason, promise) => {
@@ -400,6 +410,16 @@ login({
         api.sendMessage(a, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
+        if (err400 > 10) {
+            let message = {
+                body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
+                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+            };
+            sendMessage(api, event, message);
+            settings.crash = true;
+        } else {
+            err400++;
+        }
     });
 
     cron.schedule('*/10 * * * *', () => {
@@ -453,7 +473,7 @@ login({
                     });
                 }
             }
-            if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) && event.type != "message_unsend") {
+            if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)) && (event.type == "message" || event.type == "message_reply")) {
                 return;
             }
         }
@@ -464,7 +484,7 @@ login({
             });
         }
 
-         if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
+        if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
           let body = event.body;
             if (!body.startsWith("_")) {
                 return;
@@ -473,10 +493,45 @@ login({
             }
         }
 
-        if ((event.type == "message" || event.type == "message_reply") && event.body == "stop") {
+        if ((event.type == "message" || event.type == "message_reply")) {
             if (isMyId(event.senderID)) {
-                sendMessage(api, event, "Goodbye...");
-                return listenEmitter.stopListening();
+                if (event.body == "stop") {
+                    sendMessage(api, event, "Goodbye...");
+                    settings.isStop = true;
+                    return;
+                } else if (event.body == "resume") {
+                    sendMessage(api, event, "Hi i am back!");
+                    settings.isStop = false;
+                    return;
+                }
+            }
+        }
+
+        if (event.type == "message" || event.type == "message_reply") {
+            if (!(vips.includes(event.senderID))) {
+                if (settings.crash) {
+                    if (isGoingToFastCallingTheCommand(event)) {
+                        return;
+                    }
+                    let message = {
+                        body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
+                        attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                    };
+                    sendMessage(api, event, message);
+                    return;
+                } else if (settings.isDebugEnabled) {
+                    if (isGoingToFastCallingTheCommand(event)) {
+                        return;
+                    }
+                    let message = {
+                        body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                        attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                    };
+                    sendMessage(api, event, message);
+                    return;
+                } else if (settings.isStop) {
+                    return;
+                }
             }
         }
 
@@ -854,7 +909,11 @@ login({
                 break;
             case "event":
                 switch (event.logMessageType) {
-                    case "log:subscribe":
+                    case "log:subscribe":subscribe
+                        if (event.logMessageData.addedParticipants[0].userFbId == getMyId()) {
+                            sendMessageOnly("What sup guys!");
+                            break;
+                        }
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
                             if (gc.isGroup) {
@@ -1135,6 +1194,8 @@ async function ai(api, event) {
             } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
                 let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\nhttps://0x3ef8.github.io";
                 sendMessage(api, event, mss);
+            } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
+                sendMessage(api, event, "Do you mean cmd? You can call cmd to open my command list.");
             } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncmd 2");
                 //} else if (text1.split('').length < 10) {
@@ -1196,12 +1257,7 @@ async function ai(api, event) {
                  log(error.message);
                 }
                 sendMessageOnly(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                if (err400 > 5) {
-                    sendMessageOnly(api, event, "An internal issue has been detected the system is automatically placed under maintenance mode.");
-                    settings.isDebugEnabled = true;
-                } else {
-                    err400++;
-                }
+                err400++;
               }
             }
         }
@@ -4628,19 +4684,13 @@ function containsAny(str, substrings) {
 }
 
 function isGoingToFast(api, event) {
-    log("event_body " + event.senderID + " " + event.body);
-    if (settings.isDebugEnabled) {
-        if (!(vips.includes(event.senderID))) {
-            if (isGoingToFastCallingTheCommand(event)) {
-                return true;
-            }
-            let message = {
-                body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
-            };
-            sendMessage(api, event, message);
-          return true;
-        }
+    let input = event.body;
+    log("event_body " + event.senderID + " " + input);
+    if (input.startsWith("⦿")) {
+        sendMessageOnly(api, event, "You don't need to use ⦿ to call my command. Just type the command followed by the arguments if needed.");
+    }
+    if (input.startsWith("_")) {
+        sendMessageOnly(api, event, "Moshi mos. I don't require using _ when calling my commands. Since it's for the owner of the bot account only to prevent looping.";)
     }
     if (!settings.preventSimultaneousExecution) {
         return false;
@@ -5102,7 +5152,7 @@ function secondsToTime(e) {
         p2 += 's';
     }
     if (h != "0") {
-        return h + ' ' + p + ', ' + m + ' ' + p + ' and ' + s + " " + p2;
+        return h + ' ' + p1 + ', ' + m + ' ' + p + ' and ' + s + " " + p2;
     } else if (m != "0") {
         return m + ' ' + p + ' and ' + s + " " + p2;
     }
@@ -5124,12 +5174,18 @@ function blockUser(api, event, id) {
         return;
     }
     if (blockRRR.includes(id)) {
-        sendMessage(api, event, "User is already blocked.");
+        sendMessage(api, event, "It's already blocked.");
         return;
     }
     blockRRR.push(id);
-    sendMessage(api, event, "The user " + id + " is blocked.");
     fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+    if (vips.includes(id)) {
+        vips = vips.filter(item => item !== id);
+        fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+        sendMessage(api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
+    } else {
+        sendMessage(api, event, "The user " + id + " is blocked.");
+    }
 }
 
 function blockGroup(api, event, id) {
@@ -5148,7 +5204,7 @@ function unblockGroup(api, event, id) {
         return;
     }
     blockSSS = blockSSS.filter(item => item !== id);
-    sendMessage(api, event, "The group " + id + " can now use the commands.");
+    sendMessage(api, event, "The group " + id + " can now use my commands.");
     fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
@@ -5166,17 +5222,21 @@ function disableSmartReply(api, event, id) {
 
 function unblockUser(api, event, id) {
     if (!blockRRR.includes(id)) {
-        sendMessage(api, event, "The user has no admin rights to take away.");
+        sendMessage(api, event, "The user is not blocked.");
         return;
     }
     blockRRR = blockRRR.filter(item => item !== id);
-    sendMessage(api, event, "The user " + id + " can now use the commands.");
+    sendMessage(api, event, "The user " + id + " can now use my commands.");
     fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
 }
 
 function addAdmin(api, event, id) {
+    if (blockRRR.includes(id)) {
+        sendMessage(api, event, "I am unable to grand admin permission on a blocked user.");
+        return;
+    }
     if (vips.includes(id)) {
-        sendMessage(api, event, "Admin permission is already granted.");
+        sendMessage(api, event, "It's already an admin!");
         return;
     }
     vips.push(id);
