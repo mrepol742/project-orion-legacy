@@ -299,6 +299,7 @@ helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
 
 let helproot = "\n⦿ stop";
+helproot += "\n⦿ resume";
 helproot += "\n⦿ notify";
 helproot += "\n⦿ setMaxImage [integer]";
 helproot += "\n⦿ setTimezone [timezone]";
@@ -4690,7 +4691,7 @@ function isGoingToFast(api, event) {
         sendMessageOnly(api, event, "You don't need to use ⦿ to call my command. Just type the command followed by the arguments if needed.");
     }
     if (input.startsWith("_")) {
-        sendMessageOnly(api, event, "Moshi mos. I don't require using _ when calling my commands. Since it's for the owner of the bot account only to prevent looping.";)
+        sendMessageOnly(api, event, "Moshi mos. I don't require using _ when calling my commands. Since it's for the owner of the bot account only to prevent looping.");
     }
     if (!settings.preventSimultaneousExecution) {
         return false;
