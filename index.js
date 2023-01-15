@@ -4579,7 +4579,7 @@ async function sendMessage(api, event, message) {
     }
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
         }
     }
     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -4631,7 +4631,7 @@ async function sendMessageOnly(api, event, message) {
     }
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
         }
     }
     log("send_message " + event.threadID + " " + message);
@@ -4650,7 +4650,7 @@ async function reactMessage(api, event, reaction) {
     }
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
         }
     }
     log("react_message " + event.messageID + " " + reaction);

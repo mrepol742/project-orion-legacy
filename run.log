@@ -15006,3 +15006,31 @@ Cryptographic Vulnerability: Hardcoded Key
 1/15/2023 1:35:12 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
 1/15/2023 1:35:12 PM$ url https://project-orion.mrepol742.repl.co
 1/15/2023 1:35:12 PM$ ip_address 34.110.138.177
+1/15/2023 1:36:12 PM$ wait_timeout >> 5000
+1/15/2023 1:36:17 PM$ wait_timeout >> 3600
+1/15/2023 1:36:18 PM$ send_typing
+1/15/2023 1:36:21 PM$ send_message 5190020021066142 🥹
+1/15/2023 1:37:58 PM$ The Project Orion is now active and waiting for commands execution. ONLINE
+1/15/2023 1:37:58 PM$ url https://project-orion.mrepol742.repl.co
+1/15/2023 1:37:58 PM$ ip_address 34.110.138.177
+1/15/2023 1:38:10 PM$ event_body 100071743848974 uptime
+1/15/2023 1:38:11 PM$ 100061632526048
+1/15/2023 1:38:11 PM$ send_message_reply 2583856894982516 Uptime is 14 seconds.
+
+⦿ RAM: 15.6 GB
+⦿ ROM: 62.8 GB
+⦿ Download Speed: 33.90 mbps
+⦿ Upload Speed: 14.49 mbps
+⦿ RSS: 228.4 MB
+⦿ Heap Total: 180.4 MB
+⦿ Heap Used: 140.2 MB
+⦿ External: 1.6 MB
+⦿ Array Buffers: 731.0 KB
+⦿ Save State: N/A
+⦿ Fb State: N/A
+
+⦿ sendReport [text]
+   To send report to the author if there is any issue.
+
+⦿ Link: https://project-orion.mrepol742.repl.co
+⦿ IP: 34.110.138.177
