@@ -384,7 +384,7 @@ process.on('SIGINT', function() {
 });
 
 login({
-    appState: JSON.parse(fs.readFileSync('/app_state.json', 'utf8'))
+    appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))
 }, (err, api) => {
     if (err) return log(err);
 
