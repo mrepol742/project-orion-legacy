@@ -324,18 +324,18 @@ let apiKey = [
     "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"
 ];
 
-let settings = JSON.parse(fs.readFileSync("/settings.json", "utf8"));
-let pinned = JSON.parse(fs.readFileSync("/pinned.json", "utf8"));
-let vips = JSON.parse(fs.readFileSync("/admin.json", "utf8"));
-let nonRRR = JSON.parse(fs.readFileSync("/users.json", "utf8"));
-let blockRRR = JSON.parse(fs.readFileSync("/block_users.json", "utf8"));
-let blockSSS = JSON.parse(fs.readFileSync("/block_groups.json", "utf8"));
-let mutedRRR = JSON.parse(fs.readFileSync("/muted_users.json", "utf8"));
-let msgs = JSON.parse(fs.readFileSync("/msgs.json", "utf8"));
-let smartRRR = JSON.parse(fs.readFileSync("/smart_reply.json", "utf8"));
-let ipaddress = JSON.parse(fs.readFileSync("/ip_address.json", "utf8"));
-let unsend_msgs = JSON.parse(fs.readFileSync("/unsend_msgs.json", "utf8"));
-let group = JSON.parse(fs.readFileSync("/group.json", "utf8"));
+let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json", "utf8"));
+let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
+let vips = JSON.parse(fs.readFileSync(__dirname + "/admin.json", "utf8"));
+let nonRRR = JSON.parse(fs.readFileSync(__dirname + "/users.json", "utf8"));
+let blockRRR = JSON.parse(fs.readFileSync(__dirname + "/block_users.json", "utf8"));
+let blockSSS = JSON.parse(fs.readFileSync(__dirname + "/block_groups.json", "utf8"));
+let mutedRRR = JSON.parse(fs.readFileSync(__dirname + "/muted_users.json", "utf8"));
+let msgs = JSON.parse(fs.readFileSync(__dirname + "/msgs.json", "utf8"));
+let smartRRR = JSON.parse(fs.readFileSync(__dirname + "/smart_reply.json", "utf8"));
+let ipaddress = JSON.parse(fs.readFileSync(__dirname + "/ip_address.json", "utf8"));
+let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/unsend_msgs.json", "utf8"));
+let group = JSON.parse(fs.readFileSync(__dirname + "/group.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
@@ -1979,7 +1979,7 @@ if (isGoingtoFast(api, event)) {
 if (isGoingtoFast(api, event)) {
             return;
         }
-        let pinned = JSON.parse(fs.readFileSync("/pinned.json", "utf8"));
+        let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
         pinned.pin.message[event.threadID] = undefined
         pinned.pin.sender[event.threadID] = undefined
         sendMessage(api, event, "Pinned message removed.");
@@ -1989,7 +1989,7 @@ if (isGoingtoFast(api, event)) {
 if (isGoingtoFast(api, event)) {
             return;
         }
-        let pinned = JSON.parse(fs.readFileSync("/pinned.json", "utf8"));
+        let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
         if (pinned.pin.message[event.threadID] == undefined) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
