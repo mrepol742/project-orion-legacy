@@ -566,7 +566,7 @@ login({
                     }
                 } else if (query == "pinadd") {
                     
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
                         return;
                     }
 holdOnASecond(event);
@@ -580,7 +580,7 @@ holdOnASecond(event);
                     }
                 } else if (query == "count") {
                     
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
                         return;
                     }
 holdOnASecond(event);
@@ -591,7 +591,7 @@ holdOnASecond(event);
                     }
                 } else if (query == "countvowels") {
                     
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
                         return;
                     }
 holdOnASecond(event);
@@ -602,7 +602,7 @@ holdOnASecond(event);
                     }
                 } else if (query == "countconsonants") {
                     
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
                         return;
                     }
 holdOnASecond(event);
@@ -613,7 +613,7 @@ holdOnASecond(event);
                     }
                 } else if (query.startsWith("wfind")) {
                     
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
                         return;
                     }
 holdOnASecond(event);
@@ -633,7 +633,7 @@ holdOnASecond(event);
                     }
                 } else if (query == "bgremove") {
                     
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
                         return;
                     }
 holdOnASecond(event);
@@ -682,7 +682,7 @@ holdOnASecond(event);
                     }
                 } else if (query == "gphoto") {
                     
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
                         return;
                     }
 holdOnASecond(event);
@@ -1034,7 +1034,7 @@ async function ai(api, event) {
     }
     if (query.startsWith("searchimg")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1054,7 +1054,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("searchincog")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1079,7 +1079,7 @@ if (isGoingtoFast(api, event)) {
         otherQ(query2)) {
 
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1358,7 +1358,7 @@ if (isGoingtoFast(api, event)) {
     }
     if (query.startsWith("ttsjap")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1392,7 +1392,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query2.startsWith("tts")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1419,7 +1419,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query == "uptime" || query == "status") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1457,7 +1457,7 @@ if (isGoingtoFast(api, event)) {
         })();
     } else if (query.startsWith("ping")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1480,7 +1480,7 @@ try {
         }
     } else if (query2.startsWith("mean ")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1500,7 +1500,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("median")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1522,7 +1522,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query2.startsWith("mode ")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1555,7 +1555,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("range")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1572,7 +1572,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("divisible")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1592,7 +1592,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("factorial")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1608,7 +1608,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("findgcd")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1624,7 +1624,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query2.startsWith("roi ")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1638,7 +1638,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("cdfnormal")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1654,7 +1654,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("problem")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1684,7 +1684,7 @@ if (isGoingtoFast(api, event)) {
     }
     if (query.startsWith("urlshort")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1716,7 +1716,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1746,7 +1746,7 @@ if (isGoingtoFast(api, event)) {
 
     } else if (query.startsWith("video")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1818,7 +1818,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("music")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1887,7 +1887,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("lyrics")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1926,7 +1926,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (input.startsWith("encodebinary")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1944,7 +1944,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (input.startsWith("decodebinary")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1963,7 +1963,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("encode64")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1978,7 +1978,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("decode64")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -1993,7 +1993,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("reverse")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2009,7 +2009,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query == "pinremove") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2020,7 +2020,7 @@ if (isGoingtoFast(api, event)) {
         fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
     } else if (query == "pin") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2039,7 +2039,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("pdf")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2063,7 +2063,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2103,7 +2103,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2128,7 +2128,7 @@ if (isGoingtoFast(api, event)) {
 
     if (query.startsWith("baybayin")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2147,7 +2147,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("doublestruck")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2166,7 +2166,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("translate")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2187,7 +2187,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("weather")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2226,7 +2226,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("facts")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2240,7 +2240,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query == "wyr" || query == "wouldyourather") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2253,7 +2253,7 @@ if (isGoingtoFast(api, event)) {
         });
     } else if (query == "8ball") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2266,7 +2266,7 @@ if (isGoingtoFast(api, event)) {
         });
     } else if (query.startsWith("instagram") || query2.startsWith("ig ")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2309,7 +2309,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("profilepic")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2322,7 +2322,7 @@ if (isGoingtoFast(api, event)) {
         parseImage(api, event, getProfilePicFullHD(id), __dirname + "/cache/images/profilepic_" + getTimestamp() + ".png");
     } else if (query.startsWith("tiktok")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2362,7 +2362,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("soundcloud")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2405,7 +2405,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("github")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2454,7 +2454,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("element")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2494,7 +2494,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("npm")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2522,7 +2522,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("steam")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2559,7 +2559,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("imdb")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2597,7 +2597,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("itunes")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2635,7 +2635,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query == "car") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2661,7 +2661,7 @@ if (isGoingtoFast(api, event)) {
         });
     } else if (query == "color") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2688,7 +2688,7 @@ if (isGoingtoFast(api, event)) {
         });
     } else if (query == "pickup") {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2701,7 +2701,7 @@ if (isGoingtoFast(api, event)) {
         });
     } else if (query.startsWith("gemoji")) {
         
-if (isGoingtoFast(api, event)) {
+if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2906,7 +2906,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("adduser")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -2940,7 +2940,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("gcolor")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3192,7 +3192,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query == "gmember") {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3207,7 +3207,7 @@ if (isGoingtoFast(api, event)) {
         })
     } else if (query.startsWith("gname")) {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3229,7 +3229,7 @@ if (isGoingtoFast(api, event)) {
         });
     } else if (query == "gname") {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3242,7 +3242,7 @@ if (isGoingtoFast(api, event)) {
             }
         })
     } else if (query == "groupid" || query == "guid" || query == "uid") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3274,13 +3274,13 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3323,21 +3323,21 @@ if (isGoingtoFast(api, event)) {
         sendMessage(api, event, "The Project Orion Root\n" + helproot + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdall") {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
     } else if (query.startsWith("wiki")) {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3356,7 +3356,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("lovetest")) {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3392,7 +3392,7 @@ if (isGoingtoFast(api, event)) {
             });
         }
     } else if (query.startsWith("kiss")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3422,7 +3422,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("gun")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3453,7 +3453,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query.startsWith("wanted")) {
         
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3483,7 +3483,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("clown")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3513,7 +3513,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("drip")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3543,7 +3543,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("communist")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3573,7 +3573,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("advert")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3603,7 +3603,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("uncover")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3633,7 +3633,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("jail")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3663,7 +3663,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("invert")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3692,7 +3692,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("ship")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3718,7 +3718,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("www")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3744,7 +3744,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("pet")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3774,7 +3774,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("mnm")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3804,7 +3804,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("greyscale")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3834,7 +3834,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("jokeover")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3864,7 +3864,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("blur")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3894,7 +3894,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3948,7 +3948,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("morse")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3967,7 +3967,7 @@ if (isGoingtoFast(api, event)) {
             });
         }
     } else if (query.startsWith("lulcat")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -3986,7 +3986,7 @@ if (isGoingtoFast(api, event)) {
             });
         }
     } else if (query.startsWith("mock")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4005,7 +4005,7 @@ if (isGoingtoFast(api, event)) {
             });
         }
     } else if (query.startsWith("coding")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4030,7 +4030,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "joke") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4042,7 +4042,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "barrier") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4052,7 +4052,7 @@ if (isGoingtoFast(api, event)) {
         };
         sendMessage(api, event, message);
     } else if (query == "fact") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4064,7 +4064,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "thoughts") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4076,7 +4076,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query.startsWith("nickname")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4109,7 +4109,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query.startsWith("drake")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4122,7 +4122,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/drake_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("pika")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4135,7 +4135,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + text, __dirname + "/cache/images/pika_" + getTimestamp() + ".png");
         }
     } else if (query == "meme") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4147,13 +4147,13 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query.startsWith("conan")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         parseImage(api, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/images/conan_" + getTimestamp() + ".png");
     } else if (query.startsWith("oogway")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4170,7 +4170,7 @@ if (isGoingtoFast(api, event)) {
             sendMessage(api, event, "There are kids!!!");
             return;
         }
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4189,7 +4189,7 @@ if (isGoingtoFast(api, event)) {
             });
         }
     } else if (query == "hololive") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4211,7 +4211,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "animecouples") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4236,7 +4236,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query.startsWith("anime")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4255,7 +4255,7 @@ if (isGoingtoFast(api, event)) {
             });
         }
     } else if (query.startsWith("trump")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4268,7 +4268,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + "/cache/images/trump_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("qrcode")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4281,7 +4281,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + text, __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("alert")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4294,7 +4294,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + text, __dirname + "/cache/images/alert_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("caution")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4307,7 +4307,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + text, __dirname + "/cache/images/caution_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("biden")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4320,7 +4320,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/biden?text=" + text, __dirname + "/cache/images/biden_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("website")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4337,7 +4337,7 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query2.startsWith("god ")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4350,7 +4350,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + text, __dirname + "/cache/images/god_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("sadcat")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4363,7 +4363,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
         }
     } else if (query2.startsWith("sim ")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4382,7 +4382,7 @@ if (isGoingtoFast(api, event)) {
             });
         }
     } else if (query2.startsWith("pooh ")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4395,19 +4395,19 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/pooh_" + getTimestamp() + ".png");
         }
     } else if (query == "landscape") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
     } else if (query == "portrait") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
     } else if (query.startsWith("landscape")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4420,31 +4420,31 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
         }
     } else if (query == "cosplay") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         parseImage(api, event, "https://zenzapis.xyz/randomimage/cosplay?apikey=9c4c44db3725", __dirname + "/cache/images/costplay_" + getTimestamp() + ".png");
     } else if (query == "darkjoke") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         parseImage(api, event, "https://zenzapis.xyz/randomimage/darkjoke?apikey=9c4c44db3725", __dirname + "/cache/images/darkjoke_" + getTimestamp() + ".png");
     } else if (query == "blackpink") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         parseImage(api, event, "https://zenzapis.xyz/randomimage/blackpink?apikey=9c4c44db3725", __dirname + "/cache/images/blackpink_" + getTimestamp() + ".png");
     } else if (query == "motor") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         parseImage(api, event, "https://zenzapis.xyz/randomimage/motor?apikey=9c4c44db3725", __dirname + "/cache/images/motor_" + getTimestamp() + ".png");
     } else if (query.startsWith("portrait")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4457,7 +4457,7 @@ if (isGoingtoFast(api, event)) {
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("animequote")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4469,7 +4469,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "advice") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4485,7 +4485,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query2.startsWith("time ")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4501,13 +4501,13 @@ if (isGoingtoFast(api, event)) {
             }
         }
     } else if (query == "time") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
     } else if (query.startsWith("inspiration")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4523,7 +4523,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query.startsWith("motivation") || query.startsWith("motivate")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4539,7 +4539,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "newyear") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4557,7 +4557,7 @@ if (isGoingtoFast(api, event)) {
         };
         sendMessage(api, event, message)
     } else if (query == "christmas") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4575,7 +4575,7 @@ if (isGoingtoFast(api, event)) {
         };
         sendMessage(api, event, message)
     } else if (query == "verserandom") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4591,7 +4591,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query == "versetoday") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4607,7 +4607,7 @@ if (isGoingtoFast(api, event)) {
             }
         });
     } else if (query.startsWith("verse")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4656,13 +4656,13 @@ if (isGoingtoFast(api, event)) {
             messagesD = getFormattedDate();
         }
     } else if (query == "test" || query == "hello world" || query == "hi world") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, "Hello World");
     } else if (query == "about") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4672,7 +4672,7 @@ if (isGoingtoFast(api, event)) {
         }
         sendMessage(api, event, message);
     } else if (query == "copyright") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4682,7 +4682,7 @@ if (isGoingtoFast(api, event)) {
         }
         sendMessage(api, event, message);
     } else if (query == "license") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4717,28 +4717,28 @@ if (isGoingtoFast(api, event)) {
 
 function someA(api, event, query, input) {
     if (query == "sup" || query == "wassup") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
     } else if (query == "hi" || query == "hello" || query == "hey") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
     } else if (query.startsWith("okay")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         sendMessage(api, event, "Yup");
         return true;
     } else if (query == "idk") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4750,7 +4750,7 @@ function someA(api, event, query, input) {
 
 async function reaction(api, event, query, input) {
     if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4759,31 +4759,31 @@ async function reaction(api, event, query, input) {
             sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
         }
     } else if (containsAny(input.toLowerCase(), sadEE)) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         reactMessage(api, event, ":sad:");
     } else if (containsAny(input.toLowerCase(), angryEE)) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         reactMessage(api, event, ":angry:");
     } else if (containsAny(query, loveEE) || (query == "bot" || query == "good")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         reactMessage(api, event, ":love:");
     } else if (query == "tsk") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
         reactMessage(api, event, ":like:");
     } else if (query == "nice" || query == "uwu") {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4793,7 +4793,7 @@ async function reaction(api, event, query, input) {
 
 function someR(api, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4804,7 +4804,7 @@ function someR(api, event, query) {
         }
         return true;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4815,7 +4815,7 @@ function someR(api, event, query) {
         }
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
@@ -4826,7 +4826,7 @@ function someR(api, event, query) {
         }
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
-        if (isGoingtoFast(api, event)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
         holdOnASecond(event);
