@@ -479,6 +479,7 @@ login({
                 }
             } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID)) && 
                 (event.type == "message" || event.type == "message_reply")) {
+                    saveEvent(event);
                 return;
             }
         }
