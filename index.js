@@ -4804,7 +4804,7 @@ function containsAny(str, substrings) {
     return false;
 }
 
-function holdOnASecond(event) {
+async function holdOnASecond(event) {
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
