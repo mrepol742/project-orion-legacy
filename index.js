@@ -569,7 +569,11 @@ login({
 if (isGoingToFast(api, event)) {
                         return;
                     }
-holdOnASecond(event);
+if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                     if (event.messageReply.body == "") {
                         sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
                     } else {
@@ -583,7 +587,11 @@ holdOnASecond(event);
 if (isGoingToFast(api, event)) {
                         return;
                     }
-holdOnASecond(event);
+if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                     if (event.messageReply.body == "") {
                         sendMessage(api, event, "You need to reply count to a message.");
                     } else {
@@ -594,7 +602,11 @@ holdOnASecond(event);
 if (isGoingToFast(api, event)) {
                         return;
                     }
-holdOnASecond(event);
+if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                     if (event.messageReply.body == "") {
                         sendMessage(api, event, "You need to reply count --vowels to a message.");
                     } else {
@@ -605,7 +617,11 @@ holdOnASecond(event);
 if (isGoingToFast(api, event)) {
                         return;
                     }
-holdOnASecond(event);
+if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                     if (event.messageReply.body == "") {
                         sendMessage(api, event, "You need to reply count --consonants to a message.");
                     } else {
@@ -616,7 +632,11 @@ holdOnASecond(event);
 if (isGoingToFast(api, event)) {
                         return;
                     }
-holdOnASecond(event);
+if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                     let data = input.split(" ");
                     if (data.length < 2) {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
@@ -636,7 +656,11 @@ holdOnASecond(event);
 if (isGoingToFast(api, event)) {
                         return;
                     }
-holdOnASecond(event);
+if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                     if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                         if (event.messageReply.attachments.length < 1) {
                             sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
@@ -685,7 +709,11 @@ holdOnASecond(event);
 if (isGoingToFast(api, event)) {
                         return;
                     }
-holdOnASecond(event);
+if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
                         if (gc.isGroup) {
@@ -718,6 +746,11 @@ holdOnASecond(event);
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
+                if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                 unsend_msgs[event.messageID] = d;
                 let time = getTimestamp();
                 api.getUserInfo(event.senderID, (err, data) => {
@@ -923,7 +956,12 @@ holdOnASecond(event);
                 break;
             case "event":
                 switch (event.logMessageType) {
-                    case "log:subscribe":subscribe
+                    case "log:subscribe":
+                        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                         if (event.logMessageData.addedParticipants[0].userFbId == getMyId()) {
                             sendMessageOnly("What sup guys!");
                             break;
@@ -965,6 +1003,11 @@ holdOnASecond(event);
                         })
                         break;
                     case "log:unsubscribe":
+                        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
                         let id = event.logMessageData.leftParticipantFbId;
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) log(err);
@@ -1037,7 +1080,11 @@ async function ai(api, event) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using searchimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchimg melvin jones repol")
@@ -1057,7 +1104,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using searchincog text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchincog Who is Melvin Jones Repol")
@@ -1082,7 +1133,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
@@ -1361,7 +1416,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using ttsjap text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nttsjap I am melvin jones repol")
@@ -1395,7 +1454,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using tts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntts I am melvin jones repol")
@@ -1422,7 +1485,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         (async () => {
             const testNetworkSpeed = new NetworkSpeed();
             let osFreeMemm = os.freemem();
@@ -1460,7 +1527,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using ping url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nping google.com")
@@ -1483,7 +1554,11 @@ try {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmean 4 5 6 3 6 7 3 5")
         } else {
@@ -1503,7 +1578,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using median numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmedian 4 5 6 3 6 7 3 5")
         } else {
@@ -1525,7 +1604,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using mode numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmode 4 5 6 3 6 7 3 5")
         } else {
@@ -1558,7 +1641,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using range numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrange 4 5 6 3 6 7 3 5")
         } else {
@@ -1575,7 +1662,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using divisible number number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndivisible 5 8")
         } else {
@@ -1595,7 +1686,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using factorial number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfactorial 5")
         } else {
@@ -1611,7 +1706,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfindGCD 5")
         } else {
@@ -1627,7 +1726,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nroi 23000 6000")
         } else {
@@ -1641,7 +1744,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using cdfnormal x μ σ instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncdfnormal 5 30 25")
         } else {
@@ -1657,7 +1764,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nproblem 5*5/9")
         } else {
@@ -1687,7 +1798,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using linkshort url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlink https://mrepol742.github.io")
@@ -1719,7 +1834,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let id;
         if (event.type == "message") {
             id = event.senderID;
@@ -1749,7 +1868,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
@@ -1821,7 +1944,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
@@ -1890,7 +2017,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using lyrics text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlyrics In The End by Linkin Park")
@@ -1929,7 +2060,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using encodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencodeBinary fundamentals in engineering")
         } else {
@@ -1947,7 +2082,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using decodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecodeBinary 01100001 01100010 01100011")
         } else {
@@ -1966,7 +2105,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencode64 fundamentals in engineering")
         } else {
@@ -1981,7 +2124,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n")
         } else {
@@ -1996,7 +2143,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using reverse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nreverse fundamentals in engineering")
         } else {
@@ -2012,7 +2163,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
         pinned.pin.message[event.threadID] = undefined
         pinned.pin.sender[event.threadID] = undefined
@@ -2023,7 +2178,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
         if (pinned.pin.message[event.threadID] == undefined) {
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -2042,7 +2201,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using pdf text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npdf fundamentals in engineering")
@@ -2066,7 +2229,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using dict text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndict computer");
         } else {
@@ -2106,7 +2273,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
@@ -2131,7 +2302,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using baybayin text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbaybayin ako ay filipino")
@@ -2150,7 +2325,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using doublestruck text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndoublestruck Hello World")
@@ -2169,7 +2348,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using translate language text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate English Kamusta")
@@ -2190,7 +2373,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using weather location instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nweather caloocan city")
@@ -2229,7 +2416,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using facts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacts computer")
@@ -2243,7 +2434,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/wyr").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -2256,7 +2451,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/8ball").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -2269,7 +2468,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninstagram melvinjonesrepol")
@@ -2312,7 +2515,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let id;
         if ((event.type == "message_reply" && event.senderID != getMyId())) {
             id = event.messageReply.senderID;
@@ -2325,7 +2532,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntiktok mrepol742")
@@ -2365,7 +2576,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using soundcloud username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsoundcloud Denvau")
@@ -2408,7 +2623,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using github username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngithub mrepol742")
@@ -2457,7 +2676,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using element name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nelement hydrogen")
@@ -2497,7 +2720,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using npm name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnpm mrepol742")
@@ -2525,7 +2752,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using steam name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsteam minecraft")
@@ -2562,7 +2793,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using imdb name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nimdb iron man")
@@ -2600,7 +2835,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using itunes title instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nitunes in the end")
@@ -2638,7 +2877,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/car").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately car run away.");
@@ -2664,7 +2907,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately color fades away.");
@@ -2691,7 +2938,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately i forgot the line.");
@@ -2704,7 +2955,11 @@ if (isGoingToFast(api, event)) {
 if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngemoji 😂")
@@ -2721,7 +2976,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFastReporting(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsendReport There is a problem in ______ that cause ______.")
@@ -2909,7 +3168,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
@@ -2943,7 +3206,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
@@ -3195,7 +3462,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
@@ -3210,7 +3481,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
@@ -3232,7 +3507,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
@@ -3245,7 +3524,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (event.type == "message" && gc.isGroup && (query == "guid" || query == "groupid")) {
@@ -3277,13 +3560,21 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let num = query.substring(3);
         switch (num) {
             case "2":
@@ -3326,21 +3617,33 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
     } else if (query.startsWith("wiki")) {
         
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwiki Google")
@@ -3359,7 +3662,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest name:name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest Edogawa Conan: Ran Mouri")
@@ -3395,7 +3702,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two")
@@ -3425,7 +3736,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two")
@@ -3456,7 +3771,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two")
@@ -3486,7 +3805,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two")
@@ -3516,7 +3839,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two")
@@ -3546,7 +3873,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two")
@@ -3576,7 +3907,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two")
@@ -3606,7 +3941,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two")
@@ -3636,7 +3975,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two")
@@ -3666,7 +4009,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two")
@@ -3695,7 +4042,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
@@ -3721,7 +4072,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
@@ -3747,7 +4102,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
@@ -3777,7 +4136,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two")
@@ -3807,7 +4170,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two")
@@ -3837,7 +4204,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two")
@@ -3867,7 +4238,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two")
@@ -3897,7 +4272,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
@@ -3951,7 +4330,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(6)
         let data = input.split(" ");
@@ -3970,7 +4353,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(7)
         let data = input.split(" ");
@@ -3989,7 +4376,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(5)
         let data = input.split(" ");
@@ -4008,7 +4399,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately the code throws an exception.");
@@ -4033,7 +4428,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/joke").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately the joke is me.");
@@ -4045,7 +4444,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let message = {
             body: "Anti horny barrier activated.",
             attachment: fs.createReadStream(__dirname + '/assets/barrier.jpg')
@@ -4055,7 +4458,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/fact").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately the fact is not true.");
@@ -4067,7 +4474,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.");
@@ -4079,7 +4490,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(9)
         let data = input.split(" ");
@@ -4112,7 +4527,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(6).split(":");
         let data = input.split(" ");
@@ -4125,7 +4544,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(5);
         let data = input.split(" ");
@@ -4138,7 +4561,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4150,13 +4577,21 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         parseImage(api, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/images/conan_" + getTimestamp() + ".png");
     } else if (query.startsWith("oogway")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(7);
         let data = input.split(" ");
@@ -4173,7 +4608,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(13);
         let data = input.split(" ");
@@ -4192,7 +4631,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://zenzapis.xyz/randomanime/hololive?apikey=9c4c44db3725").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4214,7 +4657,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4239,7 +4686,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(6);
         let data = input.split(" ");
@@ -4258,7 +4709,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(6);
         let data = input.split(" ");
@@ -4271,7 +4726,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(7);
         let data = input.split(" ");
@@ -4284,7 +4743,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(6);
         let data = input.split(" ");
@@ -4297,7 +4760,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(8);
         let data = input.split(" ");
@@ -4310,7 +4777,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(6);
         let data = input.split(" ");
@@ -4323,7 +4794,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(8);
         let data = input.split(" ");
@@ -4340,7 +4815,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(4);
         let data = input.split(" ");
@@ -4353,7 +4832,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(7);
         let data = input.split(" ");
@@ -4366,7 +4849,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -4385,7 +4872,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(5).split(":");
         let data = input.split(" ");
@@ -4398,19 +4889,31 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
     } else if (query == "portrait") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
     } else if (query.startsWith("landscape")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(10);
         let data = input.split(" ");
@@ -4423,31 +4926,51 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/cosplay?apikey=9c4c44db3725", __dirname + "/cache/images/costplay_" + getTimestamp() + ".png");
     } else if (query == "darkjoke") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/darkjoke?apikey=9c4c44db3725", __dirname + "/cache/images/darkjoke_" + getTimestamp() + ".png");
     } else if (query == "blackpink") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/blackpink?apikey=9c4c44db3725", __dirname + "/cache/images/blackpink_" + getTimestamp() + ".png");
     } else if (query == "motor") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/motor?apikey=9c4c44db3725", __dirname + "/cache/images/motor_" + getTimestamp() + ".png");
     } else if (query.startsWith("portrait")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let text = input;
         text = text.substring(9);
         let data = input.split(" ");
@@ -4460,7 +4983,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://animechan.vercel.app/api/random").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4472,7 +4999,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4488,7 +5019,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Singapore");
@@ -4504,13 +5039,21 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
     } else if (query.startsWith("inspiration")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4526,7 +5069,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4542,7 +5089,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let yr = new Date().getFullYear() + 1;
         let future = new Date("Jan 1, " + yr + " 00:00:00").getTime();
         let now = new Date().getTime();
@@ -4560,7 +5111,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let yr = new Date().getFullYear();
         let future = new Date("Dec 25, " + yr + " 00:00:00").getTime();
         let now = new Date().getTime();
@@ -4578,7 +5133,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4594,7 +5153,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately there was an error occured.");
@@ -4610,7 +5173,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
@@ -4659,13 +5226,21 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, "Hello World");
     } else if (query == "about") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let message = {
             body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help.\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
             attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
@@ -4675,7 +5250,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let message = {
             body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
             attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
@@ -4685,7 +5264,11 @@ if (isGoingToFast(api, event)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         let message = {
             body: "/*\n* Copyright Ⓒ MREPOL742 - All Rights Reserved\n" +
                 "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
@@ -4715,33 +5298,49 @@ if (isGoingToFast(api, event)) {
     }
 }
 
-function someA(api, event, query, input) {
+async function someA(api, event, query, input) {
     if (query == "sup" || query == "wassup") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
     } else if (query == "hi" || query == "hello" || query == "hey") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
     } else if (query.startsWith("okay")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, "Yup");
         return true;
     } else if (query == "idk") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         sendMessage(api, event, "I dont know too...");
         return true;
     }
@@ -4753,7 +5352,11 @@ async function reaction(api, event, query, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
             sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
@@ -4762,41 +5365,65 @@ async function reaction(api, event, query, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":sad:");
     } else if (containsAny(input.toLowerCase(), angryEE)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":angry:");
     } else if (containsAny(query, loveEE) || (query == "bot" || query == "good")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":love:");
     } else if (query == "tsk") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":like:");
     } else if (query == "nice" || query == "uwu") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":heart:");
     }
 }
 
-function someR(api, event, query) {
+async function someR(api, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
         if (!isEvening(settings.timezone)) {
@@ -4807,7 +5434,11 @@ function someR(api, event, query) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
         if (!isMorning(settings.timezone)) {
@@ -4818,7 +5449,11 @@ function someR(api, event, query) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
         if (!isNight(settings.timezone)) {
@@ -4829,7 +5464,11 @@ function someR(api, event, query) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        holdOnASecond(event);
+        if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
+    }
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
         if (!isAfternoon(settings.timezone)) {
