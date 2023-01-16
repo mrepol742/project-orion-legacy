@@ -357,13 +357,13 @@ dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
     log("url https://project-orion.mrepol742.repl.co");
     if (ipaddress.length == 0) {
         ipaddress.push(addresses[0]);
-        fs.writeFileSync("ip_address.json", JSON.stringify(ipaddress), "utf8");
+        fs.writeFileSync(__dirname + "/ip_address.json", JSON.stringify(ipaddress), "utf8");
         log("new_ip_address " + addresses[0]);
     } else if (ipaddress.includes(addresses[0])) {
         log("ip_address " + addresses[0]);
     } else {
         ipaddress.push(addresses[0]);
-        fs.writeFileSync("ip_address.json", JSON.stringify(ipaddress), "utf8");
+        fs.writeFileSync(__dirname + "/ip_address.json", JSON.stringify(ipaddress), "utf8");
         log("ip_changes_to_address " + addresses[0]);
     }
 });
@@ -378,8 +378,8 @@ process.on('exit', (code) => {
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
-    fs.writeFileSync("msgs.json", JSON.stringify(msgs), "utf8");
-    fs.writeFileSync("unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+    fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
+    fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
     process.exit();
 });
 
@@ -427,7 +427,7 @@ login({
 
     cron.schedule('*/10 * * * *', () => {
         log("save_state");
-        fs.writeFileSync("msgs.json", JSON.stringify(msgs), "utf8");
+        fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
         messagesD = getFormattedDate();
     },
     {
@@ -436,7 +436,7 @@ login({
     });
 
     cron.schedule('0 * * * *', () => {
-        fs.writeFileSync("app_state.json", JSON.stringify(api.getAppState()), "utf8");
+        fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
         fb_stateD = getFormattedDate();
         log("fb_save_state")
     },
@@ -475,7 +475,7 @@ login({
                 if (mutedRRR.includes(event.senderID)) {
                     mutedRRR = mutedRRR.filter(item => item !== event.senderID);
                     sendMessage(api, event, "You can now use my commands.");
-                    fs.writeFileSync("muted_users.json", JSON.stringify(mutedRRR), "utf8");
+                    fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
                 }
             } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID)) && 
                 (event.type == "message" || event.type == "message_reply")) {
@@ -574,7 +574,7 @@ if (isGoingtoFast(api, event)) {
                         pinned.pin.message[event.threadID] = event.messageReply.body
                         pinned.pin.sender[event.threadID] = event.messageReply.senderID
                         sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
-                        fs.writeFileSync("pinned.json", JSON.stringify(pinned), "utf8")
+                        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
                     }
                 } else if (query == "count") {
                     holdOnASecond(event);
@@ -1081,7 +1081,7 @@ if (isGoingtoFast(api, event)) {
                 }
                 sendMessage(api, event, message);
                 nonRRR.push(event.senderID);
-                fs.writeFileSync("users.json", JSON.stringify(nonRRR), "utf8");
+                fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
             } else {
                 sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
@@ -1336,13 +1336,13 @@ if (isGoingtoFast(api, event)) {
     } else if (query == "debugon") {
         if (vips.includes(event.senderID)) {
             settings.isDebugEnabled = true;
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Debug mode enabled.");
         }
     } else if (query == "debugoff") {
         if (vips.includes(event.senderID)) {
             settings.isDebugEnabled = false;
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Konnichiwa i am back.");
         }
     }
@@ -1983,7 +1983,7 @@ if (isGoingtoFast(api, event)) {
         pinned.pin.message[event.threadID] = undefined
         pinned.pin.sender[event.threadID] = undefined
         sendMessage(api, event, "Pinned message removed.");
-        fs.writeFileSync("pinned.json", JSON.stringify(pinned), "utf8")
+        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
     } else if (query == "pin") {
         holdOnASecond(event);
 if (isGoingtoFast(api, event)) {
@@ -2688,7 +2688,7 @@ if (isGoingtoFast(api, event)) {
                     sendMessage(api, event, "Opps! the minimum value 10");
                 } else {
                     settings.max_tokens = num;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Max Tokens is now set to " + num);
                 }
             }
@@ -2707,7 +2707,7 @@ if (isGoingtoFast(api, event)) {
                     sendMessage(api, event, "Opps! the minimum value 0.1");
                 } else {
                     settings.temperature = num;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Temperature is now set to " + num);
                 }
             }
@@ -2726,7 +2726,7 @@ if (isGoingtoFast(api, event)) {
                     sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.frequency_penalty = num;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Frequency Penalty is now set to " + num);
                 }
             }
@@ -2745,7 +2745,7 @@ if (isGoingtoFast(api, event)) {
                     sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.presence_penalty = num;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Presence Penalty is now set to " + num);
                 }
             }
@@ -2759,7 +2759,7 @@ if (isGoingtoFast(api, event)) {
                 data.shift();
                 let num = data.join(" ");
                 settings.text_complextion = num;
-                fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Text Complextion is now set to " + num);
             }
         }
@@ -2777,7 +2777,7 @@ if (isGoingtoFast(api, event)) {
                     sendMessage(api, event, "Opps! the minimum value is 1.");
                 } else {
                     settings.max_image = num;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Max Image is now set to " + num);
                 }
             }
@@ -2796,7 +2796,7 @@ if (isGoingtoFast(api, event)) {
                     sendMessage(api, event, "Opps! the minimum value is 0.");
                 } else {
                     settings.probability_mass = num;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Probability Mass is now set to " + num);
                 }
             }
@@ -2811,7 +2811,7 @@ if (isGoingtoFast(api, event)) {
                 let pref = data.join(" ");
                 if (timeZones.includes(pref)) {
                     settings.timezone = pref;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Timezone is now set to " + pref);
                     sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
                 } else {
@@ -2830,7 +2830,7 @@ if (isGoingtoFast(api, event)) {
                 let first = pref.split("");
                 if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
                     settings.prefix = pref;
-                    fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Prefix is now set to " + pref);
                 } else {
                     sendMessage(api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
@@ -2841,7 +2841,7 @@ if (isGoingtoFast(api, event)) {
         if (vips.includes(event.senderID)) {
             if (settings.prefix != "null" || settings.prefix != undefined) {
                 settings.prefix = "null";
-                fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Prefix reset to default values.");
             }
         }
@@ -2988,7 +2988,7 @@ if (isGoingtoFast(api, event)) {
     } else if (query == "mute") {
         mutedRRR.push(event.senderID);
         sendMessage(api, event, "You've been muted. Please enter `unmute` to unmute yourself.");
-        fs.writeFileSync("muted_users.json", JSON.stringify(mutedRRR), "utf8");
+        fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
     } else if (query.startsWith("blockgroup")) {
         if (vips.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -3077,49 +3077,49 @@ if (isGoingtoFast(api, event)) {
     } else if ((query == "unsendon") && !settings.onUnsend) {
         if (vips.includes(event.senderID)) {
             settings.onUnsend = true
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if ((query == "unsendoff") && settings.onUnsend) {
         if (vips.includes(event.senderID)) {
             settings.onUnsend = false
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
         }
     } else if ((query == "delayon") && !settings.onDelay) {
         if (vips.includes(event.senderID)) {
             settings.onDelay = true
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
         }
     } else if ((query == "delayoff") && settings.onDelay) {
         if (vips.includes(event.senderID)) {
             settings.onDelay = false
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
         }
     } else if ((query == "nsfwon") && !settings.onNsfw) {
         if (vips.includes(event.senderID)) {
             settings.onNsfw = true
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Not Safe For Work are now enabled.");
         }
     } else if ((query == "nsfwoff") && settings.onNsfw) {
         if (vips.includes(event.senderID)) {
             settings.onNsfw = false
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Not Safe For Work is been disabled.");
         }
     } else if ((query == "simultaneousexecutionon") && !settings.preventSimultaneousExecution) {
         if (vips.includes(event.senderID)) {
             settings.preventSimultaneousExecution = true
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
         }
     } else if ((query == "simultaneousexecutionoff") && settings.preventSimultaneousExecution) {
         if (vips.includes(event.senderID)) {
             settings.preventSimultaneousExecution = false
-            fs.writeFileSync("settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
@@ -4548,7 +4548,7 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query == "refreshstate") {
         if (vips.includes(event.senderID)) {
-            fs.writeFileSync("app_state.json", JSON.stringify(api.getAppState()), "utf8");
+            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
             sendMessage(api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
@@ -4565,9 +4565,9 @@ if (isGoingtoFast(api, event)) {
         }
     } else if (query == "savestate") {
         if (vips.includes(event.senderID)) {
-            fs.writeFileSync("msgs.json", JSON.stringify(msgs), "utf8");
-            fs.writeFileSync("unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
-            fs.writeFileSync("group.json", JSON.stringify(group), "utf8");
+            fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
+            fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+            fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
             sendMessage(api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
         }
@@ -5307,10 +5307,10 @@ function blockUser(api, event, id) {
         return;
     }
     blockRRR.push(id);
-    fs.writeFileSync("block_users.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR), "utf8");
     if (vips.includes(id)) {
         vips = vips.filter(item => item !== id);
-        fs.writeFileSync("admin.json", JSON.stringify(vips), "utf8");
+        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
         sendMessage(api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
         sendMessage(api, event, "The user " + id + " is blocked.");
@@ -5324,7 +5324,7 @@ function blockGroup(api, event, id) {
     }
     blockSSS.push(id);
     sendMessage(api, event, "The group " + id + " is blocked.");
-    fs.writeFileSync("block_groups.json", JSON.stringify(blockSSS), "utf8");
+    fs.writeFileSync(__dirname + "/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
 function unblockGroup(api, event, id) {
@@ -5334,19 +5334,19 @@ function unblockGroup(api, event, id) {
     }
     blockSSS = blockSSS.filter(item => item !== id);
     sendMessage(api, event, "The group " + id + " can now use my commands.");
-    fs.writeFileSync("block_groups.json", JSON.stringify(blockSSS), "utf8");
+    fs.writeFileSync(__dirname + "/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
 function enableSmartReply(api, event, id) {
     smartRRR.push(id);
     sendMessage(api, event, "Smart Reply is turn on for thread " + id);
-    fs.writeFileSync("smart_reply.json", JSON.stringify(smartRRR), "utf8");
+    fs.writeFileSync(__dirname + "/smart_reply.json", JSON.stringify(smartRRR), "utf8");
 }
 
 function disableSmartReply(api, event, id) {
     smartRRR = smartRRR.filter(item => item !== id);
     sendMessage(api, event, "Smart Reply is turn off for thread " + id);
-    fs.writeFileSync("smart_reply.json", JSON.stringify(smartRRR), "utf8");
+    fs.writeFileSync(__dirname + "/smart_reply.json", JSON.stringify(smartRRR), "utf8");
 }
 
 function unblockUser(api, event, id) {
@@ -5356,7 +5356,7 @@ function unblockUser(api, event, id) {
     }
     blockRRR = blockRRR.filter(item => item !== id);
     sendMessage(api, event, "The user " + id + " can now use my commands.");
-    fs.writeFileSync("block_users.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR), "utf8");
 }
 
 function addAdmin(api, event, id) {
@@ -5370,7 +5370,7 @@ function addAdmin(api, event, id) {
     }
     vips.push(id);
     sendMessage(api, event, "Admin permission granted.");
-    fs.writeFileSync("admin.json", JSON.stringify(vips), "utf8");
+    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
 }
 
 function remAdmin(api, event, id) {
@@ -5383,7 +5383,7 @@ function remAdmin(api, event, id) {
     }
     vips = vips.filter(item => item !== id);
     sendMessage(api, event, "Admin permission removed.");
-    fs.writeFileSync("admin.json", JSON.stringify(vips), "utf8");
+    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
 }
 
 function changeNickname(api, event, id, text) {
