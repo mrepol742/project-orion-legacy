@@ -398,7 +398,7 @@ login({
         if (err400 > 10) {
             let message = {
                 body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
             };
             sendMessage(api, event, message);
             settings.crash = true;
@@ -416,7 +416,7 @@ login({
         if (err400 > 10) {
             let message = {
                 body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
             };
             sendMessage(api, event, message);
             settings.crash = true;
@@ -517,7 +517,7 @@ login({
                     }
                     let message = {
                         body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                        attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
                     };
                     sendMessage(api, event, message);
                     return;
@@ -527,7 +527,7 @@ login({
                     }
                     let message = {
                         body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                        attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
                     };
                     sendMessage(api, event, message);
                     return;
@@ -987,7 +987,7 @@ async function ai(api, event) {
     let query2 = formatQuery(input.toLowerCase());
     if (nsfw(query)) {
         let message = {
-            attachment: fs.createReadStream(__dirname + '/cache/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
+            attachment: fs.createReadStream(__dirname + '/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
         };
         sendMessage(api, event, message);
         return;
@@ -1070,7 +1070,7 @@ async function ai(api, event) {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
                     body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd.\nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help.\n⦿ about\n⦿ license\n⦿ copyright\n⦿ uptime\n\nhttps://project-orion.mrepol742.repl.co",
-                    attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+                    attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
                 }
                 sendMessage(api, event, message);
                 nonRRR.push(event.senderID);
@@ -3880,7 +3880,7 @@ try {
         }
         let message = {
             body: "Anti horny barrier activated.",
-            attachment: fs.createReadStream(__dirname + '/cache/assets/barrier.jpg')
+            attachment: fs.createReadStream(__dirname + '/assets/barrier.jpg')
         };
         sendMessage(api, event, message);
     } else if (query == "fact") {
@@ -4345,7 +4345,7 @@ try {
         let seconds = Math.floor((count % (1000 * 60)) / 1000);
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
-            attachment: fs.createReadStream(__dirname + '/cache/assets/newyear.gif')
+            attachment: fs.createReadStream(__dirname + '/assets/newyear.gif')
         };
         sendMessage(api, event, message)
     } else if (query == "christmas") {
@@ -4362,7 +4362,7 @@ try {
         let seconds = Math.floor((count % (1000 * 60)) / 1000);
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
-            attachment: fs.createReadStream(__dirname + '/cache/assets/Christmas.gif')
+            attachment: fs.createReadStream(__dirname + '/assets/Christmas.gif')
         };
         sendMessage(api, event, message)
     } else if (query == "verserandom") {
@@ -4448,13 +4448,13 @@ try {
     } else if (query == "about") {
         let message = {
             body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help.\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else if (query == "copyright") {
         let message = {
             body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else if (query == "license") {
@@ -4464,7 +4464,7 @@ try {
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
                 "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2023.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else {
