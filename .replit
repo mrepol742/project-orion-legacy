@@ -1,6 +1,6 @@
 
 hidden = [".config"]
-run = "node index.js | tee -a run.log"
+run = "node index.js | tee run.log"
 
 [[hints]]
 regex = "Error \\[ERR_REQUIRE_ESM\\]"

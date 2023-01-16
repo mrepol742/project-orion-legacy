@@ -322,18 +322,18 @@ let apiKey = [
     "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"
 ];
 
-let settings = JSON.parse(fs.readFileSync("cache/settings.json", "utf8"));
-let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
-let vips = JSON.parse(fs.readFileSync("cache/admin.json", "utf8"));
-let nonRRR = JSON.parse(fs.readFileSync("cache/users.json", "utf8"));
-let blockRRR = JSON.parse(fs.readFileSync("cache/block_users.json", "utf8"));
-let blockSSS = JSON.parse(fs.readFileSync("cache/block_groups.json", "utf8"));
-let mutedRRR = JSON.parse(fs.readFileSync("cache/muted_users.json", "utf8"));
-let msgs = JSON.parse(fs.readFileSync("cache/msgs.json", "utf8"));
-let smartRRR = JSON.parse(fs.readFileSync("cache/smart_reply.json", "utf8"));
-let ipaddress = JSON.parse(fs.readFileSync("cache/ip_address.json", "utf8"));
-let unsend_msgs = JSON.parse(fs.readFileSync("cache/unsend_msgs.json", "utf8"));
-let group = JSON.parse(fs.readFileSync("cache/group.json", "utf8"));
+let settings = JSON.parse(fs.readFileSync("/settings.json", "utf8"));
+let pinned = JSON.parse(fs.readFileSync("/pinned.json", "utf8"));
+let vips = JSON.parse(fs.readFileSync("/admin.json", "utf8"));
+let nonRRR = JSON.parse(fs.readFileSync("/users.json", "utf8"));
+let blockRRR = JSON.parse(fs.readFileSync("/block_users.json", "utf8"));
+let blockSSS = JSON.parse(fs.readFileSync("/block_groups.json", "utf8"));
+let mutedRRR = JSON.parse(fs.readFileSync("/muted_users.json", "utf8"));
+let msgs = JSON.parse(fs.readFileSync("/msgs.json", "utf8"));
+let smartRRR = JSON.parse(fs.readFileSync("/smart_reply.json", "utf8"));
+let ipaddress = JSON.parse(fs.readFileSync("/ip_address.json", "utf8"));
+let unsend_msgs = JSON.parse(fs.readFileSync("/unsend_msgs.json", "utf8"));
+let group = JSON.parse(fs.readFileSync("/group.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
@@ -355,13 +355,13 @@ dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
     log("url https://project-orion.mrepol742.repl.co");
     if (ipaddress.length == 0) {
         ipaddress.push(addresses[0]);
-        fs.writeFileSync("cache/ip_address.json", JSON.stringify(ipaddress), "utf8");
+        fs.writeFileSync("/ip_address.json", JSON.stringify(ipaddress), "utf8");
         log("new_ip_address " + addresses[0]);
     } else if (ipaddress.includes(addresses[0])) {
         log("ip_address " + addresses[0]);
     } else {
         ipaddress.push(addresses[0]);
-        fs.writeFileSync("cache/ip_address.json", JSON.stringify(ipaddress), "utf8");
+        fs.writeFileSync("/ip_address.json", JSON.stringify(ipaddress), "utf8");
         log("ip_changes_to_address " + addresses[0]);
     }
 });
@@ -376,13 +376,13 @@ process.on('exit', (code) => {
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
-    fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
-    fs.writeFileSync("cache/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+    fs.writeFileSync("/msgs.json", JSON.stringify(msgs), "utf8");
+    fs.writeFileSync("/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
     process.exit();
 });
 
 login({
-    appState: JSON.parse(fs.readFileSync('cache/app_state.json', 'utf8'))
+    appState: JSON.parse(fs.readFileSync('/app_state.json', 'utf8'))
 }, (err, api) => {
     if (err) return log(err);
 
@@ -396,7 +396,7 @@ login({
         if (err400 > 10) {
             let message = {
                 body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
             };
             sendMessage(api, event, message);
             settings.crash = true;
@@ -414,7 +414,7 @@ login({
         if (err400 > 10) {
             let message = {
                 body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
             };
             sendMessage(api, event, message);
             settings.crash = true;
@@ -425,7 +425,7 @@ login({
 
     cron.schedule('*/10 * * * *', () => {
         log("save_state");
-        fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
+        fs.writeFileSync("/msgs.json", JSON.stringify(msgs), "utf8");
         messagesD = getFormattedDate();
     },
     {
@@ -434,10 +434,7 @@ login({
     });
 
     cron.schedule('0 * * * *', () => {
-        fs.writeFileSync("cache/app_state.json", JSON.stringify(api.getAppState()), "utf8");
-        api.sendMessage("Project Orion Facebook State Refreshed", getMyId(), (err, messageInfo) => {
-            if (err) log(err);
-        })
+        fs.writeFileSync("/app_state.json", JSON.stringify(api.getAppState()), "utf8");
         fb_stateD = getFormattedDate();
         log("fb_save_state")
     },
@@ -479,12 +476,6 @@ login({
             }
         }
 
-        if (event.senderID != getMyId()) {
-            api.markAsRead(event.threadID, (err) => {
-                if (err) log(err);
-            });
-        }
-
         if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
           let body = event.body;
             if (!body.startsWith("_")) {
@@ -516,7 +507,7 @@ login({
                     }
                     let message = {
                         body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                        attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
                     };
                     sendMessage(api, event, message);
                     return;
@@ -526,7 +517,7 @@ login({
                     }
                     let message = {
                         body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                        attachment: fs.createReadStream(__dirname + '/cache/assets/maintenance.jpg')
+                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
                     };
                     sendMessage(api, event, message);
                     return;
@@ -575,7 +566,7 @@ login({
                         pinned.pin.message[event.threadID] = event.messageReply.body
                         pinned.pin.sender[event.threadID] = event.messageReply.senderID
                         sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
-                        fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
+                        fs.writeFileSync("/pinned.json", JSON.stringify(pinned), "utf8")
                     }
                 } else if (query == "count") {
                     if (isGoingToFast(api, event)) {
@@ -986,7 +977,7 @@ async function ai(api, event) {
     let query2 = formatQuery(input.toLowerCase());
     if (nsfw(query)) {
         let message = {
-            attachment: fs.createReadStream(__dirname + '/cache/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
+            attachment: fs.createReadStream(__dirname + '/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
         };
         sendMessage(api, event, message);
         return;
@@ -1069,11 +1060,11 @@ async function ai(api, event) {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
                     body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd.\nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help.\n⦿ about\n⦿ license\n⦿ copyright\n⦿ uptime\n\nhttps://project-orion.mrepol742.repl.co",
-                    attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+                    attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
                 }
                 sendMessage(api, event, message);
                 nonRRR.push(event.senderID);
-                fs.writeFileSync("cache/users.json", JSON.stringify(nonRRR), "utf8");
+                fs.writeFileSync("/users.json", JSON.stringify(nonRRR), "utf8");
             } else {
                 sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
@@ -1328,13 +1319,13 @@ async function ai(api, event) {
     } else if (query == "debugon") {
         if (vips.includes(event.senderID)) {
             settings.isDebugEnabled = true;
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Debug mode enabled.");
         }
     } else if (query == "debugoff") {
         if (vips.includes(event.senderID)) {
             settings.isDebugEnabled = false;
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Konnichiwa i am back.");
         }
     }
@@ -1946,16 +1937,16 @@ try {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
+        let pinned = JSON.parse(fs.readFileSync("/pinned.json", "utf8"));
         pinned.pin.message[event.threadID] = undefined
         pinned.pin.sender[event.threadID] = undefined
         sendMessage(api, event, "Pinned message removed.");
-        fs.writeFileSync("cache/pinned.json", JSON.stringify(pinned), "utf8")
+        fs.writeFileSync("/pinned.json", JSON.stringify(pinned), "utf8")
     } else if (query == "pin") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let pinned = JSON.parse(fs.readFileSync("cache/pinned.json", "utf8"));
+        let pinned = JSON.parse(fs.readFileSync("/pinned.json", "utf8"));
         if (pinned.pin.message[event.threadID] == undefined) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
@@ -2630,7 +2621,7 @@ try {
                     sendMessage(api, event, "Opps! the minimum value 10");
                 } else {
                     settings.max_tokens = num;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Max Tokens is now set to " + num);
                 }
             }
@@ -2649,7 +2640,7 @@ try {
                     sendMessage(api, event, "Opps! the minimum value 0.1");
                 } else {
                     settings.temperature = num;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Temperature is now set to " + num);
                 }
             }
@@ -2668,7 +2659,7 @@ try {
                     sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.frequency_penalty = num;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Frequency Penalty is now set to " + num);
                 }
             }
@@ -2687,7 +2678,7 @@ try {
                     sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.presence_penalty = num;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Presence Penalty is now set to " + num);
                 }
             }
@@ -2701,7 +2692,7 @@ try {
                 data.shift();
                 let num = data.join(" ");
                 settings.text_complextion = num;
-                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Text Complextion is now set to " + num);
             }
         }
@@ -2719,7 +2710,7 @@ try {
                     sendMessage(api, event, "Opps! the minimum value is 1.");
                 } else {
                     settings.max_image = num;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Max Image is now set to " + num);
                 }
             }
@@ -2738,7 +2729,7 @@ try {
                     sendMessage(api, event, "Opps! the minimum value is 0.");
                 } else {
                     settings.probability_mass = num;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Probability Mass is now set to " + num);
                 }
             }
@@ -2753,7 +2744,7 @@ try {
                 let pref = data.join(" ");
                 if (timeZones.includes(pref)) {
                     settings.timezone = pref;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Timezone is now set to " + pref);
                     sendMessage(api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
                 } else {
@@ -2772,7 +2763,7 @@ try {
                 let first = pref.split("");
                 if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
                     settings.prefix = pref;
-                    fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(api, event, "Prefix is now set to " + pref);
                 } else {
                     sendMessage(api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
@@ -2783,7 +2774,7 @@ try {
         if (vips.includes(event.senderID)) {
             if (settings.prefix != "null" || settings.prefix != undefined) {
                 settings.prefix = "null";
-                fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+                fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Prefix reset to default values.");
             }
         }
@@ -3015,49 +3006,49 @@ try {
     } else if ((query == "unsendon") && !settings.onUnsend) {
         if (vips.includes(event.senderID)) {
             settings.onUnsend = true
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if ((query == "unsendoff") && settings.onUnsend) {
         if (vips.includes(event.senderID)) {
             settings.onUnsend = false
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
         }
     } else if ((query == "delayon") && !settings.onDelay) {
         if (vips.includes(event.senderID)) {
             settings.onDelay = true
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
         }
     } else if ((query == "delayoff") && settings.onDelay) {
         if (vips.includes(event.senderID)) {
             settings.onDelay = false
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
         }
     } else if ((query == "nsfwon") && !settings.onNsfw) {
         if (vips.includes(event.senderID)) {
             settings.onNsfw = true
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Not Safe For Work are now enabled.");
         }
     } else if ((query == "nsfwoff") && settings.onNsfw) {
         if (vips.includes(event.senderID)) {
             settings.onNsfw = false
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Not Safe For Work is been disabled.");
         }
     } else if ((query == "simultaneousexecutionon") && !settings.preventSimultaneousExecution) {
         if (vips.includes(event.senderID)) {
             settings.preventSimultaneousExecution = true
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
         }
     } else if ((query == "simultaneousexecutionoff") && settings.preventSimultaneousExecution) {
         if (vips.includes(event.senderID)) {
             settings.preventSimultaneousExecution = false
-            fs.writeFileSync("cache/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync("/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
@@ -3873,7 +3864,7 @@ try {
         }
         let message = {
             body: "Anti horny barrier activated.",
-            attachment: fs.createReadStream(__dirname + '/cache/assets/barrier.jpg')
+            attachment: fs.createReadStream(__dirname + '/assets/barrier.jpg')
         };
         sendMessage(api, event, message);
     } else if (query == "fact") {
@@ -4338,7 +4329,7 @@ try {
         let seconds = Math.floor((count % (1000 * 60)) / 1000);
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
-            attachment: fs.createReadStream(__dirname + '/cache/assets/newyear.gif')
+            attachment: fs.createReadStream(__dirname + '/assets/newyear.gif')
         };
         sendMessage(api, event, message)
     } else if (query == "christmas") {
@@ -4355,7 +4346,7 @@ try {
         let seconds = Math.floor((count % (1000 * 60)) / 1000);
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
-            attachment: fs.createReadStream(__dirname + '/cache/assets/Christmas.gif')
+            attachment: fs.createReadStream(__dirname + '/assets/Christmas.gif')
         };
         sendMessage(api, event, message)
     } else if (query == "verserandom") {
@@ -4413,7 +4404,7 @@ try {
         }
     } else if (query == "refreshstate") {
         if (vips.includes(event.senderID)) {
-            fs.writeFileSync("cache/app_state.json", JSON.stringify(api.getAppState()), "utf8");
+            fs.writeFileSync("/app_state.json", JSON.stringify(api.getAppState()), "utf8");
             sendMessage(api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
@@ -4430,9 +4421,9 @@ try {
         }
     } else if (query == "savestate") {
         if (vips.includes(event.senderID)) {
-            fs.writeFileSync("cache/msgs.json", JSON.stringify(msgs), "utf8");
-            fs.writeFileSync("cache/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
-            fs.writeFileSync("cache/group.json", JSON.stringify(group), "utf8");
+            fs.writeFileSync("/msgs.json", JSON.stringify(msgs), "utf8");
+            fs.writeFileSync("/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+            fs.writeFileSync("/group.json", JSON.stringify(group), "utf8");
             sendMessage(api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
         }
@@ -4441,13 +4432,13 @@ try {
     } else if (query == "about") {
         let message = {
             body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help.\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else if (query == "copyright") {
         let message = {
             body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else if (query == "license") {
@@ -4457,7 +4448,7 @@ try {
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
                 "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2023.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/cache/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
         }
         sendMessage(api, event, message);
     } else {
@@ -4577,11 +4568,6 @@ async function sendMessage(api, event, message) {
             sendTyping();
         });
     }
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
-        }
-    }
     api.getThreadInfo(event.threadID, (err, gc) => {
         if (err) return log(err);
         if (gc.isGroup) {
@@ -4629,11 +4615,6 @@ async function sendMessageOnly(api, event, message) {
             sendTyping();
         });
     }
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
-        }
-    }
     log("send_message " + event.threadID + " " + message);
     api.sendMessage(message, event.threadID, (err, messageInfo) => {
         if (err) log(err);
@@ -4647,11 +4628,6 @@ async function reactMessage(api, event, reaction) {
             log("send_typing");
             sendTyping();
         });
-    }
-    if (!vips.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
-        }
     }
     log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID, (err) => {
@@ -4695,6 +4671,11 @@ function isGoingToFast(api, event) {
     }
     if (!settings.preventSimultaneousExecution) {
         return false;
+    }
+    if (!vips.includes(event.senderID)) {
+        if (settings.onDelay) {
+            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+        }
     }
     if (!(vips.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
@@ -5179,10 +5160,10 @@ function blockUser(api, event, id) {
         return;
     }
     blockRRR.push(id);
-    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync("/block_users.json", JSON.stringify(blockRRR), "utf8");
     if (vips.includes(id)) {
         vips = vips.filter(item => item !== id);
-        fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+        fs.writeFileSync("/admin.json", JSON.stringify(vips), "utf8");
         sendMessage(api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
         sendMessage(api, event, "The user " + id + " is blocked.");
@@ -5196,7 +5177,7 @@ function blockGroup(api, event, id) {
     }
     blockSSS.push(id);
     sendMessage(api, event, "The group " + id + " is blocked.");
-    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockSSS), "utf8");
+    fs.writeFileSync("/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
 function unblockGroup(api, event, id) {
@@ -5206,19 +5187,19 @@ function unblockGroup(api, event, id) {
     }
     blockSSS = blockSSS.filter(item => item !== id);
     sendMessage(api, event, "The group " + id + " can now use my commands.");
-    fs.writeFileSync("cache/block_groups.json", JSON.stringify(blockSSS), "utf8");
+    fs.writeFileSync("/block_groups.json", JSON.stringify(blockSSS), "utf8");
 }
 
 function enableSmartReply(api, event, id) {
     smartRRR.push(id);
     sendMessage(api, event, "Smart Reply is turn on for thread " + id);
-    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(smartRRR), "utf8");
+    fs.writeFileSync("/smart_reply.json", JSON.stringify(smartRRR), "utf8");
 }
 
 function disableSmartReply(api, event, id) {
     smartRRR = smartRRR.filter(item => item !== id);
     sendMessage(api, event, "Smart Reply is turn off for thread " + id);
-    fs.writeFileSync("cache/smart_reply.json", JSON.stringify(smartRRR), "utf8");
+    fs.writeFileSync("/smart_reply.json", JSON.stringify(smartRRR), "utf8");
 }
 
 function unblockUser(api, event, id) {
@@ -5228,7 +5209,7 @@ function unblockUser(api, event, id) {
     }
     blockRRR = blockRRR.filter(item => item !== id);
     sendMessage(api, event, "The user " + id + " can now use my commands.");
-    fs.writeFileSync("cache/block_users.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync("/block_users.json", JSON.stringify(blockRRR), "utf8");
 }
 
 function addAdmin(api, event, id) {
@@ -5242,7 +5223,7 @@ function addAdmin(api, event, id) {
     }
     vips.push(id);
     sendMessage(api, event, "Admin permission granted.");
-    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+    fs.writeFileSync("/admin.json", JSON.stringify(vips), "utf8");
 }
 
 function remAdmin(api, event, id) {
@@ -5255,7 +5236,7 @@ function remAdmin(api, event, id) {
     }
     vips = vips.filter(item => item !== id);
     sendMessage(api, event, "Admin permission removed.");
-    fs.writeFileSync("cache/admin.json", JSON.stringify(vips), "utf8");
+    fs.writeFileSync("/admin.json", JSON.stringify(vips), "utf8");
 }
 
 function changeNickname(api, event, id, text) {
