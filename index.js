@@ -1440,8 +1440,7 @@ if (isGoingtoFast(api, event)) {
                 "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps +
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
-                "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD +
-                "\n\n⦿ sendReport [text]\n   To send report to the author if there is any issue." + "\n\n⦿ Link: https://project-orion.mrepol742.repl.co\n⦿ IP: " + ipaddress[0]);
+                "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
         })();
     } else if (query.startsWith("ping")) {
         holdOnASecond(event);
