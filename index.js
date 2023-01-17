@@ -481,7 +481,7 @@ login({
                     sendMessage(api, event, "You can now use my commands.");
                     fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
                 }
-            } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID)| | mutedRRR.includes(event.senderID)) && 
+            } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID)) && 
             (event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
                 return;
