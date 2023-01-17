@@ -126,7 +126,7 @@ help += "\n⦿ searchincog [text]";
 help += "\n⦿ searchimg [text]";
 help += "\n⦿ gencode [text]";
 help += "\n⦿ dictionary [text]";
-help += "\n⦿ tts [text]";
+help += "\n⦿ say [text]";
 help += "\n⦿ baybayin [text]";
 help += "\n⦿ weather [location]";
 help += "\n⦿ music [text]";
@@ -299,6 +299,7 @@ helpadmin += "\n⦿ listadmins";
 helpadmin += "\n⦿ listmuted";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
+helpadmin += "\n⦿ ignore [prefix]";
 
 let helproot = "\n⦿ stop";
 helproot += "\n⦿ resume";
@@ -336,6 +337,7 @@ let smartRRR = JSON.parse(fs.readFileSync(__dirname + "/smart_reply.json", "utf8
 let ipaddress = JSON.parse(fs.readFileSync(__dirname + "/ip_address.json", "utf8"));
 let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/unsend_msgs.json", "utf8"));
 let group = JSON.parse(fs.readFileSync(__dirname + "/group.json", "utf8"));
+let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
@@ -485,6 +487,13 @@ login({
             (event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
                 return;
+            } else {
+                let ttb = event.body;
+                var result = ignoredPrefix.filter(option => ttb.startsWith(option.name));
+                if (ttb.startsWith(result)) {
+                    log("blocked " + result);
+                    return;
+                }
             }
         }
         if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
@@ -532,9 +541,9 @@ login({
                     };
                     sendMessage(api, event, message);
                     return;
-                } else if (settings.isStop) {
-                    return;
-                }
+                } 
+            } else if (settings.isStop) {
+                return;
             }
         }
 
@@ -1372,7 +1381,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately an error occured,");
             }
         }
-    } else if (query2.startsWith("tts")) {
+    } else if (query2.startsWith("tts ") || query2.startsWith("say ")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2786,6 +2795,41 @@ try {
                 settings.prefix = "null";
                 fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Prefix reset to default values.");
+            }
+        }
+    } else if (query.startsWith("ignoreprefix")) {
+        if (vips.includes(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa")
+            } else {
+                let pre = data.shift();
+                let pre2 = formatQuery(pre.replace(/\s+/g, '').toLowerCase());
+                if (pre2.startsWith("mj") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.prefix)) {
+                    sendMessage(api, event, "Unable to do such an action.");
+                } else if (!ignoredPrefix.includes(pre)) {
+                    ignoredPrefix.push(pre);
+                    fs.writeFileSync(__dirname + "/ignored_prefixes.json", JSON.stringify(ignoredPrefix), "utf8")
+                    sendMessage(api, event, "`" + pre + "` is now ignored.");
+                } else {
+                    sendMessage(api, event, "It's already ignored.");
+                }
+            }
+        }
+    } else if (query.startsWith("unignoredprefix")) {
+        if (vips.includes(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using unignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunignorePrefix alexa")
+            } else {
+                let pre = data.shift();
+                if (ignoredPrefix.includes(pre)) {
+                    ignoredPrefix = ignoredPrefix.filter(item => item !== pre);
+                    fs.writeFileSync(__dirname + "/ignored_prefixes.json", JSON.stringify(ignoredPrefix), "utf8")
+                    sendMessage(api, event, "`" + pre + "` is now unignored.");
+                } else {
+                    sendMessage(api, event, "It is not in ignored list.");
+                }
             }
         }
     } else if (query.startsWith("adduser")) {
