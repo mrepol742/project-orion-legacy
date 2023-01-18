@@ -488,12 +488,13 @@ login({
                 saveEvent(event);
                 return;
             } else {
+              /*
                 let ttb = event.body;
                 var result = ignoredPrefix.filter(option => ttb.startsWith(option.name));
                 if (ttb.startsWith(result)) {
                     log("blocked " + result);
                     return;
-                }
+                }*/
             }
         }
         if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
