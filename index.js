@@ -4681,7 +4681,7 @@ async function sendMessage(api, event, message) {
                 let filtered = test.filter(elm => elm);
                 if (filtered[0] != filtered[1]) {
                     log("send_message_reply " + event.threadID + " " + message);
-                    if (settings.speech) {
+                    if (speech.includes(event.threadID)) {
                         const url = googleTTS.getAudioUrl(message, {
                             lang: 'en',
                             slow: false,
@@ -4735,7 +4735,7 @@ async function sendMessageOnly(api, event, message) {
 }
 
 async function sendMMMS(api, event, message) {
-    if (settings.speech) {
+    if (speech.includes(event.threadID)) {
         const url = googleTTS.getAudioUrl(message, {
             lang: 'en',
             slow: false,
