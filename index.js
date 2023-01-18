@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 const express = require('express');
 const fs = require("fs");
 const login = require("fca-unofficial");
@@ -487,18 +488,19 @@ login({
             (event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
                 return;
-            } else {
-              /*
+            } 
+            /*
+            else {
                 let ttb = event.body;
                 var result = ignoredPrefix.filter(option => ttb.startsWith(option.name));
                 if (ttb.startsWith(result)) {
                     log("blocked " + result);
                     return;
-                }*/
-            }
+                }
+            }*/
         }
         if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
-          let body = event.body;
+            let body = event.body;
             if (!body.startsWith("_")) {
                 return;
             } else {
@@ -516,6 +518,22 @@ login({
                     sendMessage(api, event, "Hi i am back!");
                     settings.isStop = false;
                     return;
+                } else if (event.body == "restart") {
+                    sendMessage(api, event, "Hold on saving state is now in progress.");
+                    fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
+                    fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+                    fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+                    sendMessage(api, event, "Restarting program in 3 seconds.");
+                    setTimeout(function () {
+                        process.on("exit", function () {
+                            require("child_process").spawn(process.argv.shift(), process.argv, {
+                                cwd: process.cwd(),
+                                detached : true,
+                                stdio: "inherit"
+                            });
+                        });
+                        process.exit();
+                    }, 3000);
                 }
             }
         }
