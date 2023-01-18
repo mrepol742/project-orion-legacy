@@ -403,16 +403,6 @@ login({
         api.sendMessage(a, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
-        if (err400 > 10) {
-            let message = {
-                body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-            };
-            sendMessage(api, event, message);
-            settings.crash = true;
-        } else {
-            err400++;
-        }
     });
 
     process.on('unhandledRejection', (reason, promise) => {
@@ -421,16 +411,6 @@ login({
         api.sendMessage(a, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
-        if (err400 > 10) {
-            let message = {
-                body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-            };
-            sendMessage(api, event, message);
-            settings.crash = true;
-        } else {
-            err400++;
-        }
     });
 
     cron.schedule('*/10 * * * *', () => {
