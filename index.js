@@ -327,7 +327,7 @@ let apiKey = [
     // NLPCloudClient summarize
     "40286240a47c02b2948a8c61276be7bd481b0b14",
     // open ai api key
-    "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"
+    "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"
 ];
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json", "utf8"));
