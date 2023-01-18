@@ -278,6 +278,8 @@ help7 += "\n⦿ blackpink";
 help7 += "\n⦿ hololive";
 help7 += "\n⦿ mute";
 help7 += "\n⦿ unmute";
+help7 += "\n⦿ enableTagalogSupport [on/off]";
+help7 += "\n⦿ enableTextToSpeech [on/off]";
 
 let helpadmin = "\n⦿ unsend";
 helpadmin += "\n⦿ unsend [on|off]";
@@ -304,7 +306,9 @@ helpadmin += "\n⦿ ignore [prefix]";
 
 let helproot = "\n⦿ stop";
 helproot += "\n⦿ resume";
+helproot += "\n⦿ restart";
 helproot += "\n⦿ notify";
+helproot += "\n⦿ refreshGroup";
 helproot += "\n⦿ setMaxImage [integer]";
 helproot += "\n⦿ setTimezone [timezone]";
 helproot += "\n⦿ setTextComplextion [complextion]"
@@ -339,6 +343,7 @@ let ipaddress = JSON.parse(fs.readFileSync(__dirname + "/ip_address.json", "utf8
 let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/unsend_msgs.json", "utf8"));
 let group = JSON.parse(fs.readFileSync(__dirname + "/group.json", "utf8"));
 let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.json", "utf8"));
+let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
@@ -1089,7 +1094,7 @@ async function ai(api, event) {
         query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
         ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
-        otherQ(query2)) {
+        otherQ(query2) || (settings.tagalog && (query.startsWith("ano") || query.starstWith("bakit") || query.startsWith("saan") || query.startsWith("sino") || query.startsWith("kailan") || query.startsWith("paano")))) {
 
         if (isGoingToFast(api, event)) {
             return;
@@ -3013,6 +3018,10 @@ try {
         enableSmartReply(api, event, event.threadID);
     } else if (query.startsWith("smartreplyoff")) {
         disableSmartReply(api, event, event.threadID);
+    } else if (query.startsWith("enabletexttospeechon")) {
+        enableTTS(api, event, event.threadID);
+    } else if (query.startsWith("enabletexttospeechoff")) {
+        disableTTS(api, event, event.threadID);
     } else if (query.startsWith("listadmins")) {
         if (vips.includes(event.senderID)) {
             sendMessage(api, event, "Admins:\n" + vips);
@@ -4672,22 +4681,38 @@ async function sendMessage(api, event, message) {
                 let filtered = test.filter(elm => elm);
                 if (filtered[0] != filtered[1]) {
                     log("send_message_reply " + event.threadID + " " + message);
-                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                        if (err) log(err);
-                    }, event.messageID);
+                    if (settings.speech) {
+                        const url = googleTTS.getAudioUrl(message, {
+                            lang: 'en',
+                            slow: false,
+                            host: 'https://translate.google.com',
+                        });
+                        let time = getTimestamp();
+                        request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
+                
+                            .on('finish', () => {
+                                let message = {
+                                    attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
+                                };
+                                api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                                    if (err) log(err);
+                                }, event.messageID);
+                                unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
+                            })
+                    } else {
+                        api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                            if (err) log(err);
+                        }, event.messageID);
+                    }
                 } else {
                     log("send_message " + event.threadID + " " + message);
-                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                        if (err) log(err);
-                    });
+                    sendMMMS(api, event, message);
                 }
                 ts = history[0].timestamp;
             });
         } else {
             log("send_message " + event.threadID + " " + message);
-            api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                if (err) log(err);
-            });
+            sendMMMS(api, event, message);
         }
     });
 }
@@ -4706,9 +4731,33 @@ async function sendMessageOnly(api, event, message) {
         }
     }
     log("send_message " + event.threadID + " " + message);
-    api.sendMessage(message, event.threadID, (err, messageInfo) => {
-        if (err) log(err);
-    });
+    sendMMMS(api, event, message);
+}
+
+async function sendMMMS(api, event, message) {
+    if (settings.speech) {
+        const url = googleTTS.getAudioUrl(message, {
+            lang: 'en',
+            slow: false,
+            host: 'https://translate.google.com',
+        });
+        let time = getTimestamp();
+        request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
+
+            .on('finish', () => {
+                let message = {
+                    attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
+                };
+                api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                    if (err) log(err);
+                });
+                unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
+            })
+    } else {
+        api.sendMessage(message, event.threadID, (err, messageInfo) => {
+            if (err) log(err);
+        });
+    }
 }
 
 async function reactMessage(api, event, reaction) {
@@ -5278,6 +5327,18 @@ function unblockGroup(api, event, id) {
     blockSSS = blockSSS.filter(item => item !== id);
     sendMessage(api, event, "The group " + id + " can now use my commands.");
     fs.writeFileSync(__dirname + "/block_groups.json", JSON.stringify(blockSSS), "utf8");
+}
+
+function enableTTS(api, event, id) {
+    speech.push(id);
+    sendMessage(api, event, "Speech Synthesis is turn on for thread " + id);
+    fs.writeFileSync(__dirname + "/speech.json", JSON.stringify(speech), "utf8");
+}
+
+function disableTTS(api, event, id) {
+    speech = speech.filter(item => item != id);
+    sendMessage(api, event, "Speech Synthesis is turn off for thread " + id);
+    fs.writeFileSync(__dirname + "/speech.json", JSON.stringify(speech), "utf8");
 }
 
 function enableSmartReply(api, event, id) {
