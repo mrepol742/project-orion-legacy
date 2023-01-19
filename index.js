@@ -565,162 +565,12 @@ login({
         switch (event.type) {
             case "message":
                 saveEvent(event);
-                ai(api, event);
+                ai(api, event, event.body);
                 break;
             case "message_reply":
                 saveEvent(event);
-                ai(api, event);
-                let input = event.body;
-                let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
-                let query2 = formatQuery(input.toLowerCase());
-                if (query == "notify") {
-                    if (isMyId(event.senderID)) {
-                        if (event.messageReply.body == "") {
-                            sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
-                        } else {
-                            sendMessageToAll(api, event.messageReply.body);
-                        }
-                    }
-                } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
-                    if (vips.includes(event.senderID)) {
-                        if (event.messageReply.senderID != getMyId()) {
-                            sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
-                        } else {
-                            api.unsendMessage(event.messageReply.messageID, (err) => {
-                                if (err) log(err);
-                            });
-                        }
-                    }
-                } else if (query == "pinadd") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
-                    } else {
-                        pinned.pin.message[event.threadID] = event.messageReply.body
-                        pinned.pin.sender[event.threadID] = event.messageReply.senderID
-                        sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
-                        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
-                    }
-                } else if (query == "count") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(api, event, "You need to reply count to a message.");
-                    } else {
-                        sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
-                    }
-                } else if (query == "countvowels") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(api, event, "You need to reply count --vowels to a message.");
-                    } else {
-                        sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
-                    }
-                } else if (query == "countconsonants") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(api, event, "You need to reply count --consonants to a message.");
-                    } else {
-                        sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
-                    }
-                } else if (query.startsWith("wfind")) {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    let data = input.split(" ");
-                    if (data.length < 2) {
-                        sendMessage(api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
-                    } else {
-                        data.shift();
-                        let se = data.join(" ");
-                        if (event.messageReply.body == "") {
-                            sendMessage(api, event, "You need to reply wfind text to a message.");
-                        } else if (event.messageReply.body.includes(se)) {
-                            sendMessage(api, event, "I found the \"" + se + "\" on this message " + (se.split(se).length - 1) + " times.");
-                        } else {
-                            sendMessage(api, event, "I cannot found any apperance of your search term on the message.");
-                        }
-                    }
-                } else if (query == "bgremove") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                        if (event.messageReply.attachments.length < 1) {
-                            sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
-                        } else if (event.messageReply.attachments.length > 1) {
-                            sendMessage(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
-                        } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
-                            const url = event.messageReply.attachments[0].url;
-                            request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
-                                const inputPath = './cache/images/removebg.png';
-                                const formData = new FormData();
-                                formData.append('size', 'auto');
-                                formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
-        
-                                axios({
-                                        method: 'post',
-                                        url: 'https://api.remove.bg/v1.0/removebg',
-                                        data: formData,
-                                        responseType: 'arraybuffer',
-                                        headers: {
-                                            ...formData.getHeaders(),
-                                            'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
-                                        },
-                                        encoding: null
-                                    })
-                                    .then((res) => {
-                                        if (res.status != 200) return
-                                        console.error('Error:', res.status, res.statusText);
-                                        fs.writeFileSync("./cache/images/removebg.png", res.data);
-                                        let message = {
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
-                                        }
-                                        sendMessage(api, event, message);
-                                        unLink(__dirname + "/cache/images/removebg.png");
-                                    })
-                                    .catch((error) => {
-                                        sendMessage(api, event, "An unknown error as been occured. Please try again later.");
-                                        return log(err);
-                                    });
-                            })
-                        }
-                    } else {
-                        sendMessage(api, event, "Hold on... There is still a request in progress.");
-                    }
-                } else if (query == "gphoto") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return log(err);
-                        if (gc.isGroup) {
-                            if (event.messageReply.attachments.length < 1) {
-                                sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
-                            } else if (event.messageReply.attachments.length > 1) {
-                                sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
-                            } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
-                                const url = event.messageReply.attachments[0].url;
-                                let time = getTimestamp();
-                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
-                                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
-                                        if (err) return log(err);
-                                    });
-                                    unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
-                                })
-                            }
-                        } else {
-                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                        }
-                    });
-                }
+                ai(api, event, event.body);
+                ai22(api, event, event.body);
                 break;
             case "message_unsend":
                 if (vips.includes(event.senderID)) {
@@ -1006,8 +856,164 @@ function wait(ms) {
     });
 }
 
-async function ai(api, event) {
-    let input = event.body;
+async function ai22(api, event, input) {
+                let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
+                let query2 = formatQuery(input.toLowerCase());
+                if (query2 == ".") {
+                    if (event.messageReply.body != "") {
+                        ai(api, event, input);
+                    }
+                } else if (query == "notify") {
+                    if (isMyId(event.senderID)) {
+                        if (event.messageReply.body == "") {
+                            sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
+                        } else {
+                            sendMessageToAll(api, event.messageReply.body);
+                        }
+                    }
+                } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
+                    if (vips.includes(event.senderID)) {
+                        if (event.messageReply.senderID != getMyId()) {
+                            sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
+                        } else {
+                            api.unsendMessage(event.messageReply.messageID, (err) => {
+                                if (err) log(err);
+                            });
+                        }
+                    }
+                } else if (query == "pinadd") {
+                    if (isGoingToFast(api, event)) {
+                        return;
+                    }
+                    if (event.messageReply.body == "") {
+                        sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
+                    } else {
+                        pinned.pin.message[event.threadID] = event.messageReply.body
+                        pinned.pin.sender[event.threadID] = event.messageReply.senderID
+                        sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
+                        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
+                    }
+                } else if (query == "count") {
+                    if (isGoingToFast(api, event)) {
+                        return;
+                    }
+                    if (event.messageReply.body == "") {
+                        sendMessage(api, event, "You need to reply count to a message.");
+                    } else {
+                        sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
+                    }
+                } else if (query == "countvowels") {
+                    if (isGoingToFast(api, event)) {
+                        return;
+                    }
+                    if (event.messageReply.body == "") {
+                        sendMessage(api, event, "You need to reply count --vowels to a message.");
+                    } else {
+                        sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
+                    }
+                } else if (query == "countconsonants") {
+                    if (isGoingToFast(api, event)) {
+                        return;
+                    }
+                    if (event.messageReply.body == "") {
+                        sendMessage(api, event, "You need to reply count --consonants to a message.");
+                    } else {
+                        sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
+                    }
+                } else if (query.startsWith("wfind")) {
+                    if (isGoingToFast(api, event)) {
+                        return;
+                    }
+                    let data = input.split(" ");
+                    if (data.length < 2) {
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
+                    } else {
+                        data.shift();
+                        let se = data.join(" ");
+                        if (event.messageReply.body == "") {
+                            sendMessage(api, event, "You need to reply wfind text to a message.");
+                        } else if (event.messageReply.body.includes(se)) {
+                            sendMessage(api, event, "I found the \"" + se + "\" on this message " + (se.split(se).length - 1) + " times.");
+                        } else {
+                            sendMessage(api, event, "I cannot found any apperance of your search term on the message.");
+                        }
+                    }
+                } else if (query == "bgremove") {
+                    if (isGoingToFast(api, event)) {
+                        return;
+                    }
+                    if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+                        if (event.messageReply.attachments.length < 1) {
+                            sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
+                        } else if (event.messageReply.attachments.length > 1) {
+                            sendMessage(api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
+                        } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                            const url = event.messageReply.attachments[0].url;
+                            request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
+                                const inputPath = './cache/images/removebg.png';
+                                const formData = new FormData();
+                                formData.append('size', 'auto');
+                                formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
+        
+                                axios({
+                                        method: 'post',
+                                        url: 'https://api.remove.bg/v1.0/removebg',
+                                        data: formData,
+                                        responseType: 'arraybuffer',
+                                        headers: {
+                                            ...formData.getHeaders(),
+                                            'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
+                                        },
+                                        encoding: null
+                                    })
+                                    .then((res) => {
+                                        if (res.status != 200) return
+                                        console.error('Error:', res.status, res.statusText);
+                                        fs.writeFileSync("./cache/images/removebg.png", res.data);
+                                        let message = {
+                                            attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
+                                        }
+                                        sendMessage(api, event, message);
+                                        unLink(__dirname + "/cache/images/removebg.png");
+                                    })
+                                    .catch((error) => {
+                                        sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                                        return log(err);
+                                    });
+                            })
+                        }
+                    } else {
+                        sendMessage(api, event, "Hold on... There is still a request in progress.");
+                    }
+                } else if (query == "gphoto") {
+                    if (isGoingToFast(api, event)) {
+                        return;
+                    }
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (err) return log(err);
+                        if (gc.isGroup) {
+                            if (event.messageReply.attachments.length < 1) {
+                                sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
+                            } else if (event.messageReply.attachments.length > 1) {
+                                sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
+                            } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                                const url = event.messageReply.attachments[0].url;
+                                let time = getTimestamp();
+                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
+                                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
+                                        if (err) return log(err);
+                                    });
+                                    unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
+                                })
+                            }
+                        } else {
+                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                        }
+                    });
+                }
+}
+
+async function ai(api, event, input) {
     let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
     let query2 = formatQuery(input.toLowerCase());
     if (nsfw(query)) {
