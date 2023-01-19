@@ -344,6 +344,7 @@ let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/unsend_msgs.json", "u
 let group = JSON.parse(fs.readFileSync(__dirname + "/group.json", "utf8"));
 let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.json", "utf8"));
 let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
+let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
@@ -450,6 +451,10 @@ login({
             return;
         }
 
+        if (restart[0] != undefined) {
+            api.sendMessage("Server restarted..", restart[0], restart[1]);
+        }
+
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
             if (event.body == "unblockgroup") {
                 if (vips.includes(event.senderID)) {
@@ -510,6 +515,9 @@ login({
                     fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
                     sendMessage(api, event, "Restarting program in 3 seconds.");
                     setTimeout(function () {
+                        restart.push(event.threadID);
+                        restart.push(event.messageID);
+                        fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(restart), "utf8");
                         process.on("exit", function () {
                             require("child_process").spawn(process.argv.shift(), process.argv, {
                                 cwd: process.cwd(),
