@@ -1,26 +1,12 @@
-1/18/2023 8:23:07 PM$ Project Orion ONLINE
-1/18/2023 8:23:08 PM$ url https://project-orion.mrepol742.repl.co
-1/18/2023 8:23:08 PM$ ip_address 34.110.138.177
-1/18/2023 8:23:18 PM$ wait_timeout >> 6000
-1/18/2023 8:23:19 PM$ send_typing
-1/18/2023 8:23:23 PM$ wait_timeout >> 6000
-1/18/2023 8:23:24 PM$ send_typing
-1/18/2023 8:23:24 PM$ react_message mid.$gAB3fuY4EQE2L9hqxA2FxNVnvyWoL :sad:
-1/18/2023 8:23:29 PM$ react_message mid.$gAB-coCHI_8CL9hrB62FxNV5c0I3Z :laughing:
-1/18/2023 8:23:30 PM$ event_body 100071243882426 Lyrics red flag
-1/18/2023 8:23:30 PM$ response_data https://api.popcat.xyz/lyrics?song=red flag
-1/18/2023 8:23:30 PM$ wait_timeout >> 1000
-1/18/2023 8:23:31 PM$ event_body 100071743848974 what is matter
-1/18/2023 8:23:33 PM$ send_message 8018978668143407 Matter is anything that has mass and takes up space. It can be solid, liquid, or gas. Examples of matter include rocks, water, air, and living things.
-1/18/2023 8:23:33 PM$ wait_timeout >> 5000
-1/18/2023 8:23:33 PM$ wait_timeout >> 120000
-1/18/2023 8:23:34 PM$ send_typing
-1/18/2023 8:23:39 PM$ 100083850501256
-1/18/2023 8:23:39 PM$ 100086430836689
-1/18/2023 8:23:39 PM$ 100071243882426
-1/18/2023 8:23:39 PM$ send_message_reply 5653470298044183 [object Object]
-1/18/2023 8:23:44 PM$ react_message mid.$gABJwS7O7mZ6L9hsWz2FxNW2cEyct :laughing:
-1/18/2023 8:23:45 PM$ send_typing
-1/18/2023 8:23:49 PM$ wait_timeout >> 7000
-1/18/2023 8:23:51 PM$ send_typing
-1/18/2023 8:23:56 PM$ react_message mid.$gAB-coCHI_8CL9hspPmFxNXfxbGfL :laughing:
+1/19/2023 4:34:36 PM$ Project Orion ONLINE
+1/19/2023 4:34:37 PM$ url https://project-orion.mrepol742.repl.co
+1/19/2023 4:34:37 PM$ ip_address 34.110.138.177
+1/19/2023 4:34:41 PM$ [object Object]
+1/19/2023 4:40:00 PM$ save_state
+1/19/2023 4:50:00 PM$ save_state
+1/19/2023 5:00:00 PM$ save_state
+1/19/2023 5:10:00 PM$ save_state
+1/19/2023 5:20:00 PM$ save_state
+1/19/2023 5:30:00 PM$ save_state
+1/19/2023 5:40:00 PM$ save_state
+1/19/2023 5:50:00 PM$ save_state
