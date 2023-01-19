@@ -453,6 +453,9 @@ login({
 
         if (restart[0] != undefined) {
             api.sendMessage("Server restarted..", restart[0], restart[1]);
+            restart[0] = undefined;
+            restart[1] = undefined;
+            fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(restart), "utf8");
         }
 
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
