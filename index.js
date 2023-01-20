@@ -451,13 +451,6 @@ login({
             return;
         }
 
-        if (restart[0] != undefined) {
-            api.sendMessage("Server restarted..", restart[0], restart[1]);
-            restart[0] = undefined;
-            restart[1] = undefined;
-            fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(restart), "utf8");
-        }
-
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
             if (event.body == "unblockgroup") {
                 if (vips.includes(event.senderID)) {
@@ -498,7 +491,7 @@ login({
                 return;
             } else {
                 event.body = body.slice(1);
-            }
+          }
         }
 
         if ((event.type == "message" || event.type == "message_reply")) {
@@ -859,9 +852,12 @@ function wait(ms) {
 async function ai22(api, event, input) {
                 let query = formatQuery(input.replace(/\s+/g, '').toLowerCase());
                 let query2 = formatQuery(input.toLowerCase());
-                if (query2 == ".") {
+                if (input == ".") {
                     if (event.messageReply.body != "") {
-                        ai(api, event, input);
+                      if (input.startsWith("_")) {
+                        input = input.slice(1);
+                      }
+                        ai(api, event, event.messageReply.body);
                     }
                 } else if (query == "notify") {
                     if (isMyId(event.senderID)) {
@@ -4647,13 +4643,6 @@ function parseImage(api, event, url, dir) {
 }
 
 async function sendMessage(api, event, message) {
-    if (event.senderID != getMyId()) {
-        let sendTyping = api.sendTypingIndicator(event.threadID, (err) => {
-            if (err) log(err);
-            log("send_typing");
-            sendTyping();
-        });
-    }
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
@@ -4715,13 +4704,6 @@ async function sendMessage(api, event, message) {
 }
 
 async function sendMessageOnly(api, event, message) {
-    if (event.senderID != getMyId()) {
-        let sendTyping = api.sendTypingIndicator(event.threadID, (err) => {
-            if (err) log(err);
-            log("send_typing");
-            sendTyping();
-        });
-    }
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
@@ -4758,13 +4740,6 @@ async function sendMMMS(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
-    if (event.senderID != getMyId()) {
-        let sendTyping = api.sendTypingIndicator(event.threadID, (err) => {
-            if (err) log(err);
-            log("send_typing");
-            sendTyping();
-        });
-    }
     if (!vips.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
