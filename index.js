@@ -286,6 +286,7 @@ helpadmin += "\n⦿ unsend [on|off]";
 helpadmin += "\n⦿ delay [on|off]";
 helpadmin += "\n⦿ nsfw [on|off]";
 helpadmin += "\n⦿ debug [on|off]";
+helpadmin += "\n⦿ antiLeave [on|off]";
 helpadmin += "\n⦿ simultaneousExecution [on/off]";
 helpadmin += "\n⦿ clearCache";
 helpadmin += "\n⦿ refreshState";
@@ -826,10 +827,16 @@ login({
                             if (err) log(err);
                             api.getUserInfo(parseInt(id), (err, data) => {
                                 if (err) return log(err);
-                                for (let prop in data) {
+                                for (let prop in data) { 
                                     if (data.hasOwnProperty(prop) && data[prop].name) {
                                         let gcn = gc.threadName;
                                         let arr = gc.participantIDs;
+                                        if (settings.antiLeave) {
+                                            api.addUserToGroup(prop, event.threadID, (err) => {
+                                                if (err) log(err);
+                                                log("add_user " + event.threadID + " " + prop);
+                                            });
+                                        }
                                         byebyeUser(api, event, data[prop].name, gcn, arr.length, prop);
                                     }
                                 }
@@ -1164,7 +1171,7 @@ async function ai(api, event, input) {
                     };
                     sendMessage(api, event, message);
                 });
-            } else if (text1 == "whoami" || text1 == "whatsmyname" || text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis") {
+            } else if (text1 == "whoami" || text1 == "whatsmyname" || text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis" || text1 == "doyouknowme" || text1 == "whatismyname") {
                 let id;
                 if ((event.type == "message_reply" && event.senderID != getMyId())) {
                     id = event.messageReply.senderID;
@@ -1193,9 +1200,9 @@ async function ai(api, event, input) {
                 });
             } else if (text1 == "whoownyou") {
                 sendMessage(api, event, "Melvin Jones Repol.")
-            } else if (text1.startsWith("whomadeyou") || text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou")) {
+            } else if (text1.startsWith("whomadeyou") || text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou") || text1.startsWith("whoprogramyou")) {
                 sendMessage(api, event, "Melvin Jones Repol created me.");
-            } else if (text1.startsWith("howoldareyou") || text1.startsWith("howyoungareyou")) {
+            } else if (text1.startsWith("howoldareyou") || text1.startsWith("howyoungareyou") || text1.startsWith("whatisyourage") || text1.startsWith("whatsyourage")) {
                 sendMessage(api, event, "I'm 20 years old.");
             } else if (text1.startsWith("whereyoufrom") || text1.startsWith("whereareyoufrom") || text1.startsWith("wheredoyoufrom")) {
                 sendMessage(api, event, "Somewhere in the place they called the Philippines.");
@@ -3096,6 +3103,18 @@ try {
             settings.onUnsend = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
+        }
+    } else if ((query == "antileaveon") && !settings.antiLeave) {
+        if (vips.includes(event.senderID)) {
+            settings.antiLeave = true
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            sendMessage(api, event, "Readding of user who left is now enabled.");
+        }
+    } else if ((query == "antileaveoff") && settings.antiLeave) {
+        if (vips.includes(event.senderID)) {
+            settings.antiLeave = false
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            sendMessage(api, event, "Readding of user who left is been disabled.");
         }
     } else if ((query == "delayon") && !settings.onDelay) {
         if (vips.includes(event.senderID)) {
