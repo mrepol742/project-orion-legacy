@@ -278,8 +278,8 @@ help7 += "\n⦿ blackpink";
 help7 += "\n⦿ hololive";
 help7 += "\n⦿ mute";
 help7 += "\n⦿ unmute";
-help7 += "\n⦿ enableTagalogSupport [on/off]";
-help7 += "\n⦿ enableTextToSpeech [on/off]";
+help7 += "\n⦿ tagalogSupport [on/off]";
+help7 += "\n⦿ textToSpeech [on/off]";
 
 let helpadmin = "\n⦿ unsend";
 helpadmin += "\n⦿ unsend [on|off]";
@@ -3018,9 +3018,9 @@ try {
         enableSmartReply(api, event, event.threadID);
     } else if (query.startsWith("smartreplyoff")) {
         disableSmartReply(api, event, event.threadID);
-    } else if (query.startsWith("enabletexttospeechon")) {
+    } else if (query.startsWith("texttospeechon")) {
         enableTTS(api, event, event.threadID);
-    } else if (query.startsWith("enabletexttospeechoff")) {
+    } else if (query.startsWith("texttospeechoff")) {
         disableTTS(api, event, event.threadID);
     } else if (query.startsWith("listadmins")) {
         if (vips.includes(event.senderID)) {
@@ -3115,6 +3115,18 @@ try {
             settings.antiLeave = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Readding of user who left is been disabled.");
+        }
+    } else if ((query == "tagalogsupporton") && !settings.tagalog) {
+        if (vips.includes(event.senderID)) {
+            settings.tagalog = true
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            sendMessage(api, event, "Tagalog Support is now enabled.");
+        }
+    } else if ((query == "tagalogsupportoff") && settings.tagalog) {
+        if (vips.includes(event.senderID)) {
+            settings.tagalog = false
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            sendMessage(api, event, "Tagalog Support is been disabled.");
         }
     } else if ((query == "delayon") && !settings.onDelay) {
         if (vips.includes(event.senderID)) {
