@@ -280,6 +280,7 @@ help7 += "\n⦿ mute";
 help7 += "\n⦿ unmute";
 help7 += "\n⦿ tagalogSupport [on/off]";
 help7 += "\n⦿ textToSpeech [on/off]";
+help7 += "\n⦿ meowfacts";
 
 let helpadmin = "\n⦿ unsend";
 helpadmin += "\n⦿ unsend [on|off]";
@@ -2206,7 +2207,7 @@ try {
             if (response == null) {
                 sendMessage(api, event, "Seems like there was an internal problem.");
             } else {
-                sendMessage(api, event, response.data);
+                sendMessage(api, event, response);
             }
         });
     } else if (query == "8ball") {
