@@ -347,10 +347,11 @@ let group = JSON.parse(fs.readFileSync(__dirname + "/group.json", "utf8"));
 let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.json", "utf8"));
 let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
 let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
+let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
 
 const app = express();
 const config = new Configuration({
-    apiKey: apiKey[4],
+    apiKey: keys.ai,
 });
 const openai = new OpenAIApi(config);
 
@@ -454,7 +455,13 @@ login({
         }
 
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
-            if (event.body == "unblockgroup") {
+            let body = event.body;
+            if (!body.startsWith("_")) {
+                return;
+            } else {
+                event.body = body.slice(1);
+            }
+            if (body == "unblockgroup") {
                 if (vips.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
@@ -465,7 +472,7 @@ login({
                         }
                     });
                 }
-            } else if (event.body == "unmute") {
+            } else if (body == "unmute") {
                 if (mutedRRR.includes(event.senderID)) {
                     sendMessage(api, event, "The user is not blocked.");
                     mutedRRR = mutedRRR.filter(item => item !== event.senderID);
@@ -493,7 +500,7 @@ login({
                 return;
             } else {
                 event.body = body.slice(1);
-          }
+            }
         }
 
         if ((event.type == "message" || event.type == "message_reply")) {
@@ -1724,7 +1731,7 @@ try {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using phub text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nphub why i am here again.");
             } else {
                 data.shift()
-                let phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + apiKey[0];
+                let phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + keys.manhict;
                 parseImage(api, event, phublink, __dirname + "/cache/images/phubmeme_" + getTimestamp() + ".jpg");
             }
 
@@ -2207,7 +2214,7 @@ try {
             if (response == null) {
                 sendMessage(api, event, "Seems like there was an internal problem.");
             } else {
-                sendMessage(api, event, response);
+                sendMessage(api, event, response.data);
             }
         });
     } else if (query == "8ball") {
@@ -3065,6 +3072,23 @@ try {
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two")
             }
+        }
+    } else if (query.startsWith("setkey")) {
+        if (vips.includes(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2 && !data[1].includes(":")) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
+            } else {
+                let inp = data.split(":");
+                keys[inp[0]] = inp[1];
+                fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys), "utf8")
+                sendMessage(api, event, "Successfully saved " + inp[0] + ".");
+            }
+        }
+    } else if (query.startsWith("listkey")) {
+        if (vips.includes(event.senderID)) {
+             
+        
         }
     } else if (query.startsWith("addadmin")) {
         if (vips.includes(event.senderID)) {
