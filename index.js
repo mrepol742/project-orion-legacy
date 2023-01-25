@@ -3080,7 +3080,7 @@ try {
             if (data.length < 2 && !data[1].includes(":")) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
             } else {
-                let inp = data.split(":");
+                let inp = data[1].split(":");
                 keys[inp[0]] = inp[1];
                 fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys), "utf8")
                 sendMessage(api, event, "Successfully saved " + inp[0] + ".");
