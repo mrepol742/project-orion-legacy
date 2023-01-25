@@ -305,6 +305,7 @@ helpadmin += "\n⦿ listmuted";
 helpadmin += "\n⦿ setPrefix [prefix]";
 helpadmin += "\n⦿ remPrefix";
 helpadmin += "\n⦿ ignore [prefix]";
+helpadmin += "\n⦿ setkey [name]:[key]";
 
 let helproot = "\n⦿ stop";
 helproot += "\n⦿ resume";
@@ -334,7 +335,7 @@ let apiKey = [
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json", "utf8"));
 let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
-let vips = JSON.parse(fs.readFileSync(__dirname + "/admin.json", "utf8"));
+let adm = JSON.parse(fs.readFileSync(__dirname + "/admin.json", "utf8"));
 let nonRRR = JSON.parse(fs.readFileSync(__dirname + "/users.json", "utf8"));
 let blockRRR = JSON.parse(fs.readFileSync(__dirname + "/block_users.json", "utf8"));
 let blockSSS = JSON.parse(fs.readFileSync(__dirname + "/block_groups.json", "utf8"));
@@ -462,7 +463,7 @@ login({
                 event.body = body.slice(1);
             }
             if (body == "unblockgroup") {
-                if (vips.includes(event.senderID)) {
+                if (adm.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
                         if (gc.isGroup) {
@@ -537,7 +538,7 @@ login({
         }
 
         if (event.type == "message" || event.type == "message_reply") {
-            if (!(vips.includes(event.senderID))) {
+            if (!(adm.includes(event.senderID))) {
                 if (settings.crash) {
                     if (isGoingToFastCallingTheCommand(event)) {
                         return;
@@ -575,7 +576,7 @@ login({
                 ai22(api, event, event.body);
                 break;
             case "message_unsend":
-                if (vips.includes(event.senderID)) {
+                if (adm.includes(event.senderID)) {
                     break;
                 }
                 let d = msgs[event.messageID];
@@ -883,7 +884,7 @@ async function ai22(api, event, input) {
                         }
                     }
                 } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
-                    if (vips.includes(event.senderID)) {
+                    if (adm.includes(event.senderID)) {
                         if (event.messageReply.senderID != getMyId()) {
                             sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
                         } else {
@@ -1320,7 +1321,7 @@ async function ai(api, event, input) {
       let count1 = 0;
       let count2 = 0;
       let count3 = 0;
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             fs.readdir(__dirname + "/cache/audios/", function (err, files) {
                 if (err) {
                     return log(err);
@@ -1369,13 +1370,13 @@ async function ai(api, event, input) {
             sendMessage(api, event, "Cache cleared.\n\n⦿ Cache 1: " + count + " files\n⦿ Cache 2: " + count1 + " files\n⦿ Cache 3: " + count2 + " files\n⦿ Cache 4: " + count3 + " files\n\nThey are now scheduled for deletion.");
         }
     } else if (query == "debugon") {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.isDebugEnabled = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Debug mode enabled.");
         }
     } else if (query == "debugoff") {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.isDebugEnabled = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Konnichiwa i am back.");
@@ -2797,7 +2798,7 @@ try {
             }
         }
     } else if (query.startsWith("settimezone")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTimezone Asia/Singapore")
@@ -2815,7 +2816,7 @@ try {
             }
         }
     } else if (query.startsWith("setprefix")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setPrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPrefix $")
@@ -2833,7 +2834,7 @@ try {
             }
         }
     } else if (query == "remprefix") {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             if (settings.prefix != "null" || settings.prefix != undefined) {
                 settings.prefix = "null";
                 fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
@@ -2841,7 +2842,7 @@ try {
             }
         }
     } else if (query.startsWith("ignoreprefix")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa")
@@ -2860,7 +2861,7 @@ try {
             }
         }
     } else if (query.startsWith("unignoredprefix")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using unignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunignorePrefix alexa")
@@ -2922,7 +2923,7 @@ try {
             }
         }
     } else if (query.startsWith("welcomeuser")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
@@ -2956,7 +2957,7 @@ try {
             })
         }
     } else if (query.startsWith("kickuser")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
@@ -2996,7 +2997,7 @@ try {
             })
         }
     } else if (query.startsWith("blockuser")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -3023,7 +3024,7 @@ try {
         sendMessage(api, event, "Goodbye...");
         settings.isStop = true;
     } else if (query.startsWith("blockgroup")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
@@ -3042,19 +3043,19 @@ try {
     } else if (query.startsWith("texttospeechoff")) {
         disableTTS(api, event, event.threadID);
     } else if (query.startsWith("listadmins")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             sendMessage(api, event, "Admins:\n" + vips);
         }
     } else if (query.startsWith("listblocks")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             sendMessage(api, event, "Users:\n" + blockRRR + "\n\nGroups:\n" + blockSSS);
         }
     } else if (query.startsWith("listmuted")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             sendMessage(api, event, "");
         }
     } else if (query.startsWith("unblockuser")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -3074,7 +3075,7 @@ try {
             }
         }
     } else if (query.startsWith("setkey")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2 && !data[1].includes(":")) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
@@ -3086,12 +3087,12 @@ try {
             }
         }
     } else if (query.startsWith("listkey")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
              
         
         }
     } else if (query.startsWith("addadmin")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -3109,7 +3110,7 @@ try {
             }
         }
     } else if (query.startsWith("remadmin")) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -3129,73 +3130,73 @@ try {
             }
         }
     } else if ((query == "unsendon") && !settings.onUnsend) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.onUnsend = true
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if ((query == "unsendoff") && settings.onUnsend) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.onUnsend = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
         }
     } else if ((query == "antileaveon") && !settings.antiLeave) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.antiLeave = true
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Readding of user who left is now enabled.");
         }
     } else if ((query == "antileaveoff") && settings.antiLeave) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.antiLeave = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Readding of user who left is been disabled.");
         }
     } else if ((query == "tagalogsupporton") && !settings.tagalog) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.tagalog = true
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Tagalog Support is now enabled.");
         }
     } else if ((query == "tagalogsupportoff") && settings.tagalog) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.tagalog = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Tagalog Support is been disabled.");
         }
     } else if ((query == "delayon") && !settings.onDelay) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.onDelay = true
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
         }
     } else if ((query == "delayoff") && settings.onDelay) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.onDelay = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
         }
     } else if ((query == "nsfwon") && !settings.onNsfw) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.onNsfw = true
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Not Safe For Work are now enabled.");
         }
     } else if ((query == "nsfwoff") && settings.onNsfw) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.onNsfw = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Not Safe For Work is been disabled.");
         }
     } else if ((query == "simultaneousexecutionon") && !settings.preventSimultaneousExecution) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.preventSimultaneousExecution = true
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
         }
     } else if ((query == "simultaneousexecutionoff") && settings.preventSimultaneousExecution) {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             settings.preventSimultaneousExecution = false
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
@@ -3310,7 +3311,7 @@ try {
                 break;
         }
     } else if (query == "cmdadmin") {
-        if (!vips.includes(event.senderID)) {
+        if (!adm.includes(event.senderID)) {
             return;
         }
         sendMessage(api, event, "The Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
@@ -4552,7 +4553,7 @@ try {
             })
         }
     } else if (query == "refreshstate") {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
             sendMessage(api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
@@ -4569,7 +4570,7 @@ try {
             });
         }
     } else if (query == "savestate") {
-        if (vips.includes(event.senderID)) {
+        if (adm.includes(event.senderID)) {
             fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
             fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
             fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
@@ -4710,7 +4711,7 @@ function parseImage(api, event, url, dir) {
 }
 
 async function sendMessage(api, event, message) {
-    if (!vips.includes(event.senderID)) {
+    if (!adm.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
         }
@@ -4771,7 +4772,7 @@ async function sendMessage(api, event, message) {
 }
 
 async function sendMessageOnly(api, event, message) {
-    if (!vips.includes(event.senderID)) {
+    if (!adm.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
         }
@@ -4807,7 +4808,7 @@ async function sendMMMS(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
-    if (!vips.includes(event.senderID)) {
+    if (!adm.includes(event.senderID)) {
         if (settings.onDelay) {
             await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
         }
@@ -4855,7 +4856,7 @@ function isGoingToFast(api, event) {
     if (!settings.preventSimultaneousExecution) {
         return false;
     }
-    if (!(vips.includes(event.senderID))) {
+    if (!(adm.includes(event.senderID))) {
         if (!(event.senderID in cmd)) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
             return false;
@@ -5339,7 +5340,7 @@ function blockUser(api, event, id) {
     }
     blockRRR.push(id);
     fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR), "utf8");
-    if (vips.includes(id)) {
+    if (adm.includes(id)) {
         vips = vips.filter(item => item !== id);
         fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
         sendMessage(api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
@@ -5407,7 +5408,7 @@ function addAdmin(api, event, id) {
         sendMessage(api, event, "I am unable to grand admin permission on a blocked user.");
         return;
     }
-    if (vips.includes(id)) {
+    if (adm.includes(id)) {
         sendMessage(api, event, "It's already an admin!");
         return;
     }
@@ -5420,7 +5421,7 @@ function remAdmin(api, event, id) {
     if (isMyId(id)) {
         return;
     }
-    if (!vips.includes(id)) {
+    if (!adm.includes(id)) {
         sendMessage(api, event, "The user has no admin rights to take away.");
         return;
     }
