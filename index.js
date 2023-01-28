@@ -1264,14 +1264,8 @@ async function ai(api, event, input) {
                 if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
                     text += ".";
                 }
-                let maxTokens;
-                if (!query.startsWith("gencode")) {
-                    maxTokens = parseInt(settings.max_tokens);
-                } else {
-                    maxTokens = 4000;
-                }
-            
-                ai99
+              let ss = await aiResponse(settings.text_complextion, text, true);
+             sendMessage(api, event, ss);
             }
         }
     }
@@ -1411,7 +1405,7 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "This program process " + msgs.length + "+ messages and being used by " + nonRRR.length + " users and joined in " + groups.length + " groups.");
+        sendMessage(api, event, "This program process " + (Object.keys(msgs).length) + "+ messages and being used by " + nonRRR.length + " users and joined in " + group.length + " groups.");
     } else if (query == "uptime" || query == "status") {
         if (isGoingToFast(api, event)) {
             return;
@@ -5625,7 +5619,7 @@ function saveEvent(event) {
 async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
-        return formatResult(ai.choices[0].text);
+        return formatResult(ai.data.choices[0].text);
     } catch (error) {
         if (error.response) {
           let status = error.response.status;
@@ -5648,7 +5642,7 @@ function formatResult(str) {
     if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
         finalDataCC = finalDataCC.slice(1);
     }
-    return finalDataCC.replaceAll("'", "")
+    return finalDataCC.replaceAll("'", "");
 }
 
 function generateParamaters(complextion, text) {
