@@ -5622,7 +5622,7 @@ function saveEvent(event) {
     }
 }
 
-function aiResponse(complextion, text, repeat) {
+async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         return formatResult(ai.choices[0].text);
