@@ -119,206 +119,206 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 ]
 
 let help = "\n⦿ cmd";
-help += "\n⦿ cmd [number]";
-help += "\n⦿ cmd all";
-help += "\n⦿ mj [text]";
-help += "\n⦿ search [text]"
-help += "\n⦿ searchincog [text]";
-help += "\n⦿ searchimg [text]";
-help += "\n⦿ gencode [text]";
-help += "\n⦿ dictionary [text]";
-help += "\n⦿ say [text]";
-help += "\n⦿ baybayin [text]";
-help += "\n⦿ weather [location]";
-help += "\n⦿ music [text]";
-help += "\n⦿ video [text]";
-help += "\n⦿ lyrics [text]";
-help += "\n⦿ encode64 [text]";
-help += "\n⦿ decode64 [text]";
-help += "\n⦿ github [username]";
-help += "\n⦿ ig [username]";
-help += "\n⦿ tiktok [username]";
+help += "\n    ⦿ cmd [number]";
+help += "\n    ⦿ cmd all";
+help += "\n    ⦿ mj [text]";
+help += "\n    ⦿ search [text]"
+help += "\n    ⦿ searchincog [text]";
+help += "\n    ⦿ searchimg [text]";
+help += "\n    ⦿ gencode [text]";
+help += "\n    ⦿ dictionary [text]";
+help += "\n    ⦿ say [text]";
+help += "\n    ⦿ baybayin [text]";
+help += "\n    ⦿ weather [location]";
+help += "\n    ⦿ music [text]";
+help += "\n    ⦿ video [text]";
+help += "\n    ⦿ lyrics [text]";
+help += "\n    ⦿ encode64 [text]";
+help += "\n    ⦿ decode64 [text]";
+help += "\n    ⦿ github [username]";
+help += "\n    ⦿ ig [username]";
+help += "\n    ⦿ tiktok [username]";
 
 
 let help1 = "\n⦿ thoughts";
-help1 += "\n⦿ lulcat [text]";
-help1 += "\n⦿ gemoji [emoji]";
-help1 += "\n⦿ gname [text]";
-help1 += "\n⦿ wiki [text]";
-help1 += "\n⦿ urlshort [url]";
-help1 += "\n⦿ pickup";
-help1 += "\n⦿ landscape";
-help1 += "\n⦿ landscape [text]";
-help1 += "\n⦿ portrait";
-help1 += "\n⦿ portrait [text]";
-help1 += "\n⦿ problem [equation]";
-help1 += "\n⦿ roi [revenue] [cost]";
-help1 += "\n⦿ pin add";
-help1 += "\n⦿ pin remove";
-help1 += "\n⦿ sadcat [text]";
-help1 += "\n⦿ biden [text]";
-help1 += "\n⦿ pika [text]";
-help1 += "\n⦿ god [text]";
-help1 += "\n⦿ qrcode [text]";
+help1 += "\n    ⦿ lulcat [text]";
+help1 += "\n    ⦿ gemoji [emoji]";
+help1 += "\n    ⦿ gname [text]";
+help1 += "\n    ⦿ wiki [text]";
+help1 += "\n    ⦿ urlshort [url]";
+help1 += "\n    ⦿ pickup";
+help1 += "\n    ⦿ landscape";
+help1 += "\n    ⦿ landscape [text]";
+help1 += "\n    ⦿ portrait";
+help1 += "\n    ⦿ portrait [text]";
+help1 += "\n    ⦿ problem [equation]";
+help1 += "\n    ⦿ roi [revenue] [cost]";
+help1 += "\n    ⦿ pin add";
+help1 += "\n    ⦿ pin remove";
+help1 += "\n    ⦿ sadcat [text]";
+help1 += "\n    ⦿ biden [text]";
+help1 += "\n    ⦿ pika [text]";
+help1 += "\n    ⦿ god [text]";
+help1 += "\n    ⦿ qrcode [text]";
 
 let help2 = "\n⦿ verse today";
-help2 += "\n⦿ verse random";
-help2 += "\n⦿ verse [book] [chapter]:[verse]";
-help2 += "\n⦿ animeqoute";
-help2 += "\n⦿ bgremove";
-help2 += "\n⦿ motivate";
-help2 += "\n⦿ inspiration";
-help2 += "\n⦿ advice";
-help2 += "\n⦿ alert [text]";
-help2 += "\n⦿ meme";
-help2 += "\n⦿ lovetest [name1]: [name2]";
-help2 += "\n⦿ drake [text1]: [text2]";
-help2 += "\n⦿ pooh [text1]: [text2]";
-help2 += "\n⦿ oogway [text]";
-help2 += "\n⦿ caution [text]";
-help2 += "\n⦿ element [name]";
-help2 += "\n⦿ imdb [title]";
-help2 += "\n⦿ steam [name]";
-help2 += "\n⦿ npm [name]";
-help2 += "\n⦿ gname";
+help2 += "\n    ⦿ verse random";
+help2 += "\n    ⦿ verse [book] [chapter]:[verse]";
+help2 += "\n    ⦿ animeqoute";
+help2 += "\n    ⦿ bgremove";
+help2 += "\n    ⦿ motivate";
+help2 += "\n    ⦿ inspiration";
+help2 += "\n    ⦿ advice";
+help2 += "\n    ⦿ alert [text]";
+help2 += "\n    ⦿ meme";
+help2 += "\n    ⦿ lovetest [name1]: [name2]";
+help2 += "\n    ⦿ drake [text1]: [text2]";
+help2 += "\n    ⦿ pooh [text1]: [text2]";
+help2 += "\n    ⦿ oogway [text]";
+help2 += "\n    ⦿ caution [text]";
+help2 += "\n    ⦿ element [name]";
+help2 += "\n    ⦿ imdb [title]";
+help2 += "\n    ⦿ steam [name]";
+help2 += "\n    ⦿ npm [name]";
+help2 += "\n    ⦿ gname";
 
 let help3 = "\n⦿ mnm @mention|@me";
-help3 += "\n⦿ facebook @mention|@me";
-help3 += "\n⦿ nickname @mention|@me [text]";
-help3 += "\n⦿ invert @mention|@me";
-help3 += "\n⦿ greyscale @mention|@me";
-help3 += "\n⦿ ship @mention @mention";
-help3 += "\n⦿ www @mention @mention";
-help3 += "\n⦿ jokeover @mention|@me";
-help3 += "\n⦿ translate [language] [text]";
-help3 += "\n⦿ kiss @mention|@me";
-help3 += "\n⦿ pet @mention|@me";
-help3 += "\n⦿ jail @mention|@me";
-help3 += "\n⦿ communist @mention|@me";
-help3 += "\n⦿ wanted @mention|@me";
-help3 += "\n⦿ gun @mention|@me";
-help3 += "\n⦿ drip @mention|@me";
-help3 += "\n⦿ clown @mention|@me";
-help3 += "\n⦿ uncover @mention|@me";
-help3 += "\n⦿ advert @mention|@me";
-help3 += "\n⦿ blur @mention|@me";
+help3 += "\n    ⦿ facebook @mention|@me";
+help3 += "\n    ⦿ nickname @mention|@me [text]";
+help3 += "\n    ⦿ invert @mention|@me";
+help3 += "\n    ⦿ greyscale @mention|@me";
+help3 += "\n    ⦿ ship @mention @mention";
+help3 += "\n    ⦿ www @mention @mention";
+help3 += "\n    ⦿ jokeover @mention|@me";
+help3 += "\n    ⦿ translate [language] [text]";
+help3 += "\n    ⦿ kiss @mention|@me";
+help3 += "\n    ⦿ pet @mention|@me";
+help3 += "\n    ⦿ jail @mention|@me";
+help3 += "\n    ⦿ communist @mention|@me";
+help3 += "\n    ⦿ wanted @mention|@me";
+help3 += "\n    ⦿ gun @mention|@me";
+help3 += "\n    ⦿ drip @mention|@me";
+help3 += "\n    ⦿ clown @mention|@me";
+help3 += "\n    ⦿ uncover @mention|@me";
+help3 += "\n    ⦿ advert @mention|@me";
+help3 += "\n    ⦿ blur @mention|@me";
 
 let help4 = "\n⦿ phub [text]";
-help4 += "\n⦿ morse [text]";
-help4 += "\n⦿ joke";
-help4 += "\n⦿ profilepic";
-help4 += "\n⦿ wyr";
-help4 += "\n⦿ 8ball";
-help4 += "\n⦿ gmember";
-help4 += "\n⦿ car";
-help4 += "\n⦿ color";
-help4 += "\n⦿ sim [text]";
-help4 += "\n⦿ trump [text]";
-help4 += "\n⦿ mock [text]";
-help4 += "\n⦿ reverse [text]";
-help4 += "\n⦿ itunes [title]";
-help4 += "\n⦿ coding";
-help4 += "\n⦿ newyear";
-help4 += "\n⦿ christmas";
-help4 += "\n⦿ barrier";
-help4 += "\n⦿ fact";
-help4 += "\n⦿ thoughts";
+help4 += "\n    ⦿ morse [text]";
+help4 += "\n    ⦿ joke";
+help4 += "\n    ⦿ profilepic";
+help4 += "\n    ⦿ wyr";
+help4 += "\n    ⦿ 8ball";
+help4 += "\n    ⦿ gmember";
+help4 += "\n    ⦿ car";
+help4 += "\n    ⦿ color";
+help4 += "\n    ⦿ sim [text]";
+help4 += "\n    ⦿ trump [text]";
+help4 += "\n    ⦿ mock [text]";
+help4 += "\n    ⦿ reverse [text]";
+help4 += "\n    ⦿ itunes [title]";
+help4 += "\n    ⦿ coding";
+help4 += "\n    ⦿ newyear";
+help4 += "\n    ⦿ christmas";
+help4 += "\n    ⦿ barrier";
+help4 += "\n    ⦿ fact";
+help4 += "\n    ⦿ thoughts";
 
 let help5 = "\n⦿ uid";
-help5 += "\n⦿ guid";
-help5 += "\n⦿ facts [text]";
-help5 += "\n⦿ doublestruck [text]";
-help5 += "\n⦿ count";
-help5 += "\n⦿ count --vowels";
-help5 += "\n⦿ count --consonants";
-help5 += "\n⦿ wfind [text]";
-help5 += "\n⦿ time";
-help5 += "\n⦿ time [timezone]";
-help5 += "\n⦿ uptime";
-help5 += "\n⦿ summ [text]";
-help5 += "\n⦿ anime [category]";
-help5 += "\n   waifu, megumin, bully, cuddle";
-help5 += "\n   hug, awoo, kiss, lick";
-help5 += "\n   pat, smug, bonk, yeet";
-help5 += "\n   blush, smile, wave, highfive";
-help5 += "\n   handhold, nom, biteglomp, slap";
-help5 += "\n   kill, kick, happy, wink";
-help5 += "\n   pokedance, cringe, cry, etc..";
+help5 += "\n    ⦿ guid";
+help5 += "\n    ⦿ facts [text]";
+help5 += "\n    ⦿ doublestruck [text]";
+help5 += "\n    ⦿ count";
+help5 += "\n    ⦿ count --vowels";
+help5 += "\n    ⦿ count --consonants";
+help5 += "\n    ⦿ wfind [text]";
+help5 += "\n    ⦿ time";
+help5 += "\n    ⦿ time [timezone]";
+help5 += "\n    ⦿ uptime";
+help5 += "\n    ⦿ summ [text]";
+help5 += "\n    ⦿ anime [category]";
+help5 += "\n       waifu, megumin, bully, cuddle";
+help5 += "\n       hug, awoo, kiss, lick";
+help5 += "\n       pat, smug, bonk, yeet";
+help5 += "\n       blush, smile, wave, highfive";
+help5 += "\n       handhold, nom, biteglomp, slap";
+help5 += "\n       kill, kick, happy, wink";
+help5 += "\n       pokedance, cringe, cry, etc..";
 
 let help6 = "\n⦿ conan";
-help6 += "\n⦿ addUser [uid]";
-help6 += "\n⦿ gphoto";
-help6 += "\n⦿ encodeBinary [text]";
-help6 += "\n⦿ decodeBinary [text]";
-help6 += "\n⦿ ttsjap [text]";
-help6 += "\n⦿ pdf [text]";
-help6 += "\n⦿ sendReport [text]";
-help6 += "\n⦿ website [url]";
-help6 += "\n⦿ mean [numbers]";
-help6 += "\n⦿ median [numbers]";
-help6 += "\n⦿ mode [numbers]";
-help6 += "\n⦿ range [numbers]";
-help6 += "\n⦿ cdfnormal [x] [μ] [σ]";
-help6 += "\n⦿ divisible [number] [number]";
-help6 += "\n⦿ factorial [number]";
-help6 += "\n⦿ findGCD [number]";
-help6 += "\n⦿ smartReply [on|off]";
-help6 += "\n⦿ gcolor [theme]";
-help6 += "\n   DefaultBlue, HotPink, AquaBlue, BrightPurple";
-help6 += "\n   CoralPink, Orange, Green, LavenderPurple";
-help6 += "\n   Red, Yellow, TealBlue, Aqua";
-help6 += "\n   Mango, Berry, Citrus, Candy";
-help6 += "\n⦿ anime --nsfw [category]";
+help6 += "\n    ⦿ addUser [uid]";
+help6 += "\n    ⦿ gphoto";
+help6 += "\n    ⦿ encodeBinary [text]";
+help6 += "\n    ⦿ decodeBinary [text]";
+help6 += "\n    ⦿ ttsjap [text]";
+help6 += "\n    ⦿ pdf [text]";
+help6 += "\n    ⦿ sendReport [text]";
+help6 += "\n    ⦿ website [url]";
+help6 += "\n    ⦿ mean [numbers]";
+help6 += "\n    ⦿ median [numbers]";
+help6 += "\n    ⦿ mode [numbers]";
+help6 += "\n    ⦿ range [numbers]";
+help6 += "\n    ⦿ cdfnormal [x] [μ] [σ]";
+help6 += "\n    ⦿ divisible [number] [number]";
+help6 += "\n    ⦿ factorial [number]";
+help6 += "\n    ⦿ findGCD [number]";
+help6 += "\n    ⦿ smartReply [on|off]";
+help6 += "\n    ⦿ gcolor [theme]";
+help6 += "\n       DefaultBlue, HotPink, AquaBlue, BrightPurple";
+help6 += "\n       CoralPink, Orange, Green, LavenderPurple";
+help6 += "\n       Red, Yellow, TealBlue, Aqua";
+help6 += "\n       Mango, Berry, Citrus, Candy";
+help6 += "\n    ⦿ anime --nsfw [category]";
 
 let help7 = "\n⦿ animecouples";
-help7 += "\n⦿ cosplay";
-help7 += "\n⦿ motor";
-help7 += "\n⦿ darkjoke";
-help7 += "\n⦿ blackpink";
-help7 += "\n⦿ hololive";
-help7 += "\n⦿ mute";
-help7 += "\n⦿ unmute";
-help7 += "\n⦿ tagalogSupport [on/off]";
-help7 += "\n⦿ textToSpeech [on/off]";
-help7 += "\n⦿ meowfacts";
+help7 += "\n    ⦿ cosplay";
+help7 += "\n    ⦿ motor";
+help7 += "\n    ⦿ darkjoke";
+help7 += "\n    ⦿ blackpink";
+help7 += "\n    ⦿ hololive";
+help7 += "\n    ⦿ mute";
+help7 += "\n    ⦿ unmute";
+help7 += "\n    ⦿ tagalogSupport [on/off]";
+help7 += "\n    ⦿ textToSpeech [on/off]";
+help7 += "\n    ⦿ meowfacts";
 
 let helpadmin = "\n⦿ unsend";
-helpadmin += "\n⦿ unsend [on|off]";
-helpadmin += "\n⦿ delay [on|off]";
-helpadmin += "\n⦿ nsfw [on|off]";
-helpadmin += "\n⦿ debug [on|off]";
-helpadmin += "\n⦿ antiLeave [on|off]";
-helpadmin += "\n⦿ simultaneousExecution [on/off]";
-helpadmin += "\n⦿ clearCache";
-helpadmin += "\n⦿ refreshState";
-helpadmin += "\n⦿ saveState";
-helpadmin += "\n⦿ addAdmin @mention";
-helpadmin += "\n⦿ remAdmin @mention";
-helpadmin += "\n⦿ kickUser @mention";
-helpadmin += "\n⦿ blockUser @mention";
-helpadmin += "\n⦿ unblockUser @mention";
-helpadmin += "\n⦿ blockGroup";
-helpadmin += "\n⦿ unblockGroup";
-helpadmin += "\n⦿ listblocks";
-helpadmin += "\n⦿ listadmins";
-helpadmin += "\n⦿ listmuted";
-helpadmin += "\n⦿ setPrefix [prefix]";
-helpadmin += "\n⦿ remPrefix";
-helpadmin += "\n⦿ ignore [prefix]";
-helpadmin += "\n⦿ setkey [name]:[key]";
+helpadmin += "\n    ⦿ unsend [on|off]";
+helpadmin += "\n    ⦿ delay [on|off]";
+helpadmin += "\n    ⦿ nsfw [on|off]";
+helpadmin += "\n    ⦿ debug [on|off]";
+helpadmin += "\n    ⦿ antiLeave [on|off]";
+helpadmin += "\n    ⦿ simultaneousExecution [on/off]";
+helpadmin += "\n    ⦿ clearCache";
+helpadmin += "\n    ⦿ refreshState";
+helpadmin += "\n    ⦿ saveState";
+helpadmin += "\n    ⦿ addAdmin @mention";
+helpadmin += "\n    ⦿ remAdmin @mention";
+helpadmin += "\n    ⦿ kickUser @mention";
+helpadmin += "\n    ⦿ blockUser @mention";
+helpadmin += "\n    ⦿ unblockUser @mention";
+helpadmin += "\n    ⦿ blockGroup";
+helpadmin += "\n    ⦿ unblockGroup";
+helpadmin += "\n    ⦿ listblocks";
+helpadmin += "\n    ⦿ listadmins";
+helpadmin += "\n    ⦿ listmuted";
+helpadmin += "\n    ⦿ setPrefix [prefix]";
+helpadmin += "\n    ⦿ remPrefix";
+helpadmin += "\n    ⦿ ignore [prefix]";
+helpadmin += "\n    ⦿ setkey [name]:[key]";
 
 let helproot = "\n⦿ stop";
-helproot += "\n⦿ resume";
-helproot += "\n⦿ restart";
-helproot += "\n⦿ notify";
-helproot += "\n⦿ refreshGroup";
-helproot += "\n⦿ setMaxImage [integer]";
-helproot += "\n⦿ setTimezone [timezone]";
-helproot += "\n⦿ setTextComplextion [complextion]"
-helproot += "\n⦿ setMaxTokens [integer]";
-helproot += "\n⦿ setTemperature [integer]";
-helproot += "\n⦿ setFrequencyPenalty [integer]";
-helproot += "\n⦿ setProbabilityMass [integer]";
+helproot += "\n    ⦿ resume";
+helproot += "\n    ⦿ restart";
+helproot += "\n    ⦿ notify";
+helproot += "\n    ⦿ refreshGroup";
+helproot += "\n    ⦿ setMaxImage [integer]";
+helproot += "\n    ⦿ setTimezone [timezone]";
+helproot += "\n    ⦿ setTextComplextion [complextion]"
+helproot += "\n    ⦿ setMaxTokens [integer]";
+helproot += "\n    ⦿ setTemperature [integer]";
+helproot += "\n    ⦿ setFrequencyPenalty [integer]";
+helproot += "\n    ⦿ setProbabilityMass [integer]";
 
 let apiKey = [
     // manhict.tech/api
@@ -1276,34 +1276,8 @@ async function ai(api, event, input) {
                 } else {
                     maxTokens = 4000;
                 }
-                try {
-                const {
-                    data
-                } = await openai.createCompletion({
-                    model: settings.text_complextion,
-                    prompt: text,
-                    temperature: parseInt(settings.temperature),
-                    max_tokens: parseInt(settings.max_tokens),
-                    top_p: parseInt(settings.probability_mass),
-                    frequency_penalty: parseInt(settings.frequency_penalty),
-                    presence_penalty: parseInt(settings.presence_penalty),
-                });
-                let finish = data.choices[0].text;
-                let finalDataCC = finish.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").replaceAll("The United States of America", "The Philippines").trim();
-                if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
-                    finalDataCC = finalDataCC.slice(1);
-                }
-                sendMessage(api, event, finalDataCC.replaceAll("'", ""));
-            } catch (error) {
-                if (error.response) {
-                  log(error.response.status);
-                  log(error.response.data);
-                } else {
-                 log(error.message);
-                }
-                sendMessageOnly(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                err400++;
-              }
+            
+                ai99
             }
         }
     }
@@ -1439,6 +1413,11 @@ async function ai(api, event, input) {
                     unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
                 })
         }
+    } else if (query == "stats") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        sendMessage(api, event, "This program process " + msgs.length + "+ messages and being used by " + nonRRR.length + " users and joined in " + groups.length + " groups.");
     } else if (query == "uptime" || query == "status") {
         if (isGoingToFast(api, event)) {
             return;
@@ -2174,13 +2153,13 @@ try {
                 let output = weather.weather
                 let m = output.location
                 m += "\n\n⦿ Forecast: " + output.forecast
-                m += "\n⦿ Temperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
+                m += "\n    ⦿ Temperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
                 if (output.precipitation != undefined)
-                    m += "\n⦿ Precipitation: " + output.precipitation
+                    m += "\n    ⦿ Precipitation: " + output.precipitation
                 if (output.humidity != undefined)
-                    m += "\n⦿ Humidity: " + output.humidity
+                    m += "\n    ⦿ Humidity: " + output.humidity
                 if (output.wind != undefined)
-                    m += "\n⦿ Wind speed: " + output.wind
+                    m += "\n    ⦿ Wind speed: " + output.wind
                 sendMessage(api, event, m)
             }
         }
@@ -3278,7 +3257,7 @@ try {
             }
         });
     } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
-        sendMessage(api, event, "The Project Orion 1~8\n" + help + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, "The Project Orion \n\n" + help + "\n 2 >");
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3286,25 +3265,25 @@ try {
         let num = query.substring(3);
         switch (num) {
             case "2":
-                sendMessage(api, event, "The Project Orion 2~8\n" + help1 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "The Project Orion \n\n< 1\n" + help1 + "\n3 >");
                 break;
             case "3":
-                sendMessage(api, event, "The Project Orion 3~8\n" + help2 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "The Project Orion \n\n< 2\n" + help2 + "\n4 >");
                 break;
             case "4":
-                sendMessage(api, event, "The Project Orion 4~8\n" + help3 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "The Project Orion \n\n< 3\n" + help3 + "\n5 >");
                 break;
             case "5":
-                sendMessage(api, event, "The Project Orion 5~8\n" + help4 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "The Project Orion \n\n< 4\n" + help4 + "\n6 >");
                 break;
             case "6":
-                sendMessage(api, event, "The Project Orion 6~8\n" + help5 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "The Project Orion \n\n< 5\n" + help5 + "\n7 >");
                 break;
             case "7":
-                sendMessage(api, event, "The Project Orion 7~8\n" + help6 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "The Project Orion \n\n< 6\n" + help6 + "\n8 >");
                 break;
             case "8":
-                sendMessage(api, event, "The Project Orion 8~8\n" + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, "The Project Orion \n\n< 7\n" + help7 + "\n9 >");
                 break;
             default:
                 sendMessage(api, event, "Seem's like that's too far from the command list pages.");
@@ -3902,8 +3881,8 @@ try {
                         let time = getTimestamp();
                         let filename = __dirname + "/cache/images/facebook_" + time + ".jpg";
                         let msg = checkFound(name) + " @" + checkFound(vanity);
-                        msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
-                        msg += "\n⦿ Birthday: " + checkFound(isBirthday);
+                        msg += "\n    ⦿ Gender: " + (gender == 1 ? "female" : "male");
+                        msg += "\n    ⦿ Birthday: " + checkFound(isBirthday);
 
                         await download(url, filename, () => {
                             let message = {
@@ -5647,6 +5626,54 @@ function saveEvent(event) {
     } else {
         msgs[event.messageID] = [getFormattedDate(), event.senderID, event.body];
     }
+}
+
+function aiResponse(complextion, text, repeat) {
+    try {
+        const ai = await openai.createCompletion(generateParamaters(complextion, text));
+        return formatResult(ai.choices[0].text);
+    } catch (error) {
+        if (error.response) {
+          let status = error.response.status;
+          log(status);
+          log(error.response.data);
+          if (status == 503 && repeat) {
+            log("attempt initiated");
+            aiResponse(getNewComplextion(settings.text_complextion), text, false);
+          }
+        } else {
+          log(error.message);
+        }
+        err400++;
+        return idknow[Math.floor(Math.random() * idknow.length)];
+      }
+}
+
+function formatResult(str) {
+    let finalDataCC = str.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").replaceAll("United States", "The Philippines").trim();
+    if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
+        finalDataCC = finalDataCC.slice(1);
+    }
+    return finalDataCC.replaceAll("'", "")
+}
+
+function generateParamaters(complextion, text) {
+    return {
+        model: complextion,
+        prompt: text,
+        temperature: parseInt(settings.temperature),
+        max_tokens: parseInt(settings.max_tokens),
+        top_p: parseInt(settings.probability_mass),
+        frequency_penalty: parseInt(settings.frequency_penalty),
+        presence_penalty: parseInt(settings.presence_penalty),
+    }
+}
+
+function getNewComplextion(complextion) {
+    if (complextion.includes("002")) {
+        return "003";
+    }
+    return "002";
 }
 
 async function sendMessageToAll(api, message) {
