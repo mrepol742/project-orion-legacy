@@ -356,7 +356,7 @@ const config = new Configuration({
 });
 const openai = new OpenAIApi(config);
 
-app.get('/', (req, res) => res.send("Project Orion ONLINE"));
+app.get('/', (req, res) => res.send(fs.readFileSync(__dirname + "/index.html", "utf8")));
 
 app.listen(port, () =>
     log(`Project Orion ONLINE`)
@@ -456,13 +456,7 @@ login({
         }
 
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
-            let body = event.body;
-            if (!body.startsWith("_")) {
-                return;
-            } else {
-                event.body = body.slice(1);
-            }
-            if (body == "unblockgroup") {
+            if (event.body == "unblockgroup") {
                 if (adm.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
@@ -473,7 +467,7 @@ login({
                         }
                     });
                 }
-            } else if (body == "unmute") {
+            } else if (event.body == "unmute") {
                 if (mutedRRR.includes(event.senderID)) {
                     sendMessage(api, event, "The user is not blocked.");
                     mutedRRR = mutedRRR.filter(item => item !== event.senderID);
@@ -1103,7 +1097,7 @@ async function ai(api, event, input) {
         query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
         ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
-        otherQ(query2) || (settings.tagalog && (query.startsWith("ano") || query.startsWith("bakit") || query.startsWith("saan") || query.startsWith("sino") || query.startsWith("kailan") || query.startsWith("paano")))) {
+        otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")))) {
 
         if (isGoingToFast(api, event)) {
             return;
