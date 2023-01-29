@@ -281,6 +281,8 @@ help7 += "\n    ⦿ unmute";
 help7 += "\n    ⦿ tagalogSupport [on/off]";
 help7 += "\n    ⦿ textToSpeech [on/off]";
 help7 += "\n    ⦿ meowfacts";
+help7 += "\n    ⦿ stats";
+help7 += "\n    ⦿ status";
 
 let helpadmin = "\n⦿ unsend";
 helpadmin += "\n    ⦿ unsend [on|off]";
@@ -473,6 +475,20 @@ login({
                     mutedRRR = mutedRRR.filter(item => item !== event.senderID);
                     sendMessage(api, event, "You can now use my commands.");
                     fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
+                }
+            } else if (event.body == "status") {
+                if (mutedRRR.includes(event.senderID)) {
+                    sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
+                } else if (blockSSS.includes(event.threadID)) {
+                    sendMessage(api, event, "This group is blocked. Contact the bot admims for more info.");
+                } else if (blockRRR.includes(event.senderID)) {
+                    sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admims for more info.");
+                } else if (settings.isStop) {
+                    sendMessage(api, event, "The program is currently offline.");
+                } else if (settings.isDebugEnabled ) {
+                    sendMessage(api, event, "The program is currently under maintenance.");
+                } else { 
+                    sendMessage(api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS");
                 }
             } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID)) && 
             (event.type == "message" || event.type == "message_reply")) {
@@ -1411,11 +1427,13 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "This program process " + msgs.length + "+ messages and being used by " + nonRRR.length + " users and joined in " + groups.length + " groups.");
-    } else if (query == "uptime" || query == "status") {
+        sendMessage(api, event, "This program process \n\n⦿ Messages: " + msgs.length + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + groups.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
+    } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
+        sendMessage(api, event, "Project Orion is online for about " + seconds_con);
+    } else if (query == "sysinfo") {
         (async () => {
             const testNetworkSpeed = new NetworkSpeed();
             let osFreeMemm = os.freemem();
@@ -1446,7 +1464,7 @@ async function ai(api, event, input) {
                 "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps +
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
-                "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+                "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
         })();
     } else if (query.startsWith("ping")) {
         if (isGoingToFast(api, event)) {
@@ -5644,7 +5662,7 @@ async function aiResponse(complextion, text, repeat) {
 }
 
 function formatResult(str) {
-    let finalDataCC = str.replace(/\n\s*\n/g, '\n').replaceAll("Sarah", "Mj").replaceAll("New York City", "The Philippines").replaceAll("United States", "The Philippines").trim();
+    let finalDataCC = str.replace(/\n\s*\n/g, '\n');
     if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
         finalDataCC = finalDataCC.slice(1);
     }
