@@ -1280,14 +1280,8 @@ async function ai(api, event, input) {
                 if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
                     text += ".";
                 }
-                let maxTokens;
-                if (!query.startsWith("gencode")) {
-                    maxTokens = parseInt(settings.max_tokens);
-                } else {
-                    maxTokens = 4000;
-                }
-            
-                ai99
+              let ss = await aiResponse(settings.text_complextion, text, true);
+             sendMessage(api, event, ss);
             }
         }
     }
@@ -1427,7 +1421,7 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "This program process \n\n⦿ Messages: " + msgs.length + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + groups.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
+        sendMessage(api, event, "This program process \n\n⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + groups.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
@@ -5332,8 +5326,8 @@ function blockUser(api, event, id) {
     blockRRR.push(id);
     fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR), "utf8");
     if (adm.includes(id)) {
-        vips = vips.filter(item => item !== id);
-        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
+        adm = adm.filter(item => item !== id);
+        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
         sendMessage(api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
         sendMessage(api, event, "The user " + id + " is blocked.");
@@ -5403,9 +5397,9 @@ function addAdmin(api, event, id) {
         sendMessage(api, event, "It's already an admin!");
         return;
     }
-    vips.push(id);
+    adm.push(id);
     sendMessage(api, event, "Admin permission granted.");
-    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
+    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
 }
 
 function remAdmin(api, event, id) {
@@ -5416,7 +5410,7 @@ function remAdmin(api, event, id) {
         sendMessage(api, event, "The user has no admin rights to take away.");
         return;
     }
-    vips = vips.filter(item => item !== id);
+    adm = adm.filter(item => item !== id);
     sendMessage(api, event, "Admin permission removed.");
     fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
 }
@@ -5643,7 +5637,7 @@ function saveEvent(event) {
 async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
-        return formatResult(ai.choices[0].text);
+        return formatResult(ai.data.choices[0].text);
     } catch (error) {
         if (error.response) {
           let status = error.response.status;
@@ -5666,7 +5660,7 @@ function formatResult(str) {
     if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
         finalDataCC = finalDataCC.slice(1);
     }
-    return finalDataCC.replaceAll("'", "")
+    return finalDataCC.replaceAll("'", "");
 }
 
 function generateParamaters(complextion, text) {
