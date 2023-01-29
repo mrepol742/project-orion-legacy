@@ -5308,8 +5308,8 @@ function blockUser(api, event, id) {
     blockRRR.push(id);
     fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR), "utf8");
     if (adm.includes(id)) {
-        vips = vips.filter(item => item !== id);
-        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
+        adm = adm.filter(item => item !== id);
+        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
         sendMessage(api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
         sendMessage(api, event, "The user " + id + " is blocked.");
@@ -5379,9 +5379,9 @@ function addAdmin(api, event, id) {
         sendMessage(api, event, "It's already an admin!");
         return;
     }
-    vips.push(id);
+    adm.push(id);
     sendMessage(api, event, "Admin permission granted.");
-    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
+    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
 }
 
 function remAdmin(api, event, id) {
@@ -5392,7 +5392,7 @@ function remAdmin(api, event, id) {
         sendMessage(api, event, "The user has no admin rights to take away.");
         return;
     }
-    vips = vips.filter(item => item !== id);
+    adm = adm.filter(item => item !== id);
     sendMessage(api, event, "Admin permission removed.");
     fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
 }
