@@ -1989,9 +1989,9 @@ try {
                                         let title = response.s_title;
                                         let image = response.s_image;
                                         let artist = response.s_artist;
-                                        let lyrics = response.s_lyrics.replace(/ *\[[^\]]*] */g, '');;
+                                        let lyrics = response.s_lyrics;
                                         let message = {
-                                            body: title + " " + artist + "\n\n" + lyrics,
+                                            body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
                                             attachment: fs.createReadStream(__dirname + '/cache/audios/music_' + time + '.mp3')
                                         };
                                         sendMessage(api, event, message);
