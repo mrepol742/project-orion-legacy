@@ -1986,10 +1986,10 @@ try {
                                     if (response == null) {
                                         sendMessage(api, event, "Seems like there was an internal problem.");
                                     } else {
-                                        let title = response.s_title;
-                                        let image = response.s_image;
-                                        let artist = response.s_artist;
-                                        let lyrics = response.s_lyrics;
+                                        let title = response.result.s_title;
+                                        let image = response.result.s_image;
+                                        let artist = response.result.s_artist;
+                                        let lyrics = response.result.s_lyrics;
                                         let message = {
                                             body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
                                             attachment: fs.createReadStream(__dirname + '/cache/audios/music_' + time + '.mp3')
