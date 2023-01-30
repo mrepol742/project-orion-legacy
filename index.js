@@ -1479,14 +1479,32 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + group.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS.length + "\n⦿ Muted Users: " + mutedRRR.length);
+        let message = `
+_______  Statistics  _______
+|
+|   ⦿ Messages: ` + (Object.keys(msgs).length) + `
+|   ⦿ Unsend Messages: ` + (Object.keys(unsend_msgs).length) + `
+|   ⦿ Users: ` + nonRRR.length + `
+|   ⦿ Groups: ` + group.length + `
+|   ⦿ Block Users: ` + blockRRR.length + `
+|   ⦿ Block Groups: ` + blockSSS.length + `
+|   ⦿ Muted Users: ` + mutedRRR.length + `
+|___________________________
+`;
+        sendMessage(api, event, message);
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
         let second_process = process_p.uptime();
         let seconds_con = secondsToTime(second_process);
-        sendMessage(api, event, seconds_con);
+let message = `
+_______  Uptime  _______
+|
+|   ` + seconds_con + `
+|_______________________
+`;
+        sendMessage(api, event, message);
     } else if (query == "sysinfo") {
         if (isGoingToFast(api, event)) {
             return;
@@ -1517,11 +1535,24 @@ async function ai(api, event, input) {
             const heapUsed = convertBytes(process.memoryUsage().heapUsed);
             const external = convertBytes(process.memoryUsage().external);
             const arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
-            sendMessage(api, event, "⦿ Uptime:" + seconds_con + "\n⦿ RAM: " + osFreeMem +
-                "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps +
-                " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
-                "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
-                "\n⦿ Save State: " + messagesD + "\n⦿ Fb State: " + fb_stateD);
+let message = `
+_______  System Info  _______
+|
+|   ⦿ Uptime: ` + seconds_con + `
+|   ⦿ RAM: ` + osFreeMem + `
+|   ⦿ ROM: ` + osTotalMem + `
+|   ⦿ Download Speed: ` + upload_spee.mbps + ` mbps
+|   ⦿ Upload Speed: ` + speed.mbps + ` mbps
+|   ⦿ RSS: ` + rss + `
+|   ⦿ Heap Total: ` + heapTotal + `
+|   ⦿ Heap Used: ` + heapUsed + `
+|   ⦿ External: ` + external + `
+|   ⦿ Array Buffers: ` + arrayBuffers + `
+|   ⦿ Save State: ` + messagesD + `
+|   ⦿ Fb State: ` + fb_stateD + `
+|_____________________________
+`;
+            sendMessage(api, event, message);
         })();
     } else if (query.startsWith("ping")) {
         if (isGoingToFast(api, event)) {
