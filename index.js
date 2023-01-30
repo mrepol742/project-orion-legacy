@@ -1564,11 +1564,14 @@ _______  System Info  _______
         } else {
 try {
             data.shift();
-            let hosts = [data.join(" ")];
-            for(let host of hosts){
-                let res = await ping.promise.probe(host);
-                sendMessage(api, event, res);
-            }
+            let hosts = ['google.com'];
+
+            hosts.forEach(function (host) {
+    ping.promise.probe(host)
+        .then(function (res) {
+            console.log(res);
+        });
+});
         } catch (a) {
             sendMessage(api, event, "Unfortunately an error occured please check your parameters for errors.");
         }
