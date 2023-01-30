@@ -1565,12 +1565,10 @@ _______  System Info  _______
 try {
             data.shift();
             let hosts = [data.join(" ")];
-           await  hosts.forEach(function (host) {
-                ping.promise.probe(host)
-                    .then(function (res) {
-                        sendMessage(api, event, res.output);
-                    });
-            });
+            for(let host of hosts){
+                let res = await ping.promise.probe(host);
+                sendMessage(api, event, res);
+            }
         } catch (a) {
             sendMessage(api, event, "Unfortunately an error occured please check your parameters for errors.");
         }
