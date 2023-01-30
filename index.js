@@ -40,7 +40,7 @@ const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
 const dns = require("dns");
-const ping = require('ping');
+const { wordsToNumbers } = require('words-to-numbers');
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
@@ -324,6 +324,10 @@ _______  Project Orion 8/8  _______
 |   ⦿ meowfacts
 |   ⦿ dns4 [url]
 |   ⦿ dns6 [url]
+|   ⦿ musiclyric [title]
+|   ⦿ videolyric [title]
+|   ⦿ formatNumbers [numbers]
+|   ⦿ wordsToNumbers [words]
 |__________________________________
 `;
 
@@ -1495,9 +1499,9 @@ _______  Cache  _______
         let message = `
 _______  Statistics  _______
 |
-|   ⦿ Messages: ` + (Object.keys(msgs).length) + `
-|   ⦿ Unsend Messages: ` + (Object.keys(unsend_msgs).length) + `
-|   ⦿ Users: ` + nonRRR.length + `
+|   ⦿ Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
+|   ⦿ Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
+|   ⦿ Users: ` + numberWithCommas(nonRRR.length) + `
 |   ⦿ Groups: ` + group.length + `
 |   ⦿ Block Users: ` + blockRRR.length + `
 |   ⦿ Block Groups: ` + blockSSS.length + `
@@ -4044,6 +4048,28 @@ try {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
             }
         }
+    } else if (query.startsWith("formatnumbers")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using formatnumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nformatnumbers 326346436")
+        } else {
+            data.shift();
+            sendMessage(api, event, numberWithCommas(data.join(" ")));
+        }
+    } else if (query.startsWith("wordstonumbers")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using wordsToNumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwordsToNumbers one hundred and five")
+        } else {
+            data.shift();
+            sendMessage(api, event, wordsToNumbers(data.join(" ")));
+        }
     } else if (query.startsWith("mnm")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -6005,4 +6031,8 @@ async function sendMessageToAll(api, message) {
         await wait(5000);
         api.sendMessage(message, group[i]);
     }
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
