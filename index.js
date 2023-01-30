@@ -1187,7 +1187,7 @@ async function ai(api, event, input) {
                 sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
         } else {
-            let text = query;
+            let text = query2;
             if (query.startsWith("repol")) {
                 text = input.substring(6)
             } else if (query.startsWith("mrepol742")) {
