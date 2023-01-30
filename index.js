@@ -4068,7 +4068,7 @@ try {
             sendMessage(api, event, "Opps! I didnt get it. You should try using wordsToNumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwordsToNumbers one hundred and five")
         } else {
             data.shift();
-            sendMessage(api, event, wordsToNumbers(data.join(" ")));
+            sendMessage(api, event, wordsToNumbers(data.join(" "))+"");
         }
     } else if (query.startsWith("mnm")) {
         if (isGoingToFast(api, event)) {
