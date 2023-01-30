@@ -2001,19 +2001,14 @@ try {
         } else {
             data.shift();
             let text = data.join(" ");
-            getResponseData("https://api.popcat.xyz/lyrics?song=" + text).then((response) => {
+            getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + text).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Seems like there was an internal problem.");
                 } else {
-                    let error = response.error;
-                    if (error == "Song not found!") {
-                        sendMessage(api, event, "Unfortunately lyrics was not found.");
-                        return;
-                    }
-                    let title = response.title;
-                    let image = response.image;
-                    let artist = response.artist;
-                    let lyrics = response.lyrics;
+                    let title = response.s_title;
+                    let image = response.s_image;
+                    let artist = response.s_artist;
+                    let lyrics = response.s_lyrics.replace(/ *\[[^\]]*] */g, '');;
                     let time = getTimestamp();
                     request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/lyrics_' + time + '.png'))
 
