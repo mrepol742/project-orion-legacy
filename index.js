@@ -322,6 +322,8 @@ _______  Project Orion 8/8  _______
 |   ⦿ tagalogSupport [on|off]
 |   ⦿ textToSpeech [on|off]
 |   ⦿ meowfacts
+|   ⦿ dns4 [url]
+|   ⦿ dns6 [url]
 |__________________________________
 `;
 
