@@ -120,7 +120,7 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 ]
 
 let help = `
-___ Project Orion 1/8 ___
+_______  Project Orion 1/8  _______
 | ⦿ cmd";
 | ⦿ cmd [number]";
 | ⦿ cmd all";
@@ -145,11 +145,11 @@ ___ Project Orion 1/8 ___
 | ⦿ github [username]";
 | ⦿ ig [username]";
 | ⦿ tiktok [username]";
-|________________________
+|__________________________________
 `;
 
 let help1 = `
-___ Project Orion 2/8 ___
+_______  Project Orion 2/8  _______
 | ⦿ thoughts";
 | ⦿ lulcat [text]";
 | ⦿ gemoji [emoji]";
@@ -170,11 +170,11 @@ ___ Project Orion 2/8 ___
 | ⦿ pika [text]";
 | ⦿ god [text]";
 | ⦿ qrcode [text]";
-|________________________
+|__________________________________
 `;
 
 let help2 = `
-___ Project Orion 3/8 ___
+_______  Project Orion 3/8  _______
 | ⦿ verse today";
 | ⦿ verse random";
 | ⦿ verse [book] [chapter]:[verse]";
@@ -195,11 +195,11 @@ ___ Project Orion 3/8 ___
 | ⦿ steam [name]";
 | ⦿ npm [name]";
 | ⦿ gname";
-|________________________
+|__________________________________
 `;
 
 let help3 = `
-___ Project Orion 4/8 ___
+_______  Project Orion 4/8  _______
 | ⦿ mnm @mention|@me";
 | ⦿ facebook @mention|@me";
 | ⦿ nickname @mention|@me [text]";
@@ -220,11 +220,11 @@ ___ Project Orion 4/8 ___
 | ⦿ uncover @mention|@me";
 | ⦿ advert @mention|@me";
 | ⦿ blur @mention|@me";
-|________________________
+|__________________________________
 `;
 
 let help4 = `
-___ Project Orion 5/8 ___
+_______  Project Orion 5/8  _______
 | ⦿ phub [text]";
 | ⦿ morse [text]";
 | ⦿ joke";
@@ -245,11 +245,11 @@ ___ Project Orion 5/8 ___
 | ⦿ barrier";
 | ⦿ fact";
 | ⦿ thoughts";
-|________________________
+|__________________________________
 `;
 
 let help5 = `
-___ Project Orion 6/8 ___
+_______  Project Orion 6/8  _______
 | ⦿ uid";
 | ⦿ guid";
 | ⦿ facts [text]";
@@ -270,11 +270,11 @@ ___ Project Orion 6/8 ___
 \n|       handhold, nom, biteglomp, slap";
 \n|       kill, kick, happy, wink";
 \n|       pokedance, cringe, cry, etc..";
-|________________________
+|__________________________________
 `;
 
 let help6 = `
-___ Project Orion 7/8 ___
+_______  Project Orion 7/8  _______
 | ⦿ conan";
 | ⦿ addUser [uid]";
 | ⦿ gphoto";
@@ -298,11 +298,11 @@ ___ Project Orion 7/8 ___
 \n|       Red, Yellow, TealBlue, Aqua";
 \n|       Mango, Berry, Citrus, Candy";
 | ⦿ anime --nsfw [category]";
-|________________________
+|__________________________________
 `;
 
 let help7 = `
-___ Project Orion 8/8 ___
+_______  Project Orion 8/8  _______
 | ⦿ animecouples";
 | ⦿ cosplay";
 | ⦿ motor";
@@ -314,11 +314,11 @@ ___ Project Orion 8/8 ___
 | ⦿ tagalogSupport [on/off]";
 | ⦿ textToSpeech [on/off]";
 | ⦿ meowfacts";
-|________________________
+|__________________________________
 `;
 
 let helpadmin = `
-___ Project Orion Admin ___
+_______  Project Orion Admin  _______
 | ⦿ unsend";
 | ⦿ unsend [on|off]";
 | ⦿ delay [on|off]";
@@ -343,11 +343,11 @@ ___ Project Orion Admin ___
 | ⦿ remPrefix";
 | ⦿ ignore [prefix]";
 | ⦿ setkey [name]:[key]";
-|__________________________
+|____________________________________
 `;
 
 let helproot = `
-___ Project Orion Root ___
+_______  Project Orion Root  _______
 | ⦿ stop";
 | ⦿ resume";
 | ⦿ restart";
@@ -360,7 +360,7 @@ ___ Project Orion Root ___
 | ⦿ setTemperature [integer]";
 | ⦿ setFrequencyPenalty [integer]";
 | ⦿ setProbabilityMass [integer]";
-|__________________________
+|____________________________________
 `;
 
 let apiKey = [
@@ -1468,7 +1468,7 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + group.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
+        sendMessage(api, event, "⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + group.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS.length + "\n⦿ Muted Users: " + mutedRRR.length);
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
