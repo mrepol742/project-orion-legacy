@@ -1404,8 +1404,19 @@ async function ai(api, event, input) {
                     }
                 });
             });
-           await wait(2000);
-            sendMessage(api, event, "Cache cleared.\n\n⦿ Cache 1: " + count + " files\n⦿ Cache 2: " + count1 + " files\n⦿ Cache 3: " + count2 + " files\n⦿ Cache 4: " + count3 + " files\n\nThey are now scheduled for deletion.");
+            threadIdMV = {};
+             await wait(2000);
+let message = `
+_______  Cache  _______
+|
+|   ⦿ Cache 0: ` + count + ` file(s)
+|   ⦿ Cache 1: `  + count1 + ` file(s)
+|   ⦿ Cache 2: ` + count2 + ` file(s)
+|   ⦿ Cache 3: ` + count3 + ` file(s)
+|   ⦿ Buffer: ` + (Object.keys(threadIdMV).length) + `
+|______________________
+`;
+            sendMessage(api, event, message);
         }
     } else if (query == "debugon") {
         if (adm.includes(event.senderID)) {
@@ -1855,7 +1866,90 @@ try {
             }
 
         })
+    } else if (query.startsWith("videolyric")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park")
+        } else {
+            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+                data.shift()
+                let vdName = data.join(" ");
+                const youtube = await new Innertube();
+                const search = await youtube.search(vdName);
+                if (search.videos[0] === undefined) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park")
+                } else {
+                    let timeleft = 3;
+                    let downloadTimer = setInterval(function() {
+                        if (timeleft <= 0) {
+                            clearInterval(downloadTimer);
+                        }
+                        timeleft -= 1;
+                    }, 1000);
+                    const stream = youtube.download(search.videos[0].id, {
+                        format: 'mp4',
+                        quality: '480p',
+                        type: 'videoandaudio',
+                        bitrate: '2500',
+                        audioQuality: 'highest',
+                        loudnessDB: '20',
+                        audioBitrate: '550',
+                        fps: '30'
+                    });
+                    let time = getTimestamp();
 
+                    stream.pipe(fs.createWriteStream(__dirname + '/cache/videos/video_' + time + '.mp4'));
+
+                    stream.on('start', () => {
+                        threadIdMV[event.threadID] = false;
+                        log("Starting download of video file.");
+                    });
+                    stream.on('info', (info) => {
+                        threadIdMV[event.threadID] = false;
+                        log("downloading " + info.video_details.title);
+                        reactMessage(api, event, ":heart:");
+                    });
+                    stream.on('end', () => {
+                        let limit = 25 * 1024 * 1024;
+                        fs.readFile(__dirname + '/cache/videos/video_' + time + '.mp4', function(err, data) {
+                            if (err) log(err)
+                            if (data.length > limit) {
+                                log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
+                                sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
+                                threadIdMV[event.threadID] = true;
+                                unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
+                            } else {
+                                log("Done.");
+
+                                getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
+                                    if (response == null) {
+                                        sendMessage(api, event, "Seems like there was an internal problem.");
+                                    } else {
+                                        let title = response.result.s_title;
+                                        let image = response.result.s_image;
+                                        let artist = response.result.s_artist;
+                                        let lyrics = response.result.s_lyrics;
+                                        let message = {
+                                            body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
+                                            attachment: fs.createReadStream(__dirname + '/cache/videos/video_' + time + '.mp4')
+                                        };
+                                        sendMessage(api, event, message);
+                                    }
+                                    threadIdMV[event.threadID] = true;
+                                    unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
+                                });
+                            }
+                        })
+                    });
+                    stream.on('error', (err) => log(err));
+                }
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
+            }
+        }
     } else if (query.startsWith("video")) {
         if (isGoingToFast(api, event)) {
             return;
