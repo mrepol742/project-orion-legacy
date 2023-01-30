@@ -1554,6 +1554,42 @@ _______  System Info  _______
 `;
             sendMessage(api, event, message);
         })();
+    } else if (query.startsWith("dns4")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using dns4 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns4 google.com")
+        } else {
+            data.shift();
+        dns.resolve4(data.join(" "), (err, addresses) => {
+            if (err) {
+                log(err);
+                sendMessage(api, event, "Houston! An error occured. Please try it again later.");
+                return;
+            }
+            sendMessage(api, event, addresses);
+        });
+    }
+    } else if (query.startsWith("dns6")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using dns6 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns6 google.com")
+        } else {
+            data.shift();
+        dns.resolve6(data.join(" "), (err, addresses) => {
+            if (err) {
+                log(err);
+                sendMessage(api, event, "Houston! An error occured. Please try it again later.");
+                return;
+            }
+            sendMessage(api, event, addresses);
+        });
+    }
     } else if (query.startsWith("ping")) {
         if (isGoingToFast(api, event)) {
             return;
