@@ -500,9 +500,7 @@ login({
 
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
             let a12INP = event.body;
-            if (!a12INP.startsWith("_")) {
-                return;
-            } else {
+            if (a12INP.startsWith("_")) {
                 a12INP = a12INP.slice(1);
             }
             if (a12INP == "unblockgroup") {
