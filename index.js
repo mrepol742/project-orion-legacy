@@ -44,6 +44,7 @@ const ping = require('ping');
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
+const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 const port = process.env.PORT || 6000;
 
 let sleep = [4000, 3000, 5000, 4500, 6000, 5500, 3300, 4400, 5050, 4000, 5000, 6500, 4500, 3600];
@@ -931,8 +932,8 @@ function wait(ms) {
 }
 
 async function ai22(api, event, input) {
-                let query = formatQuery(input.normalize("NFKC").replace(/\s+/g, '').toLowerCase());
-                let query2 = formatQuery(input.normalize("NFKC").toLowerCase());
+                let query = formatQuery(input.replace(/\s+/g, ''));
+                let query2 = formatQuery(input);
                 if (input == ".") {
                     if (event.messageReply.body != "") {
                       if (input.startsWith("_")) {
@@ -1091,8 +1092,8 @@ async function ai22(api, event, input) {
 }
 
 async function ai(api, event, input) {
-    let query = formatQuery(input.normalize("NFKC").replace(/\s+/g, '').toLowerCase());
-    let query2 = formatQuery(input.normalize("NFKC").toLowerCase());
+    let query = formatQuery(input.replace(/\s+/g, ''));
+    let query2 = formatQuery(input);
     if (nsfw(query)) {
         let message = {
             attachment: fs.createReadStream(__dirname + '/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
@@ -1207,8 +1208,8 @@ async function ai(api, event, input) {
             } else if (input.startsWith(settings.prefix)) {
                 text = input.substring(settings.prefix.length);
             }
-            let text1 = formatQuery(text.replace(/\s+/g, '').toLowerCase());
-            let text2 = formatQuery(text.toLowerCase());
+            let text1 = formatQuery(text.replace(/\s+/g, ''));
+            let text2 = formatQuery(text);
             if (/^[0-9]+$/.test(input.replace(/\s+/g, '').toLowerCase())) {
                 sendMessage(api, event, "What do you want me to do with " + input + "?");
             } else if (!/[a-z0-9]/gi.test(text1)) {
@@ -1312,7 +1313,7 @@ async function ai(api, event, input) {
                 //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
             } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
                 return;
-            } else if (!query.startsWith("search") && (text.split(" ").length < 3 || text.indexOf(" ") == -1) && !/^[0-9]+$/.test(text1)) {
+            } else if (!query.startsWith("search") && (text.split(" ").length < 2 || text.indexOf(" ") == -1) && !/^[0-9]+$/.test(text1)) {
                 if (repeatOfNonWWW(event)) {
                     return;
                 }
@@ -2893,7 +2894,7 @@ try {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa")
             } else {
                 let pre = data.shift();
-                let pre2 = formatQuery(pre.replace(/\s+/g, '').toLowerCase());
+                let pre2 = formatQuery(pre.replace(/\s+/g, ''));
                 if (pre2.startsWith("mj") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.prefix)) {
                     sendMessage(api, event, "Unable to do such an action.");
                 } else if (!ignoredPrefix.includes(pre)) {
@@ -4865,7 +4866,9 @@ async function reactMessage(api, event, reaction) {
 
 function formatQuery(string) {
     let str = string.replace(pictographic, '');
-    return str.replace(latinC, '');
+    let normal = str.normalize('NFKC').replace(normalize, '')
+    let latin = normal.replace(latinC, '');
+    return latin.toLowerCase();
 }
 
 function log(data) {
