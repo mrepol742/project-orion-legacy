@@ -1993,6 +1993,85 @@ try {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
+    } else if (query.startsWith("musiclyric")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using musiclyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
+        } else {
+            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+                data.shift()
+                const youtube = await new Innertube();
+                const search = await youtube.search(data.join(" "));
+                if (search.videos[0] === undefined) {
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
+                } else {
+                    let timeleft = 3;
+                    let downloadTimer = setInterval(function() {
+                        if (timeleft <= 0) {
+                            clearInterval(downloadTimer);
+                        }
+                        timeleft -= 1;
+                    }, 1000);
+                    const stream = youtube.download(search.videos[0].id, {
+                        format: 'mp3',
+                        bitrate: '2500',
+                        audioQuality: 'highest',
+                        loudnessDB: '20',
+                        audioBitrate: '550'
+                    });
+                    let time = getTimestamp();
+
+                    stream.pipe(fs.createWriteStream(__dirname + '/cache/audios/music_' + time + '.mp3'));
+
+                    stream.on('start', () => {
+                        threadIdMV[event.threadID] = false;
+                        log("Starting the download of music file.");
+                    });
+                    stream.on('info', (info) => {
+                        threadIdMV[event.threadID] = false;
+                        log("downloading " + info.video_details.title);
+                        reactMessage(api, event, ":heart:");
+                    });
+                    stream.on('end', () => {
+                        let limit = 25 * 1024 * 1024;
+                        fs.readFile(__dirname + '/cache/audios/music_' + time + '.mp3', function(err, data) {
+                            if (err) log(err)
+                            if (data.length > limit) {
+                                log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
+                                sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
+                            } else {
+                                log("Finish downloading music.");
+
+
+                                getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + data.join(" ")).then((response) => {
+                                    if (response == null) {
+                                        sendMessage(api, event, "Seems like there was an internal problem.");
+                                    } else {
+                                        let title = response.s_title;
+                                        let image = response.s_image;
+                                        let artist = response.s_artist;
+                                        let lyrics = response.s_lyrics.replace(/ *\[[^\]]*] */g, '');;
+                                        let message = {
+                                            body: title + " " + artist + "\n\n" + lyrics,
+                                            attachment: fs.createReadStream(__dirname + '/cache/audios/music_' + time + '.mp3')
+                                        };
+                                        sendMessage(api, event, message);
+                                    }
+                                    threadIdMV[event.threadID] = true;
+                                    unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
+                                });
+                            }
+                        })
+                    });
+                    stream.on('error', (err) => log(err));
+                }
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
+            }
+        }
     } else if (query.startsWith("lyrics")) {
         if (isGoingToFast(api, event)) {
             return;
