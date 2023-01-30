@@ -3315,7 +3315,10 @@ try {
             }
         });
     } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
-        sendMessage(api, event, help);
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        sendMessage(api, event, help + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3323,45 +3326,46 @@ try {
         let num = query.substring(3);
         switch (num) {
             case "2":
-                sendMessage(api, event, "The Project Orion \n\n< 1\n" + help1 + "\n3 >");
+                sendMessage(api, event, help1 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "3":
-                sendMessage(api, event, "The Project Orion \n\n< 2\n" + help2 + "\n4 >");
+                sendMessage(api, event, help2 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "4":
-                sendMessage(api, event, "The Project Orion \n\n< 3\n" + help3 + "\n5 >");
+                sendMessage(api, event, help3 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "5":
-                sendMessage(api, event, "The Project Orion \n\n< 4\n" + help4 + "\n6 >");
+                sendMessage(api, event, help4 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "6":
-                sendMessage(api, event, "The Project Orion \n\n< 5\n" + help5 + "\n7 >");
+                sendMessage(api, event, help5 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "7":
-                sendMessage(api, event, "The Project Orion \n\n< 6\n" + help6 + "\n8 >");
+                sendMessage(api, event, help6 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "8":
-                sendMessage(api, event, "The Project Orion \n\n< 7\n" + help7 + "\n9 >");
+                sendMessage(api, event, help7 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             default:
                 sendMessage(api, event, "Seem's like that's too far from the command list pages.");
                 break;
         }
     } else if (query == "cmdadmin") {
-        if (!adm.includes(event.senderID)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "The Project Orion Admin\n" + helpadmin + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, helpadmin + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdroot") {
-        if (!isMyId(event.senderID)) {
+        if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "The Project Orion Root\n" + helproot + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, helproot + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdall") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "The Project Orion\n" + help + help1 + help2 + help3 + help4 + help5 + help6 + help7 + "\n\n" + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, help + help1 + help2 + help3 + help4 + help5 + help6);
+        sendMessage(api, event, help7 + helpadmin + helproot + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
