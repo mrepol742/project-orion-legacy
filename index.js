@@ -99,6 +99,7 @@ let messagesD = "N/A";
 let fb_stateD = "N/A";
 let err400 = 0;
 
+let itbody = "I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message `cmd`.\nIf you have any questions don't hesitate to ask.\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
     "There is an equal and opposite reaction for every action.",
@@ -118,209 +119,249 @@ let qot = ["The object will not change its motion unless a force acts on it.",
     "The external static pressure applied on a confined liquid is distributed or transmitted evenly throughout the liquid in all directions."
 ]
 
-let help = "\n⦿ cmd";
-help += "\n    ⦿ cmd [number]";
-help += "\n    ⦿ cmd all";
-help += "\n    ⦿ mj [text]";
-help += "\n    ⦿ search [text]"
-help += "\n    ⦿ searchincog [text]";
-help += "\n    ⦿ searchimg [text]";
-help += "\n    ⦿ gencode [text]";
-help += "\n    ⦿ dictionary [text]";
-help += "\n    ⦿ say [text]";
-help += "\n    ⦿ baybayin [text]";
-help += "\n    ⦿ weather [location]";
-help += "\n    ⦿ music [text]";
-help += "\n    ⦿ video [text]";
-help += "\n    ⦿ lyrics [text]";
-help += "\n    ⦿ encode64 [text]";
-help += "\n    ⦿ decode64 [text]";
-help += "\n    ⦿ github [username]";
-help += "\n    ⦿ ig [username]";
-help += "\n    ⦿ tiktok [username]";
+let help = `
+___ Project Orion 1/8 ___
+| ⦿ cmd";
+| ⦿ cmd [number]";
+| ⦿ cmd all";
+| ⦿ stats";
+| ⦿ uptime";
+| ⦿ sysinfo";
+| ⦿ sendReport [text]";
+| ⦿ mj [text]";
+| ⦿ search [text]"
+| ⦿ searchincog [text]";
+| ⦿ searchimg [text]";
+| ⦿ gencode [text]";
+| ⦿ dictionary [text]";
+| ⦿ say [text]";
+| ⦿ baybayin [text]";
+| ⦿ weather [location]";
+| ⦿ music [text]";
+| ⦿ video [text]";
+| ⦿ lyrics [text]";
+| ⦿ encode64 [text]";
+| ⦿ decode64 [text]";
+| ⦿ github [username]";
+| ⦿ ig [username]";
+| ⦿ tiktok [username]";
+|________________________
+`;
 
+let help1 = `
+___ Project Orion 2/8 ___
+| ⦿ thoughts";
+| ⦿ lulcat [text]";
+| ⦿ gemoji [emoji]";
+| ⦿ gname [text]";
+| ⦿ wiki [text]";
+| ⦿ urlshort [url]";
+| ⦿ pickup";
+| ⦿ landscape";
+| ⦿ landscape [text]";
+| ⦿ portrait";
+| ⦿ portrait [text]";
+| ⦿ problem [equation]";
+| ⦿ roi [revenue] [cost]";
+| ⦿ pin add";
+| ⦿ pin remove";
+| ⦿ sadcat [text]";
+| ⦿ biden [text]";
+| ⦿ pika [text]";
+| ⦿ god [text]";
+| ⦿ qrcode [text]";
+|________________________
+`;
 
-let help1 = "\n⦿ thoughts";
-help1 += "\n    ⦿ lulcat [text]";
-help1 += "\n    ⦿ gemoji [emoji]";
-help1 += "\n    ⦿ gname [text]";
-help1 += "\n    ⦿ wiki [text]";
-help1 += "\n    ⦿ urlshort [url]";
-help1 += "\n    ⦿ pickup";
-help1 += "\n    ⦿ landscape";
-help1 += "\n    ⦿ landscape [text]";
-help1 += "\n    ⦿ portrait";
-help1 += "\n    ⦿ portrait [text]";
-help1 += "\n    ⦿ problem [equation]";
-help1 += "\n    ⦿ roi [revenue] [cost]";
-help1 += "\n    ⦿ pin add";
-help1 += "\n    ⦿ pin remove";
-help1 += "\n    ⦿ sadcat [text]";
-help1 += "\n    ⦿ biden [text]";
-help1 += "\n    ⦿ pika [text]";
-help1 += "\n    ⦿ god [text]";
-help1 += "\n    ⦿ qrcode [text]";
+let help2 = `
+___ Project Orion 3/8 ___
+| ⦿ verse today";
+| ⦿ verse random";
+| ⦿ verse [book] [chapter]:[verse]";
+| ⦿ animeqoute";
+| ⦿ bgremove";
+| ⦿ motivate";
+| ⦿ inspiration";
+| ⦿ advice";
+| ⦿ alert [text]";
+| ⦿ meme";
+| ⦿ lovetest [name1]: [name2]";
+| ⦿ drake [text1]: [text2]";
+| ⦿ pooh [text1]: [text2]";
+| ⦿ oogway [text]";
+| ⦿ caution [text]";
+| ⦿ element [name]";
+| ⦿ imdb [title]";
+| ⦿ steam [name]";
+| ⦿ npm [name]";
+| ⦿ gname";
+|________________________
+`;
 
-let help2 = "\n⦿ verse today";
-help2 += "\n    ⦿ verse random";
-help2 += "\n    ⦿ verse [book] [chapter]:[verse]";
-help2 += "\n    ⦿ animeqoute";
-help2 += "\n    ⦿ bgremove";
-help2 += "\n    ⦿ motivate";
-help2 += "\n    ⦿ inspiration";
-help2 += "\n    ⦿ advice";
-help2 += "\n    ⦿ alert [text]";
-help2 += "\n    ⦿ meme";
-help2 += "\n    ⦿ lovetest [name1]: [name2]";
-help2 += "\n    ⦿ drake [text1]: [text2]";
-help2 += "\n    ⦿ pooh [text1]: [text2]";
-help2 += "\n    ⦿ oogway [text]";
-help2 += "\n    ⦿ caution [text]";
-help2 += "\n    ⦿ element [name]";
-help2 += "\n    ⦿ imdb [title]";
-help2 += "\n    ⦿ steam [name]";
-help2 += "\n    ⦿ npm [name]";
-help2 += "\n    ⦿ gname";
+let help3 = `
+___ Project Orion 4/8 ___
+| ⦿ mnm @mention|@me";
+| ⦿ facebook @mention|@me";
+| ⦿ nickname @mention|@me [text]";
+| ⦿ invert @mention|@me";
+| ⦿ greyscale @mention|@me";
+| ⦿ ship @mention @mention";
+| ⦿ www @mention @mention";
+| ⦿ jokeover @mention|@me";
+| ⦿ translate [language] [text]";
+| ⦿ kiss @mention|@me";
+| ⦿ pet @mention|@me";
+| ⦿ jail @mention|@me";
+| ⦿ communist @mention|@me";
+| ⦿ wanted @mention|@me";
+| ⦿ gun @mention|@me";
+| ⦿ drip @mention|@me";
+| ⦿ clown @mention|@me";
+| ⦿ uncover @mention|@me";
+| ⦿ advert @mention|@me";
+| ⦿ blur @mention|@me";
+|________________________
+`;
 
-let help3 = "\n⦿ mnm @mention|@me";
-help3 += "\n    ⦿ facebook @mention|@me";
-help3 += "\n    ⦿ nickname @mention|@me [text]";
-help3 += "\n    ⦿ invert @mention|@me";
-help3 += "\n    ⦿ greyscale @mention|@me";
-help3 += "\n    ⦿ ship @mention @mention";
-help3 += "\n    ⦿ www @mention @mention";
-help3 += "\n    ⦿ jokeover @mention|@me";
-help3 += "\n    ⦿ translate [language] [text]";
-help3 += "\n    ⦿ kiss @mention|@me";
-help3 += "\n    ⦿ pet @mention|@me";
-help3 += "\n    ⦿ jail @mention|@me";
-help3 += "\n    ⦿ communist @mention|@me";
-help3 += "\n    ⦿ wanted @mention|@me";
-help3 += "\n    ⦿ gun @mention|@me";
-help3 += "\n    ⦿ drip @mention|@me";
-help3 += "\n    ⦿ clown @mention|@me";
-help3 += "\n    ⦿ uncover @mention|@me";
-help3 += "\n    ⦿ advert @mention|@me";
-help3 += "\n    ⦿ blur @mention|@me";
+let help4 = `
+___ Project Orion 5/8 ___
+| ⦿ phub [text]";
+| ⦿ morse [text]";
+| ⦿ joke";
+| ⦿ profilepic";
+| ⦿ wyr";
+| ⦿ 8ball";
+| ⦿ gmember";
+| ⦿ car";
+| ⦿ color";
+| ⦿ sim [text]";
+| ⦿ trump [text]";
+| ⦿ mock [text]";
+| ⦿ reverse [text]";
+| ⦿ itunes [title]";
+| ⦿ coding";
+| ⦿ newyear";
+| ⦿ christmas";
+| ⦿ barrier";
+| ⦿ fact";
+| ⦿ thoughts";
+|________________________
+`;
 
-let help4 = "\n⦿ phub [text]";
-help4 += "\n    ⦿ morse [text]";
-help4 += "\n    ⦿ joke";
-help4 += "\n    ⦿ profilepic";
-help4 += "\n    ⦿ wyr";
-help4 += "\n    ⦿ 8ball";
-help4 += "\n    ⦿ gmember";
-help4 += "\n    ⦿ car";
-help4 += "\n    ⦿ color";
-help4 += "\n    ⦿ sim [text]";
-help4 += "\n    ⦿ trump [text]";
-help4 += "\n    ⦿ mock [text]";
-help4 += "\n    ⦿ reverse [text]";
-help4 += "\n    ⦿ itunes [title]";
-help4 += "\n    ⦿ coding";
-help4 += "\n    ⦿ newyear";
-help4 += "\n    ⦿ christmas";
-help4 += "\n    ⦿ barrier";
-help4 += "\n    ⦿ fact";
-help4 += "\n    ⦿ thoughts";
+let help5 = `
+___ Project Orion 6/8 ___
+| ⦿ uid";
+| ⦿ guid";
+| ⦿ facts [text]";
+| ⦿ doublestruck [text]";
+| ⦿ count";
+| ⦿ count --vowels";
+| ⦿ count --consonants";
+| ⦿ wfind [text]";
+| ⦿ time";
+| ⦿ time [timezone]";
+| ⦿ uptime";
+| ⦿ summ [text]";
+| ⦿ anime [category]";
+\n|       waifu, megumin, bully, cuddle";
+\n|       hug, awoo, kiss, lick";
+\n|       pat, smug, bonk, yeet";
+\n|       blush, smile, wave, highfive";
+\n|       handhold, nom, biteglomp, slap";
+\n|       kill, kick, happy, wink";
+\n|       pokedance, cringe, cry, etc..";
+|________________________
+`;
 
-let help5 = "\n⦿ uid";
-help5 += "\n    ⦿ guid";
-help5 += "\n    ⦿ facts [text]";
-help5 += "\n    ⦿ doublestruck [text]";
-help5 += "\n    ⦿ count";
-help5 += "\n    ⦿ count --vowels";
-help5 += "\n    ⦿ count --consonants";
-help5 += "\n    ⦿ wfind [text]";
-help5 += "\n    ⦿ time";
-help5 += "\n    ⦿ time [timezone]";
-help5 += "\n    ⦿ uptime";
-help5 += "\n    ⦿ summ [text]";
-help5 += "\n    ⦿ anime [category]";
-help5 += "\n       waifu, megumin, bully, cuddle";
-help5 += "\n       hug, awoo, kiss, lick";
-help5 += "\n       pat, smug, bonk, yeet";
-help5 += "\n       blush, smile, wave, highfive";
-help5 += "\n       handhold, nom, biteglomp, slap";
-help5 += "\n       kill, kick, happy, wink";
-help5 += "\n       pokedance, cringe, cry, etc..";
+let help6 = `
+___ Project Orion 7/8 ___
+| ⦿ conan";
+| ⦿ addUser [uid]";
+| ⦿ gphoto";
+| ⦿ encodeBinary [text]";
+| ⦿ decodeBinary [text]";
+| ⦿ ttsjap [text]";
+| ⦿ pdf [text]";
+| ⦿ website [url]";
+| ⦿ mean [numbers]";
+| ⦿ median [numbers]";
+| ⦿ mode [numbers]";
+| ⦿ range [numbers]";
+| ⦿ cdfnormal [x] [μ] [σ]";
+| ⦿ divisible [number] [number]";
+| ⦿ factorial [number]";
+| ⦿ findGCD [number]";
+| ⦿ smartReply [on|off]";
+| ⦿ gcolor [theme]";
+\n|       DefaultBlue, HotPink, AquaBlue, BrightPurple";
+\n|       CoralPink, Orange, Green, LavenderPurple";
+\n|       Red, Yellow, TealBlue, Aqua";
+\n|       Mango, Berry, Citrus, Candy";
+| ⦿ anime --nsfw [category]";
+|________________________
+`;
 
-let help6 = "\n⦿ conan";
-help6 += "\n    ⦿ addUser [uid]";
-help6 += "\n    ⦿ gphoto";
-help6 += "\n    ⦿ encodeBinary [text]";
-help6 += "\n    ⦿ decodeBinary [text]";
-help6 += "\n    ⦿ ttsjap [text]";
-help6 += "\n    ⦿ pdf [text]";
-help6 += "\n    ⦿ sendReport [text]";
-help6 += "\n    ⦿ website [url]";
-help6 += "\n    ⦿ mean [numbers]";
-help6 += "\n    ⦿ median [numbers]";
-help6 += "\n    ⦿ mode [numbers]";
-help6 += "\n    ⦿ range [numbers]";
-help6 += "\n    ⦿ cdfnormal [x] [μ] [σ]";
-help6 += "\n    ⦿ divisible [number] [number]";
-help6 += "\n    ⦿ factorial [number]";
-help6 += "\n    ⦿ findGCD [number]";
-help6 += "\n    ⦿ smartReply [on|off]";
-help6 += "\n    ⦿ gcolor [theme]";
-help6 += "\n       DefaultBlue, HotPink, AquaBlue, BrightPurple";
-help6 += "\n       CoralPink, Orange, Green, LavenderPurple";
-help6 += "\n       Red, Yellow, TealBlue, Aqua";
-help6 += "\n       Mango, Berry, Citrus, Candy";
-help6 += "\n    ⦿ anime --nsfw [category]";
+let help7 = `
+___ Project Orion 8/8 ___
+| ⦿ animecouples";
+| ⦿ cosplay";
+| ⦿ motor";
+| ⦿ darkjoke";
+| ⦿ blackpink";
+| ⦿ hololive";
+| ⦿ mute";
+| ⦿ unmute";
+| ⦿ tagalogSupport [on/off]";
+| ⦿ textToSpeech [on/off]";
+| ⦿ meowfacts";
+|________________________
+`;
 
-let help7 = "\n⦿ animecouples";
-help7 += "\n    ⦿ cosplay";
-help7 += "\n    ⦿ motor";
-help7 += "\n    ⦿ darkjoke";
-help7 += "\n    ⦿ blackpink";
-help7 += "\n    ⦿ hololive";
-help7 += "\n    ⦿ mute";
-help7 += "\n    ⦿ unmute";
-help7 += "\n    ⦿ tagalogSupport [on/off]";
-help7 += "\n    ⦿ textToSpeech [on/off]";
-help7 += "\n    ⦿ meowfacts";
-help7 += "\n    ⦿ stats";
-help7 += "\n    ⦿ status";
+let helpadmin = `
+___ Project Orion Admin ___
+| ⦿ unsend";
+| ⦿ unsend [on|off]";
+| ⦿ delay [on|off]";
+| ⦿ nsfw [on|off]";
+| ⦿ debug [on|off]";
+| ⦿ antiLeave [on|off]";
+| ⦿ simultaneousExecution [on/off]";
+| ⦿ clearCache";
+| ⦿ refreshState";
+| ⦿ saveState";
+| ⦿ addAdmin @mention";
+| ⦿ remAdmin @mention";
+| ⦿ kickUser @mention";
+| ⦿ blockUser @mention";
+| ⦿ unblockUser @mention";
+| ⦿ blockGroup";
+| ⦿ unblockGroup";
+| ⦿ listblocks";
+| ⦿ listadmins";
+| ⦿ listmuted";
+| ⦿ setPrefix [prefix]";
+| ⦿ remPrefix";
+| ⦿ ignore [prefix]";
+| ⦿ setkey [name]:[key]";
+|__________________________
+`;
 
-let helpadmin = "\n⦿ unsend";
-helpadmin += "\n    ⦿ unsend [on|off]";
-helpadmin += "\n    ⦿ delay [on|off]";
-helpadmin += "\n    ⦿ nsfw [on|off]";
-helpadmin += "\n    ⦿ debug [on|off]";
-helpadmin += "\n    ⦿ antiLeave [on|off]";
-helpadmin += "\n    ⦿ simultaneousExecution [on/off]";
-helpadmin += "\n    ⦿ clearCache";
-helpadmin += "\n    ⦿ refreshState";
-helpadmin += "\n    ⦿ saveState";
-helpadmin += "\n    ⦿ addAdmin @mention";
-helpadmin += "\n    ⦿ remAdmin @mention";
-helpadmin += "\n    ⦿ kickUser @mention";
-helpadmin += "\n    ⦿ blockUser @mention";
-helpadmin += "\n    ⦿ unblockUser @mention";
-helpadmin += "\n    ⦿ blockGroup";
-helpadmin += "\n    ⦿ unblockGroup";
-helpadmin += "\n    ⦿ listblocks";
-helpadmin += "\n    ⦿ listadmins";
-helpadmin += "\n    ⦿ listmuted";
-helpadmin += "\n    ⦿ setPrefix [prefix]";
-helpadmin += "\n    ⦿ remPrefix";
-helpadmin += "\n    ⦿ ignore [prefix]";
-helpadmin += "\n    ⦿ setkey [name]:[key]";
-
-let helproot = "\n⦿ stop";
-helproot += "\n    ⦿ resume";
-helproot += "\n    ⦿ restart";
-helproot += "\n    ⦿ notify";
-helproot += "\n    ⦿ refreshGroup";
-helproot += "\n    ⦿ setMaxImage [integer]";
-helproot += "\n    ⦿ setTimezone [timezone]";
-helproot += "\n    ⦿ setTextComplextion [complextion]"
-helproot += "\n    ⦿ setMaxTokens [integer]";
-helproot += "\n    ⦿ setTemperature [integer]";
-helproot += "\n    ⦿ setFrequencyPenalty [integer]";
-helproot += "\n    ⦿ setProbabilityMass [integer]";
+let helproot = `
+___ Project Orion Root ___
+| ⦿ stop";
+| ⦿ resume";
+| ⦿ restart";
+| ⦿ notify";
+| ⦿ refreshGroup";
+| ⦿ setMaxImage [integer]";
+| ⦿ setTimezone [timezone]";
+| ⦿ setTextComplextion [complextion]"
+| ⦿ setMaxTokens [integer]";
+| ⦿ setTemperature [integer]";
+| ⦿ setFrequencyPenalty [integer]";
+| ⦿ setProbabilityMass [integer]";
+|__________________________
+`;
 
 let apiKey = [
     // manhict.tech/api
@@ -529,7 +570,7 @@ login({
                     fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
                     fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
                     fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
-                    sendMessage(api, event, "Restarting program in 3 seconds.");
+                    sendMessage(api, event, "Restarting program...");
                     setTimeout(function () {
                         restart.push(event.threadID);
                         restart.push(event.messageID);
@@ -800,10 +841,6 @@ login({
             case "event":
                 switch (event.logMessageType) {
                     case "log:subscribe":
-                        if (event.logMessageData.addedParticipants[0].userFbId == getMyId()) {
-                            sendMessageOnly("What sup guys!");
-                            break;
-                        }
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
                             if (gc.isGroup) {
@@ -814,7 +851,11 @@ login({
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
                                         break;
                                     }
-                                    names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName])
+                                    if (event.logMessageData.addedParticipants[i].userFbId != getMyId()) {
+                                        names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName]);
+                                    } else {
+                                        sendMessageOnly("Hello! Thank you for adding me on this group. Do you want to enable ChatBot AI features on this group or not? In default, it's enabled.");
+                                    }
                                     i++;
                                 }
                                 let gret;
@@ -828,9 +869,9 @@ login({
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += " to the group.\n\nI'm Mj btw, How are you'll? If you guys needed assistance you can call me for list of commands type cmd. \n⦿ about     ⦿ license\n⦿ copyright ⦿ uptime";
+                                    gret += ". How are you all?\n\n" + itbody;
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \n⦿ about    ⦿ license\n⦿ copyright ⦿ uptime";
+                                    gret = "Welcome @" + names[0][1] + ". How are you?\n\n" + itbody;
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -1122,8 +1163,8 @@ async function ai(api, event, input) {
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
-                    body: "Moshi moshi... \nHow can i help you? If you have any question don't hesitate to ask me. For list of commands type cmd.\nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help.\n⦿ about\n⦿ license\n⦿ copyright\n⦿ uptime\n\nhttps://project-orion.mrepol742.repl.co",
-                    attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
+                    body: itbody,
+                    attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
                 }
                 sendMessage(api, event, message);
                 nonRRR.push(event.senderID);
@@ -1421,13 +1462,16 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "This program process \n\n⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + groups.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
+        sendMessage(api, event, "⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + groups.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "Project Orion is online for about " + seconds_con);
+        sendMessage(api, event, seconds_con);
     } else if (query == "sysinfo") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         (async () => {
             const testNetworkSpeed = new NetworkSpeed();
             let osFreeMemm = os.freemem();
@@ -1454,7 +1498,7 @@ async function ai(api, event, input) {
             const heapUsed = convertBytes(process.memoryUsage().heapUsed);
             const external = convertBytes(process.memoryUsage().external);
             const arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
-            sendMessage(api, event, "Uptime is " + seconds_con + ".\n\n⦿ RAM: " + osFreeMem +
+            sendMessage(api, event, "⦿ Uptime:" + seconds_con + "\n⦿ RAM: " + osFreeMem +
                 "\n⦿ ROM: " + osTotalMem + "\n⦿ Download Speed: " + upload_spee.mbps +
                 " mbps\n⦿ Upload Speed: " + speed.mbps + " mbps\n⦿ RSS: " + rss + "\n⦿ Heap Total: " + heapTotal +
                 "\n⦿ Heap Used: " + heapUsed + "\n⦿ External: " + external + "\n⦿ Array Buffers: " + arrayBuffers +
@@ -2159,13 +2203,13 @@ try {
                 let output = weather.weather
                 let m = output.location
                 m += "\n\n⦿ Forecast: " + output.forecast
-                m += "\n    ⦿ Temperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
+                m += "\n⦿ Temperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
                 if (output.precipitation != undefined)
-                    m += "\n    ⦿ Precipitation: " + output.precipitation
+                    m += "\n⦿ Precipitation: " + output.precipitation
                 if (output.humidity != undefined)
-                    m += "\n    ⦿ Humidity: " + output.humidity
+                    m += "\n⦿ Humidity: " + output.humidity
                 if (output.wind != undefined)
-                    m += "\n    ⦿ Wind speed: " + output.wind
+                    m += "\n⦿ Wind speed: " + output.wind
                 sendMessage(api, event, m)
             }
         }
@@ -2922,7 +2966,7 @@ try {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 api.getUserInfo(data[0].userID, (err, data1) => {
                                     if (err) return log(err);
-                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "Welcome @" + data1.name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help. \n⦿ cmd\n⦿ uptime\n⦿ copyright\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co");
+                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "Welcome @" + data1.name + ". How are you?\n\n" + itbody);
                                 });
                             });
                             return;
@@ -2931,7 +2975,7 @@ try {
                         }
                         api.getUserInfo(id, (err, data1) => {
                             if (err) return log(err);
-                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "Welcome @" + data1.name + ".\n\nI'm Mj, How are you? If you needed assistance you can call me for list of commands type cmd. \nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help. \n⦿ cmd\n⦿ uptime\n⦿ copyright\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co");
+                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "Welcome @" + data1.name + ". How are you?\n\n" + itbody);
                         });
                     } else {
                         sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
@@ -3263,7 +3307,7 @@ try {
             }
         });
     } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
-        sendMessage(api, event, "The Project Orion \n\n" + help + "\n 2 >");
+        sendMessage(api, event, help);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3887,8 +3931,8 @@ try {
                         let time = getTimestamp();
                         let filename = __dirname + "/cache/images/facebook_" + time + ".jpg";
                         let msg = checkFound(name) + " @" + checkFound(vanity);
-                        msg += "\n    ⦿ Gender: " + (gender == 1 ? "female" : "male");
-                        msg += "\n    ⦿ Birthday: " + checkFound(isBirthday);
+                        msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
+                        msg += "\n⦿ Birthday: " + checkFound(isBirthday);
 
                         await download(url, filename, () => {
                             let message = {
@@ -4464,7 +4508,6 @@ try {
         let seconds = Math.floor((count % (1000 * 60)) / 1000);
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
-            attachment: fs.createReadStream(__dirname + '/assets/newyear.gif')
         };
         sendMessage(api, event, message)
     } else if (query == "christmas") {
@@ -4481,7 +4524,6 @@ try {
         let seconds = Math.floor((count % (1000 * 60)) / 1000);
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
-            attachment: fs.createReadStream(__dirname + '/assets/Christmas.gif')
         };
         sendMessage(api, event, message)
     } else if (query == "verserandom") {
@@ -4566,14 +4608,14 @@ try {
         sendMessage(api, event, "Hello World");
     } else if (query == "about") {
         let message = {
-            body: "Hi there. My name is Mj a Artificial Intelligence in aims to breaking apart the boundaries between human and computer. We do not disclosed any personal information in any medium.\n\nYou can ask on me like `What is matter` or by calling me `How to do _____` i would be grateful to help.\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
+            body: itbody,
+            attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
         }
         sendMessage(api, event, message);
     } else if (query == "copyright") {
         let message = {
             body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
         }
         sendMessage(api, event, message);
     } else if (query == "license") {
@@ -4583,7 +4625,7 @@ try {
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
                 "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2023.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/assets/project-orion.gif")]
+            attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
         }
         sendMessage(api, event, message);
     } else {
@@ -5285,24 +5327,35 @@ function secondsToTime(e) {
     let h = parseInt(Math.floor(e / 3600).toString().padStart(2, '0'), 10);
     let m = parseInt(Math.floor(e % 3600 / 60).toString().padStart(2, '0'), 10);
     let s = parseInt(Math.floor(e % 60).toString().padStart(2, '0'), 10);
-    let p = "minute";
-    let p1 = "hour";
-    let p2 = "second";
-    if (h > 1) {
-        p1 += 's';
+    let constructTime = "";
+    if (h >= 1) {
+        if (h == 1) {
+            constructTime += h + " hour";
+        } else {
+            constructTime += h + " hours";
+        }
     }
-    if (m > 1) {
-        p += 's';
+    if (constructTime.includes("hour")) {
+        constructTime += " and ";
     }
-    if (s > 1) {
-        p2 += 's';
+    if (m >= 1) {
+        if (m == 1) {
+            constructTime += m + " minute";
+        } else {
+            constructTime += m + " minutes";
+        }
     }
-    if (h != "0") {
-        return h + ' ' + p1 + ', ' + m + ' ' + p + ' and ' + s + " " + p2;
-    } else if (m != "0") {
-        return m + ' ' + p + ' and ' + s + " " + p2;
+    if (constructTime.includes("minute")) {
+        constructTime += " and ";
     }
-    return s + " " + p2;
+    if (s >= 1) {
+        if (s == 1) {
+            constructTime += s + " second";
+        } else {
+            constructTime += s + " seconds";
+        }
+    }
+    constructTime += ".";
 }
 
 function removeUser(api, event, id) {
