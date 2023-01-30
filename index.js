@@ -1421,11 +1421,13 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "This program process \n\n⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + groups.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
+        sendMessage(api, event, "This program process \n\n⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + group.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS.length + "\n⦿ Muted Users: " + mutedRRR.length);
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
+      let second_process = process_p.uptime();
+            let seconds_con = secondsToTime(second_process);
         sendMessage(api, event, "Project Orion is online for about " + seconds_con);
     } else if (query == "sysinfo") {
         (async () => {
