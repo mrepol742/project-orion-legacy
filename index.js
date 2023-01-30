@@ -1936,8 +1936,9 @@ try {
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
+                let vdName = data.join(" ");
                 const youtube = await new Innertube();
-                const search = await youtube.search(data.join(" "));
+                const search = await youtube.search(vdName);
                 if (search.videos[0] === undefined) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
                 } else {
@@ -1975,11 +1976,13 @@ try {
                             if (data.length > limit) {
                                 log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
                                 sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
+                                threadIdMV[event.threadID] = true;
+                                unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
                             } else {
                                 log("Finish downloading music.");
 
 
-                                getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + data.join(" ")).then((response) => {
+                                getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
                                     if (response == null) {
                                         sendMessage(api, event, "Seems like there was an internal problem.");
                                     } else {
