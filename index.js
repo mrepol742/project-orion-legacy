@@ -123,81 +123,81 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 let help = `
 _______  Project Orion 1/8  _______
 |
-|   ⦿ cmd";
-|   ⦿ cmd [number]";
-|   ⦿ cmd all";
-|   ⦿ stats";
-|   ⦿ uptime";
-|   ⦿ sysinfo";
-|   ⦿ sendReport [text]";
-|   ⦿ mj [text]";
-|   ⦿ search [text]"
-|   ⦿ searchincog [text]";
-|   ⦿ searchimg [text]";
-|   ⦿ gencode [text]";
-|   ⦿ dictionary [text]";
-|   ⦿ say [text]";
-|   ⦿ baybayin [text]";
-|   ⦿ weather [location]";
-|   ⦿ music [text]";
-|   ⦿ video [text]";
-|   ⦿ lyrics [text]";
-|   ⦿ encode64 [text]";
-|   ⦿ decode64 [text]";
-|   ⦿ github [username]";
-|   ⦿ ig [username]";
-|   ⦿ tiktok [username]";
+|   ⦿ cmd
+|   ⦿ cmd [number]
+|   ⦿ cmd all
+|   ⦿ stats
+|   ⦿ uptime
+|   ⦿ sysinfo
+|   ⦿ sendReport [text]
+|   ⦿ mj [text]
+|   ⦿ search [text]
+|   ⦿ searchincog [text]
+|   ⦿ searchimg [text]
+|   ⦿ gencode [text]
+|   ⦿ dictionary [text]
+|   ⦿ say [text]
+|   ⦿ baybayin [text]
+|   ⦿ weather [location]
+|   ⦿ music [text]
+|   ⦿ video [text]
+|   ⦿ lyrics [text
+|   ⦿ encode64 [text]
+|   ⦿ decode64 [text]
+|   ⦿ github [username]
+|   ⦿ ig [username]
+|   ⦿ tiktok [username]
 |__________________________________
 `;
 
 let help1 = `
 _______  Project Orion 2/8  _______
 |
-|   ⦿ thoughts";
-|   ⦿ lulcat [text]";
-|   ⦿ gemoji [emoji]";
-|   ⦿ gname [text]";
-|   ⦿ wiki [text]";
-|   ⦿ urlshort [url]";
-|   ⦿ pickup";
-|   ⦿ landscape";
-|   ⦿ landscape [text]";
-|   ⦿ portrait";
-|   ⦿ portrait [text]";
-|   ⦿ problem [equation]";
-|   ⦿ roi [revenue] [cost]";
-|   ⦿ pin add";
-|   ⦿ pin remove";
-|   ⦿ sadcat [text]";
-|   ⦿ biden [text]";
-|   ⦿ pika [text]";
-|   ⦿ god [text]";
-|   ⦿ qrcode [text]";
+|   ⦿ thoughts
+|   ⦿ lulcat [text]
+|   ⦿ gemoji [emoji]
+|   ⦿ gname [text]
+|   ⦿ wiki [text]
+|   ⦿ urlshort [url]
+|   ⦿ pickup
+|   ⦿ landscape
+|   ⦿ landscape [text]
+|   ⦿ portrait
+|   ⦿ portrait [text]
+|   ⦿ problem [equation]
+|   ⦿ roi [revenue] [cost]
+|   ⦿ pin add
+|   ⦿ pin remove
+|   ⦿ sadcat [text]
+|   ⦿ biden [text]
+|   ⦿ pika [text]
+|   ⦿ god [text]
+|   ⦿ qrcode [text]
 |__________________________________
 `;
 
 let help2 = `
 _______  Project Orion 3/8  _______
 |
-|   ⦿ verse today";
-|   ⦿ verse random";
-|   ⦿ verse [book] [chapter]:[verse]";
-|   ⦿ animeqoute";
-|   ⦿ bgremove";
-|   ⦿ motivate";
-|   ⦿ inspiration";
-|   ⦿ advice";
-|   ⦿ alert [text]";
-|   ⦿ meme";
-|   ⦿ lovetest [name1]: [name2]";
-|   ⦿ drake [text1]: [text2]";
-|   ⦿ pooh [text1]: [text2]";
-|   ⦿ oogway [text]";
-|   ⦿ caution [text]";
-|   ⦿ element [name]";
-|   ⦿ imdb [title]";
-|   ⦿ steam [name]";
-|   ⦿ npm [name]";
+|   ⦿ verse today
+|   ⦿ verse random
+|   ⦿ verse [book] [chapter]:[verse]
+|   ⦿ animeqoute
+|   ⦿ bgremove
+|   ⦿ motivate
+|   ⦿ inspiration
+|   ⦿ advice
+|   ⦿ alert [text]
+|   ⦿ meme
+|   ⦿ lovetest [name1]: [name2]
+|   ⦿ drake [text1]: [text2]
+|   ⦿ pooh [text1]: [text2]
+|   ⦿ oogway [text]
+|   ⦿ caution [text]
+|   ⦿ element [name]
+|   ⦿ imdb [title]
+|   ⦿ steam [name]
+|   ⦿ npm [name]
 |   ⦿ gname";
 |__________________________________
 `;
@@ -205,172 +205,171 @@ _______  Project Orion 3/8  _______
 let help3 = `
 _______  Project Orion 4/8  _______
 |
-|   ⦿ mnm @mention|@me";
-|   ⦿ facebook @mention|@me";
-|   ⦿ nickname @mention|@me [text]";
-|   ⦿ invert @mention|@me";
-|   ⦿ greyscale @mention|@me";
-|   ⦿ ship @mention @mention";
-|   ⦿ www @mention @mention";
-|   ⦿ jokeover @mention|@me";
-|   ⦿ translate [language] [text]";
-|   ⦿ kiss @mention|@me";
-|   ⦿ pet @mention|@me";
-|   ⦿ jail @mention|@me";
-|   ⦿ communist @mention|@me";
-|   ⦿ wanted @mention|@me";
-|   ⦿ gun @mention|@me";
-|   ⦿ drip @mention|@me";
-|   ⦿ clown @mention|@me";
-|   ⦿ uncover @mention|@me";
-|   ⦿ advert @mention|@me";
-|   ⦿ blur @mention|@me";
+|   ⦿ mnm @mention|@me
+|   ⦿ facebook @mention|@me
+|   ⦿ nickname @mention|@me [text]
+|   ⦿ invert @mention|@me
+|   ⦿ greyscale @mention|@me
+|   ⦿ ship @mention @mention
+|   ⦿ www @mention @mention
+|   ⦿ jokeover @mention|@me
+|   ⦿ translate [language] [text]
+|   ⦿ kiss @mention|@me
+|   ⦿ pet @mention|@me
+|   ⦿ jail @mention|@me
+|   ⦿ communist @mention|@me
+|   ⦿ wanted @mention|@me
+|   ⦿ gun @mention|@me
+|   ⦿ drip @mention|@me
+|   ⦿ clown @mention|@me
+|   ⦿ uncover @mention|@me
+|   ⦿ advert @mention|@me
+|   ⦿ blur @mention|@me
 |__________________________________
 `;
 
 let help4 = `
 _______  Project Orion 5/8  _______
 |
-|   ⦿ phub [text]";
-|   ⦿ morse [text]";
-|   ⦿ joke";
-|   ⦿ profilepic";
-|   ⦿ wyr";
-|   ⦿ 8ball";
-|   ⦿ gmember";
-|   ⦿ car";
-|   ⦿ color";
-|   ⦿ sim [text]";
-|   ⦿ trump [text]";
-|   ⦿ mock [text]";
-|   ⦿ reverse [text]";
-|   ⦿ itunes [title]";
-|   ⦿ coding";
-|   ⦿ newyear";
-|   ⦿ christmas";
-|   ⦿ barrier";
-|   ⦿ fact";
-|   ⦿ thoughts";
+|   ⦿ phub [text]
+|   ⦿ morse [text]
+|   ⦿ joke
+|   ⦿ profilepic
+|   ⦿ wyr
+|   ⦿ 8ball
+|   ⦿ gmember
+|   ⦿ car
+|   ⦿ color
+|   ⦿ sim [text]
+|   ⦿ trump [text]
+|   ⦿ mock [text]
+|   ⦿ reverse [text]
+|   ⦿ itunes [title]
+|   ⦿ coding
+|   ⦿ newyear
+|   ⦿ christmas
+|   ⦿ barrier
+|   ⦿ fact
+|   ⦿ thoughts
 |__________________________________
 `;
 
 let help5 = `
 _______  Project Orion 6/8  _______
 |
-|   ⦿ uid";
-|   ⦿ guid";
-|   ⦿ facts [text]";
-|   ⦿ doublestruck [text]";
-|   ⦿ count";
-|   ⦿ count --vowels";
-|   ⦿ count --consonants";
-|   ⦿ wfind [text]";
-|   ⦿ time";
-|   ⦿ time [timezone]";
-|   ⦿ uptime";
-|   ⦿ summ [text]";
-|   ⦿ anime [category]";
-\n|       waifu, megumin, bully, cuddle";
-\n|       hug, awoo, kiss, lick";
-\n|       pat, smug, bonk, yeet";
-\n|       blush, smile, wave, highfive";
-\n|       handhold, nom, biteglomp, slap";
-\n|       kill, kick, happy, wink";
-\n|       pokedance, cringe, cry, etc..";
+|   ⦿ uid
+|   ⦿ guid
+|   ⦿ facts [text]
+|   ⦿ doublestruck [text]
+|   ⦿ count
+|   ⦿ count --vowels
+|   ⦿ count --consonants
+|   ⦿ wfind [text]
+|   ⦿ time
+|   ⦿ time [timezone]
+|   ⦿ summ [text]
+|   ⦿ anime [category]
+\n|       waifu, megumin, bully, cuddle
+\n|       hug, awoo, kiss, lick
+\n|       pat, smug, bonk, yeet
+\n|       blush, smile, wave, highfive
+\n|       handhold, nom, biteglomp, slap
+\n|       kill, kick, happy, wink
+\n|       pokedance, cringe, cry, etc...
 |__________________________________
 `;
 
 let help6 = `
 _______  Project Orion 7/8  _______
 |
-|   ⦿ conan";
-|   ⦿ addUser [uid]";
-|   ⦿ gphoto";
-|   ⦿ encodeBinary [text]";
-|   ⦿ decodeBinary [text]";
-|   ⦿ ttsjap [text]";
-|   ⦿ pdf [text]";
-|   ⦿ website [url]";
-|   ⦿ mean [numbers]";
-|   ⦿ median [numbers]";
-|   ⦿ mode [numbers]";
-|   ⦿ range [numbers]";
-|   ⦿ cdfnormal [x] [μ] [σ]";
-|   ⦿ divisible [number] [number]";
-|   ⦿ factorial [number]";
-|   ⦿ findGCD [number]";
-|   ⦿ smartReply [on|off]";
-|   ⦿ gcolor [theme]";
-\n|       DefaultBlue, HotPink, AquaBlue, BrightPurple";
-\n|       CoralPink, Orange, Green, LavenderPurple";
-\n|       Red, Yellow, TealBlue, Aqua";
-\n|       Mango, Berry, Citrus, Candy";
-|   ⦿ hanime [category]";
+|   ⦿ conan
+|   ⦿ addUser [uid]
+|   ⦿ gphoto
+|   ⦿ encodeBinary [text]
+|   ⦿ decodeBinary [text]
+|   ⦿ ttsjap [text]
+|   ⦿ pdf [text]
+|   ⦿ website [urrl]
+|   ⦿ mean [numbers]
+|   ⦿ median [numbers]
+|   ⦿ mode [numbers]
+|   ⦿ range [numbers]
+|   ⦿ cdfnormal [x] [μ] [σ]
+|   ⦿ divisible [number] [number]
+|   ⦿ factorial [number]
+|   ⦿ findGCD [number]
+|   ⦿ smartReply [on|off]
+|   ⦿ gcolor [theme]
+\n|       DefaultBlue, HotPink, AquaBlue, BrightPurple
+\n|       CoralPink, Orange, Green, LavenderPurple
+\n|       Red, Yellow, TealBlue, Aqua
+\n|       Mango, Berry, Citrus, Candy
+|   ⦿ hanime [category]
 |__________________________________
 `;
 
 let help7 = `
 _______  Project Orion 8/8  _______
 |
-|   ⦿ animecouples";
-|   ⦿ cosplay";
-|   ⦿ motor";
-|   ⦿ darkjoke";
-|   ⦿ blackpink";
-|   ⦿ hololive";
-|   ⦿ mute";
-|   ⦿ unmute";
-|   ⦿ tagalogSupport [on/off]";
-|   ⦿ textToSpeech [on/off]";
-|   ⦿ meowfacts";
+|   ⦿ animecouples
+|   ⦿ cosplay
+|   ⦿ motor
+|   ⦿ darkjoke
+|   ⦿ blackpink
+|   ⦿ hololive
+|   ⦿ mute
+|   ⦿ unmute
+|   ⦿ tagalogSupport [on|off]
+|   ⦿ textToSpeech [on|off]
+|   ⦿ meowfacts
 |__________________________________
 `;
 
 let helpadmin = `
 _______  Project Orion Admin  _______
 |
-|   ⦿ unsend";
-|   ⦿ unsend [on|off]";
-|   ⦿ delay [on|off]";
-|   ⦿ nsfw [on|off]";
-|   ⦿ debug [on|off]";
-|   ⦿ antiLeave [on|off]";
-|   ⦿ simultaneousExecution [on/off]";
-|   ⦿ clearCache";
-|   ⦿ refreshState";
-|   ⦿ saveState";
-|   ⦿ addAdmin @mention";
-|   ⦿ remAdmin @mention";
-|   ⦿ kickUser @mention";
-|   ⦿ blockUser @mention";
-|   ⦿ unblockUser @mention";
-|   ⦿ blockGroup";
-|   ⦿ unblockGroup";
-|   ⦿ listblocks";
-|   ⦿ listadmins";
-|   ⦿ listmuted";
-|   ⦿ setPrefix [prefix]";
-|   ⦿ remPrefix";
-|   ⦿ ignore [prefix]";
-|   ⦿ setkey [name]:[key]";
+|   ⦿ unsend
+|   ⦿ unsend [on|off]
+|   ⦿ delay [on|off]
+|   ⦿ nsfw [on|off]
+|   ⦿ debug [on|off]
+|   ⦿ antiLeave [on|off]
+|   ⦿ simultaneousExecution [on|off]
+|   ⦿ clearCache
+|   ⦿ refreshState
+|   ⦿ saveState
+|   ⦿ addAdmin @mention
+|   ⦿ remAdmin @mention
+|   ⦿ kickUser @mention
+|   ⦿ blockUser @mention
+|   ⦿ unblockUser @mention
+|   ⦿ blockGroup
+|   ⦿ unblockGroup
+|   ⦿ listblocks
+|   ⦿ listadmins
+|   ⦿ listmuted
+|   ⦿ setPrefix [prefix]
+|   ⦿ remPrefix
+|   ⦿ ignore [prefix]
+|   ⦿ setkey [name]:[key]
 |____________________________________
 `;
 
 let helproot = `
 _______  Project Orion Root  _______
 |
-|   ⦿ stop";
-|   ⦿ resume";
-|   ⦿ restart";
-|   ⦿ notify";
-|   ⦿ refreshGroup";
-|   ⦿ setMaxImage [integer]";
-|   ⦿ setTimezone [timezone]";
-|   ⦿ setTextComplextion [complextion]"
-|   ⦿ setMaxTokens [integer]";
-|   ⦿ setTemperature [integer]";
-|   ⦿ setFrequencyPenalty [integer]";
-|   ⦿ setProbabilityMass [integer]";
+|   ⦿ stop
+|   ⦿ resume
+|   ⦿ restart
+|   ⦿ notify
+|   ⦿ refreshGroup
+|   ⦿ setMaxImage [integer]
+|   ⦿ setTimezone [timezone]
+|   ⦿ setTextComplextion [complextion]
+|   ⦿ setMaxTokens [integer]
+|   ⦿ setTemperature [integer]
+|   ⦿ setFrequencyPenalty [integer]
+|   ⦿ setProbabilityMass [integer]
 |____________________________________
 `;
 
@@ -1336,8 +1335,11 @@ async function ai(api, event, input) {
                 if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
                     text += ".";
                 }
-              let ss = await aiResponse(settings.text_complextion, text, true);
-             sendMessage(api, event, ss);
+                let ss = await aiResponse(settings.text_complextion, text, true);
+                sendMessage(api, event, ss);
+                if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
+                    sendMessageOnly(api, event, "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev")
+                }
             }
         }
     }
@@ -4866,8 +4868,9 @@ async function reactMessage(api, event, reaction) {
 
 function formatQuery(string) {
     let str = string.replace(pictographic, '');
-    let normal = str.normalize('NFKC').replace(normalize, '')
-    let latin = normal.replace(latinC, '');
+    let normal = str.normalize('NFKC');
+    let specialCharacters = normal.replace(normalize, '');
+    let latin = specialCharacters.replace(latinC, '');
     return latin.toLowerCase();
 }
 
@@ -4895,10 +4898,10 @@ function isGoingToFast(api, event) {
     let input = event.body;
     log("event_body " + event.senderID + " " + input);
     if (input.startsWith("⦿")) {
-        sendMessageOnly(api, event, "You don't need to use ⦿ to call my command. Just type the command followed by the arguments if needed.");
+        sendMessageOnly(api, event, "It's unnessesary to use ⦿ i would still understand you even without it.");
     }
     if (input.startsWith("_")) {
-        sendMessageOnly(api, event, "Moshi mos. I don't require using _ when calling my commands. Since it's for the owner of the bot account only to prevent looping.");
+        sendMessageOnly(api, event, "It's unnessesary to use _ i would still understand you even without it.");
     }
     if (!settings.preventSimultaneousExecution) {
         return false;
