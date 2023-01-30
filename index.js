@@ -499,7 +499,13 @@ login({
         }
 
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
-            if (event.body == "unblockgroup") {
+            let a12INP = event.body;
+            if (!a12INP.startsWith("_")) {
+                return;
+            } else {
+                a12INP = a12INP.slice(1);
+            }
+            if (a12INP == "unblockgroup") {
                 if (adm.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
@@ -510,14 +516,14 @@ login({
                         }
                     });
                 }
-            } else if (event.body == "unmute") {
+            } else if (a12INP == "unmute") {
                 if (mutedRRR.includes(event.senderID)) {
                     sendMessage(api, event, "The user is not blocked.");
                     mutedRRR = mutedRRR.filter(item => item !== event.senderID);
                     sendMessage(api, event, "You can now use my commands.");
                     fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
                 }
-            } else if (event.body == "status") {
+            } else if (a12INP == "status") {
                 if (mutedRRR.includes(event.senderID)) {
                     sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
                 } else if (blockSSS.includes(event.threadID)) {
@@ -1462,7 +1468,7 @@ async function ai(api, event, input) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, "⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + groups.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
+        sendMessage(api, event, "⦿ Messages: " + (Object.keys(msgs).length) + "\n⦿ Users: " + nonRRR.length + "\n⦿ Groups: " + group.length + "\n⦿ Block Users: " + blockRRR.length + "\n⦿ Block Groups: " + blockSSS + "\n⦿ Muted Users: " + mutedRRR.length);
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
@@ -5358,6 +5364,7 @@ function secondsToTime(e) {
         }
     }
     constructTime += ".";
+    return constructTime;
 }
 
 function removeUser(api, event, id) {
