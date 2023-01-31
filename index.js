@@ -609,29 +609,7 @@ login({
         }
 
         if (event.type == "message" || event.type == "message_reply") {
-            if (!(adm.includes(event.senderID))) {
-                if (settings.crash) {
-                    if (isGoingToFastCallingTheCommand(event)) {
-                        return;
-                    }
-                    let message = {
-                        body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                    };
-                    sendMessage(api, event, message);
-                    return;
-                } else if (settings.isDebugEnabled) {
-                    if (isGoingToFastCallingTheCommand(event)) {
-                        return;
-                    }
-                    let message = {
-                        body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                    };
-                    sendMessage(api, event, message);
-                    return;
-                } 
-            } else if (settings.isStop) {
+            if (settings.isStop) {
                 return;
             }
         }
@@ -922,6 +900,12 @@ login({
                                 }
                             })
                         })
+                        break;
+                    case "log:thread-name":
+                        sendMessage(api, event, JSON.stringify(event.logMessageData));
+                        break;
+                    case "log:user-nickname":
+                        sendMessage(api, event, JSON.stringify(event.logMessageData));
                         break;
                 }
                 break;
@@ -5164,6 +5148,33 @@ function containsAny(str, substrings) {
 function isGoingToFast(api, event) {
     let input = event.body;
     log("event_body " + event.senderID + " " + input);
+    if (event.type == "message" || event.type == "message_reply") {
+        if (!(adm.includes(event.senderID))) {
+            if (settings.crash) {
+                if (isGoingToFastCallingTheCommand(event)) {
+                    return false;
+                }
+                let message = {
+                    body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
+                    attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                };
+                sendMessage(api, event, message);
+                return false;
+            } else if (settings.isDebugEnabled) {
+                if (isGoingToFastCallingTheCommand(event)) {
+                    return false;
+                }
+                let message = {
+                    body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                    attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                };
+                sendMessage(api, event, message);
+                return false;
+            } 
+        }
+    }
+
+
     if (input.startsWith("⦿")) {
         sendMessageOnly(api, event, "It's unnessesary to use ⦿ i would still understand you even without it.");
     }
