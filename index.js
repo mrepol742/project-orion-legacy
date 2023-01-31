@@ -460,7 +460,6 @@ login({
 }, (err, api) => {
     if (err) return log(err);
 
-     /*
     process.on('uncaughtException', (err, origin) => {
 let message = `
 ____  Caught Exception  ____
@@ -485,7 +484,7 @@ ___  Unhandled Rejection  ___
         api.sendMessage(message, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
-    });*/
+    });
 
     cron.schedule('*/10 * * * *', () => {
         fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
