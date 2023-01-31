@@ -3411,7 +3411,7 @@ try {
         disableTTS(api, event, event.threadID);
     } else if (query.startsWith("listadmins")) {
         if (adm.includes(event.senderID)) {
-            sendMessage(api, event, "Admins:\n" + vips);
+            sendMessage(api, event, "Admins:\n" + adm);
         }
     } else if (query.startsWith("listblocks")) {
         if (adm.includes(event.senderID)) {
@@ -5846,7 +5846,7 @@ function remAdmin(api, event, id) {
     }
     adm = adm.filter(item => item !== id);
     sendMessage(api, event, "Admin permission removed.");
-    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(vips), "utf8");
+    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
 }
 
 function changeNickname(api, event, id, text) {
