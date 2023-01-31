@@ -6001,36 +6001,40 @@ function saveEvent(event) {
                         log("animated_images_" + i + " " + event.attachments[i].url);
                     }
                 }
-                let data = [getFormattedDate(), event.senderID, animated_images];
+                let data1 = [getFormattedDate(), event.senderID, animated_images];
                 if (event.body != null && (typeof event.body === "string")) {
-                    data.push(event.body);
+                    data1.push(event.body);
                 }
-                msgs[event.messageID] = ['animated_images', data];
+                msgs[event.messageID] = ['animated_images', data1];
                 break;
             case "sticker":
-                let data = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                let data2 = [getFormattedDate(), event.senderID, event.attachments[0].url];
                 if (event.body != null && (typeof event.body === "string")) {
-                    data.push(event.body);
+                    data2.push(event.body);
                 }
-                msgs[event.messageID] = ['sticker', [getFormattedDate(), event.senderID, data]]
+                msgs[event.messageID] = ['sticker', data2]
                 break;
             case "video":
-                let data = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                let data3 = [getFormattedDate(), event.senderID, event.attachments[0].url];
                 if (event.body != null && (typeof event.body === "string")) {
-                    data.push(event.body);
+                    data3.push(event.body);
                 }
-                msgs[event.messageID] = ['video', [getFormattedDate(), event.senderID, data]]
+                msgs[event.messageID] = ['video', data3]
                 break;
             case "audio":
-                let data = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                let data4 = [getFormattedDate(), event.senderID, event.attachments[0].url];
                 if (event.body != null && (typeof event.body === "string")) {
-                    data.push(event.body);
+                    data4.push(event.body);
                 }
-                msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, data]]
+                msgs[event.messageID] = ['audio', data4]
                 break;
             case "file":
                 log(event.attachments[0]);
-                msgs[event.messageID] = ['file', [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url]];
+                let data5 = [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url];
+                if (event.body != null && (typeof event.body === "string")) {
+                    data5.push(event.body);
+                }
+                msgs[event.messageID] = ['file', data5];
                 break;
             case "location":
                 log(event.attachments[0]);
