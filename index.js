@@ -532,11 +532,11 @@ ___  Unhandled Rejection  ___
             }
         }
 
+        if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
+
         let input = event.body;
         let query = formatQuery(input.replace(/\s+/g, ''));
         let query2 = formatQuery(input);
-
-        if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
             if (query == "unblockgroup") {
                 if (adm.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -586,6 +586,10 @@ ___  Unhandled Rejection  ___
         }
 
         if ((event.type == "message" || event.type == "message_reply")) {
+
+        let input = event.body;
+        let query = formatQuery(input.replace(/\s+/g, ''));
+        let query2 = formatQuery(input);
             if (isMyId(event.senderID)) {
                 if (query == "stop") {
                     sendMessage(api, event, "Goodbye...");
@@ -650,12 +654,12 @@ ___  Unhandled Rejection  ___
         switch (event.type) {
             case "message":
                 saveEvent(event);
-                ai(api, event, input);
+                ai(api, event, event.body);
                 break;
             case "message_reply":
                 saveEvent(event);
-                ai(api, event, input);
-                ai22(api, event, input);
+                ai(api, event, event.body);
+                ai22(api, event, event.body);
                 break;
             case "message_unsend":
                 if (adm.includes(event.senderID)) {
