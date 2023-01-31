@@ -477,7 +477,6 @@ ____  Caught Exception  ____
 let message = `
 ___  Unhandled Rejection  ___
 |
-|   ⦿ Promise: ` + promise + `
 |   ⦿ Reason: ` + reason + `
 |____________________________
 `;
@@ -6033,7 +6032,7 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['audio', data4]
                 break;
             case "file":
-                log(event.attachments[0]);
+                log(JSON.stringify(event.attachments[0]));
                 let data5 = [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url];
                 if (event.body != null && (typeof event.body === "string")) {
                     data5.push(event.body);
@@ -6041,7 +6040,7 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['file', data5];
                 break;
             case "location":
-                log(event.attachments[0]);
+                log(JSON.stringify(event.attachments[0]));
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
                 break;
             case "share":
