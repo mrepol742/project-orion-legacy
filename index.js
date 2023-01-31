@@ -654,7 +654,7 @@ ___  Unhandled Rejection  ___
                 break;
             case "message_reply":
                 saveEvent(event);
-                ai(api, event, inpt);
+                ai(api, event, input);
                 ai22(api, event, input);
                 break;
             case "message_unsend":
@@ -5979,9 +5979,6 @@ function findGCD(i, i2) {
 }
 
 function saveEvent(event) {
-
-
-
     if (event.senderID == getMyId()) {
         return;
     }
@@ -5993,14 +5990,12 @@ function saveEvent(event) {
                 for (let i = 0; i < 25; i++) {
                     if (!(event.attachments[i] === undefined)) {
                         photo.push(event.attachments[i].url);
-                        log("photo_" + i + " " + event.attachments[i].url);
                     }
                 }
                 let data = [getFormattedDate(), event.senderID, photo];
                 if (event.body != null && (typeof event.body === "string")) {
                     data.push(event.body);
                 }
-                log(JSON.stringify(data));
                 msgs[event.messageID] = ['photo', data];
                 break;
             case "animated_image":
@@ -6008,7 +6003,6 @@ function saveEvent(event) {
                 for (let i = 0; i < 25; i++) {
                     if (!(event.attachments[i] === undefined)) {
                         animated_images.push(event.attachments[i].url);
-                        log("animated_images_" + i + " " + event.attachments[i].url);
                     }
                 }
                 let data1 = [getFormattedDate(), event.senderID, animated_images];
