@@ -461,12 +461,11 @@ login({
     if (err) return log(err);
 
     process.on('uncaughtException', (err, origin) => {
-        let message = `
-        ____  Caught Exception  ____
-        |
-        |   ⦿ Error: ` + err + `
-        |   ⦿ Origin: ` + origin + `
-        |___________________________
+let message = `
+____  Caught Exception  ____
+|
+|   ⦿ Error: ` + err + `
+|___________________________
         `;
         log(message)
         api.sendMessage(message, getMyId(), (err, messageInfo) => {
@@ -475,13 +474,13 @@ login({
     });
 
     process.on('unhandledRejection', (reason, promise) => {
-        let message = `
-        ___  Unhandled Rejection  ___
-        |
-        |   ⦿ Promise: ` + promise + `
-        |   ⦿ Reason: ` + reason + `
-        |____________________________
-        `;
+let message = `
+___  Unhandled Rejection  ___
+|
+|   ⦿ Promise: ` + promise + `
+|   ⦿ Reason: ` + reason + `
+|____________________________
+`;
         log(message);
         api.sendMessage(message, getMyId(), (err, messageInfo) => {
             if (err) log(err);
@@ -491,6 +490,7 @@ login({
     cron.schedule('*/10 * * * *', () => {
         fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
         fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+        fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
         messagesD = getFormattedDate();
         log("save_state");
     },
@@ -523,12 +523,21 @@ login({
             return;
         }
 
-        if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
-            let a12INP = event.body;
-            if (a12INP.startsWith("_")) {
-                a12INP = a12INP.slice(1);
+        if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
+            let body = event.body;
+            if (!body.startsWith("_")) {
+                return;
+            } else {
+                event.body = body.slice(1);
             }
-            if (a12INP == "unblockgroup") {
+        }
+
+        let input = event.body;
+        let query = formatQuery(input.replace(/\s+/g, ''));
+        let query2 = formatQuery(input);
+
+        if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
+            if (query == "unblockgroup") {
                 if (adm.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
@@ -539,14 +548,14 @@ login({
                         }
                     });
                 }
-            } else if (a12INP == "unmute") {
+            } else if (query == "unmute") {
                 if (mutedRRR.includes(event.senderID)) {
                     sendMessage(api, event, "The user is not blocked.");
                     mutedRRR = mutedRRR.filter(item => item !== event.senderID);
                     sendMessage(api, event, "You can now use my commands.");
                     fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
                 }
-            } else if (a12INP == "status") {
+            } else if (query == "status") {
                 if (mutedRRR.includes(event.senderID)) {
                     sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
                 } else if (blockSSS.includes(event.threadID)) {
@@ -575,26 +584,18 @@ login({
                 }
             }*/
         }
-        if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
-            let body = event.body;
-            if (!body.startsWith("_")) {
-                return;
-            } else {
-                event.body = body.slice(1);
-            }
-        }
 
         if ((event.type == "message" || event.type == "message_reply")) {
             if (isMyId(event.senderID)) {
-                if (event.body == "stop") {
+                if (query == "stop") {
                     sendMessage(api, event, "Goodbye...");
                     settings.isStop = true;
                     return;
-                } else if (event.body == "resume") {
+                } else if (query == "resume") {
                     sendMessage(api, event, "Hi i am back!");
                     settings.isStop = false;
                     return;
-                } else if (event.body == "restart") {
+                } else if (query == "restart") {
                     sendMessage(api, event, "Hold on saving state is now in progress.");
                     fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
                     fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
@@ -615,23 +616,46 @@ login({
                     }, 3000);
                 }
             }
-        }
-
-        if (event.type == "message" || event.type == "message_reply") {
-            if (settings.isStop) {
+            if (!(adm.includes(event.senderID))) {
+                if (settings.crash) {
+                    if (isMyPrefix(input, query, query2)) {
+                    if (isGoingToFastCallingTheCommand(event)) {
+                        return;
+                    }
+                    let message = {
+                        body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
+                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                    };
+                    sendMessage(api, event, message);
+                }
+                    return;
+                } else if (settings.isDebugEnabled) {
+                    if (isMyPrefix(input, query, query2)) {
+                    if (isGoingToFastCallingTheCommand(event)) {
+                        return;
+                    }
+                    let message = {
+                        body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                    };
+                    sendMessage(api, event, message);
+                }
+                    return;
+                } 
+            } else if (settings.isStop) {
                 return;
             }
         }
-
+        
         switch (event.type) {
             case "message":
                 saveEvent(event);
-                ai(api, event, event.body);
+                ai(api, event, input);
                 break;
             case "message_reply":
                 saveEvent(event);
-                ai(api, event, event.body);
-                ai22(api, event, event.body);
+                ai(api, event, inpt);
+                ai22(api, event, input);
                 break;
             case "message_unsend":
                 if (adm.includes(event.senderID)) {
@@ -1187,15 +1211,11 @@ async function ai(api, event, input) {
                 }
             });
         }
-    } else if ((settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
-        query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
-        ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
-            query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
-        otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")))) {
+    } else if (isMyPrefix(input, query, query2)) {
 
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+            if (isGoingToFast(api, event)) {
+                return;
+            }
         
         if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
@@ -5181,33 +5201,6 @@ function containsAny(str, substrings) {
 function isGoingToFast(api, event) {
     let input = event.body;
     log("event_body " + event.senderID + " " + input);
-    if (event.type == "message" || event.type == "message_reply") {
-        if (!(adm.includes(event.senderID))) {
-            if (settings.crash) {
-                if (isGoingToFastCallingTheCommand(event)) {
-                    return false;
-                }
-                let message = {
-                    body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                    attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                };
-                sendMessage(api, event, message);
-                return false;
-            } else if (settings.isDebugEnabled) {
-                if (isGoingToFastCallingTheCommand(event)) {
-                    return false;
-                }
-                let message = {
-                    body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                    attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                };
-                sendMessage(api, event, message);
-                return false;
-            } 
-        }
-    }
-
-
     if (input.startsWith("⦿")) {
         sendMessageOnly(api, event, "It's unnessesary to use ⦿ i would still understand you even without it.");
     }
@@ -6123,4 +6116,12 @@ async function sendMessageToAll(api, message) {
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function isMyPrefix(input, query, query2) {
+    return (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
+        query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
+        ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
+            query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
+        otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
 }
