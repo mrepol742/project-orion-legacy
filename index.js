@@ -723,8 +723,12 @@ login({
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
+                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                                             let message = {
-                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
                                                     tag: '@' + data[event.senderID]['name'],
@@ -735,8 +739,12 @@ login({
                                             sendMessageOnly(api, event, message);
                                             log("unsend_sticker_group " + d[1][0] + " " + filename);
                                         } else {
+                                            let constructMMM = "You deleted this sticker.\n"
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                                             let message = {
-                                                body: "You deleted this sticker.\n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename)
                                             }
                                             sendMessageOnly(api, event, message);
@@ -758,8 +766,12 @@ login({
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
+                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                                             let message = {
-                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
                                                     tag: '@' + data[event.senderID]['name'],
@@ -770,8 +782,12 @@ login({
                                             sendMessageOnly(api, event, message);
                                             log("unsend_video_group " + d[1][0] + " " + filename);
                                         } else {
+                                            let constructMMM = "You deleted this video.\n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                                             let message = {
-                                                body: "You deleted this video.\n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename)
                                             }
                                             sendMessageOnly(api, event, message);
@@ -793,8 +809,12 @@ login({
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
+                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                                             let message = {
-                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
                                                     tag: '@' + data[event.senderID]['name'],
@@ -805,8 +825,12 @@ login({
                                             sendMessageOnly(api, event, message);
                                             log("unsend_audio_group " + d[1][0] + " " + filename);
                                         } else {
+                                            let constructMMM = "You deleted this voice message.\n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                                             let message = {
-                                                body: "You deleted this voice message.\n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename)
                                             }
                                             sendMessageOnly(api, event, message);
@@ -5946,6 +5970,9 @@ function findGCD(i, i2) {
 }
 
 function saveEvent(event) {
+
+
+
     if (event.senderID == getMyId()) {
         return;
     }
@@ -5960,7 +5987,11 @@ function saveEvent(event) {
                         log("photo_" + i + " " + event.attachments[i].url);
                     }
                 }
-                msgs[event.messageID] = ['photo', [getFormattedDate(), event.senderID, photo]];
+                let data = [getFormattedDate(), event.senderID, photo];
+                if (event.body != null && (typeof event.body === "string")) {
+                    data.push(event.body);
+                }
+                msgs[event.messageID] = ['photo', data];
                 break;
             case "animated_image":
                 let animated_images = [];
@@ -5970,16 +6001,32 @@ function saveEvent(event) {
                         log("animated_images_" + i + " " + event.attachments[i].url);
                     }
                 }
-                msgs[event.messageID] = ['animated_images', [getFormattedDate(), event.senderID, animated_images]];
+                let data = [getFormattedDate(), event.senderID, animated_images];
+                if (event.body != null && (typeof event.body === "string")) {
+                    data.push(event.body);
+                }
+                msgs[event.messageID] = ['animated_images', data];
                 break;
             case "sticker":
-                msgs[event.messageID] = ['sticker', [getFormattedDate(), event.senderID, event.attachments[0].url]]
+                let data = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                if (event.body != null && (typeof event.body === "string")) {
+                    data.push(event.body);
+                }
+                msgs[event.messageID] = ['sticker', [getFormattedDate(), event.senderID, data]]
                 break;
             case "video":
-                msgs[event.messageID] = ['video', [getFormattedDate(), event.senderID, event.attachments[0].url]]
+                let data = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                if (event.body != null && (typeof event.body === "string")) {
+                    data.push(event.body);
+                }
+                msgs[event.messageID] = ['video', [getFormattedDate(), event.senderID, data]]
                 break;
             case "audio":
-                msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, event.attachments[0].url]]
+                let data = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                if (event.body != null && (typeof event.body === "string")) {
+                    data.push(event.body);
+                }
+                msgs[event.messageID] = ['audio', [getFormattedDate(), event.senderID, data]]
                 break;
             case "file":
                 log(event.attachments[0]);
