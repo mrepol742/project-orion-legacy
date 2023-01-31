@@ -461,26 +461,38 @@ login({
     if (err) return log(err);
 
     process.on('uncaughtException', (err, origin) => {
-        let a = `caught_exception ${err}\n` +
-            `exception_origin ${origin}`;
-        log(a);
-        api.sendMessage(a, getMyId(), (err, messageInfo) => {
+        let message = `
+        ____  Caught Exception  ____
+        |
+        |   ⦿ Error: ` + err + `
+        |   ⦿ Origin: ` + origin + `
+        |___________________________
+        `;
+        log(message)
+        api.sendMessage(message, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
     });
 
     process.on('unhandledRejection', (reason, promise) => {
-        let a = 'unhandled_rejection ' + promise + ' reason ' + reason;
-        log(a);
-        api.sendMessage(a, getMyId(), (err, messageInfo) => {
+        let message = `
+        ___  Unhandled Rejection  ___
+        |
+        |   ⦿ Promise: ` + promise + `
+        |   ⦿ Reason: ` + reason + `
+        |____________________________
+        `;
+        log(message);
+        api.sendMessage(message, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
     });
 
     cron.schedule('*/10 * * * *', () => {
-        log("save_state");
         fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
+        fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
         messagesD = getFormattedDate();
+        log("save_state");
     },
     {
         scheduled: true,
@@ -489,9 +501,6 @@ login({
 
     cron.schedule('0 * * * *', () => {
         fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
-        api.sendMessage("Project Orion Facebook State Refreshed", getMyId(), (err, messageInfo) => {
-            if (err) log(err);
-        })
         fb_stateD = getFormattedDate();
         log("fb_save_state")
     },
@@ -4052,7 +4061,7 @@ try {
             sendMessage(api, event, "Opps! I didnt get it. You should try using wordsToNumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwordsToNumbers one hundred and five")
         } else {
             data.shift();
-            sendMessage(api, event, wordsToNumbers(data.join(" "))+"");
+            sendMessage(api, event, numberWithCommas(wordsToNumbers(data.join(" "))));
         }
     } else if (query.startsWith("mnm")) {
         if (isGoingToFast(api, event)) {
