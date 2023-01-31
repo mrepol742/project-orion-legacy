@@ -5542,8 +5542,12 @@ async function unsendPhoto(api, event, d, data) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
+                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                 let message1 = {
-                    body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                    body: constructMMM,
                     attachment: accm,
                     mentions: [{
                         tag: '@' + data[event.senderID]['name'],
@@ -5561,8 +5565,12 @@ async function unsendPhoto(api, event, d, data) {
                 })
                 log("unsend_photo_group " + d[1][0]);
             } else {
+                let constructMMM = "You deleted this photo. \n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                 let message1 = {
-                    body: "You deleted this photo. \n",
+                    body: constructMMM,
                     attachment: accm
                 }
                 api.sendMessage(message1, event.threadID, (err, messageInfo) => {
@@ -5599,8 +5607,12 @@ async function unsendGif(api, event, d, data) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
+                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                 let message1 = {
-                    body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                    body: constructMMM,
                     attachment: accm,
                     mentions: [{
                         tag: '@' + data[event.senderID]['name'],
@@ -5618,8 +5630,12 @@ async function unsendGif(api, event, d, data) {
                 })
                 log("unsend_gif_group " + d[1][0]);
             } else {
+                 let constructMMM = "You deleted this photo. \n";
+                                            if (!(d[1][3] === undefined)) {
+                                                constructMMM += d[1][3];
+                                            }
                 let message1 = {
-                    body: "You deleted this photo. \n",
+                    body: constructMMM,
                     attachment: accm
                 }
                 api.sendMessage(message1, event.threadID, (err, messageInfo) => {
@@ -5991,6 +6007,7 @@ function saveEvent(event) {
                 if (event.body != null && (typeof event.body === "string")) {
                     data.push(event.body);
                 }
+                log(JSON.stringify(data));
                 msgs[event.messageID] = ['photo', data];
                 break;
             case "animated_image":
