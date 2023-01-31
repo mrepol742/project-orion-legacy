@@ -709,10 +709,15 @@ ___  Unhandled Rejection  ___
                             });
                         });
                     } else if (d[0] == "file") {  
-                        let filename = __dirname + '/cache/files/unsend_file_' + time + d[1][2];
+                        let filename = __dirname + '/cache/files/unsend_file_' + time + "_" + d[1][2];
                         let file = fs.createWriteStream(filename);
-                        let gifRequest = http.get(decodeURIComponent(d[1][3].replace("https://l.facebook.com/l.php?u=", "")), function(gifResponse) {
-                            gifResponse.pipe(file);
+                        log("filename " + filename);
+                        let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
+                        log("fileurl " + fileurl);
+                        let decodeurl = decodeURIComponent(fileurl);
+                        log("decodeurl " + decodeurl);
+                        let fileRequest = http.get(decodeurl, function(fileResponse) {
+                            fileResponse.pipe(file);
                             file.on('finish', function() {
                                 if (settings.onUnsend && !threads.includes(event.threadID)) {
                                     let time = getTimestamp();
@@ -720,7 +725,7 @@ ___  Unhandled Rejection  ___
                                         if (err) return log(err);
                                         if (gc.isGroup) {
                                             let message = {
-                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
+                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
                                                     tag: '@' + data[event.senderID]['name'],
@@ -732,7 +737,7 @@ ___  Unhandled Rejection  ___
                                             log("unsend_file_group " + d[1][0] + " " + filename);
                                         } else {
                                             let message = {
-                                                body: "You deleted this file.\n\n" + d[1][2],
+                                                body: "You deleted this file.\n",
                                                 attachment: fs.createReadStream(filename)
                                             }
                                             sendMessageOnly(api, event, message);
