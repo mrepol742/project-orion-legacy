@@ -714,13 +714,10 @@ ___  Unhandled Rejection  ___
                             });
                         });
                     } else if (d[0] == "file") {  
-                        let filename = __dirname + '/cache/files/unsend_file_' + time + "_" + d[1][2];
+                        let filename = __dirname + '/cache/files/' + d[1][2];
                         let file = fs.createWriteStream(filename);
-                        log("filename " + filename);
                         let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
-                        log("fileurl " + fileurl);
                         let decodeurl = decodeURIComponent(fileurl);
-                        log("decodeurl " + decodeurl);
                         let fileRequest = http.get(decodeurl, function(fileResponse) {
                             fileResponse.pipe(file);
                             file.on('finish', function() {
@@ -729,8 +726,12 @@ ___  Unhandled Rejection  ___
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
+                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            if (!(d[1][4] === undefined)) {
+                                                constructMMM += d[1][4];
+                                            }
                                             let message = {
-                                                body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
                                                     tag: '@' + data[event.senderID]['name'],
@@ -741,8 +742,12 @@ ___  Unhandled Rejection  ___
                                             sendMessageOnly(api, event, message);
                                             log("unsend_file_group " + d[1][0] + " " + filename);
                                         } else {
+                                            let constructMMM = "You deleted this file.\n";
+                                            if (!(d[1][4] === undefined)) {
+                                                constructMMM += d[1][4];
+                                            }
                                             let message = {
-                                                body: "You deleted this file.\n",
+                                                body: constructMMM,
                                                 attachment: fs.createReadStream(filename)
                                             }
                                             sendMessageOnly(api, event, message);
@@ -753,34 +758,6 @@ ___  Unhandled Rejection  ___
                                 }
                             });
                         });
-
-                        
-                        /*
-                        api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return log(err);
-                            if (settings.onUnsend && !threads.includes(event.threadID)) {
-                                api.getThreadInfo(event.threadID, (err, gc) => {
-                                    if (err) return log(err);
-                                    if (gc.isGroup) {
-                                        let message = {
-                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2] + "\n" + d[1][3],
-                                            mentions: [{
-                                                tag: '@' + data[event.senderID]['name'],
-                                                id: event.senderID,
-                                                fromIndex: 0
-                                            }]
-                                        }
-                                        sendMessageOnly(api, event, message);
-                                        log("unsend_file_group " + d[0] + " " + message);
-                                    } else {
-                                        let message = "You deleted the following.\n\n" + d[1][2] + "\n" + d[1][3];
-                                        sendMessageOnly(api, event, message);
-                                        log("unsend_file " + d[0] + " " + message);
-                                    }
-                                });
-                            }
-                        });
-                        */
                     } else if (d[0] == "location") {
                         sendMessageOnly(api, event, "Unsupported action. Please wait a while.");
                     } else if (d[0] == "sticker") {
