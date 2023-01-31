@@ -712,7 +712,7 @@ ___  Unhandled Rejection  ___
                         let filename = __dirname + '/cache/files/unsend_file_' + time + "_" + d[1][2];
                         let file = fs.createWriteStream(filename);
                         log("filename " + filename);
-                        let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
+                        let fileurl = d[1][3]; //.replace("https://l.facebook.com/l.php?u=", "");
                         log("fileurl " + fileurl);
                         let decodeurl = decodeURIComponent(fileurl);
                         log("decodeurl " + decodeurl);
