@@ -124,8 +124,9 @@ let help = `
 _______  Project Orion 1/8  _______
 |
 |   ⦿ cmd
-|   ⦿ cmd [number]
-|   ⦿ cmd all
+|   ⦿ cmd [number|all]
+|   ⦿ cmd [admin|root]
+|   ⦿ ping
 |   ⦿ stats
 |   ⦿ uptime
 |   ⦿ sysinfo
@@ -267,7 +268,6 @@ _______  Project Orion 6/8  _______
 |   ⦿ wfind [text]
 |   ⦿ time
 |   ⦿ time [timezone]
-|   ⦿ summ [text]
 |   ⦿ anime [category]
 \n|       waifu, megumin, bully, cuddle
 \n|       hug, awoo, kiss, lick
@@ -276,6 +276,7 @@ _______  Project Orion 6/8  _______
 \n|       handhold, nom, biteglomp, slap
 \n|       kill, kick, happy, wink
 \n|       pokedance, cringe, cry, etc...
+|   ⦿ hanime [category]
 |__________________________________
 `;
 
@@ -299,12 +300,12 @@ _______  Project Orion 7/8  _______
 |   ⦿ factorial [number]
 |   ⦿ findGCD [number]
 |   ⦿ smartReply [on|off]
+|   ⦿ summ [text]
 |   ⦿ gcolor [theme]
 \n|       DefaultBlue, HotPink, AquaBlue, BrightPurple
 \n|       CoralPink, Orange, Green, LavenderPurple
 \n|       Red, Yellow, TealBlue, Aqua
 \n|       Mango, Berry, Citrus, Candy
-|   ⦿ hanime [category]
 |__________________________________
 `;
 
@@ -340,6 +341,8 @@ _______  Project Orion Admin  _______
 |   ⦿ nsfw [on|off]
 |   ⦿ debug [on|off]
 |   ⦿ antiLeave [on|off]
+|   ⦿ welcomeMessage [on|off]
+|   ⦿ leavingMessage [on|off]
 |   ⦿ simultaneousExecution [on|off]
 |   ⦿ clearCache
 |   ⦿ refreshState
@@ -376,6 +379,11 @@ _______  Project Orion Root  _______
 |   ⦿ setTemperature [integer]
 |   ⦿ setFrequencyPenalty [integer]
 |   ⦿ setProbabilityMass [integer]
+|   ⦿ setAutoMarkRead [on|off]
+|   ⦿ setOnline [on|off]
+|   ⦿ setSelfListen [on|off]
+|   ⦿ setSendTypingIndicator [on|off]
+|   ⦿ setAutoMarkDelivery [on|off]
 |____________________________________
 `;
 
@@ -511,6 +519,8 @@ ___  Unhandled Rejection  ___
     api.setOptions({
         listenEvents: true,
         selfListen: true,
+        autoMarkRead: true,
+        logLevel: "silent",
         online: true
     });
 
@@ -3680,9 +3690,7 @@ try {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, help + help1 + help2 + help3 + help4 + help5 + help6);
-        wait(1000);
-        sendMessage(api, event, help7 + helpadmin + helproot + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, "Due to the limitations on messenger platform.\nAll command list are now moved to: https://mrepol742.github.io/project-orion/#cmdall\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
