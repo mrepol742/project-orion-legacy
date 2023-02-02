@@ -5895,7 +5895,7 @@ function kiss(api, event, id) {
 }
 
 function gun(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
       parseImage(api, event, "https://api.popcat.xyz/gun?image=" + response.request.res.responseUrl, __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
     }).catch(function(err) {
        log(err);
