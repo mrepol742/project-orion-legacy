@@ -1014,11 +1014,11 @@ ___  Unhandled Rejection  ___
                     case "log:thread-name":
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
-                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData["name"];
+                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData.name;
                             if (group.toString().includes(event.threadID)) {
                                 for (b in group) {
                                     if (b.startsWith(event.threadID)) {
-                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData["name"];
+                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData.name;
                                     }
                                 }
                             }
