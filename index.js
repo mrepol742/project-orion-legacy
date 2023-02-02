@@ -423,6 +423,8 @@ const config = new Configuration({
 });
 const openai = new OpenAIApi(config);
 
+let isCalled = true;
+
 app.get('/', (req, res) => res.send(fs.readFileSync(__dirname + "/index.html", "utf8")));
 
 app.listen(port, () =>
@@ -662,14 +664,20 @@ ___  Unhandled Rejection  ___
         }
 
         if (!group.includes(event.threadID)) {
-            saveGroupEvent(event);
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (err) return log(err);
+                if (gc.isGroup) {
+                    group[event.threadID] = [gc.threadName];
+                }
+            });
             log("new_group " + event.threadID);
         }
 
-        if (!(restart[0] === undefined && restart[1] === undefined)) {
+        if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
+            api.sendMessage("Successfully restarted", restart[0], restart[1]);
             let rs = [];
             fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs), "utf8");
-            sendMessage(true, api, event, "Successfully restarted");
+            isCalled = false;
         }
         
         switch (event.type) {
@@ -6054,15 +6062,6 @@ function findGCD(i, i2) {
         return i;
     }
     return findGCD(i2, i % i2);
-}
-
-function saveGroupEvent(event) {
-    api.getThreadInfo(event.threadID, (err, gc) => {
-        if (err) return log(err);
-        if (gc.isGroup) {
-            group[event.threadID] = [gc.threadName];
-        }
-    });
 }
 
 function saveEvent(event) {
