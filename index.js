@@ -981,11 +981,11 @@ ___  Unhandled Rejection  ___
                         sendMessage(true, api, event, JSON.stringify(event.logMessageData));
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
-                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData.name[0];
+                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + JSON.parse(JSON.stringify(event.logMessageData))['name'];
                             if (group.toString().includes(event.threadID)) {
                                 for (b in group) {
                                     if (b.startsWith(event.threadID)) {
-                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData.name[0];
+                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + JSON.parse(JSON.stringify(event.logMessageData))['name'];
                                     }
                                 }
                             }
@@ -6163,7 +6163,7 @@ function getNewComplextion(complextion) {
 async function sendMessageToAll(api, message) {
     for (let i = 0; i < group.length; i++) {
         await wait(5000);
-        api.sendMessage(message, group[i]);
+        api.sendMessage(message, group[i].split(":")[0]);
     }
 }
 
