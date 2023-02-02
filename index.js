@@ -604,11 +604,11 @@ ___  Unhandled Rejection  ___
         let query2 = formatQuery(input);
             if (isMyId(event.senderID)) {
                 if (query == "stop") {
-                    sendMessage(true, api, event, "Goodbye...");
+                    sendMessage(true, api, event, "Program stop its state.");
                     settings.isStop = true;
                     return;
                 } else if (query == "resume") {
-                    sendMessage(true, api, event, "Hi i am back!");
+                    sendMessage(true, api, event, "Program resume its state.");
                     settings.isStop = false;
                     return;
                 } else if (query == "restart") {
