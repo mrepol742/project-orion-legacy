@@ -369,7 +369,6 @@ _______  Project Orion Root  _______
 |   ⦿ resume
 |   ⦿ restart
 |   ⦿ notify
-|   ⦿ refreshGroup
 |   ⦿ setMaxImage [integer]
 |   ⦿ setTimezone [timezone]
 |   ⦿ setTextComplextion [complextion]
@@ -4956,17 +4955,6 @@ try {
             sendMessage(true, api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
-    } else if (query == "refreshgroup") {
-        if (isMyId(event.senderID)) {
-            api.getThreadList(5000, null, ['INBOX'], (err, list) => {
-                if (err) return log(err);
-                for (let i = 0; i <= list.length; i++) {
-                  if (list[i].isGroup) {
-                    group.push(list[i].threadID);
-                  }
-                } 
-            });
-        }
     } else if (query == "savestate") {
         if (adm.includes(event.senderID)) {
             fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
@@ -6149,9 +6137,9 @@ function getNewComplextion(complextion) {
 }
 
 async function sendMessageToAll(api, message) {
-    for (let i = 0; i < group.length; i++) {
+    for (gp in group) {
         await wait(5000);
-        api.sendMessage(message, group[i].split(":")[0]);
+        api.sendMessage(message, group[gp]);
     }
 }
 
