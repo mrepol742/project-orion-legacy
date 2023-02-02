@@ -914,6 +914,8 @@ ___  Unhandled Rejection  ___
                 break;
             case "event":
                 switch (event.logMessageType) {
+                    log(JSON.stringify(event))
+                    log(JSON.stringify(event.logMessageType));
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
@@ -980,9 +982,9 @@ ___  Unhandled Rejection  ___
                     case "log:thread-name":
                         api.getUserInfo(event.author, (err, data) => {
                             if (err) return log(err);
-                            let constructMMM = "@" + data[event.author]['name'] + " has changed the groupname to " + event.logMessageData.name;
+                            let constructMMM = "@" + data[event.author]['name'] + " has changed the groupname to `" + event.logMessageData.name + "`";
                             if (!(group[event.threadID] === undefined)) {
-                                constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from " + group[event.threadID] + "to " + event.logMessageData.name;
+                                constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from `" + group[event.threadID] + "` to `" + event.logMessageData.name + "`";
                             }
                             let message = {
                                 body: constructMMM,
@@ -1595,7 +1597,7 @@ _______  Statistics  _______
 |   ⦿ Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
 |   ⦿ Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
 |   ⦿ Users: ` + numberWithCommas(nonRRR.length) + `
-|   ⦿ Groups: ` + group.length + `
+|   ⦿ Groups: ` + numberWithCommas(Object.keys(group).length) + `
 |   ⦿ Block Users: ` + blockRRR.length + `
 |   ⦿ Block Groups: ` + blockSSS.length + `
 |   ⦿ Muted Users: ` + mutedRRR.length + `
