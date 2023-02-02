@@ -5923,55 +5923,107 @@ function gun(api, event, id) {
 }
 
 function wanted(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + getProfilePic(id), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/wanted?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function clown(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/clown?image=" + getProfilePic(id), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/clown?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function drip(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/drip?image=" + getProfilePic(id), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/drip?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function communist(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/communist?image=" + getProfilePic(id), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/communist?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function advert(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/ad?image=" + getProfilePic(id), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/ad?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function uncover(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + getProfilePic(id), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/uncover?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function jail(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/jail?image=" + getProfilePic(id), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/jail?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function invert(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/invert?image=" + getProfilePic(id), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/invert?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function pet(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/pet?image=" + getProfilePic(id), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/pet?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function mnm(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + getProfilePic(id), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/mnm?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function greyscale(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + getProfilePic(id), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/greyscale?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function jokeover(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + getProfilePic(id), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function blur(api, event, id) {
-    parseImage(api, event, "https://api.popcat.xyz/blur?image=" + getProfilePic(id), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
+    axios.get(getProfilePicFullHD(id)).then(function(response) {
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/blur?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function getTimestamp() {
