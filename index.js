@@ -5895,12 +5895,11 @@ function kiss(api, event, id) {
 }
 
 function gun(api, event, id) {
-    /*
-    request({ url: getProfilePicFullHD(id), followRedirect: false }, function (err, res, body) {
-        console.log(encodeURIComponent(res.headers.location));
-        parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(res.headers.location), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
-     });*/
-    parseImage(api, event, "https://api.popcat.xyz/gun?image=" + getProfilePic(id), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
+    axios.get(getProfilePic(id)).then(function(response) {
+      parseImage(api, event, "https://api.popcat.xyz/gun?image=" + response.request.res.responseUrl, __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
+    }).catch(function(err) {
+       log(err);
+    });
 }
 
 function wanted(api, event, id) {
