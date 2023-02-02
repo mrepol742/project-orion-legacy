@@ -666,8 +666,8 @@ ___  Unhandled Rejection  ___
         if (!group.includes(event.threadID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
-                if (gc.isGroup) {
-                    group[event.threadID] = [gc.threadName];
+                if (gc.isGroup && !group.includes(event.threadID)) {
+                    group[event.threadID] = [getFormattedDate(), gc.threadName];
                 }
             });
             log("new_group " + event.threadID);
@@ -1014,9 +1014,9 @@ ___  Unhandled Rejection  ___
                     case "log:thread-name":
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
-                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData.name;
+                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData["name"];
                             if (group.includes(event.threadID)) {
-                                constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + group[event.threadID][1] + "to " + event.logMessageData.name;
+                                constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + group[event.threadID][1] + "to " + event.logMessageData["name"];
                             }
                             let message = {
                                 body: constructMMM,
