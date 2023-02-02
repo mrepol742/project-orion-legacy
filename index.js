@@ -460,6 +460,7 @@ process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
     fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+    fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
     process.exit();
 });
 
@@ -609,15 +610,15 @@ ___  Unhandled Rejection  ___
                     settings.isStop = false;
                     return;
                 } else if (query == "restart") {
-                    sendMessage(true, api, event, "Hold on saving state is now in progress.");
                     fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
                     fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
                     fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
                     sendMessage(true, api, event, "Restarting program...");
                     setTimeout(function () {
-                        restart.push(event.threadID);
-                        restart.push(event.messageID);
-                        fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(restart), "utf8");
+                        let rs = [];
+                        rs.push(event.threadID);
+                        rs.push(event.messageID);
+                        fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs), "utf8");
                         process.on("exit", function () {
                             require("child_process").spawn(process.argv.shift(), process.argv, {
                                 cwd: process.cwd(),
@@ -658,6 +659,17 @@ ___  Unhandled Rejection  ___
             } else if (settings.isStop) {
                 return;
             }
+        }
+
+        if (!group.includes(event.threadID)) {
+            saveGroupEvent(event);
+            log("new_group " + event.threadID);
+        }
+
+        if (!(restart[0] === undefined && restart[1] === undefined)) {
+            let rs = [];
+            fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs), "utf8");
+            sendMessage(true, api, event, "Successfully restarted");
         }
         
         switch (event.type) {
@@ -992,7 +1004,22 @@ ___  Unhandled Rejection  ___
                         })
                         break;
                     case "log:thread-name":
-                        sendMessage(true, api, event, JSON.stringify(event.logMessageData));
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return log(err);
+                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData.name;
+                            if (group.includes(event.threadID)) {
+                                constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + group[event.threadID][1] + "to " + event.logMessageData.name;
+                            }
+                            let message = {
+                                body: constructMMM,
+                                mentions: [{
+                                    tag: '@' + data[event.senderID]['name'],
+                                    id: event.senderID,
+                                    fromIndex: 0
+                                }]
+                            }
+                            sendMessage(true, api, event, message);
+                        });
                         break;
                     case "log:user-nickname":
                         sendMessage(true, api, event, JSON.stringify(event.logMessageData));
@@ -6027,6 +6054,15 @@ function findGCD(i, i2) {
         return i;
     }
     return findGCD(i2, i % i2);
+}
+
+function saveGroupEvent(event) {
+    api.getThreadInfo(event.threadID, (err, gc) => {
+        if (err) return log(err);
+        if (gc.isGroup) {
+            group[event.threadID] = [gc.threadName];
+        }
+    });
 }
 
 function saveEvent(event) {
