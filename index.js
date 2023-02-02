@@ -913,9 +913,9 @@ ___  Unhandled Rejection  ___
                 });
                 break;
             case "event":
-                switch (event.logMessageType) {
-                    log(JSON.stringify(event))
+            log(JSON.stringify(event))
                     log(JSON.stringify(event.logMessageType));
+                switch (event.logMessageType) {
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
