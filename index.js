@@ -663,14 +663,14 @@ ___  Unhandled Rejection  ___
             }
         }
 
-        if (!group.includes(event.threadID)) {
+        if (!group.toString().includes(event.threadID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
-                if (gc.isGroup && !group.includes(event.threadID)) {
-                    group[event.threadID] = [getFormattedDate(), gc.threadName];
+                if (gc.isGroup && !group.toString().includes(event.threadID)) {
+                    group.push(event.threadID + ":" + gc.threadName);
+                    log("new_group " + event.threadID);
                 }
             });
-            log("new_group " + event.threadID);
         }
 
         if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
@@ -1015,8 +1015,12 @@ ___  Unhandled Rejection  ___
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
                             let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData["name"];
-                            if (group.includes(event.threadID)) {
-                                constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + group[event.threadID][1] + "to " + event.logMessageData["name"];
+                            if (group.toString().includes(event.threadID)) {
+                                for (b in group) {
+                                    if (b.startsWith(event.threadID)) {
+                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData["name"];
+                                    }
+                                }
                             }
                             let message = {
                                 body: constructMMM,
