@@ -46,6 +46,17 @@ const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 const port = process.env.PORT || 6000;
+const app = express();
+const config = new Configuration({
+    apiKey: keys.ai,
+});
+const openai = new OpenAIApi(config);
+
+app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
+
+app.listen(port, () =>
+    log(`Project Orion ONLINE`)
+);
 
 let sleep = [4000, 3000, 5000, 4500, 6000, 5500, 3300, 4400, 5050, 4000, 5000, 6500, 4500, 3600];
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
@@ -88,7 +99,6 @@ let gcolor = {
 }
 let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink", "Orange", "Green", "LavenderPurple", "Red", "Yellow", "TealBlue", "Aqua", "Mango", "Berry", "Citrus", "Candy"]
 let timeZones = ['Europe/Andorra', 'Asia/Dubai', 'Asia/Kabul', 'Europe/Tirane', 'Asia/Yerevan', 'Antarctica/Casey', 'Antarctica/Davis', 'Antarctica/DumontDUrville', 'Antarctica/Mawson', 'Antarctica/Palmer', 'Antarctica/Rothera', 'Antarctica/Syowa', 'Antarctica/Troll', 'Antarctica/Vostok', 'America/Argentina/Buenos_Aires', 'America/Argentina/Cordoba', 'America/Argentina/Salta', 'America/Argentina/Jujuy', 'America/Argentina/Tucuman', 'America/Argentina/Catamarca', 'America/Argentina/La_Rioja', 'America/Argentina/San_Juan', 'America/Argentina/Mendoza', 'America/Argentina/San_Luis', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Ushuaia', 'Pacific/Pago_Pago', 'Europe/Vienna', 'Australia/Lord_Howe', 'Antarctica/Macquarie', 'Australia/Hobart', 'Australia/Currie', 'Australia/Melbourne', 'Australia/Sydney', 'Australia/Broken_Hill', 'Australia/Brisbane', 'Australia/Lindeman', 'Australia/Adelaide', 'Australia/Darwin', 'Australia/Perth', 'Australia/Eucla', 'Asia/Baku', 'America/Barbados', 'Asia/Dhaka', 'Europe/Brussels', 'Europe/Sofia', 'Atlantic/Bermuda', 'Asia/Brunei', 'America/La_Paz', 'America/Noronha', 'America/Belem', 'America/Fortaleza', 'America/Recife', 'America/Araguaina', 'America/Maceio', 'America/Bahia', 'America/Sao_Paulo', 'America/Campo_Grande', 'America/Cuiaba', 'America/Santarem', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Manaus', 'America/Eirunepe', 'America/Rio_Branco', 'America/Nassau', 'Asia/Thimphu', 'Europe/Minsk', 'America/Belize', 'America/St_Johns', 'America/Halifax', 'America/Glace_Bay', 'America/Moncton', 'America/Goose_Bay', 'America/Blanc-Sablon', 'America/Toronto', 'America/Nipigon', 'America/Thunder_Bay', 'America/Iqaluit', 'America/Pangnirtung', 'America/Atikokan', 'America/Winnipeg', 'America/Rainy_River', 'America/Resolute', 'America/Rankin_Inlet', 'America/Regina', 'America/Swift_Current', 'America/Edmonton', 'America/Cambridge_Bay', 'America/Yellowknife', 'America/Inuvik', 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson', 'America/Vancouver', 'America/Whitehorse', 'America/Dawson', 'Indian/Cocos', 'Europe/Zurich', 'Africa/Abidjan', 'Pacific/Rarotonga', 'America/Santiago', 'America/Punta_Arenas', 'Pacific/Easter', 'Asia/Shanghai', 'Asia/Urumqi', 'America/Bogota', 'America/Costa_Rica', 'America/Havana', 'Atlantic/Cape_Verde', 'America/Curacao', 'Indian/Christmas', 'Asia/Nicosia', 'Asia/Famagusta', 'Europe/Prague', 'Europe/Berlin', 'Europe/Copenhagen', 'America/Santo_Domingo', 'Africa/Algiers', 'America/Guayaquil', 'Pacific/Galapagos', 'Europe/Tallinn', 'Africa/Cairo', 'Africa/El_Aaiun', 'Europe/Madrid', 'Africa/Ceuta', 'Atlantic/Canary', 'Europe/Helsinki', 'Pacific/Fiji', 'Atlantic/Stanley', 'Pacific/Chuuk', 'Pacific/Pohnpei', 'Pacific/Kosrae', 'Atlantic/Faroe', 'Europe/Paris', 'Europe/London', 'Asia/Tbilisi', 'America/Cayenne', 'Africa/Accra', 'Europe/Gibraltar', 'America/Godthab', 'America/Danmarkshavn', 'America/Scoresbysund', 'America/Thule', 'Europe/Athens', 'Atlantic/South_Georgia', 'America/Guatemala', 'Pacific/Guam', 'Africa/Bissau', 'America/Guyana', 'Asia/Hong_Kong', 'America/Tegucigalpa', 'America/Port-au-Prince', 'Europe/Budapest', 'Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura', 'Europe/Dublin', 'Asia/Jerusalem', 'Asia/Kolkata', 'Indian/Chagos', 'Asia/Baghdad', 'Asia/Tehran', 'Atlantic/Reykjavik', 'Europe/Rome', 'America/Jamaica', 'Asia/Amman', 'Asia/Tokyo', 'Africa/Nairobi', 'Asia/Bishkek', 'Pacific/Tarawa', 'Pacific/Enderbury', 'Pacific/Kiritimati', 'Asia/Pyongyang', 'Asia/Seoul', 'Asia/Almaty', 'Asia/Qyzylorda', 'Asia/Qostanay', 'Asia/Aqtobe', 'Asia/Aqtau', 'Asia/Atyrau', 'Asia/Oral', 'Asia/Beirut', 'Asia/Colombo', 'Africa/Monrovia', 'Europe/Vilnius', 'Europe/Luxembourg', 'Europe/Riga', 'Africa/Tripoli', 'Africa/Casablanca', 'Europe/Monaco', 'Europe/Chisinau', 'Pacific/Majuro', 'Pacific/Kwajalein', 'Asia/Yangon', 'Asia/Ulaanbaatar', 'Asia/Hovd', 'Asia/Choibalsan', 'Asia/Macau', 'America/Martinique', 'Europe/Malta', 'Indian/Mauritius', 'Indian/Maldives', 'America/Mexico_City', 'America/Cancun', 'America/Merida', 'America/Monterrey', 'America/Matamoros', 'America/Mazatlan', 'America/Chihuahua', 'America/Ojinaga', 'America/Hermosillo', 'America/Tijuana', 'America/Bahia_Banderas', 'Asia/Kuala_Lumpur', 'Asia/Kuching', 'Africa/Maputo', 'Africa/Windhoek', 'Pacific/Noumea', 'Pacific/Norfolk', 'Africa/Lagos', 'America/Managua', 'Europe/Amsterdam', 'Europe/Oslo', 'Asia/Kathmandu', 'Pacific/Nauru', 'Pacific/Niue', 'Pacific/Auckland', 'Pacific/Chatham', 'America/Panama', 'America/Lima', 'Pacific/Tahiti', 'Pacific/Marquesas', 'Pacific/Gambier', 'Pacific/Port_Moresby', 'Pacific/Bougainville', 'Asia/Manila', 'Asia/Karachi', 'Europe/Warsaw', 'America/Miquelon', 'Pacific/Pitcairn', 'America/Puerto_Rico', 'Asia/Gaza', 'Asia/Hebron', 'Europe/Lisbon', 'Atlantic/Madeira', 'Atlantic/Azores', 'Pacific/Palau', 'America/Asuncion', 'Asia/Qatar', 'Indian/Reunion', 'Europe/Bucharest', 'Europe/Belgrade', 'Europe/Kaliningrad', 'Europe/Moscow', 'Europe/Simferopol', 'Europe/Kirov', 'Europe/Astrakhan', 'Europe/Volgograd', 'Europe/Saratov', 'Europe/Ulyanovsk', 'Europe/Samara', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk', 'Asia/Barnaul', 'Asia/Tomsk', 'Asia/Novokuznetsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Chita', 'Asia/Yakutsk', 'Asia/Khandyga', 'Asia/Vladivostok', 'Asia/Ust-Nera', 'Asia/Magadan', 'Asia/Sakhalin', 'Asia/Srednekolymsk', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Riyadh', 'Pacific/Guadalcanal', 'Indian/Mahe', 'Africa/Khartoum', 'Europe/Stockholm', 'Asia/Singapore', 'America/Paramaribo', 'Africa/Juba', 'Africa/Sao_Tome', 'America/El_Salvador', 'Asia/Damascus', 'America/Grand_Turk', 'Africa/Ndjamena', 'Indian/Kerguelen', 'Asia/Bangkok', 'Asia/Dushanbe', 'Pacific/Fakaofo', 'Asia/Dili', 'Asia/Ashgabat', 'Africa/Tunis', 'Pacific/Tongatapu', 'Europe/Istanbul', 'America/Port_of_Spain', 'Pacific/Funafuti', 'Asia/Taipei', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye', 'Pacific/Wake', 'America/New_York', 'America/Detroit', 'America/Kentucky/Louisville', 'America/Kentucky/Monticello', 'America/Indiana/Indianapolis', 'America/Indiana/Vincennes', 'America/Indiana/Winamac', 'America/Indiana/Marengo', 'America/Indiana/Petersburg', 'America/Indiana/Vevay', 'America/Chicago', 'America/Indiana/Tell_City', 'America/Indiana/Knox', 'America/Menominee', 'America/North_Dakota/Center', 'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah', 'America/Denver', 'America/Boise', 'America/Phoenix', 'America/Los_Angeles', 'America/Anchorage', 'America/Juneau', 'America/Sitka', 'America/Metlakatla', 'America/Yakutat', 'America/Nome', 'America/Adak', 'Pacific/Honolulu', 'America/Montevideo', 'Asia/Samarkand', 'Asia/Tashkent', 'America/Caracas', 'Asia/Ho_Chi_Minh', 'Pacific/Efate', 'Pacific/Wallis', 'Pacific/Apia', 'Africa/Johannesburg'];
-let threads = ""
 let threadIdMV = {};
 let cmd = {};
 let cmd1 = {};
@@ -96,9 +106,10 @@ let emo = {};
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
 let nwww = {};
-let messagesD = "N/A";
-let fb_stateD = "N/A";
+let messagesD = "No data";
+let fb_stateD = "No data";
 let err400 = 0;
+let isCalled = true;
 
 let itbody = "I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message `cmd`.\nIf you have any questions don't hesitate to ask.\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
 let qot = ["The object will not change its motion unless a force acts on it.",
@@ -387,19 +398,6 @@ _______  Project Orion Root  _______
 |____________________________________
 `;
 
-let apiKey = [
-    // manhict.tech/api
-    "CcIDaVqu",
-    // graph.facebook.com
-    "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662",
-    // mashape-community-urban-dictionary.p.rapidapi.com
-    "bc23ad59e1mshdb14f6cce13bafap18cbc5jsn13348153e5cf",
-    // NLPCloudClient summarize
-    "40286240a47c02b2948a8c61276be7bd481b0b14",
-    // open ai api key
-    "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"
-];
-
 let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json", "utf8"));
 let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
 let adm = JSON.parse(fs.readFileSync(__dirname + "/admin.json", "utf8"));
@@ -409,46 +407,13 @@ let blockSSS = JSON.parse(fs.readFileSync(__dirname + "/block_groups.json", "utf
 let mutedRRR = JSON.parse(fs.readFileSync(__dirname + "/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync(__dirname + "/msgs.json", "utf8"));
 let smartRRR = JSON.parse(fs.readFileSync(__dirname + "/smart_reply.json", "utf8"));
-let ipaddress = JSON.parse(fs.readFileSync(__dirname + "/ip_address.json", "utf8"));
 let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/unsend_msgs.json", "utf8"));
 let group = JSON.parse(fs.readFileSync(__dirname + "/group.json", "utf8"));
 let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.json", "utf8"));
 let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
 let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
 let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
-
-const app = express();
-const config = new Configuration({
-    apiKey: keys.ai,
-});
-const openai = new OpenAIApi(config);
-
-let isCalled = true;
-
-app.get('/', (req, res) => res.send(fs.readFileSync(__dirname + "/index.html", "utf8")));
-
-app.listen(port, () =>
-    log(`Project Orion ONLINE`)
-);
-
-dns.resolve4("project-orion.mrepol742.repl.co", (err, addresses) => {
-    if (err) {
-        log(err);
-        return;
-    }
-    log("url https://project-orion.mrepol742.repl.co");
-    if (ipaddress.length == 0) {
-        ipaddress.push(addresses[0]);
-        fs.writeFileSync(__dirname + "/ip_address.json", JSON.stringify(ipaddress), "utf8");
-        log("new_ip_address " + addresses[0]);
-    } else if (ipaddress.includes(addresses[0])) {
-        log("ip_address " + addresses[0]);
-    } else {
-        ipaddress.push(addresses[0]);
-        fs.writeFileSync(__dirname + "/ip_address.json", JSON.stringify(ipaddress), "utf8");
-        log("ip_changes_to_address " + addresses[0]);
-    }
-});
+let state = JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"));
 
 process.on('beforeExit', (code) => {
     log('process_before_exit ' + code);
@@ -467,7 +432,7 @@ process.on('SIGINT', function() {
 });
 
 login({
-    appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))
+    appState: state
 }, (err, api) => {
     if (err) return log(err);
 
@@ -713,7 +678,7 @@ ___  Unhandled Rejection  ___
                         let gifRequest = http.get(d[1][3], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -750,7 +715,7 @@ ___  Unhandled Rejection  ___
                         let fileRequest = http.get(decodeurl, function(fileResponse) {
                             fileResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -795,7 +760,7 @@ ___  Unhandled Rejection  ___
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -838,7 +803,7 @@ ___  Unhandled Rejection  ___
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -881,7 +846,7 @@ ___  Unhandled Rejection  ___
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend && !threads.includes(event.threadID)) {
+                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -921,7 +886,7 @@ ___  Unhandled Rejection  ___
                     } else {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
-                            if (settings.onUnsend && !threads.includes(event.threadID)) {
+                            if (settings.onUnsend) {
                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                     if (err) return log(err);
                                     if (gc.isGroup) {
@@ -1012,13 +977,14 @@ ___  Unhandled Rejection  ___
                         })
                         break;
                     case "log:thread-name":
+                        sendMessage(true, api, event, JSON.stringify(event.logMessageData));
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
-                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData.name;
+                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + event.logMessageData.name[0];
                             if (group.toString().includes(event.threadID)) {
                                 for (b in group) {
                                     if (b.startsWith(event.threadID)) {
-                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData.name;
+                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData.name[0];
                                     }
                                 }
                             }
@@ -1033,8 +999,10 @@ ___  Unhandled Rejection  ___
                             sendMessage(true, api, event, message);
                         });
                         break;
+                    case "log:thread-icon":
+                    case "log:thread-color":
                     case "log:user-nickname":
-                        sendMessage(true, api, event, JSON.stringify(event.logMessageData));
+                        sendMessage(true, api, event, "Feature comming soon\n\n" + JSON.stringify(event.logMessageData));
                         break;
                 }
                 break;
@@ -2476,7 +2444,7 @@ try {
                 },
                 headers: {
                     'X-RapidAPI-Host': 'mashape-community-urban-dictionary.p.rapidapi.com',
-                    'X-RapidAPI-Key': apiKey[2]
+                    'X-RapidAPI-Key': keys.urban
                 }
             };
             axios.request(options).then(function({
@@ -2504,7 +2472,7 @@ try {
             if (query.startsWith("summarize")) {
                 text = input.substring(10)
             }
-            const client = new NLPCloudClient('bart-large-cnn', apiKey[3])
+            const client = new NLPCloudClient('bart-large-cnn', keys.nlp)
             client.summarization(text).then(function({
                 data
             }) {
@@ -2664,7 +2632,7 @@ try {
             if (userN.startsWith("@")) {
                 userN = userN.slice(1);
             }
-            getResponseData('https://manhict.tech/api/igInfo?query=' + userN + '&apikey=' + apiKey[0]).then((response) => {
+            getResponseData('https://manhict.tech/api/igInfo?query=' + userN + '&apikey=' + keys.manhict).then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "Unfortunately instagram user \"" + userN + "\" was not found.");
                 } else {
@@ -2713,7 +2681,7 @@ try {
         } else {
             data.shift()
             let userN = data.join(" ");
-            getResponseData('https://manhict.tech/api/tikInfo?query=' + userN + "&apikey=" + apiKey[0]).then((response) => {
+            getResponseData('https://manhict.tech/api/tikInfo?query=' + userN + "&apikey=" + keys.manhict).then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "Unfortunately tiktok user \"" + userN + "\" was not found.");
                 } else {
@@ -2751,7 +2719,7 @@ try {
         } else {
             data.shift()
             let userN = data.join(" ");
-            getResponseData('https://manhict.tech/api/scInfo?query=' + encodeURI(userN) + "&apikey=" + apiKey[0]).then((response) => {
+            getResponseData('https://manhict.tech/api/scInfo?query=' + encodeURI(userN) + "&apikey=" + keys.manhict).then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
                 } else {
@@ -4345,7 +4313,7 @@ try {
                             gender,
                             isBirthday
                         } = ret[prop]
-                        let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + apiKey[1])
+                        let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + keys.facebook)
                         let time = getTimestamp();
                         let filename = __dirname + "/cache/images/facebook_" + time + ".jpg";
                         let msg = checkFound(name) + " @" + checkFound(vanity);
@@ -5621,7 +5589,7 @@ async function unsendPhoto(api, event, d, data) {
         accm.push(fs.createReadStream(images[i]));
     }
 
-    if (settings.onUnsend && !threads.includes(event.threadID)) {
+    if (settings.onUnsend) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
@@ -5686,7 +5654,7 @@ async function unsendGif(api, event, d, data) {
         accm.push(fs.createReadStream(images[i]));
     }
 
-    if (settings.onUnsend && !threads.includes(event.threadID)) {
+    if (settings.onUnsend) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
