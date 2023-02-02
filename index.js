@@ -629,12 +629,12 @@ ___  Unhandled Rejection  ___
             }
         }
 
-        if (!group.toString().includes(event.threadID)) {
+        if (group[event.threadID] === undefined) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
-                if (gc.isGroup && !group.toString().includes(event.threadID)) {
-                    group.push(event.threadID + ":" + gc.threadName);
-                    log("new_group " + event.threadID);
+                if (gc.isGroup && group[event.threadID] === undefined) {
+                    group[event.threadID] = gc.threadName;
+                    log("new_group " + event.threadID + " group_name " + gc.threadName);
                 }
             });
         }
@@ -981,19 +981,14 @@ ___  Unhandled Rejection  ___
                         api.getUserInfo(event.author, (err, data) => {
                             if (err) return log(err);
                             let constructMMM = "@" + data[event.author]['name'] + " has changed the groupname to " + event.logMessageData.name;
-                            if (group.toString().includes(event.threadID)) {
-                                for (b in group) {
-                                  log(b);
-                                    if (b.includes(event.threadID)) {
-                                        constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData.name;
-                                    }
-                                }
+                            if (!(group[event.threadID] === undefined)) {
+                                constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from " + group[event.threadID] + "to " + event.logMessageData.name;
                             }
                             let message = {
                                 body: constructMMM,
                                 mentions: [{
-                                    tag: '@' + data[event.senderID]['name'],
-                                    id: event.senderID,
+                                    tag: '@' + data[event.author]['name'],
+                                    id: event.author,
                                     fromIndex: 0
                                 }]
                             }
