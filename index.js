@@ -47,10 +47,6 @@ const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 const port = process.env.PORT || 6000;
 const app = express();
-const config = new Configuration({
-    apiKey: keys.ai,
-});
-const openai = new OpenAIApi(config);
 
 app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
 
@@ -414,6 +410,11 @@ let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
 let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
 let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
 let state = JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"));
+
+const config = new Configuration({
+    apiKey: keys.ai,
+});
+const openai = new OpenAIApi(config);
 
 process.on('beforeExit', (code) => {
     log('process_before_exit ' + code);
