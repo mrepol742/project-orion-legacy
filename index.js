@@ -5096,6 +5096,26 @@ function parseImage(api, event, url, dir) {
         })
 }
 
+function parseImageFromFacebook(api, event, url, dir) {
+    log("parse_image " + url);
+    request(url).pipe(fs.createWriteStream(dir))
+        .on('finish', () => {
+            let limit = 25 * 1024 * 1024;
+            fs.readFile(dir, function(err, data) {
+                if (err) log(err)
+                if (data.length > limit) {
+                    sendMessage(true, api, event, "Unfortunately i cannot send you the file due to the size restrictions on messenger platform.");
+                } else {
+                    let image = {
+                        attachment: fs.createReadStream(dir)
+                    };
+                    sendMessage(true, api, event, image);
+                }
+                unLink(dir);
+            })
+        })
+}
+
 async function sendMessage(bn, api, event, message) {
     if (!adm.includes(event.senderID) && bn) {
         if (settings.onDelay) {
@@ -5896,9 +5916,9 @@ function kiss(api, event, id) {
 
 function gun(api, event, id) {
     axios.get(getProfilePicFullHD(id)).then(function(response) {
-      parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
+        parseImageFromFacebook(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
     }).catch(function(err) {
-       log(err);
+        log(err);
     });
 }
 
