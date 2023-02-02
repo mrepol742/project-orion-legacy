@@ -978,14 +978,14 @@ ___  Unhandled Rejection  ___
                         })
                         break;
                     case "log:thread-name":
-                        sendMessage(true, api, event, JSON.stringify(event.logMessageData));
-                        api.getUserInfo(event.senderID, (err, data) => {
+                        api.getUserInfo(event.author, (err, data) => {
                             if (err) return log(err);
-                            let constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname to " + JSON.parse(JSON.stringify(event.logMessageData))['name'];
+                            let constructMMM = "@" + data[event.author]['name'] + " has changed the groupname to " + event.logMessageData.name;
                             if (group.toString().includes(event.threadID)) {
                                 for (b in group) {
-                                    if (b.startsWith(event.threadID)) {
-                                        constructMMM = "@" + data[event.senderID]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + JSON.parse(JSON.stringify(event.logMessageData))['name'];
+                                  log(b);
+                                    if (b.includes(event.threadID)) {
+                                        constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from " + b.split(":")[1] + "to " + event.logMessageData.name;
                                     }
                                 }
                             }
