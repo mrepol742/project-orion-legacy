@@ -88,6 +88,7 @@ let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink"
 let timeZones = ['Europe/Andorra', 'Asia/Dubai', 'Asia/Kabul', 'Europe/Tirane', 'Asia/Yerevan', 'Antarctica/Casey', 'Antarctica/Davis', 'Antarctica/DumontDUrville', 'Antarctica/Mawson', 'Antarctica/Palmer', 'Antarctica/Rothera', 'Antarctica/Syowa', 'Antarctica/Troll', 'Antarctica/Vostok', 'America/Argentina/Buenos_Aires', 'America/Argentina/Cordoba', 'America/Argentina/Salta', 'America/Argentina/Jujuy', 'America/Argentina/Tucuman', 'America/Argentina/Catamarca', 'America/Argentina/La_Rioja', 'America/Argentina/San_Juan', 'America/Argentina/Mendoza', 'America/Argentina/San_Luis', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Ushuaia', 'Pacific/Pago_Pago', 'Europe/Vienna', 'Australia/Lord_Howe', 'Antarctica/Macquarie', 'Australia/Hobart', 'Australia/Currie', 'Australia/Melbourne', 'Australia/Sydney', 'Australia/Broken_Hill', 'Australia/Brisbane', 'Australia/Lindeman', 'Australia/Adelaide', 'Australia/Darwin', 'Australia/Perth', 'Australia/Eucla', 'Asia/Baku', 'America/Barbados', 'Asia/Dhaka', 'Europe/Brussels', 'Europe/Sofia', 'Atlantic/Bermuda', 'Asia/Brunei', 'America/La_Paz', 'America/Noronha', 'America/Belem', 'America/Fortaleza', 'America/Recife', 'America/Araguaina', 'America/Maceio', 'America/Bahia', 'America/Sao_Paulo', 'America/Campo_Grande', 'America/Cuiaba', 'America/Santarem', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Manaus', 'America/Eirunepe', 'America/Rio_Branco', 'America/Nassau', 'Asia/Thimphu', 'Europe/Minsk', 'America/Belize', 'America/St_Johns', 'America/Halifax', 'America/Glace_Bay', 'America/Moncton', 'America/Goose_Bay', 'America/Blanc-Sablon', 'America/Toronto', 'America/Nipigon', 'America/Thunder_Bay', 'America/Iqaluit', 'America/Pangnirtung', 'America/Atikokan', 'America/Winnipeg', 'America/Rainy_River', 'America/Resolute', 'America/Rankin_Inlet', 'America/Regina', 'America/Swift_Current', 'America/Edmonton', 'America/Cambridge_Bay', 'America/Yellowknife', 'America/Inuvik', 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson', 'America/Vancouver', 'America/Whitehorse', 'America/Dawson', 'Indian/Cocos', 'Europe/Zurich', 'Africa/Abidjan', 'Pacific/Rarotonga', 'America/Santiago', 'America/Punta_Arenas', 'Pacific/Easter', 'Asia/Shanghai', 'Asia/Urumqi', 'America/Bogota', 'America/Costa_Rica', 'America/Havana', 'Atlantic/Cape_Verde', 'America/Curacao', 'Indian/Christmas', 'Asia/Nicosia', 'Asia/Famagusta', 'Europe/Prague', 'Europe/Berlin', 'Europe/Copenhagen', 'America/Santo_Domingo', 'Africa/Algiers', 'America/Guayaquil', 'Pacific/Galapagos', 'Europe/Tallinn', 'Africa/Cairo', 'Africa/El_Aaiun', 'Europe/Madrid', 'Africa/Ceuta', 'Atlantic/Canary', 'Europe/Helsinki', 'Pacific/Fiji', 'Atlantic/Stanley', 'Pacific/Chuuk', 'Pacific/Pohnpei', 'Pacific/Kosrae', 'Atlantic/Faroe', 'Europe/Paris', 'Europe/London', 'Asia/Tbilisi', 'America/Cayenne', 'Africa/Accra', 'Europe/Gibraltar', 'America/Godthab', 'America/Danmarkshavn', 'America/Scoresbysund', 'America/Thule', 'Europe/Athens', 'Atlantic/South_Georgia', 'America/Guatemala', 'Pacific/Guam', 'Africa/Bissau', 'America/Guyana', 'Asia/Hong_Kong', 'America/Tegucigalpa', 'America/Port-au-Prince', 'Europe/Budapest', 'Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura', 'Europe/Dublin', 'Asia/Jerusalem', 'Asia/Kolkata', 'Indian/Chagos', 'Asia/Baghdad', 'Asia/Tehran', 'Atlantic/Reykjavik', 'Europe/Rome', 'America/Jamaica', 'Asia/Amman', 'Asia/Tokyo', 'Africa/Nairobi', 'Asia/Bishkek', 'Pacific/Tarawa', 'Pacific/Enderbury', 'Pacific/Kiritimati', 'Asia/Pyongyang', 'Asia/Seoul', 'Asia/Almaty', 'Asia/Qyzylorda', 'Asia/Qostanay', 'Asia/Aqtobe', 'Asia/Aqtau', 'Asia/Atyrau', 'Asia/Oral', 'Asia/Beirut', 'Asia/Colombo', 'Africa/Monrovia', 'Europe/Vilnius', 'Europe/Luxembourg', 'Europe/Riga', 'Africa/Tripoli', 'Africa/Casablanca', 'Europe/Monaco', 'Europe/Chisinau', 'Pacific/Majuro', 'Pacific/Kwajalein', 'Asia/Yangon', 'Asia/Ulaanbaatar', 'Asia/Hovd', 'Asia/Choibalsan', 'Asia/Macau', 'America/Martinique', 'Europe/Malta', 'Indian/Mauritius', 'Indian/Maldives', 'America/Mexico_City', 'America/Cancun', 'America/Merida', 'America/Monterrey', 'America/Matamoros', 'America/Mazatlan', 'America/Chihuahua', 'America/Ojinaga', 'America/Hermosillo', 'America/Tijuana', 'America/Bahia_Banderas', 'Asia/Kuala_Lumpur', 'Asia/Kuching', 'Africa/Maputo', 'Africa/Windhoek', 'Pacific/Noumea', 'Pacific/Norfolk', 'Africa/Lagos', 'America/Managua', 'Europe/Amsterdam', 'Europe/Oslo', 'Asia/Kathmandu', 'Pacific/Nauru', 'Pacific/Niue', 'Pacific/Auckland', 'Pacific/Chatham', 'America/Panama', 'America/Lima', 'Pacific/Tahiti', 'Pacific/Marquesas', 'Pacific/Gambier', 'Pacific/Port_Moresby', 'Pacific/Bougainville', 'Asia/Manila', 'Asia/Karachi', 'Europe/Warsaw', 'America/Miquelon', 'Pacific/Pitcairn', 'America/Puerto_Rico', 'Asia/Gaza', 'Asia/Hebron', 'Europe/Lisbon', 'Atlantic/Madeira', 'Atlantic/Azores', 'Pacific/Palau', 'America/Asuncion', 'Asia/Qatar', 'Indian/Reunion', 'Europe/Bucharest', 'Europe/Belgrade', 'Europe/Kaliningrad', 'Europe/Moscow', 'Europe/Simferopol', 'Europe/Kirov', 'Europe/Astrakhan', 'Europe/Volgograd', 'Europe/Saratov', 'Europe/Ulyanovsk', 'Europe/Samara', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk', 'Asia/Barnaul', 'Asia/Tomsk', 'Asia/Novokuznetsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Chita', 'Asia/Yakutsk', 'Asia/Khandyga', 'Asia/Vladivostok', 'Asia/Ust-Nera', 'Asia/Magadan', 'Asia/Sakhalin', 'Asia/Srednekolymsk', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Riyadh', 'Pacific/Guadalcanal', 'Indian/Mahe', 'Africa/Khartoum', 'Europe/Stockholm', 'Asia/Singapore', 'America/Paramaribo', 'Africa/Juba', 'Africa/Sao_Tome', 'America/El_Salvador', 'Asia/Damascus', 'America/Grand_Turk', 'Africa/Ndjamena', 'Indian/Kerguelen', 'Asia/Bangkok', 'Asia/Dushanbe', 'Pacific/Fakaofo', 'Asia/Dili', 'Asia/Ashgabat', 'Africa/Tunis', 'Pacific/Tongatapu', 'Europe/Istanbul', 'America/Port_of_Spain', 'Pacific/Funafuti', 'Asia/Taipei', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye', 'Pacific/Wake', 'America/New_York', 'America/Detroit', 'America/Kentucky/Louisville', 'America/Kentucky/Monticello', 'America/Indiana/Indianapolis', 'America/Indiana/Vincennes', 'America/Indiana/Winamac', 'America/Indiana/Marengo', 'America/Indiana/Petersburg', 'America/Indiana/Vevay', 'America/Chicago', 'America/Indiana/Tell_City', 'America/Indiana/Knox', 'America/Menominee', 'America/North_Dakota/Center', 'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah', 'America/Denver', 'America/Boise', 'America/Phoenix', 'America/Los_Angeles', 'America/Anchorage', 'America/Juneau', 'America/Sitka', 'America/Metlakatla', 'America/Yakutat', 'America/Nome', 'America/Adak', 'Pacific/Honolulu', 'America/Montevideo', 'Asia/Samarkand', 'Asia/Tashkent', 'America/Caracas', 'Asia/Ho_Chi_Minh', 'Pacific/Efate', 'Pacific/Wallis', 'Pacific/Apia', 'Africa/Johannesburg'];
 let threadIdMV = {};
 let cmd = {};
+let acGG = [];
 let cmd1 = {};
 let emo = {};
 let threadMaintenance = {};
@@ -98,7 +99,18 @@ let fb_stateD = "No data";
 let err400 = 0;
 let isCalled = true;
 
-let itbody = "I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message `cmd`.\nIf you have any questions don't hesitate to ask.\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
+let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
+"I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
+"I'm Mj, a ChatBot AI that has been trained on countless trillions of parameters. trained to communicate in a conversational or speaking manner like a human. For the list of commands message \"cmd\". I was able to appropriately respond to the majority of inquiries. If you have any further questions, don't be afraid to ask.",
+"I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
+"I'm Mj, a ChatBot AI that has been educated using countless trillions of parameters. trained to communicate with others in a conversational or speaking style. If you have any questions, don't be afraid to ask. I was able to appropriately answer the majority of inquiries regarding the list of commands message \"cmd\".",
+"I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\".",
+"I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
+"I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"."
+]
+
+let itbody = qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
+
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
     "There is an equal and opposite reaction for every action.",
@@ -130,6 +142,8 @@ _______  Project Orion 1/8  _______
 |   ⦿ sysinfo
 |   ⦿ sendReport [text]
 |   ⦿ mj [text]
+|   ⦿ sim [text]
+|   ⦿ misaka [text]
 |   ⦿ search [text]
 |   ⦿ searchincog [text]
 |   ⦿ searchimg [text]
@@ -140,7 +154,7 @@ _______  Project Orion 1/8  _______
 |   ⦿ weather [location]
 |   ⦿ music [text]
 |   ⦿ video [text]
-|   ⦿ lyrics [text
+|   ⦿ lyrics [text]
 |   ⦿ encode64 [text]
 |   ⦿ decode64 [text]
 |   ⦿ github [username]
@@ -239,7 +253,7 @@ _______  Project Orion 5/8  _______
 |   ⦿ gmember
 |   ⦿ car
 |   ⦿ color
-|   ⦿ sim [text]
+|   ⦿ animecouples
 |   ⦿ trump [text]
 |   ⦿ mock [text]
 |   ⦿ reverse [text]
@@ -310,7 +324,6 @@ _______  Project Orion 7/8  _______
 let help7 = `
 _______  Project Orion 8/8  _______
 |
-|   ⦿ animecouples
 |   ⦿ cosplay
 |   ⦿ motor
 |   ⦿ darkjoke
@@ -431,7 +444,7 @@ login({
 let message = `
 ____  Caught Exception  ____
 |
-|   ⦿ Error: ` + err + `
+|   ⦿ ` + err + `
 |___________________________
         `;
         log(message)
@@ -444,7 +457,7 @@ ____  Caught Exception  ____
 let message = `
 ___  Unhandled Rejection  ___
 |
-|   ⦿ Reason: ` + reason + `
+|   ⦿ ` + reason + `
 |____________________________
 `;
         log(message);
@@ -627,6 +640,8 @@ ___  Unhandled Rejection  ___
                     log("new_group " + event.threadID + " group_name " + gc.threadName);
                 }
             });
+        } else if (!acGG.includes(event.threadID) && !(group[event.threadID] === undefined)) {
+            acGG.push(event.threadID);
         }
 
         if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
@@ -1245,7 +1260,7 @@ async function ai(api, event, input) {
                 return;
             }
         
-        if ((settings.prefix != "" && input == settings.prefix) || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
+        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
                     body: itbody,
@@ -1273,7 +1288,7 @@ async function ai(api, event, input) {
                 text = input.substring(13)
             } else if (query.startsWith("gencode")) {
                 text = input.substring(8)
-            } else if (query.startsWith("search")) {
+            } else if (query.startsWith("search") || query.startsWith("misaka")) {
                 text = input.substring(7)
             } else if (input.startsWith(settings.prefix)) {
                 text = input.substring(settings.prefix.length);
@@ -1423,6 +1438,9 @@ async function ai(api, event, input) {
                 }
                 // initiate results simulatenoesly
                 let ss = await aiResponse(settings.text_complextion, text, true);
+                if (query.startsWith("misaka")) {
+                    ss += " MISAKA MISAKA says.";
+                }
                 let cw34 = countWords(ss);
                 sendMessage(true, api, event, ss);
                 if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
@@ -1492,7 +1510,6 @@ async function ai(api, event, input) {
                     }
                 });
             });
-            threadIdMV = {};
              await wait(2000);
 let message = `
 _______  Cache  _______
@@ -1501,10 +1518,12 @@ _______  Cache  _______
 |   ⦿ Cache 1: `  + count1 + ` file(s)
 |   ⦿ Cache 2: ` + count2 + ` file(s)
 |   ⦿ Cache 3: ` + count3 + ` file(s)
-|   ⦿ Buffer: ` + (Object.keys(threadIdMV).length) + `
+|   ⦿ Cache 4: ` + ((Object.keys(threadIdMV).length) + (Object.keys(cmd).length))  + `
 |______________________
 `;
             sendMessage(true, api, event, message);
+            threadIdMV = {};
+            cmd = {};
         }
     } else if (query == "debugon") {
         if (adm.includes(event.senderID)) {
@@ -1586,7 +1605,9 @@ _______  Statistics  _______
 |   ⦿ Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
 |   ⦿ Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
 |   ⦿ Users: ` + numberWithCommas(nonRRR.length) + `
+|   ⦿ Active Users: ` + numberWithCommas(Object.keys(cmd).length) + `
 |   ⦿ Groups: ` + numberWithCommas(Object.keys(group).length) + `
+|   ⦿ Active Groups: ` + acGG.length + `
 |   ⦿ Block Users: ` + blockRRR.length + `
 |   ⦿ Block Groups: ` + blockSSS.length + `
 |   ⦿ Muted Users: ` + mutedRRR.length + `
@@ -6208,8 +6229,8 @@ function getNewComplextion(complextion) {
 
 async function sendMessageToAll(api, message) {
     for (gp in group) {
-        await wait(5000);
-        api.sendMessage(message, group[gp]);
+        await wait(20000);
+        api.sendMessage(message, gp);
     }
 }
 
