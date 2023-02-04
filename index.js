@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+const express = require('express');
 const fs = require("fs");
 const login = require("fca-unofficial");
 const http = require('https');
@@ -44,6 +45,14 @@ const { wordsToNumbers } = require('words-to-numbers');
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
+const port = process.env.PORT || 6000;
+const app = express();
+
+app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
+
+app.listen(port, () =>
+    log(`Project Orion ONLINE`)
+);
 
 let sleep = [4000, 3000, 5000, 4500, 6000, 5500, 3300, 4400, 5050, 4000, 5000, 6500, 4500, 3600];
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
