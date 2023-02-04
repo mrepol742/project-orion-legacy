@@ -6249,7 +6249,7 @@ function numberWithCommas(x) {
 
 function isMyPrefix(input, query, query2) {
     return (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
-        query.startsWith("repol") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
+        query.startsWith("repol") || query.startsWith("misaka") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
         ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
             query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
         otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
