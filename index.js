@@ -5554,7 +5554,8 @@ function isMyId(id) {
 }
 
 function getMyId() {
-    return "100071743848974";
+    return "100046721985974";
+    //return "100071743848974";
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
