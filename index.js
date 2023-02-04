@@ -501,7 +501,6 @@ ___  Unhandled Rejection  ___
         listenEvents: true,
         selfListen: true,
         autoMarkRead: true,
-        logLevel: "silent",
         online: true
     });
 
