@@ -6228,9 +6228,9 @@ function generateParamaters(complextion, text) {
 
 function getNewComplextion(complextion) {
     if (complextion.includes("002")) {
-        return "003";
+        return complextion.replace("002", "003");
     }
-    return "002";
+    return complextion.replace("003", "002");
 }
 
 async function sendMessageToAll(api, message) {
