@@ -478,6 +478,8 @@ ___  Unhandled Rejection  ___
         fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
         fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
         fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+        cmd = {};
+        acGG = [];
         messagesD = getFormattedDate();
         log("save_state");
     },
@@ -6194,6 +6196,7 @@ async function aiResponse(complextion, text, repeat) {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         return formatResult(ai.data.choices[0].text);
     } catch (error) {
+        log(JSON.stringify(error));
         if (error.response) {
           let status = error.response.status;
           log(status);
