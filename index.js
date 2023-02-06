@@ -117,9 +117,6 @@ let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. 
 "I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
 "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"."
 ]
-
-let itbody = qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
-
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
     "There is an equal and opposite reaction for every action.",
@@ -548,9 +545,9 @@ ___  Unhandled Rejection  ___
                 if (mutedRRR.includes(event.senderID)) {
                     sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
                 } else if (blockSSS.includes(event.threadID)) {
-                    sendMessage(true, api, event, "This group is blocked. Contact the bot admims for more info.");
+                    sendMessage(true, api, event, "This group is blocked. Contact the bot admins for more info.");
                 } else if (blockRRR.includes(event.senderID)) {
-                    sendMessage(true, api, event, "You are blocked from using the bot commands. Contact the bot admims for more info.");
+                    sendMessage(true, api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
                 } else if (settings.isStop) {
                     sendMessage(true, api, event, "The program is currently offline.");
                 } else if (settings.isDebugEnabled ) {
@@ -581,11 +578,14 @@ ___  Unhandled Rejection  ___
         let query2 = formatQuery(input);
             if (isMyId(event.senderID)) {
                 if (query == "stop") {
-                    sendMessage(true, api, event, "Program stop its state.");
+                    sendMessage(true, api, event, "Program stopped its state.");
                     settings.isStop = true;
                     return;
+                } else if (query == "destroy") {
+                    sendMessage(true, api, event, "Program destroyed its state.");
+                    return;
                 } else if (query == "resume") {
-                    sendMessage(true, api, event, "Program resume its state.");
+                    sendMessage(true, api, event, "Program resumed its state.");
                     settings.isStop = false;
                     return;
                 } else if (query == "restart") {
@@ -958,9 +958,9 @@ ___  Unhandled Rejection  ___
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += ". How are you all?\n\n" + itbody;
+                                    gret += ". How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ". How are you?\n\n" + itbody;
+                                    gret = "Welcome @" + names[0][1] + ". How are you?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -1271,7 +1271,7 @@ async function ai(api, event, input) {
         if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
-                    body: itbody,
+                    body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
                     attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
                 }
                 sendMessage(true, api, event, message);
@@ -3343,7 +3343,7 @@ try {
                                 if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 api.getUserInfo(data[0].userID, (err, data1) => {
                                     if (err) return log(err);
-                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "Welcome @" + data1.name + ". How are you?\n\n" + itbody);
+                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "Welcome @" + data1.name + ". How are you?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
                                 });
                             });
                             return;
@@ -3352,7 +3352,7 @@ try {
                         }
                         api.getUserInfo(id, (err, data1) => {
                             if (err) return log(err);
-                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "Welcome @" + data1.name + ". How are you?\n\n" + itbody);
+                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "Welcome @" + data1.name + ". How are you?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
                         });
                     } else {
                         sendMessage(true, api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
@@ -4995,7 +4995,7 @@ try {
         sendMessage(true, api, event, "Hello World");
     } else if (query == "about") {
         let message = {
-            body: itbody,
+            body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
             attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
         }
         sendMessage(true, api, event, message);
@@ -5550,12 +5550,11 @@ function otherQ(query) {
 }
 
 function isMyId(id) {
-    return id == "100071743848974" || id == "100016029218667" || id == "100046721985974";
+    return id == "100071743848974" || id == "100016029218667";
 }
 
 function getMyId() {
-    return "100046721985974";
-    //return "100071743848974";
+    return "100071743848974";
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
