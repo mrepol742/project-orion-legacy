@@ -446,6 +446,8 @@ login({
 }, (err, api) => {
     if (err) return log(err);
 
+    fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
+
     process.on('uncaughtException', (err, origin) => {
 let message = `
 ____  Caught Exception  ____
