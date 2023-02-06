@@ -6196,21 +6196,14 @@ async function aiResponse(complextion, text, repeat) {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         return formatResult(ai.data.choices[0].text);
     } catch (error) {
-        log(JSON.stringify(error));
-        if (error.response) {
-          let status = error.response.status;
-          log(status);
-          log(error.response.data);
-          if (status == 503 && repeat) {
-            log("attempt initiated");
-            aiResponse(getNewComplextion(settings.text_complextion), text, false);
-          }
-        } else {
-          log(error.message);
-        }
         err400++;
-        return idknow[Math.floor(Math.random() * idknow.length)];
-      }
+        if (repeat) {
+            log("attempt initiated");
+            return aiResponse(getNewComplextion(settings.text_complextion), text, false);
+        } else {
+            return idknow[Math.floor(Math.random() * idknow.length)];
+        }
+    }
 }
 
 function formatResult(str) {
