@@ -1276,7 +1276,7 @@ async function ai(api, event, input) {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
                     body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
-                    attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
+                    url: "https://mrepol742.github.io/project-orion/"
                 }
                 sendMessage(true, api, event, message);
                 nonRRR.push(event.senderID);
@@ -1410,12 +1410,15 @@ async function ai(api, event, input) {
             } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" ||
                 (text1.startsWith("whois") && isMe(text2))) {
                     let message = {
-                        body: "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\nhttps://mrepol742.github.io",
+                        body: "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\n\nhttps://mrepol742.github.io",
                         url: "https://mrepol742.github.io"
                     }
                 sendMessage(true, api, event, );
             } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
-                let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\nhttps://0x3ef8.github.io";
+                let mss = {
+                    body: "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\n\nhttps://0x3ef8.github.io",
+                    url: "https://0x3ef8.github.io"
+                }
                 sendMessage(true, api, event, mss);
             } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
                 sendMessage(true, api, event, "Do you mean cmd? You can call cmd to open my command list.");
@@ -1456,9 +1459,17 @@ async function ai(api, event, input) {
                 let cw34 = countWords(ss);
                 sendMessage(true, api, event, ss);
                 if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
-                    sendMessageOnly(false, api, event, "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev")
+                    let msCC = {
+                        body: "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev",
+                        url: "https://webvium.github.io";
+                    }
+                    sendMessageOnly(false, api, event, msCC)
                 } else if (ss.includes("VPN")) {
-                    sendMessageOnly(false, api, event, "https://mrepol742.github.io/webviumvpn");
+                    let vpn = {
+                        body: "https://mrepol742.github.io/webviumvpn",
+                        url: "https://mrepol742.github.io/webviumvpn"
+                    }
+                    sendMessageOnly(false, api, event, vpn);
                 }
             }
         }
