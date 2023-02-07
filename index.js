@@ -1411,7 +1411,7 @@ async function ai(api, event, input) {
                 (text1.startsWith("whois") && isMe(text2))) {
                     let message = {
                         body: "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\nhttps://mrepol742.github.io",
-                        attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
+                        url: "https://mrepol742.github.io"
                     }
                 sendMessage(true, api, event, );
             } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
@@ -2481,6 +2481,25 @@ try {
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
             });
         }
+    } else if (query == "everyone") {
+        api.getThreadInfo(event.threadID, (err, info) => {
+            if (err) {
+                log(err);
+                return;
+            }
+            const a = '\u200E';
+            let message = {
+                body: a + "everyone",
+                mentions: []
+            };
+            for (let i = 0; i < info.participantIDs.length; i++) {
+                message.mention.push({
+                    tag: 'everyone',
+                    id: info.participantIDs[i]
+                })
+            }
+            sendMessageOnly(true, api, event, message);
+        });
     } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
         if (isGoingToFast(api, event)) {
             return;
