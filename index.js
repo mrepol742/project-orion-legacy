@@ -1272,7 +1272,7 @@ async function ai(api, event, input) {
                 return;
             }
         
-        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjones") {
+        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" ||  query == "melvinjonesgallanorepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
                     body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
