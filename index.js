@@ -1447,11 +1447,31 @@ async function ai(api, event, input) {
                 }
                 // initiate results simulatenoesly
                 let ss = await aiResponse(settings.text_complextion, text, true);
+                
                 if (query.startsWith("misaka")) {
                     ss += " MISAKA MISAKA says.";
                 }
-                let cw34 = countWords(ss);
-                sendMessage(true, api, event, ss);
+
+                let message = {
+                    body: ss,
+                }
+
+                let arraySS = ss.split(" ");
+                
+                for (sss in arraySS) {
+                    if (arraySS[sss].startsWith("https://") || arraySS[sss].startsWith("http://") || 
+                    (arraySS[sss].endsWith(".com") || arraySS[sss].endsWith(".net") || arraySS[sss].endsWith(".org") || 
+                    arraySS[sss].endsWith(".co") || arraySS[sss].endsWith(".edu") || arraySS[sss].endsWith(".gov") || 
+                    arraySS[sss].endsWith(".info") || arraySS[sss].endsWith(".xyz") || arraySS[sss].endsWith(".me"))) {
+                        message = {
+                            body: ss,
+                            url: arraySS[ss]
+                        }
+                        break;
+                    }
+                }
+
+                sendMessage(true, api, event, message);
                 if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
                     let msCC = {
                         body: "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev",
@@ -6195,7 +6215,6 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['audio', data4]
                 break;
             case "file":
-                log(JSON.stringify(event.attachments[0]));
                 let data5 = [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url];
                 if (event.body != null && (typeof event.body === "string")) {
                     data5.push(event.body);
@@ -6207,7 +6226,6 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
                 break;
             case "share":
-                log(JSON.stringify(event.attachments[0]));
                 msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.body, event.attachments[0].url]]
                 break;
         }
