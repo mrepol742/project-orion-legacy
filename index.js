@@ -6213,6 +6213,7 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
                 break;
             case "share":
+                log(JSON.stringify(event.attachments[0]));
                 msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.body, event.attachments[0].image]]
                 break;
         }
