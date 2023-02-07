@@ -1413,7 +1413,7 @@ async function ai(api, event, input) {
                         body: "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\nhttps://mrepol742.github.io",
                         url: "https://mrepol742.github.io"
                     }
-                sendMessage(true, api, event, );
+                sendMessage(true, api, event, message);
             } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
                 let mss = "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\nhttps://0x3ef8.github.io";
                 sendMessage(true, api, event, mss);
@@ -2493,7 +2493,7 @@ try {
                 mentions: []
             };
             for (let i = 0; i < info.participantIDs.length; i++) {
-                message.mention.push({
+                message.mentions.push({
                     tag: 'everyone',
                     id: info.participantIDs[i]
                 })
