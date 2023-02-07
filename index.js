@@ -1457,7 +1457,7 @@ async function ai(api, event, input) {
                 }
 
                 let arraySS = ss.split(" ");
-                
+
                 for (sss in arraySS) {
                     if (arraySS[sss].startsWith("https://") || arraySS[sss].startsWith("http://") || 
                     (arraySS[sss].endsWith(".com") || arraySS[sss].endsWith(".net") || arraySS[sss].endsWith(".org") || 
@@ -1465,7 +1465,7 @@ async function ai(api, event, input) {
                     arraySS[sss].endsWith(".info") || arraySS[sss].endsWith(".xyz") || arraySS[sss].endsWith(".me"))) {
                         message = {
                             body: ss,
-                            url: arraySS[ss]
+                            url: arraySS[sss]
                         }
                         break;
                     }
