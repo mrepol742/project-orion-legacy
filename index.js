@@ -691,6 +691,36 @@ ___  Unhandled Rejection  ___
                     } else if (d[0] == "animated_images") {
                         unsendGif(api, event, d, data);
                     } else if (d[0] == "share") {   
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return log(err);
+                            if (settings.onUnsend) {
+                                api.getThreadInfo(event.threadID, (err, gc) => {
+                                    if (err) return log(err);
+                                    if (gc.isGroup) {
+                                        let message = {
+                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
+                                            url: d[1][3],
+                                            mentions: [{
+                                                tag: '@' + data[event.senderID]['name'],
+                                                id: event.senderID,
+                                                fromIndex: 0
+                                            }]
+                                        }
+                                        sendMessageOnly(true, api, event, message);
+                                        log("unsend_share_group " + d[0] + " " + message);
+                                    } else {
+                                        let message = {
+                                            body: "You deleted the following.\n\n" + d[1][2],
+                                            url: d[1][3]
+                                        }
+                                        sendMessageOnly(true, api, event, message);
+                                        log("unsend_share " + d[0] + " " + message);
+                                    }
+                                });
+                            }
+                        });
+
+                        
                         let filename = __dirname + '/cache/images/unsend_share_' + time + '.png'
                         let file = fs.createWriteStream(filename);
                         let gifRequest = http.get(d[1][3], function(gifResponse) {
@@ -6214,7 +6244,7 @@ function saveEvent(event) {
                 break;
             case "share":
                 log(JSON.stringify(event.attachments[0]));
-                msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.body, event.attachments[0].image]]
+                msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.body, event.attachments[0].url]]
                 break;
         }
     } else {
