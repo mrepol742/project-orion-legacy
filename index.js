@@ -1461,7 +1461,7 @@ async function ai(api, event, input) {
                 if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
                     let msCC = {
                         body: "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev",
-                        url: "https://webvium.github.io";
+                        url: "https://webvium.github.io"
                     }
                     sendMessageOnly(false, api, event, msCC)
                 } else if (ss.includes("VPN")) {
