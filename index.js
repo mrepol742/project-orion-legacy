@@ -488,7 +488,7 @@ ___  Unhandled Rejection  ___
         timezone: "Asia/Manila"
     });
 
-    cron.schedule('0 * * * *', () => {
+    cron.schedule('*/30 * * * *', () => {
         fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
         fb_stateD = getFormattedDate();
         log("fb_save_state")
