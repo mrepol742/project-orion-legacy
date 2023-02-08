@@ -1637,9 +1637,7 @@ _______  Cache  _______
                     sendMessage(true, api, event, message);
                     unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
                 }).on('error', (err) => {
-                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                        if (err) log(err);
-                    }, event.messageID);
+                    sendMessage(true, api, event, "Failed to generate audio.");
                 })
         }
     } else if (query == "stats") {
@@ -5279,7 +5277,8 @@ async function sendMessageOnly(bn, api, event, message) {
 }
 
 async function sendMMMS(api, event, message) {
-    if (speech.includes(event.threadID) && (typeof event.body === "string")) {
+    if ((typeof message === "string") && message.trim().length < 200 && 
+        speech.includes(event.threadID)) {
         const url = googleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
         request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
