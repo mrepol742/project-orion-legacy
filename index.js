@@ -1462,6 +1462,13 @@ async function ai(api, event, input) {
                     ss += " MISAKA MISAKA says.";
                 }
 
+                if (ss.trim().endsWith("[Your Name]")) {
+                    api.getUserInfo(event.senderID, (err, data1) => {
+                        if (err) return log(err);
+                        ss.replaceAll("[Your Name]", data1.name);
+                    });
+                }
+
                 let message = {
                     body: ss,
                 }
