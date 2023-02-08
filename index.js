@@ -446,8 +446,6 @@ login({
 }, (err, api) => {
     if (err) return log(err);
 
-    fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
-
     process.on('uncaughtException', (err, origin) => {
 let message = `
 ____  Caught Exception  ____
@@ -488,7 +486,7 @@ ___  Unhandled Rejection  ___
         timezone: "Asia/Manila"
     });
 
-    cron.schedule('*/30 * * * *', () => {
+    cron.schedule('0 * * * *', () => {
         fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
         fb_stateD = getFormattedDate();
         log("fb_save_state")
@@ -593,6 +591,7 @@ ___  Unhandled Rejection  ___
                     settings.isStop = false;
                     return;
                 } else if (query == "restart") {
+                  fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
                     fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
                     fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
                     fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
