@@ -107,6 +107,7 @@ let messagesD = "No data";
 let fb_stateD = "No data";
 let err400 = 0;
 let isCalled = true;
+let isAppState = true;
 
 let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
 "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
@@ -503,9 +504,14 @@ ___  Unhandled Rejection  ___
         online: true
     });
 
-    const listenEmitter = api.listen(async (err, event) => {
+    api.listenMqtt((err, event) => {
 
         if (err) return log(err);
+
+        if (isAppState) {
+            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
+            isAppState = false;
+        }
 
         if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
             return;
