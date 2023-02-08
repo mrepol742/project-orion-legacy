@@ -424,6 +424,11 @@ let state = JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"));
 const config = new Configuration({
     apiKey: keys.ai,
 });
+let voice = {
+    lang: 'en',
+    slow: false,
+    host: 'https://translate.google.com',
+}
 const openai = new OpenAIApi(config);
 
 process.on('beforeExit', (code) => {
@@ -1258,7 +1263,7 @@ async function ai(api, event, input) {
             data.shift()
             getResponseData('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1').then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     log(JSON.stringify(response));
                     sendMessage(true, api, event, response.Abstract);
@@ -1621,11 +1626,7 @@ _______  Cache  _______
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using tts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntts I am melvin jones repol")
         } else {
             data.shift();
-            const url = googleTTS.getAudioUrl(data.join(" "), {
-                lang: 'en',
-                slow: false,
-                host: 'https://translate.google.com',
-            });
+            const url = googleTTS.getAudioUrl(data.join(" "), voice);
             let time = getTimestamp();
             request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
 
@@ -1635,6 +1636,10 @@ _______  Cache  _______
                     };
                     sendMessage(true, api, event, message);
                     unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
+                }).on('error', (err) => {
+                    api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                        if (err) log(err);
+                    }, event.messageID);
                 })
         }
     } else if (query == "stats") {
@@ -2077,7 +2082,7 @@ try {
 
                                 getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
                                     if (response == null) {
-                                        sendMessage(true, api, event, "Seems like there was an internal problem.");
+                                        sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                                     } else {
                                         let title = response.result.s_title;
                                         let image = response.result.s_image;
@@ -2229,7 +2234,7 @@ try {
 
                                 getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
                                     if (response == null) {
-                                        sendMessage(true, api, event, "Seems like there was an internal problem.");
+                                        sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                                     } else {
                                         let title = response.result.s_title;
                                         let image = response.result.s_image;
@@ -2332,7 +2337,7 @@ try {
             let text = data.join(" ");
             getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     let title = response.result.s_title;
                     let image = response.result.s_image;
@@ -2564,7 +2569,7 @@ try {
             data.shift()
             getResponseData('https://api-baybayin-transliterator.vercel.app/?text=' + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     sendMessage(true, api, event, response.baybay);
                 }
@@ -2581,7 +2586,7 @@ try {
             data.shift()
             getResponseData('https://api.popcat.xyz/doublestruck?text=' + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     sendMessage(true, api, event, response.text);
                 }
@@ -2600,7 +2605,7 @@ try {
             let message = text.substring(lang[0].length);
             getResponseData('https://api.popcat.xyz/translate?to=' + lang[0] + '&text=' + message).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     sendMessage(true, api, event, response.translated);
                 }
@@ -2661,7 +2666,7 @@ try {
         }
         getResponseData("https://api.popcat.xyz/wyr").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 sendMessage(true, api, event, "Would you rather " + response.ops1 + " or " + response.ops2);
             }
@@ -2672,7 +2677,7 @@ try {
         }
         getResponseData("https://meowfacts.herokuapp.com/").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 sendMessage(true, api, event, response.data);
             }
@@ -2683,7 +2688,7 @@ try {
         }
         getResponseData("https://api.popcat.xyz/8ball").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 sendMessage(true, api, event, response.answer);
             }
@@ -4415,7 +4420,7 @@ try {
         } else {
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     sendMessage(true, api, event, response.morse);
                 }
@@ -4433,7 +4438,7 @@ try {
         } else {
             getResponseData("https://api.popcat.xyz/lulcat?text=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     sendMessage(true, api, event, response.text);
                 }
@@ -4451,7 +4456,7 @@ try {
         } else {
             getResponseData("https://api.popcat.xyz/mock?text=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Seems like there was an internal problem.");
+                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     sendMessage(true, api, event, response.text);
                 }
@@ -4585,7 +4590,7 @@ try {
         }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 parseImage(api, event, response.image, __dirname + '/cache/images/meme.png');
             }
@@ -4631,7 +4636,7 @@ try {
         }
         getResponseData("https://zenzapis.xyz/randomanime/hololive?apikey=9c4c44db3725").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let time = getTimestamp();
                 request(encodeURI(response.result.image)).pipe(fs.createWriteStream(__dirname + "/cache/images/hololive_" + time + ".png"))
@@ -4652,7 +4657,7 @@ try {
         }
         getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let time = getTimestamp();
                 request(encodeURI(response.result.male)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"))
@@ -4682,7 +4687,7 @@ try {
         } else {
             getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "It seem like i cannot find any relavant result about " + text);
+                    sendMessage(true, api, event, "I cannot find any relavant result about " + text);
                 } else {
                     parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
                 }
@@ -4878,7 +4883,7 @@ try {
         }
         getResponseData("https://animechan.vercel.app/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 sendMessage(true, api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
             }
@@ -4889,7 +4894,7 @@ try {
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 for (let i = 0; i < response.length; i++) {
@@ -4921,7 +4926,7 @@ try {
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 for (let i = 0; i < response.length; i++) {
@@ -4936,7 +4941,7 @@ try {
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 for (let i = 0; i < response.length; i++) {
@@ -4983,7 +4988,7 @@ try {
         }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 for (let i = 0; i < response.length; i++) {
@@ -4998,7 +5003,7 @@ try {
         }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Seems like there was an internal problem.");
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 for (let i = 0; i < response.length; i++) {
@@ -5174,7 +5179,9 @@ function parseImage(api, event, url, dir) {
                 }
                 unLink(dir);
             })
-        })
+        }).on('error', (err) => {
+            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+        });
 }
 
 function parseImageFromFacebook(api, event, url, dir) {
@@ -5194,13 +5201,15 @@ function parseImageFromFacebook(api, event, url, dir) {
                 }
                 unLink(dir);
             })
+        }).on('error', (err) => {
+            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
         })
 }
 
 async function sendMessage(bn, api, event, message) {
     if (!adm.includes(event.senderID) && bn) {
         if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -5222,12 +5231,9 @@ async function sendMessage(bn, api, event, message) {
                 let filtered = test.filter(elm => elm);
                 if (filtered[0] != filtered[1]) {
                     log("send_message_reply " + event.threadID + " " + message);
-                    if (speech.includes(event.threadID)) {
-                        const url = googleTTS.getAudioUrl(message, {
-                            lang: 'en',
-                            slow: false,
-                            host: 'https://translate.google.com',
-                        });
+                    if ((typeof message === "string") && message.trim().length < 200 && 
+                        speech.includes(event.threadID)) {
+                        const url = googleTTS.getAudioUrl(message, voice);
                         let time = getTimestamp();
                         request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
                 
@@ -5239,6 +5245,10 @@ async function sendMessage(bn, api, event, message) {
                                     if (err) log(err);
                                 }, event.messageID);
                                 unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
+                            }).on('error', (err) => {
+                                api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                                    if (err) log(err);
+                                }, event.messageID);
                             })
                     } else {
                         api.sendMessage(message, event.threadID, (err, messageInfo) => {
@@ -5270,11 +5280,7 @@ async function sendMessageOnly(bn, api, event, message) {
 
 async function sendMMMS(api, event, message) {
     if (speech.includes(event.threadID) && (typeof event.body === "string")) {
-        const url = googleTTS.getAudioUrl(message, {
-            lang: 'en',
-            slow: false,
-            host: 'https://translate.google.com',
-        });
+        const url = googleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
         request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
 
@@ -5286,6 +5292,10 @@ async function sendMMMS(api, event, message) {
                     if (err) log(err);
                 });
                 unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
+            }).on('error', (err) => {
+                api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                    if (err) log(err);
+                }, event.messageID);
             })
     } else {
         api.sendMessage(message, event.threadID, (err, messageInfo) => {
@@ -5970,7 +5980,7 @@ function changeNickname(api, event, id, text) {
 function kiss(api, event, id) {
     getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
         if (response == null) {
-            sendMessage(true, api, event, "Seems like there was an internal problem.");
+            sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
         } else {
             api.getUserInfo(id, (err, info) => {
                 if (err) return log(err);
@@ -6124,6 +6134,16 @@ function welcomeUser(api, event, name, gname, Tmem, id, message1) {
                 }]
             };
             sendMessageOnly(true, api, event, message);
+        }).on('error', (err) => { 
+            let message = {
+                body: message1,
+                url: "https://mrepol742.github.io/project-orion/",
+                mentions: [{
+                    tag: name,
+                    id: id
+                }]
+            };
+            sendMessageOnly(true, api, event, message);
         })
 }
 
@@ -6144,6 +6164,15 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
             sendMessageOnly(true, api, event, message);
             log("leave_member " + name);
             unLink(filename);
+        }).on('error', (err) => { 
+            let message = {
+                body: message1,
+                mentions: [{
+                    tag: name,
+                    id: id
+                }]
+            };
+            sendMessageOnly(true, api, event, message);
         })
 }
 
