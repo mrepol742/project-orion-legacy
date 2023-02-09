@@ -55,6 +55,7 @@ app.listen(port, () =>
 );
 
 let sleep = [4000, 3000, 5000, 4500, 6000, 5500, 3300, 4400, 5050, 4000, 5000, 6500, 4500, 3600];
+let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search", "gencode"]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
@@ -365,6 +366,7 @@ _______  Project Orion Admin  _______
 |   ⦿ clearCache
 |   ⦿ refreshState
 |   ⦿ saveState
+|   ⦿ isBot @mention
 |   ⦿ addAdmin @mention
 |   ⦿ remAdmin @mention
 |   ⦿ kickUser @mention
@@ -409,6 +411,7 @@ let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
 let adm = JSON.parse(fs.readFileSync(__dirname + "/admin.json", "utf8"));
 let nonRRR = JSON.parse(fs.readFileSync(__dirname + "/users.json", "utf8"));
 let blockRRR = JSON.parse(fs.readFileSync(__dirname + "/block_users.json", "utf8"));
+let bot = JSON.parse(fs.readFileSync(__dirname + "/bot.json", "utf8"));
 let blockSSS = JSON.parse(fs.readFileSync(__dirname + "/block_groups.json", "utf8"));
 let mutedRRR = JSON.parse(fs.readFileSync(__dirname + "/muted_users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync(__dirname + "/msgs.json", "utf8"));
@@ -559,7 +562,7 @@ ________  Exception  ________
                     sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
                 } else if (blockSSS.includes(event.threadID)) {
                     sendMessage(true, api, event, "This group is blocked. Contact the bot admins for more info.");
-                } else if (blockRRR.includes(event.senderID)) {
+                } else if (blockRRR.includes(event.senderID) || bot.includes(event.senderID)) {
                     sendMessage(true, api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
                 } else if (settings.isStop) {
                     sendMessage(true, api, event, "The program is currently offline.");
@@ -568,7 +571,7 @@ ________  Exception  ________
                 } else { 
                     sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS");
                 }
-            } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID)) && 
+            } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
             (event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
                 return;
@@ -685,6 +688,9 @@ ________  Exception  ________
                 break;
             case "message_unsend":
                 if (adm.includes(event.senderID)) {
+                    break;
+                }
+                if (bot.includes(event.senderID)) {
                     break;
                 }
                 let d = msgs[event.messageID];
@@ -935,7 +941,7 @@ ________  Exception  ________
                 break;
             case "event":
             log(JSON.stringify(event))
-                    log(JSON.stringify(event.logMessageType));
+            log(JSON.stringify(event.logMessageType));
                 switch (event.logMessageType) {
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1051,6 +1057,7 @@ async function ai22(api, event, input) {
                         if (event.messageReply.body == "") {
                             sendMessage(true, api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
                         } else {
+                            sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(group).length + " groups.");
                             sendMessageToAll(api, event.messageReply.body);
                         }
                     }
@@ -1457,16 +1464,9 @@ async function ai(api, event, input) {
                 }
                 // initiate results simulatenoesly
                 let ss = await aiResponse(settings.text_complextion, text, true);
-                
+                 
                 if (query.startsWith("misaka")) {
                     ss += " MISAKA MISAKA says.";
-                }
-
-                if (ss.trim().endsWith("[Your Name]")) {
-                    api.getUserInfo(event.senderID, (err, data1) => {
-                        if (err) return log(err);
-                        ss.replaceAll("[Your Name]", data1.name);
-                    });
                 }
 
                 let message = {
@@ -3464,6 +3464,30 @@ try {
                     sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             })
+        }
+    } else if (query.startsWith("isbot")) {
+        if (adm.includes(event.senderID)) {
+            if (input.includes("@")) {
+                let id = Object.keys(event.mentions)[0];
+                if (id === undefined) {
+                    let data = input.split(" ");
+                    data.shift();
+                    api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        if (err) return log(err);
+                        bot.push(data[0].userID);
+                        fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot), "utf8");
+                        sendMessage(true, api, event, "Noted.");
+                    });
+                    return;
+                } else if (isMyId(id)) {
+                    return;
+                }
+                bot.push(id);
+                fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot), "utf8");
+                sendMessage(true, api, event, "Noted.");
+            } else {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two")
+            }
         }
     } else if (query.startsWith("blockuser")) {
         if (adm.includes(event.senderID)) {
@@ -5602,16 +5626,6 @@ function getSuffix(i) {
     return i + "th";
 }
 
-function otherQ(query) {
-    for (let i = 0; i < sqq.length; i++) {
-        if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2 ||
-            (query.endsWith("?") || query.endsWith("!") || query.endsWith("."))) {
-            return true;
-        }
-    }
-    return false;
-}
-
 function isMyId(id) {
     return id == "100071743848974" || id == "100016029218667";
 }
@@ -6271,15 +6285,19 @@ function saveEvent(event) {
 async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
+        log(JSON.stringify(ai.data.choices));
+        if (ai.data.choices[0].finish_reason == "length") {
+            return "The result was quite too long... Please try it again.";
+        }
         return formatResult(ai.data.choices[0].text);
     } catch (error) {
         log(error.response.status);
         err400++;
-        if (error.response.status == 429 || (!repeat && error.response.status == 503)) {
-            return "AI is currently down please try it again later.";
-        } else if (repeat) {
+        if (repeat) {
             log("attempt initiated");
             return aiResponse(getNewComplextion(settings.text_complextion), text, false);
+        } else if (error.response.status == 429 || error.response.status == 503) {
+                return "AI is currently down please try it again later.";
         } else {
             return idknow[Math.floor(Math.random() * idknow.length)];
         }
@@ -6314,9 +6332,11 @@ function getNewComplextion(complextion) {
 }
 
 async function sendMessageToAll(api, message) {
+    let count = 0;
     for (gp in group) {
         await wait(20000);
-        api.sendMessage(message, gp);
+        count++
+        api.sendMessage(message + "\nn-" + (count*742), gp);
     }
 }
 
@@ -6324,10 +6344,27 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function otherQ(query) {
+    for (let i = 0; i < sqq.length; i++) {
+        if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function myPrefix(query) {
+    for (let i = 0; i < isMyPrefixList.length; i++) {
+        if (query.startsWith(isMyPrefixList[i]) || query.endsWith(isMyPrefixList[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function isMyPrefix(input, query, query2) {
-    return (settings.prefix != "" && input.startsWith(settings.prefix)) || query.startsWith("mj") ||
-        query.startsWith("repol") || query.startsWith("misaka") || query.startsWith("mrepol742") || query.startsWith("melvinjonesrepol") || query.startsWith("melvinjones") || query.startsWith("melvinjonesgallanorepol") ||
-        ((query.startsWith("search") || query.startsWith("gencode") || query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || query.startsWith("where") ||
-            query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
+    return (settings.prefix != "" && input.startsWith(settings.prefix)) || myPrefix(query) ||
+        ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || 
+        query.startsWith("where") || query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
         otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
 }
