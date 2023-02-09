@@ -419,7 +419,7 @@ let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.js
 let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
 let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
 let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
-let state = JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"));
+let state = {appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))};
 
 const config = new Configuration({
     apiKey: keys.ai,
@@ -428,6 +428,12 @@ let voice = {
     lang: 'en',
     slow: false,
     host: 'https://translate.google.com',
+}
+let options = {
+    listenEvents: true,
+    selfListen: true,
+    autoMarkRead: true,
+    online: true
 }
 const openai = new OpenAIApi(config);
 
@@ -447,17 +453,15 @@ process.on('SIGINT', function() {
     process.exit();
 });
 
-login({
-    appState: state
-}, (err, api) => {
+login(state, (err, api) => {
     if (err) return log(err);
 
     process.on('uncaughtException', (err, origin) => {
 let message = `
-____  Caught Exception  ____
+________  Exception  ________
 |
 |   ⦿ ` + err + `
-|___________________________
+|____________________________
         `;
         log(message)
         api.sendMessage(message, getMyId(), (err, messageInfo) => {
@@ -467,7 +471,7 @@ ____  Caught Exception  ____
 
     process.on('unhandledRejection', (reason, promise) => {
 let message = `
-___  Unhandled Rejection  ___
+________  Exception  ________
 |
 |   ⦿ ` + reason + `
 |____________________________
@@ -479,6 +483,7 @@ ___  Unhandled Rejection  ___
     });
 
     cron.schedule('*/10 * * * *', () => {
+        fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
         fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
         fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
         fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
@@ -502,12 +507,7 @@ ___  Unhandled Rejection  ___
         timezone: "Asia/Manila"
     });
 
-    api.setOptions({
-        listenEvents: true,
-        selfListen: true,
-        autoMarkRead: true,
-        online: true
-    });
+    api.setOptions(options);
 
     api.listenMqtt((err, event) => {
 
@@ -524,7 +524,7 @@ ___  Unhandled Rejection  ___
 
         if (event.senderID == getMyId() && (event.type == "message" || event.type == "message_reply")) {
             let body = event.body;
-            if (!body.startsWith("_")) {
+            if (!body.startsWith("!")) {
                 return;
             } else {
                 event.body = body.slice(1);
@@ -957,7 +957,7 @@ ___  Unhandled Rejection  ___
                                 }
                                 let gret;
                                 if (i > 1) {
-                                    gret = "Welcome ";
+                                    gret = "Hello ";
                                     for (let a = 0; a < names.length; a++) {
                                         if (a == names.length - 1) {
                                             gret += "and @" + names[a][1] + " ";
@@ -968,7 +968,7 @@ ___  Unhandled Rejection  ___
                                     }
                                     gret += ". How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
                                 } else {
-                                    gret = "Welcome @" + names[0][1] + ". How are you?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
+                                    gret = "How are you @" + names[0][1] + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -1041,7 +1041,7 @@ async function ai22(api, event, input) {
                 let query2 = formatQuery(input);
                 if (input == ".") {
                     if (event.messageReply.body != "") {
-                      if (input.startsWith("_")) {
+                      if (input.startsWith("!")) {
                         input = input.slice(1);
                       }
                         ai(api, event, event.messageReply.body);
@@ -1276,7 +1276,8 @@ async function ai(api, event, input) {
                 return;
             }
         
-        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" ||  query == "melvinjonesgallanorepol" || query == "melvinjones") {
+        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" || 
+            query == "mrepol742" || query == "melvinjonesrepol" ||  query == "melvinjonesgallanorepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
                     body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
@@ -1284,7 +1285,6 @@ async function ai(api, event, input) {
                 }
                 sendMessage(true, api, event, message);
                 nonRRR.push(event.senderID);
-                fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
             } else {
                 sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
@@ -1406,7 +1406,7 @@ async function ai(api, event, input) {
             text1.startsWith("whatsthetimenow") || text1 == "date" || text1.startsWith("whatsthedate") || text1.startsWith("whatisthedate") || 
             text1.startsWith("datetoday") || text1.startsWith("whattimeisitnow") || text1.startsWith("whatdateisitnow")) {
                 sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
-                sendMessage(false, api, event, "To show date according to your timezone. Pleas use the `time [timezone]` command.\nFor example:\ntime Asia/Singapore");
+                sendMessage(false, api, event, "To show date according to your timezone. Pleas use the `time [timezone]` command.\nFor example:\ntime Asia/Manila");
             } else if (text1.startsWith("iloveyou") || text1.startsWith("loveme") || text1.startsWith("doyoulikeme") || text1.startsWith("doyouloveme") || text1.startsWith("whydontyouloveme") || text1.startsWith("imissyou") || text1.startsWith("iwantyou")) {
                 sendMessage(true, api, event, "I've already a girl and i love her so much >3.");
             } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
@@ -1494,13 +1494,13 @@ async function ai(api, event, input) {
                         body: "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev",
                         url: "https://webvium.github.io"
                     }
-                    sendMessageOnly(false, api, event, msCC)
+                    sendMessageOnly(true, api, event, msCC)
                 } else if (ss.includes("VPN")) {
                     let vpn = {
                         body: "https://mrepol742.github.io/webviumvpn",
                         url: "https://mrepol742.github.io/webviumvpn"
                     }
-                    sendMessageOnly(false, api, event, vpn);
+                    sendMessageOnly(true, api, event, vpn);
                 }
             }
         }
@@ -3270,7 +3270,7 @@ try {
         if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTimezone Asia/Singapore")
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTimezone Asia/Manila")
             } else {
                 data.shift();
                 let pref = data.join(" ");
@@ -3406,7 +3406,7 @@ try {
                                 if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 api.getUserInfo(data[0].userID, (err, data1) => {
                                     if (err) return log(err);
-                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "Welcome @" + data1.name + ". How are you?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
+                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
                                 });
                             });
                             return;
@@ -3415,7 +3415,7 @@ try {
                         }
                         api.getUserInfo(id, (err, data1) => {
                             if (err) return log(err);
-                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "Welcome @" + data1.name + ". How are you?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
+                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
                         });
                     } else {
                         sendMessage(true, api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
@@ -4914,13 +4914,13 @@ try {
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Singapore");
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
         } else {
             let body = input.substring(5);
             if (timeZones.includes(body)) {
                 sendMessage(true, api, event, "It's " + getMonth(body) + " " + getDayN(body) + ", " + getDay(body) + " " + formateDate(body));
             } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Singapore");
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
             }
         }
     } else if (query == "time") {
@@ -5048,6 +5048,7 @@ try {
         }
     } else if (query == "savestate") {
         if (adm.includes(event.senderID)) {
+            fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
             fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
             fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
             fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
@@ -5313,7 +5314,7 @@ async function sendMMMS(api, event, message) {
 async function reactMessage(api, event, reaction) {
     if (!adm.includes(event.senderID)) {
         if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
+            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
         }
     }
     log("react_message " + event.messageID + " " + reaction);
@@ -5336,7 +5337,7 @@ function log(data) {
 
 function getFormattedDate() {
     return new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Singapore"
+        timeZone: "Asia/Manila"
     }).replace(",", "");
 }
 
@@ -5353,12 +5354,6 @@ function containsAny(str, substrings) {
 function isGoingToFast(api, event) {
     let input = event.body;
     log("event_body " + event.senderID + " " + input);
-    if (input.startsWith("⦿")) {
-        sendMessageOnly(true, api, event, "It's unnessesary to use ⦿ i would still understand you even without it.");
-    }
-    if (input.startsWith("_")) {
-        sendMessageOnly(true, api, event, "It's unnessesary to use _ i would still understand you even without it.");
-    }
     if (!settings.preventSimultaneousExecution) {
         return false;
     }
@@ -5368,8 +5363,7 @@ function isGoingToFast(api, event) {
             return false;
         } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
             let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 20;
-            //sendMessage(true, api, event, "Hold on for " + seconds + " seconds.");
-            log("The UserID is temporarily blocked for " + seconds + " seconds.");
+            log("block_user " + event.senderID + " " + seconds);
             return true;
         } else {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
@@ -5399,7 +5393,7 @@ function isGoingToFastResendingOfEmo(event) {
         return false;
     } else if (Math.floor(Date.now() / 1000) < emo[event.threadID]) {
         let seconds = (emo[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 2);
-        log("The ThreadID is temporarily blocked from resending of emoji for " + seconds + " seconds.");
+        log("block_emoji " + event.threadID + " " + seconds);
         return true;
     } else {
         emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
@@ -5413,7 +5407,7 @@ function isGoingToFastCallingTheCommand(event) {
         return false;
     } else if (Math.floor(Date.now() / 1000) < threadMaintenance[event.threadID]) {
         let seconds = (threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 5);
-        log("The ThreadID is temporarily blocked from sending the Maintenance message for " + seconds + " seconds.");
+        log("block_maintenance " + event.threadID + " " + seconds);
         return true;
     } else {
         threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 5);
@@ -6160,7 +6154,7 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
     request(encodeURI(url)).pipe(fs.createWriteStream(filename))
         .on('finish', () => {
             let message = {
-                body: "Thank you for joining @" + name + " but now you're leaving us.",
+                body: "Thank you for joining @" + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
                 attachment: fs.createReadStream(filename),
                 mentions: [{
                     tag: name,
@@ -6172,7 +6166,7 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
             unLink(filename);
         }).on('error', (err) => { 
             let message = {
-                body: message1,
+                body: "Thank you for joining @" + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
                 mentions: [{
                     tag: name,
                     id: id
@@ -6279,8 +6273,11 @@ async function aiResponse(complextion, text, repeat) {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         return formatResult(ai.data.choices[0].text);
     } catch (error) {
+        log(error.response.status);
         err400++;
-        if (repeat) {
+        if (error.response.status == 429 || (!repeat && error.response.status == 503)) {
+            return "AI is currently down please try it again later.";
+        } else if (repeat) {
             log("attempt initiated");
             return aiResponse(getNewComplextion(settings.text_complextion), text, false);
         } else {
