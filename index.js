@@ -653,8 +653,11 @@ ________  Exception  ________
                     };
                     sendMessage(true, api, event, message);
                 }
-                    return;
+                    return; else if (settings.isStop) {
+                        return;
+                    }
                 } else if (settings.isStop) {
+                    saveEvent(event);
                     return;
                 }
             }
