@@ -6299,10 +6299,11 @@ async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         log(JSON.stringify(ai.data.choices));
-        if (ai.data.choices[0].finish_reason == "length") {
-            return "The result was quite too long... Please try it again.";
+        let text = ai.data.choices[0].text;
+        if (!text.endsWith(".") && ai.data.choices[0].finish_reason == "length") {
+            return "The response is not completed and canceled due to its length. Please try it again. Ask questions briefly. In this platform, AI are limited to what it can send.";
         }
-        return formatResult(ai.data.choices[0].text);
+        return formatResult(text);
     } catch (error) {
         log(error.response.status);
         err400++;
