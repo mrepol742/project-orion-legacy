@@ -571,6 +571,9 @@ ________  Exception  ________
                 } else { 
                     sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS");
                 }
+            } else if (blockSSS.includes(event.threadID)) {
+                saveEvent(event);
+                return;
             } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
             (event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
