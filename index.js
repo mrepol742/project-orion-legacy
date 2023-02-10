@@ -450,9 +450,7 @@ process.on('exit', (code) => {
 
 process.on('SIGINT', function() {
     log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
-    fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
-    fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
-    fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+    saveState();
     process.exit();
 });
 
@@ -486,10 +484,7 @@ ________  Exception  ________
     });
 
     cron.schedule('*/10 * * * *', () => {
-        fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
-        fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
-        fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
-        fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+        saveState();
         cmd = {};
         acGG = [];
         messagesD = getFormattedDate();
@@ -571,23 +566,16 @@ ________  Exception  ________
                 } else { 
                     sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS");
                 }
-            } else if (blockSSS.includes(event.threadID)) {
-                saveEvent(event);
-                return;
-            } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
-            (event.type == "message" || event.type == "message_reply")) {
-                saveEvent(event);
-                return;
-            } 
-            /*
-            else {
-                let ttb = event.body;
-                var result = ignoredPrefix.filter(option => ttb.startsWith(option.name));
-                if (ttb.startsWith(result)) {
-                    log("blocked " + result);
+            } else if (!(adm.includes(event.senderID))) {
+                if (blockSSS.includes(event.threadID)) {
+                    saveEvent(event);
                     return;
-                }
-            }*/
+                } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
+                (event.type == "message" || event.type == "message_reply")) {
+                    saveEvent(event);
+                    return;
+                } 
+            }
         }
 
         if ((event.type == "message" || event.type == "message_reply")) {
@@ -608,10 +596,8 @@ ________  Exception  ________
                     settings.isStop = false;
                     return;
                 } else if (query == "restart") {
-                  fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
-                    fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
-                    fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
-                    fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+                    saveState();
+                    fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
                     sendMessage(true, api, event, "Restarting program...");
                     setTimeout(function () {
                         let rs = [];
@@ -652,9 +638,6 @@ ________  Exception  ________
                         attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
                     };
                     sendMessage(true, api, event, message);
-                }
-                    return; else if (settings.isStop) {
-                        return;
                     }
                 } else if (settings.isStop) {
                     saveEvent(event);
@@ -5078,10 +5061,7 @@ try {
         }
     } else if (query == "savestate") {
         if (adm.includes(event.senderID)) {
-            fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
-            fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
-            fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
-            fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+            saveState();
             sendMessage(true, api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
         }
@@ -6373,4 +6353,11 @@ function isMyPrefix(input, query, query2) {
         ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || 
         query.startsWith("where") || query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
         otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
+}
+
+function saveState() {
+    fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
+    fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
+    fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+    fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
 }
