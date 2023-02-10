@@ -1456,6 +1456,7 @@ async function ai(api, event, input) {
                 if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
                     text += ".";
                 }
+
                 // initiate results simulatenoesly
                 let ss = await aiResponse(settings.text_complextion, text, true);
                  
@@ -1467,7 +1468,7 @@ async function ai(api, event, input) {
                     body: ss,
                 }
 
-                let arraySS = ss.split(" ");
+                let arraySS = ss.split(/\s+/);
 
                 for (sss in arraySS) {
                     if (arraySS[sss].startsWith("https://") || arraySS[sss].startsWith("http://") || 
@@ -1970,7 +1971,11 @@ try {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using linkshort url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlink https://mrepol742.github.io")
+            let message = {
+                body: "Opps! I didnt get it. You should try using linkshort url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlink https://mrepol742.github.io",
+                url: "https://mrepol742.github.io"
+            }
+            sendMessage(true, api, event, message);
         } else {
             let text = input.substring(9)
             let encodedParams = new URLSearchParams();
@@ -2471,8 +2476,8 @@ try {
                 let res = await pdfdrive.findEbook(searched);
                 let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
                 let message = {
-                    body: res2.ebookName + "\n\n" + res2.dlUrl;
-                    url: res2.dlUrl;
+                    body: res2.ebookName + "\n\n" + res2.dlUrl,
+                    url: res2.dlUrl
                 }
                 sendMessage(true, api, event, message);
             } catch (err) {
@@ -3817,7 +3822,11 @@ try {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(true, api, event, "Due to the limitations on messenger platform.\nAll command list are now moved to: https://mrepol742.github.io/project-orion/#cmdall\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+        let message = {
+            body: "Due to the limitations on messenger platform.\nAll command list are now moved to: https://mrepol742.github.io/project-orion/#cmdall\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
+            url: "https://mrepol742.github.io/project-orion/#cmdall"
+        }
+        sendMessage(true, api, event, message);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
@@ -4739,7 +4748,11 @@ try {
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using qrcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nqrcode https://mrepol742.github.io");
+            let message = {
+                body: "Opps! I didnt get it. You should try using qrcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nqrcode https://mrepol742.github.io",
+                url: "https://mrepol742.github.io"
+            }
+            sendMessage(true, api, event, message);
         } else {
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + text, __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
         }
@@ -4787,7 +4800,11 @@ try {
         text = text.substring(8);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using website url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwebsite https://mrepol742.github.io");
+            let messaage = {
+                body: "Opps! I didnt get it. You should try using website url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwebsite https://mrepol742.github.io",
+                url: "https://mrepol742.github.io"
+            }
+            sendMessage(true, api, event, message);
         } else {
             if (text.startsWith("https://") || text.startsWith("http://")) {
                 parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + encodeURI(text), __dirname + "/cache/images/website_" + getTimestamp() + ".png");
@@ -5078,13 +5095,13 @@ try {
     } else if (query == "about") {
         let message = {
             body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
-            attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
+            url: "https://mrepol742.github.io/project-orion/"
         }
         sendMessage(true, api, event, message);
     } else if (query == "copyright") {
         let message = {
-            body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
+            body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://mrepol742.github.io/project-orion/",
+            url: "https://mrepol742.github.io/project-orion/"
         }
         sendMessage(true, api, event, message);
     } else if (query == "license") {
@@ -5094,7 +5111,7 @@ try {
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
                 "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2023.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
-            attachment: [fs.createReadStream(__dirname + "/assets/mrepol742.png")]
+            url: "https://mrepol742.github.io/webvium/privacypolicy/"
         }
         sendMessage(true, api, event, message);
     } else {
