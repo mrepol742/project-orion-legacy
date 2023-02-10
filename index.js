@@ -574,7 +574,7 @@ ________  Exception  ________
             } else if (blockSSS.includes(event.threadID)) {
                 saveEvent(event);
                 return;
-            } else if ((blockRRR.includes(event.senderID) || blockSSS.includes(event.threadID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
+            } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
             (event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
                 return;
