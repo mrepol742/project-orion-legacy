@@ -654,9 +654,9 @@ ________  Exception  ________
                     sendMessage(true, api, event, message);
                 }
                     return;
-                } 
-            } else if (settings.isStop) {
-                return;
+                } else if (settings.isStop) {
+                    return;
+                }
             }
         }
 
