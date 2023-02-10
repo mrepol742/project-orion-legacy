@@ -531,9 +531,10 @@ ________  Exception  ________
 
         if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
 
-        let input = event.body;
-        let query = formatQuery(input.replace(/\s+/g, ''));
-        let query2 = formatQuery(input);
+            let input = event.body;
+            let query = formatQuery(input.replace(/\s+/g, ''));
+            let query2 = formatQuery(input);
+
             if (query == "unblockgroup") {
                 if (adm.includes(event.senderID)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -576,13 +577,21 @@ ________  Exception  ________
                     return;
                 } 
             }
-        }
+        } else if (blockSSS.includes(event.threadID)) {
+            saveEvent(event);
+            return;
+        } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
+            (event.type == "message" || event.type == "message_reply")) {
+            saveEvent(event);
+            return;
+        } 
 
         if ((event.type == "message" || event.type == "message_reply")) {
 
-        let input = event.body;
-        let query = formatQuery(input.replace(/\s+/g, ''));
-        let query2 = formatQuery(input);
+            let input = event.body;
+            let query = formatQuery(input.replace(/\s+/g, ''));
+            let query2 = formatQuery(input);
+
             if (isMyId(event.senderID)) {
                 if (query == "stop") {
                     sendMessage(true, api, event, "Program stopped its state.");
