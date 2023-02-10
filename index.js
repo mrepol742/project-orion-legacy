@@ -661,6 +661,7 @@ ________  Exception  ________
                 if (gc.isGroup && group[event.threadID] === undefined) {
                     group[event.threadID] = gc.threadName;
                     log("new_group " + event.threadID + " group_name " + gc.threadName);
+                    sendMessage(false, api, event, "Thank you for adding me.\n\nfor more information message `about`, `license`, `cmd`");
                 }
             });
         } else if (!acGG.includes(event.threadID) && !(group[event.threadID] === undefined)) {
@@ -951,11 +952,6 @@ ________  Exception  ________
                                 while (true) {
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
                                         break;
-                                    }
-                                    if (event.logMessageData.addedParticipants[i].userFbId != getMyId()) {
-                                        names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName]);
-                                    } else {
-                                        sendMessageOnly("Hello! Thank you for adding me on this group. Do you want to enable ChatBot AI features on this group or not? In default, it's enabled.");
                                     }
                                     i++;
                                 }
@@ -2474,8 +2470,11 @@ try {
 
                 let res = await pdfdrive.findEbook(searched);
                 let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
-
-                sendMessage(true, api, event, res2.ebookName + "\n\n" + res2.dlUrl)
+                let message = {
+                    body: res2.ebookName + "\n\n" + res2.dlUrl;
+                    url: res2.dlUrl;
+                }
+                sendMessage(true, api, event, message);
             } catch (err) {
                 log(err);
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
