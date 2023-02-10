@@ -578,7 +578,7 @@ ________  Exception  ________
                 } 
             }
         } else if (blockSSS.includes(event.threadID)) {
-            if ((event.type == "message" || event.type == "message_reply"))
+            if ((event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
             }
             return;
