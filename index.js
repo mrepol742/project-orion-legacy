@@ -578,7 +578,9 @@ ________  Exception  ________
                 } 
             }
         } else if (blockSSS.includes(event.threadID)) {
-            saveEvent(event);
+            if ((event.type == "message" || event.type == "message_reply"))
+                saveEvent(event);
+            }
             return;
         } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
             (event.type == "message" || event.type == "message_reply")) {
