@@ -6260,10 +6260,10 @@ function saveEvent(event) {
                 break;
             case "animated_image":
                 let animated_images = [];
-                let i;
-                for (i = 0; i < 25; i++) {
-                    if (!(event.attachments[i] === undefined)) {
-                        animated_images.push(event.attachments[i].url);
+                let i1;
+                for (i1 = 0; i1 < 25; i1++) {
+                    if (!(event.attachments[i1] === undefined)) {
+                        animated_images.push(event.attachments[i1].url);
                     }
                 }
                 let data1 = [getFormattedDate(), event.senderID, animated_images];
