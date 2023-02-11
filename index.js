@@ -98,6 +98,7 @@ let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink"
 let timeZones = ['Europe/Andorra', 'Asia/Dubai', 'Asia/Kabul', 'Europe/Tirane', 'Asia/Yerevan', 'Antarctica/Casey', 'Antarctica/Davis', 'Antarctica/DumontDUrville', 'Antarctica/Mawson', 'Antarctica/Palmer', 'Antarctica/Rothera', 'Antarctica/Syowa', 'Antarctica/Troll', 'Antarctica/Vostok', 'America/Argentina/Buenos_Aires', 'America/Argentina/Cordoba', 'America/Argentina/Salta', 'America/Argentina/Jujuy', 'America/Argentina/Tucuman', 'America/Argentina/Catamarca', 'America/Argentina/La_Rioja', 'America/Argentina/San_Juan', 'America/Argentina/Mendoza', 'America/Argentina/San_Luis', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Ushuaia', 'Pacific/Pago_Pago', 'Europe/Vienna', 'Australia/Lord_Howe', 'Antarctica/Macquarie', 'Australia/Hobart', 'Australia/Currie', 'Australia/Melbourne', 'Australia/Sydney', 'Australia/Broken_Hill', 'Australia/Brisbane', 'Australia/Lindeman', 'Australia/Adelaide', 'Australia/Darwin', 'Australia/Perth', 'Australia/Eucla', 'Asia/Baku', 'America/Barbados', 'Asia/Dhaka', 'Europe/Brussels', 'Europe/Sofia', 'Atlantic/Bermuda', 'Asia/Brunei', 'America/La_Paz', 'America/Noronha', 'America/Belem', 'America/Fortaleza', 'America/Recife', 'America/Araguaina', 'America/Maceio', 'America/Bahia', 'America/Sao_Paulo', 'America/Campo_Grande', 'America/Cuiaba', 'America/Santarem', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Manaus', 'America/Eirunepe', 'America/Rio_Branco', 'America/Nassau', 'Asia/Thimphu', 'Europe/Minsk', 'America/Belize', 'America/St_Johns', 'America/Halifax', 'America/Glace_Bay', 'America/Moncton', 'America/Goose_Bay', 'America/Blanc-Sablon', 'America/Toronto', 'America/Nipigon', 'America/Thunder_Bay', 'America/Iqaluit', 'America/Pangnirtung', 'America/Atikokan', 'America/Winnipeg', 'America/Rainy_River', 'America/Resolute', 'America/Rankin_Inlet', 'America/Regina', 'America/Swift_Current', 'America/Edmonton', 'America/Cambridge_Bay', 'America/Yellowknife', 'America/Inuvik', 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson', 'America/Vancouver', 'America/Whitehorse', 'America/Dawson', 'Indian/Cocos', 'Europe/Zurich', 'Africa/Abidjan', 'Pacific/Rarotonga', 'America/Santiago', 'America/Punta_Arenas', 'Pacific/Easter', 'Asia/Shanghai', 'Asia/Urumqi', 'America/Bogota', 'America/Costa_Rica', 'America/Havana', 'Atlantic/Cape_Verde', 'America/Curacao', 'Indian/Christmas', 'Asia/Nicosia', 'Asia/Famagusta', 'Europe/Prague', 'Europe/Berlin', 'Europe/Copenhagen', 'America/Santo_Domingo', 'Africa/Algiers', 'America/Guayaquil', 'Pacific/Galapagos', 'Europe/Tallinn', 'Africa/Cairo', 'Africa/El_Aaiun', 'Europe/Madrid', 'Africa/Ceuta', 'Atlantic/Canary', 'Europe/Helsinki', 'Pacific/Fiji', 'Atlantic/Stanley', 'Pacific/Chuuk', 'Pacific/Pohnpei', 'Pacific/Kosrae', 'Atlantic/Faroe', 'Europe/Paris', 'Europe/London', 'Asia/Tbilisi', 'America/Cayenne', 'Africa/Accra', 'Europe/Gibraltar', 'America/Godthab', 'America/Danmarkshavn', 'America/Scoresbysund', 'America/Thule', 'Europe/Athens', 'Atlantic/South_Georgia', 'America/Guatemala', 'Pacific/Guam', 'Africa/Bissau', 'America/Guyana', 'Asia/Hong_Kong', 'America/Tegucigalpa', 'America/Port-au-Prince', 'Europe/Budapest', 'Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura', 'Europe/Dublin', 'Asia/Jerusalem', 'Asia/Kolkata', 'Indian/Chagos', 'Asia/Baghdad', 'Asia/Tehran', 'Atlantic/Reykjavik', 'Europe/Rome', 'America/Jamaica', 'Asia/Amman', 'Asia/Tokyo', 'Africa/Nairobi', 'Asia/Bishkek', 'Pacific/Tarawa', 'Pacific/Enderbury', 'Pacific/Kiritimati', 'Asia/Pyongyang', 'Asia/Seoul', 'Asia/Almaty', 'Asia/Qyzylorda', 'Asia/Qostanay', 'Asia/Aqtobe', 'Asia/Aqtau', 'Asia/Atyrau', 'Asia/Oral', 'Asia/Beirut', 'Asia/Colombo', 'Africa/Monrovia', 'Europe/Vilnius', 'Europe/Luxembourg', 'Europe/Riga', 'Africa/Tripoli', 'Africa/Casablanca', 'Europe/Monaco', 'Europe/Chisinau', 'Pacific/Majuro', 'Pacific/Kwajalein', 'Asia/Yangon', 'Asia/Ulaanbaatar', 'Asia/Hovd', 'Asia/Choibalsan', 'Asia/Macau', 'America/Martinique', 'Europe/Malta', 'Indian/Mauritius', 'Indian/Maldives', 'America/Mexico_City', 'America/Cancun', 'America/Merida', 'America/Monterrey', 'America/Matamoros', 'America/Mazatlan', 'America/Chihuahua', 'America/Ojinaga', 'America/Hermosillo', 'America/Tijuana', 'America/Bahia_Banderas', 'Asia/Kuala_Lumpur', 'Asia/Kuching', 'Africa/Maputo', 'Africa/Windhoek', 'Pacific/Noumea', 'Pacific/Norfolk', 'Africa/Lagos', 'America/Managua', 'Europe/Amsterdam', 'Europe/Oslo', 'Asia/Kathmandu', 'Pacific/Nauru', 'Pacific/Niue', 'Pacific/Auckland', 'Pacific/Chatham', 'America/Panama', 'America/Lima', 'Pacific/Tahiti', 'Pacific/Marquesas', 'Pacific/Gambier', 'Pacific/Port_Moresby', 'Pacific/Bougainville', 'Asia/Manila', 'Asia/Karachi', 'Europe/Warsaw', 'America/Miquelon', 'Pacific/Pitcairn', 'America/Puerto_Rico', 'Asia/Gaza', 'Asia/Hebron', 'Europe/Lisbon', 'Atlantic/Madeira', 'Atlantic/Azores', 'Pacific/Palau', 'America/Asuncion', 'Asia/Qatar', 'Indian/Reunion', 'Europe/Bucharest', 'Europe/Belgrade', 'Europe/Kaliningrad', 'Europe/Moscow', 'Europe/Simferopol', 'Europe/Kirov', 'Europe/Astrakhan', 'Europe/Volgograd', 'Europe/Saratov', 'Europe/Ulyanovsk', 'Europe/Samara', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk', 'Asia/Barnaul', 'Asia/Tomsk', 'Asia/Novokuznetsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Chita', 'Asia/Yakutsk', 'Asia/Khandyga', 'Asia/Vladivostok', 'Asia/Ust-Nera', 'Asia/Magadan', 'Asia/Sakhalin', 'Asia/Srednekolymsk', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Riyadh', 'Pacific/Guadalcanal', 'Indian/Mahe', 'Africa/Khartoum', 'Europe/Stockholm', 'Asia/Singapore', 'America/Paramaribo', 'Africa/Juba', 'Africa/Sao_Tome', 'America/El_Salvador', 'Asia/Damascus', 'America/Grand_Turk', 'Africa/Ndjamena', 'Indian/Kerguelen', 'Asia/Bangkok', 'Asia/Dushanbe', 'Pacific/Fakaofo', 'Asia/Dili', 'Asia/Ashgabat', 'Africa/Tunis', 'Pacific/Tongatapu', 'Europe/Istanbul', 'America/Port_of_Spain', 'Pacific/Funafuti', 'Asia/Taipei', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye', 'Pacific/Wake', 'America/New_York', 'America/Detroit', 'America/Kentucky/Louisville', 'America/Kentucky/Monticello', 'America/Indiana/Indianapolis', 'America/Indiana/Vincennes', 'America/Indiana/Winamac', 'America/Indiana/Marengo', 'America/Indiana/Petersburg', 'America/Indiana/Vevay', 'America/Chicago', 'America/Indiana/Tell_City', 'America/Indiana/Knox', 'America/Menominee', 'America/North_Dakota/Center', 'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah', 'America/Denver', 'America/Boise', 'America/Phoenix', 'America/Los_Angeles', 'America/Anchorage', 'America/Juneau', 'America/Sitka', 'America/Metlakatla', 'America/Yakutat', 'America/Nome', 'America/Adak', 'Pacific/Honolulu', 'America/Montevideo', 'Asia/Samarkand', 'Asia/Tashkent', 'America/Caracas', 'Asia/Ho_Chi_Minh', 'Pacific/Efate', 'Pacific/Wallis', 'Pacific/Apia', 'Africa/Johannesburg'];
 let threadIdMV = {};
 let cmd = {};
+let thread = {};
 let acGG = [];
 let cmd1 = {};
 let emo = {};
@@ -348,6 +349,7 @@ _______  Project Orion 8/8  _______
 |   ⦿ videolyric [title]
 |   ⦿ formatNumbers [numbers]
 |   ⦿ wordsToNumbers [words]
+|   ⦿ fbi
 |__________________________________
 `;
 
@@ -529,11 +531,12 @@ ________  Exception  ________
             }
         }
 
-        if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
+        if (event.type == "message" || event.type == "message_reply") {
 
-            let input = event.body;
-            let query = formatQuery(input.replace(/\s+/g, ''));
-            let query2 = formatQuery(input);
+            let query2 = formatQuery(event.body);
+            let query = query2.replace(/\s+/g, '');
+
+            if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
 
             if (query == "unblockgroup") {
                 if (adm.includes(event.senderID)) {
@@ -577,22 +580,8 @@ ________  Exception  ________
                     return;
                 } 
             }
-        } else if (blockSSS.includes(event.threadID)) {
-            if ((event.type == "message" || event.type == "message_reply")) {
-                saveEvent(event);
+                  
             }
-            return;
-        } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
-            (event.type == "message" || event.type == "message_reply")) {
-            saveEvent(event);
-            return;
-        } 
-
-        if ((event.type == "message" || event.type == "message_reply")) {
-
-            let input = event.body;
-            let query = formatQuery(input.replace(/\s+/g, ''));
-            let query2 = formatQuery(input);
 
             if (isMyId(event.senderID)) {
                 if (query == "stop") {
@@ -625,8 +614,7 @@ ________  Exception  ________
                         process.exit();
                     }, 3000);
                 }
-            }
-            if (!(adm.includes(event.senderID))) {
+            } else if (!adm.includes(event.senderID)) {
                 if (settings.crash) {
                     if (isMyPrefix(input, query, query2)) {
                     if (isGoingToFastCallingTheCommand(event)) {
@@ -650,12 +638,24 @@ ________  Exception  ________
                     };
                     sendMessage(true, api, event, message);
                     }
+                    return;
                 } else if (settings.isStop) {
                     saveEvent(event);
                     return;
                 }
             }
-        }
+
+            
+        } else if (blockSSS.includes(event.threadID)) {
+            if ((event.type == "message" || event.type == "message_reply")) {
+                saveEvent(event);
+            }
+            return;
+        } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
+            (event.type == "message" || event.type == "message_reply")) {
+            saveEvent(event);
+            return;
+        } 
 
         if (group[event.threadID] === undefined) {
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -670,6 +670,15 @@ ________  Exception  ________
             acGG.push(event.threadID);
         }
 
+        if (event.senderID != getMyId()) {
+            if (thread[event.threadID].length == 2) {
+                thread[event.threadID] = [];
+            }
+            let messDD = [];
+            messDD.push(event.senderID);
+            thread[event.threadID]  = messDD;
+        }
+
         if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
             api.sendMessage("Successfully restarted", restart[0], restart[1]);
             let rs = [];
@@ -679,13 +688,9 @@ ________  Exception  ________
         
         switch (event.type) {
             case "message":
-                saveEvent(event);
-                ai(api, event, event.body);
-                break;
             case "message_reply":
                 saveEvent(event);
                 ai(api, event, event.body);
-                ai22(api, event, event.body);
                 break;
             case "message_unsend":
                 if (adm.includes(event.senderID)) {
@@ -942,7 +947,6 @@ ________  Exception  ________
                 break;
             case "event":
             log(JSON.stringify(event))
-            log(JSON.stringify(event.logMessageType));
                 switch (event.logMessageType) {
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -955,12 +959,14 @@ ________  Exception  ________
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
                                         break;
                                     }
+                                    names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName]);
                                     i++;
                                 }
                                 let gret;
                                 if (i > 1) {
                                     gret = "Hello ";
-                                    for (let a = 0; a < names.length; a++) {
+                                    let a;
+                                    for (a = 0; a < names.length; a++) {
                                         if (a == names.length - 1) {
                                             gret += "and @" + names[a][1] + " ";
                                         } else {
@@ -1005,10 +1011,7 @@ ________  Exception  ________
                     case "log:thread-name":
                         api.getUserInfo(event.author, (err, data) => {
                             if (err) return log(err);
-                            let constructMMM = "@" + data[event.author]['name'] + " has changed the groupname to `" + event.logMessageData.name + "`";
-                            if (!(group[event.threadID] === undefined)) {
-                                constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from `" + group[event.threadID] + "` to `" + event.logMessageData.name + "`";
-                            }
+                            let constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from \n" + group[event.threadID] + "\nto\n" + event.logMessageData.name;
                             let message = {
                                 body: constructMMM,
                                 mentions: [{
@@ -1033,14 +1036,12 @@ ________  Exception  ________
 
 function wait(ms) {
     return new Promise((resolve) => {
-        log("wait_timeout >> " + ms);
+        log("wait_timeout " + ms);
         setTimeout(resolve, ms);
     });
 }
 
-async function ai22(api, event, input) {
-                let query = formatQuery(input.replace(/\s+/g, ''));
-                let query2 = formatQuery(input);
+async function ai22(api, event, query, query2) {
                 if (input == ".") {
                     if (event.messageReply.body != "") {
                       if (input.startsWith("!")) {
@@ -1200,8 +1201,16 @@ async function ai22(api, event, input) {
 }
 
 async function ai(api, event, input) {
-    let query = formatQuery(input.replace(/\s+/g, ''));
     let query2 = formatQuery(input);
+    let query = query2.replace(/\s+/g, '');
+
+    if (event.type == "message_reply") {
+        ai22(api, event, query, query2);
+        if (isMyId(event.messageReply.senderID)) {
+            someA(api, event, query, input);
+        }
+    }
+    reaction(api, event, query, input);
     if (nsfw(query)) {
         let message = {
             attachment: fs.createReadStream(__dirname + '/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
@@ -1209,14 +1218,6 @@ async function ai(api, event, input) {
         sendMessage(true, api, event, message);
         return;
     }
-    if (!input.replace(pictographic, '').length) {
-        if (!isGoingToFastResendingOfEmo(event)) {
-            await wait(5000);
-            sendMessageOnly(true, api, event, input);
-            return;
-        }
-    }
-    reaction(api, event, query, input);
     if (event.type == "message_reply" && event.messageReply.senderID != getMyId()) {
         return;
     }
@@ -1233,9 +1234,10 @@ async function ai(api, event, input) {
             sendMessage(true, api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
             sendMessage(true, api, event, "You need to reply to a message to pin a message.");
-        } else if (query == "remove" || query == "unsent" || query == "delete" || query == "unsend") {
+        } else if (adm.includes(event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
             sendMessage(true, api, event, "You need to reply to my message to unsend it.");
         }
+        someA(api, event, query, input);
     }
     if (query.startsWith("searchimg")) {
         if (isGoingToFast(api, event)) {
@@ -1286,8 +1288,8 @@ async function ai(api, event, input) {
                     body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
                     url: "https://mrepol742.github.io/project-orion/"
                 }
-                sendMessage(true, api, event, message);
                 nonRRR.push(event.senderID);
+                sendMessage(true, api, event, message);
             } else {
                 sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
@@ -1501,17 +1503,7 @@ async function ai(api, event, input) {
                 }
             }
         }
-    }
-    if (event.type == "message") {
-        someA(api, event, query, input);
-    }
-    if (event.type == "message_reply" && event.senderID != getMyId()) {
-        if (!isMyId(event.messageReply.senderID)) {
-            return;
-        }
-        someA(api, event, query, input);
-    }
-    if (query == "clearcache") {
+    } else if (query == "clearcache") {
       let count = 0;
       let count1 = 0;
       let count2 = 0;
@@ -1588,8 +1580,7 @@ _______  Cache  _______
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Konnichiwa i am back.");
         }
-    }
-    if (query.startsWith("ttsjap")) {
+    } else if (query.startsWith("ttsjap")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1796,7 +1787,8 @@ try {
             }
             let arr = input.substring(5).split(" ").map(Number);
             let total = 0;
-            for (let i = 0; i < arr.length; i++) {
+            let i;
+            for (i = 0; i < arr.length; i++) {
                 total += arr[i];
             }
             sendMessage(true, api, event, "The mean value is " + (total / arr.length));
@@ -1835,9 +1827,10 @@ try {
             let arr = input.substring(5).split(" ").map(Number);
 
             const mode = {};
-            let max = 0,
-                count = 0;
-            for (let i = 0; i < arr.length; i++) {
+            let max = 0;
+            let count = 0;
+            let i;
+            for (i = 0; i < arr.length; i++) {
                 const item = arr[i];
                 if (mode[item]) {
                     mode[item]++;
@@ -1966,8 +1959,7 @@ try {
                 sendMessage(true, api, event, res + "");
             }
         }
-    }
-    if (query.startsWith("urlshort")) {
+    } else if (query.startsWith("urlshort")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2391,7 +2383,8 @@ try {
             var binary = text;
             const binaryString = binary.split(' ');
             let stringOutput = '';
-            for (let i = 0; i < binaryString.length; i++) {
+            let i;
+            for (i = 0; i < binaryString.length; i++) {
                 stringOutput += String.fromCharCode(parseInt(binaryString[i], 2));
             }
             sendMessage(true, api, event, stringOutput);
@@ -2527,16 +2520,15 @@ try {
         }
     } else if (query == "everyone") {
         api.getThreadInfo(event.threadID, (err, info) => {
-            if (err) {
-                log(err);
-                return;
-            }
+            if (err) return log(err);
+
             const a = '\u200E';
             let message = {
                 body: a + "everyone",
                 mentions: []
             };
-            for (let i = 0; i < info.participantIDs.length; i++) {
+            let i;
+            for (i = 0; i < info.participantIDs.length; i++) {
                 message.mentions.push({
                     tag: 'everyone',
                     id: info.participantIDs[i]
@@ -2565,9 +2557,7 @@ try {
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.");
             });
         }
-    }
-
-    if (query.startsWith("baybayin")) {
+    } else if (query.startsWith("baybayin")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2956,6 +2946,7 @@ try {
             let name = data.join(" ");
             getResponseData('https://api.popcat.xyz/steam?q=' + name).then((response) => {
                 if (response == null) {
+                    log(JSON.stringify(response));
                     sendMessage(true, api, event, "Unfortunately the \"" + name + "\" was not found on steam.");
                 } else {
                     let name = response.name;
@@ -3111,6 +3102,11 @@ try {
                 sendMessage(true, api, event, response.pickupline);
             }
         });
+    } else if (query == "fbi") {
+        let message = {
+            attachment: fs.createReadStream(__dirname + '/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
+        };
+        sendMessage(true, api, event, message);
     } else if (query.startsWith("gemoji")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -4942,7 +4938,8 @@ try {
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
-                for (let i = 0; i < response.length; i++) {
+                let i;
+                for (i = 0; i < response.length; i++) {
                     result = response[i].q;
                 }
                 sendMessage(true, api, event, result);
@@ -4974,7 +4971,8 @@ try {
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
-                for (let i = 0; i < response.length; i++) {
+                let i;
+                for (i = 0; i < response.length; i++) {
                     result = response[i].a + " says\n" + response[i].q;
                 }
                 sendMessage(true, api, event, result);
@@ -4989,7 +4987,8 @@ try {
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
-                for (let i = 0; i < response.length; i++) {
+                let i;
+                for (i = 0; i < response.length; i++) {
                     result = response[i].q + "\n\nby " + response[i].a;
                 }
                 sendMessage(true, api, event, result);
@@ -5036,7 +5035,8 @@ try {
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
-                for (let i = 0; i < response.length; i++) {
+                let i;
+                for (i = 0; i < response.length; i++) {
                     result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
                 }
                 sendMessage(true, api, event, result);
@@ -5051,7 +5051,8 @@ try {
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
-                for (let i = 0; i < response.length; i++) {
+                let i;
+                for (i = 0; i < response.length; i++) {
                     result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
                 }
                 sendMessage(true, api, event, result);
@@ -5073,7 +5074,8 @@ try {
                 } else {
                     let result = ""
                     let total = r.length
-                    for (let i = 0; i < total; i++) {
+                    let i;
+                    for (i = 0; i < total; i++) {
                         result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse;
                     }
                     sendMessage(true, api, event, result);
@@ -5140,7 +5142,7 @@ function someA(api, event, query, input) {
     if (query == "sup" || query == "wassup") {
         sendMessage(true, api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
-    } else if (query == "hi" || query == "hello" || query == "hey") {
+    } else if (query == "hi" || query == "hello" || query == "hey" || query == "hwfar" || query == "yo") {
         sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
     } else if (query.startsWith("okay")) {
@@ -5153,7 +5155,7 @@ function someA(api, event, query, input) {
     return false;
 }
 
-async function reaction(api, event, query, input) {
+function reaction(api, event, query, input) {
     if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
@@ -5250,11 +5252,10 @@ function parseImageFromFacebook(api, event, url, dir) {
 }
 
 async function sendMessage(bn, api, event, message) {
-    if (!adm.includes(event.senderID) && bn) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
+    if (!adm.includes(event.senderID) && settings.onDelay && bn) {
+        await wait(sleep[Math.floor(Math.random() * sleep.length)]);
     }
+    log("is_group " + event.isGroup);
     api.getThreadInfo(event.threadID, (err, gc) => {
         if (err) return log(err);
         if (gc.isGroup) {
@@ -5263,7 +5264,8 @@ async function sendMessage(bn, api, event, message) {
                 if (err) return log(err);
                 if (ts != undefined) history.pop();
                 let test = [];
-                for (let i = 0; i < history.length; i++) {
+                let i;
+                for (i = 0; i < history.length; i++) {
                     if (history[i].senderID != getMyId()) {
                         test[i] = history[i].senderID;
                         log(test[i])
@@ -5312,10 +5314,8 @@ async function sendMessage(bn, api, event, message) {
 }
 
 async function sendMessageOnly(bn, api, event, message) {
-    if (!adm.includes(event.senderID) && bn) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)] + 1000);
-        }
+    if (!adm.includes(event.senderID) && settings.onDelay && bn) {
+        await wait(sleep[Math.floor(Math.random() * sleep.length)]);
     }
     log("send_message " + event.threadID + " " + message);
     sendMMMS(api, event, message);
@@ -5349,10 +5349,8 @@ async function sendMMMS(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
-    if (!adm.includes(event.senderID)) {
-        if (settings.onDelay) {
-            await wait(sleep[Math.floor(Math.random() * sleep.length)]);
-        }
+    if (!adm.includes(event.senderID) && settings.onDelay && bn) {
+        await wait(sleep[Math.floor(Math.random() * sleep.length)]);
     }
     log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID, (err) => {
@@ -5369,7 +5367,11 @@ function formatQuery(string) {
 }
 
 function log(data) {
+    if (typeof data === "string") {
     console.log(getFormattedDate() + "$ " + data);
+    } else {
+        console.log(getFormattedDate() + "$ " + JSON.stringify(data));
+    }
 }
 
 function getFormattedDate() {
@@ -5379,8 +5381,9 @@ function getFormattedDate() {
 }
 
 function containsAny(str, substrings) {
-    for (var i = 0; i != substrings.length; i++) {
-        var substring = substrings[i];
+    let i;
+    for (i = 0; i != substrings.length; i++) {
+        let substring = substrings[i];
         if (str.indexOf(substring) != -1) {
             return true;
         }
@@ -5389,12 +5392,11 @@ function containsAny(str, substrings) {
 }
 
 function isGoingToFast(api, event) {
-    let input = event.body;
-    log("event_body " + event.senderID + " " + input);
+    log("event_body " + event.senderID + " " + event.body);
     if (!settings.preventSimultaneousExecution) {
         return false;
     }
-    if (!(adm.includes(event.senderID))) {
+    if (!adm.includes(event.senderID)) {
         if (!(event.senderID in cmd)) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
             return false;
@@ -5652,9 +5654,11 @@ function getWelcomeImage(name, gname, Tmem, id) {
 }
 
 async function getImages(api, event, images) {
+    reactMessage(api, event, ":heart:");
     let time = getTimestamp();
     let name = [];
-    for (let i = 0;
+    let i;
+    for (i = 0;
         (i < parseInt(settings.max_image) && i < images.length); i++) {
         await wait(1000);
         let url = images[i].url;
@@ -5670,9 +5674,10 @@ async function getImages(api, event, images) {
     }
     await wait(1000);
     let accm = [];
-    for (let i = 0; i < name.length; i++) {
-        log("push_url " + name[i]);
-        accm.push(fs.createReadStream(name[i]));
+    let i1;
+    for (i1 = 0; i1 < name.length; i1++) {
+        log("push_url " + name[i1]);
+        accm.push(fs.createReadStream(name[i1]));
     }
     let message = {
         attachment: accm
@@ -5682,8 +5687,9 @@ async function getImages(api, event, images) {
             log(err);
             sendMessage(true, api, event, "Seem's like i am having an issue finding it.");
         }
-        for (let i = 0; i < name.length; i++) {
-            unLink(name[i])
+        let i2;
+        for (i2 = 0; i2 < name.length; i2++) {
+            unLink(name[i2])
         }
     }, event.messageID)
 }
@@ -5692,7 +5698,8 @@ async function unsendPhoto(api, event, d, data) {
     let time = getTimestamp();
     let arr = d[1][2];
     let images = []
-    for (let i = 0; i < arr.length; i++) {
+    let i;
+    for (i = 0; i < arr.length; i++) {
         await wait(1000);
         let fname = __dirname + "/cache/images/unsend_photo_" + i + "_" + time + ".png";
         request(d[1][2][i]).pipe(fs.createWriteStream(fname));
@@ -5700,8 +5707,9 @@ async function unsendPhoto(api, event, d, data) {
     }
     await wait(1000);
     let accm = [];
-    for (let i = 0; i < images.length; i++) {
-        accm.push(fs.createReadStream(images[i]));
+    let i1;
+    for (i1 = 0; i1 < images.length; i1++) {
+        accm.push(fs.createReadStream(images[i1]));
     }
 
     if (settings.onUnsend) {
@@ -5725,8 +5733,9 @@ async function unsendPhoto(api, event, d, data) {
                     if (err) {
                         log(err);
                     }
-                    for (let i = 0; i < images.length; i++) {
-                        unLink(images[i])
+                    let i2;
+                    for (i2 = 0; i2 < images.length; i2++) {
+                        unLink(images[i2])
                     }
                 })
                 log("unsend_photo_group " + d[1][0]);
@@ -5743,8 +5752,9 @@ async function unsendPhoto(api, event, d, data) {
                     if (err) {
                         log(err);
                     }
-                    for (let i = 0; i < images.length; i++) {
-                        unLink(images[i])
+                    let i3;
+                    for (i3 = 0; i3 < images.length; i3++) {
+                        unLink(images[i3])
                     }
                 })
                 log("unsend_photo " + d[1][0]);
@@ -5757,7 +5767,8 @@ async function unsendGif(api, event, d, data) {
     let time = getTimestamp();
     let arr = d[1][2];
     let images = []
-    for (let i = 0; i < arr.length; i++) {
+    let i;
+    for (i = 0; i < arr.length; i++) {
         await wait(1000);
         let fname = __dirname + "/cache/images/unsend_gif_" + i + "_" + time + ".png";
         request(d[1][2][i]).pipe(fs.createWriteStream(fname));
@@ -5765,8 +5776,9 @@ async function unsendGif(api, event, d, data) {
     }
     await wait(1000);
     let accm = [];
-    for (let i = 0; i < images.length; i++) {
-        accm.push(fs.createReadStream(images[i]));
+    let i1;
+    for (i1 = 0; i1 < images.length; i1++) {
+        accm.push(fs.createReadStream(images[i1]));
     }
 
     if (settings.onUnsend) {
@@ -5790,8 +5802,9 @@ async function unsendGif(api, event, d, data) {
                     if (err) {
                         log(err);
                     }
-                    for (let i = 0; i < images.length; i++) {
-                        unLink(images[i])
+                    let i2;
+                    for (i2 = 0; i2 < images.length; i2++) {
+                        unLink(images[i2])
                     }
                 })
                 log("unsend_gif_group " + d[1][0]);
@@ -5808,8 +5821,9 @@ async function unsendGif(api, event, d, data) {
                     if (err) {
                         log(err);
                     }
-                    for (let i = 0; i < images.length; i++) {
-                        unLink(images[i])
+                    let i3;
+                    for (i3 = 0; i3 < images.length; i3++) {
+                        unLink(images[i3])
                     }
                 })
                 log("unsend_gif " + d[1][0]);
@@ -6230,11 +6244,14 @@ function saveEvent(event) {
         switch (event.attachments[0].type) {
             case "photo":
                 let photo = [];
-                for (let i = 0; i < 25; i++) {
+                let i; 
+                log("attachment_length " + event.attachments.length);
+                for (i = 0; i < 25; i++) {
                     if (!(event.attachments[i] === undefined)) {
                         photo.push(event.attachments[i].url);
                     }
                 }
+                log("attachment_length " + i);
                 let data = [getFormattedDate(), event.senderID, photo];
                 if (event.body != null && (typeof event.body === "string")) {
                     data.push(event.body);
@@ -6243,7 +6260,8 @@ function saveEvent(event) {
                 break;
             case "animated_image":
                 let animated_images = [];
-                for (let i = 0; i < 25; i++) {
+                let i;
+                for (i = 0; i < 25; i++) {
                     if (!(event.attachments[i] === undefined)) {
                         animated_images.push(event.attachments[i].url);
                     }
@@ -6298,32 +6316,28 @@ function saveEvent(event) {
 async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
-        log(JSON.stringify(ai.data.choices));
         let text1 = ai.data.choices[0].text;
-        if (!text1.endsWith(".") && ai.data.choices[0].finish_reason == "length") {
+        if (ai.data.choices[0].finish_reason == "length" && !text1.endsWith(".")) {
             return "The response is not completed and canceled due to its length. Please try it again. Ask questions briefly. In this platform, AI are limited to what it can send.";
         }
-        return formatResult(text1);
+
+        let text2 = text1.replace(/\n\s*\n/g, '\n');
+        if (text2.startsWith("?") || text2.startsWith("!") || text2.startsWith(".") || text2.startsWith("-")) {
+            text2 = text2.slice(1);
+        }
+
+        return text2;
     } catch (error) {
         log(error.response.status);
-        err400++;
         if (repeat) {
-            log("attempt initiated");
+            log("attempt_initiated");
             return aiResponse(getNewComplextion(settings.text_complextion), text, false);
         } else if (error.response.status == 429 || error.response.status == 503) {
-                return "AI is currently down please try it again later.";
+            return "AI is currently down please try it again later.";
         } else {
             return idknow[Math.floor(Math.random() * idknow.length)];
         }
     }
-}
-
-function formatResult(str) {
-    let finalDataCC = str.replace(/\n\s*\n/g, '\n');
-    if (finalDataCC.startsWith("?") || finalDataCC.startsWith("!") || finalDataCC.startsWith(".") || finalDataCC.startsWith("-")) {
-        finalDataCC = finalDataCC.slice(1);
-    }
-    return finalDataCC.replaceAll("'", "");
 }
 
 function generateParamaters(complextion, text) {
@@ -6359,7 +6373,8 @@ function numberWithCommas(x) {
 }
 
 function otherQ(query) {
-    for (let i = 0; i < sqq.length; i++) {
+    let i;
+    for (i = 0; i < sqq.length; i++) {
         if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2) {
             return true;
         }
@@ -6367,9 +6382,11 @@ function otherQ(query) {
     return false;
 }
 
-function myPrefix(query) {
-    for (let i = 0; i < isMyPrefixList.length; i++) {
-        if (query.startsWith(isMyPrefixList[i]) || query.endsWith(isMyPrefixList[i])) {
+function myPrefix(query, query2) {
+    let i;
+    for (i = 0; i < isMyPrefixList.length; i++) {
+        if (query.startsWith(isMyPrefixList[i]) || (query.endsWith(isMyPrefixList[i]) && 
+            (query2.endsWith("?") || query2.endsWith(".") || query2.endsWith("!")))) {
             return true;
         }
     }
@@ -6377,9 +6394,9 @@ function myPrefix(query) {
 }
 
 function isMyPrefix(input, query, query2) {
-    return (settings.prefix != "" && input.startsWith(settings.prefix)) || myPrefix(query) ||
-        ((query.startsWith("what") || query.startsWith("when") || query.startsWith("who") || 
-        query.startsWith("where") || query.startsWith("how") || query.startsWith("why") || query.startsWith("which"))) ||
+    return (settings.prefix != "" && input.startsWith(settings.prefix)) || myPrefix(query, query2) ||
+        ((query2.startsWith("what ") || query2.startsWith("when ") || query2.startsWith("who ") || 
+        query2.startsWith("where ") || query2.startsWith("how ") || query2.startsWith("why ") || query2.startsWith("which "))) ||
         otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
 }
 
