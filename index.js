@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 const express = require('express');
 const fs = require("fs");
 const login = require("fca-unofficial");
@@ -40,19 +39,27 @@ const process_p = require('process');
 const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
 const dns = require("dns");
-const { wordsToNumbers } = require('words-to-numbers');
+const {
+    wordsToNumbers
+} = require('words-to-numbers');
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
-const port = process.env.PORT || 6000;
+
 const app = express();
 
 app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
 
-app.listen(port, () =>
+app.listen(process.env.PORT || 6000, () =>
     log(`Project Orion ONLINE`)
 );
+
+setInterval(function() {
+  http.get("https://project-orion.mrepol853.repl.co", function(res) {
+    log("ping");
+  });
+}, 1800000 * Math.random() + 1200000);
 
 let sleep = [4000, 3000, 5000, 4500, 6000, 5500, 3300, 4400, 5050, 4000, 5000, 6500, 4500, 3600];
 let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search", "gencode"]
@@ -112,13 +119,13 @@ let isCalled = true;
 let isAppState = true;
 
 let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
-"I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
-"I'm Mj, a ChatBot AI that has been trained on countless trillions of parameters. trained to communicate in a conversational or speaking manner like a human. For the list of commands message \"cmd\". I was able to appropriately respond to the majority of inquiries. If you have any further questions, don't be afraid to ask.",
-"I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
-"I'm Mj, a ChatBot AI that has been educated using countless trillions of parameters. trained to communicate with others in a conversational or speaking style. If you have any questions, don't be afraid to ask. I was able to appropriately answer the majority of inquiries regarding the list of commands message \"cmd\".",
-"I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\".",
-"I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
-"I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"."
+    "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
+    "I'm Mj, a ChatBot AI that has been trained on countless trillions of parameters. trained to communicate in a conversational or speaking manner like a human. For the list of commands message \"cmd\". I was able to appropriately respond to the majority of inquiries. If you have any further questions, don't be afraid to ask.",
+    "I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
+    "I'm Mj, a ChatBot AI that has been educated using countless trillions of parameters. trained to communicate with others in a conversational or speaking style. If you have any questions, don't be afraid to ask. I was able to appropriately answer the majority of inquiries regarding the list of commands message \"cmd\".",
+    "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\".",
+    "I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
+    "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"."
 ]
 let qot = ["The object will not change its motion unless a force acts on it.",
     "The object is equal to its mass times its acceleration.",
@@ -142,12 +149,11 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 let help = `
 _______  Project Orion 1/8  _______
 |
-|   ⦿ cmd
+|   ⦿ cmd 
 |   ⦿ cmd [number|all]
 |   ⦿ cmd [admin|root]
-|   ⦿ ping
 |   ⦿ stats
-|   ⦿ uptime
+|   ⦿ uptime 
 |   ⦿ sysinfo
 |   ⦿ sendReport [text]
 |   ⦿ mj [text]
@@ -350,6 +356,7 @@ _______  Project Orion 8/8  _______
 |   ⦿ formatNumbers [numbers]
 |   ⦿ wordsToNumbers [words]
 |   ⦿ fbi
+|   ⦿ everyone
 |__________________________________
 `;
 
@@ -424,7 +431,9 @@ let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.js
 let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
 let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
 let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
-let state = {appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))};
+let state = {
+    appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))
+};
 
 const config = new Configuration({
     apiKey: keys.ai,
@@ -484,6 +493,7 @@ ________  Exception  ________
             if (err) log(err);
         })
     });
+    
 
     cron.schedule('*/10 * * * *', () => {
         saveState();
@@ -491,21 +501,13 @@ ________  Exception  ________
         acGG = [];
         messagesD = getFormattedDate();
         log("save_state");
-    },
-    {
-        scheduled: true,
-        timezone: "Asia/Manila"
     });
 
-    cron.schedule('0 * * * *', () => {
+    setInterval(function() {
         fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
         fb_stateD = getFormattedDate();
         log("fb_save_state")
-    },
-    {
-        scheduled: true,
-        timezone: "Asia/Manila"
-    });
+      }, 1800000 * Math.random() + 1200000);
 
     api.setOptions(options);
 
@@ -538,49 +540,46 @@ ________  Exception  ________
 
             if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
 
-            if (query == "unblockgroup") {
-                if (adm.includes(event.senderID)) {
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return log(err);
-                        if (gc.isGroup) {
+                if (query == "unblockgroup") {
+                    if (adm.includes(event.senderID)) {
+                        if (event.isGroup) {
                             unblockGroup(api, event, event.threadID);
                         } else {
                             sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
                         }
-                    });
+                    }
+                } else if (query == "unmute") {
+                    if (mutedRRR.includes(event.senderID)) {
+                        sendMessage(true, api, event, "The user is not blocked.");
+                        mutedRRR = mutedRRR.filter(item => item !== event.senderID);
+                        sendMessage(true, api, event, "You can now use my commands.");
+                        fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
+                    }
+                } else if (query == "status") {
+                    if (mutedRRR.includes(event.senderID)) {
+                        sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
+                    } else if (blockSSS.includes(event.threadID)) {
+                        sendMessage(true, api, event, "This group is blocked. Contact the bot admins for more info.");
+                    } else if (blockRRR.includes(event.senderID) || bot.includes(event.senderID)) {
+                        sendMessage(true, api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
+                    } else if (settings.isStop) {
+                        sendMessage(true, api, event, "The program is currently offline.");
+                    } else if (settings.isDebugEnabled) {
+                        sendMessage(true, api, event, "The program is currently under maintenance.");
+                    } else {
+                        sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS");
+                    }
+                } else if (!(adm.includes(event.senderID))) {
+                    if (blockSSS.includes(event.threadID)) {
+                        saveEvent(event);
+                        return;
+                    } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) &&
+                        (event.type == "message" || event.type == "message_reply")) {
+                        saveEvent(event);
+                        return;
+                    }
                 }
-            } else if (query == "unmute") {
-                if (mutedRRR.includes(event.senderID)) {
-                    sendMessage(true, api, event, "The user is not blocked.");
-                    mutedRRR = mutedRRR.filter(item => item !== event.senderID);
-                    sendMessage(true, api, event, "You can now use my commands.");
-                    fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
-                }
-            } else if (query == "status") {
-                if (mutedRRR.includes(event.senderID)) {
-                    sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
-                } else if (blockSSS.includes(event.threadID)) {
-                    sendMessage(true, api, event, "This group is blocked. Contact the bot admins for more info.");
-                } else if (blockRRR.includes(event.senderID) || bot.includes(event.senderID)) {
-                    sendMessage(true, api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
-                } else if (settings.isStop) {
-                    sendMessage(true, api, event, "The program is currently offline.");
-                } else if (settings.isDebugEnabled ) {
-                    sendMessage(true, api, event, "The program is currently under maintenance.");
-                } else { 
-                    sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS");
-                }
-            } else if (!(adm.includes(event.senderID))) {
-                if (blockSSS.includes(event.threadID)) {
-                    saveEvent(event);
-                    return;
-                } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
-                (event.type == "message" || event.type == "message_reply")) {
-                    saveEvent(event);
-                    return;
-                } 
-            }
-                  
+
             }
 
             if (isMyId(event.senderID)) {
@@ -599,15 +598,15 @@ ________  Exception  ________
                     saveState();
                     fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
                     sendMessage(true, api, event, "Restarting program...");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         let rs = [];
                         rs.push(event.threadID);
                         rs.push(event.messageID);
                         fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs), "utf8");
-                        process.on("exit", function () {
+                        process.on("exit", function() {
                             require("child_process").spawn(process.argv.shift(), process.argv, {
                                 cwd: process.cwd(),
-                                detached : true,
+                                detached: true,
                                 stdio: "inherit"
                             });
                         });
@@ -616,27 +615,29 @@ ________  Exception  ________
                 }
             } else if (!adm.includes(event.senderID)) {
                 if (settings.crash) {
+                    saveEvent(event);
                     if (isMyPrefix(input, query, query2)) {
-                    if (isGoingToFastCallingTheCommand(event)) {
-                        return;
+                        if (isGoingToFastCallingTheCommand(event)) {
+                            return;
+                        }
+                        let message = {
+                            body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
+                            attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                        };
+                        sendMessage(true, api, event, message);
                     }
-                    let message = {
-                        body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                    };
-                    sendMessage(true, api, event, message);
-                }
                     return;
                 } else if (settings.isDebugEnabled) {
-                    if (isMyPrefix(input, query, query2)) {
-                    if (isGoingToFastCallingTheCommand(event)) {
-                        return;
-                    }
-                    let message = {
-                        body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                    };
-                    sendMessage(true, api, event, message);
+                    saveEvent(event);
+                    if (isMyPrefix(event.body, query, query2)) {
+                        if (isGoingToFastCallingTheCommand(event)) {
+                            return;
+                        }
+                        let message = {
+                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                            attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                        };
+                        sendMessage(true, api, event, message);
                     }
                     return;
                 } else if (settings.isStop) {
@@ -645,17 +646,32 @@ ________  Exception  ________
                 }
             }
 
-            
+            if (event.senderID != getMyId() && event.isGroup) {
+                if (thread[event.threadID] === undefined) {
+                    let messDD = [];
+                    messDD.push(event.senderID);
+                    thread[event.threadID] = messDD;
+                    log(event.threadID + " " + event.senderID);
+                } else if (thread[event.threadID].length < 3) {
+                    thread[event.threadID].push(event.senderID);
+                    log(event.threadID + " " + event.senderID);
+                } else {
+                    thread[event.threadID].shift();
+                    thread[event.threadID].push(event.senderID);
+                }
+            }
+
+
         } else if (blockSSS.includes(event.threadID)) {
             if ((event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
             }
             return;
-        } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) && 
+        } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) &&
             (event.type == "message" || event.type == "message_reply")) {
             saveEvent(event);
             return;
-        } 
+        }
 
         if (group[event.threadID] === undefined) {
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -663,20 +679,11 @@ ________  Exception  ________
                 if (gc.isGroup && group[event.threadID] === undefined) {
                     group[event.threadID] = gc.threadName;
                     log("new_group " + event.threadID + " group_name " + gc.threadName);
-                    sendMessage(false, api, event, "Thank you for adding me.\n\nfor more information message `about`, `license`, `cmd`");
+                    sendMessageOnly(false, api, event, "Thank you for adding me.\n\nfor more information message `about`, `license`, `cmd`");
                 }
             });
         } else if (!acGG.includes(event.threadID) && !(group[event.threadID] === undefined)) {
             acGG.push(event.threadID);
-        }
-
-        if (event.senderID != getMyId()) {
-            if (thread[event.threadID].length == 2) {
-                thread[event.threadID] = [];
-            }
-            let messDD = [];
-            messDD.push(event.senderID);
-            thread[event.threadID]  = messDD;
         }
 
         if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
@@ -685,14 +692,17 @@ ________  Exception  ________
             fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs), "utf8");
             isCalled = false;
         }
-        
+
         switch (event.type) {
             case "message":
             case "message_reply":
                 saveEvent(event);
-                ai(api, event, event.body);
+                ai(api, event);
                 break;
             case "message_unsend":
+                if (!settings.onUnsend) {
+                    break;
+                }
                 if (adm.includes(event.senderID)) {
                     break;
                 }
@@ -712,10 +722,9 @@ ________  Exception  ________
                         unsendPhoto(api, event, d, data);
                     } else if (d[0] == "animated_images") {
                         unsendGif(api, event, d, data);
-                    } else if (d[0] == "share") {   
+                    } else if (d[0] == "share") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
-                            if (settings.onUnsend) {
                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                     if (err) return log(err);
                                     if (gc.isGroup) {
@@ -739,9 +748,8 @@ ________  Exception  ________
                                         log("unsend_share " + d[1][0] + " " + message);
                                     }
                                 });
-                            }
                         });
-                    } else if (d[0] == "file") {  
+                    } else if (d[0] == "file") {
                         let filename = __dirname + '/cache/files/' + d[1][2];
                         let file = fs.createWriteStream(filename);
                         let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
@@ -749,7 +757,6 @@ ________  Exception  ________
                         let fileRequest = http.get(decodeurl, function(fileResponse) {
                             fileResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -783,53 +790,91 @@ ________  Exception  ________
                                         }
                                     });
                                     unLink(filename);
-                                }
                             });
                         });
                     } else if (d[0] == "location") {
-                        sendMessageOnly(true, api, event, "Unsupported action. Please wait a while.");
-                    } else if (d[0] == "sticker") {
-                        let filename = __dirname + '/cache/images/unsend_sticker_' + time + '.png';
-                        let file = fs.createWriteStream(filename);
-                        let gifRequest = http.get(d[1][2], function(gifResponse) {
-                            gifResponse.pipe(file);
-                            file.on('finish', function() {
-                                if (settings.onUnsend) {
-                                    let time = getTimestamp();
-                                    api.getThreadInfo(event.threadID, (err, gc) => {
-                                        if (err) return log(err);
-                                        if (gc.isGroup) {
-                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                            if (!(d[1][3] === undefined)) {
-                                                constructMMM += d[1][3];
-                                            }
-                                            let message = {
-                                                body: constructMMM,
-                                                attachment: fs.createReadStream(filename),
-                                                mentions: [{
-                                                    tag: '@' + data[event.senderID]['name'],
-                                                    id: event.senderID,
-                                                    fromIndex: 0
-                                                }]
-                                            }
-                                            sendMessageOnly(true, api, event, message);
-                                            log("unsend_sticker_group " + d[1][0] + " " + filename);
-                                        } else {
-                                            let constructMMM = "You deleted this sticker.\n"
-                                            if (!(d[1][3] === undefined)) {
-                                                constructMMM += d[1][3];
-                                            }
-                                            let message = {
-                                                body: constructMMM,
-                                                attachment: fs.createReadStream(filename)
-                                            }
-                                            sendMessageOnly(true, api, event, message);
-                                            log("unsend_sticker " + d[1][0] + " " + filename);
-                                        }
-                                    });
-                                    unLink(filename);
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (err) return log(err);
+                            if (gc.isGroup) {
+                                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    mentions: [{
+                                        tag: '@' + data[event.senderID]['name'],
+                                        id: event.senderID,
+                                        fromIndex: 0
+                                    }],
+                                    url: d[1][3]
                                 }
-                            });
+                                sendMessageOnly(true, api, event, message1);
+                                log("unsend_location " + d[1][0] + " " + d[1][2]);
+                            } else {
+                                let constructMMM = "You deleted this location.\n"
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    url: d[1][3]
+                                }
+                                sendMessageOnly(true, api, event, message1);
+                                log("unsend_location " + d[1][0] + " " + d[1][2]);
+                            }
+                        });
+                    } else if (d[0] == "location_sharing") {
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (err) return log(err);
+                            if (gc.isGroup) {
+                                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    mentions: [{
+                                        tag: '@' + data[event.senderID]['name'],
+                                        id: event.senderID,
+                                        fromIndex: 0
+                                    }],
+                                    location: {latitude: d[1][3], longitude: d[1][4], current: true}
+                                }
+                                sendMessageOnly(true, api, event, message1);
+                                log("unsend_location_sharing_group " + d[1][0] + " " + d[1][2]);
+                            } else {
+                                let constructMMM = "You deleted this live location.\n"
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    location: {latitude: d[1][3], longitude: d[1][4], current: true}
+                                }
+                                sendMessageOnly(true, api, event, message1);
+                                log("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
+                            }
+                        });
+                    } else if (d[0] == "sticker") {
+                        api.getThreadInfo(event.threadID, (err, gc) => {
+                            if (err) return log(err);
+                            if (gc.isGroup) {
+                                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let message = {
+                                    body: constructMMM,
+                                    mentions: [{
+                                        tag: '@' + data[event.senderID]['name'],
+                                        id: event.senderID,
+                                        fromIndex: 0
+                                    }]
+                                }
+                                let message1 = {
+                                    sticker: d[1][2]
+                                }
+                                sendMessageOnly(true, api, event, message);
+                                sendMessageOnly(true, api, event, message1);
+                                log("unsend_sticker_group " + d[1][0] + " " + d[1][2]);
+                            } else {
+                                let constructMMM = "You deleted this sticker.\n"
+                                let message = {
+                                    body: constructMMM
+                                }
+                                let message1 = {
+                                    sticker: d[1][2]
+                                }
+                                sendMessageOnly(true, api, event, message);
+                                sendMessageOnly(true, api, event, message1);
+                                log("unsend_sticker " + d[1][0] + " " + d[1][2]);
+                            }
                         });
                     } else if (d[0] == "video") {
                         let filename = __dirname + '/cache/videos/unsend_video_' + time + '.mp4'
@@ -837,7 +882,6 @@ ________  Exception  ________
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -871,7 +915,6 @@ ________  Exception  ________
                                         }
                                     });
                                     unLink(filename);
-                                }
                             });
                         });
                     } else if (d[0] == "audio") {
@@ -880,7 +923,6 @@ ________  Exception  ________
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                if (settings.onUnsend) {
                                     let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
@@ -914,13 +956,11 @@ ________  Exception  ________
                                         }
                                     });
                                     unLink(filename);
-                                }
                             });
                         });
                     } else {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
-                            if (settings.onUnsend) {
                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                     if (err) return log(err);
                                     if (gc.isGroup) {
@@ -940,13 +980,12 @@ ________  Exception  ________
                                         log("unsend_message " + d[0] + " " + message);
                                     }
                                 });
-                            }
                         });
                     }
                 });
                 break;
             case "event":
-            log(JSON.stringify(event))
+                log(JSON.stringify(event))
                 switch (event.logMessageType) {
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -974,9 +1013,9 @@ ________  Exception  ________
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += ". How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
+                                    gret += ". How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/";
                                 } else {
-                                    gret = "How are you @" + names[0][1] + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol";
+                                    gret = "How are you @" + names[0][1] + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/";
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -992,7 +1031,7 @@ ________  Exception  ________
                             if (err) log(err);
                             api.getUserInfo(parseInt(id), (err, data) => {
                                 if (err) return log(err);
-                                for (let prop in data) { 
+                                for (let prop in data) {
                                     if (data.hasOwnProperty(prop) && data[prop].name) {
                                         let gcn = gc.threadName;
                                         let arr = gc.participantIDs;
@@ -1010,8 +1049,14 @@ ________  Exception  ________
                         break;
                     case "log:thread-name":
                         api.getUserInfo(event.author, (err, data) => {
-                            if (err) return log(err);
-                            let constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from \n" + group[event.threadID] + "\nto\n" + event.logMessageData.name;
+                            if (err) return log(err); 
+                            let constructMMM;
+                            if (group[event.threadID] == null || group[event.threadID] === undefined) {
+                                group[event.threadID] = event.logMessageData.name;
+                                constructMMM = "@" + data[event.author]['name'] + " set the group name to " + event.logMessageData.name;
+                            } else {
+                                constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from \n" + group[event.threadID] + "\nto\n" + event.logMessageData.name;
+                            }
                             let message = {
                                 body: constructMMM,
                                 mentions: [{
@@ -1042,165 +1087,157 @@ function wait(ms) {
 }
 
 async function ai22(api, event, query, query2) {
-                if (input == ".") {
-                    if (event.messageReply.body != "") {
-                      if (input.startsWith("!")) {
-                        input = input.slice(1);
-                      }
-                        ai(api, event, event.messageReply.body);
-                    }
-                } else if (query == "notify") {
-                    if (isMyId(event.senderID)) {
-                        if (event.messageReply.body == "") {
-                            sendMessage(true, api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
-                        } else {
-                            sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(group).length + " groups.");
-                            sendMessageToAll(api, event.messageReply.body);
-                        }
-                    }
-                } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
-                    if (adm.includes(event.senderID)) {
-                        if (event.messageReply.senderID != getMyId()) {
-                            sendMessage(true, api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
-                        } else {
-                            api.unsendMessage(event.messageReply.messageID, (err) => {
-                                if (err) log(err);
-                            });
-                        }
-                    }
-                } else if (query == "pinadd") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(true, api, event, "You need to reply pin add to a message which is not empty to pin it.");
-                    } else {
-                        pinned.pin.message[event.threadID] = event.messageReply.body
-                        pinned.pin.sender[event.threadID] = event.messageReply.senderID
-                        sendMessage(true, api, event, "Message pinned.. Enter \"pin\" to show it.");
-                        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
-                    }
-                } else if (query == "count") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(true, api, event, "You need to reply count to a message.");
-                    } else {
-                        sendMessage(true, api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
-                    }
-                } else if (query == "countvowels") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(true, api, event, "You need to reply count --vowels to a message.");
-                    } else {
-                        sendMessage(true, api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
-                    }
-                } else if (query == "countconsonants") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (event.messageReply.body == "") {
-                        sendMessage(true, api, event, "You need to reply count --consonants to a message.");
-                    } else {
-                        sendMessage(true, api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
-                    }
-                } else if (query.startsWith("wfind")) {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    let data = input.split(" ");
-                    if (data.length < 2) {
-                        sendMessage(true, api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
-                    } else {
-                        data.shift();
-                        let se = data.join(" ");
-                        if (event.messageReply.body == "") {
-                            sendMessage(true, api, event, "You need to reply wfind text to a message.");
-                        } else if (event.messageReply.body.includes(se)) {
-                            sendMessage(true, api, event, "I found the \"" + se + "\" on this message " + (se.split(se).length - 1) + " times.");
-                        } else {
-                            sendMessage(true, api, event, "I cannot found any apperance of your search term on the message.");
-                        }
-                    }
-                } else if (query == "bgremove") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                        if (event.messageReply.attachments.length < 1) {
-                            sendMessage(true, api, event, "I cannot see an image. Please reply bgremove to an image.");
-                        } else if (event.messageReply.attachments.length > 1) {
-                            sendMessage(true, api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
-                        } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
-                            const url = event.messageReply.attachments[0].url;
-                            request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
-                                const inputPath = './cache/images/removebg.png';
-                                const formData = new FormData();
-                                formData.append('size', 'auto');
-                                formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
-        
-                                axios({
-                                        method: 'post',
-                                        url: 'https://api.remove.bg/v1.0/removebg',
-                                        data: formData,
-                                        responseType: 'arraybuffer',
-                                        headers: {
-                                            ...formData.getHeaders(),
-                                            'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
-                                        },
-                                        encoding: null
-                                    })
-                                    .then((res) => {
-                                        if (res.status != 200) return
-                                        console.error('Error:', res.status, res.statusText);
-                                        fs.writeFileSync("./cache/images/removebg.png", res.data);
-                                        let message = {
-                                            attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
-                                        }
-                                        sendMessage(true, api, event, message);
-                                        unLink(__dirname + "/cache/images/removebg.png");
-                                    })
-                                    .catch((error) => {
-                                        sendMessage(true, api, event, "An unknown error as been occured. Please try again later.");
-                                        return log(err);
-                                    });
-                            })
-                        }
-                    } else {
-                        sendMessage(true, api, event, "Hold on... There is still a request in progress.");
-                    }
-                } else if (query == "gphoto") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return log(err);
-                        if (gc.isGroup) {
-                            if (event.messageReply.attachments.length < 1) {
-                                sendMessage(true, api, event, "I cannot see an image. Please reply gphoto to an image.");
-                            } else if (event.messageReply.attachments.length > 1) {
-                                sendMessage(true, api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
-                            } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
-                                const url = event.messageReply.attachments[0].url;
-                                let time = getTimestamp();
-                                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
-                                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
-                                        if (err) return log(err);
-                                    });
-                                    unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
-                                })
+    
+    if (query == "notify") {
+        if (isMyId(event.senderID)) {
+            if (event.messageReply.body == "") {
+                sendMessage(true, api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
+            } else {
+                sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(group).length + " groups.");
+                sendMessageToAll(api, event.messageReply.body);
+            }
+        }
+    } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
+        if (adm.includes(event.senderID)) {
+            if (event.messageReply.senderID != getMyId()) {
+                sendMessage(true, api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
+            } else {
+                api.unsendMessage(event.messageReply.messageID, (err) => {
+                    if (err) log(err);
+                });
+            }
+        }
+    } else if (query == "pinadd") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (event.messageReply.body == "") {
+            sendMessage(true, api, event, "You need to reply pin add to a message which is not empty to pin it.");
+        } else {
+            pinned.pin.message[event.threadID] = event.messageReply.body
+            pinned.pin.sender[event.threadID] = event.messageReply.senderID
+            sendMessage(true, api, event, "Message pinned.. Enter \"pin\" to show it.");
+            fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
+        }
+    } else if (query == "count") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (event.messageReply.body == "") {
+            sendMessage(true, api, event, "You need to reply count to a message.");
+        } else {
+            sendMessage(true, api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
+        }
+    } else if (query == "countvowels") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (event.messageReply.body == "") {
+            sendMessage(true, api, event, "You need to reply count --vowels to a message.");
+        } else {
+            sendMessage(true, api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
+        }
+    } else if (query == "countconsonants") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (event.messageReply.body == "") {
+            sendMessage(true, api, event, "You need to reply count --consonants to a message.");
+        } else {
+            sendMessage(true, api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
+        }
+    } else if (query.startsWith("wfind")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
+        } else {
+            data.shift();
+            let se = data.join(" ");
+            if (event.messageReply.body == "") {
+                sendMessage(true, api, event, "You need to reply wfind text to a message.");
+            } else if (event.messageReply.body.includes(se)) {
+                sendMessage(true, api, event, "I found the \"" + se + "\" on this message " + (se.split(se).length - 1) + " times.");
+            } else {
+                sendMessage(true, api, event, "I cannot found any apperance of your search term on the message.");
+            }
+        }
+    } else if (query == "bgremove") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+            if (event.messageReply.attachments.length < 1) {
+                sendMessage(true, api, event, "I cannot see an image. Please reply bgremove to an image.");
+            } else if (event.messageReply.attachments.length > 1) {
+                sendMessage(true, api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
+            } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                const url = event.messageReply.attachments[0].url;
+                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
+                    const inputPath = './cache/images/removebg.png';
+                    const formData = new FormData();
+                    formData.append('size', 'auto');
+                    formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
+
+                    axios({
+                            method: 'post',
+                            url: 'https://api.remove.bg/v1.0/removebg',
+                            data: formData,
+                            responseType: 'arraybuffer',
+                            headers: {
+                                ...formData.getHeaders(),
+                                'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
+                            },
+                            encoding: null
+                        })
+                        .then((res) => {
+                            if (res.status != 200) return
+                            console.error('Error:', res.status, res.statusText);
+                            fs.writeFileSync("./cache/images/removebg.png", res.data);
+                            let message = {
+                                attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
                             }
-                        } else {
-                            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
-                        }
+                            sendMessage(true, api, event, message);
+                            unLink(__dirname + "/cache/images/removebg.png");
+                        })
+                        .catch((error) => {
+                            sendMessage(true, api, event, "An unknown error as been occured. Please try again later.");
+                            return log(err);
+                        });
+                })
+            }
+        } else {
+            sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+        }
+    } else if (query == "gphoto") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (event.isGroup) {
+            if (event.messageReply.attachments.length < 1) {
+                sendMessage(true, api, event, "I cannot see an image. Please reply gphoto to an image.");
+            } else if (event.messageReply.attachments.length > 1) {
+                sendMessage(true, api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
+            } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
+                const url = event.messageReply.attachments[0].url;
+                let time = getTimestamp();
+                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
+                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
+                        if (err) return log(err);
                     });
-                }
+                    unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
+                })
+            }
+        } else {
+            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
+    }
 }
 
-async function ai(api, event, input) {
+async function ai(api, event) {
+    let input = event.body;
     let query2 = formatQuery(input);
     let query = query2.replace(/\s+/g, '');
 
@@ -1240,7 +1277,7 @@ async function ai(api, event, input) {
         someA(api, event, query, input);
     }
     if (query.startsWith("searchimg")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -1258,7 +1295,7 @@ async function ai(api, event, input) {
             }
         }
     } else if (query.startsWith("searchincog")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -1277,15 +1314,15 @@ async function ai(api, event, input) {
         }
     } else if (isMyPrefix(input, query, query2)) {
 
-            if (isGoingToFast(api, event)) {
-                return;
-            }
-        
-        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" || 
-            query == "mrepol742" || query == "melvinjonesrepol" ||  query == "melvinjonesgallanorepol" || query == "melvinjones") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+
+        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" ||
+            query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
             if (!nonRRR.includes(event.senderID)) {
                 let message = {
-                    body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
+                    body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
                     url: "https://mrepol742.github.io/project-orion/"
                 }
                 nonRRR.push(event.senderID);
@@ -1314,8 +1351,8 @@ async function ai(api, event, input) {
             } else if (input.startsWith(settings.prefix)) {
                 text = input.substring(settings.prefix.length);
             }
-            let text1 = formatQuery(text.replace(/\s+/g, ''));
-            let text2 = formatQuery(text);
+            let text1 = text;
+            let text2 = text;
             if (/^[0-9]+$/.test(input.replace(/\s+/g, '').toLowerCase())) {
                 sendMessage(true, api, event, "What do you want me to do with " + input + "?");
             } else if (!/[a-z0-9]/gi.test(text1)) {
@@ -1363,7 +1400,7 @@ async function ai(api, event, input) {
                     if (err) return log(err);
                     let name = info[id]['name'];
                     let time = getTimestamp();
-                    request(encodeURI(getProfilePicFullHD(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam_' + time + '.png'))
+                    request(encodeURI(getProfilePic(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam_' + time + '.png'))
 
                         .on('finish', () => {
                             let message = {
@@ -1405,11 +1442,11 @@ async function ai(api, event, input) {
                 sendMessage(true, api, event, "bye bye.");
             } else if (text1 == "ok" || text1 == "okay" || text1 == "nice" || text1.startsWith("hmmm")) {
                 sendMessage(true, api, event, "Yeahh..");
-            } else if (text1 == "time" || text1.startsWith("whatsthetime") || text1.startsWith("whatisthetime") || 
-            text1 == "todayis" || text1.startsWith("timetoday") || text1.startsWith("whatsthedatetoday") || 
-            text1.startsWith("whatisthedatetoday") || text1.startsWith("whatdatetoday") || text1.startsWith("whatisthetimenow") || 
-            text1.startsWith("whatsthetimenow") || text1 == "date" || text1.startsWith("whatsthedate") || text1.startsWith("whatisthedate") || 
-            text1.startsWith("datetoday") || text1.startsWith("whattimeisitnow") || text1.startsWith("whatdateisitnow")) {
+            } else if (text1 == "time" || text1.startsWith("whatsthetime") || text1.startsWith("whatisthetime") ||
+                text1 == "todayis" || text1.startsWith("timetoday") || text1.startsWith("whatsthedatetoday") ||
+                text1.startsWith("whatisthedatetoday") || text1.startsWith("whatdatetoday") || text1.startsWith("whatisthetimenow") ||
+                text1.startsWith("whatsthetimenow") || text1 == "date" || text1.startsWith("whatsthedate") || text1.startsWith("whatisthedate") ||
+                text1.startsWith("datetoday") || text1.startsWith("whattimeisitnow") || text1.startsWith("whatdateisitnow")) {
                 sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
                 sendMessage(false, api, event, "To show date according to your timezone. Pleas use the `time [timezone]` command.\nFor example:\ntime Asia/Manila");
             } else if (text1.startsWith("iloveyou") || text1.startsWith("loveme") || text1.startsWith("doyoulikeme") || text1.startsWith("doyouloveme") || text1.startsWith("whydontyouloveme") || text1.startsWith("imissyou") || text1.startsWith("iwantyou")) {
@@ -1418,10 +1455,10 @@ async function ai(api, event, input) {
                 sendMessage(true, api, event, "huhhhhhhhhh uh.");
             } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" ||
                 (text1.startsWith("whois") && isMe(text2))) {
-                    let message = {
-                        body: "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\n\nhttps://mrepol742.github.io",
-                        url: "https://mrepol742.github.io"
-                    }
+                let message = {
+                    body: "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\n\nhttps://mrepol742.github.io",
+                    url: "https://mrepol742.github.io"
+                }
                 sendMessage(true, api, event, message);
             } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
                 let mss = {
@@ -1463,7 +1500,7 @@ async function ai(api, event, input) {
 
                 // initiate results simulatenoesly
                 let ss = await aiResponse(settings.text_complextion, text, true);
-                 
+
                 if (query.startsWith("misaka")) {
                     ss += " MISAKA MISAKA says.";
                 }
@@ -1475,10 +1512,10 @@ async function ai(api, event, input) {
                 let arraySS = ss.split(/\s+/);
 
                 for (sss in arraySS) {
-                    if (arraySS[sss].startsWith("https://") || arraySS[sss].startsWith("http://") || 
-                    (arraySS[sss].endsWith(".com") || arraySS[sss].endsWith(".net") || arraySS[sss].endsWith(".org") || 
-                    arraySS[sss].endsWith(".co") || arraySS[sss].endsWith(".edu") || arraySS[sss].endsWith(".gov") || 
-                    arraySS[sss].endsWith(".info") || arraySS[sss].endsWith(".xyz") || arraySS[sss].endsWith(".me"))) {
+                    if (arraySS[sss].startsWith("https://") || arraySS[sss].startsWith("http://") ||
+                        (arraySS[sss].endsWith(".com") || arraySS[sss].endsWith(".net") || arraySS[sss].endsWith(".org") ||
+                            arraySS[sss].endsWith(".co") || arraySS[sss].endsWith(".edu") || arraySS[sss].endsWith(".gov") ||
+                            arraySS[sss].endsWith(".info") || arraySS[sss].endsWith(".xyz") || arraySS[sss].endsWith(".me"))) {
                         message = {
                             body: ss,
                             url: arraySS[sss]
@@ -1504,64 +1541,63 @@ async function ai(api, event, input) {
             }
         }
     } else if (query == "clearcache") {
-      let count = 0;
-      let count1 = 0;
-      let count2 = 0;
-      let count3 = 0;
+        let count = 0;
+        let count1 = 0;
+        let count2 = 0;
+        let count3 = 0;
         if (adm.includes(event.senderID)) {
-            fs.readdir(__dirname + "/cache/audios/", function (err, files) {
+            fs.readdir(__dirname + "/cache/audios/", function(err, files) {
                 if (err) {
                     return log(err);
                 }
-                files.forEach(function (file) {
+                files.forEach(function(file) {
                     if (!file.endsWith(".gitkeep")) {
-                      count++;
+                        count++;
                         unLink(__dirname + "/cache/audios/" + file);
                     }
                 });
             });
-            fs.readdir(__dirname + "/cache/images/", function (err, files) {
+            fs.readdir(__dirname + "/cache/images/", function(err, files) {
                 if (err) {
                     return log(err);
                 }
-                files.forEach(function (file) {
+                files.forEach(function(file) {
                     if (!file.endsWith(".gitkeep")) {
-                     count1++;
+                        count1++;
                         unLink(__dirname + "/cache/images/" + file);
                     }
                 });
             });
-            fs.readdir(__dirname + "/cache/videos/", function (err, files) {
+            fs.readdir(__dirname + "/cache/videos/", function(err, files) {
                 if (err) {
                     return log(err);
                 }
-                files.forEach(function (file) {
+                files.forEach(function(file) {
                     if (!file.endsWith(".gitkeep")) {
-                      count2++;
+                        count2++;
                         unLink(__dirname + "/cache/videos/" + file);
                     }
                 });
             });
-            fs.readdir(__dirname + "/cache/files/", function (err, files) {
+            fs.readdir(__dirname + "/cache/files/", function(err, files) {
                 if (err) {
                     return log(err);
                 }
-                files.forEach(function (file) {
+                files.forEach(function(file) {
                     if (!file.endsWith(".gitkeep")) {
-                      count3++;
+                        count3++;
                         unLink(__dirname + "/cache/files/" + file);
                     }
                 });
             });
-             await wait(2000);
-let message = `
+            let message = `
 _______  Cache  _______
 |
 |   ⦿ Cache 0: ` + count + ` file(s)
-|   ⦿ Cache 1: `  + count1 + ` file(s)
+|   ⦿ Cache 1: ` + count1 + ` file(s)
 |   ⦿ Cache 2: ` + count2 + ` file(s)
 |   ⦿ Cache 3: ` + count3 + ` file(s)
-|   ⦿ Cache 4: ` + ((Object.keys(threadIdMV).length) + (Object.keys(cmd).length))  + `
+|   ⦿ Cache 4: ` + ((Object.keys(threadIdMV).length) + (Object.keys(cmd).length)) + `
 |______________________
 `;
             sendMessage(true, api, event, message);
@@ -1581,7 +1617,7 @@ _______  Cache  _______
             sendMessage(true, api, event, "Konnichiwa i am back.");
         }
     } else if (query.startsWith("ttsjap")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -1613,7 +1649,7 @@ _______  Cache  _______
             }
         }
     } else if (query2.startsWith("tts ") || query2.startsWith("say ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -1636,7 +1672,7 @@ _______  Cache  _______
                 })
         }
     } else if (query == "stats") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let message = `
@@ -1655,12 +1691,12 @@ _______  Statistics  _______
 `;
         sendMessage(true, api, event, message);
     } else if (query == "uptime") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let second_process = process_p.uptime();
         let seconds_con = secondsToTime(second_process);
-let message = `
+        let message = `
 _______  Uptime  _______
 |
 |   ` + seconds_con + `
@@ -1668,7 +1704,7 @@ _______  Uptime  _______
 `;
         sendMessage(true, api, event, message);
     } else if (query == "sysinfo") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         (async () => {
@@ -1697,7 +1733,7 @@ _______  Uptime  _______
             const heapUsed = convertBytes(process.memoryUsage().heapUsed);
             const external = convertBytes(process.memoryUsage().external);
             const arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
-let message = `
+            let message = `
 _______  System Info  _______
 |
 |   ⦿ Uptime: ` + seconds_con + `
@@ -1717,7 +1753,7 @@ _______  System Info  _______
             sendMessage(true, api, event, message);
         })();
     } else if (query.startsWith("dns4")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -1725,17 +1761,17 @@ _______  System Info  _______
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using dns4 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns4 google.com")
         } else {
             data.shift();
-        dns.resolve4(data.join(" "), (err, addresses) => {
-            if (err) {
-                log(err);
-                sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
-                return;
-            }
-            sendMessage(true, api, event, addresses);
-        });
-    }
+            dns.resolve4(data.join(" "), (err, addresses) => {
+                if (err) {
+                    log(err);
+                    sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
+                    return;
+                }
+                sendMessage(true, api, event, addresses);
+            });
+        }
     } else if (query.startsWith("dns6")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -1743,39 +1779,39 @@ _______  System Info  _______
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using dns6 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns6 google.com")
         } else {
             data.shift();
-        dns.resolve6(data.join(" "), (err, addresses) => {
-            if (err) {
-                log(err);
-                sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
-                return;
-            }
-            sendMessage(true, api, event, addresses);
-        });
-    }
+            dns.resolve6(data.join(" "), (err, addresses) => {
+                if (err) {
+                    log(err);
+                    sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
+                    return;
+                }
+                sendMessage(true, api, event, addresses);
+            });
+        }
     } else if (query.startsWith("ping")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using ping url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nping google.com")
         } else {
-try {
-            data.shift();
-            let hosts = ['google.com'];
+            try {
+                data.shift();
+                let hosts = ['google.com'];
 
-            hosts.forEach(function (host) {
-    ping.promise.probe(host)
-        .then(function (res) {
-            console.log(res);
-        });
-});
-        } catch (a) {
-            sendMessage(true, api, event, "Unfortunately an error occured please check your parameters for errors.");
-        }
+                hosts.forEach(function(host) {
+                    ping.promise.probe(host)
+                        .then(function(res) {
+                            console.log(res);
+                        });
+                });
+            } catch (a) {
+                sendMessage(true, api, event, "Unfortunately an error occured please check your parameters for errors.");
+            }
         }
     } else if (query2.startsWith("mean ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
@@ -1794,7 +1830,7 @@ try {
             sendMessage(true, api, event, "The mean value is " + (total / arr.length));
         }
     } else if (query.startsWith("median")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
@@ -1814,7 +1850,7 @@ try {
             sendMessage(true, api, event, "The median value is " + (arr[(length - 1) / 2]));
         }
     } else if (query2.startsWith("mode ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
@@ -1846,7 +1882,7 @@ try {
             sendMessage(true, api, event, "The mode value is " + max);
         }
     } else if (query.startsWith("range")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
@@ -1861,7 +1897,7 @@ try {
             sendMessage(true, api, event, "The range value is " + [arr[0], arr[arr.length - 1]]);
         }
     } else if (query.startsWith("divisible")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
@@ -1879,7 +1915,7 @@ try {
             }
         }
     } else if (query.startsWith("factorial")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1893,7 +1929,7 @@ try {
             sendMessage(true, api, event, "The factorial of " + num + " is " + factorial(num));
         }
     } else if (query.startsWith("findgcd")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1907,7 +1943,7 @@ try {
             sendMessage(true, api, event, "The GCD of " + num + " is " + findGCD(num));
         }
     } else if (query2.startsWith("roi ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
@@ -1919,7 +1955,7 @@ try {
             sendMessage(true, api, event, "The return of investment is " + calcu);
         }
     } else if (query.startsWith("cdfnormal")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
@@ -1933,7 +1969,7 @@ try {
             sendMessage(true, api, event, "The normal distribution is " + cdfNormal(arr[1], arr[2], arr[3]));
         }
     } else if (query.startsWith("problem")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -1960,7 +1996,7 @@ try {
             }
         }
     } else if (query.startsWith("urlshort")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -1994,7 +2030,7 @@ try {
             });
         }
     } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let id;
@@ -2021,7 +2057,7 @@ try {
 
         })
     } else if (query.startsWith("videolyric")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -2105,7 +2141,7 @@ try {
             }
         }
     } else if (query.startsWith("video")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -2175,7 +2211,7 @@ try {
             }
         }
     } else if (query.startsWith("musiclyric")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -2257,7 +2293,7 @@ try {
             }
         }
     } else if (query.startsWith("music")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -2324,7 +2360,7 @@ try {
             }
         }
     } else if (query.startsWith("lyrics")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -2356,7 +2392,7 @@ try {
             });
         }
     } else if (input.startsWith("encodebinary")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -2372,7 +2408,7 @@ try {
             sendMessage(true, api, event, output);
         }
     } else if (input.startsWith("decodebinary")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -2390,7 +2426,7 @@ try {
             sendMessage(true, api, event, stringOutput);
         }
     } else if (query.startsWith("encode64")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -2403,7 +2439,7 @@ try {
             sendMessage(true, api, event, base64data);
         }
     } else if (query.startsWith("decode64")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -2416,7 +2452,7 @@ try {
             sendMessage(true, api, event, base642text);
         }
     } else if (query.startsWith("reverse")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -2430,7 +2466,7 @@ try {
             sendMessage(true, api, event, joinArray);
         }
     } else if (query == "pinremove") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
@@ -2439,24 +2475,21 @@ try {
         sendMessage(true, api, event, "Pinned message removed.");
         fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
     } else if (query == "pin") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
         if (pinned.pin.message[event.threadID] == undefined) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (gc.isGroup) {
-                    sendMessage(true, api, event, "There is no pinned message on this group chat.");
-                } else {
-                    sendMessage(true, api, event, "There is no pinned message on this chat.");
-                }
-            });
+            if (event.isGroup) {
+                sendMessage(true, api, event, "There is no pinned message on this group chat.");
+            } else {
+                sendMessage(true, api, event, "There is no pinned message on this chat.");
+            }
         } else {
             sendMessage(true, api, event, pinned.pin.message[event.threadID]);
         }
     } else if (query.startsWith("pdf")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -2481,7 +2514,7 @@ try {
             }
         }
     } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -2518,7 +2551,7 @@ try {
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
             });
         }
-    } else if (query == "everyone") {
+    } else if (query == "everyone" || query == "all") {
         api.getThreadInfo(event.threadID, (err, info) => {
             if (err) return log(err);
 
@@ -2537,7 +2570,7 @@ try {
             sendMessageOnly(true, api, event, message);
         });
     } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
@@ -2558,7 +2591,7 @@ try {
             });
         }
     } else if (query.startsWith("baybayin")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2575,7 +2608,7 @@ try {
             });
         }
     } else if (query.startsWith("doublestruck")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2592,7 +2625,7 @@ try {
             });
         }
     } else if (query.startsWith("translate")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2611,7 +2644,7 @@ try {
             });
         }
     } else if (query.startsWith("weather")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2648,7 +2681,7 @@ try {
             }
         }
     } else if (query.startsWith("facts")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2660,7 +2693,7 @@ try {
             parseImage(api, event, url, __dirname + "/cache/images/facts_" + getTimestamp() + ".png");
         }
     } else if (query == "wyr" || query == "wouldyourather") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/wyr").then((response) => {
@@ -2671,7 +2704,7 @@ try {
             }
         });
     } else if (query == "meowfacts") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://meowfacts.herokuapp.com/").then((response) => {
@@ -2682,7 +2715,7 @@ try {
             }
         });
     } else if (query == "8ball") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/8ball").then((response) => {
@@ -2693,7 +2726,7 @@ try {
             }
         });
     } else if (query.startsWith("instagram") || query2.startsWith("ig ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2734,7 +2767,7 @@ try {
             });
         }
     } else if (query.startsWith("profilepic")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let id;
@@ -2743,9 +2776,9 @@ try {
         } else {
             id = event.senderID;
         }
-        parseImage(api, event, getProfilePicFullHD(id), __dirname + "/cache/images/profilepic_" + getTimestamp() + ".png");
+        parseImage(api, event, getProfilePic(id), __dirname + "/cache/images/profilepic_" + getTimestamp() + ".png");
     } else if (query.startsWith("tiktok")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -2783,7 +2816,7 @@ try {
             });
         }
     } else if (query.startsWith("soundcloud")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2824,7 +2857,7 @@ try {
             });
         }
     } else if (query.startsWith("github")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2871,7 +2904,7 @@ try {
             });
         }
     } else if (query.startsWith("element")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2909,7 +2942,7 @@ try {
             });
         }
     } else if (query.startsWith("npm")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2935,7 +2968,7 @@ try {
             });
         }
     } else if (query.startsWith("steam")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -2971,7 +3004,7 @@ try {
             });
         }
     } else if (query.startsWith("imdb")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -3007,7 +3040,7 @@ try {
             });
         }
     } else if (query.startsWith("itunes")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -3043,7 +3076,7 @@ try {
             });
         }
     } else if (query == "car") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/car").then((response) => {
@@ -3067,7 +3100,7 @@ try {
             }
         });
     } else if (query == "color") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
@@ -3092,7 +3125,7 @@ try {
             }
         });
     } else if (query == "pickup") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
@@ -3108,7 +3141,7 @@ try {
         };
         sendMessage(true, api, event, message);
     } else if (query.startsWith("gemoji")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -3356,18 +3389,18 @@ try {
                 if (/^\d+$/.test(pref)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
-                        if (gc.isGroup) {
-                            if (!JSON.stringify(gc.adminIDs).includes(getMyId()) && gc.approvalMode) {
-                                sendMessage("The user " + pref + " has been added and its on member approval lists.");
-                            }
-                            api.addUserToGroup(pref, event.threadID, (err) => {
-                                if (err) log(err);
-                                log("add_user " + event.threadID + " " + pref);
-                            });
-                        } else {
-                            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    if (gc.isGroup) {
+                        if (!JSON.stringify(gc.adminIDs).includes(getMyId()) && gc.approvalMode) {
+                            sendMessage("The user " + pref + " has been added and its on member approval lists.");
                         }
-                    })
+                        api.addUserToGroup(pref, event.threadID, (err) => {
+                            if (err) log(err);
+                            log("add_user " + event.threadID + " " + pref);
+                        });
+                    } else {
+                        sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
+                });
                 } else {
                     sendMessage(true, api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
                 }
@@ -3393,77 +3426,74 @@ try {
         }
     } else if (query.startsWith("welcomeuser")) {
         if (adm.includes(event.senderID)) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (gc.isGroup) {
-                    let arr = gc.participantIDs;
-                    if (input.includes("@")) {
-                        let id = Object.keys(event.mentions)[0];
-                        if (id === undefined) {
-                            let data = input.split(" ");
-                            data.shift();
-                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                                if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                api.getUserInfo(data[0].userID, (err, data1) => {
-                                    if (err) return log(err);
-                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
-                                });
+            if (event.isGroup) {
+                let arr = gc.participantIDs;
+                if (input.includes("@")) {
+                    let id = Object.keys(event.mentions)[0];
+                    if (id === undefined) {
+                        let data = input.split(" ");
+                        data.shift();
+                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                            if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            api.getUserInfo(data[0].userID, (err, data1) => {
+                                if (err) return log(err);
+                                welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/");
                             });
-                            return;
-                        } else if (isMyId(id)) {
-                            return;
-                        }
-                        api.getUserInfo(id, (err, data1) => {
-                            if (err) return log(err);
-                            welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol");
                         });
-                    } else {
-                        sendMessage(true, api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
+                        return;
+                    } else if (isMyId(id)) {
+                        return;
                     }
+                    api.getUserInfo(id, (err, data1) => {
+                        if (err) return log(err);
+                        welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/");
+                    });
                 } else {
-                    sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
                 }
-            })
+            } else {
+                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+            }
         }
     } else if (query.startsWith("kickuser")) {
         if (adm.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
-                    let arr = gc.participantIDs;
-                    if (!JSON.stringify(gc.adminIDs).includes(getMyId())) {
-                        sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
+                let arr = gc.participantIDs;
+                if (!JSON.stringify(gc.adminIDs).includes(getMyId())) {
+                    sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
+                    return;
+                }
+                if (input.includes("@")) {
+                    let id = Object.keys(event.mentions)[0];
+                    if (id === undefined) {
+                        let data = input.split(" ");
+                        data.shift();
+                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                            if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            removeUser(api, event, data[0].userID);
+                            api.getUserInfo(data[0].userID, (err, data1) => {
+                                if (err) return log(err);
+                                byebyeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
+                            });
+                        });
+                        return;
+                    } else if (isMyId(id)) {
                         return;
                     }
-                    if (input.includes("@")) {
-                        let id = Object.keys(event.mentions)[0];
-                        if (id === undefined) {
-                            let data = input.split(" ");
-                            data.shift();
-                            api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                                if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                removeUser(api, event, data[0].userID);
-                                api.getUserInfo(data[0].userID, (err, data1) => {
-                                    if (err) return log(err);
-                                    byebyeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
-                                });
-                            });
-                            return;
-                        } else if (isMyId(id)) {
-                            return;
-                        }
-                        removeUser(api, event, id);
-                        api.getUserInfo(id, (err, data1) => {
-                            if (err) return log(err);
-                            byebyeUser(api, event, data1.name, gc.threadName, arr.length, id);
-                        });
-                    } else {
-                        sendMessage(true, api, event, "Opps! I didnt get it. You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two")
-                    }
+                    removeUser(api, event, id);
+                    api.getUserInfo(id, (err, data1) => {
+                        if (err) return log(err);
+                        byebyeUser(api, event, data1.name, gc.threadName, arr.length, id);
+                    });
                 } else {
-                    sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two")
                 }
-            })
+            } else {
+                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+            }
+        });
         }
     } else if (query.startsWith("isbot")) {
         if (adm.includes(event.senderID)) {
@@ -3518,14 +3548,11 @@ try {
         settings.isStop = true;
     } else if (query.startsWith("blockgroup")) {
         if (adm.includes(event.senderID)) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (gc.isGroup) {
-                    blockGroup(api, event, event.threadID);
-                } else {
-                    sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
-                }
-            });
+            if (event.isGroup) {
+                blockGroup(api, event, event.threadID);
+            } else {
+                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+            }
         }
     } else if (query.startsWith("smartreplyon")) {
         enableSmartReply(api, event, event.threadID);
@@ -3581,8 +3608,8 @@ try {
         }
     } else if (query.startsWith("listkey")) {
         if (adm.includes(event.senderID)) {
-             
-        
+
+
         }
     } else if (query.startsWith("addadmin")) {
         if (adm.includes(event.senderID)) {
@@ -3596,7 +3623,7 @@ try {
                         addAdmin(api, event, data[0].userID);
                     });
                     return;
-                } 
+                }
                 addAdmin(api, event, id);
             } else {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
@@ -3695,52 +3722,43 @@ try {
             sendMessage(true, api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return log(err);
-            if (gc.isGroup) {
-                let arr = gc.participantIDs;
-                sendMessage(true, api, event, "This group has about " + arr.length + " members.")
-            } else {
-                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
-            }
-        })
+        if (event.isGroup) {
+            let arr = gc.participantIDs;
+            sendMessage(true, api, event, "This group has about " + arr.length + " members.")
+        } else {
+            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
     } else if (query.startsWith("gname")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return log(err);
-            if (gc.isGroup) {
-                let data = input.split(" ");
-                if (data.length < 2) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3")
-                } else {
-                    data.shift()
-                    api.setTitle(data.join(" "), event.threadID, (err, obj) => {
-                        if (err) return log(err);
-                    });
-                }
+        if (event.isGroup) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3")
             } else {
-                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                data.shift()
+                api.setTitle(data.join(" "), event.threadID, (err, obj) => {
+                    if (err) return log(err);
+                });
             }
-        });
+        } else {
+            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
     } else if (query == "gname") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return log(err);
-            if (gc.isGroup) {
-                sendMessage(true, api, event, gc.threadName);
-            } else {
-                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
-            }
-        })
+        if (event.isGroup) {
+            sendMessage(true, api, event, gc.threadName);
+        } else {
+            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
     } else if (query == "groupid" || query == "guid" || query == "uid") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -3771,12 +3789,12 @@ try {
             }
         });
     } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         sendMessage(true, api, event, help + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let num = query.substring(3);
@@ -3807,17 +3825,17 @@ try {
                 break;
         }
     } else if (query == "cmdadmin") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         sendMessage(true, api, event, helpadmin + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdroot") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         sendMessage(true, api, event, helproot + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdall") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let message = {
@@ -3826,12 +3844,12 @@ try {
         }
         sendMessage(true, api, event, message);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         sendMessage(true, api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
     } else if (query.startsWith("wiki")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -3848,7 +3866,7 @@ try {
             });
         }
     } else if (query.startsWith("lovetest")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -3883,7 +3901,7 @@ try {
             });
         }
     } else if (query.startsWith("kiss")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -3912,7 +3930,7 @@ try {
             }
         }
     } else if (query.startsWith("gun")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -3941,7 +3959,7 @@ try {
             }
         }
     } else if (query.startsWith("wanted")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -3970,7 +3988,7 @@ try {
             }
         }
     } else if (query.startsWith("clown")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -3999,7 +4017,7 @@ try {
             }
         }
     } else if (query.startsWith("drip")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4028,7 +4046,7 @@ try {
             }
         }
     } else if (query.startsWith("communist")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4057,7 +4075,7 @@ try {
             }
         }
     } else if (query.startsWith("advert")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4086,7 +4104,7 @@ try {
             }
         }
     } else if (query.startsWith("uncover")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4115,7 +4133,7 @@ try {
             }
         }
     } else if (query.startsWith("jail")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4144,7 +4162,7 @@ try {
             }
         }
     } else if (query.startsWith("invert")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4172,7 +4190,7 @@ try {
             }
         }
     } else if (query.startsWith("ship")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4191,13 +4209,36 @@ try {
                 } else if (isMyId(id2)) {
                     id2 = event.senderID;
                 }
-                parseImage(api, event, "https://api.popcat.xyz/ship?user1=" + getProfilePic(id1) + "&user2=" + getProfilePic(id2), __dirname + "/cache/images/ship_" + getTimestamp() + ".png");
+                axios.get(getProfilePic(id1)).then(function(response) {
+                    let aaa = encodeURIComponent(response.request.res.responseUrl)
+                    axios.get(getProfilePic(id2)).then(function(response) {
+                        let url = "https://api.popcat.xyz/ship?user1=" + aaa + "&user2=" + encodeURIComponent(response.request.res.responseUrl);
+                        let dir = __dirname + "/cache/images/ship_" + getTimestamp() + ".png";
+                        log("parse_image " + url);
+    request(url).pipe(fs.createWriteStream(dir))
+        .on('finish', () => {
+            let image = {
+                body: "New Lovers >3",
+                attachment: fs.createReadStream(dir)
+            };
+            sendMessage(true, api, event, image);
+                unLink(dir);
+        }).on('error', (err) => {
+            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+        })
+
+                    }).catch(function(err) {
+                        log(err);
+                    });
+                }).catch(function(err) {
+                    log(err);
+                });
             } else {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
             }
         }
     } else if (query.startsWith("www")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4216,13 +4257,36 @@ try {
                 } else if (isMyId(id2)) {
                     id2 = event.senderID;
                 }
-                parseImage(api, event, "https://api.popcat.xyz/whowouldwin?image1=" + getProfilePic(id1) + "&image2=" + getProfilePic(id2), __dirname + "/cache/images/www_" + getTimestamp() + ".png");
+                axios.get(getProfilePic(id1)).then(function(response) {
+                    let aaa = encodeURIComponent(response.request.res.responseUrl)
+                    axios.get(getProfilePic(id2)).then(function(response) {
+                        let url = "https://api.popcat.xyz/whowouldwin?image1=" + aaa + "&image2=" + encodeURIComponent(response.request.res.responseUrl);
+                        let dir = __dirname + "/cache/images/www_" + getTimestamp() + ".png";
+                        log("parse_image " + url);
+    request(url).pipe(fs.createWriteStream(dir))
+        .on('finish', () => {
+            let image = {
+                body: "Hmmmm.. Who?",
+                attachment: fs.createReadStream(dir)
+            };
+            sendMessage(true, api, event, image);
+                unLink(dir);
+        }).on('error', (err) => {
+            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+        })
+
+                    }).catch(function(err) {
+                        log(err);
+                    });
+                }).catch(function(err) {
+                    log(err);
+                });
             } else {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
             }
         }
     } else if (query.startsWith("pet")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4251,7 +4315,7 @@ try {
             }
         }
     } else if (query.startsWith("formatnumbers")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4262,7 +4326,7 @@ try {
             sendMessage(true, api, event, numberWithCommas(data.join(" ")));
         }
     } else if (query.startsWith("wordstonumbers")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4273,7 +4337,7 @@ try {
             sendMessage(true, api, event, numberWithCommas(wordsToNumbers(data.join(" "))));
         }
     } else if (query.startsWith("mnm")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4302,7 +4366,7 @@ try {
             }
         }
     } else if (query.startsWith("greyscale")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4331,7 +4395,7 @@ try {
             }
         }
     } else if (query.startsWith("jokeover")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4360,7 +4424,7 @@ try {
             }
         }
     } else if (query.startsWith("blur")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4389,7 +4453,7 @@ try {
             }
         }
     } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4442,7 +4506,7 @@ try {
             }
         }
     } else if (query.startsWith("morse")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4460,7 +4524,7 @@ try {
             });
         }
     } else if (query.startsWith("lulcat")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4478,7 +4542,7 @@ try {
             });
         }
     } else if (query.startsWith("mock")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4496,7 +4560,7 @@ try {
             });
         }
     } else if (query.startsWith("coding")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
@@ -4520,7 +4584,7 @@ try {
             }
         });
     } else if (query == "joke") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/joke").then((response) => {
@@ -4531,7 +4595,7 @@ try {
             }
         });
     } else if (query == "barrier") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let message = {
@@ -4540,7 +4604,7 @@ try {
         };
         sendMessage(true, api, event, message);
     } else if (query == "fact") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/fact").then((response) => {
@@ -4551,7 +4615,7 @@ try {
             }
         });
     } else if (query == "thoughts") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
@@ -4562,7 +4626,7 @@ try {
             }
         });
     } else if (query.startsWith("nickname")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4572,7 +4636,6 @@ try {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
         } else {
             if (input.includes("@")) {
-                await wait(3000);
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
                     if (input.includes("@me")) {
@@ -4594,7 +4657,7 @@ try {
             }
         }
     } else if (query.startsWith("drake")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4606,7 +4669,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/drake_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("pika")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4618,7 +4681,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + text, __dirname + "/cache/images/pika_" + getTimestamp() + ".png");
         }
     } else if (query == "meme") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
@@ -4629,12 +4692,12 @@ try {
             }
         });
     } else if (query.startsWith("conan")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         parseImage(api, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/images/conan_" + getTimestamp() + ".png");
     } else if (query.startsWith("oogway")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4646,7 +4709,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + text, __dirname + "/cache/images/oogway_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("hanime")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4664,7 +4727,7 @@ try {
             });
         }
     } else if (query == "hololive") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://zenzapis.xyz/randomanime/hololive?apikey=9c4c44db3725").then((response) => {
@@ -4685,7 +4748,7 @@ try {
             }
         });
     } else if (query == "animecouples") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
@@ -4709,7 +4772,7 @@ try {
             }
         });
     } else if (query.startsWith("anime")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4727,7 +4790,7 @@ try {
             });
         }
     } else if (query.startsWith("trump")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4739,7 +4802,7 @@ try {
             parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + "/cache/images/trump_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("qrcode")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4755,7 +4818,7 @@ try {
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + text, __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("alert")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4767,7 +4830,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + text, __dirname + "/cache/images/alert_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("caution")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4779,7 +4842,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + text, __dirname + "/cache/images/caution_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("biden")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4791,7 +4854,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/biden?text=" + text, __dirname + "/cache/images/biden_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("website")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4805,13 +4868,13 @@ try {
             sendMessage(true, api, event, message);
         } else {
             if (text.startsWith("https://") || text.startsWith("http://")) {
-                parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + encodeURI(text), __dirname + "/cache/images/website_" + getTimestamp() + ".png");
+                parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + text, __dirname + "/cache/images/website_" + getTimestamp() + ".png");
             } else {
                 sendMessage(true, api, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
     } else if (query2.startsWith("god ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4823,7 +4886,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + text, __dirname + "/cache/images/god_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("sadcat")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4835,7 +4898,7 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
         }
     } else if (query2.startsWith("sim ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
@@ -4853,7 +4916,7 @@ try {
             });
         }
     } else if (query2.startsWith("pooh ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4865,17 +4928,17 @@ try {
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/pooh_" + getTimestamp() + ".png");
         }
     } else if (query == "landscape") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
     } else if (query == "portrait") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
     } else if (query.startsWith("landscape")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4887,27 +4950,27 @@ try {
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
         }
     } else if (query == "cosplay") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/cosplay?apikey=9c4c44db3725", __dirname + "/cache/images/costplay_" + getTimestamp() + ".png");
     } else if (query == "darkjoke") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/darkjoke?apikey=9c4c44db3725", __dirname + "/cache/images/darkjoke_" + getTimestamp() + ".png");
     } else if (query == "blackpink") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/blackpink?apikey=9c4c44db3725", __dirname + "/cache/images/blackpink_" + getTimestamp() + ".png");
     } else if (query == "motor") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         parseImage(api, event, "https://zenzapis.xyz/randomimage/motor?apikey=9c4c44db3725", __dirname + "/cache/images/motor_" + getTimestamp() + ".png");
     } else if (query.startsWith("portrait")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let text = input;
@@ -4919,7 +4982,7 @@ try {
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("animequote")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://animechan.vercel.app/api/random").then((response) => {
@@ -4930,7 +4993,7 @@ try {
             }
         });
     } else if (query == "advice") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -4946,7 +5009,7 @@ try {
             }
         });
     } else if (query2.startsWith("time ")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -4963,7 +5026,7 @@ try {
     } else if (query == "time") {
         sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
     } else if (query.startsWith("inspiration")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -4979,7 +5042,7 @@ try {
             }
         });
     } else if (query.startsWith("motivation") || query.startsWith("motivate")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -4995,7 +5058,7 @@ try {
             }
         });
     } else if (query == "newyear") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let yr = new Date().getFullYear() + 1;
@@ -5011,7 +5074,7 @@ try {
         };
         sendMessage(true, api, event, message)
     } else if (query == "christmas") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let yr = new Date().getFullYear();
@@ -5027,7 +5090,7 @@ try {
         };
         sendMessage(true, api, event, message)
     } else if (query == "verserandom") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
@@ -5043,7 +5106,7 @@ try {
             }
         });
     } else if (query == "versetoday") {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
@@ -5059,7 +5122,7 @@ try {
             }
         });
     } else if (query.startsWith("verse")) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ")
@@ -5098,7 +5161,7 @@ try {
         sendMessage(true, api, event, "Hello World");
     } else if (query == "about") {
         let message = {
-            body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/\n©2023 Melvin Jones Repol",
+            body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
             url: "https://mrepol742.github.io/project-orion/"
         }
         sendMessage(true, api, event, message);
@@ -5119,22 +5182,19 @@ try {
         }
         sendMessage(true, api, event, message);
     } else {
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return log(err);
-            if (gc.isGroup) {
-                if ((event.type == "message_reply" && event.senderID != getMyId())) {
-                    if (event.messageReply.senderID == getMyId()) {
-                        someR(api, event, query);
-                    }
-                } else {
-                    if (isMyId(Object.keys(event.mentions)[0]) || (query.includes("@") && isMe(query2)) || !query.includes("@")) {
-                        someR(api, event, query);
-                    }
+        if (event.isGroup) {
+            if (event.type == "message_reply" && event.senderID != getMyId()) {
+                if (event.messageReply.senderID == getMyId()) {
+                    someR(api, event, query);
                 }
             } else {
-                someR(api, event, query);
+                if (isMyId(Object.keys(event.mentions)[0]) || (query.includes("@") && isMe(query2)) || !query.includes("@")) {
+                    someR(api, event, query);
+                }
             }
-        });
+        } else {
+            someR(api, event, query);
+        }
     }
 }
 
@@ -5211,19 +5271,11 @@ function parseImage(api, event, url, dir) {
     log("parse_image " + url);
     request(encodeURI(url)).pipe(fs.createWriteStream(dir))
         .on('finish', () => {
-            let limit = 25 * 1024 * 1024;
-            fs.readFile(dir, function(err, data) {
-                if (err) log(err)
-                if (data.length > limit) {
-                    sendMessage(true, api, event, "Unfortunately i cannot send you the file due to the size restrictions on messenger platform.");
-                } else {
-                    let image = {
-                        attachment: fs.createReadStream(dir)
-                    };
-                    sendMessage(true, api, event, image);
-                }
-                unLink(dir);
-            })
+            let image = {
+                attachment: fs.createReadStream(dir)
+            };
+            sendMessage(true, api, event, image);
+            unLink(dir);
         }).on('error', (err) => {
             sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
         });
@@ -5233,19 +5285,11 @@ function parseImageFromFacebook(api, event, url, dir) {
     log("parse_image " + url);
     request(url).pipe(fs.createWriteStream(dir))
         .on('finish', () => {
-            let limit = 25 * 1024 * 1024;
-            fs.readFile(dir, function(err, data) {
-                if (err) log(err)
-                if (data.length > limit) {
-                    sendMessage(true, api, event, "Unfortunately i cannot send you the file due to the size restrictions on messenger platform.");
-                } else {
-                    let image = {
-                        attachment: fs.createReadStream(dir)
-                    };
-                    sendMessage(true, api, event, image);
-                }
-                unLink(dir);
-            })
+            let image = {
+                attachment: fs.createReadStream(dir)
+            };
+            sendMessage(true, api, event, image);
+            unLink(dir);
         }).on('error', (err) => {
             sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
         })
@@ -5253,76 +5297,61 @@ function parseImageFromFacebook(api, event, url, dir) {
 
 async function sendMessage(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
-        await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        await wait(2000);
     }
-    log("is_group " + event.isGroup);
-    api.getThreadInfo(event.threadID, (err, gc) => {
-        if (err) return log(err);
-        if (gc.isGroup) {
-            let ts = undefined;
-            api.getThreadHistory(event.threadID, 3, ts, (err, history) => {
-                if (err) return log(err);
-                if (ts != undefined) history.pop();
-                let test = [];
-                let i;
-                for (i = 0; i < history.length; i++) {
-                    if (history[i].senderID != getMyId()) {
-                        test[i] = history[i].senderID;
-                        log(test[i])
-                    } else {
-                        test[i] = undefined;
-                    }
-                }
-                let filtered = test.filter(elm => elm);
-                if (filtered[0] != filtered[1]) {
-                    log("send_message_reply " + event.threadID + " " + message);
-                    if ((typeof message === "string") && message.trim().length < 200 && 
-                        speech.includes(event.threadID)) {
-                        const url = googleTTS.getAudioUrl(message, voice);
-                        let time = getTimestamp();
-                        request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
-                
-                            .on('finish', () => {
-                                let message = {
-                                    attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
-                                };
-                                api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                                    if (err) log(err);
-                                }, event.messageID);
-                                unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
-                            }).on('error', (err) => {
-                                api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                                    if (err) log(err);
-                                }, event.messageID);
-                            })
-                    } else {
+    if (message == "") {
+        sendMMMS(api, event, "It appears the AI sends a blank response. Please try again.");
+    } else if (event.isGroup && event.senderID != getMyId()) {
+        if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
+            log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
+            if ((typeof message === "string") && message.trim().length < 200 &&
+                speech.includes(event.threadID)) {
+                const url = googleTTS.getAudioUrl(message, voice);
+                let time = getTimestamp();
+                request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
+
+                    .on('finish', () => {
+                        let message = {
+                            attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
+                        };
                         api.sendMessage(message, event.threadID, (err, messageInfo) => {
                             if (err) log(err);
                         }, event.messageID);
-                    }
-                } else {
-                    log("send_message " + event.threadID + " " + message);
-                    sendMMMS(api, event, message);
-                }
-                ts = history[0].timestamp;
-            });
+                        unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
+                    }).on('error', (err) => {
+                        api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                            if (err) log(err);
+                        }, event.messageID);
+                    })
+            } else {
+                api.sendMessage(message, event.threadID, (err, messageInfo) => {
+                    if (err) log(err);
+                }, event.messageID);
+            }
         } else {
-            log("send_message " + event.threadID + " " + message);
+            log("send_message " + event.threadID + " " + JSON.stringify(message));
             sendMMMS(api, event, message);
         }
-    });
+    } else {
+        log("send_message " + event.threadID + " " + JSON.stringify(message));
+        sendMMMS(api, event, message);
+    }
 }
 
 async function sendMessageOnly(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
-        await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+        await wait(2000);
     }
-    log("send_message " + event.threadID + " " + message);
-    sendMMMS(api, event, message);
+    if (message == "") {
+        sendMMMS(api, event, "It appears the AI sends a blank response. Please try again.");
+    } else {
+       log("send_message " + event.threadID + " " + JSON.stringify(message));
+       sendMMMS(api, event, message);
+    }
 }
 
 async function sendMMMS(api, event, message) {
-    if ((typeof message === "string") && message.trim().length < 200 && 
+    if ((typeof message === "string") && message.trim().length < 200 &&
         speech.includes(event.threadID)) {
         const url = googleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
@@ -5349,8 +5378,8 @@ async function sendMMMS(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
-    if (!adm.includes(event.senderID) && settings.onDelay && bn) {
-        await wait(sleep[Math.floor(Math.random() * sleep.length)]);
+    if (!adm.includes(event.senderID) && settings.onDelay) {
+        await wait(4000);
     }
     log("react_message " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID, (err) => {
@@ -5368,7 +5397,7 @@ function formatQuery(string) {
 
 function log(data) {
     if (typeof data === "string") {
-    console.log(getFormattedDate() + "$ " + data);
+        console.log(getFormattedDate() + "$ " + data);
     } else {
         console.log(getFormattedDate() + "$ " + JSON.stringify(data));
     }
@@ -5391,8 +5420,9 @@ function containsAny(str, substrings) {
     return false;
 }
 
-function isGoingToFast(api, event) {
-    log("event_body " + event.senderID + " " + event.body);
+function isGoingToFast(event) {
+    let input = event.body;
+    log("event_body " + event.senderID + " " + input);
     if (!settings.preventSimultaneousExecution) {
         return false;
     }
@@ -5409,20 +5439,6 @@ function isGoingToFast(api, event) {
             return false;
         }
     }
-    /*
-    if (!(event.threadID in cmd1)) {
-        cmd1[event.threadID] = Math.floor(Date.now() / 1000) + (120);
-        return false;
-    } else if (Math.floor(Date.now() / 1000) < cmd1[event.threadID]) {
-        let seconds = (cmd1[event.threadID] - Math.floor(Date.now() / 1000)) % 120;
-        sendMessageOnly(true, api, event, "It looks like you guys are going to fast of calling this AI commands. Please wait " + seconds + " seconds.");
-        log("The ThreadID is temporarily blocked for " + seconds + " seconds");
-        return true;
-    } else {
-        cmd1[event.threadID] = Math.floor(Date.now() / 1000) + (120);
-        return false;
-    }
-    */
     return false;
 }
 
@@ -5505,7 +5521,6 @@ async function weathersearch(location) {
 
 async function getResponseData(url) {
     log("response_data " + url);
-    await wait(1000);
     let data = await axios.get(encodeURI(url)).then((response) => {
         if (response.data.error === undefined) {
             return response.data;
@@ -5554,10 +5569,6 @@ function nsfw(text) {
 }
 
 function getProfilePic(id) {
-    return "https://graph.facebook.com/" + id + "/picture?access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
-}
-
-function getProfilePicFullHD(id) {
     return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
 }
 
@@ -5642,7 +5653,7 @@ function getSuffix(i) {
 }
 
 function isMyId(id) {
-    return id == "100071743848974" || id == "100016029218667";
+    return id == "100071743848974";
 }
 
 function getMyId() {
@@ -5650,7 +5661,7 @@ function getMyId() {
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
-    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + name + "&text2=" + gname + "&text3=" + getSuffix(Tmem) + " member&avatar=" + getProfilePic(id)
+    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + encodeURI(name) + "&text2=" + encodeURI(gname) + "&text3=" + getSuffix(Tmem) + " member&avatar=";
 }
 
 async function getImages(api, event, images) {
@@ -5660,14 +5671,14 @@ async function getImages(api, event, images) {
     let i;
     for (i = 0;
         (i < parseInt(settings.max_image) && i < images.length); i++) {
-        await wait(1000);
         let url = images[i].url;
         log("get_images " + url);
         let type = images[i].type;
-        if ((type == "image/png" || type == "image/jpg" || type == "image/jpeg") && !url.endsWith(".svg.png")) {
+        if ((type == "image/png" || type == "image/jpg" || type == "image/jpeg") && 
+            !url.endsWith(".svg.png") && !url.startsWith("https://upload.wikimedia.org")) {
+                await wait(1000);
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
-            log("fname " + fname);
-            log("accepted_url " + url);
+            log("accepted_url " + type + " " + url);
             request(encodeURI(url)).pipe(fs.createWriteStream(fname));
             name.push(fname);
         }
@@ -5682,6 +5693,7 @@ async function getImages(api, event, images) {
     let message = {
         attachment: accm
     };
+    log(JSON.stringify(images));
     api.sendMessage(message, event.threadID, (err, messageInfo) => {
         if (err) {
             log(err);
@@ -5712,14 +5724,13 @@ async function unsendPhoto(api, event, d, data) {
         accm.push(fs.createReadStream(images[i1]));
     }
 
-    if (settings.onUnsend) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
                 let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                            if (!(d[1][3] === undefined)) {
-                                                constructMMM += d[1][3];
-                                            }
+                if (!(d[1][3] === undefined)) {
+                    constructMMM += d[1][3];
+                }
                 let message1 = {
                     body: constructMMM,
                     attachment: accm,
@@ -5741,9 +5752,9 @@ async function unsendPhoto(api, event, d, data) {
                 log("unsend_photo_group " + d[1][0]);
             } else {
                 let constructMMM = "You deleted this photo. \n";
-                                            if (!(d[1][3] === undefined)) {
-                                                constructMMM += d[1][3];
-                                            }
+                if (!(d[1][3] === undefined)) {
+                    constructMMM += d[1][3];
+                }
                 let message1 = {
                     body: constructMMM,
                     attachment: accm
@@ -5760,7 +5771,6 @@ async function unsendPhoto(api, event, d, data) {
                 log("unsend_photo " + d[1][0]);
             }
         });
-    }
 }
 
 async function unsendGif(api, event, d, data) {
@@ -5781,14 +5791,13 @@ async function unsendGif(api, event, d, data) {
         accm.push(fs.createReadStream(images[i1]));
     }
 
-    if (settings.onUnsend) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
                 let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                            if (!(d[1][3] === undefined)) {
-                                                constructMMM += d[1][3];
-                                            }
+                if (!(d[1][3] === undefined)) {
+                    constructMMM += d[1][3];
+                }
                 let message1 = {
                     body: constructMMM,
                     attachment: accm,
@@ -5809,10 +5818,10 @@ async function unsendGif(api, event, d, data) {
                 })
                 log("unsend_gif_group " + d[1][0]);
             } else {
-                 let constructMMM = "You deleted this photo. \n";
-                                            if (!(d[1][3] === undefined)) {
-                                                constructMMM += d[1][3];
-                                            }
+                let constructMMM = "You deleted this photo. \n";
+                if (!(d[1][3] === undefined)) {
+                    constructMMM += d[1][3];
+                }
                 let message1 = {
                     body: constructMMM,
                     attachment: accm
@@ -5829,16 +5838,13 @@ async function unsendGif(api, event, d, data) {
                 log("unsend_gif " + d[1][0]);
             }
         });
-    }
 }
 
 async function unLink(dir) {
-    await wait(1000*120);
+    await wait(1000 * 120);
     fs.unlink(dir, (err => {
         if (err) log(err);
-        else {
-            log("un_link " + dir);
-        }
+        log("un_link " + dir);
     }));
 }
 
@@ -6047,7 +6053,7 @@ function kiss(api, event, id) {
 }
 
 function gun(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6055,7 +6061,7 @@ function gun(api, event, id) {
 }
 
 function wanted(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/wanted?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6063,7 +6069,7 @@ function wanted(api, event, id) {
 }
 
 function clown(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/clown?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6071,7 +6077,7 @@ function clown(api, event, id) {
 }
 
 function drip(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/drip?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6079,7 +6085,7 @@ function drip(api, event, id) {
 }
 
 function communist(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/communist?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6087,7 +6093,7 @@ function communist(api, event, id) {
 }
 
 function advert(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/ad?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6095,7 +6101,7 @@ function advert(api, event, id) {
 }
 
 function uncover(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/uncover?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6103,7 +6109,7 @@ function uncover(api, event, id) {
 }
 
 function jail(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/jail?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6111,7 +6117,7 @@ function jail(api, event, id) {
 }
 
 function invert(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/invert?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6119,7 +6125,7 @@ function invert(api, event, id) {
 }
 
 function pet(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/pet?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6127,7 +6133,7 @@ function pet(api, event, id) {
 }
 
 function mnm(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/mnm?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6135,7 +6141,7 @@ function mnm(api, event, id) {
 }
 
 function greyscale(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/greyscale?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6143,7 +6149,7 @@ function greyscale(api, event, id) {
 }
 
 function jokeover(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6151,7 +6157,7 @@ function jokeover(api, event, id) {
 }
 
 function blur(api, event, id) {
-    axios.get(getProfilePicFullHD(id)).then(function(response) {
+    axios.get(getProfilePic(id)).then(function(response) {
         parseImageFromFacebook(api, event, "https://api.popcat.xyz/blur?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6159,40 +6165,46 @@ function blur(api, event, id) {
 }
 
 function getTimestamp() {
-    return Math.floor(Date.now() / 1000);
+    return Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 90000) + 10000;
 }
 
 function welcomeUser(api, event, name, gname, Tmem, id, message1) {
-    let time = getTimestamp();
-    request(encodeURI(getWelcomeImage(name, gname, Tmem, id))).pipe(fs.createWriteStream(__dirname + "/cache/images/welcome_img_" + time + ".png"))
-        .on('finish', () => {
-            let message = {
-                body: message1,
-                attachment: fs.createReadStream(__dirname + "/cache/images/welcome_img_" + time + ".png"),
-                mentions: [{
-                    tag: name,
-                    id: id
-                }]
-            };
-            sendMessageOnly(true, api, event, message);
-        }).on('error', (err) => { 
-            let message = {
-                body: message1,
-                url: "https://mrepol742.github.io/project-orion/",
-                mentions: [{
-                    tag: name,
-                    id: id
-                }]
-            };
-            sendMessageOnly(true, api, event, message);
-        })
+    axios.get(getProfilePic(id)).then(function(response) {
+        let filename = __dirname + "/cache/images/welcome_img_" + getTimestamp() + ".png"
+        request(getWelcomeImage(name, gname, Tmem, id) + encodeURIComponent(response.request.res.responseUrl))
+            .pipe(fs.createWriteStream(filename))
+            .on('finish', () => {
+                let message = {
+                    body: message1,
+                    attachment: fs.createReadStream(filename),
+                    mentions: [{
+                        tag: name,
+                        id: id
+                    }]
+                };
+                sendMessageOnly(true, api, event, message);
+                unLink(filename);
+            }).on('error', (err) => {
+                let message = {
+                    body: message1,
+                    url: "https://mrepol742.github.io/project-orion/",
+                    mentions: [{
+                        tag: name,
+                        id: id
+                    }]
+                };
+                sendMessageOnly(true, api, event, message);
+            })
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function byebyeUser(api, event, name, gname, Tmem, id) {
-    let time = getTimestamp();
-    let filename = __dirname + "/cache/images/byebye_" + time + ".jpg";
-    let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + name + "&text2=" + gname + "&text3=" + Tmem + " Member&avatar=" + getProfilePic(id);
-    request(encodeURI(url)).pipe(fs.createWriteStream(filename))
+    axios.get(getProfilePic(id)).then(function(response) {
+    let filename = __dirname + "/cache/images/byebye_" + getTimestamp() + ".jpg";
+    let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + encodeURI(name) + "&text2=" + encodeURI(gname) + "&text3=" + getSuffix(Tmem) + " Member&avatar=" + encodeURIComponent(response.request.res.responseUrl);
+    request(url).pipe(fs.createWriteStream(filename))
         .on('finish', () => {
             let message = {
                 body: "Thank you for joining @" + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
@@ -6205,7 +6217,7 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
             sendMessageOnly(true, api, event, message);
             log("leave_member " + name);
             unLink(filename);
-        }).on('error', (err) => { 
+        }).on('error', (err) => {
             let message = {
                 body: "Thank you for joining @" + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
                 mentions: [{
@@ -6215,6 +6227,9 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
             };
             sendMessageOnly(true, api, event, message);
         })
+    }).catch(function(err) {
+        log(err);
+    });
 }
 
 function cdfNormal(x, mean, standardDeviation) {
@@ -6244,14 +6259,10 @@ function saveEvent(event) {
         switch (event.attachments[0].type) {
             case "photo":
                 let photo = [];
-                let i; 
-                log("attachment_length " + event.attachments.length);
-                for (i = 0; i < 25; i++) {
-                    if (!(event.attachments[i] === undefined)) {
-                        photo.push(event.attachments[i].url);
-                    }
+                let i;
+                for (i = 0; i < event.attachments.length; i++) {
+                    photo.push(event.attachments[i].url);
                 }
-                log("attachment_length " + i);
                 let data = [getFormattedDate(), event.senderID, photo];
                 if (event.body != null && (typeof event.body === "string")) {
                     data.push(event.body);
@@ -6261,10 +6272,8 @@ function saveEvent(event) {
             case "animated_image":
                 let animated_images = [];
                 let i1;
-                for (i1 = 0; i1 < 25; i1++) {
-                    if (!(event.attachments[i1] === undefined)) {
-                        animated_images.push(event.attachments[i1].url);
-                    }
+                for (i1 = 0; i1 < event.attachments.length; i1++) {
+                    animated_images.push(event.attachments[i1].url);
                 }
                 let data1 = [getFormattedDate(), event.senderID, animated_images];
                 if (event.body != null && (typeof event.body === "string")) {
@@ -6273,10 +6282,7 @@ function saveEvent(event) {
                 msgs[event.messageID] = ['animated_images', data1];
                 break;
             case "sticker":
-                let data2 = [getFormattedDate(), event.senderID, event.attachments[0].url];
-                if (event.body != null && (typeof event.body === "string")) {
-                    data2.push(event.body);
-                }
+                let data2 = [getFormattedDate(), event.senderID, event.attachments[0].ID];
                 msgs[event.messageID] = ['sticker', data2]
                 break;
             case "video":
@@ -6302,10 +6308,14 @@ function saveEvent(event) {
                 break;
             case "location":
                 log(JSON.stringify(event.attachments[0]));
-                msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].image, event.attachments[0].url, event.attachments[0].address]];
+                msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].address, event.attachments[0].facebookUrl]];
                 break;
             case "share":
-                msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.body, event.attachments[0].url]]
+                if (event.attachments[0].target.coordinate === undefined) {
+                    msgs[event.messageID] = ['share', [getFormattedDate(), event.senderID, event.body, event.attachments[0].url]]
+                } else {
+                    msgs[event.messageID] = ['location_sharing', [getFormattedDate(), event.senderID, event.attachments[0].title, event.attachments[0].target.coordinate["latitude"], event.attachments[0].target.coordinate["longitude"]]];
+                }
                 break;
         }
     } else {
@@ -6318,7 +6328,7 @@ async function aiResponse(complextion, text, repeat) {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         let text1 = ai.data.choices[0].text;
         if (ai.data.choices[0].finish_reason == "length" && !text1.endsWith(".")) {
-            return "The response is not completed and canceled due to its length. Please try it again. Ask questions briefly. In this platform, AI are limited to what it can send.";
+            return "The response for is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
         }
 
         let text2 = text1.replace(/\n\s*\n/g, '\n');
@@ -6364,7 +6374,7 @@ async function sendMessageToAll(api, message) {
     for (gp in group) {
         await wait(20000);
         count++
-        api.sendMessage(message + "\nn-" + (count*742), gp);
+        api.sendMessage(message + "\nn-" + (count * 742), gp);
     }
 }
 
@@ -6385,8 +6395,8 @@ function otherQ(query) {
 function myPrefix(query, query2) {
     let i;
     for (i = 0; i < isMyPrefixList.length; i++) {
-        if (query.startsWith(isMyPrefixList[i]) || (query.endsWith(isMyPrefixList[i]) && 
-            (query2.endsWith("?") || query2.endsWith(".") || query2.endsWith("!")))) {
+        if (query.startsWith(isMyPrefixList[i]) || (query.endsWith(isMyPrefixList[i]) &&
+                (query2.endsWith("?") || query2.endsWith(".") || query2.endsWith("!")))) {
             return true;
         }
     }
@@ -6395,8 +6405,8 @@ function myPrefix(query, query2) {
 
 function isMyPrefix(input, query, query2) {
     return (settings.prefix != "" && input.startsWith(settings.prefix)) || myPrefix(query, query2) ||
-        ((query2.startsWith("what ") || query2.startsWith("when ") || query2.startsWith("who ") || 
-        query2.startsWith("where ") || query2.startsWith("how ") || query2.startsWith("why ") || query2.startsWith("which "))) ||
+        ((query2.startsWith("what ") || query2.startsWith("when ") || query2.startsWith("who ") ||
+            query2.startsWith("where ") || query2.startsWith("how ") || query2.startsWith("why ") || query2.startsWith("which "))) ||
         otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
 }
 
