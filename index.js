@@ -25,7 +25,6 @@ const {
     OpenAIApi
 } = require("openai");
 const NLPCloudClient = require('nlpcloud');
-const cron = require('node-cron');
 const axios = require("axios");
 const weatherjs = require("weather-js")
 const FormData = require('form-data');
@@ -61,7 +60,6 @@ setInterval(function() {
   });
 }, 1800000 * Math.random() + 1200000);
 
-let sleep = [4000, 3000, 5000, 4500, 6000, 5500, 3300, 4400, 5050, 4000, 5000, 6500, 4500, 3600];
 let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search", "gencode"]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?"];
@@ -73,7 +71,6 @@ let goodev = ["Good evening too... The sun set is so beautiful as always, hope y
 let goodmo = ["Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.", "Also good morning... Enjoy your day, and never forget that breakfast should always be the heaviest meal of the day.", "Greetings as well... Have a fantastic day, and never forget that breakfast ought to be the largest meal of the day."]
 let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
 let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
-let tips = ["Be detailed but brief", "Ask me like Who are you?", "Ask me like How to do this?"]
 let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify"];
 let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -102,7 +99,6 @@ let gcolor = {
     "Candy": "205488546921017"
 }
 let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink", "Orange", "Green", "LavenderPurple", "Red", "Yellow", "TealBlue", "Aqua", "Mango", "Berry", "Citrus", "Candy"]
-let timeZones = ['Europe/Andorra', 'Asia/Dubai', 'Asia/Kabul', 'Europe/Tirane', 'Asia/Yerevan', 'Antarctica/Casey', 'Antarctica/Davis', 'Antarctica/DumontDUrville', 'Antarctica/Mawson', 'Antarctica/Palmer', 'Antarctica/Rothera', 'Antarctica/Syowa', 'Antarctica/Troll', 'Antarctica/Vostok', 'America/Argentina/Buenos_Aires', 'America/Argentina/Cordoba', 'America/Argentina/Salta', 'America/Argentina/Jujuy', 'America/Argentina/Tucuman', 'America/Argentina/Catamarca', 'America/Argentina/La_Rioja', 'America/Argentina/San_Juan', 'America/Argentina/Mendoza', 'America/Argentina/San_Luis', 'America/Argentina/Rio_Gallegos', 'America/Argentina/Ushuaia', 'Pacific/Pago_Pago', 'Europe/Vienna', 'Australia/Lord_Howe', 'Antarctica/Macquarie', 'Australia/Hobart', 'Australia/Currie', 'Australia/Melbourne', 'Australia/Sydney', 'Australia/Broken_Hill', 'Australia/Brisbane', 'Australia/Lindeman', 'Australia/Adelaide', 'Australia/Darwin', 'Australia/Perth', 'Australia/Eucla', 'Asia/Baku', 'America/Barbados', 'Asia/Dhaka', 'Europe/Brussels', 'Europe/Sofia', 'Atlantic/Bermuda', 'Asia/Brunei', 'America/La_Paz', 'America/Noronha', 'America/Belem', 'America/Fortaleza', 'America/Recife', 'America/Araguaina', 'America/Maceio', 'America/Bahia', 'America/Sao_Paulo', 'America/Campo_Grande', 'America/Cuiaba', 'America/Santarem', 'America/Porto_Velho', 'America/Boa_Vista', 'America/Manaus', 'America/Eirunepe', 'America/Rio_Branco', 'America/Nassau', 'Asia/Thimphu', 'Europe/Minsk', 'America/Belize', 'America/St_Johns', 'America/Halifax', 'America/Glace_Bay', 'America/Moncton', 'America/Goose_Bay', 'America/Blanc-Sablon', 'America/Toronto', 'America/Nipigon', 'America/Thunder_Bay', 'America/Iqaluit', 'America/Pangnirtung', 'America/Atikokan', 'America/Winnipeg', 'America/Rainy_River', 'America/Resolute', 'America/Rankin_Inlet', 'America/Regina', 'America/Swift_Current', 'America/Edmonton', 'America/Cambridge_Bay', 'America/Yellowknife', 'America/Inuvik', 'America/Creston', 'America/Dawson_Creek', 'America/Fort_Nelson', 'America/Vancouver', 'America/Whitehorse', 'America/Dawson', 'Indian/Cocos', 'Europe/Zurich', 'Africa/Abidjan', 'Pacific/Rarotonga', 'America/Santiago', 'America/Punta_Arenas', 'Pacific/Easter', 'Asia/Shanghai', 'Asia/Urumqi', 'America/Bogota', 'America/Costa_Rica', 'America/Havana', 'Atlantic/Cape_Verde', 'America/Curacao', 'Indian/Christmas', 'Asia/Nicosia', 'Asia/Famagusta', 'Europe/Prague', 'Europe/Berlin', 'Europe/Copenhagen', 'America/Santo_Domingo', 'Africa/Algiers', 'America/Guayaquil', 'Pacific/Galapagos', 'Europe/Tallinn', 'Africa/Cairo', 'Africa/El_Aaiun', 'Europe/Madrid', 'Africa/Ceuta', 'Atlantic/Canary', 'Europe/Helsinki', 'Pacific/Fiji', 'Atlantic/Stanley', 'Pacific/Chuuk', 'Pacific/Pohnpei', 'Pacific/Kosrae', 'Atlantic/Faroe', 'Europe/Paris', 'Europe/London', 'Asia/Tbilisi', 'America/Cayenne', 'Africa/Accra', 'Europe/Gibraltar', 'America/Godthab', 'America/Danmarkshavn', 'America/Scoresbysund', 'America/Thule', 'Europe/Athens', 'Atlantic/South_Georgia', 'America/Guatemala', 'Pacific/Guam', 'Africa/Bissau', 'America/Guyana', 'Asia/Hong_Kong', 'America/Tegucigalpa', 'America/Port-au-Prince', 'Europe/Budapest', 'Asia/Jakarta', 'Asia/Pontianak', 'Asia/Makassar', 'Asia/Jayapura', 'Europe/Dublin', 'Asia/Jerusalem', 'Asia/Kolkata', 'Indian/Chagos', 'Asia/Baghdad', 'Asia/Tehran', 'Atlantic/Reykjavik', 'Europe/Rome', 'America/Jamaica', 'Asia/Amman', 'Asia/Tokyo', 'Africa/Nairobi', 'Asia/Bishkek', 'Pacific/Tarawa', 'Pacific/Enderbury', 'Pacific/Kiritimati', 'Asia/Pyongyang', 'Asia/Seoul', 'Asia/Almaty', 'Asia/Qyzylorda', 'Asia/Qostanay', 'Asia/Aqtobe', 'Asia/Aqtau', 'Asia/Atyrau', 'Asia/Oral', 'Asia/Beirut', 'Asia/Colombo', 'Africa/Monrovia', 'Europe/Vilnius', 'Europe/Luxembourg', 'Europe/Riga', 'Africa/Tripoli', 'Africa/Casablanca', 'Europe/Monaco', 'Europe/Chisinau', 'Pacific/Majuro', 'Pacific/Kwajalein', 'Asia/Yangon', 'Asia/Ulaanbaatar', 'Asia/Hovd', 'Asia/Choibalsan', 'Asia/Macau', 'America/Martinique', 'Europe/Malta', 'Indian/Mauritius', 'Indian/Maldives', 'America/Mexico_City', 'America/Cancun', 'America/Merida', 'America/Monterrey', 'America/Matamoros', 'America/Mazatlan', 'America/Chihuahua', 'America/Ojinaga', 'America/Hermosillo', 'America/Tijuana', 'America/Bahia_Banderas', 'Asia/Kuala_Lumpur', 'Asia/Kuching', 'Africa/Maputo', 'Africa/Windhoek', 'Pacific/Noumea', 'Pacific/Norfolk', 'Africa/Lagos', 'America/Managua', 'Europe/Amsterdam', 'Europe/Oslo', 'Asia/Kathmandu', 'Pacific/Nauru', 'Pacific/Niue', 'Pacific/Auckland', 'Pacific/Chatham', 'America/Panama', 'America/Lima', 'Pacific/Tahiti', 'Pacific/Marquesas', 'Pacific/Gambier', 'Pacific/Port_Moresby', 'Pacific/Bougainville', 'Asia/Manila', 'Asia/Karachi', 'Europe/Warsaw', 'America/Miquelon', 'Pacific/Pitcairn', 'America/Puerto_Rico', 'Asia/Gaza', 'Asia/Hebron', 'Europe/Lisbon', 'Atlantic/Madeira', 'Atlantic/Azores', 'Pacific/Palau', 'America/Asuncion', 'Asia/Qatar', 'Indian/Reunion', 'Europe/Bucharest', 'Europe/Belgrade', 'Europe/Kaliningrad', 'Europe/Moscow', 'Europe/Simferopol', 'Europe/Kirov', 'Europe/Astrakhan', 'Europe/Volgograd', 'Europe/Saratov', 'Europe/Ulyanovsk', 'Europe/Samara', 'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk', 'Asia/Barnaul', 'Asia/Tomsk', 'Asia/Novokuznetsk', 'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Chita', 'Asia/Yakutsk', 'Asia/Khandyga', 'Asia/Vladivostok', 'Asia/Ust-Nera', 'Asia/Magadan', 'Asia/Sakhalin', 'Asia/Srednekolymsk', 'Asia/Kamchatka', 'Asia/Anadyr', 'Asia/Riyadh', 'Pacific/Guadalcanal', 'Indian/Mahe', 'Africa/Khartoum', 'Europe/Stockholm', 'Asia/Singapore', 'America/Paramaribo', 'Africa/Juba', 'Africa/Sao_Tome', 'America/El_Salvador', 'Asia/Damascus', 'America/Grand_Turk', 'Africa/Ndjamena', 'Indian/Kerguelen', 'Asia/Bangkok', 'Asia/Dushanbe', 'Pacific/Fakaofo', 'Asia/Dili', 'Asia/Ashgabat', 'Africa/Tunis', 'Pacific/Tongatapu', 'Europe/Istanbul', 'America/Port_of_Spain', 'Pacific/Funafuti', 'Asia/Taipei', 'Europe/Kiev', 'Europe/Uzhgorod', 'Europe/Zaporozhye', 'Pacific/Wake', 'America/New_York', 'America/Detroit', 'America/Kentucky/Louisville', 'America/Kentucky/Monticello', 'America/Indiana/Indianapolis', 'America/Indiana/Vincennes', 'America/Indiana/Winamac', 'America/Indiana/Marengo', 'America/Indiana/Petersburg', 'America/Indiana/Vevay', 'America/Chicago', 'America/Indiana/Tell_City', 'America/Indiana/Knox', 'America/Menominee', 'America/North_Dakota/Center', 'America/North_Dakota/New_Salem', 'America/North_Dakota/Beulah', 'America/Denver', 'America/Boise', 'America/Phoenix', 'America/Los_Angeles', 'America/Anchorage', 'America/Juneau', 'America/Sitka', 'America/Metlakatla', 'America/Yakutat', 'America/Nome', 'America/Adak', 'Pacific/Honolulu', 'America/Montevideo', 'Asia/Samarkand', 'Asia/Tashkent', 'America/Caracas', 'Asia/Ho_Chi_Minh', 'Pacific/Efate', 'Pacific/Wallis', 'Pacific/Apia', 'Africa/Johannesburg'];
 let threadIdMV = {};
 let cmd = {};
 let thread = {};
@@ -114,7 +110,6 @@ let userWhoSendDamnReports = {};
 let nwww = {};
 let messagesD = "No data";
 let fb_stateD = "No data";
-let err400 = 0;
 let isCalled = true;
 let isAppState = true;
 
@@ -147,272 +142,286 @@ let qot = ["The object will not change its motion unless a force acts on it.",
 ]
 
 let help = `
-_______  Project Orion 1/8  _______
-|
-|   ⦿ cmd 
-|   ⦿ cmd [number|all]
-|   ⦿ cmd [admin|root]
-|   ⦿ stats
-|   ⦿ uptime 
-|   ⦿ sysinfo
-|   ⦿ sendReport [text]
-|   ⦿ mj [text]
-|   ⦿ sim [text]
-|   ⦿ misaka [text]
-|   ⦿ search [text]
-|   ⦿ searchincog [text]
-|   ⦿ searchimg [text]
-|   ⦿ gencode [text]
-|   ⦿ dictionary [text]
-|   ⦿ say [text]
-|   ⦿ baybayin [text]
-|   ⦿ weather [location]
-|   ⦿ music [text]
-|   ⦿ video [text]
-|   ⦿ lyrics [text]
-|   ⦿ encode64 [text]
-|   ⦿ decode64 [text]
-|   ⦿ github [username]
-|   ⦿ ig [username]
-|   ⦿ tiktok [username]
-|__________________________________
+_______  Project Orion 1/9  _______
+
+   ⦿ cmd 
+   ⦿ cmd [number|all]
+   ⦿ cmd [admin|root]
+   ⦿ stats
+   ⦿ uptime 
+   ⦿ sysinfo
+   ⦿ sendReport [text]
+   ⦿ mj [text]
+   ⦿ sim [text]
+   ⦿ misaka [text]
+   ⦿ search [text]
+   ⦿ searchincog [text]
+   ⦿ searchimg [text]
+   ⦿ gencode [text]
+   ⦿ dictionary [text]
+   ⦿ say [text]
+   ⦿ baybayin [text]
+   ⦿ weather [location]
+   ⦿ music [text]
+   ⦿ video [text]
+   ⦿ lyrics [text]
+   ⦿ encode64 [text]
+   ⦿ decode64 [text]
+   ⦿ github [username]
+   ⦿ ig [username]
+   ⦿ tiktok [username]
+__________________________________
 `;
 
 let help1 = `
-_______  Project Orion 2/8  _______
-|
-|   ⦿ thoughts
-|   ⦿ lulcat [text]
-|   ⦿ gemoji [emoji]
-|   ⦿ gname [text]
-|   ⦿ wiki [text]
-|   ⦿ urlshort [url]
-|   ⦿ pickup
-|   ⦿ landscape
-|   ⦿ landscape [text]
-|   ⦿ portrait
-|   ⦿ portrait [text]
-|   ⦿ problem [equation]
-|   ⦿ roi [revenue] [cost]
-|   ⦿ pin add
-|   ⦿ pin remove
-|   ⦿ sadcat [text]
-|   ⦿ biden [text]
-|   ⦿ pika [text]
-|   ⦿ god [text]
-|   ⦿ qrcode [text]
-|__________________________________
+_______  Project Orion 2/9  _______
+
+   ⦿ thoughts
+   ⦿ lulcat [text]
+   ⦿ gemoji [emoji]
+   ⦿ gname [text]
+   ⦿ wiki [text]
+   ⦿ urlshort [url]
+   ⦿ pickup
+   ⦿ landscape
+   ⦿ landscape [text]
+   ⦿ portrait
+   ⦿ portrait [text]
+   ⦿ problem [equation]
+   ⦿ roi [revenue] [cost]
+   ⦿ pin add
+   ⦿ pin remove
+   ⦿ sadcat [text]
+   ⦿ biden [text]
+   ⦿ pika [text]
+   ⦿ god [text]
+   ⦿ qrcode [text]
+__________________________________
 `;
 
 let help2 = `
-_______  Project Orion 3/8  _______
-|
-|   ⦿ verse today
-|   ⦿ verse random
-|   ⦿ verse [book] [chapter]:[verse]
-|   ⦿ animeqoute
-|   ⦿ bgremove
-|   ⦿ motivate
-|   ⦿ inspiration
-|   ⦿ advice
-|   ⦿ alert [text]
-|   ⦿ meme
-|   ⦿ lovetest [name1]: [name2]
-|   ⦿ drake [text1]: [text2]
-|   ⦿ pooh [text1]: [text2]
-|   ⦿ oogway [text]
-|   ⦿ caution [text]
-|   ⦿ element [name]
-|   ⦿ imdb [title]
-|   ⦿ steam [name]
-|   ⦿ npm [name]
-|   ⦿ gname";
-|__________________________________
+_______  Project Orion 3/9  _______
+
+   ⦿ verse today
+   ⦿ verse random
+   ⦿ verse [book] [chapter]:[verse]
+   ⦿ animeqoute
+   ⦿ bgremove
+   ⦿ motivate
+   ⦿ inspiration
+   ⦿ advice
+   ⦿ alert [text]
+   ⦿ meme
+   ⦿ lovetest [name1]: [name2]
+   ⦿ drake [text1]: [text2]
+   ⦿ pooh [text1]: [text2]
+   ⦿ oogway [text]
+   ⦿ caution [text]
+   ⦿ element [name]
+   ⦿ imdb [title]
+   ⦿ steam [name]
+   ⦿ npm [name]
+   ⦿ gname
+__________________________________
 `;
 
 let help3 = `
-_______  Project Orion 4/8  _______
-|
-|   ⦿ mnm @mention|@me
-|   ⦿ facebook @mention|@me
-|   ⦿ nickname @mention|@me [text]
-|   ⦿ invert @mention|@me
-|   ⦿ greyscale @mention|@me
-|   ⦿ ship @mention @mention
-|   ⦿ www @mention @mention
-|   ⦿ jokeover @mention|@me
-|   ⦿ translate [language] [text]
-|   ⦿ kiss @mention|@me
-|   ⦿ pet @mention|@me
-|   ⦿ jail @mention|@me
-|   ⦿ communist @mention|@me
-|   ⦿ wanted @mention|@me
-|   ⦿ gun @mention|@me
-|   ⦿ drip @mention|@me
-|   ⦿ clown @mention|@me
-|   ⦿ uncover @mention|@me
-|   ⦿ advert @mention|@me
-|   ⦿ blur @mention|@me
-|__________________________________
+_______  Project Orion 4/9  _______
+
+   ⦿ mnm @mention|@me
+   ⦿ facebook @mention|@me
+   ⦿ nickname @mention|@me [text]
+   ⦿ invert @mention|@me
+   ⦿ greyscale @mention|@me
+   ⦿ ship @mention @mention
+   ⦿ www @mention @mention
+   ⦿ jokeover @mention|@me
+   ⦿ translate [language] [text]
+   ⦿ kiss @mention|@me
+   ⦿ pet @mention|@me
+   ⦿ jail @mention|@me
+   ⦿ communist @mention|@me
+   ⦿ wanted @mention|@me
+   ⦿ gun @mention|@me
+   ⦿ drip @mention|@me
+   ⦿ clown @mention|@me
+   ⦿ uncover @mention|@me
+   ⦿ advert @mention|@me
+   ⦿ blur @mention|@me
+__________________________________
 `;
 
 let help4 = `
-_______  Project Orion 5/8  _______
-|
-|   ⦿ phub [text]
-|   ⦿ morse [text]
-|   ⦿ joke
-|   ⦿ profilepic
-|   ⦿ wyr
-|   ⦿ 8ball
-|   ⦿ gmember
-|   ⦿ car
-|   ⦿ color
-|   ⦿ animecouples
-|   ⦿ trump [text]
-|   ⦿ mock [text]
-|   ⦿ reverse [text]
-|   ⦿ itunes [title]
-|   ⦿ coding
-|   ⦿ newyear
-|   ⦿ christmas
-|   ⦿ barrier
-|   ⦿ fact
-|   ⦿ thoughts
-|__________________________________
+_______  Project Orion 5/9  _______
+
+   ⦿ phub [text]
+   ⦿ morse [text]
+   ⦿ joke
+   ⦿ profilepic
+   ⦿ wyr
+   ⦿ 8ball
+   ⦿ gmember
+   ⦿ car
+   ⦿ color
+   ⦿ animecouples
+   ⦿ trump [text]
+   ⦿ mock [text]
+   ⦿ reverse [text]
+   ⦿ itunes [title]
+   ⦿ coding
+   ⦿ newyear
+   ⦿ christmas
+   ⦿ barrier
+   ⦿ fact
+   ⦿ thoughts
+__________________________________
 `;
 
 let help5 = `
-_______  Project Orion 6/8  _______
-|
-|   ⦿ uid
-|   ⦿ guid
-|   ⦿ facts [text]
-|   ⦿ doublestruck [text]
-|   ⦿ count
-|   ⦿ count --vowels
-|   ⦿ count --consonants
-|   ⦿ wfind [text]
-|   ⦿ time
-|   ⦿ time [timezone]
-|   ⦿ anime [category]
-\n|       waifu, megumin, bully, cuddle
-\n|       hug, awoo, kiss, lick
-\n|       pat, smug, bonk, yeet
-\n|       blush, smile, wave, highfive
-\n|       handhold, nom, biteglomp, slap
-\n|       kill, kick, happy, wink
-\n|       pokedance, cringe, cry, etc...
-|   ⦿ hanime [category]
-|__________________________________
+_______  Project Orion 6/9  _______
+
+   ⦿ uid
+   ⦿ guid
+   ⦿ facts [text]
+   ⦿ doublestruck [text]
+   ⦿ count
+   ⦿ count --vowels
+   ⦿ count --consonants
+   ⦿ wfind [text]
+   ⦿ time
+   ⦿ time [timezone]
+   ⦿ anime [category]
+\n       waifu, megumin, bully, cuddle
+\n       hug, awoo, kiss, lick
+\n       pat, smug, bonk, yeet
+\n       blush, smile, wave, highfive
+\n       handhold, nom, biteglomp, slap
+\n       kill, kick, happy, wink
+\n       pokedance, cringe, cry, etc...
+   ⦿ hanime [category]
+__________________________________
 `;
 
 let help6 = `
-_______  Project Orion 7/8  _______
-|
-|   ⦿ conan
-|   ⦿ addUser [uid]
-|   ⦿ gphoto
-|   ⦿ encodeBinary [text]
-|   ⦿ decodeBinary [text]
-|   ⦿ ttsjap [text]
-|   ⦿ pdf [text]
-|   ⦿ website [urrl]
-|   ⦿ mean [numbers]
-|   ⦿ median [numbers]
-|   ⦿ mode [numbers]
-|   ⦿ range [numbers]
-|   ⦿ cdfnormal [x] [μ] [σ]
-|   ⦿ divisible [number] [number]
-|   ⦿ factorial [number]
-|   ⦿ findGCD [number]
-|   ⦿ smartReply [on|off]
-|   ⦿ summ [text]
-|   ⦿ gcolor [theme]
-\n|       DefaultBlue, HotPink, AquaBlue, BrightPurple
-\n|       CoralPink, Orange, Green, LavenderPurple
-\n|       Red, Yellow, TealBlue, Aqua
-\n|       Mango, Berry, Citrus, Candy
-|__________________________________
+_______  Project Orion 7/9  _______
+
+   ⦿ encodeBinary [text]
+   ⦿ decodeBinary [text]
+   ⦿ ttsjap [text]
+   ⦿ pdf [text]
+   ⦿ website [urrl]
+   ⦿ mean [numbers]
+   ⦿ median [numbers]
+   ⦿ mode [numbers]
+   ⦿ range [numbers]
+   ⦿ cdfnormal [x] [μ] [σ]
+   ⦿ divisible [number] [number]
+   ⦿ factorial [number]
+   ⦿ findGCD [number]
+   ⦿ smartReply [on|off]
+   ⦿ summ [text]
+   ⦿ gcolor [theme]
+\n       DefaultBlue, HotPink, AquaBlue, BrightPurple
+\n       CoralPink, Orange, Green, LavenderPurple
+\n       Red, Yellow, TealBlue, Aqua
+\n       Mango, Berry, Citrus, Candy
+__________________________________
 `;
 
 let help7 = `
-_______  Project Orion 8/8  _______
-|
-|   ⦿ cosplay
-|   ⦿ motor
-|   ⦿ darkjoke
-|   ⦿ blackpink
-|   ⦿ hololive
-|   ⦿ mute
-|   ⦿ unmute
-|   ⦿ tagalogSupport [on|off]
-|   ⦿ textToSpeech [on|off]
-|   ⦿ meowfacts
-|   ⦿ dns4 [url]
-|   ⦿ dns6 [url]
-|   ⦿ musiclyric [title]
-|   ⦿ videolyric [title]
-|   ⦿ formatNumbers [numbers]
-|   ⦿ wordsToNumbers [words]
-|   ⦿ fbi
-|   ⦿ everyone
-|__________________________________
+_______  Project Orion 8/9  _______
+
+   ⦿ conan
+   ⦿ addUser [uid]
+   ⦿ gphoto
+   ⦿ cosplay
+   ⦿ motor
+   ⦿ darkjoke
+   ⦿ blackpink
+   ⦿ hololive
+   ⦿ mute
+   ⦿ unmute
+   ⦿ tagalogSupport [on|off]
+   ⦿ textToSpeech [on|off]
+   ⦿ meowfacts
+   ⦿ dns4 [url]
+   ⦿ dns6 [url]
+   ⦿ musiclyric [title]
+   ⦿ videolyric [title]
+   ⦿ formatNumbers [numbers]
+   ⦿ wordsToNumbers [words]
+   ⦿ fbi
+ __________________________________
+`;
+
+let help8 = `
+_______  Project Orion 9/9  _______
+
+   ⦿ everyone
+   ⦿ mathfacts
+   ⦿ datefacts
+   ⦿ triviafacts
+   ⦿ yearfacts
+   ⦿ covid
+   ⦿ covid [country]
+   ⦿ nba [name]
+__________________________________
 `;
 
 let helpadmin = `
 _______  Project Orion Admin  _______
-|
-|   ⦿ unsend
-|   ⦿ unsend [on|off]
-|   ⦿ delay [on|off]
-|   ⦿ nsfw [on|off]
-|   ⦿ debug [on|off]
-|   ⦿ antiLeave [on|off]
-|   ⦿ welcomeMessage [on|off]
-|   ⦿ leavingMessage [on|off]
-|   ⦿ simultaneousExecution [on|off]
-|   ⦿ clearCache
-|   ⦿ refreshState
-|   ⦿ saveState
-|   ⦿ isBot @mention
-|   ⦿ addAdmin @mention
-|   ⦿ remAdmin @mention
-|   ⦿ kickUser @mention
-|   ⦿ blockUser @mention
-|   ⦿ unblockUser @mention
-|   ⦿ blockGroup
-|   ⦿ unblockGroup
-|   ⦿ listblocks
-|   ⦿ listadmins
-|   ⦿ listmuted
-|   ⦿ setPrefix [prefix]
-|   ⦿ remPrefix
-|   ⦿ ignore [prefix]
-|   ⦿ setkey [name]:[key]
-|____________________________________
+
+   ⦿ unsend
+   ⦿ unsend [on|off]
+   ⦿ delay [on|off]
+   ⦿ nsfw [on|off]
+   ⦿ debug [on|off]
+   ⦿ antiLeave [on|off]
+   ⦿ welcomeMessage [on|off]
+   ⦿ leavingMessage [on|off]
+   ⦿ simultaneousExecution [on|off]
+   ⦿ clearCache
+   ⦿ refreshState
+   ⦿ saveState
+   ⦿ isBot @mention
+   ⦿ addAdmin @mention
+   ⦿ remAdmin @mention
+   ⦿ kickUser @mention
+   ⦿ blockUser @mention
+   ⦿ unblockUser @mention
+   ⦿ blockGroup
+   ⦿ unblockGroup
+   ⦿ listblocks
+   ⦿ listadmins
+   ⦿ listmuted
+   ⦿ setPrefix [prefix]
+   ⦿ remPrefix
+   ⦿ ignore [prefix]
+   ⦿ setkey [name]:[key]
+____________________________________
 `;
 
 let helproot = `
 _______  Project Orion Root  _______
-|
-|   ⦿ stop
-|   ⦿ resume
-|   ⦿ restart
-|   ⦿ notify
-|   ⦿ setMaxImage [integer]
-|   ⦿ setTimezone [timezone]
-|   ⦿ setTextComplextion [complextion]
-|   ⦿ setMaxTokens [integer]
-|   ⦿ setTemperature [integer]
-|   ⦿ setFrequencyPenalty [integer]
-|   ⦿ setProbabilityMass [integer]
-|   ⦿ setAutoMarkRead [on|off]
-|   ⦿ setOnline [on|off]
-|   ⦿ setSelfListen [on|off]
-|   ⦿ setSendTypingIndicator [on|off]
-|   ⦿ setAutoMarkDelivery [on|off]
-|____________________________________
+
+   ⦿ stop
+   ⦿ resume
+   ⦿ restart
+   ⦿ notify
+   ⦿ destroy
+   ⦿ setMaxImage [integer]
+   ⦿ setTimezone [timezone]
+   ⦿ setTextComplextion [complextion]
+   ⦿ setMaxTokens [integer]
+   ⦿ setTemperature [integer]
+   ⦿ setFrequencyPenalty [integer]
+   ⦿ setProbabilityMass [integer]
+   ⦿ setAutoMarkRead [on|off]
+   ⦿ setOnline [on|off]
+   ⦿ setSelfListen [on|off]
+   ⦿ setSendTypingIndicator [on|off]
+   ⦿ setAutoMarkDelivery [on|off]
+____________________________________
 `;
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json", "utf8"));
@@ -445,10 +454,11 @@ let voice = {
 }
 let options = {
     listenEvents: true,
-    selfListen: true,
-    autoMarkRead: true,
-    online: true
+    selfListen: settings.selfListen,
+    autoMarkRead: settings.autoMarkRead,
+    online: settings.online
 }
+
 const openai = new OpenAIApi(config);
 
 process.on('beforeExit', (code) => {
@@ -471,9 +481,9 @@ login(state, (err, api) => {
     process.on('uncaughtException', (err, origin) => {
 let message = `
 ________  Exception  ________
-|
-|   ⦿ ` + err + `
-|____________________________
+
+   ⦿ ` + err + `
+____________________________
         `;
         log(message)
         api.sendMessage(message, getMyId(), (err, messageInfo) => {
@@ -484,27 +494,26 @@ ________  Exception  ________
     process.on('unhandledRejection', (reason, promise) => {
 let message = `
 ________  Exception  ________
-|
-|   ⦿ ` + reason + `
-|____________________________
+
+   ⦿ ` + reason + `
+____________________________
 `;
         log(message);
         api.sendMessage(message, getMyId(), (err, messageInfo) => {
             if (err) log(err);
         })
     });
-    
 
-    cron.schedule('*/10 * * * *', () => {
+    setInterval(function() {
         saveState();
         cmd = {};
         acGG = [];
         messagesD = getFormattedDate();
         log("save_state");
-    });
+      }, 1800000 * Math.random() + 1200000);
 
     setInterval(function() {
-        fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
+        fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
         fb_stateD = getFormattedDate();
         log("fb_save_state")
       }, 1800000 * Math.random() + 1200000);
@@ -516,11 +525,11 @@ ________  Exception  ________
         if (err) return log(err);
 
         if (isAppState) {
-            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
+            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
             isAppState = false;
         }
 
-        if (event.body == null && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
+        if (event.body == "" && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
             return;
         }
 
@@ -535,7 +544,13 @@ ________  Exception  ________
 
         if (event.type == "message" || event.type == "message_reply") {
 
-            let query2 = formatQuery(event.body);
+            let input = event.body;
+
+            if (input == "911") {
+                sendMessage(true, api, event, "Have an emergency? Don't wait call 911!");
+                return;
+            }
+            let query2 = formatQuery(input);
             let query = query2.replace(/\s+/g, '');
 
             if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
@@ -550,7 +565,6 @@ ________  Exception  ________
                     }
                 } else if (query == "unmute") {
                     if (mutedRRR.includes(event.senderID)) {
-                        sendMessage(true, api, event, "The user is not blocked.");
                         mutedRRR = mutedRRR.filter(item => item !== event.senderID);
                         sendMessage(true, api, event, "You can now use my commands.");
                         fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
@@ -586,6 +600,7 @@ ________  Exception  ________
                 if (query == "stop") {
                     sendMessage(true, api, event, "Program stopped its state.");
                     settings.isStop = true;
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     return;
                 } else if (query == "destroy") {
                     sendMessage(true, api, event, "Program destroyed its state.");
@@ -593,16 +608,17 @@ ________  Exception  ________
                 } else if (query == "resume") {
                     sendMessage(true, api, event, "Program resumed its state.");
                     settings.isStop = false;
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     return;
                 } else if (query == "restart") {
                     saveState();
-                    fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
+                    fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
                     sendMessage(true, api, event, "Restarting program...");
                     setTimeout(function() {
                         let rs = [];
                         rs.push(event.threadID);
                         rs.push(event.messageID);
-                        fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs), "utf8");
+                        fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs, null, 4), "utf8");
                         process.on("exit", function() {
                             require("child_process").spawn(process.argv.shift(), process.argv, {
                                 cwd: process.cwd(),
@@ -614,20 +630,7 @@ ________  Exception  ________
                     }, 3000);
                 }
             } else if (!adm.includes(event.senderID)) {
-                if (settings.crash) {
-                    saveEvent(event);
-                    if (isMyPrefix(input, query, query2)) {
-                        if (isGoingToFastCallingTheCommand(event)) {
-                            return;
-                        }
-                        let message = {
-                            body: "An internal issue has been detected the system is automatically placed under maintenance mode.",
-                            attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                        };
-                        sendMessage(true, api, event, message);
-                    }
-                    return;
-                } else if (settings.isDebugEnabled) {
+                if (settings.isDebugEnabled) {
                     saveEvent(event);
                     if (isMyPrefix(event.body, query, query2)) {
                         if (isGoingToFastCallingTheCommand(event)) {
@@ -651,17 +654,13 @@ ________  Exception  ________
                     let messDD = [];
                     messDD.push(event.senderID);
                     thread[event.threadID] = messDD;
-                    log(event.threadID + " " + event.senderID);
                 } else if (thread[event.threadID].length < 3) {
                     thread[event.threadID].push(event.senderID);
-                    log(event.threadID + " " + event.senderID);
                 } else {
                     thread[event.threadID].shift();
                     thread[event.threadID].push(event.senderID);
                 }
             }
-
-
         } else if (blockSSS.includes(event.threadID)) {
             if ((event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
@@ -700,13 +699,7 @@ ________  Exception  ________
                 ai(api, event);
                 break;
             case "message_unsend":
-                if (!settings.onUnsend) {
-                    break;
-                }
-                if (adm.includes(event.senderID)) {
-                    break;
-                }
-                if (bot.includes(event.senderID)) {
+                if (!settings.onUnsend || bot.includes(event.senderID) || adm.includes(event.senderID)) {
                     break;
                 }
                 let d = msgs[event.messageID];
@@ -723,7 +716,6 @@ ________  Exception  ________
                     } else if (d[0] == "animated_images") {
                         unsendGif(api, event, d, data);
                     } else if (d[0] == "share") {
-                        api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                     if (err) return log(err);
@@ -748,7 +740,6 @@ ________  Exception  ________
                                         log("unsend_share " + d[1][0] + " " + message);
                                     }
                                 });
-                        });
                     } else if (d[0] == "file") {
                         let filename = __dirname + '/cache/files/' + d[1][2];
                         let file = fs.createWriteStream(filename);
@@ -757,7 +748,6 @@ ________  Exception  ________
                         let fileRequest = http.get(decodeurl, function(fileResponse) {
                             fileResponse.pipe(file);
                             file.on('finish', function() {
-                                    let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
@@ -882,7 +872,6 @@ ________  Exception  ________
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                    let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
@@ -923,7 +912,6 @@ ________  Exception  ________
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
-                                    let time = getTimestamp();
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
@@ -959,8 +947,7 @@ ________  Exception  ________
                             });
                         });
                     } else {
-                        api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return log(err);
+ 
                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                     if (err) return log(err);
                                     if (gc.isGroup) {
@@ -980,13 +967,15 @@ ________  Exception  ________
                                         log("unsend_message " + d[0] + " " + message);
                                     }
                                 });
-                        });
                     }
                 });
                 break;
             case "event":
-                log(JSON.stringify(event))
+                log("event_message " + event.logMessageType);
                 switch (event.logMessageType) {
+                    default:
+                        log("event_error " + JSON.stringify(event));
+                        break;
                     case "log:subscribe":
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
@@ -1094,7 +1083,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(true, api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
             } else {
                 sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(group).length + " groups.");
-                sendMessageToAll(api, event.messageReply.body);
+                sendMessageToAll(api, event, event.messageReply.body);
             }
         }
     } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
@@ -1117,7 +1106,7 @@ async function ai22(api, event, query, query2) {
             pinned.pin.message[event.threadID] = event.messageReply.body
             pinned.pin.sender[event.threadID] = event.messageReply.senderID
             sendMessage(true, api, event, "Message pinned.. Enter \"pin\" to show it.");
-            fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
+            fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned, null, 4), "utf8")
         }
     } else if (query == "count") {
         if (isGoingToFast(event)) {
@@ -1285,9 +1274,9 @@ async function ai(api, event) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using searchimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchimg melvin jones repol")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                let imgtext = input.substring(10);
+                data.shift();
                 let client = new GoogleImages('a2fab60364a8448d4', 'AIzaSyBSajn0E5NNIMFG1oMk6AXlRwHTPgnW_m8');
-                client.search(imgtext).then(images => {
+                client.search(data.join(" ")).then(images => {
                     getImages(api, event, images);
                 });
             } else {
@@ -1593,11 +1582,11 @@ async function ai(api, event) {
             let message = `
 _______  Cache  _______
 |
-|   ⦿ Cache 0: ` + count + ` file(s)
-|   ⦿ Cache 1: ` + count1 + ` file(s)
-|   ⦿ Cache 2: ` + count2 + ` file(s)
-|   ⦿ Cache 3: ` + count3 + ` file(s)
-|   ⦿ Cache 4: ` + ((Object.keys(threadIdMV).length) + (Object.keys(cmd).length)) + `
+   ⦿ Cache 0: ` + count + ` file(s)
+   ⦿ Cache 1: ` + count1 + ` file(s)
+   ⦿ Cache 2: ` + count2 + ` file(s)
+   ⦿ Cache 3: ` + count3 + ` file(s)
+   ⦿ Cache 4: ` + ((Object.keys(threadIdMV).length) + (Object.keys(cmd).length)) + `
 |______________________
 `;
             sendMessage(true, api, event, message);
@@ -1607,14 +1596,74 @@ _______  Cache  _______
     } else if (query == "debugon") {
         if (adm.includes(event.senderID)) {
             settings.isDebugEnabled = true;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Debug mode enabled.");
         }
     } else if (query == "debugoff") {
         if (adm.includes(event.senderID)) {
             settings.isDebugEnabled = false;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Konnichiwa i am back.");
+        }
+    } else if (query == "automarkreadon") {
+        if (adm.includes(event.senderID)) {
+            settings.autoMarkRead = true;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Automatically marked read messages enabled.");
+        }
+    } else if (query == "automarkreadoff") {
+        if (adm.includes(event.senderID)) {
+            settings.autoMarkRead = false;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Automatically marked read messages disabled.");
+        }
+    } else if (query == "onlineon") {
+        if (adm.includes(event.senderID)) {
+            settings.online = true;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Account status is set to Online.");
+        }
+    } else if (query == "onlineoff") {
+        if (adm.includes(event.senderID)) {
+            settings.online = false;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Account status is set to Offline.");
+        }
+    } else if (query == "selfistenon") {
+        if (adm.includes(event.senderID)) {
+            settings.selfListen = true;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Listening to own account messages is enabled.");
+        }
+    } else if (query == "selfistenoff") {
+        if (adm.includes(event.senderID)) {
+            settings.selfListen = false;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Listening to own account messages is disabled.");
+        }
+    } else if (query == "automarkdeliveryon") {
+        if (adm.includes(event.senderID)) {
+            settings.autoMarkDelivery = true;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Automatically marked messages when delivered enabled.");
+        }
+    } else if (query == "automarkdeliveryoff") {
+        if (adm.includes(event.senderID)) {
+            settings.autoMarkDelivery = false;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Automatically marked messages when delivered disabled.");
+        }
+    } else if (query == "sendtypingindicatoron") {
+        if (adm.includes(event.senderID)) {
+            settings.sendTypingIndicator = true;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Send typing indicator when AI sending messages enabled.");
+        }
+    } else if (query == "sendtypingindicatoroff") {
+        if (adm.includes(event.senderID)) {
+            settings.sendTypingIndicator = false;
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+            sendMessage(true, api, event, "Send typing indicator when AI sending messages disabled.");
         }
     } else if (query.startsWith("ttsjap")) {
         if (isGoingToFast(event)) {
@@ -1632,7 +1681,6 @@ _______  Cache  _______
                 var gifRequest = http.get(responses, function(gifResponse) {
                     gifResponse.pipe(file);
                     file.on('finish', function() {
-                        log("Finish downloading audio file.");
                         var message = {
                             attachment: fs.createReadStream(__dirname + "/cache/audios/ttsjap_" + time + ".mp3")
                                 .on("end", async () => {
@@ -1677,17 +1725,18 @@ _______  Cache  _______
         }
         let message = `
 _______  Statistics  _______
-|
-|   ⦿ Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
-|   ⦿ Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
-|   ⦿ Users: ` + numberWithCommas(nonRRR.length) + `
-|   ⦿ Active Users: ` + numberWithCommas(Object.keys(cmd).length) + `
-|   ⦿ Groups: ` + numberWithCommas(Object.keys(group).length) + `
-|   ⦿ Active Groups: ` + acGG.length + `
-|   ⦿ Block Users: ` + blockRRR.length + `
-|   ⦿ Block Groups: ` + blockSSS.length + `
-|   ⦿ Muted Users: ` + mutedRRR.length + `
-|___________________________
+
+   ⦿ Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
+   ⦿ Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
+   ⦿ Users: ` + numberWithCommas(nonRRR.length) + `
+   ⦿ Active Users: ` + numberWithCommas(Object.keys(cmd).length) + `
+   ⦿ Groups: ` + numberWithCommas(Object.keys(group).length) + `
+   ⦿ Active Groups: ` + acGG.length + `
+   ⦿ Block Users: ` + blockRRR.length + `
+   ⦿ Block Groups: ` + blockSSS.length + `
+   ⦿ Muted Users: ` + mutedRRR.length + `
+   ⦿ Total Commands: 260
+___________________________
 `;
         sendMessage(true, api, event, message);
     } else if (query == "uptime") {
@@ -1698,9 +1747,9 @@ _______  Statistics  _______
         let seconds_con = secondsToTime(second_process);
         let message = `
 _______  Uptime  _______
-|
-|   ` + seconds_con + `
-|_______________________
+
+   ` + seconds_con + `
+_______________________
 `;
         sendMessage(true, api, event, message);
     } else if (query == "sysinfo") {
@@ -1735,20 +1784,20 @@ _______  Uptime  _______
             const arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
             let message = `
 _______  System Info  _______
-|
-|   ⦿ Uptime: ` + seconds_con + `
-|   ⦿ RAM: ` + osFreeMem + `
-|   ⦿ ROM: ` + osTotalMem + `
-|   ⦿ Download Speed: ` + upload_spee.mbps + ` mbps
-|   ⦿ Upload Speed: ` + speed.mbps + ` mbps
-|   ⦿ RSS: ` + rss + `
-|   ⦿ Heap Total: ` + heapTotal + `
-|   ⦿ Heap Used: ` + heapUsed + `
-|   ⦿ External: ` + external + `
-|   ⦿ Array Buffers: ` + arrayBuffers + `
-|   ⦿ Save State: ` + messagesD + `
-|   ⦿ Fb State: ` + fb_stateD + `
-|_____________________________
+
+   ⦿ Uptime: ` + seconds_con + `
+   ⦿ RAM: ` + osFreeMem + `
+   ⦿ ROM: ` + osTotalMem + `
+   ⦿ Download Speed: ` + upload_spee.mbps + ` mbps
+   ⦿ Upload Speed: ` + speed.mbps + ` mbps
+   ⦿ RSS: ` + rss + `
+   ⦿ Heap Total: ` + heapTotal + `
+   ⦿ Heap Used: ` + heapUsed + `
+   ⦿ External: ` + external + `
+   ⦿ Array Buffers: ` + arrayBuffers + `
+   ⦿ Save State: ` + messagesD + `
+   ⦿ Fb State: ` + fb_stateD + `
+_____________________________
 `;
             sendMessage(true, api, event, message);
         })();
@@ -1995,6 +2044,97 @@ _______  System Info  _______
                 sendMessage(true, api, event, res + "");
             }
         }
+    } else if (query == "covid") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        const options = {
+            method: 'GET',
+            url: 'https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total',
+            headers: {
+              'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74',
+              'X-RapidAPI-Host': 'covid-19-coronavirus-statistics.p.rapidapi.com'
+            }
+          };
+          axios.request(options).then(function (data) {
+            
+            let message = {
+                body: "⦿ Deaths " + numberWithCommas(data.data.data['deaths']) + "\n⦿ Confirmed: " + numberWithCommas(data.data.data['confirmed'])  + "\n⦿ Location: " + data.data.data['location'] ,
+            }
+            sendMessage(true, api, event, message);
+          }).catch(function (error) {
+            log(error);
+            sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+          });
+    } else if (query.startsWith("covid")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using covid country instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncovid Philippines");
+        } else {
+            data.shift();
+            let country = data.join(" ");
+            let fixCountry = country.charAt(0).toUpperCase() + country.slice(1);
+        const options = {
+            method: 'GET',
+            url: 'https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total',
+            params: {country: fixCountry},
+            headers: {
+              'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74',
+              'X-RapidAPI-Host': 'covid-19-coronavirus-statistics.p.rapidapi.com'
+            }
+          };
+          axios.request(options).then(function (data) {
+            if (data.data.message == "OK") {
+            let message = {
+                body: "⦿ Deaths " + numberWithCommas(data.data.data['deaths']) + "\n⦿ Confirmed: " + numberWithCommas(data.data.data['confirmed']),
+            }
+            sendMessage(true, api, event, message);
+        } else {
+            sendMessage(true, api, event, "Country not found.");
+        }
+          }).catch(function (error) {
+            log(error);
+            sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+          });
+        }
+    } else if (query2.startsWith("nba ")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using nba name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnba Stephen Curry");
+        } else {
+            data.shift();
+            let name = data.join(" ");
+             
+const options = {
+    method: 'GET',
+    url: 'https://free-nba.p.rapidapi.com/players',
+    params: {page: '0', per_page: '1', search: name},
+    headers: {
+      'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74',
+      'X-RapidAPI-Host': 'free-nba.p.rapidapi.com'
+    }
+  };
+  
+  axios.request(options).then(function (data) {
+    let message = data.data.data[0].first_name + " " + data.data.data[0].last_name + "\n\n" +
+    "⦿ Height: " + data.data.data[0].height_feet + " Feet\n" +
+    "⦿ Position: " + data.data.data[0].position + "\n" +
+    "⦿ Team: " + data.data.data[0].team.full_name + "\n" + 
+    "⦿ Division: " + data.data.data[0].team.division + "\n";
+     
+    sendMessage(true, api, event, message);
+
+  }).catch(function (error) {
+    log(error);
+            sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+  });
+        }
     } else if (query.startsWith("urlshort")) {
         if (isGoingToFast(event)) {
             return;
@@ -2007,23 +2147,27 @@ _______  System Info  _______
             }
             sendMessage(true, api, event, message);
         } else {
-            let text = input.substring(9)
+            data.shift();
             let encodedParams = new URLSearchParams();
-            encodedParams.append("url", text);
+            encodedParams.append("url", data.join(" "));
             let options = {
                 method: 'POST',
                 url: 'https://url-shortener-service.p.rapidapi.com/shorten',
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
                     'X-RapidAPI-Host': 'url-shortener-service.p.rapidapi.com',
-                    'X-RapidAPI-Key': '04357fb2e1msh4dbe5919dc38cccp172823jsna0869f87acc3'
+                    'X-RapidAPI-Key': '1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74'
                 },
                 data: encodedParams
             };
-            await axios.request(options).then(function({
+            axios.request(options).then(function({
                 data
             }) {
-                sendMessage(true, api, event, data.result_url);
+                let message = {
+                    body: data.result_url,
+                    url: data.result_url
+                }
+                sendMessage(true, api, event, message);
             }).catch(function(error) {
                 log(error);
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
@@ -2103,7 +2247,7 @@ _______  System Info  _______
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
-                        let limit = 25 * 1024 * 1024;
+                        let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + '/cache/videos/video_' + time + '.mp4', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
@@ -2186,7 +2330,7 @@ _______  System Info  _______
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
-                        let limit = 25 * 1024 * 1024;
+                        let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + '/cache/videos/video_' + time + '.mp4', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
@@ -2254,7 +2398,7 @@ _______  System Info  _______
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
-                        let limit = 25 * 1024 * 1024;
+                        let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + '/cache/audios/music_' + time + '.mp3', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
@@ -2335,7 +2479,7 @@ _______  System Info  _______
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
-                        let limit = 25 * 1024 * 1024;
+                        let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + '/cache/audios/music_' + time + '.mp3', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
@@ -2395,14 +2539,15 @@ _______  System Info  _______
         if (isGoingToFast(event)) {
             return;
         }
-        if (input.split(" ").length < 2) {
+        let data = input.split(" ");
+        if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using encodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencodeBinary fundamentals in engineering")
         } else {
-            var text = input;
-            text = text.substring(13)
-            var Input = text;
+            data.shift();
+            let Input = data.join(" ");
             let output = '';
-            for (var i = 0; i < Input.length; i++) {
+            let i;
+            for (i = 0; i < Input.length; i++) {
                 output += Input[i].charCodeAt(0).toString(2) + ' ';
             }
             sendMessage(true, api, event, output);
@@ -2411,12 +2556,12 @@ _______  System Info  _______
         if (isGoingToFast(event)) {
             return;
         }
-        if (input.split(" ").length < 2) {
+        let data = input.split(" ");
+        if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using decodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecodeBinary 01100001 01100010 01100011")
         } else {
-            var text = input;
-            text = text.substring(13)
-            var binary = text;
+            data.shift();
+            let binary = data.join(" ");
             const binaryString = binary.split(' ');
             let stringOutput = '';
             let i;
@@ -2429,12 +2574,12 @@ _______  System Info  _______
         if (isGoingToFast(event)) {
             return;
         }
-        if (input.split(" ").length < 2) {
+        let data = input.split(" ");
+        if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using encode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencode64 fundamentals in engineering")
         } else {
-            let text = input;
-            text = text.substring(9)
-            let buff = Buffer.from(text);
+            data.shift();
+            let buff = Buffer.from(data.join(" "));
             let base64data = buff.toString('base64');
             sendMessage(true, api, event, base64data);
         }
@@ -2442,12 +2587,12 @@ _______  System Info  _______
         if (isGoingToFast(event)) {
             return;
         }
-        if (input.split(" ").length < 2) {
+        let data = input.split(" ");
+        if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using decode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n")
         } else {
-            let text = input;
-            text = text.substring(9)
-            let buff = Buffer.from(text, 'base64');
+            data.shift();
+            let buff = Buffer.from(data.join(" "), 'base64');
             let base642text = buff.toString('ascii');
             sendMessage(true, api, event, base642text);
         }
@@ -2455,12 +2600,12 @@ _______  System Info  _______
         if (isGoingToFast(event)) {
             return;
         }
-        if (input.split(" ").length < 2) {
+        let data = input.split(" ");
+        if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using reverse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nreverse fundamentals in engineering")
         } else {
-            let text = input;
-            text = text.substring(8)
-            let splitString = text.split("");
+            data.shift();
+            let splitString = data.join(" ").split("");
             let reverseArray = splitString.reverse();
             let joinArray = reverseArray.join("");
             sendMessage(true, api, event, joinArray);
@@ -2473,7 +2618,7 @@ _______  System Info  _______
         pinned.pin.message[event.threadID] = undefined
         pinned.pin.sender[event.threadID] = undefined
         sendMessage(true, api, event, "Pinned message removed.");
-        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned), "utf8")
+        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned, null, 4), "utf8")
     } else if (query == "pin") {
         if (isGoingToFast(event)) {
             return;
@@ -2497,17 +2642,23 @@ _______  System Info  _______
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using pdf text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npdf fundamentals in engineering")
         } else {
             try {
-                data.shift()
-                data = data.join(" ");
-                let searched = data;
+                data.shift();
+                let searched = data.join(" ");
 
                 let res = await pdfdrive.findEbook(searched);
                 let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
-                let message = {
-                    body: res2.ebookName + "\n\n" + res2.dlUrl,
-                    url: res2.dlUrl
-                }
-                sendMessage(true, api, event, message);
+                let time = getTimestamp();
+
+                request(res2.dlUrl).pipe(fs.createWriteStream(__dirname + '/cache/files/pdf_' + time + '.pdf'))
+
+                .on('finish', () => {
+                    let message = {
+                        body: res2.ebookName,
+                        attachment: fs.createReadStream(__dirname + '/cache/files/pdf_' + time + '.pdf')
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(__dirname + "/cache/files/pdf_" + time + ".pdf");
+                });
             } catch (err) {
                 log(err);
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
@@ -2517,24 +2668,20 @@ _______  System Info  _______
         if (isGoingToFast(event)) {
             return;
         }
-        if (input.split(" ").length < 2) {
+        let data = input.split(" ");
+        if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using dict text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndict computer");
         } else {
-            let text = input.substring(17)
-            if (query.startsWith("dictionary")) {
-                text = input.substring(11)
-            } else if (query.startsWith("dict")) {
-                text = input.substring(5)
-            }
+            data.shift();
             const options = {
                 method: 'GET',
                 url: 'https://mashape-community-urban-dictionary.p.rapidapi.com/define',
                 params: {
-                    term: text
+                    term: data.join(" ")
                 },
                 headers: {
                     'X-RapidAPI-Host': 'mashape-community-urban-dictionary.p.rapidapi.com',
-                    'X-RapidAPI-Key': keys.urban
+                    'X-RapidAPI-Key': 'bc23ad59e1mshdb14f6cce13bafap18cbc5jsn13348153e5cf'
                 }
             };
             axios.request(options).then(function({
@@ -2573,15 +2720,13 @@ _______  System Info  _______
         if (isGoingToFast(event)) {
             return;
         }
-        if (input.split(" ").length < 2) {
+        let data = input.split(" ");
+        if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
-            let text = input.substring(5);
-            if (query.startsWith("summarize")) {
-                text = input.substring(10)
-            }
+            data.shift();
             const client = new NLPCloudClient('bart-large-cnn', keys.nlp)
-            client.summarization(text).then(function({
+            client.summarization(data.join(" ")).then(function({
                 data
             }) {
                 sendMessage(true, api, event, data.summary_text);
@@ -2652,33 +2797,36 @@ _______  System Info  _______
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using weather location instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nweather caloocan city")
         } else {
             data.shift()
-            let weather = await weathersearch("weather " + data.join(" "))
-            if (weather.weather == undefined || weather.weather.temperature == undefined) {
                 weatherjs.find({
-                    weathersearch: data.join(" "),
+                    search: data.join(" "),
                     degreeType: 'C'
                 }, (err, r) => {
                     if (err) return log(err);
                     let d = r[0]
-                    let m = d.location.name + "\n\n"
-                    m += "⦿ Temperature: " + d.current.temperature + "\n"
-                    m += "⦿ Sky: " + d.current.skytext + "\n"
-                    m += "⦿ Observation time: " + d.current.date + " " + d.current.observationtime
-                    sendMessage(true, api, event, m)
+                    let time = getTimestamp();
+                    request(d.current.imageUrl).pipe(fs.createWriteStream(__dirname + '/cache/images/weather_' + time + '.png'))
+
+                        .on('finish', () => {
+                            let m = d.location.name + " " + d.location.lat + " " + d.location.long+ "\n\n" +
+                            "⦿ Temperature: " + d.current.temperature + "°C / " + ((d.current.temperature * 9/5) + 32) + "°F\n" +
+                            "⦿ Sky: " + d.current.skytext + "\n" +
+                            "⦿ Feelslike: " + d.current.feelslike + "\n" +
+                            "⦿ Humidity: " + d.current.humidity + "\n" +
+                            "⦿ Wind Speed: " + d.current.winddisplay + "\n" +
+                            "\nForecast\n" +
+                            "⦿ Mon: " + d.forecast[0].skytextday + "\n" +
+                            "⦿ Tue: " + d.forecast[1].skytextday + "\n" +
+                            "⦿ Wed: " + d.forecast[2].skytextday + "\n" +
+                            "⦿ Thu: " + d.forecast[3].skytextday + "\n" +
+                            "⦿ Fri: " + d.forecast[4].skytextday + "\n";
+                            let message = {
+                           body: m,
+                           attachment: fs.createReadStream(__dirname + '/cache/images/weather_' + time + '.png')
+                            };
+                    sendMessage(true, api, event, message)
+                            unLink(__dirname + "/cache/images/weather_" + time + ".png");
+                        });
                 })
-            } else {
-                let output = weather.weather
-                let m = output.location
-                m += "\n\n⦿ Forecast: " + output.forecast
-                m += "\n⦿ Temperature: " + output.temperature + "°F" + " (" + (Math.round(((output.temperature - 32) * 5 / 9) * 100) / 100).toFixed(2) + "°C)"
-                if (output.precipitation != undefined)
-                    m += "\n⦿ Precipitation: " + output.precipitation
-                if (output.humidity != undefined)
-                    m += "\n⦿ Humidity: " + output.humidity
-                if (output.wind != undefined)
-                    m += "\n⦿ Wind speed: " + output.wind
-                sendMessage(true, api, event, m)
-            }
         }
     } else if (query.startsWith("facts")) {
         if (isGoingToFast(event)) {
@@ -2711,7 +2859,51 @@ _______  System Info  _______
             if (response == null) {
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response.data);
+                sendMessage(true, api, event, response.data[0]);
+            }
+        });
+    } else if (query == "mathfacts") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        getResponseData("http://numbersapi.com/random/math").then((response) => {
+            if (response == null) {
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+            } else {
+                sendMessage(true, api, event, response);
+            }
+        });
+    } else if (query == "datefacts") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        getResponseData("http://numbersapi.com/random/date").then((response) => {
+            if (response == null) {
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+            } else {
+                sendMessage(true, api, event, response);
+            }
+        });
+    } else if (query == "triviafacts") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        getResponseData("http://numbersapi.com/random/trivia").then((response) => {
+            if (response == null) {
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+            } else {
+                sendMessage(true, api, event, response);
+            }
+        });
+    } else if (query == "yearfacts") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        getResponseData("http://numbersapi.com/random/year").then((response) => {
+            if (response == null) {
+                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+            } else {
+                sendMessage(true, api, event, response);
             }
         });
     } else if (query == "8ball") {
@@ -3186,7 +3378,7 @@ _______  System Info  _______
                     sendMessage(true, api, event, "Opps! the minimum value 10");
                 } else {
                     settings.max_tokens = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Max Tokens is now set to " + num);
                 }
             }
@@ -3205,7 +3397,7 @@ _______  System Info  _______
                     sendMessage(true, api, event, "Opps! the minimum value 0.1");
                 } else {
                     settings.temperature = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Temperature is now set to " + num);
                 }
             }
@@ -3224,7 +3416,7 @@ _______  System Info  _______
                     sendMessage(true, api, event, "Opps! the minimum value -2");
                 } else {
                     settings.frequency_penalty = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Frequency Penalty is now set to " + num);
                 }
             }
@@ -3243,7 +3435,7 @@ _______  System Info  _______
                     sendMessage(true, api, event, "Opps! the minimum value -2");
                 } else {
                     settings.presence_penalty = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Presence Penalty is now set to " + num);
                 }
             }
@@ -3257,7 +3449,7 @@ _______  System Info  _______
                 data.shift();
                 let num = data.join(" ");
                 settings.text_complextion = num;
-                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                 sendMessage(true, api, event, "Text Complextion is now set to " + num);
             }
         }
@@ -3275,7 +3467,7 @@ _______  System Info  _______
                     sendMessage(true, api, event, "Opps! the minimum value is 1.");
                 } else {
                     settings.max_image = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Max Image is now set to " + num);
                 }
             }
@@ -3294,7 +3486,7 @@ _______  System Info  _______
                     sendMessage(true, api, event, "Opps! the minimum value is 0.");
                 } else {
                     settings.probability_mass = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Probability Mass is now set to " + num);
                 }
             }
@@ -3307,9 +3499,9 @@ _______  System Info  _______
             } else {
                 data.shift();
                 let pref = data.join(" ");
-                if (timeZones.includes(pref)) {
+                if (isValidTimeZone(pref)) {
                     settings.timezone = pref;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Timezone is now set to " + pref);
                     sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
                 } else {
@@ -3328,7 +3520,7 @@ _______  System Info  _______
                 let first = pref.split("");
                 if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
                     settings.prefix = pref;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                     sendMessage(true, api, event, "Prefix is now set to " + pref);
                 } else {
                     sendMessage(true, api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
@@ -3339,7 +3531,7 @@ _______  System Info  _______
         if (adm.includes(event.senderID)) {
             if (settings.prefix != "null" || settings.prefix != undefined) {
                 settings.prefix = "null";
-                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
                 sendMessage(true, api, event, "Prefix reset to default values.");
             }
         }
@@ -3497,23 +3689,35 @@ _______  System Info  _______
         }
     } else if (query.startsWith("isbot")) {
         if (adm.includes(event.senderID)) {
-            if (input.includes("@")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    let data = input.split(" ");
                     data.shift();
-                    api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
+                        id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                         if (err) return log(err);
                         bot.push(data[0].userID);
-                        fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot), "utf8");
+                        fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot, null, 4), "utf8");
                         sendMessage(true, api, event, "Noted.");
                     });
                     return;
+                }
                 } else if (isMyId(id)) {
                     return;
                 }
                 bot.push(id);
-                fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot), "utf8");
+                fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot, null, 4), "utf8");
                 sendMessage(true, api, event, "Noted.");
             } else {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two")
@@ -3521,16 +3725,28 @@ _______  System Info  _______
         }
     } else if (query.startsWith("blockuser")) {
         if (adm.includes(event.senderID)) {
-            if (input.includes("@")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    let data = input.split(" ");
                     data.shift();
-                    api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
+                        id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                         if (err) return log(err);
                         blockUser(api, event, data[0].userID);
                     });
                     return;
+                }
                 } else if (isMyId(id)) {
                     return;
                 }
@@ -3543,9 +3759,6 @@ _______  System Info  _______
         mutedRRR.push(event.senderID);
         sendMessage(true, api, event, "You have been muted. Enter `unmute` for you to use my commands again.");
         fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
-    } else if (query == "stop") {
-        sendMessage(true, api, event, "Goodbye...");
-        settings.isStop = true;
     } else if (query.startsWith("blockgroup")) {
         if (adm.includes(event.senderID)) {
             if (event.isGroup) {
@@ -3576,16 +3789,28 @@ _______  System Info  _______
         }
     } else if (query.startsWith("unblockuser")) {
         if (adm.includes(event.senderID)) {
-            if (input.includes("@")) {
+            let data = input.split(" ");
+            if (data.length < 2) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    let data = input.split(" ");
                     data.shift();
-                    api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
+                        id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                         if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         unblockUser(api, event, data[0].userID);
                     });
                     return;
+                }
                 } else if (isMyId(id)) {
                     return;
                 }
@@ -3602,7 +3827,7 @@ _______  System Info  _______
             } else {
                 let inp = data[1].split(":");
                 keys[inp[0]] = inp[1];
-                fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys), "utf8")
+                fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys, null, 4), "utf8")
                 sendMessage(true, api, event, "Successfully saved " + inp[0] + ".");
             }
         }
@@ -3613,16 +3838,28 @@ _______  System Info  _______
         }
     } else if (query.startsWith("addadmin")) {
         if (adm.includes(event.senderID)) {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
+            let data = input.split(" ");
+            if (data.length < 2) {
+            let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    let data = input.split(" ");
                     data.shift();
-                    api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
+                        id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                         if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         addAdmin(api, event, data[0].userID);
                     });
                     return;
+                }
                 }
                 addAdmin(api, event, id);
             } else {
@@ -3631,16 +3868,28 @@ _______  System Info  _______
         }
     } else if (query.startsWith("remadmin")) {
         if (adm.includes(event.senderID)) {
-            if (input.includes("@")) {
+            let data = input.split(" ");
+            if (data.lenght < 2) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    let data = input.split(" ");
                     data.shift();
-                    api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
+                        id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                         if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         remAdmin(api, event, data[0].userID);
                     });
                     return;
+                }
                 } else if (isMyId(id)) {
                     return;
                 }
@@ -3652,73 +3901,73 @@ _______  System Info  _______
     } else if ((query == "unsendon") && !settings.onUnsend) {
         if (adm.includes(event.senderID)) {
             settings.onUnsend = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if ((query == "unsendoff") && settings.onUnsend) {
         if (adm.includes(event.senderID)) {
             settings.onUnsend = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Resending of unsend messages and attachments is been disabled.");
         }
     } else if ((query == "antileaveon") && !settings.antiLeave) {
         if (adm.includes(event.senderID)) {
             settings.antiLeave = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Readding of user who left is now enabled.");
         }
     } else if ((query == "antileaveoff") && settings.antiLeave) {
         if (adm.includes(event.senderID)) {
             settings.antiLeave = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Readding of user who left is been disabled.");
         }
     } else if ((query == "tagalogsupporton") && !settings.tagalog) {
         if (adm.includes(event.senderID)) {
             settings.tagalog = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Tagalog Support is now enabled.");
         }
     } else if ((query == "tagalogsupportoff") && settings.tagalog) {
         if (adm.includes(event.senderID)) {
             settings.tagalog = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Tagalog Support is been disabled.");
         }
     } else if ((query == "delayon") && !settings.onDelay) {
         if (adm.includes(event.senderID)) {
             settings.onDelay = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Delay on messages, replies and reaction are now enabled.");
         }
     } else if ((query == "delayoff") && settings.onDelay) {
         if (adm.includes(event.senderID)) {
             settings.onDelay = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Delay on messages, replies and reaction is been disabled.");
         }
     } else if ((query == "nsfwon") && !settings.onNsfw) {
         if (adm.includes(event.senderID)) {
             settings.onNsfw = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Not Safe For Work are now enabled.");
         }
     } else if ((query == "nsfwoff") && settings.onNsfw) {
         if (adm.includes(event.senderID)) {
             settings.onNsfw = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Not Safe For Work is been disabled.");
         }
     } else if ((query == "simultaneousexecutionon") && !settings.preventSimultaneousExecution) {
         if (adm.includes(event.senderID)) {
             settings.preventSimultaneousExecution = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Prevention of simulataneous execution are now enabled.");
         }
     } else if ((query == "simultaneousexecutionoff") && settings.preventSimultaneousExecution) {
         if (adm.includes(event.senderID)) {
             settings.preventSimultaneousExecution = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings), "utf8")
+            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
@@ -3820,6 +4069,9 @@ _______  System Info  _______
             case "8":
                 sendMessage(true, api, event, help7 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
+            case "9":
+                sendMessage(true, api, event, help8 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                break;
             default:
                 sendMessage(true, api, event, "Seem's like that's too far from the command list pages.");
                 break;
@@ -3908,14 +4160,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             kiss(api, event, data[0].userID)
                         });
@@ -3925,9 +4184,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 kiss(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two")
-            }
         }
     } else if (query.startsWith("gun")) {
         if (isGoingToFast(event)) {
@@ -3937,14 +4193,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
+            let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    if (input.includes("@me")) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
                         id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
                     } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             gun(api, event, data[0].userID);
                         });
@@ -3954,9 +4217,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 gun(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two")
-            }
         }
     } else if (query.startsWith("wanted")) {
         if (isGoingToFast(event)) {
@@ -3966,14 +4226,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             wanted(api, event, data[0].userID);
                         });
@@ -3983,9 +4250,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 wanted(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two")
-            }
         }
     } else if (query.startsWith("clown")) {
         if (isGoingToFast(event)) {
@@ -3995,14 +4259,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
+            let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    if (input.includes("@me")) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
                         id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
                     } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             clown(api, event, data[0].userID);
                         });
@@ -4012,9 +4283,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 clown(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two")
-            }
         }
     } else if (query.startsWith("drip")) {
         if (isGoingToFast(event)) {
@@ -4024,14 +4292,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
+            let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    if (input.includes("@me")) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
                         id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
                     } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             drip(api, event, data[0].userID);
                         });
@@ -4041,9 +4316,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 drip(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two")
-            }
         }
     } else if (query.startsWith("communist")) {
         if (isGoingToFast(event)) {
@@ -4053,14 +4325,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             communist(api, event, data[0].userID);
                         });
@@ -4070,9 +4349,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 communist(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two")
-            }
         }
     } else if (query.startsWith("advert")) {
         if (isGoingToFast(event)) {
@@ -4082,14 +4358,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             advert(api, event, data[0].userID);
                         });
@@ -4099,9 +4382,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 advert(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two")
-            }
         }
     } else if (query.startsWith("uncover")) {
         if (isGoingToFast(event)) {
@@ -4111,14 +4391,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             uncover(api, event, data[0].userID);
                         });
@@ -4128,9 +4415,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 uncover(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two")
-            }
         }
     } else if (query.startsWith("jail")) {
         if (isGoingToFast(event)) {
@@ -4140,14 +4424,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
+            let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    if (input.includes("@me")) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
                         id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
                     } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             jail(api, event, id = data[0].userID);
                         });
@@ -4157,9 +4448,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 jail(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two")
-            }
         }
     } else if (query.startsWith("invert")) {
         if (isGoingToFast(event)) {
@@ -4169,14 +4457,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             invert(api, event, data[0].userID);
                         });
@@ -4185,9 +4480,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 invert(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two")
-            }
         }
     } else if (query.startsWith("ship")) {
         if (isGoingToFast(event)) {
@@ -4293,14 +4585,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             pet(api, event, id);
                         });
@@ -4310,9 +4609,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 pet(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
-            }
         }
     } else if (query.startsWith("formatnumbers")) {
         if (isGoingToFast(event)) {
@@ -4344,14 +4640,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             mnm(api, event, data[0].userID);
                         });
@@ -4361,9 +4664,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 mnm(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two")
-            }
         }
     } else if (query.startsWith("greyscale")) {
         if (isGoingToFast(event)) {
@@ -4373,14 +4673,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two")
         } else {
-            if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    if (input.includes("@me")) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (input.includes("@me")) {
                         id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
                     } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             greyscale(api, event, data[0].userID);
                         });
@@ -4390,9 +4697,7 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 greyscale(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two")
-            }
+
         }
     } else if (query.startsWith("jokeover")) {
         if (isGoingToFast(event)) {
@@ -4402,14 +4707,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             jokeover(api, event, data[0].userID);
                         });
@@ -4419,9 +4731,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 jokeover(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two")
-            }
         }
     } else if (query.startsWith("blur")) {
         if (isGoingToFast(event)) {
@@ -4431,14 +4740,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             blur(api, event, data[0].userID);
                         });
@@ -4448,9 +4764,6 @@ _______  System Info  _______
                     id = event.senderID;
                 }
                 blur(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two")
-            }
         }
     } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
         if (isGoingToFast(event)) {
@@ -4460,14 +4773,21 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
         } else {
-            if (input.includes("@")) {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (input.includes("@me")) {
-                        id = event.senderID;
-                    } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+            let id = Object.keys(event.mentions)[0];
+            if (id === undefined) {
+                data.shift();
+                let user = data.join(" ");
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                    id = user;
+                } else if (input.includes("@me")) {
+                    id = event.senderID;
+                } else if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             id = data[0].userID;
                         });
@@ -4501,9 +4821,6 @@ _______  System Info  _______
                         })
                     }
                 });
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
-            }
         }
     } else if (query.startsWith("morse")) {
         if (isGoingToFast(event)) {
@@ -5016,8 +5333,8 @@ _______  System Info  _______
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
         } else {
-            let body = input.substring(5);
-            if (timeZones.includes(body)) {
+            data.shift()
+            if (isValidTimeZone(data.join(" "))) {
                 sendMessage(true, api, event, "It's " + getMonth(body) + " " + getDayN(body) + ", " + getDay(body) + " " + formateDate(body));
             } else {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
@@ -5147,7 +5464,7 @@ _______  System Info  _______
         }
     } else if (query == "refreshstate") {
         if (adm.includes(event.senderID)) {
-            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState()), "utf8");
+            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
             sendMessage(true, api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
@@ -5241,7 +5558,7 @@ function someR(api, event, query) {
         if (!isEvening(settings.timezone)) {
             sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
         }
-        return true;
+        return true;json
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         reactMessage(api, event, ":love:");
         sendMessage(true, api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
@@ -5506,17 +5823,6 @@ let download = async function(uri, filename, callback) {
 
 const checkFound = (text) => {
     return text ? text : "N/A"
-}
-
-async function weathersearch(location) {
-    let result = await google.search(location, {
-        page: 0,
-        safe: true,
-        additional_parameters: {
-            hl: "en"
-        }
-    })
-    return result
 }
 
 async function getResponseData(url) {
@@ -5872,7 +6178,11 @@ function secondsToTime(e) {
         }
     }
     if (constructTime.includes("hour")) {
-        constructTime += " and ";
+        if (h >= 1 && m >= 1) {
+           constructTime += " and ";
+        } else {
+           constructTime += ", ";
+        }
     }
     if (m >= 1) {
         if (m == 1) {
@@ -5914,10 +6224,10 @@ function blockUser(api, event, id) {
         return;
     }
     blockRRR.push(id);
-    fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR, null, 4), "utf8");
     if (adm.includes(id)) {
         adm = adm.filter(item => item !== id);
-        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
+        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm, null, 4), "utf8");
         sendMessage(true, api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
         sendMessage(true, api, event, "The user " + id + " is blocked.");
@@ -6257,6 +6567,9 @@ function saveEvent(event) {
     if (event.attachments.length != 0) {
         log("attachments_type " + event.attachments[0].type);
         switch (event.attachments[0].type) {
+            case "error":
+                log("attachments_error " + JSON.stringify(event.attachments));
+                break;
             case "photo":
                 let photo = [];
                 let i;
@@ -6264,7 +6577,7 @@ function saveEvent(event) {
                     photo.push(event.attachments[i].url);
                 }
                 let data = [getFormattedDate(), event.senderID, photo];
-                if (event.body != null && (typeof event.body === "string")) {
+                if (event.body != "" && (typeof event.body === "string")) {
                     data.push(event.body);
                 }
                 msgs[event.messageID] = ['photo', data];
@@ -6276,7 +6589,7 @@ function saveEvent(event) {
                     animated_images.push(event.attachments[i1].url);
                 }
                 let data1 = [getFormattedDate(), event.senderID, animated_images];
-                if (event.body != null && (typeof event.body === "string")) {
+                if (event.body != "" && (typeof event.body === "string")) {
                     data1.push(event.body);
                 }
                 msgs[event.messageID] = ['animated_images', data1];
@@ -6287,27 +6600,26 @@ function saveEvent(event) {
                 break;
             case "video":
                 let data3 = [getFormattedDate(), event.senderID, event.attachments[0].url];
-                if (event.body != null && (typeof event.body === "string")) {
+                if (event.body != "" && (typeof event.body === "string")) {
                     data3.push(event.body);
                 }
                 msgs[event.messageID] = ['video', data3]
                 break;
             case "audio":
                 let data4 = [getFormattedDate(), event.senderID, event.attachments[0].url];
-                if (event.body != null && (typeof event.body === "string")) {
+                if (event.body != "" && (typeof event.body === "string")) {
                     data4.push(event.body);
                 }
                 msgs[event.messageID] = ['audio', data4]
                 break;
             case "file":
                 let data5 = [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url];
-                if (event.body != null && (typeof event.body === "string")) {
+                if (event.body != "" && (typeof event.body === "string")) {
                     data5.push(event.body);
                 }
                 msgs[event.messageID] = ['file', data5];
                 break;
             case "location":
-                log(JSON.stringify(event.attachments[0]));
                 msgs[event.messageID] = ['location', [getFormattedDate(), event.senderID, event.attachments[0].address, event.attachments[0].facebookUrl]];
                 break;
             case "share":
@@ -6328,7 +6640,7 @@ async function aiResponse(complextion, text, repeat) {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         let text1 = ai.data.choices[0].text;
         if (ai.data.choices[0].finish_reason == "length" && !text1.endsWith(".")) {
-            return "The response for is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
+            return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
         }
 
         let text2 = text1.replace(/\n\s*\n/g, '\n');
@@ -6341,7 +6653,7 @@ async function aiResponse(complextion, text, repeat) {
         log(error.response.status);
         if (repeat) {
             log("attempt_initiated");
-            return aiResponse(getNewComplextion(settings.text_complextion), text, false);
+            return await aiResponse(getNewComplextion(settings.text_complextion), text, false);
         } else if (error.response.status == 429 || error.response.status == 503) {
             return "AI is currently down please try it again later.";
         } else {
@@ -6369,13 +6681,16 @@ function getNewComplextion(complextion) {
     return complextion.replace("003", "002");
 }
 
-async function sendMessageToAll(api, message) {
+async function sendMessageToAll(api, event, message) {
     let count = 0;
     for (gp in group) {
-        await wait(20000);
-        count++
-        api.sendMessage(message + "\nn-" + (count * 742), gp);
+        if (!blockSSS.includes(gp)) {
+            await wait(20000);
+            count++
+            api.sendMessage(message + "\n\n" + gp + "-" + (count * 742), gp);
+        }
     }
+    sendMessage(true, api, event, "Message successfully send to " + count + " groups.")
 }
 
 function numberWithCommas(x) {
@@ -6415,4 +6730,24 @@ function saveState() {
     fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
     fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
     fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+}
+
+function getIdFromUrl(url) {
+    try {
+        return url.match(/id=(\d+)/)[1];
+    } catch (err) {
+    }
+    return ""
+}
+
+function isValidTimeZone(tz) {
+    if (!Intl || !Intl.DateTimeFormat().resolvedOptions().timeZone) {
+        throw new Error('Time zones are not available in this environment');
+    }
+    try {
+        Intl.DateTimeFormat(undefined, {timeZone: tz});
+        return true;
+    } catch (ex) {
+        return false;
+    }
 }
