@@ -552,6 +552,9 @@ ____________________________
             if (input == "911") {
                 sendMessage(true, api, event, "Have an emergency? Don't wait call 911!");
                 return;
+            } else if (input == "k" || input == "y") {
+                sendMessage(true, api, event, "women");
+                return;
             }
             let query2 = formatQuery(input);
             let query = query2.replace(/\s+/g, '');
