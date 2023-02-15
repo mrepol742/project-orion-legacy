@@ -62,7 +62,7 @@ setInterval(function() {
 
 let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search", "gencode"]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
-let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?"];
+let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?", "hello", "hi", "hellooooo", "hiiiiii", "cool", "yo"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
 let idknow = ["Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.", "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.", "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do."]
 let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
@@ -423,7 +423,6 @@ _______  Project Orion Root  _______
    ⦿ setAutoMarkDelivery [on|off]
    ⦿ setPresence [on|off]
    ⦿ setReportingThreat [uid]
-
 ____________________________________
 `;
 
@@ -459,6 +458,7 @@ let options = {
     listenEvents: true,
     selfListen: settings.selfListen,
     autoMarkRead: settings.autoMarkRead,
+    autoMarkDelivery: settings.autoMarkDelivery,
     online: settings.online
 }
 
@@ -683,8 +683,15 @@ ____________________________
                 if (err) return log(err);
                 if (gc.isGroup && group[event.threadID] === undefined) {
                     group[event.threadID] = gc.threadName;
+                    api.muteThread(event.threadID, -1, (err) => {
+                        if (err) log(err);
+                    });
                     log("new_group " + event.threadID + " group_name " + gc.threadName);
-                    sendMessageOnly(false, api, event, "Thank you for adding me.\n\nfor more information message `about`, `license`, `cmd`");
+                    let message = {
+                        body: "How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
+                        url: "https://mrepol742.github.io/project-orion/"
+                    }
+                    sendMessageOnly(false, api, event, message);
                 }
             });
         } else if (!acGG.includes(event.threadID) && !(group[event.threadID] === undefined)) {
@@ -705,7 +712,9 @@ ____________________________
                 ai(api, event);
                 break;
             case "message_reaction":
-                if (event.userID != getMyId() && event.senderID != getMyId() && !emo.includes(event.messageID)) {
+                if (event.userID != getMyId() && event.senderID != getMyId() && 
+                    !emo.includes(event.messageID) && !bot.includes(event.senderID)) {
+                    await wait(1500);
                     emo.push(event.messageID);
                     log("react_message " + event.messageID + " " + event.reaction);
                     api.setMessageReaction(event.reaction, event.messageID, (err) => {
@@ -723,32 +732,30 @@ ____________________________
                 break;
                 */
             case "message_unsend":
-                if (!settings.onUnsend || bot.includes(event.senderID) || adm.includes(event.senderID)) {
-                    break;
-                }
                 let d = msgs[event.messageID];
                 if (d === undefined) {
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
                 unsend_msgs[event.messageID] = d;
-                let time = getTimestamp();
-                api.getUserInfo(event.senderID, (err, data) => {
-                    if (err) return log(err);
+                if (!settings.onUnsend || bot.includes(event.senderID) || adm.includes(event.senderID)) {
+                    break;
+                }
                     if (d[0] == "photo") {
-                        unsendPhoto(api, event, d, data);
+                        unsendPhoto(api, event, d);
                     } else if (d[0] == "animated_images") {
-                        unsendGif(api, event, d, data);
+                        unsendGif(api, event, d);
                     } else if (d[0] == "share") {
+                        api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return log(err);
                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                     if (err) return log(err);
                                     if (gc.isGroup) {
                                         let message = {
-                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
+                                            body: "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
                                             url: d[1][3],
                                             mentions: [{
-                                                tag: '@' + data[event.senderID]['name'],
+                                                tag: '@' + data[event.senderID]['firstName'],
                                                 id: event.senderID,
                                                 fromIndex: 0
                                             }]
@@ -764,18 +771,22 @@ ____________________________
                                         log("unsend_share " + d[1][0] + " " + message);
                                     }
                                 });
+                            });
                     } else if (d[0] == "file") {
-                        let filename = __dirname + '/cache/files/' + d[1][2];
+                        let time = getTimestamp();
+                        let filename = __dirname + '/cache/files/' + d[1][2] + "_" + time;
                         let file = fs.createWriteStream(filename);
                         let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
                         let decodeurl = decodeURIComponent(fileurl);
                         let fileRequest = http.get(decodeurl, function(fileResponse) {
                             fileResponse.pipe(file);
                             file.on('finish', function() {
+                                api.getUserInfo(event.senderID, (err, data) => {
+                                    if (err) return log(err);
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
-                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                             if (!(d[1][4] === undefined)) {
                                                 constructMMM += d[1][4];
                                             }
@@ -783,7 +794,7 @@ ____________________________
                                                 body: constructMMM,
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
-                                                    tag: '@' + data[event.senderID]['name'],
+                                                    tag: '@' + data[event.senderID]['firstName'],
                                                     id: event.senderID,
                                                     fromIndex: 0
                                                 }]
@@ -804,17 +815,20 @@ ____________________________
                                         }
                                     });
                                     unLink(filename);
+                                });
                             });
                         });
                     } else if (d[0] == "location") {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return log(err);
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
                             if (gc.isGroup) {
-                                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                 let message1 = {
                                     body: constructMMM + d[1][2],
                                     mentions: [{
-                                        tag: '@' + data[event.senderID]['name'],
+                                        tag: '@' + data[event.senderID]['firstName'],
                                         id: event.senderID,
                                         fromIndex: 0
                                     }],
@@ -832,15 +846,18 @@ ____________________________
                                 log("unsend_location " + d[1][0] + " " + d[1][2]);
                             }
                         });
+                    });
                     } else if (d[0] == "location_sharing") {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return log(err);
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
                             if (gc.isGroup) {
-                                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                 let message1 = {
                                     body: constructMMM + d[1][2],
                                     mentions: [{
-                                        tag: '@' + data[event.senderID]['name'],
+                                        tag: '@' + data[event.senderID]['firstName'],
                                         id: event.senderID,
                                         fromIndex: 0
                                     }],
@@ -858,15 +875,18 @@ ____________________________
                                 log("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
                             }
                         });
+                    });
                     } else if (d[0] == "sticker") {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return log(err);
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
                             if (gc.isGroup) {
-                                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                 let message = {
                                     body: constructMMM,
                                     mentions: [{
-                                        tag: '@' + data[event.senderID]['name'],
+                                        tag: '@' + data[event.senderID]['firstName'],
                                         id: event.senderID,
                                         fromIndex: 0
                                     }]
@@ -890,16 +910,20 @@ ____________________________
                                 log("unsend_sticker " + d[1][0] + " " + d[1][2]);
                             }
                         });
+                    });
                     } else if (d[0] == "video") {
-                        let filename = __dirname + '/cache/videos/unsend_video_' + time + '.mp4'
+                        let time1 = getTimestamp();
+                        let filename = __dirname + '/cache/videos/unsend_video_' + time1 + '.mp4'
                         let file = fs.createWriteStream(filename);
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
+                                api.getUserInfo(event.senderID, (err, data) => {
+                                    if (err) return log(err);
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
-                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                             if (!(d[1][3] === undefined)) {
                                                 constructMMM += d[1][3];
                                             }
@@ -907,7 +931,7 @@ ____________________________
                                                 body: constructMMM,
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
-                                                    tag: '@' + data[event.senderID]['name'],
+                                                    tag: '@' + data[event.senderID]['firstName'],
                                                     id: event.senderID,
                                                     fromIndex: 0
                                                 }]
@@ -928,18 +952,22 @@ ____________________________
                                         }
                                     });
                                     unLink(filename);
+                                });
                             });
                         });
                     } else if (d[0] == "audio") {
-                        let filename = __dirname + '/cache/audios/unsend_audio_' + time + '.mp3'
+                        let time2 = getTimestamp();
+                        let filename = __dirname + '/cache/audios/unsend_audio_' + time2 + '.mp3'
                         let file = fs.createWriteStream(filename);
                         let gifRequest = http.get(d[1][2], function(gifResponse) {
                             gifResponse.pipe(file);
                             file.on('finish', function() {
+                                api.getUserInfo(event.senderID, (err, data) => {
+                                    if (err) return log(err);
                                     api.getThreadInfo(event.threadID, (err, gc) => {
                                         if (err) return log(err);
                                         if (gc.isGroup) {
-                                            let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                            let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                             if (!(d[1][3] === undefined)) {
                                                 constructMMM += d[1][3];
                                             }
@@ -947,7 +975,7 @@ ____________________________
                                                 body: constructMMM,
                                                 attachment: fs.createReadStream(filename),
                                                 mentions: [{
-                                                    tag: '@' + data[event.senderID]['name'],
+                                                    tag: '@' + data[event.senderID]['firstName'],
                                                     id: event.senderID,
                                                     fromIndex: 0
                                                 }]
@@ -968,17 +996,19 @@ ____________________________
                                         }
                                     });
                                     unLink(filename);
+                                });
                             });
                         });
                     } else {
- 
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return log(err);
                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                     if (err) return log(err);
                                     if (gc.isGroup) {
                                         let message = {
-                                            body: "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
+                                            body: "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
                                             mentions: [{
-                                                tag: '@' + data[event.senderID]['name'],
+                                                tag: '@' + data[event.senderID]['firstName'],
                                                 id: event.senderID,
                                                 fromIndex: 0
                                             }]
@@ -991,8 +1021,8 @@ ____________________________
                                         log("unsend_message " + d[0] + " " + message);
                                     }
                                 });
+                            });
                     }
-                });
                 break;
             case "event":
                 log("event_message " + event.logMessageType);
@@ -1066,14 +1096,14 @@ ____________________________
                             let constructMMM;
                             if (group[event.threadID] == null || group[event.threadID] === undefined) {
                                 group[event.threadID] = event.logMessageData.name;
-                                constructMMM = "@" + data[event.author]['name'] + " set the group name to " + event.logMessageData.name;
+                                constructMMM = "@" + data[event.author]['firstName'] + " set the group name to " + event.logMessageData.name;
                             } else {
-                                constructMMM = "@" + data[event.author]['name'] + " has changed the groupname from \n" + group[event.threadID] + "\nto\n" + event.logMessageData.name;
+                                constructMMM = "@" + data[event.author]['firstName'] + " has changed the groupname from \n" + group[event.threadID] + "\nto\n" + event.logMessageData.name;
                             }
                             let message = {
                                 body: constructMMM,
                                 mentions: [{
-                                    tag: '@' + data[event.author]['name'],
+                                    tag: '@' + data[event.author]['firstName'],
                                     id: event.author,
                                     fromIndex: 0
                                 }]
@@ -1393,7 +1423,7 @@ async function ai(api, event) {
                 }
                 api.getUserInfo(id, (err, info) => {
                     if (err) return log(err);
-                    let name = info[id]['name'];
+                    let name = info[id]['firstName'];
                     let message = {
                         body: "Yes " + name + "?",
                         mentions: [{
@@ -1413,7 +1443,7 @@ async function ai(api, event) {
                 }
                 api.getUserInfo(id, (err, info) => {
                     if (err) return log(err);
-                    let name = info[id]['name'];
+                    let name = info[id]['firstName'];
                     let time = getTimestamp();
                     request(encodeURI(getProfilePic(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam_' + time + '.png'))
 
@@ -2216,7 +2246,7 @@ const options = {
         }
         api.getUserInfo(id, (err, info) => {
             if (err) return log(err);
-            let name = info[id]['name'];
+            let name = info[id]['firstName'];
             let data = input.split(" ")
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using phub text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nphub why i am here again.");
@@ -4061,9 +4091,9 @@ const options = {
                 api.getUserInfo(id1, (err, info) => {
                     if (err) return log(err);
                     let message = {
-                        body: "@" + info[id1]['name'] + " uid is " + id1,
+                        body: "@" + info[id1]['firstName'] + " uid is " + id1,
                         mentions: [{
-                            tag: '@' + info[id1]['name'],
+                            tag: '@' + info[id1]['firstName'],
                             id: id1,
                             fromIndex: 0
                         }]
@@ -6038,7 +6068,7 @@ async function getImages(api, event, images) {
     }, event.messageID)
 }
 
-async function unsendPhoto(api, event, d, data) {
+async function unsendPhoto(api, event, d) {
     let time = getTimestamp();
     let arr = d[1][2];
     let images = []
@@ -6055,11 +6085,12 @@ async function unsendPhoto(api, event, d, data) {
     for (i1 = 0; i1 < images.length; i1++) {
         accm.push(fs.createReadStream(images[i1]));
     }
-
+    api.getUserInfo(event.senderID, (err, data) => {
+        if (err) return log(err);
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
-                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                 if (!(d[1][3] === undefined)) {
                     constructMMM += d[1][3];
                 }
@@ -6067,7 +6098,7 @@ async function unsendPhoto(api, event, d, data) {
                     body: constructMMM,
                     attachment: accm,
                     mentions: [{
-                        tag: '@' + data[event.senderID]['name'],
+                        tag: '@' + data[event.senderID]['firstName'],
                         id: event.senderID,
                         fromIndex: 0
                     }]
@@ -6103,9 +6134,10 @@ async function unsendPhoto(api, event, d, data) {
                 log("unsend_photo " + d[1][0]);
             }
         });
+    });
 }
 
-async function unsendGif(api, event, d, data) {
+async function unsendGif(api, event, d) {
     let time = getTimestamp();
     let arr = d[1][2];
     let images = []
@@ -6122,11 +6154,12 @@ async function unsendGif(api, event, d, data) {
     for (i1 = 0; i1 < images.length; i1++) {
         accm.push(fs.createReadStream(images[i1]));
     }
-
+    api.getUserInfo(event.senderID, (err, data) => {
+        if (err) return log(err);
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
             if (gc.isGroup) {
-                let constructMMM = "@" + data[event.senderID]['name'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                let constructMMM = "@" + data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                 if (!(d[1][3] === undefined)) {
                     constructMMM += d[1][3];
                 }
@@ -6134,7 +6167,7 @@ async function unsendGif(api, event, d, data) {
                     body: constructMMM,
                     attachment: accm,
                     mentions: [{
-                        tag: '@' + data[event.senderID]['name'],
+                        tag: '@' + data[event.senderID]['firstName'],
                         id: event.senderID,
                         fromIndex: 0
                     }]
@@ -6170,6 +6203,7 @@ async function unsendGif(api, event, d, data) {
                 log("unsend_gif " + d[1][0]);
             }
         });
+    });
 }
 
 async function unLink(dir) {
@@ -6367,7 +6401,7 @@ function kiss(api, event, id) {
         } else {
             api.getUserInfo(id, (err, info) => {
                 if (err) return log(err);
-                let name = info[id]['name'];
+                let name = info[id]['firstName'];
                 let time = getTimestamp();
                 request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss_" + time + ".png"))
                     .on('finish', () => {
