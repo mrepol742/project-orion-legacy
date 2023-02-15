@@ -422,6 +422,8 @@ _______  Project Orion Root  _______
    ⦿ setSendTypingIndicator [on|off]
    ⦿ setAutoMarkDelivery [on|off]
    ⦿ setPresence [on|off]
+   ⦿ setReportingThreat [uid]
+
 ____________________________________
 `;
 
