@@ -17,9 +17,9 @@
     "timezone": "Asia/Manila",
     "isDebugEnabled": false,
     "isEnabled": false,
-    "autoMarkRead":true,
-    "online":true,
-    "selfListen":true,
-    "sendTypingIndicator":true,
-    "autoMarkDelivery":true
+    "autoMarkRead": true,
+    "online": true,
+    "selfListen": true,
+    "sendTypingIndicator": true,
+    "autoMarkDelivery": true
 }
