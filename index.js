@@ -104,7 +104,7 @@ let cmd = {};
 let thread = {};
 let acGG = [];
 let cmd1 = {};
-let emo = {};
+let emo = [];
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
 let nwww = {};
@@ -228,26 +228,26 @@ __________________________________
 let help3 = `
 _______  Project Orion 4/9  _______
 
-   ⦿ mnm @mention|@me
-   ⦿ facebook @mention|@me
+   ⦿ mnm [mention|me|name|url|uid|reply]
+   ⦿ facebook [mention|me|name|url|uid|reply]
    ⦿ nickname @mention|@me [text]
-   ⦿ invert @mention|@me
-   ⦿ greyscale @mention|@me
+   ⦿ invert [mention|me|name|url|uid|reply]
+   ⦿ greyscale [mention|me|name|url|uid|reply]
    ⦿ ship @mention @mention
    ⦿ www @mention @mention
-   ⦿ jokeover @mention|@me
+   ⦿ jokeover [mention|me|name|url|uid|reply]
    ⦿ translate [language] [text]
-   ⦿ kiss @mention|@me
-   ⦿ pet @mention|@me
-   ⦿ jail @mention|@me
-   ⦿ communist @mention|@me
-   ⦿ wanted @mention|@me
-   ⦿ gun @mention|@me
-   ⦿ drip @mention|@me
-   ⦿ clown @mention|@me
-   ⦿ uncover @mention|@me
-   ⦿ advert @mention|@me
-   ⦿ blur @mention|@me
+   ⦿ kiss [mention|me|name|url|uid|reply]
+   ⦿ pet [mention|me|name|url|uid|reply]
+   ⦿ jail [mention|me|name|url|uid|reply]
+   ⦿ communist [mention|me|name|url|uid|reply]
+   ⦿ wanted [mention|me|name|url|uid|reply]
+   ⦿ gun [mention|me|name|url|uid|reply]
+   ⦿ drip [mention|me|name|url|uid|reply]
+   ⦿ clown [mention|me|name|url|uid|reply]
+   ⦿ uncover [mention|me|name|url|uid|reply]
+   ⦿ advert [mention|me|name|url|uid|reply]
+   ⦿ blur [mention|me|name|url|uid|reply]
 __________________________________
 `;
 
@@ -383,12 +383,12 @@ _______  Project Orion Admin  _______
    ⦿ clearCache
    ⦿ refreshState
    ⦿ saveState
-   ⦿ isBot @mention
-   ⦿ addAdmin @mention
-   ⦿ remAdmin @mention
-   ⦿ kickUser @mention
-   ⦿ blockUser @mention
-   ⦿ unblockUser @mention
+   ⦿ isBot [mention|name|url|uid|reply]
+   ⦿ addAdmin [mention|name|url|uid|reply]
+   ⦿ remAdmin [mention|name|url|uid|reply]
+   ⦿ kickUser [mention|name|url|uid|reply]
+   ⦿ blockUser [mention|name|url|uid|reply]
+   ⦿ unblockUser [mention|name|url|uid|reply]
    ⦿ blockGroup
    ⦿ unblockGroup
    ⦿ listblocks
@@ -421,6 +421,7 @@ _______  Project Orion Root  _______
    ⦿ setSelfListen [on|off]
    ⦿ setSendTypingIndicator [on|off]
    ⦿ setAutoMarkDelivery [on|off]
+   ⦿ setPresence [on|off]
 ____________________________________
 `;
 
@@ -698,6 +699,24 @@ ____________________________
                 saveEvent(event);
                 ai(api, event);
                 break;
+            case "message_reaction":
+                if (event.userID != getMyId() && event.senderID != getMyId() && !emo.includes(event.messageID)) {
+                    emo.push(event.messageID);
+                    log("react_message " + event.messageID + " " + event.reaction);
+                    api.setMessageReaction(event.reaction, event.messageID, (err) => {
+                        if (err) log(err);
+                    });
+                }
+                break;
+                /*
+            case "presence":
+                if (event.statuses == 0 && settings.presence) {
+                    api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", event.userID, (err, messageInfo) => {
+                        if (err) log(err);
+                    });
+                }
+                break;
+                */
             case "message_unsend":
                 if (!settings.onUnsend || bot.includes(event.senderID) || adm.includes(event.senderID)) {
                     break;
@@ -1405,6 +1424,8 @@ async function ai(api, event) {
                             unLink(__dirname + "/cache/images/whoiam_" + time + ".png");
                         })
                 });
+            } else if (text1 == "howitwork" || text1 == "howyoufunction") {
+                sendMessage(true, api, event, "We do this by emulating the browser. This means doing the exact same GET/POST requests and tricking Facebook into thinking we're accessing the website normally.");
             } else if (text1 == "whoownyou") {
                 sendMessage(true, api, event, "Melvin Jones Repol.")
             } else if (text1.startsWith("whomadeyou") || text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou") || text1.startsWith("whoprogramyou")) {
@@ -1437,7 +1458,6 @@ async function ai(api, event) {
                 text1.startsWith("whatsthetimenow") || text1 == "date" || text1.startsWith("whatsthedate") || text1.startsWith("whatisthedate") ||
                 text1.startsWith("datetoday") || text1.startsWith("whattimeisitnow") || text1.startsWith("whatdateisitnow")) {
                 sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
-                sendMessage(false, api, event, "To show date according to your timezone. Pleas use the `time [timezone]` command.\nFor example:\ntime Asia/Manila");
             } else if (text1.startsWith("iloveyou") || text1.startsWith("loveme") || text1.startsWith("doyoulikeme") || text1.startsWith("doyouloveme") || text1.startsWith("whydontyouloveme") || text1.startsWith("imissyou") || text1.startsWith("iwantyou")) {
                 sendMessage(true, api, event, "I've already a girl and i love her so much >3.");
             } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
@@ -3620,12 +3640,23 @@ const options = {
         if (adm.includes(event.senderID)) {
             if (event.isGroup) {
                 let arr = gc.participantIDs;
-                if (input.includes("@")) {
+                let data = input.split(" ");
+                if (data.length < 2) {
+                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
+                } else {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        let data = input.split(" ");
                         data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        let user = data.join(" ");
+                        let attem = getIdFromUrl(user);
+                        if (/^[0-9]+$/.test(attem)) {
+                            id = attem;
+                        } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                            id = user;
+                        } else if (event.type == "message_reply") {
+                            id = event.messageReply.senderID;
+                        } else {
+                            api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             api.getUserInfo(data[0].userID, (err, data1) => {
                                 if (err) return log(err);
@@ -3633,6 +3664,7 @@ const options = {
                             });
                         });
                         return;
+                    }
                     } else if (isMyId(id)) {
                         return;
                     }
@@ -3640,8 +3672,6 @@ const options = {
                         if (err) return log(err);
                         welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/");
                     });
-                } else {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
                 }
             } else {
                 sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -3657,12 +3687,23 @@ const options = {
                     sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
                     return;
                 }
-                if (input.includes("@")) {
+                let data = input.split(" ");
+                if (data.length < 2) {
+                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two")
+                } else {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
-                        let data = input.split(" ");
                         data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        let user = data.join(" ");
+                        let attem = getIdFromUrl(user);
+                        if (/^[0-9]+$/.test(attem)) {
+                            id = attem;
+                        } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                            id = user;
+                        } else if (event.type == "message_reply") {
+                            id = event.messageReply.senderID;
+                        } else {
+                            api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             removeUser(api, event, data[0].userID);
                             api.getUserInfo(data[0].userID, (err, data1) => {
@@ -3671,6 +3712,7 @@ const options = {
                             });
                         });
                         return;
+                    }
                     } else if (isMyId(id)) {
                         return;
                     }
@@ -3679,8 +3721,6 @@ const options = {
                         if (err) return log(err);
                         byebyeUser(api, event, data1.name, gc.threadName, arr.length, id);
                     });
-                } else {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two")
                 }
             } else {
                 sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -3691,6 +3731,8 @@ const options = {
         if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two")
+            } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
                     data.shift();
@@ -3700,8 +3742,6 @@ const options = {
                         id = attem;
                     } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                         id = user;
-                    } else if (input.includes("@me")) {
-                        id = event.senderID;
                     } else if (event.type == "message_reply") {
                         id = event.messageReply.senderID;
                     } else {
@@ -3719,14 +3759,14 @@ const options = {
                 bot.push(id);
                 fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot, null, 4), "utf8");
                 sendMessage(true, api, event, "Noted.");
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two")
             }
         }
     } else if (query.startsWith("blockuser")) {
         if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using blockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblockUser @Zero Two")
+            } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
                     data.shift();
@@ -3736,8 +3776,6 @@ const options = {
                         id = attem;
                     } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                         id = user;
-                    } else if (input.includes("@me")) {
-                        id = event.senderID;
                     } else if (event.type == "message_reply") {
                         id = event.messageReply.senderID;
                     } else {
@@ -3751,8 +3789,6 @@ const options = {
                     return;
                 }
                 blockUser(api, event, id)
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using blockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblockUser @Zero Two")
             }
         }
     } else if (query == "mute") {
@@ -3791,6 +3827,8 @@ const options = {
         if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two")
+            } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
                     data.shift();
@@ -3800,8 +3838,6 @@ const options = {
                         id = attem;
                     } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                         id = user;
-                    } else if (input.includes("@me")) {
-                        id = event.senderID;
                     } else if (event.type == "message_reply") {
                         id = event.messageReply.senderID;
                     } else {
@@ -3815,8 +3851,6 @@ const options = {
                     return;
                 }
                 unblockUser(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two")
             }
         }
     } else if (query.startsWith("setkey")) {
@@ -3840,6 +3874,8 @@ const options = {
         if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
+            } else {
             let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
                     data.shift();
@@ -3849,8 +3885,6 @@ const options = {
                         id = attem;
                     } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                         id = user;
-                    } else if (input.includes("@me")) {
-                        id = event.senderID;
                     } else if (event.type == "message_reply") {
                         id = event.messageReply.senderID;
                     } else {
@@ -3862,14 +3896,14 @@ const options = {
                 }
                 }
                 addAdmin(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
-            }
+            } 
         }
     } else if (query.startsWith("remadmin")) {
         if (adm.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.lenght < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two")
+            } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
                     data.shift();
@@ -3879,8 +3913,6 @@ const options = {
                         id = attem;
                     } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                         id = user;
-                    } else if (input.includes("@me")) {
-                        id = event.senderID;
                     } else if (event.type == "message_reply") {
                         id = event.messageReply.senderID;
                     } else {
@@ -3894,8 +3926,6 @@ const options = {
                     return;
                 }
                 remAdmin(api, event, id);
-            } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two")
             }
         }
     } else if ((query == "unsendon") && !settings.onUnsend) {
@@ -5695,6 +5725,9 @@ async function sendMMMS(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
+    if (event.senderID == getMyId()) {
+        return;
+    }
     if (!adm.includes(event.senderID) && settings.onDelay) {
         await wait(4000);
     }
@@ -5757,20 +5790,6 @@ function isGoingToFast(event) {
         }
     }
     return false;
-}
-
-function isGoingToFastResendingOfEmo(event) {
-    if (!(event.threadID in emo)) {
-        emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
-        return false;
-    } else if (Math.floor(Date.now() / 1000) < emo[event.threadID]) {
-        let seconds = (emo[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 2);
-        log("block_emoji " + event.threadID + " " + seconds);
-        return true;
-    } else {
-        emo[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 2);
-        return false;
-    }
 }
 
 function isGoingToFastCallingTheCommand(event) {
