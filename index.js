@@ -1375,6 +1375,8 @@ async function ai(api, event) {
                 sendMessage(true, api, event, "I'm Mj.");
             } else if (text1.startsWith("whoisactive")) {
                 sendMessage(true, api, event, "Me");
+            } else if (text1.includes("pornsite") || text1.startsWith("whatissex") || text1.startsWith("whatssex")) {
+                blockUser(api, event, event.senderID);
             } else if (text1 == "sim") {
                 sendMessage(true, api, event, "Me? noooo...");
             } else if (text1 == "callme") {
