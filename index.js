@@ -5686,6 +5686,9 @@ async function sendMessage(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
         await wait(2000);
     }
+    if (!event.isGroup) {
+        userPresence[event.threadID] = new Date();
+    }
     if (message == "") {
         sendMMMS(api, event, "It appears the AI sends a blank response. Please try again.");
     } else if (event.isGroup && event.senderID != getMyId()) {
@@ -5720,7 +5723,6 @@ async function sendMessage(bn, api, event, message) {
             sendMMMS(api, event, message);
         }
     } else {
-        userPresence[event.senderID] = new Date();
         log("send_message " + event.threadID + " " + JSON.stringify(message));
         sendMMMS(api, event, message);
     }
@@ -5731,7 +5733,7 @@ async function sendMessageOnly(bn, api, event, message) {
         await wait(2000);
     }
     if (!event.isGroup) {
-        userPresence[event.senderID] = new Date();
+        userPresence[event.threadID] = new Date();
     }
     if (message == "") {
         sendMMMS(api, event, "It appears the AI sends a blank response. Please try again.");
