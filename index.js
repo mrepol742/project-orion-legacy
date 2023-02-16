@@ -512,11 +512,15 @@ ____________________________
 
     setInterval(function() {
         saveState();
-        cmd = {};
-        acGG = [];
         messagesD = getFormattedDate();
         log("save_state");
     }, 1800000 * Math.random() + 1200000);
+
+    setInterval(function() {
+        cmd = {};
+        acGG = [];
+        log("clear_list");
+    }, 10000);
 
     setInterval(function() {
         fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
