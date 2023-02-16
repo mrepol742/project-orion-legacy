@@ -105,6 +105,7 @@ let thread = {};
 let acGG = [];
 let cmd1 = {};
 let emo = [];
+let userPresence = {};
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
 let nwww = {};
@@ -523,6 +524,23 @@ ____________________________
         log("fb_save_state")
     }, 1800000 * Math.random() + 1200000);
 
+    setInterval(function() {
+        let min = 120000; 
+        for (time in userPresence) {
+            if (userPresence[time] != null) {
+                let past = new Date(userPresence[time]).getTime();
+                let isPast = (new Date().getTime() - past < min) ? false : true;
+                if (isPast) {
+                    userPresence[time] = null;
+                    api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", 
+                        time, (err, messageInfo) => {
+                        if (err) log(err);
+                    });
+                }
+            }
+        }
+    }, 120000);
+
     api.setOptions(options);
 
     api.listenMqtt((err, event) => {
@@ -671,6 +689,26 @@ ____________________________
                     thread[event.threadID].push(event.senderID);
                 }
             }
+
+            if (group[event.threadID] === undefined && event.isGroup) {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return log(err);
+                    if (gc.isGroup && group[event.threadID] === undefined) {
+                        group[event.threadID] = gc.threadName;
+                        api.muteThread(event.threadID, -1, (err) => {
+                            if (err) log(err);
+                        });
+                        log("new_group " + event.threadID + " group_name " + gc.threadName);
+                        let message = {
+                            body: "How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
+                            url: "https://mrepol742.github.io/project-orion/"
+                        }
+                        sendMessageOnly(false, api, event, message);
+                    }
+                });
+            } else if (!acGG.includes(event.threadID) && !(group[event.threadID] === undefined)) {
+                acGG.push(event.threadID);
+            }
         } else if (blockSSS.includes(event.threadID)) {
             if ((event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
@@ -680,26 +718,6 @@ ____________________________
             (event.type == "message" || event.type == "message_reply")) {
             saveEvent(event);
             return;
-        }
-
-        if (group[event.threadID] === undefined) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
-                if (gc.isGroup && group[event.threadID] === undefined) {
-                    group[event.threadID] = gc.threadName;
-                    api.muteThread(event.threadID, -1, (err) => {
-                        if (err) log(err);
-                    });
-                    log("new_group " + event.threadID + " group_name " + gc.threadName);
-                    let message = {
-                        body: "How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
-                        url: "https://mrepol742.github.io/project-orion/"
-                    }
-                    sendMessageOnly(false, api, event, message);
-                }
-            });
-        } else if (!acGG.includes(event.threadID) && !(group[event.threadID] === undefined)) {
-            acGG.push(event.threadID);
         }
 
         if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
@@ -725,15 +743,6 @@ ____________________________
                     });
                 }
                 break;
-                /*
-            case "presence":
-                if (event.statuses == 0 && settings.presence) {
-                    api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", event.userID, (err, messageInfo) => {
-                        if (err) log(err);
-                    });
-                }
-                break;
-                */
             case "message_unsend":
                 let d = msgs[event.messageID];
                 if (d === undefined) {
@@ -5711,6 +5720,7 @@ async function sendMessage(bn, api, event, message) {
             sendMMMS(api, event, message);
         }
     } else {
+        userPresence[event.senderID] = new Date();
         log("send_message " + event.threadID + " " + JSON.stringify(message));
         sendMMMS(api, event, message);
     }
@@ -5719,6 +5729,9 @@ async function sendMessage(bn, api, event, message) {
 async function sendMessageOnly(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
         await wait(2000);
+    }
+    if (!event.isGroup) {
+        userPresence[event.senderID] = new Date();
     }
     if (message == "") {
         sendMMMS(api, event, "It appears the AI sends a blank response. Please try again.");
