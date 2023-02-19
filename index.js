@@ -549,6 +549,7 @@ ____________________________
 
     api.listenMqtt((err, event) => {
 
+        //3252001 temporarily blocked
         if (err) return log(err);
 
         if (isAppState) {
