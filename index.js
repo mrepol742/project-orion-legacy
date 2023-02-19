@@ -512,11 +512,15 @@ ____________________________
 
     setInterval(function() {
         saveState();
-        cmd = {};
-        acGG = [];
         messagesD = getFormattedDate();
         log("save_state");
     }, 1800000 * Math.random() + 1200000);
+
+    setInterval(function() {
+        cmd = {};
+        acGG = [];
+        log("clear_list");
+    }, 10000);
 
     setInterval(function() {
         fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
@@ -735,12 +739,11 @@ ____________________________
                 break;
             case "message_reaction":
                 if (event.userID != getMyId() && event.senderID != getMyId() &&
-                    !emo.includes(event.messageID) && !bot.includes(event.senderID)) {
+                    !emo.includes(event.messageID) && !bot.includes(event.senderID) && 
+                    event.senderID != event.userID) {
                     emo.push(event.messageID);
                     log("react_message " + event.messageID + " " + event.reaction);
-                    api.setMessageReaction(event.reaction, event.messageID, (err) => {
-                        if (err) log(err);
-                    });
+                    sendMessageReaction(event.reaction);
                 }
                 break;
             case "message_unsend":
@@ -6818,5 +6821,20 @@ function isValidTimeZone(tz) {
         return true;
     } catch (ex) {
         return false;
+    }
+}
+
+async function sendMessageReaction(react) {
+    await wait(2500);
+    if (react == "😍" || react == "😆" || react == "😮" ||
+        react == "😢" || react == "😠" || react == "👍" || 
+        react == "👎" || react == "❤" react == "💗") {
+        api.setMessageReaction(react, event.messageID, (err) => {
+            if (err) log(err);
+        });
+    } else {
+        api.setMessageReaction(react, event.messageID, (err) => {
+            if (err) log(err);
+        }, react);
     }
 }
