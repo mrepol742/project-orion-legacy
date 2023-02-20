@@ -155,6 +155,8 @@ _______  Project Orion 1/9  _______
    ⦿ mj [text]
    ⦿ sim [text]
    ⦿ misaka [text]
+   ⦿ openai [text]
+   ⦿ chatgpt [text]
    ⦿ search [text]
    ⦿ searchincog [text]
    ⦿ searchimg [text]
