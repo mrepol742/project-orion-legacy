@@ -1601,6 +1601,40 @@ async function ai(api, event) {
                 }
             }
         }
+    } else if (query.startsWith("chatgpt")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using chatgpt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchatgpt what is matter?")
+        } else {
+            getResponseData("https://api.amosayomide05.cf/gpt/?question=" + vdName + "&string_id=unique_id").then((response) => {
+                if (response == null) {
+                    sendMessage(true, api, event, "An error occured. Please try it again later.");
+                } else {
+                    sendMessage(true, api, event, response.response);
+                }
+            });
+        }
+    } else if (query.startsWith("openai")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using openai text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nopenai what is matter?")
+        } else {
+            data.shift();
+            try {
+            const response = await openai.createCompletion({
+                model: "text-davinci-003",
+                prompt: data.join(" "),
+                temperature: 0.7,
+                max_tokens: 256,
+                top_p: 1,
+                frequency_penalty: 0,
+                presence_penalty: 0,
+              });
+              sendMessage(true, api, event, response.data.choices[0].text);
+            } catch (err) {
+                sendMessage(true, api, event, "An error occured. Please try it again later.");
+            }
+        }
     } else if (query == "clearcache") {
         let count = 0;
         let count1 = 0;
