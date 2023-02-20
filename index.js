@@ -1394,9 +1394,9 @@ async function ai(api, event) {
             } else if (input.startsWith(settings.prefix)) {
                 text = input.substring(settings.prefix.length);
             }
-            let text1 = text;
+            let text1 = text.replace(/\s+/g, '');
             let text2 = text;
-            if (/^[0-9]+$/.test(input.replace(/\s+/g, '').toLowerCase())) {
+            if (/^[0-9]+$/.test(text1)) {
                 sendMessage(true, api, event, "What do you want me to do with " + input + "?");
             } else if (!/[a-z0-9]/gi.test(text1)) {
                 sendMessage(true, api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
@@ -1506,7 +1506,7 @@ async function ai(api, event) {
                     url: "https://mrepol742.github.io"
                 }
                 sendMessage(true, api, event, message);
-            } else if (text1.startsWith("whois") && (text2.includes("pat") || text2.includes("patrickelcano") || text2.includes("0x3ef8") || text2.includes("jaypatrickcano") || text2.includes("patrickcano"))) {
+            } else if (text1.startsWith("whois") && (text2.includes("pat") || text1.includes("patrickelcano") || text2.includes("0x3ef8") || text1.includes("jaypatrickcano") || text1.includes("patrickcano"))) {
                 let mss = {
                     body: "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\n\nhttps://0x3ef8.github.io",
                     url: "https://0x3ef8.github.io"
