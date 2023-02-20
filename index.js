@@ -549,6 +549,21 @@ ____________________________
 
     api.listenMqtt((err, event) => {
 
+        /*
+        {
+ERR! markAsDelivered   __ar: 1,
+ERR! markAsDelivered   error: 3252001,
+ERR! markAsDelivered   errorSummary: 'You’re Temporarily Blocked',
+ERR! markAsDelivered   errorDescription: {
+ERR! markAsDelivered     __html: '<ul class="uiList _4kg _6-h _6-j _6-i"><li>It looks like you were misusing this feature by going too fast. You’ve been temporarily blocked from using it.</li><li>If you think this doesn&#039;t go against our Community Standards <a href="https://www.facebook.com/help/contact/571927962827151?additional_content=AegW_3WWpk6vaBQsq_UBokooWYqyU90582X_iBpY4cQ9gbrKMOsfSn2_OqnVp7kBu89cw9jKMVlGjFV4BB12iX0JY-dJWKiBW-so_QIFaRrdPBGnlZxEBzJAvkG50iAZOjeVhjpnSqqGQ7v72J2QzvK93qELn6wVM2eAsAyQIRj2LOV8VnMpRjVDKJRW3FNhqY7LmiCpTU3oi_4HE4rdis3VB6-XR_l64YG5rradN5mEOxDCIKwwNSSFGmF82GpxFC0HnVug1S84cwh9uO0GQH9wCG-4KIKFAGvvQODU8RBzhveXCJpioMLUG6ZumbaIsTzHCUhinKPhHRXBQosNS54o58ZcV6FRu3euHyXIF802AD8Ymgmu9nbvwVvAiuE5_7VYBiGJIqKbwlGfctshnSNcD_kR7Znc7ShJqrGvVsRNBJmyL-EnjR8rQKNq_V1CCzk" target="_blank">let us know</a>.</li></ul>'
+ERR! markAsDelivered   },
+ERR! markAsDelivered   blockedAction: true,
+ERR! markAsDelivered   payload: null,
+ERR! markAsDelivered   hsrp: { hblp: { consistency: [Object], rsrcMap: [Object] } },
+ERR! markAsDelivered   allResources: [ 'I4hwzeu' ],
+ERR! markAsDelivered   lid: '7202019069067064307'
+ERR! markAsDelivered }
+        */
         if (err) return log(err);
 
         if (isAppState) {
