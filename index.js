@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 const express = require('express');
 const fs = require("fs");
 const login = require("fca-unofficial");
@@ -1058,8 +1059,13 @@ ERR! markAsDelivered }
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
                                         break;
                                     }
-                                    names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName]);
-                                    i++;
+                                    if (event.logMessageData.addedParticipants[i].userFbId != getMyId()) {
+                                        names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName]);
+                                        i++;
+                                    }
+                                }
+                                if (names[0][0] === undefined) {
+                                    break;
                                 }
                                 let gret;
                                 if (i > 1) {
@@ -3959,6 +3965,11 @@ _____________________________
                 keys[inp[0]] = inp[1];
                 fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys, null, 4), "utf8")
                 sendMessage(true, api, event, "Successfully saved " + inp[0] + ".");
+                if (inp[0] == "ai") {
+                    config = new Configuration({
+                        apiKey: inp[1],
+                    });
+                }
             }
         }
     } else if (query.startsWith("listkey")) {
@@ -5740,7 +5751,7 @@ async function sendMessage(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
         await wait(2000);
     }
-    if (!event.isGroup) {
+    if (group[event.threadID] === undefined) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "") {
@@ -5786,7 +5797,7 @@ async function sendMessageOnly(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
         await wait(2000);
     }
-    if (!event.isGroup) {
+    if (group[event.threadID] === undefined) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "") {
@@ -6777,7 +6788,7 @@ async function aiResponse(complextion, text, repeat) {
             log("attempt_initiated");
             return await aiResponse(getNewComplextion(settings.text_complextion), text, false);
         } else if (error.response.status == 429 || error.response.status == 503) {
-            return "AI is currently down please try it again later.";
+            return "It seems like there are problems with the server. Please try it again later.";
         } else {
             return idknow[Math.floor(Math.random() * idknow.length)];
         }
@@ -6879,7 +6890,7 @@ async function sendMessageReaction(react) {
     await wait(2500);
     if (react == "😍" || react == "😆" || react == "😮" ||
         react == "😢" || react == "😠" || react == "👍" || 
-        react == "👎" || react == "❤" react == "💗") {
+        react == "👎" || react == "❤" || react == "💗") {
         api.setMessageReaction(react, event.messageID, (err) => {
             if (err) log(err);
         });
