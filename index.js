@@ -42,6 +42,9 @@ const dns = require("dns");
 const {
     wordsToNumbers
 } = require('words-to-numbers');
+const { 
+    transcribeAudioFile 
+} = require('openai-whisper');
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
@@ -72,7 +75,7 @@ let goodev = ["Good evening too... The sun set is so beautiful as always, hope y
 let goodmo = ["Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.", "Also good morning... Enjoy your day, and never forget that breakfast should always be the heaviest meal of the day.", "Greetings as well... Have a fantastic day, and never forget that breakfast ought to be the largest meal of the day."]
 let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
 let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
-let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify"];
+let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify", "write", "create"];
 let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 let happyEE = ['haha', 'ahah', 'ahha', 'funny ', 'insane ', 'lol', 'lmao', 'lmfao', 'silly ', 'laugh ', 'laughable', 'humorous', 'amusing', 'hilarious', 'absurd', 'ridicolous', 'ludicrous', 'entertaining']
@@ -83,24 +86,24 @@ let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
 let sendEffects = ["(sent with gift wrap effect)", "(sent with fire effect)", "(sent with celebration effect)", "(sent with love effect)"];
 let example = ["For instance:", "For example:", "Like:", "Suppose that:", "e.g:", "In particular:", "To give you an idea:", "Let's say:", "Example:"];
 let gcolor = {
-    "DefaultBlue": "196241301102133",
-    "HotPink": "169463077092846",
-    "AquaBlue": "2442142322678320",
-    "BrightPurple": "234137870477637",
-    "CoralPink": "980963458735625",
-    "Orange": "175615189761153",
-    "Green": "2136751179887052",
-    "LavenderPurple": "2058653964378557",
-    "Red": "2129984390566328",
-    "Yellow": "174636906462322",
-    "TealBlue": "1928399724138152",
-    "Aqua": "417639218648241",
-    "Mango": "930060997172551",
-    "Berry": "164535220883264",
-    "Citrus": "370940413392601",
-    "Candy": "205488546921017"
+    "defaultblue": "196241301102133",
+    "hotpink": "169463077092846",
+    "aquablue": "2442142322678320",
+    "brightpurple": "234137870477637",
+    "coralpink": "980963458735625",
+    "orange": "175615189761153",
+    "green": "2136751179887052",
+    "lavenderpurple": "2058653964378557",
+    "red": "2129984390566328",
+    "yellow": "174636906462322",
+    "tealblue": "1928399724138152",
+    "aqua": "417639218648241",
+    "mango": "930060997172551",
+    "berry": "164535220883264",
+    "citrus": "370940413392601",
+    "candy": "205488546921017"
 }
-let gcolorn = ["DefaultBlue", "HotPink", "AquaBlue", "BrightPurple", "CoralPink", "Orange", "Green", "LavenderPurple", "Red", "Yellow", "TealBlue", "Aqua", "Mango", "Berry", "Citrus", "Candy"]
+let gcolorn = ["defaultblue", "hotpink", "aquablue", "brightpurple", "coralpink", "orange", "green", "lavenderpurple", "red", "yellow", "tealblue", "aqua", "mango", "berry", "citrus", "candy"]
 let threadIdMV = {};
 let cmd = {};
 let thread = {};
@@ -155,9 +158,6 @@ _______  Project Orion 1/9  _______
    ⦿ sysinfo
    ⦿ sendReport [text]
    ⦿ mj [text]
-       available params:
-       --force
-       --effect [effect name]
    ⦿ sim [text]
    ⦿ misaka [text]
    ⦿ openai [text]
@@ -373,6 +373,7 @@ _______  Project Orion 9/9  _______
    ⦿ covid
    ⦿ covid [country]
    ⦿ nba [name]
+   ⦿ totext
 __________________________________
 `;
 
@@ -417,6 +418,9 @@ _______  Project Orion Root  _______
    ⦿ restart
    ⦿ notify
    ⦿ destroy
+   ⦿ acceptMessageRequest [threadid]
+   ⦿ acceptFriendRequest [uid]
+   ⦿ changeBio [text]
    ⦿ setMaxImage [integer]
    ⦿ setTimezone [timezone]
    ⦿ setTextComplextion [complextion]
@@ -1241,6 +1245,34 @@ async function ai22(api, event, query, query2) {
                 sendMessage(true, api, event, "I cannot found any apperance of your search term on the message.");
             }
         }
+    } else if (query == "totext") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+            if (event.messageReply.attachments.length < 1 || event.messageReply.attachments[0].type != 'audio') {
+                sendMessage(true, api, event, "I cannot see an audio. Please reply totext to an audio.");
+            } else {
+                let url = event.messageReply.attachments[0].url;
+                let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
+                request(encodeURI(url)).pipe(fs.createWriteStream(dir))
+        .on('finish', () => {
+            transcribeAudioFile(dir)
+            .then(transcription => {
+             sendMessage(true, api, event, transcription);
+             unLink(dir);
+            })
+            .catch(error => {
+                sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+                unLink(dir);
+            });
+        }).on('error', (err) => {
+            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+        });
+            }
+        } else {
+            sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+        }
     } else if (query == "bgremove") {
         if (isGoingToFast(event)) {
             return;
@@ -1248,42 +1280,8 @@ async function ai22(api, event, query, query2) {
         if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1) {
                 sendMessage(true, api, event, "I cannot see an image. Please reply bgremove to an image.");
-            } else if (event.messageReply.attachments.length > 1) {
-                sendMessage(true, api, event, "Opps! I cannot remove all of the images background at the same time. Please select only one image.");
-            } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
-                const url = event.messageReply.attachments[0].url;
-                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/removebg.png')).on('finish', () => {
-                    const inputPath = './cache/images/removebg.png';
-                    const formData = new FormData();
-                    formData.append('size', 'auto');
-                    formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
-
-                    axios({
-                            method: 'post',
-                            url: 'https://api.remove.bg/v1.0/removebg',
-                            data: formData,
-                            responseType: 'arraybuffer',
-                            headers: {
-                                ...formData.getHeaders(),
-                                'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
-                            },
-                            encoding: null
-                        })
-                        .then((res) => {
-                            if (res.status != 200) return
-                            console.error('Error:', res.status, res.statusText);
-                            fs.writeFileSync("./cache/images/removebg.png", res.data);
-                            let message = {
-                                attachment: fs.createReadStream(__dirname + "/cache/images/removebg.png")
-                            }
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/removebg.png");
-                        })
-                        .catch((error) => {
-                            sendMessage(true, api, event, "An unknown error as been occured. Please try again later.");
-                            return log(err);
-                        });
-                })
+            } else {
+                bgRemove(api, event);
             }
         } else {
             sendMessage(true, api, event, "Hold on... There is still a request in progress.");
@@ -1336,8 +1334,10 @@ async function ai(api, event) {
         return;
     }
     if (event.type == "message") {
-        if (query == "bgremove" || query == "gphoto") {
-            sendMessage(true, api, event, "You need to reply to an image in order to work.");
+        if (query == "totext") {
+            sendMessage(true, api, event, "You need to reply to a message with an audio.");
+        } else if (query == "bgremove" || query == "gphoto") {
+            sendMessage(true, api, event, "You need to reply to a message with a photo.");
         } else if (query == "count") {
             sendMessage(true, api, event, "You need to reply to a message to count its words.");
         } else if (query == "countvowels") {
@@ -1579,10 +1579,7 @@ async function ai(api, event) {
                 }
 
                 // initiate results simulatenoesly
-                if (text.startsWith("force")) {
-                    text = text.replace("force", "")
-                }
-                let ss = await aiResponse(settings.text_complextion, text, true, text.startsWith("force"));
+                let ss = await aiResponse(settings.text_complextion, text, true);
 
                 if (query.startsWith("misaka")) {
                     ss += " MISAKA MISAKA says.";
@@ -1607,7 +1604,7 @@ async function ai(api, event) {
                     }
                 }
 
-                sendMessage(true, api, event, message + " (sent with gift wrap effect)");
+                sendMessage(true, api, event, message);
                 if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
                     let msCC = {
                         body: "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev",
@@ -1734,61 +1731,61 @@ _______  Cache  _______
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Konnichiwa i am back.");
         }
-    } else if (query == "automarkreadon") {
+    } else if (query == "setautomarkreadon") {
         if (adm.includes(event.senderID)) {
             settings.autoMarkRead = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Automatically marked read messages enabled.");
         }
-    } else if (query == "automarkreadoff") {
+    } else if (query == "setautomarkreadoff") {
         if (adm.includes(event.senderID)) {
             settings.autoMarkRead = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Automatically marked read messages disabled.");
         }
-    } else if (query == "onlineon") {
+    } else if (query == "setonlineon") {
         if (adm.includes(event.senderID)) {
             settings.online = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Account status is set to Online.");
         }
-    } else if (query == "onlineoff") {
+    } else if (query == "setonlineoff") {
         if (adm.includes(event.senderID)) {
             settings.online = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Account status is set to Offline.");
         }
-    } else if (query == "selfistenon") {
+    } else if (query == "setselfistenon") {
         if (adm.includes(event.senderID)) {
             settings.selfListen = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Listening to own account messages is enabled.");
         }
-    } else if (query == "selfistenoff") {
+    } else if (query == "setselfistenoff") {
         if (adm.includes(event.senderID)) {
             settings.selfListen = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Listening to own account messages is disabled.");
         }
-    } else if (query == "automarkdeliveryon") {
+    } else if (query == "setautomarkdeliveryon") {
         if (adm.includes(event.senderID)) {
             settings.autoMarkDelivery = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Automatically marked messages when delivered enabled.");
         }
-    } else if (query == "automarkdeliveryoff") {
+    } else if (query == "setautomarkdeliveryoff") {
         if (adm.includes(event.senderID)) {
             settings.autoMarkDelivery = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Automatically marked messages when delivered disabled.");
         }
-    } else if (query == "sendtypingindicatoron") {
+    } else if (query == "ssetsendtypingindicatoron") {
         if (adm.includes(event.senderID)) {
             settings.sendTypingIndicator = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Send typing indicator when AI sending messages enabled.");
         }
-    } else if (query == "sendtypingindicatoroff") {
+    } else if (query == "setsendtypingindicatoroff") {
         if (adm.includes(event.senderID)) {
             settings.sendTypingIndicator = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
@@ -3501,6 +3498,48 @@ _____________________________
             });
             sendMessage(true, api, event, "The engineers have been notified.");
         }
+    } else if (query.startsWith("acceptmessagerequest")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using acceptmessagerequest [threadid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptmessagerequest 0000000000000")
+            } else {
+                data.shift();
+                let num = data.join(" ");
+                api.handleMessageRequest(data.join(" "), true, (err) => {
+                    if (err) log(err);
+                });
+                sendMessage(true, api, event, "Message Request Accepted!");
+            }
+        }
+    } else if (query.startsWith("changebio")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using changebio [text] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchangebio Hello There")
+            } else {
+                data.shift();
+                let num = data.join(" ");
+                api.changeBio(data.join(" "), true, (err) => {
+                    if (err) log(err);
+                });
+                sendMessage(true, api, event, "Bio Message is now set to `" + data.join(" ") + "`");
+            }
+        }
+    } else if (query.startsWith("acceptfriendrequest")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using acceptfriendrequest [uid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptfriendrequest 0000000000000")
+            } else {
+                data.shift();
+                let num = data.join(" ");
+                api.handleFriendRequest(data.join(" "), true, (err) => {
+                    if (err) log(err);
+                });
+                sendMessage(true, api, event, "Friend Request Accepted!");
+            }
+        }
     } else if (query.startsWith("setmaxtokens")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
@@ -3743,7 +3782,7 @@ _____________________________
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
         } else {
             data.shift();
-            let pref = data.join(" ");
+            let pref = data.join(" ").toLowerCase();
             if (gcolorn.includes(pref)) {
                 api.changeThreadColor(gcolor[pref], event.threadID, (err) => {
                     if (err) return log(err);
@@ -5772,11 +5811,8 @@ async function sendMessage(bn, api, event, message) {
     if (message == "") {
         sendMMMS(api, event, "It appears the AI sends a blank response. Please try again.");
     } else if (event.isGroup && event.senderID != getMyId()) {
-        if (message.startsWith("**SEND_AS_REPLY**") || thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
+        if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
-            if (message.startsWith("**SEND_AS_REPLY**")) {
-                message = message.replace("**SEND_AS_REPLY**", "");
-            }
             if ((typeof message === "string") && message.trim().length < 200 &&
                 speech.includes(event.threadID)) {
                 const url = googleTTS.getAudioUrl(message, voice);
@@ -6306,6 +6342,81 @@ async function unsendGif(api, event, d) {
     });
 }
 
+async function bgRemove(api, event) {
+    let time = getTimestamp();
+    let url = [];
+    let i55;
+    for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+        url.push(event.messageReply.attachments[i55].url);
+    }
+
+    let i66;
+    for (i66 = 0; i66 < url.length; i66++) {
+        await wait(1000);
+        let dataUrl = __dirname + '/cache/images/removebg_' + i66 + '_' + time + '.png';
+        let inputPath = './cache/images/removebg_' + i66 + '_' + time + '.png';
+        request(encodeURI(url[i66])).pipe(fs.createWriteStream(dataUrl)).on('finish', () => {
+            const formData = new FormData();
+            formData.append('size', 'auto');
+            formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
+
+            axios({
+                    method: 'post',
+                    url: 'https://api.remove.bg/v1.0/removebg',
+                    data: formData,
+                    responseType: 'arraybuffer',
+                    headers: {
+                        ...formData.getHeaders(),
+                        'X-Api-Key': 'UB8WrY6YRzeeZDTsxv9NYQ9C',
+                    },
+                    encoding: null
+                })
+                .then((res) => {
+                    log(res.status)
+                    if (res.status == 200) {
+                        fs.writeFileSync(inputPath, res.data);
+                        log("done " + dataUrl);
+                    }
+                })
+                .catch((error) => {
+                     return log(error);
+                });
+        })
+    }
+
+    await wait(2000);
+
+    let accm = [];
+    let i1;
+    for (i1 = 0; i1 < url.length; i1++) {
+        accm.push(fs.createReadStream( __dirname + '/cache/images/removebg_' + i1 + '_' + time + '.png'));
+    }
+    let message1 = {
+        attachment: accm
+    }
+    if (group[event.threadID] === undefined) {
+        api.sendMessage(message1, event.threadID, (err, messageInfo) => {
+            if (err) {
+                log(err);
+            }
+            let i22;
+            for (i22 = 0; i22 < url.length; i22++) {
+                unLink(__dirname + '/cache/images/removebg_' + i22 + '_' + time + '.png')
+            }
+        }, event.messageID);
+    } else {
+        api.sendMessage(message1, event.threadID, (err, messageInfo) => {
+            if (err) {
+                log(err);
+            }
+            let i2;
+            for (i2 = 0; i2 < url.length; i2++) {
+                unLink(__dirname + '/cache/images/removebg_' + i2 + '_' + time + '.png')
+            }
+        });
+    }
+}
+
 async function unLink(dir) {
     await wait(1000 * 120);
     fs.unlink(dir, (err => {
@@ -6796,12 +6907,12 @@ function saveEvent(event) {
     }
 }
 
-async function aiResponse(complextion, text, repeat, isForce) {
+async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         let text1 = ai.data.choices[0].text;
-        if (ai.data.choices[0].finish_reason == "length" && !text1.endsWith(".") && !isForce) {
-            return "**SEND_AS_REPLY**The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
+        if (ai.data.choices[0].finish_reason == "length" && !text1.endsWith(".")) {
+            return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
         }
 
         let text2 = text1.replace(/\n\s*\n/g, '\n');
@@ -6814,7 +6925,9 @@ async function aiResponse(complextion, text, repeat, isForce) {
         log(error.response.status);
         if (repeat) {
             log("attempt_initiated");
-            return await aiResponse(getNewComplextion(settings.text_complextion), text, false, isForce);
+            return await aiResponse(getNewComplextion(settings.text_complextion), text, false);
+        } else if (error.response.status == 500 ) {
+            return "There seem to be a problem. The engineers have been notified.";
         } else if (error.response.status == 429 || error.response.status == 503) {
             return "It seems like there are problems with the server. Please try it again later.";
         } else {
@@ -6916,12 +7029,7 @@ function isValidTimeZone(tz) {
 
 async function sendMessageReaction(api, event) {
     await wait(2500);
-    let react = event.reaction;
-    if (react == "😍" || react == "😆" || react == "😮" ||
-        react == "😢" || react == "😠" || react == "👍" || 
-        react == "👎" || react == "❤" || react == "💗") {
-        api.setMessageReaction(react, event.messageID, (err) => {
+    api.setMessageReaction(event.reaction, event.messageID, (err) => {
             if (err) log(err);
-        });
-    }
+    });
 }
