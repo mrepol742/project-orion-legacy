@@ -157,11 +157,6 @@ _______  Project Orion 1/9  _______
    ⦿ uptime 
    ⦿ sysinfo
    ⦿ sendReport [text]
-   ⦿ mj [text]
-   ⦿ sim [text]
-   ⦿ misaka [text]
-   ⦿ openai [text]
-   ⦿ chatgpt [text]
    ⦿ search [text]
    ⦿ searchincog [text]
    ⦿ searchimg [text]
@@ -176,8 +171,13 @@ _______  Project Orion 1/9  _______
    ⦿ encode64 [text]
    ⦿ decode64 [text]
    ⦿ github [username]
-   ⦿ ig [username]
-   ⦿ tiktok [username]
+   
+   AI:
+    ⦿ mj [text]
+    ⦿ sim [text]
+    ⦿ misaka [text]
+    ⦿ openai [text]
+    ⦿ chatgpt [text]
 __________________________________
 `;
 
@@ -374,6 +374,8 @@ _______  Project Orion 9/9  _______
    ⦿ covid [country]
    ⦿ nba [name]
    ⦿ totext
+   ⦿ ig [username]
+   ⦿ tiktok [username]
 __________________________________
 `;
 
@@ -781,7 +783,7 @@ ERR! markAsDelivered }
                 break;
             case "message_unsend":
                 let d = msgs[event.messageID];
-                if (d === undefined) {
+                if (d === undefined && event.senderID != getMyId()) {
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
@@ -1064,6 +1066,9 @@ ERR! markAsDelivered }
                         log("event_error " + JSON.stringify(event));
                         break;
                     case "log:subscribe":
+                        if (event.logMessageData.addedParticipants.length == 1 && event.logMessageData.addedParticipants[0].userFbId == getMyId()) {
+                            break;
+                        }
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) return log(err);
                             if (gc.isGroup) {
@@ -1078,9 +1083,6 @@ ERR! markAsDelivered }
                                         names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName]);
                                         i++;
                                     }
-                                }
-                                if (names[0][0] === undefined) {
-                                    return;
                                 }
                                 let gret;
                                 if (i > 1) {
@@ -1108,6 +1110,9 @@ ERR! markAsDelivered }
                         break;
                     case "log:unsubscribe":
                         let id = event.logMessageData.leftParticipantFbId;
+                        if (id == getMyId()) {
+                            break;
+                        }
                         api.getThreadInfo(event.threadID, (err, gc) => {
                             if (err) log(err);
                             api.getUserInfo(parseInt(id), (err, data) => {
