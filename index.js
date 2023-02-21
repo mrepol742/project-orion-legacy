@@ -80,6 +80,7 @@ let sadEE = ['pain', 'painful', 'cry ', 'crying ', 'unhappy', 'sad ', 'tired', '
 let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed', 'fury ', 'rage ', 'ire ', 'wrath']
 let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 'regards', 'respects', 'dear', 'darling', 'boyfriend', 'girlfriend', 'sweetheart', 'angel', 'honey', 'adore', 'treasure', 'prize', 'devotion', 'friend']
 let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
+let sendEffects = ["(sent with gift wrap effect)", "(sent with fire effect)", "(sent with celebration effect)", "(sent with love effect)"];
 let example = ["For instance:", "For example:", "Like:", "Suppose that:", "e.g:", "In particular:", "To give you an idea:", "Let's say:", "Example:"];
 let gcolor = {
     "DefaultBlue": "196241301102133",
@@ -311,7 +312,7 @@ _______  Project Orion 7/9  _______
 
    ⦿ encodeBinary [text]
    ⦿ decodeBinary [text]
-   ⦿ ttsjap [text]
+   ⦿ sayjap [text]
    ⦿ pdf [text]
    ⦿ website [urrl]
    ⦿ mean [numbers]
@@ -589,6 +590,13 @@ ERR! markAsDelivered }
 
         if (event.type == "message" || event.type == "message_reply") {
 
+            let mainInput = event.body;
+            for (effects in sendEffects) {
+                if (mainInput.endsWith(effects)) {
+                    event.body = mainInput.replace(effects, "");
+                }
+            }
+
             let input = event.body.toLowerCase();
 
             if (input == "911") {
@@ -784,7 +792,7 @@ ERR! markAsDelivered }
                         if (err) return log(err);
                         if (group[event.threadID] === undefined) {
                             let message = {
-                                body: "You deleted the following.\n\n" + d[1][2],
+                                body: "You deleted this link.\n\n" + d[1][2],
                                 url: d[1][3]
                             }
                             sendMessageOnly(true, api, event, message);
@@ -1024,7 +1032,7 @@ ERR! markAsDelivered }
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
                         if (group[event.threadID] === undefined) {
-                            let message = "You deleted the following.\n\n" + d[2];
+                            let message = "You deleted this message.\n\n" + d[2];
                             sendMessageOnly(true, api, event, message);
                             log("unsend_message " + d[0] + " " + message);
                         } else {
@@ -1780,13 +1788,13 @@ _______  Cache  _______
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Send typing indicator when AI sending messages disabled.");
         }
-    } else if (query.startsWith("ttsjap")) {
+    } else if (query.startsWith("ttsjap") || query.startsWith("sayjap")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using ttsjap text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nttsjap I am melvin jones repol")
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using sayjap text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsayjap I am melvin jones repol")
         } else {
             try {
                 data.shift();
@@ -1817,7 +1825,7 @@ _______  Cache  _______
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using tts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntts I am melvin jones repol")
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using say text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsay I am melvin jones repol")
         } else {
             data.shift();
             const url = googleTTS.getAudioUrl(data.join(" "), voice);
@@ -6167,7 +6175,12 @@ async function unsendPhoto(api, event, d) {
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return log(err);
         if (group[event.threadID] === undefined) {
-            let constructMMM = "You deleted this photo. \n";
+            let constructMMM = "You deleted this";
+            if (images.length > 1) {
+                constructMMM += " photos. \n";
+            } else {
+                constructMMM += " photo. \n";
+            }
             if (!(d[1][3] === undefined)) {
                 constructMMM += d[1][3];
             }
@@ -6233,7 +6246,12 @@ async function unsendGif(api, event, d) {
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return log(err);
         if (group[event.threadID] === undefined) {
-            let constructMMM = "You deleted this photo. \n";
+            let constructMMM = "You deleted this";
+            if (images.length > 1) {
+                constructMMM += " gifs. \n";
+            } else {
+                constructMMM += " gif. \n";
+            }
                 if (!(d[1][3] === undefined)) {
                     constructMMM += d[1][3];
                 }
@@ -6896,9 +6914,5 @@ async function sendMessageReaction(api, event) {
         api.setMessageReaction(react, event.messageID, (err) => {
             if (err) log(err);
         });
-    } else {
-        api.setMessageReaction(react, event.messageID, (err) => {
-            if (err) log(err);
-        }, react);
     }
 }
