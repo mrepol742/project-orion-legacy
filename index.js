@@ -1614,7 +1614,8 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using chatgpt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchatgpt what is matter?")
         } else {
-            getResponseData("https://api.amosayomide05.cf/gpt/?question=" + vdName + "&string_id=unique_id").then((response) => {
+          data.shift();
+            getResponseData("https://api.amosayomide05.cf/gpt/?question=" + data.join(" ") + "&string_id=unique_id").then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "An error occured. Please try it again later.");
                 } else {
