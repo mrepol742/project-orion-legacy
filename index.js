@@ -155,9 +155,9 @@ _______  Project Orion 1/9  _______
    ⦿ sysinfo
    ⦿ sendReport [text]
    ⦿ mj [text]
-\n       available params:
-\n       --force
-\n       --effect [effect name]
+       available params:
+       --force
+       --effect [effect name]
    ⦿ sim [text]
    ⦿ misaka [text]
    ⦿ openai [text]
@@ -299,13 +299,13 @@ _______  Project Orion 6/9  _______
    ⦿ time
    ⦿ time [timezone]
    ⦿ anime [category]
-\n       waifu, megumin, bully, cuddle
-\n       hug, awoo, kiss, lick
-\n       pat, smug, bonk, yeet
-\n       blush, smile, wave, highfive
-\n       handhold, nom, biteglomp, slap
-\n       kill, kick, happy, wink
-\n       pokedance, cringe, cry, etc...
+       waifu, megumin, bully, cuddle
+       hug, awoo, kiss, lick
+       pat, smug, bonk, yeet
+       blush, smile, wave, highfive
+       handhold, nom, biteglomp, slap
+       kill, kick, happy, wink
+       pokedance, cringe, cry, etc...
    ⦿ hanime [category]
 __________________________________
 `;
@@ -329,10 +329,10 @@ _______  Project Orion 7/9  _______
    ⦿ smartReply [on|off]
    ⦿ summ [text]
    ⦿ gcolor [theme]
-\n       DefaultBlue, HotPink, AquaBlue, BrightPurple
-\n       CoralPink, Orange, Green, LavenderPurple
-\n       Red, Yellow, TealBlue, Aqua
-\n       Mango, Berry, Citrus, Candy
+       DefaultBlue, HotPink, AquaBlue, BrightPurple
+       CoralPink, Orange, Green, LavenderPurple
+       Red, Yellow, TealBlue, Aqua
+       Mango, Berry, Citrus, Candy
 __________________________________
 `;
 
@@ -1579,7 +1579,10 @@ async function ai(api, event) {
                 }
 
                 // initiate results simulatenoesly
-                let ss = await aiResponse(settings.text_complextion, text, true);
+                if (text.startsWith("force")) {
+                    text = text.replace("force", "")
+                }
+                let ss = await aiResponse(settings.text_complextion, text, true, text.startsWith("force"));
 
                 if (query.startsWith("misaka")) {
                     ss += " MISAKA MISAKA says.";
@@ -1604,7 +1607,7 @@ async function ai(api, event) {
                     }
                 }
 
-                sendMessage(true, api, event, message);
+                sendMessage(true, api, event, message + " (sent with gift wrap effect)");
                 if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
                     let msCC = {
                         body: "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev",
@@ -5769,8 +5772,11 @@ async function sendMessage(bn, api, event, message) {
     if (message == "") {
         sendMMMS(api, event, "It appears the AI sends a blank response. Please try again.");
     } else if (event.isGroup && event.senderID != getMyId()) {
-        if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
+        if (message.startsWith("**SEND_AS_REPLY**") || thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
+            if (message.startsWith("**SEND_AS_REPLY**")) {
+                message = message.replace("**SEND_AS_REPLY**", "");
+            }
             if ((typeof message === "string") && message.trim().length < 200 &&
                 speech.includes(event.threadID)) {
                 const url = googleTTS.getAudioUrl(message, voice);
@@ -6790,12 +6796,12 @@ function saveEvent(event) {
     }
 }
 
-async function aiResponse(complextion, text, repeat) {
+async function aiResponse(complextion, text, repeat, isForce) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         let text1 = ai.data.choices[0].text;
-        if (ai.data.choices[0].finish_reason == "length" && !text1.endsWith(".")) {
-            return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
+        if (ai.data.choices[0].finish_reason == "length" && !text1.endsWith(".") && !isForce) {
+            return "**SEND_AS_REPLY**The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
         }
 
         let text2 = text1.replace(/\n\s*\n/g, '\n');
@@ -6808,7 +6814,7 @@ async function aiResponse(complextion, text, repeat) {
         log(error.response.status);
         if (repeat) {
             log("attempt_initiated");
-            return await aiResponse(getNewComplextion(settings.text_complextion), text, false);
+            return await aiResponse(getNewComplextion(settings.text_complextion), text, false, isForce);
         } else if (error.response.status == 429 || error.response.status == 503) {
             return "It seems like there are problems with the server. Please try it again later.";
         } else {
