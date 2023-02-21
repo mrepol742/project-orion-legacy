@@ -155,6 +155,9 @@ _______  Project Orion 1/9  _______
    ⦿ sysinfo
    ⦿ sendReport [text]
    ⦿ mj [text]
+\n       available params:
+\n       --force
+\n       --effect [effect name]
    ⦿ sim [text]
    ⦿ misaka [text]
    ⦿ openai [text]
@@ -592,8 +595,8 @@ ERR! markAsDelivered }
 
             let mainInput = event.body;
             for (effects in sendEffects) {
-                if (mainInput.endsWith(effects)) {
-                    event.body = mainInput.replace(effects, "");
+                if (mainInput.endsWith(sendEffects[effects])) {
+                    event.body = mainInput.replace(sendEffects[effects], "");
                 }
             }
 
