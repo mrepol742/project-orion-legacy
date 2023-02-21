@@ -1065,7 +1065,7 @@ ERR! markAsDelivered }
                                     }
                                 }
                                 if (names[0][0] === undefined) {
-                                    break;
+                                    return;
                                 }
                                 let gret;
                                 if (i > 1) {
