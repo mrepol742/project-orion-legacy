@@ -523,7 +523,7 @@ ____________________________
         cmd = {};
         acGG = [];
         log("clear_list");
-    }, 10000);
+    }, 600000);
 
     setInterval(function() {
         fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
@@ -761,7 +761,7 @@ ERR! markAsDelivered }
                     event.senderID != event.userID) {
                     emo.push(event.messageID);
                     log("react_message " + event.messageID + " " + event.reaction);
-                    sendMessageReaction(event.reaction);
+                    sendMessageReaction(api, event);
                 }
                 break;
             case "message_unsend":
@@ -6886,8 +6886,9 @@ function isValidTimeZone(tz) {
     }
 }
 
-async function sendMessageReaction(react) {
+async function sendMessageReaction(api, event) {
     await wait(2500);
+    let react = event.reaction;
     if (react == "😍" || react == "😆" || react == "😮" ||
         react == "😢" || react == "😠" || react == "👍" || 
         react == "👎" || react == "❤" || react == "💗") {
