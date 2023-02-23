@@ -1,6 +1,6 @@
 
 hidden = [".config"]
-run = "node index.js"
+run = "while [ true ]; do node index.js ; done"
 entrypoint = "index.js"
 
 [[hints]]

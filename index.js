@@ -40,11 +40,15 @@ const googleTTS = require('google-tts-api');
 const mathjs = require('mathjs')
 const dns = require("dns");
 const {
-    wordsToNumbers
+    WordsToNumbers
 } = require('words-to-numbers');
 const { 
-    transcribeAudioFile 
+    TranscribeAudioFile 
 } = require('openai-whisper');
+const { 
+    Encrypt, 
+    Decrypt 
+} = require('./crypto')
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
@@ -681,20 +685,7 @@ ERR! markAsDelivered }
                     saveState();
                     fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
                     sendMessage(true, api, event, "Restarting program...");
-                    setTimeout(function() {
-                        let rs = [];
-                        rs.push(event.threadID);
-                        rs.push(event.messageID);
-                        fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs, null, 4), "utf8");
-                        process.on("exit", function() {
-                            require("child_process").spawn(process.argv.shift(), process.argv, {
-                                cwd: process.cwd(),
-                                detached: true,
-                                stdio: "inherit"
-                            });
-                        });
-                        process.exit();
-                    }, 3000);
+                    process.exit(0)
                 }
             } else if (!adm.includes(event.senderID)) {
                 if (settings.isDebugEnabled) {
@@ -1153,6 +1144,7 @@ ERR! markAsDelivered }
                             }
                             sendMessage(true, api, event, message);
                         });
+                        fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
                         break;
                     case "log:thread-icon":
                     case "log:thread-color":
@@ -1180,7 +1172,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(true, api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
             } else {
                 sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(group).length + " groups.");
-                sendMessageToAll(api, event, event.messageReply.body);
+                sendMessageToAll(api, event);
             }
         }
     } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
@@ -1262,7 +1254,7 @@ async function ai22(api, event, query, query2) {
                 let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
                 request(encodeURI(url)).pipe(fs.createWriteStream(dir))
         .on('finish', () => {
-            transcribeAudioFile(dir)
+            TranscribeAudioFile(dir)
             .then(transcription => {
              sendMessage(true, api, event, transcription);
              unLink(dir);
@@ -1409,6 +1401,7 @@ async function ai(api, event) {
                 }
                 nonRRR.push(event.senderID);
                 sendMessage(true, api, event, message);
+                fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
             } else {
                 sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
@@ -1541,7 +1534,7 @@ async function ai(api, event) {
             } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" ||
                 (text1.startsWith("whois") && isMe(text2))) {
                 let message = {
-                    body: "Melvin Jones Gallano Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\n\nhttps://mrepol742.github.io",
+                    body: "Melvin Jones 'Mj' Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\n\nhttps://mrepol742.github.io",
                     url: "https://mrepol742.github.io"
                 }
                 sendMessage(true, api, event, message);
@@ -1610,19 +1603,6 @@ async function ai(api, event) {
                 }
 
                 sendMessage(true, api, event, message);
-                if (ss.includes("browser") || ss.includes("chrome") || ss.includes("webkit") || ss.includes("KHTML")) {
-                    let msCC = {
-                        body: "Talking bout browsers lemme introduce my own web browser for Android devices, it's full of features and design minimalist with the size of 400KB you wouldnt even expect. Programming drive me to this try it out while it's free.\n\n⦿ Stable: https://webvium.github.io\n⦿ Beta: https://webvium.github.io/beta/\n⦿ Dev: https://mrepol742.github.io/webviumdev",
-                        url: "https://webvium.github.io"
-                    }
-                    sendMessageOnly(true, api, event, msCC)
-                } else if (ss.includes("VPN")) {
-                    let vpn = {
-                        body: "https://mrepol742.github.io/webviumvpn",
-                        url: "https://mrepol742.github.io/webviumvpn"
-                    }
-                    sendMessageOnly(true, api, event, vpn);
-                }
             }
         }
     } else if (query.startsWith("chatgpt")) {
@@ -1633,9 +1613,9 @@ async function ai(api, event) {
           data.shift();
             getResponseData("https://api.amosayomide05.cf/gpt/?question=" + data.join(" ") + "&string_id=unique_id").then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "An error occured. Please try it again later.");
+                    sendMessage(true, api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
                 } else {
-                    sendMessage(true, api, event, response.response);
+                    sendMessage(false, api, event, response.response);
                 }
             });
         }
@@ -1657,15 +1637,15 @@ async function ai(api, event) {
               });
               sendMessage(true, api, event, response.data.choices[0].text);
             } catch (err) {
-                sendMessage(true, api, event, "An error occured. Please try it again later.");
+                sendMessage(true, api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
             }
         }
     } else if (query == "clearcache") {
-        let count = 0;
-        let count1 = 0;
-        let count2 = 0;
-        let count3 = 0;
         if (adm.includes(event.senderID)) {
+            let count = 0;
+            let count1 = 0;
+            let count2 = 0;
+            let count3 = 0;
             fs.readdir(__dirname + "/cache/audios/", function(err, files) {
                 if (err) {
                     return log(err);
@@ -4021,14 +4001,9 @@ _____________________________
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
             } else {
                 let inp = data[1].split(":");
-                keys[inp[0]] = inp[1];
+                keys[inp[0]] = Decrypt(inp[1]);
                 fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys, null, 4), "utf8")
                 sendMessage(true, api, event, "Successfully saved " + inp[0] + ".");
-                if (inp[0] == "ai") {
-                    config = new Configuration({
-                        apiKey: inp[1],
-                    });
-                }
             }
         }
     } else if (query.startsWith("listkey")) {
@@ -4170,12 +4145,15 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        if (event.isGroup) {
+        api.getThreadInfo(event.threadID, (err, gc) => {
+            if (err) return log(err);
+        if (gc.isGroup) {
             let arr = gc.participantIDs;
             sendMessage(true, api, event, "This group has about " + arr.length + " members.")
         } else {
             sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
+    });
     } else if (query.startsWith("gname")) {
         if (isGoingToFast(event)) {
             return;
@@ -4823,7 +4801,7 @@ _____________________________
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using wordsToNumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwordsToNumbers one hundred and five")
         } else {
             data.shift();
-            sendMessage(true, api, event, numberWithCommas(wordsToNumbers(data.join(" "))));
+            sendMessage(true, api, event, numberWithCommas(WordsToNumbers(data.join(" "))));
         }
     } else if (query.startsWith("mnm")) {
         if (isGoingToFast(event)) {
@@ -6932,8 +6910,10 @@ async function aiResponse(complextion, text, repeat) {
             log("attempt_initiated");
             return await aiResponse(getNewComplextion(settings.text_complextion), text, false);
         } else if (error.response.status == 500 ) {
-            return "There seem to be a problem. The engineers have been notified.";
-        } else if (error.response.status == 429 || error.response.status == 503) {
+            return "Mj is currently down. Please try it again later.";
+        } else if (error.response.status == 429) {
+            return "Mj is at capacity right now. Please try it again later.";
+        } else if (error.response.status == 503) {
             return "It seems like there are problems with the server. Please try it again later.";
         } else {
             return idknow[Math.floor(Math.random() * idknow.length)];
@@ -6960,13 +6940,33 @@ function getNewComplextion(complextion) {
     return complextion.replace("003", "002");
 }
 
-async function sendMessageToAll(api, event, message) {
+async function sendMessageToAll(api, event) {
+    let message = event.messageReply.body;
+    let time = getTimestamp();
     let count = 0;
+    let format = getFormat(event.attachments[0].type);
+
+    if (event.messageReply.attachments.length != 0) {
+    for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+      await wait(1000);
+      let dir = __dirname + "/cache/files/notify_" + i55 + "_" + time + format;
+         request(encodeURI(event.messageReply.attachments[i55].url)).pipe(fs.createWriteStream(dir));
+         count++;
+    }
+    }
+let accm = [];
+    let i1;
+    for (i1 = 0; i1 < name.length; i1++) {
+        accm.push(fs.createReadStream(__dirname + "/cache/files/notify_" + i1 + "_" + time + format));
+    }
     for (gp in group) {
         if (!blockSSS.includes(gp)) {
             await wait(20000);
-            count++
-            api.sendMessage(message + "\n\n" + gp + "-" + (count * 742), gp);
+            let body = {
+                body: message + "\n\n" + gp + "\n>> Notification From The Developer",
+                attachment: accm
+            }
+            api.sendMessage(body, gp);
         }
     }
     sendMessage(true, api, event, "Message successfully send to " + count + " groups.")
@@ -7037,4 +7037,34 @@ async function sendMessageReaction(api, event) {
     api.setMessageReaction(event.reaction, event.messageID, (err) => {
             if (err) log(err);
     });
+}
+
+function getFormat(attach) {
+    if (attach == "photo") {
+        return ".png";
+    } else if (attach == "animated_image") {
+        return ".gif";
+    } else if (attach == "video") {
+        return ".mp4";
+    } else if (attach == "audio") {
+        return ".mp3";
+    }
+    return "";
+}
+
+function Encrypt(text) {
+  let iv = crypto.randomBytes(16)
+  let cipher = crypto.createCipheriv(algorithm, secretKey, iv)
+  let encrypted = Buffer.concat([cipher.update(text), cipher.final()])
+
+  return {
+    iv: iv.toString('hex'),
+    content: encrypted.toString('hex')
+  }
+}
+
+function Decrypt(hash) {
+  let decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(hash.iv, 'hex'))
+  let decrpyted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()])
+  return decrpyted.toString()
 }
