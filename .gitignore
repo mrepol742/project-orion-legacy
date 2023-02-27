@@ -5,3 +5,5 @@ cache/images/*
 !cache/images/.gitkeep
 cache/videos/*
 !cache/videos/.gitkeep
+cache/files/*
+!cache/files/.gitkeep
