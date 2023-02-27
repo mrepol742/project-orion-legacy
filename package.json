@@ -1,8 +1,8 @@
 {
   "name": "Project Orion",
   "version": "1.0.0",
-  "description": "...",
-  "main": "index.js",
+  "description": "",
+  "main": "mj.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
