@@ -708,8 +708,14 @@ ERR! uploadAttachment }
                 } else if (query == "restart") {
                     saveState();
                     fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+                    let rs = []; 
+                        rs.push(event.threadID); 
+                        rs.push(event.messageID); 
+                    fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs, null, 4), "utf8"); 
                     sendMessage(true, api, event, "Restarting program...");
-                    process.exit(0)
+                    setTimeout(function() { 
+                        process.exit(0);
+                    }, 3000); 
                 }
             } else if (!adm.includes(event.senderID)) {
                 if (settings.isDebugEnabled) {
