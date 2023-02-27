@@ -613,6 +613,10 @@ ERR! uploadAttachment }
             let result = !!body.match(/^[!@#$%&*~|?/_]/)
             if (result) {
                 event.body = body.slice(1);
+            } else {
+                if (event.senderID == getMyId()) {
+                    return;
+                }
             }
         }
 
