@@ -1,18 +1,20 @@
-const fs = require("fs");
-const login = require("fca-unofficial");
 
-login({appState: JSON.parse(fs.readFileSync('app_state.json', 'utf8'))}, (err, api) => {
-    if(err) return console.error(err);
+/*const fs = require("fs");
 
-    api.setOptions({listenEvents: true});
+//let data = fs.readFileSync(__dirname + "/cache/images/byebye_1677410993.jpg", "utf8");
+let data = fs.readFileSync(__dirname + "/cache/images/createimg_1677329405.png", "utf8");
+const latinC = /[^a-z0-9]/gi;
 
-    var stopListening = api.listenMqtt((err, event) => {
-        if(err) return console.error(err);
+console.log(data);
+*/
+var request = require('request');
 
-        api.markAsRead(event.threadID, (err) => {
-            if(err) console.error(err);
-        });
-
-        console.log(JSON.stringify(event))
-    });
-});
+request.post(
+    'https://toughsleepyapplicationprogram.mrepol853.repl.co/',
+    { json: { lang: 'php', code: 'echo \'hello world\';' } },
+    function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body);
+        }
+    }
+);

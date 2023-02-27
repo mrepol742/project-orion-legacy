@@ -690,6 +690,7 @@ ERR! uploadAttachment }
                     sendMessage(true, api, event, "Program stopped its state.");
                     settings.isStop = true;
                     fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    app.get('/', (req, res) => res.send("{\"status\":\"stopped\"}"));
                     return;
                 } else if (query == "destroy") {
                     sendMessage(true, api, event, "Program destroyed its state.");
@@ -698,6 +699,7 @@ ERR! uploadAttachment }
                     sendMessage(true, api, event, "Program resumed its state.");
                     settings.isStop = false;
                     fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
                     return;
                 } else if (query == "restart") {
                     saveState();
@@ -745,6 +747,9 @@ ERR! uploadAttachment }
                         group[event.threadID] = gc.threadName;
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) log(err);
+                        });
+                        api.changeNickname("⦿ Mj", event.threadID, getMyId(), (err) => {
+                            if (err) return log(err);
                         });
                         log("new_group " + event.threadID + " group_name " + gc.threadName);
                         let message = {
@@ -1825,12 +1830,14 @@ _______  Cache  _______
             settings.isDebugEnabled = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Debug mode enabled.");
+            app.get('/', (req, res) => res.send("{\"status\":\"maintenance\"}"));
         }
     } else if (query == "debugoff") {
         if (adm.includes(event.senderID)) {
             settings.isDebugEnabled = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Konnichiwa i am back.");
+            app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
         }
     } else if (query == "setautomarkreadon") {
         if (adm.includes(event.senderID)) {
@@ -7218,7 +7225,7 @@ function isValidDate(date) {
     return (new Date(date) !== "Invalid Date") && !isNaN(new Date(date));
 }
 
-let mavenMap = {
+let normalMap = {
     "a": "𝖺",
     "b": "𝖻",
     "c": "𝖼",
@@ -7275,7 +7282,7 @@ let mavenMap = {
 
 function maven(text) {
     return text.split("").map(function(a) {
-        return mavenMap[a] ? mavenMap[a] : a;
+        return normalMap[a] ? normalMap[a] : a;
     }).join("");
 }
 
@@ -7298,11 +7305,11 @@ function updateFont(message) {
 
 
 function removeTags(str) {
-    if ((str===null) || (str===''))
+    if ((str===null) || (str==='')) {
         return false;
-    else
+    } else {
         str = str.toString();
-
+    }
     return str.replace( /(<([^>]+)>)/ig, '');
 }
 
