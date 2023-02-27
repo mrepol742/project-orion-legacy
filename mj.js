@@ -797,7 +797,7 @@ ERR! uploadAttachment }
                 break;
             case "message_unsend":
                 let d = msgs[event.messageID];
-                if (d === undefined && event.senderID != getMyId()) {
+                if (d === undefined || isMyId(event.senderID)) {
                     log("unsend_undefined " + event.messageID);
                     break;
                 }
@@ -6265,7 +6265,7 @@ function getSuffix(i) {
 }
 
 function isMyId(id) {
-    return id == "100090779792636";
+    return id == "100090779792636" || id == "100071743848974" || id == "100090779792636";
 }
 
 function getMyId() {
@@ -6964,7 +6964,7 @@ function findGCD(i, i2) {
 }
 
 function saveEvent(event) {
-    if (event.senderID == getMyId()) {
+    if (isMyId(event.senderID)) {
         return;
     }
     if (event.attachments.length != 0) {
