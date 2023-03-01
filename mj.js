@@ -32,7 +32,6 @@ const GoogleImages = require('google-images');
 const NetworkSpeed = require('network-speed')
 const GoogleTTS = require('google-tts-api');
 const axios = require("axios");
-const crypto = require('crypto')
 const dns = require("dns");
 const fs = require("fs");
 const fca = require("fca-unofficial");
@@ -845,6 +844,9 @@ ERR! uploadAttachment }
                     break;
                 }
                 log("message_unsend " + d[0]);
+                if (isGoingToFastCallingTheCommand(event)) {
+                    return;
+                }
                 if (d[0] == "photo") {
                     unsendPhoto(api, event, d);
                 } else if (d[0] == "animated_images") {
@@ -7180,23 +7182,6 @@ function getFormat(attach) {
         return ".mp3";
     }
     return "";
-}
-
-function Encrypt(text) {
-  let iv = crypto.randomBytes(16)
-  let cipher = crypto.createCipheriv(algorithm, secretKey, iv)
-  let encrypted = Buffer.concat([cipher.update(text), cipher.final()])
-
-  return {
-    iv: iv.toString('hex'),
-    content: encrypted.toString('hex')
-  }
-}
-
-function Decrypt(hash) {
-  let decipher = crypto.createDecipheriv(algorithm, secretKey, Buffer.from(hash.iv, 'hex'))
-  let decrpyted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()])
-  return decrpyted.toString()
 }
 
 function isValidDate(date) {
