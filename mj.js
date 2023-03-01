@@ -15,37 +15,34 @@
  * limitations under the License.
  */
 
-const express = require('express');
-const fs = require("fs");
-const login = require("fca-unofficial");
-const http = require('https');
-const pdfdrive = require('pdfdrive-ebook-scraper');
-const request = require("request");
 const {
     Configuration,
     OpenAIApi
 } = require("openai");
-const NLPCloudClient = require('nlpcloud');
-const axios = require("axios");
-const weatherjs = require("weather-js")
-const FormData = require('form-data');
-const path = require('path');
-const Innertube = require('youtubei.js');
-const GoogleImages = require('google-images');
-const google = require('googlethis');
-const os = require('os');
-const NetworkSpeed = require('network-speed')
-const process_p = require('process');
-const googleTTS = require('google-tts-api');
-const mathjs = require('mathjs')
-const dns = require("dns");
+const { 
+    transcribeAudioFile 
+} = require('openai-whisper');
 const {
     WordsToNumbers
 } = require('words-to-numbers');
-const { 
-    TranscribeAudioFile 
-} = require('openai-whisper');
+const WeatherJS = require("weather-js")
+const FormData = require('form-data');
+const Youtubei = require('youtubei.js');
+const GoogleImages = require('google-images');
+const NetworkSpeed = require('network-speed')
+const GoogleTTS = require('google-tts-api');
+const axios = require("axios");
 const crypto = require('crypto')
+const dns = require("dns");
+const fs = require("fs");
+const fca = require("fca-unofficial");
+//const fca = require("mj-fca");
+const http = require('http');
+const https = require('https');
+const os = require('os');
+const pdfdrive = require('pdfdrive-ebook-scraper');
+const path = require('path');
+const request = require("request");
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
@@ -53,17 +50,16 @@ const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 const algorithm = 'aes-256-ctr'
 const secretKey = '742-project_orion~.?;56vxkfewngferjhge'
 
-const app = express();
-const port = process.env.PORT || 6000;
-
-app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
-
-app.listen(port, () =>
-    log(`Project Orion ONLINE at ` + port)
-);
+http.createServer(function (req, res) {
+   res.writeHead(200, {'Content-Type': 'text/json'});
+   res.write("{\"status\":\"online\"}");
+   res.end();
+}).listen(3000, function(){
+   log("Server start at port 3000");
+});
 
 setInterval(function() {
-    http.get("https://project-orion.mrepol853.repl.co", function(res) {
+    https.get("https://project-orion.mrepol853.repl.co", function(res) {
         log("ping");
     });
 }, 1800000 * Math.random() + 1200000);
@@ -122,6 +118,7 @@ let messagesD = "No data";
 let fb_stateD = "No data";
 let isCalled = true;
 let isAppState = true;
+let commandCalls = 0;
 
 let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
     "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
@@ -328,7 +325,6 @@ _______  Project Orion 7/9  _______
    ⦿ median [numbers]
    ⦿ mode [numbers]
    ⦿ range [numbers]
-   ⦿ cdfnormal [x] [μ] [σ]
    ⦿ divisible [number] [number]
    ⦿ factorial [number]
    ⦿ findGCD [number]
@@ -465,9 +461,11 @@ let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
 let state = {
     appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))
 };
+let currentID;
 
 const config = new Configuration({
-    apiKey: keys.ai,
+    organization: "org-7GIMM0pAEJnLtNHCgNHOgP4F",
+    apiKey: keys.ai
 });
 let voice = {
     lang: 'en',
@@ -500,7 +498,7 @@ process.on('SIGINT', function() {
     process.exit();
 });
 
-login(state, (err, api) => {
+fca(state, (err, api) => {
     if (err) return log(err);
 
     process.on('uncaughtException', (err, origin) => {
@@ -511,7 +509,7 @@ ________  Exception  ________
 ____________________________
         `;
         log(message)
-        api.sendMessage(message, getMyId(), (err, messageInfo) => {
+        api.sendMessage(message, currentID, (err, messageInfo) => {
             if (err) log(err);
         })
     });
@@ -524,7 +522,7 @@ ________  Exception  ________
 ____________________________
 `;
         log(message);
-        api.sendMessage(message, getMyId(), (err, messageInfo) => {
+        api.sendMessage(message, currentID, (err, messageInfo) => {
             if (err) log(err);
         })
     });
@@ -538,6 +536,7 @@ ____________________________
     setInterval(function() {
         cmd = {};
         acGG = [];
+        commandCalls = 0;
         log("clear_list");
     }, 600000);
 
@@ -593,6 +592,8 @@ ERR! uploadAttachment   hsrp: { hblp: { consistency: [Object] } },
 ERR! uploadAttachment   lid: '7204280677982478840'
 ERR! uploadAttachment }
 
+{"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
+
 {"__ar":1,"error":1545023,"errorSummary":"Unable to Send Message","errorDescription":{"__html":"Your message appears to be blank. Please enter your message and try again.<br /><br />The message is empty, but there is an image that I wanted to share. <br /><br />Another problem is the fact that the report bug button is not working."},"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007017942}}},"lid":"7204288752837096672"}
 
 {"__ar":1,"error":1404102,"errorSummary":"You can't share this link","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li><ul class=\"uiList _4of _4kg\"><li class=\"_3isk\"><div class=\"fcb\">system.in</div></li><li class=\"_3isk\"><div class=\"fcb\">linka.net</div></li><li class=\"_3isk\"><div class=\"fcb\">youmob.com</div></li></ul><br /><br />Your message couldn&#039;t be shared, because this link goes against our <a href=\"https://www.facebook.com/communitystandards\" target=\"_blank\">Community Standards</a></li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=Aeivw6RLfnC7evrzb6LFhdDPmh9IgSIvws1yZRnKdcGXAvA_21QHdz7Cpu1XSyBv_Cw_uPQcRNzKe4Knq67HZ2fSyH_JQvN4YS6hB7-sklB-GSwxV37kViCttgZ1t-bX46zOSTuPjA9OOgi_0PBQMuEixbuihy9eQPwHRD7OgUeSLDEY-Qx4RTOuquCauoIjgP-1w4Xt8HwlF0UKxc4zaESE6vEjFq3Dp1ve51yW6uwT6eUHV1ZloCpce2d4LUwBO4yzWPvgVVyWAqcKeyP5I4He6C9LDuPCl1eZ9SEGi1HvHjrO6e3WwBl5jisPi7-uATNYGx_2VJIiui1CodPJN4qiatLX60xgUVBi_-UfUAxu6WyFqbXsBygT1hEIVqgiSZLGOH6UrOHiB2r7XcM5mTJFzaaRDJrHQbHcN_1PCkUas2Vhkd5H1TY4_qaBZoDUL8Ibz9kxbU6oriImDk34Zt3oNGGMiyvij-xiV9Mk9nvBQc85nftukVm_-Q-hIYhgjkTBn1MfLAQGPHjp4D_Le-MX7ydIDPc9F9CTFPJlXXseasq6LF9fRJGRzwqof3BhwwIAxlPXvtWEmnuBiHJuAK-RqxgKyAJwlW_GtkF6mme4Tk1HboYwW7kSC8y58eDs_osCr48KEHk-mE38-A5bqLb8_Zh-Kc-I3COithJkreBr46gqFN0k__ISKtwIJzYUvid9V0tl8woS9rmymhYW2mu2coIR-AxcN3Db2T95HWpe2Yheu_JU5lJFnyExCdZou2jXbBOkutDXvIMDmd5kBCmYXXtT-g1MgY3C9XeTRUx_liPf798rsM0h_bqAuZdrl_kI4d9AjYDxIfzijgtO_taASpTB3mWSWidbgOzDMeOFbQoOX9wmOYQURkbRNOv8MPRIIYOujWO5OpguKRFvLEnYA8oVvBVNO2ooAKs9StqefcXIHYb8zUoUiMISRpNhVG7nI995RmeJL79L3eqMHss_MUFemWn-YB4Ji1yxOAs3rnVdUSb3Kv8YRt-C7A7YUBrRxAdzMuBnSnuAjpyNcOcfrA-5Esu4k8MXoYShyzMS1ugTlmKoOMnIhq7M9KU8Y7GkTgcCr2jO8qPLkSKfNCmfHtj6mFrT60lbw7zR_lc777rullhn57fdFsLqe7LdP9eAuOOiPG5M3D0XkdBYoE5IBoAhutIaHstL2yKyLBCAPIVruBIkCAtvrCgAF-Iq9nrgfbw8d11M_TRidrUKsrb1wGhSItSM87575-QbA3H_RRcLGiGbmUiYQubl5HERsQ-fsx_6s1vU0Fc-DUf7plFqf7RHqRPRrdxlPv89IX1vqg\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007017942},"rsrcMap":{"kU5IbEZ":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/yT/l/0,cross/JzHCg-C_piI.css?_nc_x=OtsmPLmDoWW","nc":1},"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=OtsmPLmDoWW","nc":1}}}},"allResources":["kU5IbEZ","nYb9A+M"],"lid":"7204287420035354690"}
@@ -600,23 +601,19 @@ ERR! uploadAttachment }
         if (err) return log(err);
 
         if (isAppState) {
+            currentID = api.getCurrentUserID();
             fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
             isAppState = false;
-        }
-
-        if (event.body == "" && !(typeof event.body === "string") && !(event.type == "message_unsend" || event.type == "event")) {
-            return;
         }
 
         if (event.type == "message" || event.type == "message_reply") {
             let body = event.body;
             let result = !!body.match(/^[!@#$%&*~|?/_]/)
+            if (!result && isMyId(event.senderID)) {
+                return;
+            }
             if (result) {
                 event.body = body.slice(1);
-            } else {
-                if (event.senderID == getMyId()) {
-                    return;
-                }
             }
         }
 
@@ -632,22 +629,34 @@ ERR! uploadAttachment }
             let input = event.body.toLowerCase();
 
             if (input == "911") {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 sendMessage(true, api, event, "Have an emergency? Don't wait call 911!");
                 return;
             } else if (input == "same") {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 sendMessage(true, api, event, "(2)");
                 return;
             } else if (input == "k" || input == "y") {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 sendMessage(true, api, event, "women");
                 return;
             } else if (input == "wdym") {
+                if (isGoingToFast(event)) {
+                    return;
+                }
                 sendMessage(true, api, event, "what do you mean?");
                 return;
             }
             let query2 = formatQuery(input);
             let query = query2.replace(/\s+/g, '');
 
-            if (event.type == "message" || (event.type == "message_reply" && (event.senderID != getMyId() || event.messageReply.senderID != getMyId()))) {
+            if (event.type == "message" || (event.type == "message_reply" && (event.senderID != currentID || event.messageReply.senderID != currentID))) {
 
                 if (query == "unblockgroup") {
                     if (adm.includes(event.senderID)) {
@@ -658,13 +667,26 @@ ERR! uploadAttachment }
                         }
                     }
                 } else if (query == "unmute") {
+                    if (isGoingToFast(event)) {
+                        return;
+                    }
                     if (mutedRRR.includes(event.senderID)) {
                         mutedRRR = mutedRRR.filter(item => item !== event.senderID);
                         sendMessage(true, api, event, "You can now use my commands.");
-                        fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
+                        fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR, null, 4), "utf8");
                     }
                 } else if (query == "status") {
-                    if (mutedRRR.includes(event.senderID)) {
+                    if (isGoingToFast(event)) {
+                        return;
+                    }
+                    if (settings.error == "3252001") {
+                        // bug this can be initiate if api.markAllAsRead is the reason or attachments
+                        sendMessage(true, api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
+                    } else if (settings.error == "1404078") {  
+                        sendMessage(true, api, event, "This account is restricted right now. Please try it again in few hours.");
+                    } else if (settings.error == "1545023") {  
+                        sendMessage(true, api, event, "This account is unable to send messages right now. Please try it again in few hours.");
+                    } else if (mutedRRR.includes(event.senderID)) {
                         sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
                     } else if (blockSSS.includes(event.threadID)) {
                         sendMessage(true, api, event, "This group is blocked. Contact the bot admins for more info.");
@@ -675,7 +697,7 @@ ERR! uploadAttachment }
                     } else if (settings.isDebugEnabled) {
                         sendMessage(true, api, event, "The program is currently under maintenance.");
                     } else {
-                        sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS");
+                        sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS.");
                     }
                 } else if (!(adm.includes(event.senderID))) {
                     if (blockSSS.includes(event.threadID)) {
@@ -693,8 +715,7 @@ ERR! uploadAttachment }
                 if (query == "stop") {
                     sendMessage(true, api, event, "Program stopped its state.");
                     settings.isStop = true;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
-                    app.get('/', (req, res) => res.send("{\"status\":\"stopped\"}"));
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8");
                     return;
                 } else if (query == "destroy") {
                     sendMessage(true, api, event, "Program destroyed its state.");
@@ -702,8 +723,7 @@ ERR! uploadAttachment }
                 } else if (query == "resume") {
                     sendMessage(true, api, event, "Program resumed its state.");
                     settings.isStop = false;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
-                    app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
+                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8");
                     return;
                 } else if (query == "restart") {
                     saveState();
@@ -717,27 +737,9 @@ ERR! uploadAttachment }
                         process.exit(0);
                     }, 3000); 
                 }
-            } else if (!adm.includes(event.senderID)) {
-                if (settings.isDebugEnabled) {
-                    saveEvent(event);
-                    if (isMyPrefix(event.body, query, query2)) {
-                        if (isGoingToFastCallingTheCommand(event)) {
-                            return;
-                        }
-                        let message = {
-                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                            attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                        };
-                        sendMessage(true, api, event, message);
-                    }
-                    return;
-                } else if (settings.isStop) {
-                    saveEvent(event);
-                    return;
-                }
-            }
+            } 
 
-            if (event.senderID != getMyId() && event.isGroup) {
+            if (event.senderID != currentID && event.isGroup) {
                 if (thread[event.threadID] === undefined) {
                     let messDD = [];
                     messDD.push(event.senderID);
@@ -758,7 +760,7 @@ ERR! uploadAttachment }
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) log(err);
                         });
-                        api.changeNickname("⦿ Mj", event.threadID, getMyId(), (err) => {
+                        api.changeNickname("⦿ Mj", event.threadID, currentID, (err) => {
                             if (err) return log(err);
                         });
                         log("new_group " + event.threadID + " group_name " + gc.threadName);
@@ -783,6 +785,33 @@ ERR! uploadAttachment }
             return;
         }
 
+        if (settings.isDebugEnabled && !isMyId(event.senderID)) {
+            if (event.type == "message" || event.type == "message_reply") {
+            let input = event.body;
+            let query2 = formatQuery(input);
+            let query = query2.replace(/\s+/g, '');
+            if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
+                if (isGoingToFastCallingTheCommand(event)) {
+                    return;
+                }
+                let message = {
+                    body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                    attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                };
+                sendMessage(true, api, event, message);
+            }
+            saveEvent(event);
+        }
+            return;
+        }
+        
+        if (settings.isStop && !isMyId(event.senderID)) {
+            if (event.type == "message" || event.type == "message_reply") {
+            saveEvent(event);
+            }
+            return;
+        }
+
         if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
             api.sendMessage("Successfully restarted", restart[0], restart[1]);
             let rs = [];
@@ -797,7 +826,7 @@ ERR! uploadAttachment }
                 ai(api, event);
                 break;
             case "message_reaction":
-                if (event.userID != getMyId() && event.senderID != getMyId() &&
+                if (!isMyId(event.userID) && !isMyId(event.senderID) &&
                     !emo.includes(event.messageID) && !bot.includes(event.senderID) && 
                     event.senderID != event.userID && !(event.reaction === undefined)) {
                     emo.push(event.messageID);
@@ -852,7 +881,7 @@ ERR! uploadAttachment }
                     let file = fs.createWriteStream(filename);
                     let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
                     let decodeurl = decodeURIComponent(fileurl);
-                    let fileRequest = http.get(decodeurl, function(fileResponse) {
+                    let fileRequest = https.get(decodeurl, function(fileResponse) {
                         fileResponse.pipe(file);
                         file.on('finish', function() {
                             api.getUserInfo(event.senderID, (err, data) => {
@@ -993,7 +1022,7 @@ ERR! uploadAttachment }
                     let time1 = getTimestamp();
                     let filename = __dirname + '/cache/videos/unsend_video_' + time1 + '.mp4'
                     let file = fs.createWriteStream(filename);
-                    let gifRequest = http.get(d[1][2], function(gifResponse) {
+                    let gifRequest = https.get(d[1][2], function(gifResponse) {
                         gifResponse.pipe(file);
                         file.on('finish', function() {
                             api.getUserInfo(event.senderID, (err, data) => {
@@ -1036,7 +1065,7 @@ ERR! uploadAttachment }
                     let time2 = getTimestamp();
                     let filename = __dirname + '/cache/audios/unsend_audio_' + time2 + '.mp3'
                     let file = fs.createWriteStream(filename);
-                    let gifRequest = http.get(d[1][2], function(gifResponse) {
+                    let gifRequest = https.get(d[1][2], function(gifResponse) {
                         gifResponse.pipe(file);
                         file.on('finish', function() {
                             api.getUserInfo(event.senderID, (err, data) => {
@@ -1106,7 +1135,7 @@ ERR! uploadAttachment }
                         log("event_error " + JSON.stringify(event));
                         break;
                     case "log:subscribe":
-                        if (event.logMessageData.addedParticipants.length == 1 && event.logMessageData.addedParticipants[0].userFbId == getMyId()) {
+                        if (event.logMessageData.addedParticipants.length == 1 && event.logMessageData.addedParticipants[0].userFbId == currentID) {
                             break;
                         }
                         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1119,7 +1148,7 @@ ERR! uploadAttachment }
                                     if (event.logMessageData.addedParticipants[i] === undefined) {
                                         break;
                                     }
-                                    if (event.logMessageData.addedParticipants[i].userFbId != getMyId()) {
+                                    if (event.logMessageData.addedParticipants[i].userFbId != currentID) {
                                         names.push([event.logMessageData.addedParticipants[i].userFbId, event.logMessageData.addedParticipants[i].fullName]);
                                         i++;
                                     }
@@ -1150,7 +1179,7 @@ ERR! uploadAttachment }
                         break;
                     case "log:unsubscribe":
                         let id = event.logMessageData.leftParticipantFbId;
-                        if (id == getMyId()) {
+                        if (id == currentID) {
                             break;
                         }
                         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1228,7 +1257,7 @@ async function ai22(api, event, query, query2) {
         }
     } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
         if (adm.includes(event.senderID)) {
-            if (event.messageReply.senderID != getMyId()) {
+            if (event.messageReply.senderID != currentID) {
                 sendMessage(true, api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
             } else {
                 api.unsendMessage(event.messageReply.messageID, (err) => {
@@ -1305,7 +1334,7 @@ async function ai22(api, event, query, query2) {
                 let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
                 request(encodeURI(url)).pipe(fs.createWriteStream(dir))
         .on('finish', () => {
-            TranscribeAudioFile(dir)
+            transcribeAudioFile(dir)
             .then(transcription => {
              sendMessage(true, api, event, transcription);
              unLink(dir);
@@ -1333,16 +1362,11 @@ async function ai22(api, event, query, query2) {
             data.shift()
             let lang = data.join(" ").toLowerCase();
             let body = event.messageReply.body;
-            let buff = Buffer.from(body);
-            let base64data = buff.toString('base64');
-            getResponseData("https://toughsleepyapplicationprogram.mrepol853.repl.co/?code=" + base64data + "&lang=" + lang).then((response) => {
+            getResponseData("https://toughsleepyapplicationprogram.mrepol853.repl.co/?code=" + encodeURI(body) + "&lang=" + lang).then((response) => {
                         if (response == null) {
                             sendMessage(true, api, event, "The language " + lang + " is not yet supported.");
                         } else {
-                            let data = JSON.stringify(response);
-                            if (data.code == "200") {
-                                sendMessage(true, api, event, removeTags(data.output));
-                            }
+                            sendMessage(true, api, event, response);
                         }
                     });
         }
@@ -1403,7 +1427,7 @@ async function ai(api, event) {
         sendMessage(true, api, event, message);
         return;
     }
-    if (event.type == "message_reply" && event.messageReply.senderID != getMyId()) {
+    if (event.type == "message_reply" && event.messageReply.senderID != currentID) {
         return;
     }
     if (event.type == "message") {
@@ -1518,13 +1542,13 @@ async function ai(api, event) {
                 sendMessage(true, api, event, "I'm Mj.");
             } else if (text1.startsWith("whoisactive")) {
                 sendMessage(true, api, event, "Me");
-            } else if (text1.includes("pornsite") || text1.startsWith("whatissex") || text1.startsWith("whatssex")) {
+            } else if (text1.includes("pornsite") || text1.startsWith("whatissex") || text1.startsWith("whatssex") || text1.startsWith("fuckyou") || text1.startsWith("curseyou")) {
                 blockUser(api, event, event.senderID);
             } else if (text1 == "sim") {
                 sendMessage(true, api, event, "Me? noooo...");
             } else if (text1 == "callme") {
                 let id;
-                if ((event.type == "message_reply" && event.senderID != getMyId())) {
+                if ((event.type == "message_reply" && event.senderID != currentID)) {
                     id = event.messageReply.senderID;
                 } else if (event.type == "message") {
                     id = event.senderID;
@@ -1546,7 +1570,7 @@ async function ai(api, event) {
                 });
             } else if (text1 == "whoami" || text1 == "whatsmyname" || text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis" || text1 == "doyouknowme" || text1 == "whatismyname") {
                 let id;
-                if ((event.type == "message_reply" && event.senderID != getMyId())) {
+                if ((event.type == "message_reply" && event.senderID != currentID)) {
                     id = event.messageReply.senderID;
                 } else if (event.type == "message") {
                     id = event.senderID;
@@ -1821,15 +1845,16 @@ async function ai(api, event) {
                     }
                 });
             });
+            await wait(1000);
             let message = `
 _______  Cache  _______
-|
+
    ⦿ Cache 0: ` + count + ` file(s)
    ⦿ Cache 1: ` + count1 + ` file(s)
    ⦿ Cache 2: ` + count2 + ` file(s)
    ⦿ Cache 3: ` + count3 + ` file(s)
    ⦿ Cache 4: ` + ((Object.keys(threadIdMV).length) + (Object.keys(cmd).length)) + `
-|______________________
+_______________________
 `;
             sendMessage(true, api, event, message);
             threadIdMV = {};
@@ -1840,14 +1865,12 @@ _______  Cache  _______
             settings.isDebugEnabled = true;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Debug mode enabled.");
-            app.get('/', (req, res) => res.send("{\"status\":\"maintenance\"}"));
         }
     } else if (query == "debugoff") {
         if (adm.includes(event.senderID)) {
             settings.isDebugEnabled = false;
             fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
             sendMessage(true, api, event, "Konnichiwa i am back.");
-            app.get('/', (req, res) => res.send("{\"status\":\"online\"}"));
         }
     } else if (query == "setautomarkreadon") {
         if (adm.includes(event.senderID)) {
@@ -1922,7 +1945,7 @@ _______  Cache  _______
                 let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(data.join(" ")) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
                 let time = getTimestamp();
                 var file = fs.createWriteStream(__dirname + "/cache/audios/ttsjap_" + time + ".mp3");
-                var gifRequest = http.get(responses, function(gifResponse) {
+                var gifRequest = https.get(responses, function(gifResponse) {
                     gifResponse.pipe(file);
                     file.on('finish', function() {
                         var message = {
@@ -1949,7 +1972,7 @@ _______  Cache  _______
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using say text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsay I am melvin jones repol")
         } else {
             data.shift();
-            const url = googleTTS.getAudioUrl(data.join(" "), voice);
+            const url = GoogleTTS.getAudioUrl(data.join(" "), voice);
             let time = getTimestamp();
             request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
 
@@ -1972,13 +1995,12 @@ _______  Statistics  _______
 
    ⦿ Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
    ⦿ Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
-   ⦿ Users: ` + numberWithCommas(nonRRR.length) + `
-   ⦿ Active Users: ` + numberWithCommas(Object.keys(cmd).length) + `
-   ⦿ Groups: ` + numberWithCommas(Object.keys(group).length) + `
-   ⦿ Active Groups: ` + acGG.length + `
+   ⦿ Users: ` + numberWithCommas(Object.keys(cmd).length) + `/` + numberWithCommas(nonRRR.length) + `
+   ⦿ Groups: ` + acGG.length + `/` + numberWithCommas(Object.keys(group).length) + `
    ⦿ Block Users: ` + blockRRR.length + `
    ⦿ Block Groups: ` + blockSSS.length + `
    ⦿ Muted Users: ` + mutedRRR.length + `
+   ⦿ Command Call: ` + commandCalls + `
    ⦿ Total Commands: 260
 ___________________________
 `;
@@ -1987,7 +2009,7 @@ ___________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let second_process = process_p.uptime();
+        let second_process = process.uptime();
         let seconds_con = secondsToTime(second_process);
         let message = `
 _______  Uptime  _______
@@ -2002,13 +2024,11 @@ _______________________
         }
         (async () => {
             const testNetworkSpeed = new NetworkSpeed();
-            let osFreeMemm = os.freemem();
-            let osFreeMem = convertBytes(osFreeMemm);
-            let second_process = process_p.uptime();
-            let seconds_con = secondsToTime(second_process);
-            let baseUrl = 'https://eu.httpbin.org/stream-bytes/500000';
+            let osFreeMem = convertBytes(os.freemem());
+            let osTotalMem = convertBytes(os.totalmem());
+            let seconds_con = secondsToTime(process.uptime());
             let fileSizeInBytes = 500000;
-            let speed = await testNetworkSpeed.checkDownloadSpeed(baseUrl, fileSizeInBytes);
+            let speed = await testNetworkSpeed.checkDownloadSpeed('https://eu.httpbin.org/stream-bytes/500000', fileSizeInBytes);
             let optionss = {
                 hostname: 'www.google.com',
                 port: 80,
@@ -2031,21 +2051,17 @@ _______  System Info  _______
    ⦿ Uptime: ` + seconds_con + `
    ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
-   ⦿ RAM: ` + osFreeMem + `/4GB
+   ⦿ RAM: ` + osFreeMem + `/` + osTotalMem + `
    ⦿ ROM: ` + "500MB/1GB" + `
-   ⦿ Download Speed: ` + upload_spee.mbps + ` mbps
-   ⦿ Upload Speed: ` + speed.mbps + ` mbps
+   ⦿ Speed: ` + upload_spee.mbps + ` mbps | ` + speed.mbps + ` mbps
    ⦿ RSS: ` + rss + `
-   ⦿ Heap Total: ` + heapTotal + `
-   ⦿ Heap Used: ` + heapUsed + `
+   ⦿ Heap: ` + heapUsed + `/` + heapTotal + `
    ⦿ External: ` + external + `
    ⦿ Array Buffers: ` + arrayBuffers + `
-   ⦿ Load Average 1M: ` + avg_load[0] + `
-   ⦿ Load Average 5M: ` + avg_load[1] + `
-   ⦿ Load Average 15M: ` + avg_load[2] + `
+   ⦿ Load Average: ` + avg_load[0] + ` | ` + avg_load[1] + ` | ` + avg_load[2] + `
    ⦿ Save State: ` + messagesD + `
    ⦿ Fb State: ` + fb_stateD + `
-   ⦿ Is Blocked: ` + "False" + `
+   ⦿ Blocked: ` + "False" + `
 _____________________________
 `;
             sendMessage(true, api, event, message);
@@ -2065,7 +2081,7 @@ _____________________________
                     sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
                     return;
                 }
-                sendMessage(true, api, event, addresses);
+                sendMessage(true, api, event, addresses[0]);
             });
         }
     } else if (query.startsWith("dns6")) {
@@ -2083,7 +2099,7 @@ _____________________________
                     sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
                     return;
                 }
-                sendMessage(true, api, event, addresses);
+                sendMessage(true, api, event, addresses[0]);
             });
         }
     } else if (query.startsWith("ping")) {
@@ -2251,20 +2267,6 @@ _____________________________
             let cost = input.split(" ")[2];
             let calcu = (revenue - cost) / cost;
             sendMessage(true, api, event, "The return of investment is " + calcu);
-        }
-    } else if (query.startsWith("cdfnormal")) {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        if (input.split(" ").length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using cdfnormal x μ σ instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncdfnormal 5 30 25")
-        } else {
-            if (!/^\d+$/.test(query.substring(9))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
-                return;
-            }
-            let arr = input.split(" ").map(Number);
-            sendMessage(true, api, event, "The normal distribution is " + cdfNormal(arr[1], arr[2], arr[3]));
         }
     } else if (query.startsWith("problem")) {
         if (isGoingToFast(event)) {
@@ -2466,7 +2468,7 @@ _____________________________
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 let vdName = data.join(" ");
-                const youtube = await new Innertube();
+                const youtube = await new Youtubei();
                 const search = await youtube.search(vdName);
                 if (search.videos[0] === undefined) {
                     sendMessage(true, api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park")
@@ -2549,7 +2551,7 @@ _____________________________
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
-                const youtube = await new Innertube();
+                const youtube = await new Youtubei();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
                     sendMessage(true, api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
@@ -2620,7 +2622,7 @@ _____________________________
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 let vdName = data.join(" ");
-                const youtube = await new Innertube();
+                const youtube = await new Youtubei();
                 const search = await youtube.search(vdName);
                 if (search.videos[0] === undefined) {
                     sendMessage(true, api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
@@ -2701,7 +2703,7 @@ _____________________________
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
-                const youtube = await new Innertube();
+                const youtube = await new Youtubei();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
                     sendMessage(true, api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
@@ -2979,16 +2981,8 @@ _____________________________
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
-            data.shift();
-            const client = new NLPCloudClient('bart-large-cnn', keys.nlp)
-            client.summarization(data.join(" ")).then(function({
-                data
-            }) {
-                sendMessage(true, api, event, data.summary_text);
-            }).catch(function(err) {
-                log(err);
-                sendMessage(true, api, event, "An unknown error as been occured. Please try again later.");
-            });
+            let ss = await aiResponse(settings.text_complextion, input, true);
+            sendMessage(true, api, event, ss);
         }
     } else if (query.startsWith("baybayin")) {
         if (isGoingToFast(event)) {
@@ -3052,7 +3046,7 @@ _____________________________
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using weather location instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nweather caloocan city")
         } else {
             data.shift()
-            weatherjs.find({
+            WeatherJS.find({
                 search: data.join(" "),
                 degreeType: 'C'
             }, (err, r) => {
@@ -3218,7 +3212,7 @@ _____________________________
             return;
         }
         let id;
-        if ((event.type == "message_reply" && event.senderID != getMyId())) {
+        if ((event.type == "message_reply" && event.senderID != currentID)) {
             id = event.messageReply.senderID;
         } else {
             id = event.senderID;
@@ -3614,7 +3608,7 @@ _____________________________
             data.shift()
             let report = "report " + event.senderID + " " + data.join(" ");
             log(report);
-            api.sendMessage(report, getMyId(), (err, messageInfo) => {
+            api.sendMessage(report, currentID, (err, messageInfo) => {
                 if (err) log(err);
             });
             sendMessage(true, api, event, "The engineers have been notified.");
@@ -3879,7 +3873,7 @@ _____________________________
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return log(err);
                         if (gc.isGroup) {
-                            if (!JSON.stringify(gc.adminIDs).includes(getMyId()) && gc.approvalMode) {
+                            if (!JSON.stringify(gc.adminIDs).includes(currentID) && gc.approvalMode) {
                                 sendMessage("The user " + pref + " has been added and its on member approval lists.");
                             }
                             api.addUserToGroup(pref, event.threadID, (err) => {
@@ -3960,7 +3954,7 @@ _____________________________
                 if (err) return log(err);
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
-                    if (!JSON.stringify(gc.adminIDs).includes(getMyId())) {
+                    if (!JSON.stringify(gc.adminIDs).includes(currentID)) {
                         sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
                         return;
                     }
@@ -4137,7 +4131,7 @@ _____________________________
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
             } else {
                 let inp = data[1].split(":");
-                keys[inp[0]] = Decrypt(inp[1]);
+                keys[inp[0]] = inp[1];
                 fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys, null, 4), "utf8")
                 sendMessage(true, api, event, "Successfully saved " + inp[0] + ".");
             }
@@ -5120,14 +5114,14 @@ _____________________________
                     msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
                     msg += "\n⦿ Birthday: " + checkFound(isBirthday);
 
-                    await download(url, filename, () => {
-                        let message = {
+                    downloadFile(url, filename).then((response) => {
+                        let image = {
                             body: msg,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(true, api, event, image);
                         unLink(filename);
-                    })
+                    });
                 }
             });
         }
@@ -5411,7 +5405,7 @@ _____________________________
                 if (response == null) {
                     sendMessage(true, api, event, "I cannot find any relavant result about " + text);
                 } else {
-                    parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
+                   parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
                 }
             });
         }
@@ -5809,8 +5803,8 @@ _____________________________
         sendMessage(true, api, event, message);
     } else {
         if (event.isGroup) {
-            if (event.type == "message_reply" && event.senderID != getMyId()) {
-                if (event.messageReply.senderID == getMyId()) {
+            if (event.type == "message_reply" && event.senderID != currentID) {
+                if (event.messageReply.senderID == currentID) {
                     someR(api, event, query);
                 }
             } else {
@@ -5896,30 +5890,13 @@ function someR(api, event, query) {
 
 function parseImage(api, event, url, dir) {
     log("parse_image " + url);
-    request(encodeURI(url)).pipe(fs.createWriteStream(dir))
-        .on('finish', () => {
-            let image = {
-                attachment: fs.createReadStream(dir)
-            };
-            sendMessage(true, api, event, image);
-            unLink(dir);
-        }).on('error', (err) => {
-            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-        });
-}
-
-function parseImageFromFacebook(api, event, url, dir) {
-    log("parse_image " + url);
-    request(url).pipe(fs.createWriteStream(dir))
-        .on('finish', () => {
-            let image = {
-                attachment: fs.createReadStream(dir)
-            };
-            sendMessage(true, api, event, image);
-            unLink(dir);
-        }).on('error', (err) => {
-            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-        })
+    downloadFile(url, dir).then((response) => {
+        let image = {
+            attachment: fs.createReadStream(dir)
+        };
+        sendMessage(true, api, event, image);
+        unLink(dir);
+    });
 }
 
 async function sendMessage(bn, api, event, message) {
@@ -5931,12 +5908,12 @@ async function sendMessage(bn, api, event, message) {
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
         sendMMMS(api, event, "It appears the AI sends a blank message. Please try again.");
-    } else if (event.isGroup && event.senderID != getMyId()) {
+    } else if (event.isGroup && event.senderID != currentID) {
         if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
             if ((typeof message === "string") && message.trim().length < 200 &&
                 speech.includes(event.threadID)) {
-                const url = googleTTS.getAudioUrl(message, voice);
+                const url = GoogleTTS.getAudioUrl(message, voice);
                 let time = getTimestamp();
                 request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
 
@@ -5986,7 +5963,7 @@ async function sendMessageOnly(bn, api, event, message) {
 async function sendMMMS(api, event, message) {
     if ((typeof message === "string") && message.trim().length < 200 &&
         speech.includes(event.threadID)) {
-        const url = googleTTS.getAudioUrl(message, voice);
+        const url = GoogleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
         request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
 
@@ -6011,12 +5988,10 @@ async function sendMMMS(api, event, message) {
 }
 
 async function reactMessage(api, event, reaction) {
-    if (event.senderID == getMyId()) {
+    if (isMyId(event.senderID)) {
         return;
     }
-    if (!adm.includes(event.senderID) && settings.onDelay) {
-        await wait(4000);
-    }
+    await wait(4000);
     if (reaction === undefined) {
         log("react_message undefined" + event.messageID);
         return;
@@ -6037,13 +6012,13 @@ function formatQuery(string) {
 
 function log(data) {
     if (typeof data === "string") {
-        console.log(getFormattedDate() + "$ " + data);
+        console.log('\x1b[36m', getFormattedDate() + " ~ ", '\x1b[0m', data.normalize('NFKC'));
     } else {
         let da = JSON.stringify(data);
         if (da == "") {
             return;
         }
-        console.log(getFormattedDate() + "$ " + da);
+        console.log('\x1b[36m', getFormattedDate() + " ~ ", '\x1b[0m', da.normalize('NFKC'));
     }
 }
 
@@ -6066,6 +6041,7 @@ function containsAny(str, substrings) {
 
 function isGoingToFast(event) {
     let input = event.body;
+    commandCalls = commandCalls + 1;
     log("event_body " + event.senderID + " " + input);
     if (!settings.preventSimultaneousExecution) {
         return false;
@@ -6131,11 +6107,6 @@ function isGoingToFastReporting(api, event) {
         return false;
     }
 }
-
-let download = async function(uri, filename, callback) {
-    log("download " + uri);
-    await request(encodeURI(uri)).pipe(fs.createWriteStream(filename)).on('close', callback);
-};
 
 const checkFound = (text) => {
     return text ? text : "N/A"
@@ -6276,10 +6247,6 @@ function getSuffix(i) {
 
 function isMyId(id) {
     return id == "100090779792636" || id == "100071743848974" || id == "100090779792636";
-}
-
-function getMyId() {
-    return "100090779792636";
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
@@ -6769,7 +6736,7 @@ function kiss(api, event, id) {
 
 function gun(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6777,7 +6744,7 @@ function gun(api, event, id) {
 
 function wanted(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/wanted?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6785,7 +6752,7 @@ function wanted(api, event, id) {
 
 function clown(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/clown?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/clown?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6793,7 +6760,7 @@ function clown(api, event, id) {
 
 function drip(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/drip?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/drip?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6801,7 +6768,7 @@ function drip(api, event, id) {
 
 function communist(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/communist?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/communist?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6809,7 +6776,7 @@ function communist(api, event, id) {
 
 function advert(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/ad?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/ad?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6817,7 +6784,7 @@ function advert(api, event, id) {
 
 function uncover(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/uncover?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6825,7 +6792,7 @@ function uncover(api, event, id) {
 
 function jail(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/jail?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/jail?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6833,7 +6800,7 @@ function jail(api, event, id) {
 
 function invert(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/invert?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/invert?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6841,7 +6808,7 @@ function invert(api, event, id) {
 
 function pet(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/pet?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/pet?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6849,7 +6816,7 @@ function pet(api, event, id) {
 
 function mnm(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/mnm?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6857,7 +6824,7 @@ function mnm(api, event, id) {
 
 function greyscale(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/greyscale?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6865,7 +6832,7 @@ function greyscale(api, event, id) {
 
 function jokeover(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6873,7 +6840,7 @@ function jokeover(api, event, id) {
 
 function blur(api, event, id) {
     axios.get(getProfilePic(id)).then(function(response) {
-        parseImageFromFacebook(api, event, "https://api.popcat.xyz/blur?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
+        parseImage(api, event, "https://api.popcat.xyz/blur?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
@@ -6953,10 +6920,6 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
     }).catch(function(err) {
         log(err);
     });
-}
-
-function cdfNormal(x, mean, standardDeviation) {
-    return (1 - mathjs.erf((mean - x) / (Math.sqrt(2) * standardDeviation))) / 2
 }
 
 function factorial(num) {
@@ -7053,6 +7016,7 @@ async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         let text1 = ai.data.choices[0].text;
+     log(JSON.stringify(ai))
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
                 return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
@@ -7067,19 +7031,23 @@ async function aiResponse(complextion, text, repeat) {
 
         return text2;
     } catch (error) {
-        log(error.response.status);
         if (repeat) {
             log("attempt_initiated");
             return await aiResponse(getNewComplextion(settings.text_complextion), text, false);
-        } else if (error.response.status == 500 ) {
+        }
+        if (!(error.response === undefined)) {
+            log(error.response.status);
+        if (error.response.status == 500 ) {
             return "Mj is currently down. Please try it again later.";
-        } else if (error.response.status == 429) {
+        } else if (error.response.status == 429 || error.response.status == 401) {
             return "Mj is at capacity right now. Please try it again later.";
         } else if (error.response.status == 503) {
             return "It seems like there are problems with the server. Please try it again later.";
         } else {
             return idknow[Math.floor(Math.random() * idknow.length)];
         }
+    }
+    return "It seems like there are problems with the server. Please try it again later.";
     }
 }
 
@@ -7322,6 +7290,33 @@ function removeTags(str) {
     }
     return str.replace( /(<([^>]+)>)/ig, '');
 }
+
+async function downloadFile(fileUrl, outputLocationPath) {
+    const writer = fs.createWriteStream(outputLocationPath);
+  
+    return axios({
+      method: 'get',
+      url: fileUrl,
+      responseType: 'stream',
+    }).then(response => {
+      return new Promise((resolve, reject) => {
+        response.data.pipe(writer);
+        let error = null;
+        writer.on('error', err => {
+          error = err;
+          writer.close();
+          reject(err);
+        });
+        writer.on('close', () => {
+          if (!error) {
+            resolve(true);
+          }
+        });
+      });
+    });
+  }
+
+
 
 
 

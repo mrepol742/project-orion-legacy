@@ -1,7 +1,7 @@
 {
     "antiLeave": false,
     "tagalog": false,
-    "isStop": true,
+    "isStop": false,
     "max_image": "8",
     "text_complextion": "text-davinci-003",
     "onUnsend": true,
@@ -15,11 +15,12 @@
     "probability_mass": "1",
     "prefix": "null",
     "timezone": "Asia/Singapore",
-    "isDebugEnabled": false,
+    "isDebugEnabled": true,
     "isEnabled": false,
     "autoMarkRead": false,
     "online": true,
     "selfListen": true,
     "sendTypingIndicator": true,
-    "autoMarkDelivery": false
+    "autoMarkDelivery": false,
+    "error": "0"
 }
