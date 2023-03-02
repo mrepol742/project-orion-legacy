@@ -41,13 +41,11 @@ const https = require('https');
 const os = require('os');
 const pdfdrive = require('pdfdrive-ebook-scraper');
 const path = require('path');
-const request = require("request");
+const crypto = require('crypto')
 
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
-const algorithm = 'aes-256-ctr'
-const secretKey = '742-project_orion~.?;56vxkfewngferjhge'
 
 http.createServer(function (req, res) {
    res.writeHead(200, {'Content-Type': 'text/json'});
@@ -118,6 +116,9 @@ let fb_stateD = "No data";
 let isCalled = true;
 let isAppState = true;
 let commandCalls = 0;
+let oldCPUTime = 0;
+let oldCPUIdle = 0;
+let crashes = 0;
 
 let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
     "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
@@ -457,13 +458,14 @@ let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.js
 let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
 let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
 let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
+let token = JSON.parse(fs.readFileSync(__dirname + "/token.json", "utf8"));
+let filter = JSON.parse(fs.readFileSync(__dirname + "/filter.json", "utf8"));
 let state = {
     appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))
 };
 let currentID;
 
 const config = new Configuration({
-    organization: "org-7GIMM0pAEJnLtNHCgNHOgP4F",
     apiKey: keys.ai
 });
 let voice = {
@@ -484,10 +486,12 @@ log(JSON.stringify(options, null, 4));
 const openai = new OpenAIApi(config);
 
 process.on('beforeExit', (code) => {
+    saveState();
     log('process_before_exit ' + code);
 });
 
 process.on('exit', (code) => {
+    saveState();
     log('process_exit ' + code);
 });
 
@@ -501,6 +505,7 @@ fca(state, (err, api) => {
     if (err) return log(err);
 
     process.on('uncaughtException', (err, origin) => {
+        crashes++;
         let message = `
 ________  Exception  ________
 
@@ -514,6 +519,7 @@ ____________________________
     });
 
     process.on('unhandledRejection', (reason, promise) => {
+        crashes++;
         let message = `
 ________  Exception  ________
 
@@ -735,7 +741,7 @@ ERR! uploadAttachment }
                     setTimeout(function() { 
                         process.exit(0);
                     }, 3000); 
-                }
+                } 
             } 
 
             if (event.senderID != currentID && event.isGroup) {
@@ -1334,20 +1340,17 @@ async function ai22(api, event, query, query2) {
             } else {
                 let url = event.messageReply.attachments[0].url;
                 let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
-                request(encodeURI(url)).pipe(fs.createWriteStream(dir))
-        .on('finish', () => {
-            transcribeAudioFile(dir)
-            .then(transcription => {
-             sendMessage(true, api, event, transcription);
-             unLink(dir);
-            })
-            .catch(error => {
-                sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-                unLink(dir);
-            });
-        }).on('error', (err) => {
-            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-        });
+                downloadFile(encodeURI(url), dir).then((response) => {
+                    transcribeAudioFile(dir)
+                    .then(transcription => {
+                     sendMessage(true, api, event, transcription);
+                     unLink(dir);
+                    })
+                    .catch(error => {
+                        sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+                        unLink(dir);
+                    });
+                });
             }
         } else {
             sendMessage(true, api, event, "Hold on... There is still a request in progress.");
@@ -1397,12 +1400,13 @@ async function ai22(api, event, query, query2) {
             } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
                 const url = event.messageReply.attachments[0].url;
                 let time = getTimestamp();
-                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/gphoto_' + time + '.png')).on('finish', () => {
-                    api.changeGroupImage(fs.createReadStream(__dirname + '/cache/images/gphoto_' + time + '.png'), event.threadID, (err) => {
-                        if (err) return log(err);
-                    });
-                    unLink(__dirname + '/cache/images/gphoto.png_' + time + '');
-                })
+                let filename = __dirname + '/cache/images/gphoto_' + time + '.png'
+                        downloadFile(url, dir).then((response) => {
+                            api.changeGroupImage(fs.createReadStream(filename), event.threadID, (err) => {
+                                if (err) return log(err);
+                            });
+                            unLink(filename);
+                        });
             }
         } else {
             sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -1581,12 +1585,11 @@ async function ai(api, event) {
                     if (err) return log(err);
                     let name = info[id]['firstName'];
                     let time = getTimestamp();
-                    request(encodeURI(getProfilePic(id))).pipe(fs.createWriteStream(__dirname + '/cache/images/whoiam_' + time + '.png'))
-
-                        .on('finish', () => {
+                    let filename = __dirname + '/cache/images/whoiam_' + time + '.png'
+                        downloadFile(encodeURI(getProfilePic(id)), filename).then((response) => {
                             let message = {
                                 body: "You're " + name,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/whoiam_' + time + '.png'),
+                                attachment: fs.createReadStream(filename),
                                 /*
                                 mentions: [{
                                     tag: '@' + name,
@@ -1596,8 +1599,8 @@ async function ai(api, event) {
                                 */
                             };
                             sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/whoiam_" + time + ".png");
-                        })
+                            unLink(filename);
+                        });
                 });
             } else if (text1 == "howitwork" || text1 == "howyoufunction") {
                 sendMessage(true, api, event, "We do this by emulating the browser. This means doing the exact same GET/POST requests and tricking Facebook into thinking we're accessing the website normally.");
@@ -1701,7 +1704,7 @@ async function ai(api, event) {
                             arraySS[sss].endsWith(".co") || arraySS[sss].endsWith(".edu") || arraySS[sss].endsWith(".gov") ||
                             arraySS[sss].endsWith(".info") || arraySS[sss].endsWith(".xyz") || arraySS[sss].endsWith(".me"))) {
                         message = {
-                            body: ss,
+                            body: maven(ss),
                             url: arraySS[sss]
                         }
                         break;
@@ -1749,7 +1752,7 @@ async function ai(api, event) {
               });
               sendMessage(true, api, event, response.data.choices[0].text);
             } catch (err) {
-                sendMessage(true, api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
+                sendMessage(true, api, event, "OpenAI is at capacity right now. Please try it again later.");
             }
         }
     } else if (query.startsWith("createimg")) {
@@ -1765,22 +1768,18 @@ async function ai(api, event) {
             const response =  await openai.createImage({
                 prompt: data.join(" "),
                 n: 1,
-                size: "1024x1024",
+                size: "256x256",
             });
             let url = response.data.data[0].url;
-            log(JSON.stringify(response.data));
              if (url.startsWith("https://") || url.startsWith("http://")) {
                 let dir = __dirname + "/cache/images/createimg_" + getTimestamp() + ".png";
-                request(url).pipe(fs.createWriteStream(dir))
-        .on('finish', () => {
-            let image = {
-                attachment: fs.createReadStream(dir)
-            };
-            sendMessage(true, api, event, image);
-            unLink(dir);
-        }).on('error', (err) => {
-            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-        });
+                downloadFile(url, dir).then((response) => {
+                    let message = {
+                        attachment: fs.createReadStream(dir)
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(dir);
+                });
              }
               sendMessage(true, api, event, response.data.choices[0].text);
             } catch (error) {
@@ -1976,17 +1975,14 @@ _______________________
             data.shift();
             const url = GoogleTTS.getAudioUrl(data.join(" "), voice);
             let time = getTimestamp();
-            request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
-
-                .on('finish', () => {
-                    let message = {
-                        attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
-                    };
-                    sendMessage(true, api, event, message);
-                    unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
-                }).on('error', (err) => {
-                    sendMessage(true, api, event, "Failed to generate audio.");
-                })
+            let filename = __dirname + '/cache/audios/tts_' + time + '.mp3'
+                    downloadFile(encodeURI(url), filename).then((response) => {
+                        let message = {
+                            attachment: fs.createReadStream(filename),
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
         }
     } else if (query == "stats") {
         if (isGoingToFast(event)) {
@@ -2003,6 +1999,7 @@ _______  Statistics  _______
    ⦿ Block Groups: ` + blockSSS.length + `
    ⦿ Muted Users: ` + mutedRRR.length + `
    ⦿ Command Call: ` + commandCalls + `
+   ⦿ Total Tokens: ` + token.total_tokens + `
    ⦿ Total Commands: 260
 ___________________________
 `;
@@ -2040,6 +2037,8 @@ _______________________
                     'Content-Type': 'application/json',
                 },
             };
+         
+
             let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
             const rss = convertBytes(process.memoryUsage().rss);
             const heapTotal = convertBytes(process.memoryUsage().heapTotal);
@@ -2052,6 +2051,7 @@ _______  System Info  _______
 
    ⦿ Uptime: ` + seconds_con + `
    ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
+   ⦿ CPU Usage: ` +  getLoad() + `%
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
    ⦿ RAM: ` + osFreeMem + `/` + osTotalMem + `
    ⦿ ROM: ` + "500MB/1GB" + `
@@ -2064,6 +2064,7 @@ _______  System Info  _______
    ⦿ Save State: ` + messagesD + `
    ⦿ Fb State: ` + fb_stateD + `
    ⦿ Blocked: ` + "False" + `
+   ⦿ Crash: ` + crashes + `
 _____________________________
 `;
             sendMessage(true, api, event, message);
@@ -2781,16 +2782,15 @@ _____________________________
                     let artist = response.result.s_artist;
                     let lyrics = response.result.s_lyrics;
                     let time = getTimestamp();
-                    request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/lyrics_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
-                                attachment: fs.createReadStream(__dirname + '/cache/images/lyrics_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/lyrics_" + time + ".png");
-                        })
+                    let filename = __dirname + '/cache/images/lyrics_' + time + '.png'
+                downloadFile(encodeURI(image), filename).then((response) => {
+                    let message = {
+                        body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
+                        attachment: fs.createReadStream(filename)
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(filename);
+                });
                 }
             });
         }
@@ -2907,17 +2907,15 @@ _____________________________
                 let res = await pdfdrive.findEbook(searched);
                 let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
                 let time = getTimestamp();
-
-                request(res2.dlUrl).pipe(fs.createWriteStream(__dirname + '/cache/files/pdf_' + time + '.pdf'))
-
-                    .on('finish', () => {
-                        let message = {
-                            body: res2.ebookName,
-                            attachment: fs.createReadStream(__dirname + '/cache/files/pdf_' + time + '.pdf')
-                        };
-                        sendMessage(true, api, event, message);
-                        unLink(__dirname + "/cache/files/pdf_" + time + ".pdf");
-                    });
+                let filename = __dirname + '/cache/files/pdf_' + time + '.pdf'
+                downloadFile(encodeURI(url), filename).then((response) => {
+                    let message = {
+                        body: res2.ebookName,
+                        attachment: fs.createReadStream(filename)
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(filename);
+                });
             } catch (err) {
                 log(err);
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
@@ -3055,10 +3053,9 @@ _____________________________
                 if (err) return log(err);
                 let d = r[0]
                 let time = getTimestamp();
-                request(d.current.imageUrl).pipe(fs.createWriteStream(__dirname + '/cache/images/weather_' + time + '.png'))
-
-                    .on('finish', () => {
-                        let m = d.location.name + " " + d.location.lat + " " + d.location.long + "\n\n" +
+                let filename = __dirname + '/cache/images/weather_' + time + '.png'
+                downloadFile(d.current.imageUrl, filename).then((response) => {
+                    let m = d.location.name + " " + d.location.lat + " " + d.location.long + "\n\n" +
                             "⦿ Temperature: " + d.current.temperature + "°C / " + ((d.current.temperature * 9 / 5) + 32) + "°F\n" +
                             "⦿ Sky: " + d.current.skytext + "\n" +
                             "⦿ Feelslike: " + d.current.feelslike + "\n" +
@@ -3072,11 +3069,11 @@ _____________________________
                             "⦿ Fri: " + d.forecast[4].skytextday + "\n";
                         let message = {
                             body: m,
-                            attachment: fs.createReadStream(__dirname + '/cache/images/weather_' + time + '.png')
+                            attachment: fs.createReadStream(filename)
                         };
                         sendMessage(true, api, event, message)
-                        unLink(__dirname + "/cache/images/weather_" + time + ".png");
-                    });
+                    unLink(filename);
+                });
             })
         }
     } else if (query.startsWith("facts")) {
@@ -3196,16 +3193,15 @@ _____________________________
                     let profilepic = response.result.profilePicture;
                     let time = getTimestamp();
 
-                    request(encodeURI(profilepic)).pipe(fs.createWriteStream(__dirname + '/cache/images/instaprofile_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
+                    let dir = __dirname + '/cache/images/instaprofile_' + time + '.png'
+                    downloadFile(encodeURI(url), dir).then((response) => {
+                        let message = {
                                 body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified + "\n\n" + biography,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/instaprofile_' + time + '.png')
+                                attachment: fs.createReadStream(dir)
                             };
                             sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/instaprofile_" + time + ".png");
-                        })
+                            unLink(dir);
+                    });
                 }
             });
         }
@@ -3244,17 +3240,15 @@ _____________________________
                     let digg = response.result.diggCount;
                     let avatar = response.result.avatar;
                     let time = getTimestamp();
-
-                    request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/tiktok_avatar_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: name + " @" + username + "\n⦿ Hearts: " + heart + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Videos: " + video + "\n⦿ Digg: " + digg + "\n\n" + bio,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/tiktok_avatar_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/tiktok_avatar_" + time + ".png");
-                        })
+                    let filename = __dirname + '/cache/images/tiktok_avatar_' + time + '.png'
+                    downloadFile(encodeURI(avatar), filename).then((response) => {
+                        let message = {
+                            body: name + " @" + username + "\n⦿ Hearts: " + heart + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Videos: " + video + "\n⦿ Digg: " + digg + "\n\n" + bio,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -3285,17 +3279,15 @@ _____________________________
                     let permalinkUrl = response.result['permalink_url'];
                     let avatar = response.result['avatar_url'];
                     let time = getTimestamp();
-
-                    request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/soundcloud_avatar_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: name + " @" + username + "\n⦿ Location: " + location + "\n⦿ Likes: " + likes + "\n⦿ Playlist: " + playlist + "\n⦿ Playlist Likes: " + playlistLikes + "\n⦿ Tracks: " + trackCount + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n\n" + bio + "\n" + permalinkUrl,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/soundcloud_avatar_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/soundcloud_avatar_" + time + ".png");
-                        })
+                    let filename = __dirname + '/cache/images/soundcloud_avatar_' + time + '.png'
+                    downloadFile(encodeURI(avatar), filename).then((response) => {
+                        let message = {
+                            body: name + " @" + username + "\n⦿ Location: " + location + "\n⦿ Likes: " + likes + "\n⦿ Playlist: " + playlist + "\n⦿ Playlist Likes: " + playlistLikes + "\n⦿ Tracks: " + trackCount + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n\n" + bio + "\n" + permalinkUrl,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -3333,16 +3325,15 @@ _____________________________
                         bio = "";
                     }
 
-                    request(encodeURI(avatar)).pipe(fs.createWriteStream(__dirname + '/cache/images/github_avatar_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: "⦿ Name: " + name + "\n⦿ Email: " + email + "\n⦿ Location: " + location + "\n⦿ Company: " + company + "\n⦿ Website: " + url + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Public Repository: " + public_repos + "\n⦿ Public Gists: " + public_gists + "\n\n" + bio + "\nhttps://github.com/" + userN,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/github_avatar_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/github_avatar_" + time + ".png");
-                        })
+                    let filename = __dirname + '/cache/images/github_avatar_' + time + '.png'
+                    downloadFile(encodeURI(avatar), filename).then((response) => {
+                        let message = {
+                            body: "⦿ Name: " + name + "\n⦿ Email: " + email + "\n⦿ Location: " + location + "\n⦿ Company: " + company + "\n⦿ Website: " + url + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Public Repository: " + public_repos + "\n⦿ Public Gists: " + public_gists + "\n\n" + bio + "\nhttps://github.com/" + userN,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -3371,16 +3362,15 @@ _____________________________
                     let summary = response.summary;
                     let time = getTimestamp();
 
-                    request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/element_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/element_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/element_" + time + ".png");
-                        })
+                    let filename = __dirname + '/cache/images/element_' + time + '.png'
+                    downloadFile(encodeURI(image), filename).then((response) => {
+                        let message = {
+                            body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -3433,16 +3423,15 @@ _____________________________
                     let price = response.price;
                     let time = getTimestamp();
 
-                    request(encodeURI(banner)).pipe(fs.createWriteStream(__dirname + '/cache/images/steam_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/steam_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/steam_" + time + ".png");
-                        })
+                    let filename = __dirname + '/cache/images/steam_' + time + '.png'
+                    downloadFile(encodeURI(banner), filename).then((response) => {
+                        let message = {
+                            body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -3468,17 +3457,15 @@ _____________________________
                     let genres = response.genres;
                     let plot = response.plot;
                     let time = getTimestamp();
-
-                    request(encodeURI(poster)).pipe(fs.createWriteStream(__dirname + '/cache/images/imdb_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
-                                attachment: fs.createReadStream(__dirname + '/cache/images/imdb_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/imdb_" + time + ".png");
-                        })
+                    let filename = __dirname + '/cache/images/imdb_' + time + '.png' 
+                    downloadFile(encodeURI(avatar), filename).then((response) => {
+                        let message = {
+                            body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -3504,17 +3491,15 @@ _____________________________
                     let lenghtM = (Math.round((length / 60) * 100) / 100).toFixed(2);
                     let thumbnail = response.thumbnail;
                     let time = getTimestamp();
-
-                    request(encodeURI(thumbnail)).pipe(fs.createWriteStream(__dirname + '/cache/images/itunes_' + time + '.png'))
-
-                        .on('finish', () => {
-                            let message = {
-                                body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
-                                attachment: fs.createReadStream(__dirname + '/cache/images/itunes_' + time + '.png')
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(__dirname + "/cache/images/itunes_" + time + ".png");
-                        })
+                    let filename = __dirname + "/cache/images/itunes_" + time + ".png"
+                    downloadFile(encodeURI(thumbnail), filename).then((response) => {
+                        let message = {
+                            body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -3529,17 +3514,15 @@ _____________________________
                 let image = response.image;
                 let title = response.title;
                 let time = getTimestamp();
-
-                request(encodeURI(image)).pipe(fs.createWriteStream(__dirname + '/cache/images/car_' + time + '.png'))
-
-                    .on('finish', () => {
+                let filename = __dirname + "/cache/images/car_" + time + ".png"
+                    downloadFile(encodeURI(thumbnail), filename).then((response) => {
                         let message = {
                             body: title,
-                            attachment: fs.createReadStream(__dirname + '/cache/images/car_' + time + '.png')
+                            attachment: fs.createReadStream(filename)
                         };
                         sendMessage(true, api, event, message);
-                        unLink(__dirname + "/cache/images/car_" + time + ".png");
-                    })
+                        unLink(filename);
+                    });
             }
         });
     } else if (query == "color") {
@@ -3554,17 +3537,15 @@ _____________________________
                 let name = response.name;
                 let url = response.image;
                 let time = getTimestamp();
-
-                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/color_' + time + '.png'))
-
-                    .on('finish', () => {
+                let filename = __dirname + "/cache/images/color_" + time + ".png"
+                    downloadFile(encodeURI(url), filename).then((response) => {
                         let message = {
                             body: name + " #" + hex,
-                            attachment: fs.createReadStream(__dirname + '/cache/images/color_' + time + '.png')
+                            attachment: fs.createReadStream(filename)
                         };
                         sendMessage(true, api, event, message);
-                        unLink(__dirname + "/cache/images/color_" + time + ".png");
-                    })
+                        unLink(filename);
+                    });
             }
         });
     } else if (query == "pickup") {
@@ -4812,18 +4793,14 @@ _____________________________
                         let url = "https://api.popcat.xyz/ship?user1=" + aaa + "&user2=" + encodeURIComponent(response.request.res.responseUrl);
                         let dir = __dirname + "/cache/images/ship_" + getTimestamp() + ".png";
                         log("parse_image " + url);
-                        request(url).pipe(fs.createWriteStream(dir))
-                            .on('finish', () => {
-                                let image = {
-                                    body: "New Lovers >3",
-                                    attachment: fs.createReadStream(dir)
-                                };
-                                sendMessage(true, api, event, image);
-                                unLink(dir);
-                            }).on('error', (err) => {
-                                sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-                            })
-
+                    downloadFile(url, dir).then((response) => {
+                        let image = {
+                            body: "New Lovers >3",
+                            attachment: fs.createReadStream(dir)
+                        };
+                        sendMessage(true, api, event, image);
+                        unLink(dir);
+                    });
                     }).catch(function(err) {
                         log(err);
                     });
@@ -4860,18 +4837,14 @@ _____________________________
                         let url = "https://api.popcat.xyz/whowouldwin?image1=" + aaa + "&image2=" + encodeURIComponent(response.request.res.responseUrl);
                         let dir = __dirname + "/cache/images/www_" + getTimestamp() + ".png";
                         log("parse_image " + url);
-                        request(url).pipe(fs.createWriteStream(dir))
-                            .on('finish', () => {
-                                let image = {
-                                    body: "Hmmmm.. Who?",
-                                    attachment: fs.createReadStream(dir)
-                                };
-                                sendMessage(true, api, event, image);
-                                unLink(dir);
-                            }).on('error', (err) => {
-                                sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-                            })
-
+                        downloadFile(url, dir).then((response) => {
+                            let image = {
+                                body: "Hmmmm.. Who?",
+                                attachment: fs.createReadStream(dir)
+                            };
+                            sendMessage(true, api, event, image);
+                            unLink(dir);
+                        });
                     }).catch(function(err) {
                         log(err);
                     });
@@ -5192,17 +5165,15 @@ _____________________________
                 let url = response.url;
                 let title = response.title;
                 let time = getTimestamp();
-
-                request(encodeURI(url)).pipe(fs.createWriteStream(__dirname + '/cache/images/coding_' + time + '.png'))
-
-                    .on('finish', () => {
-                        let message = {
-                            body: title,
-                            attachment: fs.createReadStream(__dirname + '/cache/images/coding_' + time + '.png')
-                        };
-                        sendMessage(true, api, event, message);
-                        unLink(__dirname + "/cache/images/coding_" + time + ".png");
-                    })
+                let filename = __dirname + '/cache/images/coding_' + time + '.png';
+                downloadFile(encodeURI(url), filename).then((response) => {
+                    let message = {
+                        body: title,
+                        attachment: fs.createReadStream(filename)
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(filename);
+                });
             }
         });
     } else if (query == "joke") {
@@ -5357,16 +5328,17 @@ _____________________________
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let time = getTimestamp();
-                request(encodeURI(response.result.image)).pipe(fs.createWriteStream(__dirname + "/cache/images/hololive_" + time + ".png"))
-                    .on('finish', () => {
-                        let message = {
-                            body: response.result.caption,
-                            attachment: [
-                                fs.createReadStream(__dirname + "/cache/images/hololive_" + time + ".png")
-                            ]
-                        }
-                        sendMessage(true, api, event, message);
-                    });
+                let filename = __dirname + "/cache/images/hololive_" + time + ".png";
+                downloadFile(encodeURI(response.result.image), filename).then((response) => {
+                    let message = {
+                        body: response.result.caption,
+                        attachment: [
+                            fs.createReadStream(filename)
+                        ]
+                    }
+                    sendMessage(true, api, event, message);
+                    unLink(filename);
+                });
             }
         });
     } else if (query == "animecouples") {
@@ -5378,19 +5350,21 @@ _____________________________
                 sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let time = getTimestamp();
-                request(encodeURI(response.result.male)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"))
-                    .on('finish', () => {
-                        request(encodeURI(response.result.female)).pipe(fs.createWriteStream(__dirname + "/cache/images/animecouple_female_" + time + ".png"))
-                            .on('finish', () => {
-                                let message = {
-                                    attachment: [
-                                        fs.createReadStream(__dirname + "/cache/images/animecouple_male_" + time + ".png"),
-                                        fs.createReadStream(__dirname + "/cache/images/animecouple_female_" + time + ".png")
-                                    ]
-                                }
-                                sendMessage(true, api, event, message);
-                            });
+                let fmmale = __dirname + "/cache/images/animecouple_male_" + time + ".png";
+                let fmfemale = __dirname + "/cache/images/animecouple_female_" + time + ".png";
+                downloadFile(encodeURI(response.result.male), fmmale).then((response) => {
+                    downloadFile(encodeURI(response.result.female), fmfemale).then((response) => {
+                        let message = {
+                            attachment: [
+                                fs.createReadStream(fmmale),
+                                fs.createReadStream(fmfemale)
+                            ]
+                        }
+                        sendMessage(true, api, event, message);
+                        unLink(fmmale);
+                        unLink(fmfemale);
                     });
+                });
             }
         });
     } else if (query.startsWith("anime")) {
@@ -5905,7 +5879,7 @@ async function sendMessage(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
         await wait(2000);
     }
-    if (group[event.threadID] === undefined) {
+    if (group[event.threadID] === undefined && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -5917,21 +5891,16 @@ async function sendMessage(bn, api, event, message) {
                 speech.includes(event.threadID)) {
                 const url = GoogleTTS.getAudioUrl(message, voice);
                 let time = getTimestamp();
-                request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
-
-                    .on('finish', () => {
-                        let message = {
-                            attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
-                        };
-                        api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
-                            if (err) log(err);
-                        }, event.messageID);
-                        unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
-                    }).on('error', (err) => {
-                        api.sendMessage(message, event.threadID, (err, messageInfo) => {
-                            if (err) log(err);
-                        }, event.messageID);
-                    })
+                let dir = __dirname + '/cache/audios/tts_' + time + '.mp3';
+                downloadFile(url, dir).then((response) => {
+                    let message = {
+                        attachment: fs.createReadStream(dir),
+                    };
+                    api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
+                        if (err) log(err);
+                    }, event.messageID);
+                    unLink(dir);
+                });
             } else {
                 api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
                     if (err) log(err);
@@ -5951,7 +5920,7 @@ async function sendMessageOnly(bn, api, event, message) {
     if (!adm.includes(event.senderID) && settings.onDelay && bn) {
         await wait(2000);
     }
-    if (group[event.threadID] === undefined) {
+    if (group[event.threadID] === undefined && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -5967,21 +5936,16 @@ async function sendMMMS(api, event, message) {
         speech.includes(event.threadID)) {
         const url = GoogleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
-        request(url).pipe(fs.createWriteStream(__dirname + '/cache/audios/tts_' + time + '.mp3'))
-
-            .on('finish', () => {
-                let message = {
-                    attachment: fs.createReadStream(__dirname + '/cache/audios/tts_' + time + '.mp3'),
-                };
-                api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
-                    if (err) log(err);
-                });
-                unLink(__dirname + "/cache/audios/tts_" + time + ".mp3");
-            }).on('error', (err) => {
-                api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
-                    if (err) log(err);
-                }, event.messageID);
-            })
+        let dir = __dirname + '/cache/audios/tts_' + time + '.mp3';
+        downloadFile(url, dir).then((response) => {
+            let message = {
+                attachment: fs.createReadStream(dir),
+            };
+            api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
+                if (err) log(err);
+            }, event.messageID);
+            unLink(dir);
+        });
     } else {
         api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
             if (err) log(err);
@@ -6014,13 +5978,13 @@ function formatQuery(string) {
 
 function log(data) {
     if (typeof data === "string") {
-        console.log('\x1b[36m', getFormattedDate() + " ~ ", '\x1b[0m', data.normalize('NFKC'));
+        console.log('\x1b[36m', getFormattedDate() + " ~", '\x1b[0m', data.normalize('NFKC'));
     } else {
         let da = JSON.stringify(data);
         if (da == "") {
             return;
         }
-        console.log('\x1b[36m', getFormattedDate() + " ~ ", '\x1b[0m', da.normalize('NFKC'));
+        console.log('\x1b[36m', getFormattedDate() + " ~", '\x1b[0m', da.normalize('NFKC'));
     }
 }
 
@@ -6270,7 +6234,7 @@ async function getImages(api, event, images) {
             await wait(1000);
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
             log("accepted_url " + type + " " + url);
-            request(encodeURI(url)).pipe(fs.createWriteStream(fname));
+            downloadFile(encodeURI(url), fname);
             name.push(fname);
         }
     }
@@ -6305,7 +6269,7 @@ async function unsendPhoto(api, event, d) {
     for (i = 0; i < arr.length; i++) {
         await wait(1000);
         let fname = __dirname + "/cache/images/unsend_photo_" + i + "_" + time + ".png";
-        request(d[1][2][i]).pipe(fs.createWriteStream(fname));
+        downloadFile(d[1][2][i], fname);
         images.push(fname);
     }
     await wait(1000);
@@ -6378,7 +6342,7 @@ async function unsendGif(api, event, d) {
     for (i = 0; i < arr.length; i++) {
         await wait(1000);
         let fname = __dirname + "/cache/images/unsend_gif_" + i + "_" + time + ".png";
-        request(d[1][2][i]).pipe(fs.createWriteStream(fname));
+        downloadFile(d[1][2][i], fname);
         images.push(fname);
     }
     await wait(1000);
@@ -6456,7 +6420,7 @@ async function bgRemove(api, event) {
         await wait(1000);
         let dataUrl = __dirname + '/cache/images/removebg_' + i66 + '_' + time + '.png';
         let inputPath = './cache/images/removebg_' + i66 + '_' + time + '.png';
-        request(encodeURI(url[i66])).pipe(fs.createWriteStream(dataUrl)).on('finish', () => {
+        downloadFile(encodeURI(url[i66]), dataUrl).then((response) => {
             const formData = new FormData();
             formData.append('size', 'auto');
             formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
@@ -6482,7 +6446,7 @@ async function bgRemove(api, event) {
                 .catch((error) => {
                      return log(error);
                 });
-        })
+        });
     }
 
     await wait(2000);
@@ -6715,22 +6679,22 @@ function kiss(api, event, id) {
                 if (err) return log(err);
                 let name = info[id]['firstName'];
                 let time = getTimestamp();
-                request(encodeURI(response.url)).pipe(fs.createWriteStream(__dirname + "/cache/images/kiss_" + time + ".png"))
-                    .on('finish', () => {
-                        let image = {
-                            body: name,
-                            attachment: fs.createReadStream(__dirname + "/cache/images/kiss_" + time + ".png"),
-                            /*
-                            mentions: [{
-                                tag: '@' + name,
-                                id: id,
-                                fromIndex: 0
-                            }]
-                            */
-                        };
-                        sendMessage(true, api, event, image);
-                        unLink(__dirname + "/cache/images/kiss_" + time + ".png");
-                    })
+                let filename = __dirname + "/cache/images/kiss_" + time + ".png";
+                downloadFile(encodeURI(response.url), filename).then((response) => {
+                    let image = {
+                        body: name,
+                        attachment: fs.createReadStream(filename),
+                        /*
+                        mentions: [{
+                            tag: '@' + name,
+                            id: id,
+                            fromIndex: 0
+                        }]
+                        */
+                    };
+                    sendMessage(true, api, event, image);
+                    unLink(filename);
+                });
             })
         }
     });
@@ -6854,35 +6818,21 @@ function getTimestamp() {
 
 function welcomeUser(api, event, name, gname, Tmem, id, message1) {
     axios.get(getProfilePic(id)).then(function(response) {
-        let filename = __dirname + "/cache/images/welcome_img_" + getTimestamp() + ".png"
-        request(getWelcomeImage(name, gname, Tmem, id) + encodeURIComponent(response.request.res.responseUrl))
-            .pipe(fs.createWriteStream(filename))
-            .on('finish', () => {
-                let message = {
-                    body: message1,
-                    attachment: fs.createReadStream(filename),
-                    /*
-                    mentions: [{
-                        tag: name,
-                        id: id
-                    }]
-                    */
-                };
-                sendMessageOnly(true, api, event, message);
-                unLink(filename);
-            }).on('error', (err) => {
-                let message = {
-                    body: message1,
-                    url: "https://mrepol742.github.io/project-orion/",
-                    /*
-                    mentions: [{
-                        tag: name,
-                        id: id
-                    }]
-                    */
-                };
-                sendMessageOnly(true, api, event, message);
-            })
+        let filename = __dirname + "/cache/images/welcome_img_" + getTimestamp() + ".png";
+                downloadFile(getWelcomeImage(name, gname, Tmem, id) + encodeURIComponent(response.request.res.responseUrl), filename).then((response) => {
+                    let message = {
+                        body: message1,
+                        attachment: fs.createReadStream(filename),
+                        /*
+                        mentions: [{
+                            tag: name,
+                            id: id
+                        }]
+                        */
+                    };
+                    sendMessageOnly(true, api, event, message);
+                    unLink(filename);
+                });
     }).catch(function(err) {
         log(err);
     });
@@ -6892,33 +6842,21 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
     axios.get(getProfilePic(id)).then(function(response) {
         let filename = __dirname + "/cache/images/byebye_" + getTimestamp() + ".jpg";
         let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + encodeURI(name) + "&text2=" + encodeURI(gname) + "&text3=" + getSuffix(Tmem) + " Member&avatar=" + encodeURIComponent(response.request.res.responseUrl);
-        request(url).pipe(fs.createWriteStream(filename))
-            .on('finish', () => {
-                let message = {
-                    body: "Thank you for joining " + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
-                    attachment: fs.createReadStream(filename),
-                    /*
-                    mentions: [{
-                        tag: name,
-                        id: id
-                    }]
-                    */
-                };
-                sendMessageOnly(true, api, event, message);
-                log("leave_member " + name);
-                unLink(filename);
-            }).on('error', (err) => {
-                let message = {
-                    body: "Thank you for joining " + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
-                    /*
-                    mentions: [{
-                        tag: name,
-                        id: id
-                    }]
-                    */
-                };
-                sendMessageOnly(true, api, event, message);
-            })
+        downloadFile(url, filename).then((response) => {
+            let message = {
+                body: "Thank you for joining " + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
+                attachment: fs.createReadStream(filename),
+                /*
+                mentions: [{
+                    tag: name,
+                    id: id
+                }]
+                */
+            };
+            sendMessageOnly(true, api, event, message);
+            log("leave_member " + name);
+            unLink(filename);
+        });
     }).catch(function(err) {
         log(err);
     });
@@ -7018,7 +6956,10 @@ async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         let text1 = ai.data.choices[0].text;
-     log(JSON.stringify(ai))
+        token.prompt_tokens = token.prompt_tokens + ai.data.usage.prompt_tokens;
+        token.completion_tokens = token.completion_tokens + ai.data.usage.completion_tokens;
+        token.total_tokens = token.total_tokens + ai.data.usage.total_tokens;
+
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
                 return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
@@ -7082,7 +7023,7 @@ async function sendMessageToAll(api, event) {
     for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
       await wait(1000);
       let dir = __dirname + "/cache/files/notify_" + i55 + "_" + time + format;
-         request(encodeURI(event.messageReply.attachments[i55].url)).pipe(fs.createWriteStream(dir));
+         downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
          count++;
     }
     }
@@ -7141,6 +7082,7 @@ function saveState() {
     fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
     fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
     fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+    fs.writeFileSync(__dirname + "/token.json", JSON.stringify(token), "utf8");
 }
 
 function getIdFromUrl(url) {
@@ -7249,20 +7191,21 @@ function maven(text) {
     }).join("");
 }
 
-function updateFont(message) {
+async function updateFont(message) {
     if (typeof message === "string") {
         if (message == "\u200Eeveryone") {
             return message;
         }
-        return (maven(message));
+        return maven(message);
     }
+
     if (message.body === undefined) {
         return message;
     }
     if (message.body == "\u200Eeveryone") {
         return message;
     }
-    message.body = maven(message.body);
+    message.body = maven(message);
     return message;
 }
 
@@ -7301,7 +7244,23 @@ async function downloadFile(fileUrl, outputLocationPath) {
     });
   }
 
-
-
-
-
+  function getLoad(){
+    let cpus = os.cpus()
+    let totalTime = -oldCPUTime
+    let totalIdle = -oldCPUIdle
+      for(let i = 0; i < cpus.length; i++) {
+        let cpu = cpus[i]
+          for(let type in cpu.times) {
+              totalTime += cpu.times[type];
+              if(type == "idle"){
+                  totalIdle += cpu.times[type];
+              }
+          }
+      }
+  
+      let load = 100 - Math.round(totalIdle/totalTime*100)
+      oldCPUTime = totalTime
+      oldCPUIdle = totalIdle
+  
+      return load;
+  }
