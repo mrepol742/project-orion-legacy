@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 const {
     Configuration,
     OpenAIApi
 } = require("openai");
-const { 
-    transcribeAudioFile 
+const {
+    transcribeAudioFile
 } = require('openai-whisper');
 const {
     WordsToNumbers
@@ -48,12 +47,14 @@ const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 
-http.createServer(function (req, res) {
-   res.writeHead(200, {'Content-Type': 'text/json'});
-   res.write("{\"status\":\"online\"}");
-   res.end();
-}).listen(3000, function(){
-   log("Server start at port 3000");
+http.createServer(function(req, res) {
+    res.writeHead(200, {
+        'Content-Type': 'text/json'
+    });
+    res.write("{\"status\":\"online\"}");
+    res.end();
+}).listen(3000, function() {
+    log("Server start at port 3000");
 });
 
 setInterval(function() {
@@ -482,13 +483,13 @@ const options = {
     online: settings.online
 }
 const options1 = {
-    page: 0, 
+    page: 0,
     safe: true, // Safe Search
     parse_ads: false, // If set to true sponsored results will be parsed
-    additional_params: { 
-      hl: 'en' 
+    additional_params: {
+        hl: 'en'
     }
-  }
+}
 
 log(JSON.stringify(options, null, 4));
 
@@ -561,17 +562,17 @@ ____________________________
     }, 1800000 * Math.random() + 1200000);
 
     setInterval(function() {
-        let min = 120000; 
+        let min = 120000;
         for (time in userPresence) {
             if (userPresence[time] != null) {
                 let past = new Date(userPresence[time]).getTime();
                 let isPast = (new Date().getTime() - past < min) ? false : true;
                 if (isPast) {
                     userPresence[time] = null;
-                    api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", 
+                    api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!",
                         time, (err, messageInfo) => {
-                        if (err) log(err);
-                    });
+                            if (err) log(err);
+                        });
                 }
             }
         }
@@ -696,9 +697,9 @@ ERR! uploadAttachment }
                     if (settings.error == "3252001") {
                         // bug this can be initiate if api.markAllAsRead is the reason or attachments
                         sendMessage(true, api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
-                    } else if (settings.error == "1404078") {  
+                    } else if (settings.error == "1404078") {
                         sendMessage(true, api, event, "This account is restricted right now. Please try it again in few hours.");
-                    } else if (settings.error == "1545023") {  
+                    } else if (settings.error == "1545023") {
                         sendMessage(true, api, event, "This account is unable to send messages right now. Please try it again in few hours.");
                     } else if (mutedRRR.includes(event.senderID)) {
                         sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
@@ -742,16 +743,16 @@ ERR! uploadAttachment }
                 } else if (query == "restart") {
                     saveState();
                     fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
-                    let rs = []; 
-                        rs.push(event.threadID); 
-                        rs.push(event.messageID); 
-                    fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs, null, 4), "utf8"); 
+                    let rs = [];
+                    rs.push(event.threadID);
+                    rs.push(event.messageID);
+                    fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs, null, 4), "utf8");
                     sendMessage(true, api, event, "Restarting program...");
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         process.exit(0);
-                    }, 3000); 
-                } 
-            } 
+                    }, 3000);
+                }
+            }
 
             if (event.senderID != currentID && event.isGroup) {
                 if (thread[event.threadID] === undefined) {
@@ -801,27 +802,27 @@ ERR! uploadAttachment }
 
         if (settings.isDebugEnabled && !isMyId(event.senderID)) {
             if (event.type == "message" || event.type == "message_reply") {
-            let input = event.body;
-            let query2 = formatQuery(input);
-            let query = query2.replace(/\s+/g, '');
-            if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
-                if (isGoingToFastCallingTheCommand(event)) {
-                    return;
+                let input = event.body;
+                let query2 = formatQuery(input);
+                let query = query2.replace(/\s+/g, '');
+                if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
+                    if (isGoingToFastCallingTheCommand(event)) {
+                        return;
+                    }
+                    let message = {
+                        body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                        attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
+                    };
+                    sendMessage(true, api, event, message);
                 }
-                let message = {
-                    body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                    attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
-                };
-                sendMessage(true, api, event, message);
+                saveEvent(event);
             }
-            saveEvent(event);
-        }
             return;
         }
-        
+
         if (settings.isStop && !isMyId(event.senderID)) {
             if (event.type == "message" || event.type == "message_reply") {
-            saveEvent(event);
+                saveEvent(event);
             }
             return;
         }
@@ -841,7 +842,7 @@ ERR! uploadAttachment }
                 break;
             case "message_reaction":
                 if (!isMyId(event.userID) && !isMyId(event.senderID) &&
-                    !emo.includes(event.messageID) && !bot.includes(event.senderID) && 
+                    !emo.includes(event.messageID) && !bot.includes(event.senderID) &&
                     event.senderID != event.userID && !(event.reaction === undefined)) {
                     emo.push(event.messageID);
                     log("react_message " + event.messageID + " " + event.reaction);
@@ -942,12 +943,12 @@ ERR! uploadAttachment }
                         if (err) return log(err);
                         if (group[event.threadID] === undefined) {
                             let constructMMM = "You deleted this location.\n"
-                                let message1 = {
-                                    body: constructMMM + d[1][2],
-                                    url: d[1][3]
-                                }
-                                sendMessageOnly(true, api, event, message1);
-                                log("unsend_location " + d[1][0] + " " + d[1][2]);
+                            let message1 = {
+                                body: constructMMM + d[1][2],
+                                url: d[1][3]
+                            }
+                            sendMessageOnly(true, api, event, message1);
+                            log("unsend_location " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                             let message1 = {
@@ -970,16 +971,16 @@ ERR! uploadAttachment }
                         if (err) return log(err);
                         if (group[event.threadID] === undefined) {
                             let constructMMM = "You deleted this live location.\n"
-                                let message1 = {
-                                    body: constructMMM + d[1][2],
-                                    location: {
-                                        latitude: d[1][3],
-                                        longitude: d[1][4],
-                                        current: true
-                                    }
+                            let message1 = {
+                                body: constructMMM + d[1][2],
+                                location: {
+                                    latitude: d[1][3],
+                                    longitude: d[1][4],
+                                    current: true
                                 }
-                                sendMessageOnly(true, api, event, message1);
-                                log("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
+                            }
+                            sendMessageOnly(true, api, event, message1);
+                            log("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                             let message1 = {
@@ -1006,15 +1007,15 @@ ERR! uploadAttachment }
                         if (err) return log(err);
                         if (group[event.threadID] === undefined) {
                             let constructMMM = "You deleted this sticker.\n"
-                                let message = {
-                                    body: constructMMM
-                                }
-                                let message1 = {
-                                    sticker: d[1][2]
-                                }
-                                sendMessageOnly(true, api, event, message);
-                                sendMessageOnly(true, api, event, message1);
-                                log("unsend_sticker " + d[1][0] + " " + d[1][2]);
+                            let message = {
+                                body: constructMMM
+                            }
+                            let message1 = {
+                                sticker: d[1][2]
+                            }
+                            sendMessageOnly(true, api, event, message);
+                            sendMessageOnly(true, api, event, message1);
+                            log("unsend_sticker " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                             let message = {
@@ -1089,15 +1090,15 @@ ERR! uploadAttachment }
                                 if (err) return log(err);
                                 if (group[event.threadID] === undefined) {
                                     let constructMMM = "You deleted this voice message.\n";
-                                        if (!(d[1][3] === undefined)) {
-                                            constructMMM += d[1][3];
-                                        }
-                                        let message = {
-                                            body: constructMMM,
-                                            attachment: fs.createReadStream(filename)
-                                        }
-                                        sendMessageOnly(true, api, event, message);
-                                        log("unsend_audio " + d[1][0] + " " + filename);
+                                    if (!(d[1][3] === undefined)) {
+                                        constructMMM += d[1][3];
+                                    }
+                                    let message = {
+                                        body: constructMMM,
+                                        attachment: fs.createReadStream(filename)
+                                    }
+                                    sendMessageOnly(true, api, event, message);
+                                    log("unsend_audio " + d[1][0] + " " + filename);
                                 } else {
                                     let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                     if (!(d[1][3] === undefined)) {
@@ -1351,14 +1352,14 @@ async function ai22(api, event, query, query2) {
                 let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
                 downloadFile(encodeURI(url), dir).then((response) => {
                     transcribeAudioFile(dir)
-                    .then(transcription => {
-                     sendMessage(true, api, event, transcription);
-                     unLink(dir);
-                    })
-                    .catch(error => {
-                        sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
-                        unLink(dir);
-                    });
+                        .then(transcription => {
+                            sendMessage(true, api, event, transcription);
+                            unLink(dir);
+                        })
+                        .catch(error => {
+                            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+                            unLink(dir);
+                        });
                 });
             }
         } else {
@@ -1376,36 +1377,43 @@ async function ai22(api, event, query, query2) {
             data.shift()
             let lang = data.join(" ").toLowerCase();
             let body = event.messageReply.body;
-            if (lang == "dragon") {
-                const form_data = new FormData();
-                form_data.append('Code', body);
-                let res = await axios.post('http://146.56.52.226/runner.php', form_data, 
-                    { 
-                        headers: form_data.getHeaders() 
+            switch (lang) {
+                case "dragon":
+                    const form_data = new FormData();
+                    form_data.append('Code', body);
+                    let res = await axios.post('http://146.56.52.226/runner.php', form_data, {
+                        headers: form_data.getHeaders()
                     });
-            
-                let data = res.data;
-                if (data == "") {
-                    sendMessage(true, api, event, "Program died. Execution took too long.");
-                } else {
-                sendMessage(true, api, event, data+"");
-                }
-            } else {
-                const form_data1 = new FormData();
-                form_data1.append('Code', body);
-                form_data1.append('Lang', lang);
-                let res1 = await axios.post('https://run.mrepol742.repl.co', form_data1, 
-                    { 
-                        headers: form_data1.getHeaders() 
+
+                    let data = res.data;
+                    if (data == "") {
+                        sendMessage(true, api, event, "Program died. Execution took too long.");
+                    } else {
+                        sendMessage(true, api, event, data + "");
+                    }
+                break;
+                case "php":
+                    const form_data1 = new FormData();
+                    form_data1.append('Code', body);
+                    form_data1.append('Lang', lang);
+                    let res1 = await axios.post('https://run.mrepol742.repl.co', form_data1, {
+                        headers: form_data1.getHeaders()
                     });
-            
-                let data1 = res1.data;
-                if (data1 == "") {
-                    sendMessage(true, api, event, "Program died. Execution took too long.");
-                } else {
-                sendMessage(true, api, event, data1+"");
-                }
-                }
+
+                    let data1 = res1.data;
+                    if (data1 == "") {
+                        sendMessage(true, api, event, "Program died. Execution took too long.");
+                    } else {
+                        if (data1.includes("/home/runner/run/")) {
+                            data1 = data1.replaceAll("/home/runner/run/", "");
+                        }
+                        sendMessage(true, api, event, data1 + "");
+                    }
+                break;
+                default:
+                    sendMessage(true, api, event, lang + " is not yet supported.")
+                break;
+            }
         }
     } else if (query == "bgremove") {
         if (isGoingToFast(event)) {
@@ -1430,7 +1438,7 @@ async function ai22(api, event, query, query2) {
             } else {
                 let filename = __dirname + '/cache/images/searchimgreverse_' + getTimestamp() + '.png'
                 downloadFile(event.messageReply.attachments[0].url, filename).then((response) => {
-                   
+
                     searchimgr(api, event, filename);
                     unLink(filename);
                 });
@@ -1451,12 +1459,12 @@ async function ai22(api, event, query, query2) {
                 const url = event.messageReply.attachments[0].url;
                 let time = getTimestamp();
                 let filename = __dirname + '/cache/images/gphoto_' + time + '.png'
-                        downloadFile(url, dir).then((response) => {
-                            api.changeGroupImage(fs.createReadStream(filename), event.threadID, (err) => {
-                                if (err) return log(err);
-                            });
-                            unLink(filename);
-                        });
+                downloadFile(url, dir).then((response) => {
+                    api.changeGroupImage(fs.createReadStream(filename), event.threadID, (err) => {
+                        if (err) return log(err);
+                    });
+                    unLink(filename);
+                });
             }
         } else {
             sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -1491,6 +1499,8 @@ async function ai(api, event) {
             sendMessage(true, api, event, "You need to reply to a message with an audio.");
         } else if (query == "bgremove" || query == "gphoto") {
             sendMessage(true, api, event, "You need to reply to a message with a photo.");
+        } else if (query.startsWith("run")) {
+            sendMessage(true, api, event, "You need to reply to a message which contains the code to run");
         } else if (query == "count") {
             sendMessage(true, api, event, "You need to reply to a message to count its words.");
         } else if (query == "countvowels") {
@@ -1516,7 +1526,9 @@ async function ai(api, event) {
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
-                let images = await google.image(data.join(" "), { safe: true });
+                let images = await google.image(data.join(" "), {
+                    safe: true
+                });
                 getImages(api, event, images);
             } else {
                 sendMessage(true, api, event, "Hold on... There is still a request in progress.");
@@ -1634,21 +1646,21 @@ async function ai(api, event) {
                     let name = info[id]['firstName'];
                     let time = getTimestamp();
                     let filename = __dirname + '/cache/images/whoiam_' + time + '.png'
-                        downloadFile(encodeURI(getProfilePic(id)), filename).then((response) => {
-                            let message = {
-                                body: "You're " + name,
-                                attachment: fs.createReadStream(filename),
-                                /*
-                                mentions: [{
-                                    tag: '@' + name,
-                                    id: id,
-                                    fromIndex: 0
-                                }]
-                                */
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(filename);
-                        });
+                    downloadFile(encodeURI(getProfilePic(id)), filename).then((response) => {
+                        let message = {
+                            body: "You're " + name,
+                            attachment: fs.createReadStream(filename),
+                            /*
+                            mentions: [{
+                                tag: '@' + name,
+                                id: id,
+                                fromIndex: 0
+                            }]
+                            */
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 });
             } else if (text1 == "howitwork" || text1 == "howyoufunction") {
                 sendMessage(true, api, event, "We do this by emulating the browser. This means doing the exact same GET/POST requests and tricking Facebook into thinking we're accessing the website normally.");
@@ -1770,7 +1782,7 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using chatgpt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchatgpt what is matter?")
         } else {
-          data.shift();
+            data.shift();
             getResponseData("https://api.amosayomide05.cf/gpt/?question=" + data.join(" ") + "&string_id=unique_id").then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
@@ -1789,16 +1801,16 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-            const response = await openai.createCompletion({
-                model: "text-davinci-003",
-                prompt: data.join(" "),
-                temperature: 0.7,
-                max_tokens: 256,
-                top_p: 1,
-                frequency_penalty: 0,
-                presence_penalty: 0,
-              });
-              sendMessage(true, api, event, response.data.choices[0].text);
+                const response = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: data.join(" "),
+                    temperature: 0.7,
+                    max_tokens: 256,
+                    top_p: 1,
+                    frequency_penalty: 0,
+                    presence_penalty: 0,
+                });
+                sendMessage(true, api, event, response.data.choices[0].text);
             } catch (err) {
                 sendMessage(true, api, event, "OpenAI is at capacity right now. Please try it again later.");
             }
@@ -1813,35 +1825,35 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-            const response =  await openai.createImage({
-                prompt: data.join(" "),
-                n: 1,
-                size: "256x256",
-            });
-            let url = response.data.data[0].url;
-             if (url.startsWith("https://") || url.startsWith("http://")) {
-                let dir = __dirname + "/cache/images/createimg_" + getTimestamp() + ".png";
-                downloadFile(url, dir).then((response) => {
-                    let message = {
-                        attachment: fs.createReadStream(dir)
-                    };
-                    sendMessage(true, api, event, message);
-                    unLink(dir);
+                const response = await openai.createImage({
+                    prompt: data.join(" "),
+                    n: 1,
+                    size: "256x256",
                 });
-             }
-              sendMessage(true, api, event, response.data.choices[0].text);
+                let url = response.data.data[0].url;
+                if (url.startsWith("https://") || url.startsWith("http://")) {
+                    let dir = __dirname + "/cache/images/createimg_" + getTimestamp() + ".png";
+                    downloadFile(url, dir).then((response) => {
+                        let message = {
+                            attachment: fs.createReadStream(dir)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(dir);
+                    });
+                }
+                sendMessage(true, api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
-                if (error.response.status == 500 ) {
-                    sendMessage(true, api, event, "Mj is currently down. Please try it again later.");
-                } else if (error.response.status == 429) {
-                    sendMessage(true, api, event, "Mj is at capacity right now. Please try it again later.");
-                } else if (error.response.status == 503) {
-                    sendMessage(true, api, event, "It seems like there are problems with the server. Please try it again later.");
-                } else {
-                    sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    if (error.response.status == 500) {
+                        sendMessage(true, api, event, "Mj is currently down. Please try it again later.");
+                    } else if (error.response.status == 429) {
+                        sendMessage(true, api, event, "Mj is at capacity right now. Please try it again later.");
+                    } else if (error.response.status == 503) {
+                        sendMessage(true, api, event, "It seems like there are problems with the server. Please try it again later.");
+                    } else {
+                        sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    }
                 }
-            }
             }
         }
     } else if (query == "clearcache") {
@@ -2024,13 +2036,13 @@ _______________________
             const url = GoogleTTS.getAudioUrl(data.join(" "), voice);
             let time = getTimestamp();
             let filename = __dirname + '/cache/audios/tts_' + time + '.mp3'
-                    downloadFile(encodeURI(url), filename).then((response) => {
-                        let message = {
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(true, api, event, message);
-                        unLink(filename);
-                    });
+            downloadFile(encodeURI(url), filename).then((response) => {
+                let message = {
+                    attachment: fs.createReadStream(filename),
+                };
+                sendMessage(true, api, event, message);
+                unLink(filename);
+            });
         }
     } else if (query == "stats") {
         if (isGoingToFast(event)) {
@@ -2084,7 +2096,7 @@ _______________________
                     'Content-Type': 'application/json',
                 },
             };
-         
+
 
             let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
             const rss = convertBytes(process.memoryUsage().rss);
@@ -2098,7 +2110,7 @@ _______  System Info  _______
 
    ⦿ Uptime: ` + seconds_con + `
    ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
-   ⦿ CPU Usage: ` +  getLoad() + `%
+   ⦿ CPU Usage: ` + getLoad() + `%
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
    ⦿ RAM: ` + osFreeMem + `/` + osTotalMem + `
    ⦿ ROM: ` + "500MB/1GB" + `
@@ -2830,14 +2842,14 @@ _____________________________
                     let lyrics = response.result.s_lyrics;
                     let time = getTimestamp();
                     let filename = __dirname + '/cache/images/lyrics_' + time + '.png'
-                downloadFile(encodeURI(image), filename).then((response) => {
-                    let message = {
-                        body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
-                        attachment: fs.createReadStream(filename)
-                    };
-                    sendMessage(true, api, event, message);
-                    unLink(filename);
-                });
+                    downloadFile(encodeURI(image), filename).then((response) => {
+                        let message = {
+                            body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
                 }
             });
         }
@@ -2977,20 +2989,20 @@ _____________________________
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using dictionary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndictionary computer");
         } else {
             try {
-            let response = await google.search(input, options1);
-            let dir = __dirname + '/cache/audios/dictionary_' + getTimestamp() + '.mp3'
-            let content = response.dictionary.word + " " + response.dictionary.phonetic + "\n\n⦿ Definitions: \n" + response.dictionary.definitions.join("\n") + "\n⦿ Examples: \n" + response.dictionary.examples.join("\n").replaceAll("\"", "");
-                    downloadFile(response.dictionary.audio, dir).then((response) => {
-                        let message = {
-                                body: content,
-                                attachment: fs.createReadStream(dir)
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(dir);
-                    });
-                } catch (error) {
-                    sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
-                }
+                let response = await google.search(input, options1);
+                let dir = __dirname + '/cache/audios/dictionary_' + getTimestamp() + '.mp3'
+                let content = response.dictionary.word + " " + response.dictionary.phonetic + "\n\n⦿ Definitions: \n" + response.dictionary.definitions.join("\n") + "\n⦿ Examples: \n" + response.dictionary.examples.join("\n").replaceAll("\"", "");
+                downloadFile(response.dictionary.audio, dir).then((response) => {
+                    let message = {
+                        body: content,
+                        attachment: fs.createReadStream(dir)
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(dir);
+                });
+            } catch (error) {
+                sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
+            }
         }
     } else if (query == "everyone" || query == "all") {
         api.getThreadInfo(event.threadID, (err, info) => {
@@ -3064,11 +3076,11 @@ _____________________________
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using translate text to language instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate Hello to Tagalog")
         } else {
             try {
-            let response = await google.search(input, options1);
-            sendMessage(true, api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
-        } catch (error) {
-            sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
-        }
+                let response = await google.search(input, options1);
+                sendMessage(true, api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
+            } catch (error) {
+                sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
+            }
         }
     } else if (query.startsWith("weather")) {
         if (isGoingToFast(event)) {
@@ -3089,22 +3101,22 @@ _____________________________
                 let filename = __dirname + '/cache/images/weather_' + time + '.png'
                 downloadFile(d.current.imageUrl, filename).then((response) => {
                     let m = d.location.name + " " + d.location.lat + " " + d.location.long + "\n\n" +
-                            "⦿ Temperature: " + d.current.temperature + "°C / " + ((d.current.temperature * 9 / 5) + 32) + "°F\n" +
-                            "⦿ Sky: " + d.current.skytext + "\n" +
-                            "⦿ Feelslike: " + d.current.feelslike + "\n" +
-                            "⦿ Humidity: " + d.current.humidity + "\n" +
-                            "⦿ Wind Speed: " + d.current.winddisplay + "\n" +
-                            "\nForecast\n" +
-                            "⦿ Mon: " + d.forecast[0].skytextday + "\n" +
-                            "⦿ Tue: " + d.forecast[1].skytextday + "\n" +
-                            "⦿ Wed: " + d.forecast[2].skytextday + "\n" +
-                            "⦿ Thu: " + d.forecast[3].skytextday + "\n" +
-                            "⦿ Fri: " + d.forecast[4].skytextday + "\n";
-                        let message = {
-                            body: m,
-                            attachment: fs.createReadStream(filename)
-                        };
-                        sendMessage(true, api, event, message)
+                        "⦿ Temperature: " + d.current.temperature + "°C / " + ((d.current.temperature * 9 / 5) + 32) + "°F\n" +
+                        "⦿ Sky: " + d.current.skytext + "\n" +
+                        "⦿ Feelslike: " + d.current.feelslike + "\n" +
+                        "⦿ Humidity: " + d.current.humidity + "\n" +
+                        "⦿ Wind Speed: " + d.current.winddisplay + "\n" +
+                        "\nForecast\n" +
+                        "⦿ Mon: " + d.forecast[0].skytextday + "\n" +
+                        "⦿ Tue: " + d.forecast[1].skytextday + "\n" +
+                        "⦿ Wed: " + d.forecast[2].skytextday + "\n" +
+                        "⦿ Thu: " + d.forecast[3].skytextday + "\n" +
+                        "⦿ Fri: " + d.forecast[4].skytextday + "\n";
+                    let message = {
+                        body: m,
+                        attachment: fs.createReadStream(filename)
+                    };
+                    sendMessage(true, api, event, message)
                     unLink(filename);
                 });
             })
@@ -3229,11 +3241,11 @@ _____________________________
                     let dir = __dirname + '/cache/images/instaprofile_' + time + '.png'
                     downloadFile(encodeURI(url), dir).then((response) => {
                         let message = {
-                                body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified + "\n\n" + biography,
-                                attachment: fs.createReadStream(dir)
-                            };
-                            sendMessage(true, api, event, message);
-                            unLink(dir);
+                            body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified + "\n\n" + biography,
+                            attachment: fs.createReadStream(dir)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(dir);
                     });
                 }
             });
@@ -3490,7 +3502,7 @@ _____________________________
                     let genres = response.genres;
                     let plot = response.plot;
                     let time = getTimestamp();
-                    let filename = __dirname + '/cache/images/imdb_' + time + '.png' 
+                    let filename = __dirname + '/cache/images/imdb_' + time + '.png'
                     downloadFile(encodeURI(avatar), filename).then((response) => {
                         let message = {
                             body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
@@ -3548,14 +3560,14 @@ _____________________________
                 let title = response.title;
                 let time = getTimestamp();
                 let filename = __dirname + "/cache/images/car_" + time + ".png"
-                    downloadFile(encodeURI(thumbnail), filename).then((response) => {
-                        let message = {
-                            body: title,
-                            attachment: fs.createReadStream(filename)
-                        };
-                        sendMessage(true, api, event, message);
-                        unLink(filename);
-                    });
+                downloadFile(encodeURI(thumbnail), filename).then((response) => {
+                    let message = {
+                        body: title,
+                        attachment: fs.createReadStream(filename)
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(filename);
+                });
             }
         });
     } else if (query == "color") {
@@ -3571,14 +3583,14 @@ _____________________________
                 let url = response.image;
                 let time = getTimestamp();
                 let filename = __dirname + "/cache/images/color_" + time + ".png"
-                    downloadFile(encodeURI(url), filename).then((response) => {
-                        let message = {
-                            body: name + " #" + hex,
-                            attachment: fs.createReadStream(filename)
-                        };
-                        sendMessage(true, api, event, message);
-                        unLink(filename);
-                    });
+                downloadFile(encodeURI(url), filename).then((response) => {
+                    let message = {
+                        body: name + " #" + hex,
+                        attachment: fs.createReadStream(filename)
+                    };
+                    sendMessage(true, api, event, message);
+                    unLink(filename);
+                });
             }
         });
     } else if (query == "pickup") {
@@ -4293,13 +4305,13 @@ _____________________________
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return log(err);
-        if (gc.isGroup) {
-            let arr = gc.participantIDs;
-            sendMessage(true, api, event, "This group has about " + arr.length + " members.")
-        } else {
-            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
-        }
-    });
+            if (gc.isGroup) {
+                let arr = gc.participantIDs;
+                sendMessage(true, api, event, "This group has about " + arr.length + " members.")
+            } else {
+                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+            }
+        });
     } else if (query.startsWith("gname")) {
         if (isGoingToFast(event)) {
             return;
@@ -4826,14 +4838,14 @@ _____________________________
                         let url = "https://api.popcat.xyz/ship?user1=" + aaa + "&user2=" + encodeURIComponent(response.request.res.responseUrl);
                         let dir = __dirname + "/cache/images/ship_" + getTimestamp() + ".png";
                         log("parse_image " + url);
-                    downloadFile(url, dir).then((response) => {
-                        let image = {
-                            body: "New Lovers >3",
-                            attachment: fs.createReadStream(dir)
-                        };
-                        sendMessage(true, api, event, image);
-                        unLink(dir);
-                    });
+                        downloadFile(url, dir).then((response) => {
+                            let image = {
+                                body: "New Lovers >3",
+                                attachment: fs.createReadStream(dir)
+                            };
+                            sendMessage(true, api, event, image);
+                            unLink(dir);
+                        });
                     }).catch(function(err) {
                         log(err);
                     });
@@ -5413,7 +5425,7 @@ _____________________________
                 if (response == null) {
                     sendMessage(true, api, event, "I cannot find any relavant result about " + text);
                 } else {
-                   parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
+                    parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
                 }
             });
         }
@@ -6389,23 +6401,23 @@ async function unsendGif(api, event, d) {
             } else {
                 constructMMM += " gif. \n";
             }
-                if (!(d[1][3] === undefined)) {
-                    constructMMM += d[1][3];
+            if (!(d[1][3] === undefined)) {
+                constructMMM += d[1][3];
+            }
+            let message1 = {
+                body: constructMMM,
+                attachment: accm
+            }
+            api.sendMessage(message1, event.threadID, (err, messageInfo) => {
+                if (err) {
+                    log(err);
                 }
-                let message1 = {
-                    body: constructMMM,
-                    attachment: accm
+                let i3;
+                for (i3 = 0; i3 < images.length; i3++) {
+                    unLink(images[i3])
                 }
-                api.sendMessage(message1, event.threadID, (err, messageInfo) => {
-                    if (err) {
-                        log(err);
-                    }
-                    let i3;
-                    for (i3 = 0; i3 < images.length; i3++) {
-                        unLink(images[i3])
-                    }
-                })
-                log("unsend_gif " + d[1][0]);
+            })
+            log("unsend_gif " + d[1][0]);
         } else {
             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
             if (!(d[1][3] === undefined)) {
@@ -6473,7 +6485,7 @@ async function bgRemove(api, event) {
                     }
                 })
                 .catch((error) => {
-                     return log(error);
+                    return log(error);
                 });
         });
     }
@@ -6483,7 +6495,7 @@ async function bgRemove(api, event) {
     let accm = [];
     let i1;
     for (i1 = 0; i1 < url.length; i1++) {
-        accm.push(fs.createReadStream( __dirname + '/cache/images/removebg_' + i1 + '_' + time + '.png'));
+        accm.push(fs.createReadStream(__dirname + '/cache/images/removebg_' + i1 + '_' + time + '.png'));
     }
     let message1 = {
         attachment: accm
@@ -6848,20 +6860,20 @@ function getTimestamp() {
 function welcomeUser(api, event, name, gname, Tmem, id, message1) {
     axios.get(getProfilePic(id)).then(function(response) {
         let filename = __dirname + "/cache/images/welcome_img_" + getTimestamp() + ".png";
-                downloadFile(getWelcomeImage(name, gname, Tmem, id) + encodeURIComponent(response.request.res.responseUrl), filename).then((response) => {
-                    let message = {
-                        body: message1,
-                        attachment: fs.createReadStream(filename),
-                        /*
-                        mentions: [{
-                            tag: name,
-                            id: id
-                        }]
-                        */
-                    };
-                    sendMessageOnly(true, api, event, message);
-                    unLink(filename);
-                });
+        downloadFile(getWelcomeImage(name, gname, Tmem, id) + encodeURIComponent(response.request.res.responseUrl), filename).then((response) => {
+            let message = {
+                body: message1,
+                attachment: fs.createReadStream(filename),
+                /*
+                mentions: [{
+                    tag: name,
+                    id: id
+                }]
+                */
+            };
+            sendMessageOnly(true, api, event, message);
+            unLink(filename);
+        });
     }).catch(function(err) {
         log(err);
     });
@@ -6925,7 +6937,7 @@ function saveEvent(event) {
                 if (event.body != "" && (typeof event.body === "string")) {
                     data.push(event.body);
                 }
-                
+
                 msgs[event.messageID] = ['photo', data];
                 break;
             case "animated_image":
@@ -7009,17 +7021,17 @@ async function aiResponse(complextion, text, repeat) {
         }
         if (!(error.response === undefined)) {
             log(error.response.status);
-        if (error.response.status == 500 ) {
-            return "Mj is currently down. Please try it again later.";
-        } else if (error.response.status == 429 || error.response.status == 401) {
-            return "Mj is at capacity right now. Please try it again later.";
-        } else if (error.response.status == 503) {
-            return "It seems like there are problems with the server. Please try it again later.";
-        } else {
-            return idknow[Math.floor(Math.random() * idknow.length)];
+            if (error.response.status == 500) {
+                return "Mj is currently down. Please try it again later.";
+            } else if (error.response.status == 429 || error.response.status == 401) {
+                return "Mj is at capacity right now. Please try it again later.";
+            } else if (error.response.status == 503) {
+                return "It seems like there are problems with the server. Please try it again later.";
+            } else {
+                return idknow[Math.floor(Math.random() * idknow.length)];
+            }
         }
-    }
-    return "It seems like there are problems with the server. Please try it again later.";
+        return "It seems like there are problems with the server. Please try it again later.";
     }
 }
 
@@ -7049,12 +7061,12 @@ async function sendMessageToAll(api, event) {
     let format = getFormat(event.messageReply.attachments[0].type);
 
     if (event.messageReply.attachments.length != 0) {
-    for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
-      await wait(1000);
-      let dir = __dirname + "/cache/files/notify_" + i55 + "_" + time + format;
-         downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
-         count++;
-    }
+        for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+            await wait(1000);
+            let dir = __dirname + "/cache/files/notify_" + i55 + "_" + time + format;
+            downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
+            count++;
+        }
     }
     let accm = [];
     let i1;
@@ -7138,7 +7150,7 @@ function isValidTimeZone(tz) {
 async function sendMessageReaction(api, event) {
     await wait(2500);
     api.setMessageReaction(event.reaction, event.messageID, (err) => {
-            if (err) log(err);
+        if (err) log(err);
     }, true);
 }
 
@@ -7237,63 +7249,65 @@ function updateFont(message) {
 
 
 function removeTags(str) {
-    if ((str===null) || (str==='')) {
+    if ((str === null) || (str === '')) {
         return false;
     } else {
         str = str.toString();
     }
-    return str.replace( /(<([^>]+)>)/ig, '');
+    return str.replace(/(<([^>]+)>)/ig, '');
 }
 
 async function downloadFile(fileUrl, outputLocationPath) {
     const writer = fs.createWriteStream(outputLocationPath);
-  
-    return axios({
-      method: 'get',
-      url: fileUrl,
-      responseType: 'stream',
-    }).then(response => {
-      return new Promise((resolve, reject) => {
-        response.data.pipe(writer);
-        let error = null;
-        writer.on('error', err => {
-          error = err;
-          writer.close();
-          reject(err);
-        });
-        writer.on('close', () => {
-          if (!error) {
-            resolve(true);
-          }
-        });
-      });
-    });
-  }
 
-  function getLoad(){
+    return axios({
+        method: 'get',
+        url: fileUrl,
+        responseType: 'stream',
+    }).then(response => {
+        return new Promise((resolve, reject) => {
+            response.data.pipe(writer);
+            let error = null;
+            writer.on('error', err => {
+                error = err;
+                writer.close();
+                reject(err);
+            });
+            writer.on('close', () => {
+                if (!error) {
+                    resolve(true);
+                }
+            });
+        });
+    });
+}
+
+function getLoad() {
     let cpus = os.cpus()
     let totalTime = -oldCPUTime
     let totalIdle = -oldCPUIdle
-      for(let i = 0; i < cpus.length; i++) {
+    for (let i = 0; i < cpus.length; i++) {
         let cpu = cpus[i]
-          for(let type in cpu.times) {
-              totalTime += cpu.times[type];
-              if(type == "idle"){
-                  totalIdle += cpu.times[type];
-              }
-          }
-      }
-  
-      let load = 100 - Math.round(totalIdle/totalTime*100)
-      oldCPUTime = totalTime
-      oldCPUIdle = totalIdle
-  
-      return load;
-  }
+        for (let type in cpu.times) {
+            totalTime += cpu.times[type];
+            if (type == "idle") {
+                totalIdle += cpu.times[type];
+            }
+        }
+    }
 
-  async function searchimgr(api, event, filename) {
+    let load = 100 - Math.round(totalIdle / totalTime * 100)
+    oldCPUTime = totalTime
+    oldCPUIdle = totalIdle
+
+    return load;
+}
+
+async function searchimgr(api, event, filename) {
     let img = fs.readFileSync(filename);
-    let reverse = await google.search(img, { ris: true })
+    let reverse = await google.search(img, {
+        ris: true
+    })
     log(JSON.stringify(reverse))
     getImages(api, event, reverse);
-  }
+}
