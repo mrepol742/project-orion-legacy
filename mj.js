@@ -31,6 +31,7 @@ const Youtubei = require('youtubei.js');
 const GoogleImages = require('google-images');
 const NetworkSpeed = require('network-speed')
 const GoogleTTS = require('google-tts-api');
+const google = require('googlethis');
 const axios = require("axios");
 const dns = require("dns");
 const fs = require("fs");
@@ -247,7 +248,7 @@ _______  Project Orion 4/9  _______
    ⦿ ship @mention @mention
    ⦿ www @mention @mention
    ⦿ jokeover [mention|me|name|url|uid|reply]
-   ⦿ translate [language] [text]
+   ⦿ translate [text] to [language]
    ⦿ kiss [mention|me|name|url|uid|reply]
    ⦿ pet [mention|me|name|url|uid|reply]
    ⦿ jail [mention|me|name|url|uid|reply]
@@ -468,18 +469,26 @@ let currentID;
 const config = new Configuration({
     apiKey: keys.ai
 });
-let voice = {
+const voice = {
     lang: 'en',
     slow: false,
     host: 'https://translate.google.com',
 }
-let options = {
+const options = {
     listenEvents: true,
     selfListen: settings.selfListen,
     autoMarkRead: settings.autoMarkRead,
     autoMarkDelivery: settings.autoMarkDelivery,
     online: settings.online
 }
+const options1 = {
+    page: 0, 
+    safe: true, // Safe Search
+    parse_ads: false, // If set to true sponsored results will be parsed
+    additional_params: { 
+      hl: 'en' 
+    }
+  }
 
 log(JSON.stringify(options, null, 4));
 
@@ -1367,13 +1376,36 @@ async function ai22(api, event, query, query2) {
             data.shift()
             let lang = data.join(" ").toLowerCase();
             let body = event.messageReply.body;
-            getResponseData("https://toughsleepyapplicationprogram.mrepol853.repl.co/?code=" + encodeURI(body) + "&lang=" + lang).then((response) => {
-                        if (response == null) {
-                            sendMessage(true, api, event, "The language " + lang + " is not yet supported.");
-                        } else {
-                            sendMessage(true, api, event, response);
-                        }
+            if (lang == "dragon") {
+                const form_data = new FormData();
+                form_data.append('Code', body);
+                let res = await axios.post('http://146.56.52.226/runner.php', form_data, 
+                    { 
+                        headers: form_data.getHeaders() 
                     });
+            
+                let data = res.data;
+                if (data == "") {
+                    sendMessage(true, api, event, "Program died. Execution took too long.");
+                } else {
+                sendMessage(true, api, event, data+"");
+                }
+            } else {
+                const form_data1 = new FormData();
+                form_data1.append('Code', body);
+                form_data1.append('Lang', lang);
+                let res1 = await axios.post('https://run.mrepol742.repl.co', form_data1, 
+                    { 
+                        headers: form_data1.getHeaders() 
+                    });
+            
+                let data1 = res1.data;
+                if (data1 == "") {
+                    sendMessage(true, api, event, "Program died. Execution took too long.");
+                } else {
+                sendMessage(true, api, event, data1+"");
+                }
+                }
         }
     } else if (query == "bgremove") {
         if (isGoingToFast(event)) {
@@ -1384,6 +1416,24 @@ async function ai22(api, event, query, query2) {
                 sendMessage(true, api, event, "I cannot see an image. Please reply bgremove to an image.");
             } else {
                 bgRemove(api, event);
+            }
+        } else {
+            sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+        }
+    } else if (query == "searchimgreverse") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+            if (event.messageReply.attachments.length < 1) {
+                sendMessage(true, api, event, "I cannot see an image. Please reply searchimg --reverse to an image.");
+            } else {
+                let filename = __dirname + '/cache/images/searchimgreverse_' + getTimestamp() + '.png'
+                downloadFile(event.messageReply.attachments[0].url, filename).then((response) => {
+                   
+                    searchimgr(api, event, filename);
+                    unLink(filename);
+                });
             }
         } else {
             sendMessage(true, api, event, "Hold on... There is still a request in progress.");
@@ -1466,10 +1516,8 @@ async function ai(api, event) {
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
-                let client = new GoogleImages('a2fab60364a8448d4', 'AIzaSyBSajn0E5NNIMFG1oMk6AXlRwHTPgnW_m8');
-                client.search(data.join(" ")).then(images => {
-                    getImages(api, event, images);
-                });
+                let images = await google.image(data.join(" "), { safe: true });
+                getImages(api, event, images);
             } else {
                 sendMessage(true, api, event, "Hold on... There is still a request in progress.");
             }
@@ -2000,7 +2048,6 @@ _______  Statistics  _______
    ⦿ Muted Users: ` + mutedRRR.length + `
    ⦿ Command Call: ` + commandCalls + `
    ⦿ Total Tokens: ` + token.total_tokens + `
-   ⦿ Total Commands: 260
 ___________________________
 `;
         sendMessage(true, api, event, message);
@@ -2921,39 +2968,29 @@ _____________________________
                 sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
             }
         }
-    } else if (query.startsWith("urbandictionary") || query.startsWith("dictionary") || query2.startsWith("dict ")) {
+    } else if (query.startsWith("dictionary")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using dict text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndict computer");
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using dictionary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndictionary computer");
         } else {
-            data.shift();
-            const options = {
-                method: 'GET',
-                url: 'https://mashape-community-urban-dictionary.p.rapidapi.com/define',
-                params: {
-                    term: data.join(" ")
-                },
-                headers: {
-                    'X-RapidAPI-Host': 'mashape-community-urban-dictionary.p.rapidapi.com',
-                    'X-RapidAPI-Key': 'bc23ad59e1mshdb14f6cce13bafap18cbc5jsn13348153e5cf'
+            try {
+            let response = await google.search(input, options1);
+            let dir = __dirname + '/cache/audios/dictionary_' + getTimestamp() + '.mp3'
+            let content = response.dictionary.word + " " + response.dictionary.phonetic + "\n\n⦿ Definitions: \n" + response.dictionary.definitions.join("\n") + "\n⦿ Examples: \n" + response.dictionary.examples.join("\n").replaceAll("\"", "");
+                    downloadFile(response.dictionary.audio, dir).then((response) => {
+                        let message = {
+                                body: content,
+                                attachment: fs.createReadStream(dir)
+                            };
+                            sendMessage(true, api, event, message);
+                            unLink(dir);
+                    });
+                } catch (error) {
+                    sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
                 }
-            };
-            axios.request(options).then(function({
-                data
-            }) {
-                let word = data.list[0].word;
-                let def = data.list[0].definition;
-                let sample = data.list[0].example;
-                let timestamp = data.list[0].written_on;
-                let source = data.list[0].permalink;
-                sendMessage(true, api, event, def + "\n\nExample: \n" + sample);
-            }).catch(function(error) {
-                log(err);
-                sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
-            });
         }
     } else if (query == "everyone" || query == "all") {
         api.getThreadInfo(event.threadID, (err, info) => {
@@ -3024,18 +3061,14 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using translate language text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate English Kamusta")
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using translate text to language instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate Hello to Tagalog")
         } else {
-            let text = input.substring(10);
-            let lang = text.split(" ");
-            let message = text.substring(lang[0].length);
-            getResponseData('https://api.popcat.xyz/translate?to=' + lang[0] + '&text=' + message).then((response) => {
-                if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
-                } else {
-                    sendMessage(true, api, event, response.translated);
-                }
-            });
+            try {
+            let response = await google.search(input, options1);
+            sendMessage(true, api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
+        } catch (error) {
+            sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
+        }
         }
     } else if (query.startsWith("weather")) {
         if (isGoingToFast(event)) {
@@ -3304,8 +3337,8 @@ _____________________________
             if (userN.startsWith("@")) {
                 userN = userN.slice(1);
             }
-            getResponseData('https://api.popcat.xyz/github/' + userN).then((response) => {
-                if (response == null) {
+            getResponseData('https://api.github.com/users/' + userN).then((response) => {
+                if (response == null || response.message == "Not Found") {
                     sendMessage(true, api, event, "Unfortunately github user \"" + userN + "\" was not found.");
                 } else {
                     let name = response.name;
@@ -3318,7 +3351,7 @@ _____________________________
                     let following = response.following;
                     let public_repos = response.public_repos;
                     let public_gists = response.public_gists;
-                    let avatar = response.avatar;
+                    let avatar = response.avatar_url;
                     let time = getTimestamp();
 
                     if (bio == "No Bio") {
@@ -5088,7 +5121,6 @@ _____________________________
                     let msg = checkFound(name) + " @" + checkFound(vanity);
                     msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
                     msg += "\n⦿ Birthday: " + checkFound(isBirthday);
-
                     downloadFile(url, filename).then((response) => {
                         let image = {
                             body: msg,
@@ -6227,13 +6259,10 @@ async function getImages(api, event, images) {
     for (i = 0;
         (i < parseInt(settings.max_image) && i < images.length); i++) {
         let url = images[i].url;
-        log("get_images " + url);
-        let type = images[i].type;
-        if ((type == "image/png" || type == "image/jpg" || type == "image/jpeg") &&
+        if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") &&
             !url.endsWith(".svg.png") && !url.startsWith("https://upload.wikimedia.org")) {
             await wait(1000);
             let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
-            log("accepted_url " + type + " " + url);
             downloadFile(encodeURI(url), fname);
             name.push(fname);
         }
@@ -7191,7 +7220,7 @@ function maven(text) {
     }).join("");
 }
 
-async function updateFont(message) {
+function updateFont(message) {
     if (typeof message === "string") {
         if (message == "\u200Eeveryone") {
             return message;
@@ -7199,13 +7228,10 @@ async function updateFont(message) {
         return maven(message);
     }
 
-    if (message.body === undefined) {
+    if (message.body === undefined || message.body == "\u200Eeveryone") {
         return message;
     }
-    if (message.body == "\u200Eeveryone") {
-        return message;
-    }
-    message.body = maven(message);
+    message.body = maven(message.body);
     return message;
 }
 
@@ -7263,4 +7289,11 @@ async function downloadFile(fileUrl, outputLocationPath) {
       oldCPUIdle = totalIdle
   
       return load;
+  }
+
+  async function searchimgr(api, event, filename) {
+    let img = fs.readFileSync(filename);
+    let reverse = await google.search(img, { ris: true })
+    log(JSON.stringify(reverse))
+    getImages(api, event, reverse);
   }
