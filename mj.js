@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 const {
     Configuration,
     OpenAIApi
@@ -27,7 +28,6 @@ const {
 const WeatherJS = require("weather-js")
 const FormData = require('form-data');
 const Youtubei = require('youtubei.js');
-const GoogleImages = require('google-images');
 const NetworkSpeed = require('network-speed')
 const GoogleTTS = require('google-tts-api');
 const google = require('googlethis');
@@ -35,7 +35,6 @@ const axios = require("axios");
 const dns = require("dns");
 const fs = require("fs");
 const fca = require("fca-unofficial");
-//const fca = require("mj-fca");
 const http = require('http');
 const https = require('https');
 const os = require('os');
@@ -56,12 +55,6 @@ http.createServer(function(req, res) {
 }).listen(3000, function() {
     log("Server start at port 3000");
 });
-
-setInterval(function() {
-    https.get("https://project-orion.mrepol853.repl.co", function(res) {
-        log("ping");
-    });
-}, 1800000 * Math.random() + 1200000);
 
 let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search", "createcode"]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
@@ -115,6 +108,7 @@ let userWhoSendDamnReports = {};
 let nwww = {};
 let messagesD = "No data";
 let fb_stateD = "No data";
+let pingD = "No data";
 let isCalled = true;
 let isAppState = true;
 let commandCalls = 0;
@@ -176,6 +170,7 @@ _______  Project Orion 1/9  _______
    ⦿ decode64 [text]
    ⦿ github [username]
    ⦿ run [lang] [reply]
+       Java, Python, C, C++, JavaScript, PHP and Dragon
    
    AI:
     ⦿ mj [text]
@@ -424,6 +419,8 @@ _______  Project Orion Root  _______
    ⦿ restart
    ⦿ notify
    ⦿ destroy
+   ⦿ addPing [url]
+   ⦿ remPing [url]
    ⦿ acceptMessageRequest [threadid]
    ⦿ acceptFriendRequest [uid]
    ⦿ changeBio [text]
@@ -444,31 +441,28 @@ _______  Project Orion Root  _______
 ____________________________________
 `;
 
-let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json", "utf8"));
-let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
-let adm = JSON.parse(fs.readFileSync(__dirname + "/admin.json", "utf8"));
-let nonRRR = JSON.parse(fs.readFileSync(__dirname + "/users.json", "utf8"));
-let blockRRR = JSON.parse(fs.readFileSync(__dirname + "/block_users.json", "utf8"));
-let bot = JSON.parse(fs.readFileSync(__dirname + "/bot.json", "utf8"));
-let blockSSS = JSON.parse(fs.readFileSync(__dirname + "/block_groups.json", "utf8"));
-let mutedRRR = JSON.parse(fs.readFileSync(__dirname + "/muted_users.json", "utf8"));
-let msgs = JSON.parse(fs.readFileSync(__dirname + "/msgs.json", "utf8"));
-let smartRRR = JSON.parse(fs.readFileSync(__dirname + "/smart_reply.json", "utf8"));
-let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/unsend_msgs.json", "utf8"));
-let group = JSON.parse(fs.readFileSync(__dirname + "/group.json", "utf8"));
-let ignoredPrefix = JSON.parse(fs.readFileSync(__dirname + "/ignored_prefixes.json", "utf8"));
-let speech = JSON.parse(fs.readFileSync(__dirname + "/speech.json", "utf8"));
-let restart = JSON.parse(fs.readFileSync(__dirname + "/restart.json", "utf8"));
-let keys = JSON.parse(fs.readFileSync(__dirname + "/key.json", "utf8"));
-let token = JSON.parse(fs.readFileSync(__dirname + "/token.json", "utf8"));
-let filter = JSON.parse(fs.readFileSync(__dirname + "/filter.json", "utf8"));
+let settings = JSON.parse(fs.readFileSync(__dirname + "/data/settings.json", "utf8"));
+let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
+let msgs = JSON.parse(fs.readFileSync(__dirname + "/data/msgs.json", "utf8"));
+let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/data/unsend_msgs.json", "utf8"));
+let filter = JSON.parse(fs.readFileSync(__dirname + "/data/filter.json", "utf8"));
+let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 let state = {
-    appState: JSON.parse(fs.readFileSync(__dirname + "/app_state.json", "utf8"))
+    appState: JSON.parse(fs.readFileSync(__dirname + "/data/app_state.json", "utf8"))
 };
 let currentID;
 
+setInterval(function() {
+    for (url in settings.url) {
+        https.get(url, function(res) {
+            log("ping " + url);
+        });
+    }
+    pingD = getFormattedDate();
+}, 1800000 * Math.random() + 1200000);
+
 const config = new Configuration({
-    apiKey: keys.ai
+    apiKey: settings.apikey.ai
 });
 const voice = {
     lang: 'en',
@@ -477,15 +471,15 @@ const voice = {
 }
 const options = {
     listenEvents: true,
-    selfListen: settings.selfListen,
-    autoMarkRead: settings.autoMarkRead,
-    autoMarkDelivery: settings.autoMarkDelivery,
-    online: settings.online
+    selfListen: settings.preference.selfListen,
+    autoMarkRead: settings.preference.autoMarkRead,
+    autoMarkDelivery: settings.preference.autoMarkDelivery,
+    online: settings.preference.online
 }
 const options1 = {
     page: 0,
-    safe: true, // Safe Search
-    parse_ads: false, // If set to true sponsored results will be parsed
+    safe: true,
+    parse_ads: false,
     additional_params: {
         hl: 'en'
     }
@@ -556,7 +550,7 @@ ____________________________
     }, 600000);
 
     setInterval(function() {
-        fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+        fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
         fb_stateD = getFormattedDate();
         log("fb_save_state")
     }, 1800000 * Math.random() + 1200000);
@@ -617,7 +611,7 @@ ERR! uploadAttachment }
 
         if (isAppState) {
             currentID = api.getCurrentUserID();
-            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+            fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
             isAppState = false;
         }
 
@@ -674,7 +668,7 @@ ERR! uploadAttachment }
             if (event.type == "message" || (event.type == "message_reply" && (event.senderID != currentID || event.messageReply.senderID != currentID))) {
 
                 if (query == "unblockgroup") {
-                    if (adm.includes(event.senderID)) {
+                    if (users.admin.includes(event.senderID)) {
                         if (event.isGroup) {
                             unblockGroup(api, event, event.threadID);
                         } else {
@@ -685,40 +679,40 @@ ERR! uploadAttachment }
                     if (isGoingToFast(event)) {
                         return;
                     }
-                    if (mutedRRR.includes(event.senderID)) {
-                        mutedRRR = mutedRRR.filter(item => item !== event.senderID);
+                    if (users.muted.includes(event.senderID)) {
+                        users.muted = users.muted.filter(item => item !== event.senderID);
                         sendMessage(true, api, event, "You can now use my commands.");
-                        fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR, null, 4), "utf8");
+                        fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     }
                 } else if (query == "status") {
                     if (isGoingToFast(event)) {
                         return;
                     }
-                    if (settings.error == "3252001") {
+                    if (settings.preference.error == "3252001") {
                         // bug this can be initiate if api.markAllAsRead is the reason or attachments
                         sendMessage(true, api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
-                    } else if (settings.error == "1404078") {
+                    } else if (settings.preference.error == "1404078") {
                         sendMessage(true, api, event, "This account is restricted right now. Please try it again in few hours.");
-                    } else if (settings.error == "1545023") {
+                    } else if (settings.preference.error == "1545023") {
                         sendMessage(true, api, event, "This account is unable to send messages right now. Please try it again in few hours.");
-                    } else if (mutedRRR.includes(event.senderID)) {
+                    } else if (users.muted.includes(event.senderID)) {
                         sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
-                    } else if (blockSSS.includes(event.threadID)) {
+                    } else if (groups.blocked.includes(event.threadID)) {
                         sendMessage(true, api, event, "This group is blocked. Contact the bot admins for more info.");
-                    } else if (blockRRR.includes(event.senderID) || bot.includes(event.senderID)) {
+                    } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
                         sendMessage(true, api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
-                    } else if (settings.isStop) {
+                    } else if (settings.preference.isStop) {
                         sendMessage(true, api, event, "The program is currently offline.");
-                    } else if (settings.isDebugEnabled) {
+                    } else if (settings.preference.isDebugEnabled) {
                         sendMessage(true, api, event, "The program is currently under maintenance.");
                     } else {
                         sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS.");
                     }
-                } else if (!(adm.includes(event.senderID))) {
-                    if (blockSSS.includes(event.threadID)) {
+                } else if (!(users.admin.includes(event.senderID))) {
+                    if (groups.blocked.includes(event.threadID)) {
                         saveEvent(event);
                         return;
-                    } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) &&
+                    } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) &&
                         (event.type == "message" || event.type == "message_reply")) {
                         saveEvent(event);
                         return;
@@ -729,24 +723,25 @@ ERR! uploadAttachment }
             if (isMyId(event.senderID)) {
                 if (query == "stop") {
                     sendMessage(true, api, event, "Program stopped its state.");
-                    settings.isStop = true;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8");
+                    settings.preference.isStop = true;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     return;
                 } else if (query == "destroy") {
                     sendMessage(true, api, event, "Program destroyed its state.");
                     return;
                 } else if (query == "resume") {
                     sendMessage(true, api, event, "Program resumed its state.");
-                    settings.isStop = false;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8");
+                    settings.preference.isStop = false;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     return;
                 } else if (query == "restart") {
                     saveState();
-                    fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+                    fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
                     let rs = [];
                     rs.push(event.threadID);
                     rs.push(event.messageID);
-                    fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs, null, 4), "utf8");
+                    settings.restart = rs;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(true, api, event, "Restarting program...");
                     setTimeout(function() {
                         process.exit(0);
@@ -767,11 +762,11 @@ ERR! uploadAttachment }
                 }
             }
 
-            if (group[event.threadID] === undefined && event.isGroup) {
+            if (groups.list[event.threadID] === undefined && event.isGroup) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
                     if (err) return log(err);
-                    if (gc.isGroup && group[event.threadID] === undefined) {
-                        group[event.threadID] = gc.threadName;
+                    if (gc.isGroup && groups.list[event.threadID] === undefined) {
+                        groups.list[event.threadID] = gc.threadName;
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) log(err);
                         });
@@ -786,21 +781,21 @@ ERR! uploadAttachment }
                         sendMessageOnly(false, api, event, message);
                     }
                 });
-            } else if (!acGG.includes(event.threadID) && !(group[event.threadID] === undefined)) {
+            } else if (!acGG.includes(event.threadID) && !(groups.list[event.threadID] === undefined)) {
                 acGG.push(event.threadID);
             }
-        } else if (blockSSS.includes(event.threadID)) {
+        } else if (groups.blocked.includes(event.threadID)) {
             if ((event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
             }
             return;
-        } else if ((blockRRR.includes(event.senderID) || mutedRRR.includes(event.senderID) || bot.includes(event.senderID)) &&
+        } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) &&
             (event.type == "message" || event.type == "message_reply")) {
             saveEvent(event);
             return;
         }
 
-        if (settings.isDebugEnabled && !isMyId(event.senderID)) {
+        if (settings.preference.isDebugEnabled && !isMyId(event.senderID)) {
             if (event.type == "message" || event.type == "message_reply") {
                 let input = event.body;
                 let query2 = formatQuery(input);
@@ -820,17 +815,17 @@ ERR! uploadAttachment }
             return;
         }
 
-        if (settings.isStop && !isMyId(event.senderID)) {
+        if (settings.preference.isStop && !isMyId(event.senderID)) {
             if (event.type == "message" || event.type == "message_reply") {
                 saveEvent(event);
             }
             return;
         }
 
-        if (!(restart[0] === undefined && restart[1] === undefined) && isCalled) {
-            api.sendMessage("Successfully restarted", restart[0], restart[1]);
-            let rs = [];
-            fs.writeFileSync(__dirname + "/restart.json", JSON.stringify(rs), "utf8");
+        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled) {
+            api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
+            settings.restart = [];
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             isCalled = false;
         }
 
@@ -842,7 +837,7 @@ ERR! uploadAttachment }
                 break;
             case "message_reaction":
                 if (!isMyId(event.userID) && !isMyId(event.senderID) &&
-                    !emo.includes(event.messageID) && !bot.includes(event.senderID) &&
+                    !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) &&
                     event.senderID != event.userID && !(event.reaction === undefined)) {
                     emo.push(event.messageID);
                     log("react_message " + event.messageID + " " + event.reaction);
@@ -856,7 +851,7 @@ ERR! uploadAttachment }
                     break;
                 }
                 unsend_msgs[event.messageID] = d;
-                if (!settings.onUnsend || bot.includes(event.senderID) || adm.includes(event.senderID)) {
+                if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID)) {
                     break;
                 }
                 log("message_unsend " + d[0]);
@@ -870,7 +865,7 @@ ERR! uploadAttachment }
                 } else if (d[0] == "share") {
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
-                        if (group[event.threadID] === undefined) {
+                        if (groups.list[event.threadID] === undefined) {
                             let message = {
                                 body: "You deleted this link.\n\n" + d[1][2],
                                 url: d[1][3]
@@ -904,7 +899,7 @@ ERR! uploadAttachment }
                         file.on('finish', function() {
                             api.getUserInfo(event.senderID, (err, data) => {
                                 if (err) return log(err);
-                                if (group[event.threadID] === undefined) {
+                                if (groups.list[event.threadID] === undefined) {
                                     let constructMMM = "You deleted this file.\n";
                                     if (!(d[1][4] === undefined)) {
                                         constructMMM += d[1][4];
@@ -941,7 +936,7 @@ ERR! uploadAttachment }
                 } else if (d[0] == "location") {
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
-                        if (group[event.threadID] === undefined) {
+                        if (groups.list[event.threadID] === undefined) {
                             let constructMMM = "You deleted this location.\n"
                             let message1 = {
                                 body: constructMMM + d[1][2],
@@ -969,7 +964,7 @@ ERR! uploadAttachment }
                 } else if (d[0] == "location_sharing") {
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
-                        if (group[event.threadID] === undefined) {
+                        if (groups.list[event.threadID] === undefined) {
                             let constructMMM = "You deleted this live location.\n"
                             let message1 = {
                                 body: constructMMM + d[1][2],
@@ -1005,7 +1000,7 @@ ERR! uploadAttachment }
                 } else if (d[0] == "sticker") {
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
-                        if (group[event.threadID] === undefined) {
+                        if (groups.list[event.threadID] === undefined) {
                             let constructMMM = "You deleted this sticker.\n"
                             let message = {
                                 body: constructMMM
@@ -1045,7 +1040,7 @@ ERR! uploadAttachment }
                         file.on('finish', function() {
                             api.getUserInfo(event.senderID, (err, data) => {
                                 if (err) return log(err);
-                                if (group[event.threadID] === undefined) {
+                                if (groups.list[event.threadID] === undefined) {
                                     let constructMMM = "You deleted this video.\n";
                                     if (!(d[1][3] === undefined)) {
                                         constructMMM += d[1][3];
@@ -1088,7 +1083,7 @@ ERR! uploadAttachment }
                         file.on('finish', function() {
                             api.getUserInfo(event.senderID, (err, data) => {
                                 if (err) return log(err);
-                                if (group[event.threadID] === undefined) {
+                                if (groups.list[event.threadID] === undefined) {
                                     let constructMMM = "You deleted this voice message.\n";
                                     if (!(d[1][3] === undefined)) {
                                         constructMMM += d[1][3];
@@ -1125,7 +1120,7 @@ ERR! uploadAttachment }
                 } else {
                     api.getUserInfo(event.senderID, (err, data) => {
                         if (err) return log(err);
-                        if (group[event.threadID] === undefined) {
+                        if (groups.list[event.threadID] === undefined) {
                             let message = "You deleted this message.\n\n" + d[2];
                             sendMessageOnly(true, api, event, message);
                             log("unsend_message " + d[0] + " " + message);
@@ -1208,7 +1203,7 @@ ERR! uploadAttachment }
                                     if (data.hasOwnProperty(prop) && data[prop].name) {
                                         let gcn = gc.threadName;
                                         let arr = gc.participantIDs;
-                                        if (settings.antiLeave) {
+                                        if (settings.preference.antiLeave) {
                                             api.addUserToGroup(prop, event.threadID, (err) => {
                                                 if (err) log(err);
                                                 log("add_user " + event.threadID + " " + prop);
@@ -1224,11 +1219,11 @@ ERR! uploadAttachment }
                         api.getUserInfo(event.author, (err, data) => {
                             if (err) return log(err);
                             let constructMMM;
-                            if (group[event.threadID] == null || group[event.threadID] === undefined) {
-                                group[event.threadID] = event.logMessageData.name;
+                            if (groups.list[event.threadID] == null || groups.list[event.threadID] === undefined) {
+                                groups.list[event.threadID] = event.logMessageData.name;
                                 constructMMM = data[event.author]['firstName'] + " set the group name to " + event.logMessageData.name;
                             } else {
-                                constructMMM = data[event.author]['firstName'] + " has changed the groupname from \n" + group[event.threadID] + "\nto\n" + event.logMessageData.name;
+                                constructMMM = data[event.author]['firstName'] + " has changed the groupname from \n" + groups.list[event.threadID] + "\nto\n" + event.logMessageData.name;
                             }
                             let message = {
                                 body: constructMMM,
@@ -1242,7 +1237,7 @@ ERR! uploadAttachment }
                             }
                             sendMessage(true, api, event, message);
                         });
-                        fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
+                        fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
                         break;
                     case "log:thread-icon":
                     case "log:thread-color":
@@ -1269,12 +1264,12 @@ async function ai22(api, event, query, query2) {
             if (event.messageReply.body == "") {
                 sendMessage(true, api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
             } else {
-                sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(group).length + " groups.");
+                sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(groups.list).length + " groups.");
                 sendMessageToAll(api, event);
             }
         }
     } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             if (event.messageReply.senderID != currentID) {
                 sendMessage(true, api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
             } else {
@@ -1290,10 +1285,9 @@ async function ai22(api, event, query, query2) {
         if (event.messageReply.body == "") {
             sendMessage(true, api, event, "You need to reply pin add to a message which is not empty to pin it.");
         } else {
-            pinned.pin.message[event.threadID] = event.messageReply.body
-            pinned.pin.sender[event.threadID] = event.messageReply.senderID
+            settings.pin[event.threadID] = event.messageReply.body;
             sendMessage(true, api, event, "Message pinned.. Enter \"pin\" to show it.");
-            fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned, null, 4), "utf8")
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
         }
     } else if (query == "count") {
         if (isGoingToFast(event)) {
@@ -1377,6 +1371,7 @@ async function ai22(api, event, query, query2) {
             data.shift()
             let lang = data.join(" ").toLowerCase();
             let body = event.messageReply.body;
+            body = body.normalize('NFKC');
             switch (lang) {
                 case "dragon":
                     const form_data = new FormData();
@@ -1393,6 +1388,15 @@ async function ai22(api, event, query, query2) {
                     }
                 break;
                 case "php":
+                case "java":
+                case "js":
+                case "javascript":
+                case "c":
+                case "c++":
+                case "cpp":
+                case "python":
+                case "cplusplus":
+                case "etc":
                     const form_data1 = new FormData();
                     form_data1.append('Code', body);
                     form_data1.append('Lang', lang);
@@ -1400,15 +1404,19 @@ async function ai22(api, event, query, query2) {
                         headers: form_data1.getHeaders()
                     });
 
-                    let data1 = res1.data;
+                    let data1 = res1.data + "";
                     if (data1 == "") {
                         sendMessage(true, api, event, "Program died. Execution took too long.");
                     } else {
                         if (data1.includes("/home/runner/run/")) {
                             data1 = data1.replaceAll("/home/runner/run/", "");
                         }
-                        sendMessage(true, api, event, data1 + "");
+                        sendMessage(true, api, event, removeTags(data1));
                     }
+                break;
+                case "sh":
+                case "bash":
+                    sendMessage(true, api, event, "Permission Unauthorized.");
                 break;
                 default:
                     sendMessage(true, api, event, lang + " is not yet supported.")
@@ -1511,7 +1519,7 @@ async function ai(api, event) {
             sendMessage(true, api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
             sendMessage(true, api, event, "You need to reply to a message to pin a message.");
-        } else if (adm.includes(event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
+        } else if (users.admin.includes(event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
             sendMessage(true, api, event, "You need to reply to my message to unsend it.");
         }
         someA(api, event, query, input);
@@ -1558,16 +1566,16 @@ async function ai(api, event) {
             return;
         }
 
-        if ((settings.prefix != "" && input == settings.prefix) || query == "misaka" || query == "mj" || query == "repol" ||
+        if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "misaka" || query == "mj" || query == "repol" ||
             query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
-            if (!nonRRR.includes(event.senderID)) {
+            if (!users.list.includes(event.senderID)) {
                 let message = {
                     body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
                     url: "https://mrepol742.github.io/project-orion/"
                 }
-                nonRRR.push(event.senderID);
+                users.list.push(event.senderID);
                 sendMessage(true, api, event, message);
-                fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
+                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
             } else {
                 sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
@@ -1589,8 +1597,8 @@ async function ai(api, event) {
                 text = input.substring(10)
             } else if (query.startsWith("search") || query.startsWith("misaka")) {
                 text = input.substring(7)
-            } else if (input.startsWith(settings.prefix)) {
-                text = input.substring(settings.prefix.length);
+            } else if (input.startsWith(settings.preference.prefix)) {
+                text = input.substring(settings.preference.prefix.length);
             }
             let text1 = text.replace(/\s+/g, '');
             let text2 = text;
@@ -1695,7 +1703,7 @@ async function ai(api, event) {
                 text1.startsWith("whatisthedatetoday") || text1.startsWith("whatdatetoday") || text1.startsWith("whatisthetimenow") ||
                 text1.startsWith("whatsthetimenow") || text1 == "date" || text1.startsWith("whatsthedate") || text1.startsWith("whatisthedate") ||
                 text1.startsWith("datetoday") || text1.startsWith("whattimeisitnow") || text1.startsWith("whatdateisitnow")) {
-                sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
+                sendMessage(true, api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
             } else if (text1.startsWith("iloveyou") || text1.startsWith("loveme") || text1.startsWith("doyoulikeme") || text1.startsWith("doyouloveme") || text1.startsWith("whydontyouloveme") || text1.startsWith("imissyou") || text1.startsWith("iwantyou")) {
                 sendMessage(true, api, event, "I've already a girl and i love her so much >3.");
             } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
@@ -1746,7 +1754,7 @@ async function ai(api, event) {
                 }
 
                 // initiate results simulatenoesly
-                let ss = await aiResponse(settings.text_complextion, text, true);
+                let ss = await aiResponse(settings.preference.text_complextion, text, true);
 
                 if (query.startsWith("misaka")) {
                     ss += " MISAKA MISAKA says.";
@@ -1857,7 +1865,7 @@ async function ai(api, event) {
             }
         }
     } else if (query == "clearcache") {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let count = 0;
             let count1 = 0;
             let count2 = 0;
@@ -1922,75 +1930,75 @@ _______________________
             cmd = {};
         }
     } else if (query == "debugon") {
-        if (adm.includes(event.senderID)) {
-            settings.isDebugEnabled = true;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.isDebugEnabled = true;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Debug mode enabled.");
         }
     } else if (query == "debugoff") {
-        if (adm.includes(event.senderID)) {
-            settings.isDebugEnabled = false;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.isDebugEnabled = false;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Konnichiwa i am back.");
         }
     } else if (query == "setautomarkreadon") {
-        if (adm.includes(event.senderID)) {
-            settings.autoMarkRead = true;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.autoMarkRead = true;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Automatically marked read messages enabled.");
         }
     } else if (query == "setautomarkreadoff") {
-        if (adm.includes(event.senderID)) {
-            settings.autoMarkRead = false;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.autoMarkRead = false;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Automatically marked read messages disabled.");
         }
     } else if (query == "setonlineon") {
-        if (adm.includes(event.senderID)) {
-            settings.online = true;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.online = true;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Account status is set to Online.");
         }
     } else if (query == "setonlineoff") {
-        if (adm.includes(event.senderID)) {
-            settings.online = false;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.online = false;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Account status is set to Offline.");
         }
     } else if (query == "setselfistenon") {
-        if (adm.includes(event.senderID)) {
-            settings.selfListen = true;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.selfListen = true;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Listening to own account messages is enabled.");
         }
     } else if (query == "setselfistenoff") {
-        if (adm.includes(event.senderID)) {
-            settings.selfListen = false;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.selfListen = false;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Listening to own account messages is disabled.");
         }
     } else if (query == "setautomarkdeliveryon") {
-        if (adm.includes(event.senderID)) {
-            settings.autoMarkDelivery = true;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.autoMarkDelivery = true;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Automatically marked messages when delivered enabled.");
         }
     } else if (query == "setautomarkdeliveryoff") {
-        if (adm.includes(event.senderID)) {
-            settings.autoMarkDelivery = false;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.autoMarkDelivery = false;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Automatically marked messages when delivered disabled.");
         }
     } else if (query == "ssetsendtypingindicatoron") {
-        if (adm.includes(event.senderID)) {
-            settings.sendTypingIndicator = true;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.sendTypingIndicator = true;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Send typing indicator when AI sending messages enabled.");
         }
     } else if (query == "setsendtypingindicatoroff") {
-        if (adm.includes(event.senderID)) {
-            settings.sendTypingIndicator = false;
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.sendTypingIndicator = false;
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Send typing indicator when AI sending messages disabled.");
         }
     } else if (query.startsWith("ttsjap") || query.startsWith("sayjap")) {
@@ -2048,18 +2056,32 @@ _______________________
         if (isGoingToFast(event)) {
             return;
         }
+        let count = 0;
+        let count1 = 0;
+        for (msg in msgs) {
+            if (msgs[msg][1] == event.senderID) {
+                count++;
+            }
+        }
+        for (umsg in unsend_msgs) {
+            if (unsend_msgs[umsg][1] == event.senderID) {
+                count1++;
+            }
+        }
         let message = `
 _______  Statistics  _______
 
-   ⦿ Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
-   ⦿ Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
-   ⦿ Users: ` + numberWithCommas(Object.keys(cmd).length) + `/` + numberWithCommas(nonRRR.length) + `
-   ⦿ Groups: ` + acGG.length + `/` + numberWithCommas(Object.keys(group).length) + `
-   ⦿ Block Users: ` + blockRRR.length + `
-   ⦿ Block Groups: ` + blockSSS.length + `
-   ⦿ Muted Users: ` + mutedRRR.length + `
+   ⦿ Your Messages: ` + count + `
+   ⦿ Your Unsend Messages: ` + count1 + `
+   ⦿ Total Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
+   ⦿ Toal Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
+   ⦿ Users: ` + numberWithCommas(Object.keys(cmd).length) + `/` + numberWithCommas(users.list.length) + `
+   ⦿ Groups: ` + acGG.length + `/` + numberWithCommas(Object.keys(groups.list).length) + `
+   ⦿ Block Users: ` + users.blocked.length + `
+   ⦿ Block Groups: ` + groups.blocked.length + `
+   ⦿ Muted Users: ` + users.muted.length + `
    ⦿ Command Call: ` + commandCalls + `
-   ⦿ Total Tokens: ` + token.total_tokens + `
+   ⦿ Total Tokens: ` + settings.token.total_tokens + `
 ___________________________
 `;
         sendMessage(true, api, event, message);
@@ -2113,7 +2135,7 @@ _______  System Info  _______
    ⦿ CPU Usage: ` + getLoad() + `%
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
    ⦿ RAM: ` + osFreeMem + `/` + osTotalMem + `
-   ⦿ ROM: ` + "500MB/1GB" + `
+   ⦿ ROM: ` + "1.5/10GB" + `
    ⦿ Speed: ` + upload_spee.mbps + ` mbps | ` + speed.mbps + ` mbps
    ⦿ RSS: ` + rss + `
    ⦿ Heap: ` + heapUsed + `/` + heapTotal + `
@@ -2122,8 +2144,9 @@ _______  System Info  _______
    ⦿ Load Average: ` + avg_load[0] + ` | ` + avg_load[1] + ` | ` + avg_load[2] + `
    ⦿ Save State: ` + messagesD + `
    ⦿ Fb State: ` + fb_stateD + `
+   ⦿ Ping State: ` + pingD + `
    ⦿ Blocked: ` + "False" + `
-   ⦿ Crash: ` + crashes + `
+   ⦿ Crash: ` + crashes + ` crash
 _____________________________
 `;
             sendMessage(true, api, event, message);
@@ -2514,7 +2537,7 @@ _____________________________
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using phub text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nphub why i am here again.");
             } else {
                 data.shift()
-                let phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + keys.manhict;
+                let phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + settings.apikey.manhict;
                 parseImage(api, event, phublink, __dirname + "/cache/images/phubmeme_" + getTimestamp() + ".jpg");
             }
 
@@ -2932,24 +2955,21 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
-        pinned.pin.message[event.threadID] = undefined
-        pinned.pin.sender[event.threadID] = undefined
+        settings.pin[event.threadID] = undefined
         sendMessage(true, api, event, "Pinned message removed.");
-        fs.writeFileSync(__dirname + "/pinned.json", JSON.stringify(pinned, null, 4), "utf8")
+        fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
     } else if (query == "pin") {
         if (isGoingToFast(event)) {
             return;
         }
-        let pinned = JSON.parse(fs.readFileSync(__dirname + "/pinned.json", "utf8"));
-        if (pinned.pin.message[event.threadID] == undefined) {
+        if (settings.pin[event.threadID] == undefined) {
             if (event.isGroup) {
                 sendMessage(true, api, event, "There is no pinned message on this group chat.");
             } else {
                 sendMessage(true, api, event, "There is no pinned message on this chat.");
             }
         } else {
-            sendMessage(true, api, event, pinned.pin.message[event.threadID]);
+            sendMessage(true, api, event, settings.pin[event.threadID]);
         }
     } else if (query.startsWith("pdf")) {
         if (isGoingToFast(event)) {
@@ -3030,7 +3050,7 @@ _____________________________
         if (data.length < 2) {
             sendMessage(true, api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
-            let ss = await aiResponse(settings.text_complextion, input, true);
+            let ss = await aiResponse(settings.preference.text_complextion, input, true);
             sendMessage(true, api, event, ss);
         }
     } else if (query.startsWith("baybayin")) {
@@ -3223,7 +3243,7 @@ _____________________________
             if (userN.startsWith("@")) {
                 userN = userN.slice(1);
             }
-            getResponseData('https://manhict.tech/api/igInfo?query=' + userN + '&apikey=' + keys.manhict).then((response) => {
+            getResponseData('https://manhict.tech/api/igInfo?query=' + userN + '&apikey=' + settings.apikey.manhict).then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "Unfortunately instagram user \"" + userN + "\" was not found.");
                 } else {
@@ -3271,7 +3291,7 @@ _____________________________
         } else {
             data.shift()
             let userN = data.join(" ");
-            getResponseData('https://manhict.tech/api/tikInfo?query=' + userN + "&apikey=" + keys.manhict).then((response) => {
+            getResponseData('https://manhict.tech/api/tikInfo?query=' + userN + "&apikey=" + settings.apikey.manhict).then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "Unfortunately tiktok user \"" + userN + "\" was not found.");
                 } else {
@@ -3307,7 +3327,7 @@ _____________________________
         } else {
             data.shift()
             let userN = data.join(" ");
-            getResponseData('https://manhict.tech/api/scInfo?query=' + encodeURI(userN) + "&apikey=" + keys.manhict).then((response) => {
+            getResponseData('https://manhict.tech/api/scInfo?query=' + encodeURI(userN) + "&apikey=" + settings.apikey.manhict).then((response) => {
                 if (response == null) {
                     sendMessage(true, api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
                 } else {
@@ -3696,8 +3716,8 @@ _____________________________
                 } else if (num < 10) {
                     sendMessage(true, api, event, "Opps! the minimum value 10");
                 } else {
-                    settings.max_tokens = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.max_tokens = num;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Max Tokens is now set to " + num);
                 }
             }
@@ -3715,8 +3735,8 @@ _____________________________
                 } else if (num < -0) {
                     sendMessage(true, api, event, "Opps! the minimum value 0.1");
                 } else {
-                    settings.temperature = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.temperature = num;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Temperature is now set to " + num);
                 }
             }
@@ -3734,8 +3754,8 @@ _____________________________
                 } else if (num < -2) {
                     sendMessage(true, api, event, "Opps! the minimum value -2");
                 } else {
-                    settings.frequency_penalty = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.frequency_penalty = num;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Frequency Penalty is now set to " + num);
                 }
             }
@@ -3753,8 +3773,8 @@ _____________________________
                 } else if (num < -2) {
                     sendMessage(true, api, event, "Opps! the minimum value -2");
                 } else {
-                    settings.presence_penalty = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.presence_penalty = num;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Presence Penalty is now set to " + num);
                 }
             }
@@ -3767,8 +3787,8 @@ _____________________________
             } else {
                 data.shift();
                 let num = data.join(" ");
-                settings.text_complextion = num;
-                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                settings.preference.text_complextion = num;
+                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(true, api, event, "Text Complextion is now set to " + num);
             }
         }
@@ -3785,8 +3805,8 @@ _____________________________
                 } else if (num < 1) {
                     sendMessage(true, api, event, "Opps! the minimum value is 1.");
                 } else {
-                    settings.max_image = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.max_image = num;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Max Image is now set to " + num);
                 }
             }
@@ -3804,14 +3824,14 @@ _____________________________
                 } else if (num < -0) {
                     sendMessage(true, api, event, "Opps! the minimum value is 0.");
                 } else {
-                    settings.probability_mass = num;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.probability_mass = num;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Probability Mass is now set to " + num);
                 }
             }
         }
     } else if (query.startsWith("settimezone")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTimezone Asia/Manila")
@@ -3819,17 +3839,17 @@ _____________________________
                 data.shift();
                 let pref = data.join(" ");
                 if (isValidTimeZone(pref)) {
-                    settings.timezone = pref;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.timezone = pref;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Timezone is now set to " + pref);
-                    sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
+                    sendMessage(true, api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
                 } else {
                     sendMessage(true, api, event, "Timezone " + pref + " is invalid. Please input valid timezones.")
                 }
             }
         }
     } else if (query.startsWith("setprefix")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using setPrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPrefix $")
@@ -3838,8 +3858,8 @@ _____________________________
                 let pref = data.join(" ");
                 let first = pref.split("");
                 if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
-                    settings.prefix = pref;
-                    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+                    settings.preference.prefix = pref;
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "Prefix is now set to " + pref);
                 } else {
                     sendMessage(true, api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
@@ -3847,26 +3867,26 @@ _____________________________
             }
         }
     } else if (query == "remprefix") {
-        if (adm.includes(event.senderID)) {
-            if (settings.prefix != "null" || settings.prefix != undefined) {
-                settings.prefix = "null";
-                fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+        if (users.admin.includes(event.senderID)) {
+            if (settings.preference.prefix != "null" || settings.preference.prefix != undefined) {
+                settings.preference.prefix = "null";
+                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(true, api, event, "Prefix reset to default values.");
             }
         }
     } else if (query.startsWith("ignoreprefix")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa")
             } else {
                 let pre = data.shift();
                 let pre2 = formatQuery(pre.replace(/\s+/g, ''));
-                if (pre2.startsWith("mj") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.prefix)) {
+                if (pre2.startsWith("mj") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.preference.prefix)) {
                     sendMessage(true, api, event, "Unable to do such an action.");
-                } else if (!ignoredPrefix.includes(pre)) {
-                    ignoredPrefix.push(pre);
-                    fs.writeFileSync(__dirname + "/ignored_prefixes.json", JSON.stringify(ignoredPrefix), "utf8")
+                } else if (!settings.ignored_prefixes.includes(pre)) {
+                    settings.ignored_prefixes.push(pre);
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "`" + pre + "` is now ignored.");
                 } else {
                     sendMessage(true, api, event, "It's already ignored.");
@@ -3874,19 +3894,48 @@ _____________________________
             }
         }
     } else if (query.startsWith("unignoredprefix")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using unignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunignorePrefix alexa")
             } else {
                 let pre = data.shift();
-                if (ignoredPrefix.includes(pre)) {
-                    ignoredPrefix = ignoredPrefix.filter(item => item !== pre);
-                    fs.writeFileSync(__dirname + "/ignored_prefixes.json", JSON.stringify(ignoredPrefix), "utf8")
+                if (settings.ignored_prefixes.includes(pre)) {
+                    settings.ignored_prefixes = settings.ignored_prefixes.filter(item => item !== pre);
+                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                     sendMessage(true, api, event, "`" + pre + "` is now unignored.");
                 } else {
                     sendMessage(true, api, event, "It is not in ignored list.");
                 }
+            }
+        }
+    } else if (query.startsWith("addping")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using addPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddPing https://google.com")
+            } else {
+                data.shift();
+                settings.url.push(data.join(" "));
+                sendMessage(true, api, event, "Noted.");
+                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
+            }
+        }
+    } else if (query.startsWith("remping")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using remPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremPing https://google.com")
+            } else {
+                data.shift();
+                let url = data.join(" ");
+                if (settings.url.includes(url)) {
+                    settings.url.pop(url);
+                    sendMessage(true, api, event, "The url has been removed from the list.");
+                } else {
+                    sendMessage(true, api, event, "The url is not on the list.");
+                }
+                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             }
         }
     } else if (query.startsWith("adduser")) {
@@ -3936,7 +3985,7 @@ _____________________________
             }
         }
     } else if (query.startsWith("welcomeuser")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             if (event.isGroup) {
                 let arr = gc.participantIDs;
                 let data = input.split(" ");
@@ -3977,7 +4026,7 @@ _____________________________
             }
         }
     } else if (query.startsWith("kickuser")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
                 if (err) return log(err);
                 if (gc.isGroup) {
@@ -4027,7 +4076,7 @@ _____________________________
             });
         }
     } else if (query.startsWith("isbot")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two")
@@ -4046,8 +4095,8 @@ _____________________________
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return log(err);
-                            bot.push(data[0].userID);
-                            fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot, null, 4), "utf8");
+                            users.bot.push(data[0].userID);
+                            fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                             sendMessage(true, api, event, "Noted.");
                         });
                         return;
@@ -4055,13 +4104,13 @@ _____________________________
                 } else if (isMyId(id)) {
                     return;
                 }
-                bot.push(id);
-                fs.writeFileSync(__dirname + "/bot.json", JSON.stringify(bot, null, 4), "utf8");
+                users.bot.push(id);
+                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                 sendMessage(true, api, event, "Noted.");
             }
         }
     } else if (query.startsWith("blockuser")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using blockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblockUser @Zero Two")
@@ -4091,11 +4140,12 @@ _____________________________
             }
         }
     } else if (query == "mute") {
-        mutedRRR.push(event.senderID);
+        users.muted.push(event.senderID);
+        userPresence[event.threadID] = null;
         sendMessage(true, api, event, "You have been muted. Enter `unmute` for you to use my commands again.");
-        fs.writeFileSync(__dirname + "/muted_users.json", JSON.stringify(mutedRRR), "utf8");
+        fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     } else if (query.startsWith("blockgroup")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             if (event.isGroup) {
                 blockGroup(api, event, event.threadID);
             } else {
@@ -4110,20 +4160,8 @@ _____________________________
         enableTTS(api, event, event.threadID);
     } else if (query.startsWith("texttospeechoff")) {
         disableTTS(api, event, event.threadID);
-    } else if (query.startsWith("listadmins")) {
-        if (adm.includes(event.senderID)) {
-            sendMessage(true, api, event, "Admins:\n" + adm);
-        }
-    } else if (query.startsWith("listblocks")) {
-        if (adm.includes(event.senderID)) {
-            sendMessage(true, api, event, "Users:\n" + blockRRR + "\n\nGroups:\n" + blockSSS);
-        }
-    } else if (query.startsWith("listmuted")) {
-        if (adm.includes(event.senderID)) {
-            sendMessage(true, api, event, "");
-        }
     } else if (query.startsWith("unblockuser")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two")
@@ -4153,24 +4191,24 @@ _____________________________
             }
         }
     } else if (query.startsWith("setkey")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2 && !data[1].includes(":")) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
             } else {
                 let inp = data[1].split(":");
                 keys[inp[0]] = inp[1];
-                fs.writeFileSync(__dirname + "/key.json", JSON.stringify(keys, null, 4), "utf8")
+                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(true, api, event, "Successfully saved " + inp[0] + ".");
             }
         }
     } else if (query.startsWith("listkey")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
 
 
         }
     } else if (query.startsWith("addadmin")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
@@ -4198,7 +4236,7 @@ _____________________________
             }
         }
     } else if (query.startsWith("remadmin")) {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.lenght < 2) {
                 sendMessage(true, api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two")
@@ -4227,76 +4265,76 @@ _____________________________
                 remAdmin(api, event, id);
             }
         }
-    } else if ((query == "unsendon") && !settings.onUnsend) {
-        if (adm.includes(event.senderID)) {
-            settings.onUnsend = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "unsendon") && !settings.preference.onUnsend) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.onUnsend = true
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Resending of unsend messages and attachments are now enabled.");
         }
-    } else if ((query == "unsendoff") && settings.onUnsend) {
-        if (adm.includes(event.senderID)) {
-            settings.onUnsend = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "unsendoff") && settings.preference.onUnsend) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.onUnsend = false
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Resending of unsend messages and attachments is been disabled.");
         }
-    } else if ((query == "antileaveon") && !settings.antiLeave) {
-        if (adm.includes(event.senderID)) {
-            settings.antiLeave = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "antileaveon") && !settings.preference.antiLeave) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.antiLeave = true
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Readding of user who left is now enabled.");
         }
-    } else if ((query == "antileaveoff") && settings.antiLeave) {
-        if (adm.includes(event.senderID)) {
-            settings.antiLeave = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "antileaveoff") && settings.preference.antiLeave) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.antiLeave = false
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Readding of user who left is been disabled.");
         }
-    } else if ((query == "tagalogsupporton") && !settings.tagalog) {
-        if (adm.includes(event.senderID)) {
-            settings.tagalog = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "tagalogsupporton") && !settings.preference.tagalog) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.tagalog = true
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Tagalog Support is now enabled.");
         }
-    } else if ((query == "tagalogsupportoff") && settings.tagalog) {
-        if (adm.includes(event.senderID)) {
-            settings.tagalog = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "tagalogsupportoff") && settings.preference.tagalog) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.tagalog = false
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Tagalog Support is been disabled.");
         }
-    } else if ((query == "delayon") && !settings.onDelay) {
-        if (adm.includes(event.senderID)) {
-            settings.onDelay = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "delayon") && !settings.preference.onDelay) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.onDelay = true
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Delay on messages, replies and reaction are now enabled.");
         }
-    } else if ((query == "delayoff") && settings.onDelay) {
-        if (adm.includes(event.senderID)) {
-            settings.onDelay = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "delayoff") && settings.preference.onDelay) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.onDelay = false
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Delay on messages, replies and reaction is been disabled.");
         }
-    } else if ((query == "nsfwon") && !settings.onNsfw) {
-        if (adm.includes(event.senderID)) {
-            settings.onNsfw = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "nsfwon") && !settings.preference.onNsfw) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.onNsfw = true
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Not Safe For Work are now enabled.");
         }
-    } else if ((query == "nsfwoff") && settings.onNsfw) {
-        if (adm.includes(event.senderID)) {
-            settings.onNsfw = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "nsfwoff") && settings.preference.onNsfw) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.onNsfw = false
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Not Safe For Work is been disabled.");
         }
-    } else if ((query == "simultaneousexecutionon") && !settings.preventSimultaneousExecution) {
-        if (adm.includes(event.senderID)) {
-            settings.preventSimultaneousExecution = true
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "simultaneousexecutionon") && !settings.preference.preventSimultaneousExecution) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.preventSimultaneousExecution = true
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Prevention of simulataneous execution are now enabled.");
         }
-    } else if ((query == "simultaneousexecutionoff") && settings.preventSimultaneousExecution) {
-        if (adm.includes(event.senderID)) {
-            settings.preventSimultaneousExecution = false
-            fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings, null, 4), "utf8")
+    } else if ((query == "simultaneousexecutionoff") && settings.preference.preventSimultaneousExecution) {
+        if (users.admin.includes(event.senderID)) {
+            settings.preference.preventSimultaneousExecution = false
+            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
             sendMessage(true, api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
@@ -4342,8 +4380,8 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        if (event.type == "message" && !(group[event.threadID] === undefined) && (query == "guid" || query == "groupid")) {
-            sendMessage(true, api, event, "The " + group[event.threadID] + " guid is " + event.threadID);
+        if (event.type == "message" && !(groups.list[event.threadID] === undefined) && (query == "guid" || query == "groupid")) {
+            sendMessage(true, api, event, "The " + groups.list[event.threadID] + " guid is " + event.threadID);
         } else if (event.type == "message_reply") {
             let id1;
             if (isMyId(id1)) {
@@ -5127,7 +5165,7 @@ _____________________________
                         gender,
                         isBirthday
                     } = ret[prop]
-                    let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + keys.facebook)
+                    let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + settings.apikey.facebook)
                     let time = getTimestamp();
                     let filename = __dirname + "/cache/images/facebook_" + time + ".jpg";
                     let msg = checkFound(name) + " @" + checkFound(vanity);
@@ -5664,7 +5702,7 @@ _____________________________
             }
         }
     } else if (query == "time") {
-        sendMessage(true, api, event, "It's " + getMonth(settings.timezone) + " " + getDayN(settings.timezone) + ", " + getDay(settings.timezone) + " " + formateDate(settings.timezone));
+        sendMessage(true, api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
     } else if (query.startsWith("inspiration")) {
         if (isGoingToFast(event)) {
             return;
@@ -5786,13 +5824,13 @@ _____________________________
             })
         }
     } else if (query == "refreshstate") {
-        if (adm.includes(event.senderID)) {
-            fs.writeFileSync(__dirname + "/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+        if (users.admin.includes(event.senderID)) {
+            fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
             sendMessage(true, api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
     } else if (query == "savestate") {
-        if (adm.includes(event.senderID)) {
+        if (users.admin.includes(event.senderID)) {
             saveState();
             sendMessage(true, api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
@@ -5878,30 +5916,30 @@ function someR(api, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
         reactMessage(api, event, ":love:");
         sendMessage(true, api, event, goodev[Math.floor(Math.random() * goodev.length)]);
-        if (!isEvening(settings.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
+        if (!isEvening(settings.preference.timezone)) {
+            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
         json
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         reactMessage(api, event, ":love:");
         sendMessage(true, api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
-        if (!isMorning(settings.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
+        if (!isMorning(settings.preference.timezone)) {
+            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night")) {
         reactMessage(api, event, ":love:");
         sendMessage(true, api, event, goodni[Math.floor(Math.random() * goodni.length)]);
-        if (!isNight(settings.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
+        if (!isNight(settings.preference.timezone)) {
+            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
         reactMessage(api, event, ":love:");
         sendMessage(true, api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
-        if (!isAfternoon(settings.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.timezone) + " in the " + getDayNightTime(settings.timezone) + " over here.");
+        if (!isAfternoon(settings.preference.timezone)) {
+            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
     }
@@ -5920,10 +5958,10 @@ function parseImage(api, event, url, dir) {
 }
 
 async function sendMessage(bn, api, event, message) {
-    if (!adm.includes(event.senderID) && settings.onDelay && bn) {
+    if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await wait(2000);
     }
-    if (group[event.threadID] === undefined && event.senderID != currentID) {
+    if (groups.list[event.threadID] === undefined && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -5932,7 +5970,7 @@ async function sendMessage(bn, api, event, message) {
         if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
             if ((typeof message === "string") && message.trim().length < 200 &&
-                speech.includes(event.threadID)) {
+                groups.tts.includes(event.threadID)) {
                 const url = GoogleTTS.getAudioUrl(message, voice);
                 let time = getTimestamp();
                 let dir = __dirname + '/cache/audios/tts_' + time + '.mp3';
@@ -5961,10 +5999,10 @@ async function sendMessage(bn, api, event, message) {
 }
 
 async function sendMessageOnly(bn, api, event, message) {
-    if (!adm.includes(event.senderID) && settings.onDelay && bn) {
+    if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await wait(2000);
     }
-    if (group[event.threadID] === undefined && event.senderID != currentID) {
+    if (groups.list[event.threadID] === undefined && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -5977,7 +6015,7 @@ async function sendMessageOnly(bn, api, event, message) {
 
 async function sendMMMS(api, event, message) {
     if ((typeof message === "string") && message.trim().length < 200 &&
-        speech.includes(event.threadID)) {
+        groups.tts.includes(event.threadID)) {
         const url = GoogleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
         let dir = __dirname + '/cache/audios/tts_' + time + '.mp3';
@@ -6053,10 +6091,10 @@ function isGoingToFast(event) {
     let input = event.body;
     commandCalls = commandCalls + 1;
     log("event_body " + event.senderID + " " + input);
-    if (!settings.preventSimultaneousExecution) {
+    if (!settings.preference.preventSimultaneousExecution) {
         return false;
     }
-    if (!adm.includes(event.senderID)) {
+    if (!users.admin.includes(event.senderID)) {
         if (!(event.senderID in cmd)) {
             cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
             return false;
@@ -6168,7 +6206,7 @@ function nsfw(text) {
     return (text.includes("jabol") || text.includes("nude") || text.includes("hentai") || text.includes("milf") ||
         text.includes("masturbate") || text.includes("pussy") || text.includes("dick") || text.includes("horny") ||
         text.includes("blowjob") || text.includes("lolli ") || text.includes("sex ") || text.includes("jakol ") ||
-        text.includes("kantot ") || text.includes("jabol ") || text.includes("porn ") || text.includes("sex ")) && !settings.onNsfw;
+        text.includes("kantot ") || text.includes("jabol ") || text.includes("porn ") || text.includes("sex ")) && !settings.preference.onNsfw;
 }
 
 function getProfilePic(id) {
@@ -6269,7 +6307,7 @@ async function getImages(api, event, images) {
     let name = [];
     let i;
     for (i = 0;
-        (i < parseInt(settings.max_image) && i < images.length); i++) {
+        (i < parseInt(settings.preference.max_image) && i < images.length); i++) {
         let url = images[i].url;
         if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") &&
             !url.endsWith(".svg.png") && !url.startsWith("https://upload.wikimedia.org")) {
@@ -6321,7 +6359,7 @@ async function unsendPhoto(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return log(err);
-        if (group[event.threadID] === undefined) {
+        if (groups.list[event.threadID] === undefined) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " photos. \n";
@@ -6394,7 +6432,7 @@ async function unsendGif(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return log(err);
-        if (group[event.threadID] === undefined) {
+        if (groups.list[event.threadID] === undefined) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " gifs. \n";
@@ -6500,7 +6538,7 @@ async function bgRemove(api, event) {
     let message1 = {
         attachment: accm
     }
-    if (group[event.threadID] === undefined) {
+    if (groups.list[event.threadID] === undefined) {
         api.sendMessage(message1, event.threadID, (err, messageInfo) => {
             if (err) {
                 log(err);
@@ -6596,15 +6634,15 @@ function blockUser(api, event, id) {
     if (isMyId(id)) {
         return;
     }
-    if (blockRRR.includes(id)) {
+    if (users.blocked.includes(id)) {
         sendMessage(true, api, event, "It's already blocked.");
         return;
     }
-    blockRRR.push(id);
-    fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR, null, 4), "utf8");
-    if (adm.includes(id)) {
-        adm = adm.filter(item => item !== id);
-        fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm, null, 4), "utf8");
+    users.blocked.push(id);
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+    if (users.admin.includes(id)) {
+        users.admin = users.admin.filter(item => item !== id);
+        fs.writeFileSync(__dirname + "/data/admin.json", JSON.stringify(users), "utf8");
         sendMessage(true, api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
         sendMessage(true, api, event, "The user " + id + " is blocked.");
@@ -6612,84 +6650,84 @@ function blockUser(api, event, id) {
 }
 
 function blockGroup(api, event, id) {
-    if (blockSSS.includes(id)) {
+    if (groups.blocked.includes(id)) {
         sendMessage(true, api, event, "Group is already blocked.");
         return;
     }
-    blockSSS.push(id);
+    groups.blocked.push(id);
     sendMessage(true, api, event, "The group " + id + " is blocked.");
-    fs.writeFileSync(__dirname + "/block_groups.json", JSON.stringify(blockSSS), "utf8");
+    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function unblockGroup(api, event, id) {
-    if (!blockSSS.includes(id)) {
+    if (!groups.blocked.includes(id)) {
         sendMessage(true, api, event, "The group is not blocked.");
         return;
     }
-    blockSSS = blockSSS.filter(item => item !== id);
+    groups.blocked = groups.blocked.filter(item => item !== id);
     sendMessage(true, api, event, "The group " + id + " can now use my commands.");
-    fs.writeFileSync(__dirname + "/block_groups.json", JSON.stringify(blockSSS), "utf8");
+    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function enableTTS(api, event, id) {
-    speech.push(id);
+    groups.tts.push(id);
     sendMessage(true, api, event, "Speech Synthesis is turn on for thread " + id);
-    fs.writeFileSync(__dirname + "/speech.json", JSON.stringify(speech), "utf8");
+    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function disableTTS(api, event, id) {
-    speech = speech.filter(item => item != id);
+    groups.tts = groups.tts.filter(item => item != id);
     sendMessage(true, api, event, "Speech Synthesis is turn off for thread " + id);
-    fs.writeFileSync(__dirname + "/speech.json", JSON.stringify(speech), "utf8");
+    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function enableSmartReply(api, event, id) {
-    smartRRR.push(id);
+    users.smart_reply.push(id);
     sendMessage(true, api, event, "Smart Reply is turn on for thread " + id);
-    fs.writeFileSync(__dirname + "/smart_reply.json", JSON.stringify(smartRRR), "utf8");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function disableSmartReply(api, event, id) {
-    smartRRR = smartRRR.filter(item => item !== id);
+    users.smart_reply = users.smart_reply.filter(item => item !== id);
     sendMessage(true, api, event, "Smart Reply is turn off for thread " + id);
-    fs.writeFileSync(__dirname + "/smart_reply.json", JSON.stringify(smartRRR), "utf8");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function unblockUser(api, event, id) {
-    if (!blockRRR.includes(id)) {
+    if (!users.blocked.includes(id)) {
         sendMessage(true, api, event, "The user is not blocked.");
         return;
     }
-    blockRRR = blockRRR.filter(item => item !== id);
+    users.blocked = users.blocked.filter(item => item !== id);
     sendMessage(true, api, event, "The user " + id + " can now use my commands.");
-    fs.writeFileSync(__dirname + "/block_users.json", JSON.stringify(blockRRR), "utf8");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function addAdmin(api, event, id) {
-    if (blockRRR.includes(id)) {
+    if (users.blocked.includes(id)) {
         sendMessage(true, api, event, "I am unable to grand admin permission on a blocked user.");
         return;
     }
-    if (adm.includes(id)) {
+    if (users.admin.includes(id)) {
         sendMessage(true, api, event, "It's already an admin!");
         return;
     }
-    adm.push(id);
+    users.admin.push(id);
     sendMessage(true, api, event, "Admin permission granted.");
-    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
+    fs.writeFileSync(__dirname + "/data/admin.json", JSON.stringify(users), "utf8");
 }
 
 function remAdmin(api, event, id) {
     if (isMyId(id)) {
         return;
     }
-    if (!adm.includes(id)) {
+    if (!users.admin.includes(id)) {
         sendMessage(true, api, event, "The user has no admin rights to take away.");
         return;
     }
-    adm = adm.filter(item => item !== id);
+    users.admin = users.admin.filter(item => item !== id);
     sendMessage(true, api, event, "Admin permission removed.");
-    fs.writeFileSync(__dirname + "/admin.json", JSON.stringify(adm), "utf8");
+    fs.writeFileSync(__dirname + "/data/admin.json", JSON.stringify(users), "utf8");
 }
 
 function changeNickname(api, event, id, text) {
@@ -6997,9 +7035,9 @@ async function aiResponse(complextion, text, repeat) {
     try {
         const ai = await openai.createCompletion(generateParamaters(complextion, text));
         let text1 = ai.data.choices[0].text;
-        token.prompt_tokens = token.prompt_tokens + ai.data.usage.prompt_tokens;
-        token.completion_tokens = token.completion_tokens + ai.data.usage.completion_tokens;
-        token.total_tokens = token.total_tokens + ai.data.usage.total_tokens;
+        settings.token.prompt_tokens = settings.token.prompt_tokens + ai.data.usage.prompt_tokens;
+        settings.token.completion_tokens = settings.token.completion_tokens + ai.data.usage.completion_tokens;
+        settings.token.total_tokens = settings.token.total_tokens + ai.data.usage.total_tokens;
 
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
@@ -7017,7 +7055,7 @@ async function aiResponse(complextion, text, repeat) {
     } catch (error) {
         if (repeat) {
             log("attempt_initiated");
-            return await aiResponse(getNewComplextion(settings.text_complextion), text, false);
+            return await aiResponse(getNewComplextion(settings.preference.text_complextion), text, false);
         }
         if (!(error.response === undefined)) {
             log(error.response.status);
@@ -7039,11 +7077,11 @@ function generateParamaters(complextion, text) {
     return {
         model: complextion,
         prompt: text,
-        temperature: parseInt(settings.temperature),
-        max_tokens: parseInt(settings.max_tokens),
-        top_p: parseInt(settings.probability_mass),
-        frequency_penalty: parseInt(settings.frequency_penalty),
-        presence_penalty: parseInt(settings.presence_penalty),
+        temperature: parseInt(settings.preference.temperature),
+        max_tokens: parseInt(settings.preference.max_tokens),
+        top_p: parseInt(settings.preference.probability_mass),
+        frequency_penalty: parseInt(settings.preference.frequency_penalty),
+        presence_penalty: parseInt(settings.preference.presence_penalty),
     }
 }
 
@@ -7074,7 +7112,7 @@ async function sendMessageToAll(api, event) {
         accm.push(fs.createReadStream(__dirname + "/cache/files/notify_" + i1 + "_" + time + format));
     }
     for (gp in group) {
-        if (!blockSSS.includes(gp)) {
+        if (!groups.blocked.includes(gp)) {
             await wait(20000);
             let body = {
                 body: message + "\n\n" + "\n>> Notification From The Developer",
@@ -7112,18 +7150,18 @@ function myPrefix(query, query2) {
 }
 
 function isMyPrefix(input, query, query2) {
-    return (settings.prefix != "" && input.startsWith(settings.prefix)) || myPrefix(query, query2) ||
+    return (settings.preference.prefix != "" && input.startsWith(settings.preference.prefix)) || myPrefix(query, query2) ||
         ((query2.startsWith("what ") || query2.startsWith("when ") || query2.startsWith("who ") ||
             query2.startsWith("where ") || query2.startsWith("how ") || query2.startsWith("why ") || query2.startsWith("which "))) ||
-        otherQ(query2) || (settings.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
+        otherQ(query2) || (settings.preference.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")));
 }
 
 function saveState() {
-    fs.writeFileSync(__dirname + "/users.json", JSON.stringify(nonRRR), "utf8");
-    fs.writeFileSync(__dirname + "/msgs.json", JSON.stringify(msgs), "utf8");
-    fs.writeFileSync(__dirname + "/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
-    fs.writeFileSync(__dirname + "/group.json", JSON.stringify(group), "utf8");
-    fs.writeFileSync(__dirname + "/token.json", JSON.stringify(token), "utf8");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+    fs.writeFileSync(__dirname + "/data/msgs.json", JSON.stringify(msgs), "utf8");
+    fs.writeFileSync(__dirname + "/data/unsend_msgs.json", JSON.stringify(unsend_msgs), "utf8");
+    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
+    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
 }
 
 function getIdFromUrl(url) {
@@ -7148,7 +7186,7 @@ function isValidTimeZone(tz) {
 }
 
 async function sendMessageReaction(api, event) {
-    await wait(2500);
+    await wait(4000);
     api.setMessageReaction(event.reaction, event.messageID, (err) => {
         if (err) log(err);
     }, true);
@@ -7239,8 +7277,8 @@ function updateFont(message) {
         }
         return maven(message);
     }
-
-    if (message.body === undefined || message.body == "\u200Eeveryone") {
+    let body = message.body;
+    if (body === undefined || body == "\u200Eeveryone") {
         return message;
     }
     message.body = maven(message.body);
@@ -7253,6 +7291,9 @@ function removeTags(str) {
         return false;
     } else {
         str = str.toString();
+    }
+    if (str.includes("<br>")) {
+        str = str.replaceAll("<br>", "\n");
     }
     return str.replace(/(<([^>]+)>)/ig, '');
 }
