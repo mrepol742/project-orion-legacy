@@ -109,6 +109,7 @@ let nwww = {};
 let messagesD = "No data";
 let fb_stateD = "No data";
 let pingD = "No data";
+let gitD = "No data";
 let isCalled = true;
 let isAppState = true;
 let commandCalls = 0;
@@ -454,11 +455,16 @@ let currentID;
 
 setInterval(function() {
     for (url in settings.url) {
-        https.get(url, function(res) {
+        https.get(settings.url[url], function(res) {
             log("ping " + url);
         });
     }
     pingD = getFormattedDate();
+}, 1800000 * Math.random() + 1200000);
+
+setInterval(function() {
+    
+    gitD = getFormattedDate();
 }, 1800000 * Math.random() + 1200000);
 
 const config = new Configuration({
@@ -1400,7 +1406,7 @@ async function ai22(api, event, query, query2) {
                     const form_data1 = new FormData();
                     form_data1.append('Code', body);
                     form_data1.append('Lang', lang);
-                    let res1 = await axios.post('https://run.mrepol742.repl.co', form_data1, {
+                    let res1 = await axios.post('https://run.mrepol853.repl.co', form_data1, {
                         headers: form_data1.getHeaders()
                     });
 
@@ -1864,6 +1870,51 @@ async function ai(api, event) {
                 }
             }
         }
+    } else if (query.startsWith("quiz")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using quiz topic instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nquiz math");
+        } else {
+            data.shift();
+            try {
+                const completion = await openai.createCompletion({
+                  model: "text-davinci-003",
+                  prompt: "Generate a multiple choice quiz on " + data.join(" ") + " with 10 questions.\nQuestion:",
+                  temperature: 0.7,
+                  max_tokens: 256,
+                  top_p: 1,
+                  frequency_penalty: 0,
+                  presence_penalty: 0,
+                  stop: ["A.", "B.", "C.", "D."] 
+                });
+                const quiz = completion.data.choices[0].text.trim();
+                const quizParts = quiz.split("\n");
+                const question = quizParts[0];
+                const options = quizParts.slice(1, 5);
+                if (options && options.length > 0) {
+                    let correctAnswer = options[0].substring(0, 1);
+                    log("Quiz: " + quiz + "\nQuiz Parts: " + quizParts + "\nQuestion: " + question + "\nOptions: " + options + "\nCorrect Answer: " + correctAnswer);
+                    sendMessage(true, api, event, "Question: " + question + "\nOptions:\n" + options.join("\n"));
+                } else {
+                    sendMessage(true, api, event, "Error: No options generated for this question.");
+                }
+            } catch (error) {
+                if (!(error.response === undefined)) {
+                    if (error.response.status == 500) {
+                        sendMessage(true, api, event, "Mj is currently down. Please try it again later.");
+                    } else if (error.response.status == 429) {
+                        sendMessage(true, api, event, "Mj is at capacity right now. Please try it again later.");
+                    } else if (error.response.status == 503) {
+                        sendMessage(true, api, event, "It seems like there are problems with the server. Please try it again later.");
+                    } else {
+                        sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    }
+                }
+            }
+        }
     } else if (query == "clearcache") {
         if (users.admin.includes(event.senderID)) {
             let count = 0;
@@ -2141,12 +2192,13 @@ _______  System Info  _______
    ⦿ Heap: ` + heapUsed + `/` + heapTotal + `
    ⦿ External: ` + external + `
    ⦿ Array Buffers: ` + arrayBuffers + `
-   ⦿ Load Average: ` + avg_load[0] + ` | ` + avg_load[1] + ` | ` + avg_load[2] + `
+   ⦿ Load Average: ` + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + `
    ⦿ Save State: ` + messagesD + `
    ⦿ Fb State: ` + fb_stateD + `
    ⦿ Ping State: ` + pingD + `
+   ⦿ Git State: ` + gitD + `
    ⦿ Blocked: ` + "False" + `
-   ⦿ Crash: ` + crashes + ` crash
+   ⦿ Crash: ` + crashes + ` crash caught
 _____________________________
 `;
             sendMessage(true, api, event, message);
@@ -4410,7 +4462,7 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        sendMessage(true, api, event, help + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(true, api, event, help + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(event)) {
             return;
@@ -4418,28 +4470,28 @@ _____________________________
         let num = query.substring(3);
         switch (num) {
             case "2":
-                sendMessage(true, api, event, help1 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help1 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "3":
-                sendMessage(true, api, event, help2 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help2 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "4":
-                sendMessage(true, api, event, help3 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help3 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "5":
-                sendMessage(true, api, event, help4 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help4 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "6":
-                sendMessage(true, api, event, help5 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help5 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "7":
-                sendMessage(true, api, event, help6 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help6 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "8":
-                sendMessage(true, api, event, help7 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help7 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             case "9":
-                sendMessage(true, api, event, help8 + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(true, api, event, help8 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
                 break;
             default:
                 sendMessage(true, api, event, "Seem's like that's too far from the command list pages.");
@@ -4449,18 +4501,18 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        sendMessage(true, api, event, helpadmin + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(true, api, event, helpadmin + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdroot") {
         if (isGoingToFast(event)) {
             return;
         }
-        sendMessage(true, api, event, helproot + "\n\n>> " + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(true, api, event, helproot + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
     } else if (query == "cmdall") {
         if (isGoingToFast(event)) {
             return;
         }
         let message = {
-            body: "Due to the limitations on messenger platform.\nAll command list are now moved to: https://mrepol742.github.io/project-orion/#cmdall\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
+            body: "Due to the limitations on messenger platform.\nAll command list are now moved to: https://mrepol742.github.io/project-orion/#cmdall\n\n> " + qot[Math.floor(Math.random() * qot.length)],
             url: "https://mrepol742.github.io/project-orion/#cmdall"
         }
         sendMessage(true, api, event, message);
@@ -6312,22 +6364,23 @@ async function getImages(api, event, images) {
         if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") &&
             !url.endsWith(".svg.png") && !url.startsWith("https://upload.wikimedia.org")) {
             await wait(1000);
-            let fname = __dirname + "/cache/images/findimg" + i + "_" + time + ".png";
+            let fname = __dirname + "/cache/images/findimg_" + i + "_" + time + ".png";
             downloadFile(encodeURI(url), fname);
             name.push(fname);
+            log(url);
         }
     }
     await wait(1000);
     let accm = [];
     let i1;
     for (i1 = 0; i1 < name.length; i1++) {
-        log("push_url " + name[i1]);
+        log(name[i1]);
         accm.push(fs.createReadStream(name[i1]));
     }
     let message = {
         attachment: accm
     };
-    log(JSON.stringify(images));
+    log(JSON.stringify(message));
     api.sendMessage(message, event.threadID, (err, messageInfo) => {
         if (err) {
             log(err);
@@ -6923,7 +6976,7 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
         let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + encodeURI(name) + "&text2=" + encodeURI(gname) + "&text3=" + getSuffix(Tmem) + " Member&avatar=" + encodeURIComponent(response.request.res.responseUrl);
         downloadFile(url, filename).then((response) => {
             let message = {
-                body: "Thank you for joining " + name + " but now you're leaving us.\n\n>> " + qot[Math.floor(Math.random() * qot.length)],
+                body: "Thank you for joining " + name + " but now you're leaving us.\n\n> " + qot[Math.floor(Math.random() * qot.length)],
                 attachment: fs.createReadStream(filename),
                 /*
                 mentions: [{
@@ -7115,7 +7168,7 @@ async function sendMessageToAll(api, event) {
         if (!groups.blocked.includes(gp)) {
             await wait(20000);
             let body = {
-                body: message + "\n\n" + "\n>> Notification From The Developer",
+                body: message + "\n\n" + "\n> Notification From The Developer",
                 attachment: accm
             }
             api.sendMessage(body, gp);
@@ -7278,7 +7331,7 @@ function updateFont(message) {
         return maven(message);
     }
     let body = message.body;
-    if (body === undefined || body == "\u200Eeveryone") {
+    if (body == "" || body === undefined || body == "\u200Eeveryone") {
         return message;
     }
     message.body = maven(message.body);
