@@ -19,16 +19,9 @@ const {
     Configuration,
     OpenAIApi
 } = require("openai");
-const {
-    transcribeAudioFile
-} = require('openai-whisper');
-const {
-    WordsToNumbers
-} = require('words-to-numbers');
 const WeatherJS = require("weather-js")
 const FormData = require('form-data');
 const Youtubei = require('youtubei.js');
-const NetworkSpeed = require('network-speed')
 const GoogleTTS = require('google-tts-api');
 const google = require('googlethis');
 const axios = require("axios");
@@ -38,8 +31,6 @@ const fca = require("fca-unofficial");
 const http = require('http');
 const https = require('https');
 const os = require('os');
-const pdfdrive = require('pdfdrive-ebook-scraper');
-const path = require('path');
 const crypto = require('crypto')
 
 const pictographic = /\p{Extended_Pictographic}/ug;
@@ -56,7 +47,7 @@ http.createServer(function(req, res) {
     log("Server start at port 3000");
 });
 
-let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search", "createcode"]
+let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search"]
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?", "hello", "hi", "hellooooo", "hiiiiii", "cool", "yo"];
 let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
@@ -104,6 +95,7 @@ let cmd1 = {};
 let emo = [];
 let userPresence = {};
 let threadMaintenance = {};
+let threadUnsending = {};
 let userWhoSendDamnReports = {};
 let nwww = {};
 let messagesD = "No data";
@@ -116,6 +108,10 @@ let commandCalls = 0;
 let oldCPUTime = 0;
 let oldCPUIdle = 0;
 let crashes = 0;
+let currentID;
+let bookID = "";
+let blockedUserC = 0;
+let blockedGroupC = 0;
 
 let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
     "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
@@ -171,7 +167,8 @@ _______  Project Orion 1/9  _______
    ⦿ decode64 [text]
    ⦿ github [username]
    ⦿ run [lang] [reply]
-       Java, Python, C, C++, JavaScript, PHP and Dragon
+       Java, Python, C, C++,
+       JavaScript, PHP and Dragon
    
    AI:
     ⦿ mj [text]
@@ -291,22 +288,26 @@ _______  Project Orion 6/9  _______
 
    ⦿ uid
    ⦿ guid
-   ⦿ facts [text]
    ⦿ doublestruck [text]
    ⦿ count
    ⦿ count --vowels
    ⦿ count --consonants
-   ⦿ wfind [text]
    ⦿ time
    ⦿ time [timezone]
    ⦿ anime [category]
-       waifu, megumin, bully, cuddle
-       hug, awoo, kiss, lick
-       pat, smug, bonk, yeet
-       blush, smile, wave, highfive
-       handhold, nom, biteglomp, slap
-       kill, kick, happy, wink
-       pokedance, cringe, cry, etc...
+       waifu, neko, shinobu, megumin,
+       bully, cuddle, cry, hug,
+       awoo, kiss, lick, pat,
+       smug, bonk, yeet, blush,
+       smile, wave, highfive, handhold,
+       nom, bite, glomp, slap,
+       kill, kick, happy, wink,
+       poke, dance and cringe
+   ⦿ animeinfo [text]
+   ⦿ animesearch [text]
+   ⦿ animegenre [text]
+   ⦿ animetop
+   ⦿ animetop --movie
    ⦿ hanime [category]
 __________________________________
 `;
@@ -317,7 +318,7 @@ _______  Project Orion 7/9  _______
    ⦿ encodeBinary [text]
    ⦿ decodeBinary [text]
    ⦿ sayjap [text]
-   ⦿ pdf [text]
+   ⦿ mathfacts
    ⦿ website [urrl]
    ⦿ mean [numbers]
    ⦿ median [numbers]
@@ -357,7 +358,7 @@ _______  Project Orion 8/9  _______
    ⦿ musiclyric [title]
    ⦿ videolyric [title]
    ⦿ formatNumbers [numbers]
-   ⦿ wordsToNumbers [words]
+   ⦿ everyone
    ⦿ fbi
  __________________________________
 `;
@@ -365,8 +366,6 @@ _______  Project Orion 8/9  _______
 let help8 = `
 _______  Project Orion 9/9  _______
 
-   ⦿ everyone
-   ⦿ mathfacts
    ⦿ datefacts
    ⦿ triviafacts
    ⦿ yearfacts
@@ -376,6 +375,8 @@ _______  Project Orion 9/9  _______
    ⦿ totext
    ⦿ ig [username]
    ⦿ tiktok [username]
+   ⦿ wfind [text]
+   ⦿ facts [text]
 __________________________________
 `;
 
@@ -395,6 +396,7 @@ _______  Project Orion Admin  _______
    ⦿ refreshState
    ⦿ saveState
    ⦿ isBot [mention|name|url|uid|reply]
+   ⦿ isNotBot [mention|name|url|uid|reply]
    ⦿ addAdmin [mention|name|url|uid|reply]
    ⦿ remAdmin [mention|name|url|uid|reply]
    ⦿ kickUser [mention|name|url|uid|reply]
@@ -446,26 +448,20 @@ let settings = JSON.parse(fs.readFileSync(__dirname + "/data/settings.json", "ut
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync(__dirname + "/data/msgs.json", "utf8"));
 let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/data/unsend_msgs.json", "utf8"));
-let filter = JSON.parse(fs.readFileSync(__dirname + "/data/filter.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
-let state = {
-    appState: JSON.parse(fs.readFileSync(__dirname + "/data/app_state.json", "utf8"))
-};
-let currentID;
 
-setInterval(function() {
+task(function() {
     for (url in settings.url) {
         https.get(settings.url[url], function(res) {
             log("ping " + url);
         });
     }
-    pingD = getFormattedDate();
-}, 1800000 * Math.random() + 1200000);
+    pingD = getFormattedDate()
+}, Math.floor(1800000 * Math.random() + 1200000));
 
-setInterval(function() {
-    
-    gitD = getFormattedDate();
-}, 1800000 * Math.random() + 1200000);
+task(function() {
+    gitD = getFormattedDate()
+}, Math.floor(1800000 * Math.random() + 1200000));
 
 const config = new Configuration({
     apiKey: settings.apikey.ai
@@ -496,12 +492,10 @@ log(JSON.stringify(options, null, 4));
 const openai = new OpenAIApi(config);
 
 process.on('beforeExit', (code) => {
-    saveState();
     log('process_before_exit ' + code);
 });
 
 process.on('exit', (code) => {
-    saveState();
     log('process_exit ' + code);
 });
 
@@ -511,57 +505,39 @@ process.on('SIGINT', function() {
     process.exit();
 });
 
-fca(state, (err, api) => {
+fca(loadAppState("nf9372fh4ce83g"), (err, api) => {
     if (err) return log(err);
 
     process.on('uncaughtException', (err, origin) => {
-        crashes++;
-        let message = `
-________  Exception  ________
-
-   ⦿ ` + err + `
-____________________________
-        `;
-        log(message)
-        api.sendMessage(message, currentID, (err, messageInfo) => {
-            if (err) log(err);
-        })
+        caughtException(api, err);
     });
 
     process.on('unhandledRejection', (reason, promise) => {
-        crashes++;
-        let message = `
-________  Exception  ________
-
-   ⦿ ` + reason + `
-____________________________
-`;
-        log(message);
-        api.sendMessage(message, currentID, (err, messageInfo) => {
-            if (err) log(err);
-        })
+        caughtException(api, reason);
     });
 
-    setInterval(function() {
+    task(function() {
         saveState();
-        messagesD = getFormattedDate();
+        messagesD = getFormattedDate()
         log("save_state");
-    }, 1800000 * Math.random() + 1200000);
+    }, Math.floor(1800000 * Math.random() + 1200000));
 
-    setInterval(function() {
+    task(function() {
         cmd = {};
         acGG = [];
         commandCalls = 0;
+        blockedGroupC = 0;
+        blockedUserC = 0;
         log("clear_list");
-    }, 600000);
+    }, 60 * 10 * 1000);
 
-    setInterval(function() {
-        fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
-        fb_stateD = getFormattedDate();
+    task(function() {
+        fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
+        fb_stateD = getFormattedDate()
         log("fb_save_state")
-    }, 1800000 * Math.random() + 1200000);
+    }, Math.floor(1800000 * Math.random() + 1200000));
 
-    setInterval(function() {
+    task(function() {
         let min = 120000;
         for (time in userPresence) {
             if (userPresence[time] != null) {
@@ -576,7 +552,7 @@ ____________________________
                 }
             }
         }
-    }, 120000);
+    }, 60 * 2 * 1000);
 
     api.setOptions(options);
 
@@ -617,7 +593,7 @@ ERR! uploadAttachment }
 
         if (isAppState) {
             currentID = api.getCurrentUserID();
-            fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+            fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
             isAppState = false;
         }
 
@@ -714,15 +690,17 @@ ERR! uploadAttachment }
                     } else {
                         sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS.");
                     }
-                } else if (!(users.admin.includes(event.senderID))) {
-                    if (groups.blocked.includes(event.threadID)) {
-                        saveEvent(event);
-                        return;
-                    } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) &&
-                        (event.type == "message" || event.type == "message_reply")) {
-                        saveEvent(event);
-                        return;
-                    }
+                } else if (users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
+                    saveEvent(event);
+                    return;
+                }
+            }
+
+            if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && 
+                !(users.admin.includes(event.senderID))) {
+                if (groups.blocked.includes(event.threadID) && event.type != "message_unsend") {
+                    saveEvent(event);
+                    return;
                 }
             }
 
@@ -742,7 +720,7 @@ ERR! uploadAttachment }
                     return;
                 } else if (query == "restart") {
                     saveState();
-                    fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+                    fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
                     let rs = [];
                     rs.push(event.threadID);
                     rs.push(event.messageID);
@@ -793,10 +771,12 @@ ERR! uploadAttachment }
         } else if (groups.blocked.includes(event.threadID)) {
             if ((event.type == "message" || event.type == "message_reply")) {
                 saveEvent(event);
+                blockedGroupC++;
             }
             return;
         } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) &&
             (event.type == "message" || event.type == "message_reply")) {
+            blockedUserC++;
             saveEvent(event);
             return;
         }
@@ -807,7 +787,7 @@ ERR! uploadAttachment }
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, '');
                 if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
-                    if (isGoingToFastCallingTheCommand(event)) {
+                    if (isGoingToFast1(event, threadMaintenance, 15)) {
                         return;
                     }
                     let message = {
@@ -853,15 +833,14 @@ ERR! uploadAttachment }
             case "message_unsend":
                 let d = msgs[event.messageID];
                 if (d === undefined || isMyId(event.senderID)) {
-                    log("unsend_undefined " + event.messageID);
                     break;
                 }
                 unsend_msgs[event.messageID] = d;
-                if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID)) {
+                log("message_unsend " + d[0]);
+                if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID) || groups.blocked.includes(event.threadID)) {
                     break;
                 }
-                log("message_unsend " + d[0]);
-                if (isGoingToFastCallingTheCommand(event)) {
+                if (isGoingToFast1(event, threadUnsending, 2)) {
                     return;
                 }
                 if (d[0] == "photo") {
@@ -1372,7 +1351,7 @@ async function ai22(api, event, query, query2) {
         let input = event.body;
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using run language instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrun python")
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using run language instead.\nCategories:\nJava, Python, C, C++,\nJavaScript, PHP and Dragon" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrun python")
         } else {
             data.shift()
             let lang = data.join(" ").toLowerCase();
@@ -1452,7 +1431,6 @@ async function ai22(api, event, query, query2) {
             } else {
                 let filename = __dirname + '/cache/images/searchimgreverse_' + getTimestamp() + '.png'
                 downloadFile(event.messageReply.attachments[0].url, filename).then((response) => {
-
                     searchimgr(api, event, filename);
                     unLink(filename);
                 });
@@ -1599,8 +1577,6 @@ async function ai(api, event) {
                 text = input.substring(28)
             } else if (query.startsWith("melvinjones")) {
                 text = input.substring(13)
-            } else if (query.startsWith("createcode")) {
-                text = input.substring(10)
             } else if (query.startsWith("search") || query.startsWith("misaka")) {
                 text = input.substring(7)
             } else if (input.startsWith(settings.preference.prefix)) {
@@ -1736,7 +1712,7 @@ async function ai(api, event) {
             } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
                 return;
             } else if (!query.startsWith("search") && (text.split(" ").length < 2 || text.indexOf(" ") == -1) && !/^[0-9]+$/.test(text1)) {
-                if (repeatOfNonWWW(event)) {
+                if (isGoingToFast1(event, nwww, 1)) {
                     return;
                 }
                 if (text1.startsWith("what")) {
@@ -1827,6 +1803,36 @@ async function ai(api, event) {
                 sendMessage(true, api, event, response.data.choices[0].text);
             } catch (err) {
                 sendMessage(true, api, event, "OpenAI is at capacity right now. Please try it again later.");
+            }
+        }
+    } else if (query.startsWith("createcode")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using createcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncreatecode hello world in python")
+        } else {
+            data.shift();
+            try {
+                const response = await openai.createCompletion({
+                    model: "code-davinci-002",
+                    prompt: data.join(" "),
+                    max_tokens: 2000
+                });
+                sendMessage(true, api, event, response.data.choices[0].text);
+            } catch (error) {
+                if (!(error.response === undefined)) {
+                    if (error.response.status == 500) {
+                        sendMessage(true, api, event, "Mj is currently down. Please try it again later.");
+                    } else if (error.response.status == 429) {
+                        sendMessage(true, api, event, "Mj is at capacity right now. Please try it again later.");
+                    } else if (error.response.status == 503) {
+                        sendMessage(true, api, event, "It seems like there are problems with the server. Please try it again later.");
+                    } else {
+                        sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    }
+                }
             }
         }
     } else if (query.startsWith("createimg")) {
@@ -2122,15 +2128,15 @@ _______________________
         let message = `
 _______  Statistics  _______
 
-   ⦿ Your Messages: ` + count + `
-   ⦿ Your Unsend Messages: ` + count1 + `
+   ⦿ Date: ` + getFormattedDate() + `
+   ⦿ Your Messages: ` + numberWithCommas(count) + `
+   ⦿ Your Unsend Messages: ` + numberWithCommas(count1) + `
    ⦿ Total Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
    ⦿ Toal Unsend Messages: ` + numberWithCommas(Object.keys(unsend_msgs).length) + `
    ⦿ Users: ` + numberWithCommas(Object.keys(cmd).length) + `/` + numberWithCommas(users.list.length) + `
    ⦿ Groups: ` + acGG.length + `/` + numberWithCommas(Object.keys(groups.list).length) + `
-   ⦿ Block Users: ` + users.blocked.length + `
-   ⦿ Block Groups: ` + groups.blocked.length + `
-   ⦿ Muted Users: ` + users.muted.length + `
+   ⦿ Block Users: ` + blockedUserC + "/" + users.blocked.length + `
+   ⦿ Block Groups: ` + blockedGroupC + "/" + groups.blocked.length + `
    ⦿ Command Call: ` + commandCalls + `
    ⦿ Total Tokens: ` + settings.token.total_tokens + `
 ___________________________
@@ -2153,46 +2159,30 @@ _______________________
         if (isGoingToFast(event)) {
             return;
         }
-        (async () => {
-            const testNetworkSpeed = new NetworkSpeed();
             let osFreeMem = convertBytes(os.freemem());
             let osTotalMem = convertBytes(os.totalmem());
             let seconds_con = secondsToTime(process.uptime());
-            let fileSizeInBytes = 500000;
-            let speed = await testNetworkSpeed.checkDownloadSpeed('https://eu.httpbin.org/stream-bytes/500000', fileSizeInBytes);
-            let optionss = {
-                hostname: 'www.google.com',
-                port: 80,
-                path: '/catchers/544b09b4599c1d0200000289',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            };
-
-
-            let upload_spee = await testNetworkSpeed.checkUploadSpeed(optionss, fileSizeInBytes);
-            const rss = convertBytes(process.memoryUsage().rss);
-            const heapTotal = convertBytes(process.memoryUsage().heapTotal);
-            const heapUsed = convertBytes(process.memoryUsage().heapUsed);
-            const external = convertBytes(process.memoryUsage().external);
-            const arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
+            let rss = convertBytes(process.memoryUsage().rss);
+            let heapTotal = convertBytes(process.memoryUsage().heapTotal);
+            let heapUsed = convertBytes(process.memoryUsage().heapUsed);
+            let external = convertBytes(process.memoryUsage().external);
+            let arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
             let avg_load = os.loadavg();
             let message = `
 _______  System Info  _______
 
+   ⦿ Date: ` + getFormattedDate() + `
    ⦿ Uptime: ` + seconds_con + `
    ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
    ⦿ CPU Usage: ` + getLoad() + `%
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
    ⦿ RAM: ` + osFreeMem + `/` + osTotalMem + `
-   ⦿ ROM: ` + "1.5/10GB" + `
-   ⦿ Speed: ` + upload_spee.mbps + ` mbps | ` + speed.mbps + ` mbps
+   ⦿ ROM: ` + convertBytes((process.memoryUsage().rss+process.memoryUsage().heapUsed)*2) + "/10GB" + `
    ⦿ RSS: ` + rss + `
    ⦿ Heap: ` + heapUsed + `/` + heapTotal + `
    ⦿ External: ` + external + `
    ⦿ Array Buffers: ` + arrayBuffers + `
-   ⦿ Load Average: ` + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + `
+   ⦿ Average Load: ` + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + `%
    ⦿ Save State: ` + messagesD + `
    ⦿ Fb State: ` + fb_stateD + `
    ⦿ Ping State: ` + pingD + `
@@ -2202,7 +2192,6 @@ _______  System Info  _______
 _____________________________
 `;
             sendMessage(true, api, event, message);
-        })();
     } else if (query.startsWith("dns4")) {
         if (isGoingToFast(event)) {
             return;
@@ -3023,35 +3012,6 @@ _____________________________
         } else {
             sendMessage(true, api, event, settings.pin[event.threadID]);
         }
-    } else if (query.startsWith("pdf")) {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using pdf text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npdf fundamentals in engineering")
-        } else {
-            try {
-                data.shift();
-                let searched = data.join(" ");
-
-                let res = await pdfdrive.findEbook(searched);
-                let res2 = await pdfdrive.getEbook(res[0].ebookUrl);
-                let time = getTimestamp();
-                let filename = __dirname + '/cache/files/pdf_' + time + '.pdf'
-                downloadFile(encodeURI(url), filename).then((response) => {
-                    let message = {
-                        body: res2.ebookName,
-                        attachment: fs.createReadStream(filename)
-                    };
-                    sendMessage(true, api, event, message);
-                    unLink(filename);
-                });
-            } catch (err) {
-                log(err);
-                sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
-            }
-        }
     } else if (query.startsWith("dictionary")) {
         if (isGoingToFast(event)) {
             return;
@@ -3575,7 +3535,7 @@ _____________________________
                     let plot = response.plot;
                     let time = getTimestamp();
                     let filename = __dirname + '/cache/images/imdb_' + time + '.png'
-                    downloadFile(encodeURI(avatar), filename).then((response) => {
+                    downloadFile(encodeURI(poster), filename).then((response) => {
                         let message = {
                             body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
                             attachment: fs.createReadStream(filename)
@@ -3698,7 +3658,11 @@ _____________________________
             });
         }
     } else if (query.startsWith("sendreport")) {
-        if (isGoingToFastReporting(api, event)) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (isGoingToFast1(event, userWhoSendDamnReports, 30)) {
+            sendMessage(true, api, event, "Please wait a while. Before sending another report.");
             return;
         }
         let data = input.split(" ");
@@ -4023,7 +3987,7 @@ _____________________________
     } else if (query.startsWith("gcolor")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nTheme:\nDefaultBlue, HotPink, AquaBlue, BrightPurple\nCoralPink, Orange, Green, LavenderPurple\nRed, Yellow, TealBlue, Aqua\nMango, Berry, Citrus, Candy" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
         } else {
             data.shift();
             let pref = data.join(" ").toLowerCase();
@@ -4157,6 +4121,40 @@ _____________________________
                     return;
                 }
                 users.bot.push(id);
+                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+                sendMessage(true, api, event, "Noted.");
+            }
+        }
+    } else if (query.startsWith("isnotbot")) {
+        if (users.admin.includes(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using isNotBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisNotBot @Zero Two")
+            } else {
+                let id = Object.keys(event.mentions)[0];
+                if (id === undefined) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
+                            if (err) return log(err);
+                            users.bot.pop(data[0].userID);
+                            fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+                            sendMessage(true, api, event, "Noted.");
+                        });
+                        return;
+                    }
+                } else if (isMyId(id)) {
+                    return;
+                }
+                users.bot.pop(id);
                 fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                 sendMessage(true, api, event, "Noted.");
             }
@@ -5034,17 +5032,6 @@ _____________________________
             data.shift();
             sendMessage(true, api, event, numberWithCommas(data.join(" ")));
         }
-    } else if (query.startsWith("wordstonumbers")) {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using wordsToNumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwordsToNumbers one hundred and five")
-        } else {
-            data.shift();
-            sendMessage(true, api, event, numberWithCommas(WordsToNumbers(data.join(" "))));
-        }
     } else if (query.startsWith("mnm")) {
         if (isGoingToFast(event)) {
             return;
@@ -5443,7 +5430,7 @@ _____________________________
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using hanime category instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using hanime category instead.\n\nCategories: \nwaifu, neko, trap, blowjob" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
         } else {
             getResponseData("https://api.waifu.pics/nsfw/" + text).then((response) => {
                 if (response == null) {
@@ -5501,6 +5488,176 @@ _____________________________
                 });
             }
         });
+    } else if (query == "animetopmovie") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        getResponseData('https://gogoanime.consumet.stream/anime-movies').then((response) => {
+                if (response == null) {
+                    sendMessage(true, api, event, "Unfortunately an error occured.");
+                } else {
+                    let list = "";
+                    let i;
+                    let img;
+                    let isRep = true;
+                    for (i = 0; i < response.length; i++) {
+                         list += "\n" + (i + 1) + ". " + response[i].animeTitle + " " + response[i].releasedDate;
+                         if (isRep) {
+                            img = response[i].animeImg;
+                            isRep = false;
+                         }
+                    }
+                    let filename = __dirname + "/cache/images/animetopmovie_" + getTimestamp() + ".png";
+                    downloadFile(encodeURI(img), filename).then((response) => {
+                        let message = {
+                            body: "Top Popular Anime Movies\n" + list,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
+                }
+            });
+    } else if (query == "animetop") {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        getResponseData('https://gogoanime.consumet.stream/top-airing').then((response) => {
+                if (response == null) {
+                    sendMessage(true, api, event, "Unfortunately an error occured.");
+                } else {
+                    let list = "";
+                    let i;
+                    let img;
+                    let isRep = true;
+                    for (i = 0; i < response.length; i++) {
+                         list += "\n" + (i + 1) + ". " + response[i].animeTitle;
+                         if (isRep) {
+                            img = response[i].animeImg;
+                            isRep = false;
+                         }
+                    }
+                    let filename = __dirname + "/cache/images/animetop_" + getTimestamp() + ".png";
+                    downloadFile(encodeURI(img), filename).then((response) => {
+                        let message = {
+                            body: "Top Popular Anime Series\n" + list,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
+                }
+            });
+        } else if (query.startsWith("animegenre")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ")
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using animegenre genre instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimegenre action")
+            } else {
+                data.shift()
+                let name = data.join(" ");
+                getResponseData('https://gogoanime.consumet.stream/genre/' + name).then((response) => {
+                    if (response == null) {
+                        sendMessage(true, api, event, "Invalid genre \"" + name + "\".");
+                    } else {
+                        let list = "";
+                        let i;
+                        let img;
+                        let isRep = true;
+                        for (i = 0; i < response.length; i++) {
+                             list += "\n" + (i + 1) + ". " + response[i].animeTitle + " " + response[i].releasedDate;
+                             if (isRep) {
+                                img = response[i].animeImg;
+                                isRep = false;
+                             }
+                        }
+                        let filename = __dirname + "/cache/images/animegenre_" + getTimestamp() + ".png";
+                        downloadFile(encodeURI(img), filename).then((response) => {
+                            let message = {
+                                body: list,
+                                attachment: fs.createReadStream(filename)
+                            };
+                            sendMessage(true, api, event, message);
+                            unLink(filename);
+                        });
+                    }
+                });
+            }
+        } else if (query.startsWith("animesearch")) {
+            if (isGoingToFast(event)) {
+                return;
+            }
+            let data = input.split(" ")
+            if (data.length < 2) {
+                sendMessage(true, api, event, "Opps! I didnt get it. You should try using animesearch text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimesearch Detective Conan")
+            } else {
+                data.shift()
+                let name = data.join(" ");
+                getResponseData('https://gogoanime.consumet.stream/search?keyw=' + name).then((response) => {
+                    if (response == null) {
+                        sendMessage(true, api, event, "Unfortunately there was no search output found for \"" + name + "\".");
+                    } else {
+                        let list = "";
+                        let i;
+                        let img;
+                        let isRep = true;
+                        for (i = 0; i < response.length; i++) {
+                             list += "\n" + (i + 1) + ". " + response[i].animeTitle;
+                             if (isRep) {
+                                img = response[i].animeImg;
+                                isRep = false;
+                             }
+                        }
+                        let filename = __dirname + "/cache/images/animesearch_" + getTimestamp() + ".png";
+                        downloadFile(encodeURI(img), filename).then((response) => {
+                            let message = {
+                                body: "Here are the results:\n" + list,
+                                attachment: fs.createReadStream(filename)
+                            };
+                            sendMessage(true, api, event, message);
+                            unLink(filename);
+                        });
+                    }
+                });
+            }
+    } else if (query.startsWith("animeinfo")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ")
+        if (data.length < 2) {
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using animeinfo text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimeinfo Detective Conan")
+        } else {
+            data.shift()
+            let name = data.join(" ").replaceAll(" ", "-");
+            getResponseData('https://gogoanime.consumet.stream/anime-details/' + name).then((response) => {
+                if (response == null) {
+                    sendMessage(true, api, event, "Unfortunately anime \"" + name + "\" was not found.");
+                } else {
+                    let title = response.animeTitle;
+                    let otherT = response.otherNames;
+                    let year = response.releasedDate;
+                    let type = response.type;
+                    let status = response.status;
+                    let animeImg = response.animeImg;
+                    let genres = response.genres;
+                    let synopsis = response.synopsis;
+                    let ep = response.totalEpisodes;
+                    let time = getTimestamp();
+                    let filename = __dirname + '/cache/images/animeinfo_' + time + '.png'
+                    downloadFile(encodeURI(animeImg), filename).then((response) => {
+                        let message = {
+                            body: "⦿ Title: " + title + " (" + otherT + ") " + year + "\n⦿ Genres: " + genres + "\n⦿ Type: " + type + "\n⦿ Status: " + status+ "\n⦿ Episodes: " + ep + "\n\n" + synopsis,
+                            attachment: fs.createReadStream(filename)
+                        };
+                        sendMessage(true, api, event, message);
+                        unLink(filename);
+                    });
+                }
+            });
+        }
     } else if (query.startsWith("anime")) {
         if (isGoingToFast(event)) {
             return;
@@ -5509,7 +5666,7 @@ _____________________________
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using anime category instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanime waifu");
+            sendMessage(true, api, event, "Opps! I didnt get it. You should try using anime category instead.\n\nCategories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanime waifu");
         } else {
             getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
                 if (response == null) {
@@ -5877,7 +6034,7 @@ _____________________________
         }
     } else if (query == "refreshstate") {
         if (users.admin.includes(event.senderID)) {
-            fs.writeFileSync(__dirname + "/data/app_state.json", JSON.stringify(api.getAppState(), null, 4), "utf8");
+            fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
             sendMessage(true, api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
@@ -6147,65 +6304,31 @@ function isGoingToFast(event) {
         return false;
     }
     if (!users.admin.includes(event.senderID)) {
-        if (!(event.senderID in cmd)) {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
-            return false;
-        } else if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
+        if (!(cmd[event.senderID] === undefined)) {
+            if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
             let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 20;
             if (seconds > 3) {
                 log("block_user " + event.senderID + " " + seconds);
                 return true;
             }
             return false;
-        } else {
-            cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
-            return false;
         }
+        }
+        cmd[event.senderID] = Math.floor(Date.now() / 1000) + (20);
+        return false;
     }
     return false;
 }
 
-function isGoingToFastCallingTheCommand(event) {
-    if (!(event.threadID in threadMaintenance)) {
-        threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 15);
-        return false;
-    } else if (Math.floor(Date.now() / 1000) < threadMaintenance[event.threadID]) {
-        let seconds = (threadMaintenance[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 15);
-        log("block_maintenance " + event.threadID + " " + seconds);
-        return true;
-    } else {
-        threadMaintenance[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 15);
-        return false;
+function isGoingToFast1(event, list, time) {
+    if (!(list[event.threadID] === undefined)) {
+       if (Math.floor(Date.now() / 1000) < list[event.threadID]) {
+           log("going_to_fast " + event.threadID + " " + (list[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * time));
+           return true;
+       }
     }
-}
-
-function repeatOfNonWWW(event) {
-    if (!(event.threadID in nwww)) {
-        nwww[event.threadID] = Math.floor(Date.now() / 1000) + (60);
-        return false;
-    } else if (Math.floor(Date.now() / 1000) < nwww[event.threadID]) {
-        let seconds = (nwww[event.threadID] - Math.floor(Date.now() / 1000)) % 60;
-        log("The ThreadID is temporarily blocked from resending AI Query for " + seconds + " seconds.")
-        return true;
-    } else {
-        nwww[event.threadID] = Math.floor(Date.now() / 1000) + (60);
-        return false;
-    }
-}
-
-function isGoingToFastReporting(api, event) {
-    if (!(event.threadID in userWhoSendDamnReports)) {
-        userWhoSendDamnReports[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 30);
-        return false;
-    } else if (Math.floor(Date.now() / 1000) < userWhoSendDamnReports[event.threadID]) {
-        let seconds = (userWhoSendDamnReports[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * 30);
-        sendMessage(true, api, event, "Please wait " + seconds + " seconds. Before sending another report.");
-        log("The ThreadID is temporarily blocked from using sendReport for " + seconds + " seconds.");
-        return true;
-    } else {
-        userWhoSendDamnReports[event.threadID] = Math.floor(Date.now() / 1000) + (60 * 30);
-        return false;
-    }
+    list[event.threadID] = Math.floor(Date.now() / 1000) + (60 * time);
+    return false;
 }
 
 const checkFound = (text) => {
@@ -6365,9 +6488,10 @@ async function getImages(api, event, images) {
             !url.endsWith(".svg.png") && !url.startsWith("https://upload.wikimedia.org")) {
             await wait(1000);
             let fname = __dirname + "/cache/images/findimg_" + i + "_" + time + ".png";
-            downloadFile(encodeURI(url), fname);
-            name.push(fname);
-            log(url);
+            downloadFile(encodeURI(url), fname).then((response) => {
+                name.push(fname);
+                log(url);
+            });
         }
     }
     await wait(1000);
@@ -6378,9 +6502,9 @@ async function getImages(api, event, images) {
         accm.push(fs.createReadStream(name[i1]));
     }
     let message = {
+        body: "",
         attachment: accm
     };
-    log(JSON.stringify(message));
     api.sendMessage(message, event.threadID, (err, messageInfo) => {
         if (err) {
             log(err);
@@ -6550,12 +6674,12 @@ async function bgRemove(api, event) {
     let i66;
     for (i66 = 0; i66 < url.length; i66++) {
         await wait(1000);
-        let dataUrl = __dirname + '/cache/images/removebg_' + i66 + '_' + time + '.png';
-        let inputPath = './cache/images/removebg_' + i66 + '_' + time + '.png';
+        let name = 'removebg_' + i66 + '_' + time + '.png';
+        let dataUrl = __dirname + '/cache/images/' + name;
         downloadFile(encodeURI(url[i66]), dataUrl).then((response) => {
             const formData = new FormData();
             formData.append('size', 'auto');
-            formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
+            formData.append('image_file', fs.createReadStream(dataUrl), name);
 
             axios({
                     method: 'post',
@@ -6571,7 +6695,7 @@ async function bgRemove(api, event) {
                 .then((res) => {
                     log(res.status)
                     if (res.status == 200) {
-                        fs.writeFileSync(inputPath, res.data);
+                        fs.writeFileSync(dataUrl, res.data);
                         log("done " + dataUrl);
                     }
                 })
@@ -6692,14 +6816,13 @@ function blockUser(api, event, id) {
         return;
     }
     users.blocked.push(id);
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     if (users.admin.includes(id)) {
         users.admin = users.admin.filter(item => item !== id);
-        fs.writeFileSync(__dirname + "/data/admin.json", JSON.stringify(users), "utf8");
         sendMessage(true, api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
         sendMessage(true, api, event, "The user " + id + " is blocked.");
     }
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function blockGroup(api, event, id) {
@@ -6767,7 +6890,7 @@ function addAdmin(api, event, id) {
     }
     users.admin.push(id);
     sendMessage(true, api, event, "Admin permission granted.");
-    fs.writeFileSync(__dirname + "/data/admin.json", JSON.stringify(users), "utf8");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function remAdmin(api, event, id) {
@@ -6780,7 +6903,7 @@ function remAdmin(api, event, id) {
     }
     users.admin = users.admin.filter(item => item !== id);
     sendMessage(true, api, event, "Admin permission removed.");
-    fs.writeFileSync(__dirname + "/data/admin.json", JSON.stringify(users), "utf8");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function changeNickname(api, event, id, text) {
@@ -7323,7 +7446,7 @@ function maven(text) {
     }).join("");
 }
 
-function updateFont(message) {
+  function updateFont(message) {
     if (typeof message === "string") {
         if (message == "\u200Eeveryone") {
             return message;
@@ -7334,7 +7457,7 @@ function updateFont(message) {
     if (body == "" || body === undefined || body == "\u200Eeveryone") {
         return message;
     }
-    message.body = maven(message.body);
+    message.body = maven(body);
     return message;
 }
 
@@ -7377,11 +7500,12 @@ async function downloadFile(fileUrl, outputLocationPath) {
 }
 
 function getLoad() {
-    let cpus = os.cpus()
-    let totalTime = -oldCPUTime
-    let totalIdle = -oldCPUIdle
-    for (let i = 0; i < cpus.length; i++) {
-        let cpu = cpus[i]
+    let cpus = os.cpus();
+    let totalTime = -oldCPUTime;
+    let totalIdle = -oldCPUIdle;
+    let i;
+    for (i = 0; i < cpus.length; i++) {
+        let cpu = cpus[i];
         for (let type in cpu.times) {
             totalTime += cpu.times[type];
             if (type == "idle") {
@@ -7389,11 +7513,9 @@ function getLoad() {
             }
         }
     }
-
-    let load = 100 - Math.round(totalIdle / totalTime * 100)
-    oldCPUTime = totalTime
-    oldCPUIdle = totalIdle
-
+    let load = 100 - Math.round(totalIdle / totalTime * 100);
+    oldCPUTime = totalTime;
+    oldCPUIdle = totalIdle;
     return load;
 }
 
@@ -7402,6 +7524,55 @@ async function searchimgr(api, event, filename) {
     let reverse = await google.search(img, {
         ris: true
     })
-    log(JSON.stringify(reverse))
+     
     getImages(api, event, reverse);
 }
+
+async function transcribeAudioFile(filePath) {
+    const formData = new FormData();
+    formData.append('audio_file', fs.createReadStream(filePath), {contentType: 'audio/mpeg'});
+    formData.append('task', 'transcribe');
+    formData.append('output', 'txt');
+  
+    try {
+      const api_url = "http://stt.amosayomide05.cf:9000/asr?task=transcribe&output=txt";
+      const response = await axios.post(api_url, formData, {
+        headers: {
+          ...formData.getHeaders(),
+          'accept': 'application/json'
+        }
+      });
+      return response.data;
+    } catch (error) {
+     log(error)
+    }
+  }
+
+  function getAppState(api) {
+    return JSON.stringify(api.getAppState());
+  }
+
+  function loadAppState(text) {
+    let state = fs.readFileSync(__dirname + "/data/" + settings.preference.app_state, "utf8");
+    return {
+        appState: JSON.parse(state)
+    };
+  }
+
+  function caughtException(api, err) {
+        crashes++;
+        let message = `
+________  Exception  ________
+
+   ⦿ ` + err + `
+____________________________
+        `;
+        log(message)
+        api.sendMessage(message, currentID, (err, messageInfo) => {
+            if (err) log(err);
+        })
+  }
+
+  function task(func, time) {
+    return setInterval(func, time);
+    }

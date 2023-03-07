@@ -1,20 +1,33 @@
+const axios = require("axios");
+const fs = require("fs");
 
-/*const fs = require("fs");
 
-//let data = fs.readFileSync(__dirname + "/cache/images/byebye_1677410993.jpg", "utf8");
-let data = fs.readFileSync(__dirname + "/cache/images/createimg_1677329405.png", "utf8");
-const latinC = /[^a-z0-9]/gi;
+downloadFile(encodeURI("https://mrepol742.github.io/favicon.ico"), __dirname + "/file").then((response) => {
+    
+});
 
-console.log(data);
-*/
-var request = require('request');
 
-request.post(
-    'https://toughsleepyapplicationprogram.mrepol853.repl.co/',
-    { json: { lang: 'php', code: 'echo \'hello world\';' } },
-    function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(body);
-        }
-    }
-);
+async function downloadFile(fileUrl, outputLocationPath) {
+    const writer = fs.createWriteStream(outputLocationPath);
+
+    return axios({
+        method: 'get',
+        url: fileUrl,
+        responseType: 'stream',
+    }).then(response => {
+        return new Promise((resolve, reject) => {
+            response.data.pipe(writer);
+            let error = null;
+            writer.on('error', err => {
+                error = err;
+                writer.close();
+                reject(err);
+            });
+            writer.on('close', () => {
+                if (!error) {
+                    resolve(true);
+                }
+            });
+        });
+    });
+}
