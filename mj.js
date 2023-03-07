@@ -154,6 +154,7 @@ _______  Project Orion 1/9  _______
    ⦿ search [text]
    ⦿ searchincog [text]
    ⦿ searchimg [text]
+   ⦿ searchimg --reverse
    ⦿ createcode [text]
    ⦿ createimg [text]
    ⦿ dictionary [text]
@@ -598,13 +599,18 @@ ERR! uploadAttachment }
         }
 
         if (event.type == "message" || event.type == "message_reply") {
-            let body = event.body;
+            let body = getBody(event);
             let result = !!body.match(/^[!@#$%&*~|?/_]/)
             if (!result && isMyId(event.senderID)) {
                 return;
             }
             if (result) {
                 event.body = body.slice(1);
+            }
+            if (event.type == "message_reply") {
+                if (event.messageReply.body == body) {
+                    return;
+                }
             }
         }
 
@@ -1332,7 +1338,9 @@ async function ai22(api, event, query, query2) {
                 downloadFile(encodeURI(url), dir).then((response) => {
                     transcribeAudioFile(dir)
                         .then(transcription => {
-                            sendMessage(true, api, event, transcription);
+                            api.sendMessage(transcription, event.threadID, (err, messageInfo) => {
+                                if (err) log(err);
+                            }, event.messageReply.messageID);
                             unLink(dir);
                         })
                         .catch(error => {
@@ -1365,11 +1373,13 @@ async function ai22(api, event, query, query2) {
                         headers: form_data.getHeaders()
                     });
 
-                    let data = res.data;
+                    let data = res.data + "";
                     if (data == "") {
                         sendMessage(true, api, event, "Program died. Execution took too long.");
                     } else {
-                        sendMessage(true, api, event, data + "");
+                        api.sendMessage(data, event.threadID, (err, messageInfo) => {
+                            if (err) log(err);
+                        }, event.messageReply.messageID);
                     }
                 break;
                 case "php":
@@ -1396,7 +1406,9 @@ async function ai22(api, event, query, query2) {
                         if (data1.includes("/home/runner/run/")) {
                             data1 = data1.replaceAll("/home/runner/run/", "");
                         }
-                        sendMessage(true, api, event, removeTags(data1));
+                        api.sendMessage(removeTags(data1), event.threadID, (err, messageInfo) => {
+                            if (err) log(err);
+                        }, event.messageReply.messageID);
                     }
                 break;
                 case "sh":
@@ -1426,7 +1438,8 @@ async function ai22(api, event, query, query2) {
             return;
         }
         if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-            if (event.messageReply.attachments.length < 1) {
+            if (event.messageReply.attachments.length < 1 || 
+                (event.messageReply.attachments[0].type == "photo" || event.messageReply.attachments[0].type == "animated_image")) {
                 sendMessage(true, api, event, "I cannot see an image. Please reply searchimg --reverse to an image.");
             } else {
                 let filename = __dirname + '/cache/images/searchimgreverse_' + getTimestamp() + '.png'
@@ -1489,7 +1502,7 @@ async function ai(api, event) {
     if (event.type == "message") {
         if (query == "totext") {
             sendMessage(true, api, event, "You need to reply to a message with an audio.");
-        } else if (query == "bgremove" || query == "gphoto") {
+        } else if (query == "bgremove" || query == "gphoto" || query == "searchimgreverse") {
             sendMessage(true, api, event, "You need to reply to a message with a photo.");
         } else if (query.startsWith("run")) {
             sendMessage(true, api, event, "You need to reply to a message which contains the code to run");
@@ -7524,8 +7537,11 @@ async function searchimgr(api, event, filename) {
     let reverse = await google.search(img, {
         ris: true
     })
-     
-    getImages(api, event, reverse);
+    let message = {
+        body: reverse.results[0].title + "\n\n" + reverse.results[0].url,
+        url: reverse.results[0].url
+    }
+    sendMessage(true, api, event, message);
 }
 
 async function transcribeAudioFile(filePath) {
@@ -7575,4 +7591,11 @@ ____________________________
 
   function task(func, time) {
     return setInterval(func, time);
+    }
+
+    function getBody(event) {
+        if (event.type == "message_reply") {
+            return event.messageReply.body;
+        }
+        return event.body;
     }
