@@ -29,16 +29,6 @@ const { help, help1, help2, help3, help4, help5, help6, help7, help8,
         helpadmin, helproot,
       } = require('./cmd.js')
 
-http.createServer(function(req, res) {
-    res.writeHead(200, {
-        'Content-Type': 'text/json'
-    });
-    res.write("{\"status\":\"online\"}");
-    res.end();
-}).listen(3000, function() {
-    log("server_start 3000");
-});
-
 const pictographic = /\p{Extended_Pictographic}/ug;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
@@ -73,6 +63,12 @@ let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync(__dirname + "/data/msgs.json", "utf8"));
 let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/data/unsend_msgs.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
+
+const server = http.createServer(getRoutes());
+let homepage = fs.readFileSync(__dirname + "/index.html");
+server.listen(3000, function() {
+    log("server_start 3000");
+});
 
 task(function() {
     for (url in settings.url) {
@@ -748,7 +744,7 @@ ERR! markAsDelivered }
                 }
                 break;
             case "event":
-                log("event_message " + event.threadId + " " event.logMessageType);
+                log("event_message " + event.threadID + " " + event.logMessageType);
                 switch (event.logMessageType) {
                     default:
                         log("event_error " + JSON.stringify(event));
@@ -7342,4 +7338,29 @@ ____________________________
         let hour = today.getHours();
         let suffix = hour >= 12 ? "PM":"AM"
         return hour = ((hour + 11) % 12 + 1) + ":" + today.getMinutes() + ":" + today.getSeconds() + " " + suffix;
+      }
+
+      function getStatus() {
+          if (settings.preference.isStop) {
+          return "Offline";
+        } else if (settings.preference.isDebugEnabled) {
+          return "Maintenance";
+           } else {
+       return "Online";
+    }
+      }
+
+      function getRoutes() {
+        return function(req, res) {
+            res.setHeader("Content-Type", "text/html");
+            switch (req.url) {
+                case "/status":
+                    res.writeHead(200);
+                    res.end(JSON.stringify({status:getStatus()}));
+                    break
+                default:
+                    res.writeHead(200);
+                    res.end(homepage);
+            }
+        };
       }
