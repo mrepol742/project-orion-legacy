@@ -6,7 +6,6 @@ var log = require("npmlog");
 var checkVerified = null;
 
 var defaultLogRecordSize = 100;
-let today = new Date();
 log.maxRecordSize = defaultLogRecordSize;
 
 function logged(data) {
@@ -45,6 +44,7 @@ function tConvert (time) {
 }
 
 function getCurrentTime() {
+  const today = new Date();
   return  tConvert(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
 }
 
@@ -105,7 +105,7 @@ function setOptions(globalOptions, options) {
         globalOptions.emitReady = Boolean(options.emitReady);
         break;
       default:
-        log.warn("setOptions", "Unrecognized option given to setOptions: " + key);
+      logged("fca_options", "Unrecognized option given to setOptions: " + key);
         break;
     }
   });
@@ -305,7 +305,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
     });
     // ---------- Very Hacky Part Ends -----------------
 
-    log.info("login", "Logging in...");
+    logged("fca_login", "Logging in...");
     return utils
       .post("https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&lwv=110", jar, form, loginOptions)
       .then(utils.saveCookies(jar))
@@ -317,7 +317,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
 
         // This means the account has login approvals turned on.
         if (headers.location.indexOf('https://www.facebook.com/checkpoint/') > -1) {
-          log.info("login", "You have login approvals turned on.");
+          logged("lfca_login", "You have login approvals turned on.");
           var nextURL = 'https://www.facebook.com/checkpoint/?next=https%3A%2F%2Fwww.facebook.com%2Fhome.php';
 
           return utils
@@ -440,7 +440,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
                             JSON.parse(res.body.replace(/for\s*\(\s*;\s*;\s*\)\s*;\s*/, ""));
                           } catch (ex) {
                             clearInterval(checkVerified);
-                            log.info("login", "Verified from browser. Logging in...");
+                            logged("fca_login", "Verified from browser. Logging in...");
                             if (callback === prCallback) {
                               callback = function (err, api) {
                                 if (err) {
@@ -453,7 +453,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
                           }
                         })
                         .catch(ex => {
-                          log.error("login", ex);
+                          logged("fca_login " + ex);
                           if (callback === prCallback) {
                             prReject(ex);
                           } else {

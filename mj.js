@@ -67,7 +67,6 @@ let currentID;
 let bookID = "";
 let blockedUserC = 0;
 let blockedGroupC = 0;
-let today = new Date();
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/settings.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
@@ -7318,5 +7317,6 @@ ____________________________
       }
 
       function getCurrentTime() {
+        const today = new Date();
         return  tConvert(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
       }

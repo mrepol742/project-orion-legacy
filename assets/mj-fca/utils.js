@@ -1076,8 +1076,8 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
         }
         retryCount++;
         var retryTime = Math.floor(Math.random() * 5000);
-        log.warn(
-          "parseAndCheckLogin",
+        logged(
+          "fca_login parseAndCheckLogin",
           "Got status code " +
           data.statusCode +
           " - " +
