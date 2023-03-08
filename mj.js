@@ -23,7 +23,7 @@ const { FormData, dns, fs, http, https, os, crypto, WeatherJS,
 const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, mjme,
         goodev, goodmo, goodni, goodaf, sqq, days, months, happyEE,
         sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn,
-        qot1,
+        qot1, example,
       } = require('./arrays.js')
 const { help, help1, help2, help3, help4, help5, help6, help7, help8,
         helpadmin, helproot,
@@ -209,22 +209,9 @@ ERR! markAsDelivered   allResources: [ 'I4hwzeu' ],
 ERR! markAsDelivered   lid: '7202019069067064307'
 ERR! markAsDelivered }
 
-ERR! uploadAttachment {
-ERR! uploadAttachment   __ar: 1,
-ERR! uploadAttachment   error: 1545051,
-ERR! uploadAttachment   errorSummary: 'Bad Image',
-ERR! uploadAttachment   errorDescription: 'There was a problem with the image file.',
-ERR! uploadAttachment   payload: null,
-ERR! uploadAttachment   hsrp: { hblp: { consistency: [Object] } },
-ERR! uploadAttachment   lid: '7204280677982478840'
-ERR! uploadAttachment }
 
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
-
-{"__ar":1,"error":1545023,"errorSummary":"Unable to Send Message","errorDescription":{"__html":"Your message appears to be blank. Please enter your message and try again.<br /><br />The message is empty, but there is an image that I wanted to share. <br /><br />Another problem is the fact that the report bug button is not working."},"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007017942}}},"lid":"7204288752837096672"}
-
-{"__ar":1,"error":1404102,"errorSummary":"You can't share this link","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li><ul class=\"uiList _4of _4kg\"><li class=\"_3isk\"><div class=\"fcb\">system.in</div></li><li class=\"_3isk\"><div class=\"fcb\">linka.net</div></li><li class=\"_3isk\"><div class=\"fcb\">youmob.com</div></li></ul><br /><br />Your message couldn&#039;t be shared, because this link goes against our <a href=\"https://www.facebook.com/communitystandards\" target=\"_blank\">Community Standards</a></li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=Aeivw6RLfnC7evrzb6LFhdDPmh9IgSIvws1yZRnKdcGXAvA_21QHdz7Cpu1XSyBv_Cw_uPQcRNzKe4Knq67HZ2fSyH_JQvN4YS6hB7-sklB-GSwxV37kViCttgZ1t-bX46zOSTuPjA9OOgi_0PBQMuEixbuihy9eQPwHRD7OgUeSLDEY-Qx4RTOuquCauoIjgP-1w4Xt8HwlF0UKxc4zaESE6vEjFq3Dp1ve51yW6uwT6eUHV1ZloCpce2d4LUwBO4yzWPvgVVyWAqcKeyP5I4He6C9LDuPCl1eZ9SEGi1HvHjrO6e3WwBl5jisPi7-uATNYGx_2VJIiui1CodPJN4qiatLX60xgUVBi_-UfUAxu6WyFqbXsBygT1hEIVqgiSZLGOH6UrOHiB2r7XcM5mTJFzaaRDJrHQbHcN_1PCkUas2Vhkd5H1TY4_qaBZoDUL8Ibz9kxbU6oriImDk34Zt3oNGGMiyvij-xiV9Mk9nvBQc85nftukVm_-Q-hIYhgjkTBn1MfLAQGPHjp4D_Le-MX7ydIDPc9F9CTFPJlXXseasq6LF9fRJGRzwqof3BhwwIAxlPXvtWEmnuBiHJuAK-RqxgKyAJwlW_GtkF6mme4Tk1HboYwW7kSC8y58eDs_osCr48KEHk-mE38-A5bqLb8_Zh-Kc-I3COithJkreBr46gqFN0k__ISKtwIJzYUvid9V0tl8woS9rmymhYW2mu2coIR-AxcN3Db2T95HWpe2Yheu_JU5lJFnyExCdZou2jXbBOkutDXvIMDmd5kBCmYXXtT-g1MgY3C9XeTRUx_liPf798rsM0h_bqAuZdrl_kI4d9AjYDxIfzijgtO_taASpTB3mWSWidbgOzDMeOFbQoOX9wmOYQURkbRNOv8MPRIIYOujWO5OpguKRFvLEnYA8oVvBVNO2ooAKs9StqefcXIHYb8zUoUiMISRpNhVG7nI995RmeJL79L3eqMHss_MUFemWn-YB4Ji1yxOAs3rnVdUSb3Kv8YRt-C7A7YUBrRxAdzMuBnSnuAjpyNcOcfrA-5Esu4k8MXoYShyzMS1ugTlmKoOMnIhq7M9KU8Y7GkTgcCr2jO8qPLkSKfNCmfHtj6mFrT60lbw7zR_lc777rullhn57fdFsLqe7LdP9eAuOOiPG5M3D0XkdBYoE5IBoAhutIaHstL2yKyLBCAPIVruBIkCAtvrCgAF-Iq9nrgfbw8d11M_TRidrUKsrb1wGhSItSM87575-QbA3H_RRcLGiGbmUiYQubl5HERsQ-fsx_6s1vU0Fc-DUf7plFqf7RHqRPRrdxlPv89IX1vqg\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007017942},"rsrcMap":{"kU5IbEZ":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/yT/l/0,cross/JzHCg-C_piI.css?_nc_x=OtsmPLmDoWW","nc":1},"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=OtsmPLmDoWW","nc":1}}}},"allResources":["kU5IbEZ","nYb9A+M"],"lid":"7204287420035354690"}
-        */
+*/
         if (err) return log(err);
 
         if (isAppState) {
@@ -312,8 +299,6 @@ ERR! uploadAttachment }
                         sendMessage(api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
                     } else if (settings.preference.error == "1404078") {
                         sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
-                    } else if (settings.preference.error == "1545023") {
-                        sendMessage(api, event, "This account is unable to send messages right now. Please try it again in few hours.");
                     } else if (users.muted.includes(event.senderID)) {
                         sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
                     } else if (groups.blocked.includes(event.threadID)) {
@@ -763,7 +748,7 @@ ERR! uploadAttachment }
                 }
                 break;
             case "event":
-                log("event_message " + event.logMessageType);
+                log("event_message " + event.threadId + " " event.logMessageType);
                 switch (event.logMessageType) {
                     default:
                         log("event_error " + JSON.stringify(event));
@@ -3915,11 +3900,6 @@ _____________________________
                 sendMessage(api, event, "Successfully saved " + inp[0] + ".");
             }
         }
-    } else if (query.startsWith("listkey")) {
-        if (users.admin.includes(event.senderID)) {
-
-
-        }
     } else if (query.startsWith("addadmin")) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
@@ -4828,13 +4808,13 @@ _____________________________
             }
             blur(api, event, id);
         }
-    } else if (query.startsWith("facebook") || query2.startsWith("fb ")) {
+    } else if (query.startsWith("getfbinfo")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using getfbinfo @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngetfbinfo @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4860,28 +4840,45 @@ _____________________________
             }
             api.getUserInfo(id, async (err, ret) => {
                 if (err) return log(err);
-                for (let prop in ret) {
-                    let {
-                        vanity,
-                        name,
-                        gender,
-                        isBirthday
-                    } = ret[prop]
-                    let url = encodeURI('https://graph.facebook.com/' + `${prop}` + '/picture?height=720&width=720&access_token=' + settings.apikey.facebook)
-                    let time = getTimestamp();
-                    let filename = __dirname + "/cache/images/facebook_" + time + ".jpg";
-                    let msg = checkFound(name) + " @" + checkFound(vanity);
-                    msg += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
-                    msg += "\n⦿ Birthday: " + checkFound(isBirthday);
+                log(JSON.stringify(ret));
+                let name = ret[id].name;
+                let vanity = ret[id].vanity;
+                if (vanity == "") {
+                    vanity = id;
+                } else {
+                    vanit = "@" + vanity;
+                }
+                let gender = ret[id].gender;
+                let isBirthday = ret[id].isBirthday;
+                let isFriend = ret[id].isFriend;
+                let type = ret[id].type;
+                let count = 0;
+                    let count1 = 0;
+                    for (msg in msgs) {
+                        if (msgs[msg][1] == id) {
+                            count++;
+                        }
+                    }
+                    for (umsg in unsend_msgs) {
+                        if (unsend_msgs[umsg][1] == id) {
+                            count1++;
+                        }
+                    }
+                    let url = encodeURI('https://graph.facebook.com/' + id + '/picture?height=720&width=720&access_token=' + settings.apikey.facebook)
+                    let filename = __dirname + "/cache/images/facebook_" + getTimestamp() + ".jpg";
+                    let cons = checkFound(name) + " @" + vanity;
+                    cons += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
+                    cons += "\n⦿ Birthday: " + checkFound(isBirthday);
+                    cons += "\n⦿ Messages: " + numberWithCommas(count);
+                    cons += "\n⦿ Unsend Messages: " + numberWithCommas(count1);
                     downloadFile(url, filename).then((response) => {
                         let image = {
-                            body: msg,
+                            body: cons,
                             attachment: fs.createReadStream(filename)
                         };
                         sendMessage(api, event, image);
                         unLink(filename);
                     });
-                }
             });
         }
     } else if (query.startsWith("morse")) {
@@ -5875,12 +5872,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                 });
             } else {
                 api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
-                    if (err) {
-                        log(err);
-                    api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
-                        if (err) log(err);
-                    }, message_id);
-                }
+                    sendMessageErr(api, thread_id, message_id, err);
                 }, message_id);
             }
         } else {
@@ -5933,22 +5925,44 @@ async function sendMMMS(api, message, thread_id, message_id, voiceE) {
             api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
                 if (err) {
                     log(err);
-                api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
-                    if (err) log(err);
-                }, message_id);
-            }
+                    api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+                        if (err) log(err);
+                    }, message_id);
+                }
             }, message_id);
             unLink(dir);
         });
     } else {
         api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
-            if (err) {
-                log(err);
+            sendMessageErr(api, thread_id, message_id, err);
+        });
+    }
+}
+
+function sendMessageErr(api, thread_id, message_id, err) {
+    if (err) {
+        log(err);
+        if (err.error == 1545049) {
+            api.sendMessage(updateFont("Message is too long to be sent."), thread_id, (err, messageInfo) => {
+                if (err) log(err);
+            }, message_id);
+        } else if (err.error == 1545051) {
+            api.sendMessage(updateFont("Failure to send the response due to an invalid image."), thread_id, (err, messageInfo) => {
+                if (err) log(err);
+            }, message_id);
+        } else if (err.error == 1404102) {
+            api.sendMessage(updateFont("Failure to send message because the reponse contains url in which prohibited in Facebook."), thread_id, (err, messageInfo) => {
+                if (err) log(err);
+            }, message_id);
+        } else if (err.error == 1545023) {
+            api.sendMessage(updateFont("The AI response seems empty. No idea why thought."), thread_id, (err, messageInfo) => {
+                if (err) log(err);
+            }, message_id);
+        } else {
             api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
                 if (err) log(err);
             }, message_id);
         }
-        });
     }
 }
 
@@ -6053,7 +6067,7 @@ function isGoingToFast1(event, list, time) {
 }
 
 const checkFound = (text) => {
-    return text ? text : "N/A"
+    return text ? text : "No data"
 }
 
 async function getResponseData(url) {
@@ -6850,12 +6864,29 @@ function findGCD(i, i2) {
     return findGCD(i2, i % i2);
 }
 
+function voiceR(api, event) {
+    if (event.attachments.length != 0 && event.attachments[0].type == "audio") {
+    let url = event.attachments[0].url;
+    let dir = __dirname + "/cache/audios/voicer_" + getTimestamp() + ".mp3";
+    downloadFile(encodeURI(url), dir).then((response) => {
+        transcribeAudioFile(dir)
+           .then(transcription => {
+                event.body = transcription;
+                ai(api, event);
+                unLink(dir);
+            }).catch(error => {
+                unLink(dir);
+            });
+        });
+    }
+}
+
 function saveEvent(event) {
     if (isMyId(event.senderID)) {
         return;
     }
     if (event.attachments.length != 0) {
-        log("attachments_type " + event.attachments[0].type);
+        log("attachments_type " + event.threadID + " " + event.attachments[0].type);
         switch (event.attachments[0].type) {
             case "error":
                 log("attachments_error " + JSON.stringify(event.attachments));
@@ -7306,17 +7337,9 @@ ____________________________
         return "USA";
     }
 
-    function tConvert (time) {
-        time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-        if (time.length > 1) {
-          time = time.slice(1);
-          time[5] = +time[0] < 12 ? ' AM' : ' PM';
-          time[0] = +time[0] % 12 || 12;
-        }
-        return time.join('');
-      }
-
       function getCurrentTime() {
-        const today = new Date();
-        return  tConvert(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
+        let today = new Date();
+        let hour = today.getHours();
+        let suffix = hour >= 12 ? "PM":"AM"
+        return hour = ((hour + 11) % 12 + 1) + ":" + today.getMinutes() + ":" + today.getSeconds() + " " + suffix;
       }

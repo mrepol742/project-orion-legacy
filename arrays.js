@@ -71,5 +71,6 @@ module.exports = {
     sendEffects: sendEffects,
     gcolor: gcolor,
     gcolorn: gcolorn,
-    qot1: qot1
+    qot1: qot1,
+    example: example
 }

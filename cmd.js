@@ -21,8 +21,6 @@ _______  Project Orion 1/9  _______
    ⦿ music [text]
    ⦿ video [text]
    ⦿ lyrics [text]
-   ⦿ encode64 [text]
-   ⦿ decode64 [text]
    ⦿ github [username]
    ⦿ run [lang] [reply]
        Java, Python, C, C++,
@@ -93,7 +91,7 @@ let help3 = `
 _______  Project Orion 4/9  _______
 
    ⦿ mnm [mention|me|name|url|uid|reply]
-   ⦿ facebook [mention|me|name|url|uid|reply]
+   ⦿ getfbinfo [mention|me|name|url|uid|reply]
    ⦿ nickname @mention|@me [text]
    ⦿ invert [mention|me|name|url|uid|reply]
    ⦿ greyscale [mention|me|name|url|uid|reply]
@@ -235,6 +233,8 @@ _______  Project Orion 9/9  _______
    ⦿ tiktok [username]
    ⦿ wfind [text]
    ⦿ facts [text]
+   ⦿ encode64 [text]
+   ⦿ decode64 [text]
 __________________________________
 `;
 
