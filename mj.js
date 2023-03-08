@@ -1,3 +1,5 @@
+const fca = require("./assets/mj-fca/");
+
 /*
  *
  * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
@@ -15,27 +17,17 @@
  * limitations under the License.
  */
 
-const {
-    Configuration,
-    OpenAIApi
-} = require("openai");
-const WeatherJS = require("weather-js")
-const FormData = require('form-data');
-const Youtubei = require('youtubei.js');
-const GoogleTTS = require('google-tts-api');
-const google = require('googlethis');
-const axios = require("axios");
-const dns = require("dns");
-const fs = require("fs");
-const fca = require("fca-unofficial");
-const http = require('http');
-const https = require('https');
-const os = require('os');
-const crypto = require('crypto')
-
-const pictographic = /\p{Extended_Pictographic}/ug;
-const latinC = /[^a-z0-9\s]/gi;
-const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
+const { FormData, dns, fs, http, https, os, crypto, WeatherJS, 
+        Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi,
+      } = require('./require.js')
+const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, mjme,
+        goodev, goodmo, goodni, goodaf, sqq, days, months, happyEE,
+        sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn,
+        qot1,
+      } = require('./arrays.js')
+const { help, help1, help2, help3, help4, help5, help6, help7, help8,
+        helpadmin, helproot,
+      } = require('./cmd.js')
 
 http.createServer(function(req, res) {
     res.writeHead(200, {
@@ -44,49 +36,12 @@ http.createServer(function(req, res) {
     res.write("{\"status\":\"online\"}");
     res.end();
 }).listen(3000, function() {
-    log("Server start at port 3000");
+    log("server_start 3000");
 });
 
-let isMyPrefixList = ["mj", "melvinjones", "melvinjonesgallanorepol", "repol", "melvinjonesrepol", "mrepol742", "misaka", "search"]
-let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
-let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?", "hello", "hi", "hellooooo", "hiiiiii", "cool", "yo"];
-let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."]
-let idknow = ["Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.", "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.", "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.", "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do."]
-let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
-let mjme = ["Mj", "Melvin Jones Repol", "Melvin Jones Gallano Repol"]
-let goodev = ["Good evening too... The sun set is so beautiful as always, hope you're seeing it too.", "Good evening, as well. As always, the sun set is quite lovely; I hope you can see it as well.", "Good evening as well... As always, the sun set is breathtaking; I hope you can see it too."]
-let goodmo = ["Good morning too... Have a great day ahead, and always don't forget breakfast must be the heaviest meal of the day.", "Also good morning... Enjoy your day, and never forget that breakfast should always be the heaviest meal of the day.", "Greetings as well... Have a fantastic day, and never forget that breakfast ought to be the largest meal of the day."]
-let goodni = ["Good night too... Have a nice and comfortable sleep, don't forget to wakeup early.", "Good night, as well. Sleep well and comfortably, and remember to get up early.", "Also good night. Enjoy a restful night's sleep, and remember to get up early."]
-let goodaf = ["Good afternoon too... It's quite hot now.. Always remember to stay hydrated.", "Also good afternoon... Right now it's very hot. Never forget to drink plenty of water.", "Good afternoon, as well. Now that it's hot, Keep in mind to drink plenty of water."]
-let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify", "write", "create"];
-let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-let happyEE = ['haha', 'ahah', 'ahha', 'funny ', 'insane ', 'lol', 'lmao', 'lmfao', 'silly ', 'laugh ', 'laughable', 'humorous', 'amusing', 'hilarious', 'absurd', 'ridicolous', 'ludicrous', 'entertaining']
-let sadEE = ['pain', 'painful', 'cry ', 'crying ', 'unhappy', 'sad ', 'tired', 'sick ', 'dejected', 'regretful', 'depressed', 'downcast', 'miserable ', 'downhearted', 'heartbroken', 'wretched', 'doleful', 'low-spirited', 'sorry', 'disgraceful', 'regrettable', 'sorrowful', 'upsetting', 'traumatic', 'truma', 'pitiful', 'depressing', 'depress', 'unfortunate', 'awful', 'miserable', 'grievous', 'cheerless'];
-let angryEE = ['angry', 'irate', 'irritated', 'furious', 'raving', 'bitter', 'hostile', 'outraged', 'incensed', 'mad ', 'filthy', 'displeased', 'provoked', 'annoyed', 'fury ', 'rage ', 'ire ', 'wrath']
-let loveEE = ['love', 'liking', 'appreciation', 'thank', 'delight', 'pleasure', 'regards', 'respects', 'dear', 'darling', 'boyfriend', 'girlfriend', 'sweetheart', 'angel', 'honey', 'adore', 'treasure', 'prize', 'devotion', 'friend']
-let sizesM = ["Bytes", "KB", "MB", "GB", "TB"]
-let sendEffects = ["(sent with gift wrap effect)", "(sent with fire effect)", "(sent with celebration effect)", "(sent with love effect)"];
-let example = ["For instance:", "For example:", "Like:", "Suppose that:", "e.g:", "In particular:", "To give you an idea:", "Let's say:", "Example:"];
-let gcolor = {
-    "defaultblue": "196241301102133",
-    "hotpink": "169463077092846",
-    "aquablue": "2442142322678320",
-    "brightpurple": "234137870477637",
-    "coralpink": "980963458735625",
-    "orange": "175615189761153",
-    "green": "2136751179887052",
-    "lavenderpurple": "2058653964378557",
-    "red": "2129984390566328",
-    "yellow": "174636906462322",
-    "tealblue": "1928399724138152",
-    "aqua": "417639218648241",
-    "mango": "930060997172551",
-    "berry": "164535220883264",
-    "citrus": "370940413392601",
-    "candy": "205488546921017"
-}
-let gcolorn = ["defaultblue", "hotpink", "aquablue", "brightpurple", "coralpink", "orange", "green", "lavenderpurple", "red", "yellow", "tealblue", "aqua", "mango", "berry", "citrus", "candy"]
+const pictographic = /\p{Extended_Pictographic}/ug;
+const latinC = /[^a-z0-9\s]/gi;
+const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 let threadIdMV = {};
 let cmd = {};
 let thread = {};
@@ -112,338 +67,7 @@ let currentID;
 let bookID = "";
 let blockedUserC = 0;
 let blockedGroupC = 0;
-
-let qot1 = ["I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
-    "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"",
-    "I'm Mj, a ChatBot AI that has been trained on countless trillions of parameters. trained to communicate in a conversational or speaking manner like a human. For the list of commands message \"cmd\". I was able to appropriately respond to the majority of inquiries. If you have any further questions, don't be afraid to ask.",
-    "I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
-    "I'm Mj, a ChatBot AI that has been educated using countless trillions of parameters. trained to communicate with others in a conversational or speaking style. If you have any questions, don't be afraid to ask. I was able to appropriately answer the majority of inquiries regarding the list of commands message \"cmd\".",
-    "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\".",
-    "I'm an AI chatbot named Mj, and I was trained using a staggering number of parameters. trained in conversational or speaking manners appropriate to human interaction. If you have any questions, don't be afraid to ask. I could typically provide appropriate answers for questions involving the list of commands message \"cmd\".",
-    "I'm Mj, a ChatBot AI that was trained using a staggering number of parameters. trained to engage in conversation or talk in a human manner. If you have any questions, don't be afraid to ask. I was able to appropriately respond to the majority of inquiries regarding the list of commands message \"cmd\"."
-]
-let qot = ["The object will not change its motion unless a force acts on it.",
-    "The object is equal to its mass times its acceleration.",
-    "There is an equal and opposite reaction for every action.",
-    "Energy can neither be created nor destroyed, but it can be changed from one form to another.",
-    "The radiant intensity from the ideal diffusely reflecting surface and cosine of the angle θ between the direction of incident light and surface normal are directly proportional.",
-    "For a system of mass of particles, the sum of the difference of the force acting on the system and the time derivatives of the momenta is zero when projected onto any virtual displacement.",
-    "The velocity of the galaxy, which is also known as the redshift, is directly proportional to its distance.",
-    "For a given material, the sample path length and concentration of the sample are directly proportional to the absorbance of the light.",
-    "The intensity of the radiation is inversely proportional to the square of the distance.",
-    "The intensity of the light to an observer from a source is inversely proportional to the square of the distance from the observer to the source.",
-    "The the strain of the material is proportional to the applied stress within the elastic limit of that material.",
-    "Every point on a wavefront is in itself the source of spherical wavelets which spread out in the forward direction at the speed of light. The sum of these spherical wavelets forms the wavefront.",
-    "If the net external force acting on a system of bodies is zero, then the momentum of the system remains constant.",
-    "The product of the pressure and the volume of one gram molecule of an ideal gas is equal to the product of the absolute temperature of the gas and the universal gas constant.",
-    "The upward buoyant force that is exerted on a body immersed in a fluid, whether partially or fully submerged, is equal to the weight of the fluid that the body displaces and acts in the upward direction at the center of mass of the displaced fluid.",
-    "The molar flux due to diffusion is proportional to the concentration gradient.",
-    "The external static pressure applied on a confined liquid is distributed or transmitted evenly throughout the liquid in all directions."
-]
-
-let help = `
-_______  Project Orion 1/9  _______
-
-   ⦿ cmd 
-   ⦿ cmd [number|all]
-   ⦿ cmd [admin|root]
-   ⦿ stats
-   ⦿ uptime 
-   ⦿ sysinfo
-   ⦿ sendReport [text]
-   ⦿ search [text]
-   ⦿ searchincog [text]
-   ⦿ searchimg [text]
-   ⦿ searchimg --reverse
-   ⦿ createcode [text]
-   ⦿ createimg [text]
-   ⦿ dictionary [text]
-   ⦿ say [text]
-   ⦿ baybayin [text]
-   ⦿ weather [location]
-   ⦿ music [text]
-   ⦿ video [text]
-   ⦿ lyrics [text]
-   ⦿ encode64 [text]
-   ⦿ decode64 [text]
-   ⦿ github [username]
-   ⦿ run [lang] [reply]
-       Java, Python, C, C++,
-       JavaScript, PHP and Dragon
-   
-   AI:
-    ⦿ mj [text]
-    ⦿ sim [text]
-    ⦿ misaka [text]
-    ⦿ openai [text]
-    ⦿ chatgpt [text]
-__________________________________
-`;
-
-let help1 = `
-_______  Project Orion 2/9  _______
-
-   ⦿ thoughts
-   ⦿ lulcat [text]
-   ⦿ gemoji [emoji]
-   ⦿ gname [text]
-   ⦿ wiki [text]
-   ⦿ urlshort [url]
-   ⦿ pickup
-   ⦿ landscape
-   ⦿ landscape [text]
-   ⦿ portrait
-   ⦿ portrait [text]
-   ⦿ problem [equation]
-   ⦿ roi [revenue] [cost]
-   ⦿ pin add
-   ⦿ pin remove
-   ⦿ sadcat [text]
-   ⦿ biden [text]
-   ⦿ pika [text]
-   ⦿ god [text]
-   ⦿ qrcode [text]
-__________________________________
-`;
-
-let help2 = `
-_______  Project Orion 3/9  _______
-
-   ⦿ verse today
-   ⦿ verse random
-   ⦿ verse [book] [chapter]:[verse]
-   ⦿ animeqoute
-   ⦿ bgremove
-   ⦿ motivate
-   ⦿ inspiration
-   ⦿ advice
-   ⦿ alert [text]
-   ⦿ meme
-   ⦿ lovetest [name1]: [name2]
-   ⦿ drake [text1]: [text2]
-   ⦿ pooh [text1]: [text2]
-   ⦿ oogway [text]
-   ⦿ caution [text]
-   ⦿ element [name]
-   ⦿ imdb [title]
-   ⦿ steam [name]
-   ⦿ npm [name]
-   ⦿ gname
-__________________________________
-`;
-
-let help3 = `
-_______  Project Orion 4/9  _______
-
-   ⦿ mnm [mention|me|name|url|uid|reply]
-   ⦿ facebook [mention|me|name|url|uid|reply]
-   ⦿ nickname @mention|@me [text]
-   ⦿ invert [mention|me|name|url|uid|reply]
-   ⦿ greyscale [mention|me|name|url|uid|reply]
-   ⦿ ship @mention @mention
-   ⦿ www @mention @mention
-   ⦿ jokeover [mention|me|name|url|uid|reply]
-   ⦿ translate [text] to [language]
-   ⦿ kiss [mention|me|name|url|uid|reply]
-   ⦿ pet [mention|me|name|url|uid|reply]
-   ⦿ jail [mention|me|name|url|uid|reply]
-   ⦿ communist [mention|me|name|url|uid|reply]
-   ⦿ wanted [mention|me|name|url|uid|reply]
-   ⦿ gun [mention|me|name|url|uid|reply]
-   ⦿ drip [mention|me|name|url|uid|reply]
-   ⦿ clown [mention|me|name|url|uid|reply]
-   ⦿ uncover [mention|me|name|url|uid|reply]
-   ⦿ advert [mention|me|name|url|uid|reply]
-   ⦿ blur [mention|me|name|url|uid|reply]
-__________________________________
-`;
-
-let help4 = `
-_______  Project Orion 5/9  _______
-
-   ⦿ phub [text]
-   ⦿ morse [text]
-   ⦿ joke
-   ⦿ profilepic
-   ⦿ wyr
-   ⦿ 8ball
-   ⦿ gmember
-   ⦿ car
-   ⦿ color
-   ⦿ animecouples
-   ⦿ trump [text]
-   ⦿ mock [text]
-   ⦿ reverse [text]
-   ⦿ itunes [title]
-   ⦿ coding
-   ⦿ newyear
-   ⦿ christmas
-   ⦿ barrier
-   ⦿ fact
-   ⦿ thoughts
-__________________________________
-`;
-
-let help5 = `
-_______  Project Orion 6/9  _______
-
-   ⦿ uid
-   ⦿ guid
-   ⦿ doublestruck [text]
-   ⦿ count
-   ⦿ count --vowels
-   ⦿ count --consonants
-   ⦿ time
-   ⦿ time [timezone]
-   ⦿ anime [category]
-       waifu, neko, shinobu, megumin,
-       bully, cuddle, cry, hug,
-       awoo, kiss, lick, pat,
-       smug, bonk, yeet, blush,
-       smile, wave, highfive, handhold,
-       nom, bite, glomp, slap,
-       kill, kick, happy, wink,
-       poke, dance and cringe
-   ⦿ animeinfo [text]
-   ⦿ animesearch [text]
-   ⦿ animegenre [text]
-   ⦿ animetop
-   ⦿ animetop --movie
-   ⦿ hanime [category]
-__________________________________
-`;
-
-let help6 = `
-_______  Project Orion 7/9  _______
-
-   ⦿ encodeBinary [text]
-   ⦿ decodeBinary [text]
-   ⦿ sayjap [text]
-   ⦿ mathfacts
-   ⦿ website [urrl]
-   ⦿ mean [numbers]
-   ⦿ median [numbers]
-   ⦿ mode [numbers]
-   ⦿ range [numbers]
-   ⦿ divisible [number] [number]
-   ⦿ factorial [number]
-   ⦿ findGCD [number]
-   ⦿ smartReply [on|off]
-   ⦿ summ [text]
-   ⦿ gcolor [theme]
-       DefaultBlue, HotPink, AquaBlue, BrightPurple
-       CoralPink, Orange, Green, LavenderPurple
-       Red, Yellow, TealBlue, Aqua
-       Mango, Berry, Citrus, Candy
-__________________________________
-`;
-
-let help7 = `
-_______  Project Orion 8/9  _______
-
-   ⦿ conan
-   ⦿ addUser [uid]
-   ⦿ gphoto
-   ⦿ cosplay
-   ⦿ motor
-   ⦿ darkjoke
-   ⦿ blackpink
-   ⦿ hololive
-   ⦿ mute
-   ⦿ unmute
-   ⦿ tagalogSupport [on|off]
-   ⦿ textToSpeech [on|off]
-   ⦿ meowfacts
-   ⦿ dns4 [url]
-   ⦿ dns6 [url]
-   ⦿ musiclyric [title]
-   ⦿ videolyric [title]
-   ⦿ formatNumbers [numbers]
-   ⦿ everyone
-   ⦿ fbi
- __________________________________
-`;
-
-let help8 = `
-_______  Project Orion 9/9  _______
-
-   ⦿ datefacts
-   ⦿ triviafacts
-   ⦿ yearfacts
-   ⦿ covid
-   ⦿ covid [country]
-   ⦿ nba [name]
-   ⦿ totext
-   ⦿ ig [username]
-   ⦿ tiktok [username]
-   ⦿ wfind [text]
-   ⦿ facts [text]
-__________________________________
-`;
-
-let helpadmin = `
-_______  Project Orion Admin  _______
-
-   ⦿ unsend
-   ⦿ unsend [on|off]
-   ⦿ delay [on|off]
-   ⦿ nsfw [on|off]
-   ⦿ debug [on|off]
-   ⦿ antiLeave [on|off]
-   ⦿ welcomeMessage [on|off]
-   ⦿ leavingMessage [on|off]
-   ⦿ simultaneousExecution [on|off]
-   ⦿ clearCache
-   ⦿ refreshState
-   ⦿ saveState
-   ⦿ isBot [mention|name|url|uid|reply]
-   ⦿ isNotBot [mention|name|url|uid|reply]
-   ⦿ addAdmin [mention|name|url|uid|reply]
-   ⦿ remAdmin [mention|name|url|uid|reply]
-   ⦿ kickUser [mention|name|url|uid|reply]
-   ⦿ blockUser [mention|name|url|uid|reply]
-   ⦿ unblockUser [mention|name|url|uid|reply]
-   ⦿ blockGroup
-   ⦿ unblockGroup
-   ⦿ listblocks
-   ⦿ listadmins
-   ⦿ listmuted
-   ⦿ setPrefix [prefix]
-   ⦿ remPrefix
-   ⦿ ignore [prefix]
-   ⦿ setkey [name]:[key]
-____________________________________
-`;
-
-let helproot = `
-_______  Project Orion Root  _______
-
-   ⦿ stop
-   ⦿ resume
-   ⦿ restart
-   ⦿ notify
-   ⦿ destroy
-   ⦿ addPing [url]
-   ⦿ remPing [url]
-   ⦿ acceptMessageRequest [threadid]
-   ⦿ acceptFriendRequest [uid]
-   ⦿ changeBio [text]
-   ⦿ setMaxImage [integer]
-   ⦿ setTimezone [timezone]
-   ⦿ setTextComplextion [complextion]
-   ⦿ setMaxTokens [integer]
-   ⦿ setTemperature [integer]
-   ⦿ setFrequencyPenalty [integer]
-   ⦿ setProbabilityMass [integer]
-   ⦿ setAutoMarkRead [on|off]
-   ⦿ setOnline [on|off]
-   ⦿ setSelfListen [on|off]
-   ⦿ setSendTypingIndicator [on|off]
-   ⦿ setAutoMarkDelivery [on|off]
-   ⦿ setPresence [on|off]
-   ⦿ setReportingThreat [uid]
-____________________________________
-`;
+let today = new Date();
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/settings.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
@@ -453,9 +77,18 @@ let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8")
 
 task(function() {
     for (url in settings.url) {
-        https.get(settings.url[url], function(res) {
-            log("ping " + url);
-        });
+        let surl = settings.url[url];
+        if (surl.startsWith("https://")) {
+            https.get(surl, function(res) {
+               log("ping_url " + surl);
+            });
+        } else if (surl.startsWith("http://")){
+            http.get(surl, function(res) {
+                log("ping_url " + surl);
+             });
+        } else {
+            log("ping_url_unsupported " + surl);
+        }
     }
     pingD = getFormattedDate()
 }, Math.floor(1800000 * Math.random() + 1200000));
@@ -477,7 +110,8 @@ const options = {
     selfListen: settings.preference.selfListen,
     autoMarkRead: settings.preference.autoMarkRead,
     autoMarkDelivery: settings.preference.autoMarkDelivery,
-    online: settings.preference.online
+    online: settings.preference.online,
+    forceLogin: true
 }
 const options1 = {
     page: 0,
@@ -488,7 +122,8 @@ const options1 = {
     }
 }
 
-log(JSON.stringify(options, null, 4));
+log("fca_options " + JSON.stringify(options, null, 4));
+log("settings_options " + JSON.stringify(settings.preference));
 
 const openai = new OpenAIApi(config);
 
@@ -501,7 +136,7 @@ process.on('exit', (code) => {
 });
 
 process.on('SIGINT', function() {
-    log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
+    log("process_exit\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     saveState();
     process.exit();
 });
@@ -524,18 +159,18 @@ fca(loadAppState("nf9372fh4ce83g"), (err, api) => {
     }, Math.floor(1800000 * Math.random() + 1200000));
 
     task(function() {
+        log("clear_list User: " + (Object.keys(cmd).length) + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
         cmd = {};
         acGG = [];
         commandCalls = 0;
         blockedGroupC = 0;
         blockedUserC = 0;
-        log("clear_list");
     }, 60 * 10 * 1000);
 
     task(function() {
         fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
         fb_stateD = getFormattedDate()
-        log("fb_save_state")
+        log("fca_state refresh");
     }, Math.floor(1800000 * Math.random() + 1200000));
 
     task(function() {
@@ -546,6 +181,7 @@ fca(loadAppState("nf9372fh4ce83g"), (err, api) => {
                 let isPast = (new Date().getTime() - past < min) ? false : true;
                 if (isPast) {
                     userPresence[time] = null;
+                    log("user_presence " + time);
                     api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!",
                         time, (err, messageInfo) => {
                             if (err) log(err);
@@ -595,22 +231,18 @@ ERR! uploadAttachment }
         if (isAppState) {
             currentID = api.getCurrentUserID();
             fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
+            log("app_state refresh");
             isAppState = false;
         }
 
-        if (event.type == "message" || event.type == "message_reply") {
-            let body = getBody(event);
+        if (event.type == "message") {
+            let body = event.body;
             let result = !!body.match(/^[!@#$%&*~|?/_]/)
             if (!result && isMyId(event.senderID)) {
                 return;
             }
             if (result) {
                 event.body = body.slice(1);
-            }
-            if (event.type == "message_reply") {
-                if (event.messageReply.body == body) {
-                    return;
-                }
             }
         }
 
@@ -629,25 +261,25 @@ ERR! uploadAttachment }
                 if (isGoingToFast(event)) {
                     return;
                 }
-                sendMessage(true, api, event, "Have an emergency? Don't wait call 911!");
+                sendMessage(api, event, "Have an emergency? Don't wait call 911!");
                 return;
             } else if (input == "same") {
                 if (isGoingToFast(event)) {
                     return;
                 }
-                sendMessage(true, api, event, "(2)");
+                sendMessage(api, event, "(2)");
                 return;
             } else if (input == "k" || input == "y") {
                 if (isGoingToFast(event)) {
                     return;
                 }
-                sendMessage(true, api, event, "women");
+                sendMessage(api, event, "women");
                 return;
             } else if (input == "wdym") {
                 if (isGoingToFast(event)) {
                     return;
                 }
-                sendMessage(true, api, event, "what do you mean?");
+                sendMessage(api, event, "what do you mean?");
                 return;
             }
             let query2 = formatQuery(input);
@@ -660,7 +292,7 @@ ERR! uploadAttachment }
                         if (event.isGroup) {
                             unblockGroup(api, event, event.threadID);
                         } else {
-                            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                         }
                     }
                 } else if (query == "unmute") {
@@ -669,7 +301,7 @@ ERR! uploadAttachment }
                     }
                     if (users.muted.includes(event.senderID)) {
                         users.muted = users.muted.filter(item => item !== event.senderID);
-                        sendMessage(true, api, event, "You can now use my commands.");
+                        sendMessage(api, event, "You can now use my commands.");
                         fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     }
                 } else if (query == "status") {
@@ -678,23 +310,23 @@ ERR! uploadAttachment }
                     }
                     if (settings.preference.error == "3252001") {
                         // bug this can be initiate if api.markAllAsRead is the reason or attachments
-                        sendMessage(true, api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
+                        sendMessage(api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
                     } else if (settings.preference.error == "1404078") {
-                        sendMessage(true, api, event, "This account is restricted right now. Please try it again in few hours.");
+                        sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
                     } else if (settings.preference.error == "1545023") {
-                        sendMessage(true, api, event, "This account is unable to send messages right now. Please try it again in few hours.");
+                        sendMessage(api, event, "This account is unable to send messages right now. Please try it again in few hours.");
                     } else if (users.muted.includes(event.senderID)) {
-                        sendMessage(true, api, event, "You are muted please enter `unmute` for you to use the bot commands");
+                        sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
                     } else if (groups.blocked.includes(event.threadID)) {
-                        sendMessage(true, api, event, "This group is blocked. Contact the bot admins for more info.");
+                        sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
                     } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                        sendMessage(true, api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
+                        sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
                     } else if (settings.preference.isStop) {
-                        sendMessage(true, api, event, "The program is currently offline.");
+                        sendMessage(api, event, "The program is currently offline.");
                     } else if (settings.preference.isDebugEnabled) {
-                        sendMessage(true, api, event, "The program is currently under maintenance.");
+                        sendMessage(api, event, "The program is currently under maintenance.");
                     } else {
-                        sendMessage(true, api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS.");
+                        sendMessage(api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS.");
                     }
                 } else if (users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
                     saveEvent(event);
@@ -712,27 +344,28 @@ ERR! uploadAttachment }
 
             if (isMyId(event.senderID)) {
                 if (query == "stop") {
-                    sendMessage(true, api, event, "Program stopped its state.");
+                    sendMessage(api, event, "Program stopped its state.");
                     settings.preference.isStop = true;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     return;
                 } else if (query == "destroy") {
-                    sendMessage(true, api, event, "Program destroyed its state.");
+                    sendMessage(api, event, "Program destroyed its state.");
                     return;
                 } else if (query == "resume") {
-                    sendMessage(true, api, event, "Program resumed its state.");
+                    sendMessage(api, event, "Program resumed its state.");
                     settings.preference.isStop = false;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     return;
                 } else if (query == "restart") {
                     saveState();
                     fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
+                    log("app_state refresh");
                     let rs = [];
                     rs.push(event.threadID);
                     rs.push(event.messageID);
                     settings.restart = rs;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
-                    sendMessage(true, api, event, "Restarting program...");
+                    sendMessage(api, event, "Restarting program...");
                     setTimeout(function() {
                         process.exit(0);
                     }, 3000);
@@ -768,7 +401,7 @@ ERR! uploadAttachment }
                             body: "How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
                             url: "https://mrepol742.github.io/project-orion/"
                         }
-                        sendMessageOnly(false, api, event, message);
+                        sendMessageOnly(api, event, message, event.threadID, event.messageID, false, false);
                     }
                 });
             } else if (!acGG.includes(event.threadID) && !(groups.list[event.threadID] === undefined)) {
@@ -800,7 +433,7 @@ ERR! uploadAttachment }
                         body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
                         attachment: fs.createReadStream(__dirname + '/assets/maintenance.jpg')
                     };
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                 }
                 saveEvent(event);
             }
@@ -832,7 +465,7 @@ ERR! uploadAttachment }
                     !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) &&
                     event.senderID != event.userID && !(event.reaction === undefined)) {
                     emo.push(event.messageID);
-                    log("react_message " + event.messageID + " " + event.reaction);
+                    log("react_message " + event.threadID + " " + event.messageID + " " + event.reaction);
                     sendMessageReaction(api, event);
                 }
                 break;
@@ -846,9 +479,7 @@ ERR! uploadAttachment }
                 if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID) || groups.blocked.includes(event.threadID)) {
                     break;
                 }
-                if (isGoingToFast1(event, threadUnsending, 2)) {
-                    return;
-                }
+                
                 if (d[0] == "photo") {
                     unsendPhoto(api, event, d);
                 } else if (d[0] == "animated_images") {
@@ -861,7 +492,7 @@ ERR! uploadAttachment }
                                 body: "You deleted this link.\n\n" + d[1][2],
                                 url: d[1][3]
                             }
-                            sendMessageOnly(true, api, event, message);
+                            sendMessageOnly(api, event, message);
                             log("unsend_share " + d[1][0] + " " + message);
                         } else {
                             let message = {
@@ -875,7 +506,7 @@ ERR! uploadAttachment }
                                 }]
                                 */
                             }
-                            sendMessageOnly(true, api, event, message);
+                            sendMessageOnly(api, event, message);
                             log("unsend_share_group " + d[1][0] + " " + message);
                         }
                     });
@@ -899,7 +530,7 @@ ERR! uploadAttachment }
                                         body: constructMMM,
                                         attachment: fs.createReadStream(filename)
                                     }
-                                    sendMessageOnly(true, api, event, message);
+                                    sendMessageOnly(api, event, message);
                                     log("unsend_file " + d[1][0] + " " + filename);
                                 } else {
                                     let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -917,7 +548,7 @@ ERR! uploadAttachment }
                                         }]
                                         */
                                     }
-                                    sendMessageOnly(true, api, event, message);
+                                    sendMessageOnly(api, event, message);
                                     log("unsend_file_group " + d[1][0] + " " + filename);
                                 }
                                 unLink(filename);
@@ -933,7 +564,7 @@ ERR! uploadAttachment }
                                 body: constructMMM + d[1][2],
                                 url: d[1][3]
                             }
-                            sendMessageOnly(true, api, event, message1);
+                            sendMessageOnly(api, event, message1);
                             log("unsend_location " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -948,7 +579,7 @@ ERR! uploadAttachment }
                                 }],
                                 */
                             }
-                            sendMessageOnly(true, api, event, message1);
+                            sendMessageOnly(api, event, message1);
                             log("unsend_location " + d[1][0] + " " + d[1][2]);
                         }
                     });
@@ -965,7 +596,7 @@ ERR! uploadAttachment }
                                     current: true
                                 }
                             }
-                            sendMessageOnly(true, api, event, message1);
+                            sendMessageOnly(api, event, message1);
                             log("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -984,7 +615,7 @@ ERR! uploadAttachment }
                                 }],
                                 */
                             }
-                            sendMessageOnly(true, api, event, message1);
+                            sendMessageOnly(api, event, message1);
                             log("unsend_location_sharing_group " + d[1][0] + " " + d[1][2]);
                         }
                     });
@@ -999,8 +630,8 @@ ERR! uploadAttachment }
                             let message1 = {
                                 sticker: d[1][2]
                             }
-                            sendMessageOnly(true, api, event, message);
-                            sendMessageOnly(true, api, event, message1);
+                            sendMessageOnly(api, event, message);
+                            sendMessageOnly(api, event, message1);
                             log("unsend_sticker " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -1017,8 +648,8 @@ ERR! uploadAttachment }
                             let message1 = {
                                 sticker: d[1][2]
                             }
-                            sendMessageOnly(true, api, event, message);
-                            sendMessageOnly(true, api, event, message1);
+                            sendMessageOnly(api, event, message);
+                            sendMessageOnly(api, event, message1);
                             log("unsend_sticker_group " + d[1][0] + " " + d[1][2]);
                         }
                     });
@@ -1040,7 +671,7 @@ ERR! uploadAttachment }
                                         body: constructMMM,
                                         attachment: fs.createReadStream(filename)
                                     }
-                                    sendMessageOnly(true, api, event, message);
+                                    sendMessageOnly(api, event, message);
                                     log("unsend_video " + d[1][0] + " " + filename);
                                 } else {
                                     let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -1058,7 +689,7 @@ ERR! uploadAttachment }
                                         }]
                                         */
                                     }
-                                    sendMessageOnly(true, api, event, message);
+                                    sendMessageOnly(api, event, message);
                                     log("unsend_video_group " + d[1][0] + " " + filename);
                                 }
                                 unLink(filename);
@@ -1083,7 +714,7 @@ ERR! uploadAttachment }
                                         body: constructMMM,
                                         attachment: fs.createReadStream(filename)
                                     }
-                                    sendMessageOnly(true, api, event, message);
+                                    sendMessageOnly(api, event, message);
                                     log("unsend_audio " + d[1][0] + " " + filename);
                                 } else {
                                     let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -1101,7 +732,7 @@ ERR! uploadAttachment }
                                         }]
                                         */
                                     }
-                                    sendMessageOnly(true, api, event, message);
+                                    sendMessageOnly(api, event, message);
                                     log("unsend_audio_group " + d[1][0] + " " + filename);
                                 }
                                 unLink(filename);
@@ -1113,7 +744,7 @@ ERR! uploadAttachment }
                         if (err) return log(err);
                         if (groups.list[event.threadID] === undefined) {
                             let message = "You deleted this message.\n\n" + d[2];
-                            sendMessageOnly(true, api, event, message);
+                            sendMessageOnly(api, event, message);
                             log("unsend_message " + d[0] + " " + message);
                         } else {
                             let message = {
@@ -1126,7 +757,7 @@ ERR! uploadAttachment }
                                 }]
                                 */
                             }
-                            sendMessageOnly(true, api, event, message);
+                            sendMessageOnly(api, event, message);
                             log("unsend_message_group " + d[0] + " " + message);
                         }
                     });
@@ -1169,9 +800,9 @@ ERR! uploadAttachment }
                                         }
                                         log("new_member_multi " + names[a][0] + " " + names[a][1])
                                     }
-                                    gret += ". How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/";
+                                    gret += ". How are you all doin?";
                                 } else {
-                                    gret = "How are you " + names[0][1] + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/";
+                                    gret = "How are you " + names[0][1] + "?";
                                     log("new_member " + names[0][0] + " " + names[0][1])
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
@@ -1226,14 +857,14 @@ ERR! uploadAttachment }
                                 }]
                                 */
                             }
-                            sendMessage(true, api, event, message);
+                            sendMessage(api, event, message);
                         });
                         fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
                         break;
                     case "log:thread-icon":
                     case "log:thread-color":
                     case "log:user-nickname":
-                        sendMessage(true, api, event, "Feature comming soon\n\n" + JSON.stringify(event.logMessageData));
+                        sendMessage(api, event, "Feature comming soon\n\n" + JSON.stringify(event.logMessageData));
                         break;
                 }
                 break;
@@ -1253,16 +884,16 @@ async function ai22(api, event, query, query2) {
     if (query == "notify") {
         if (isMyId(event.senderID)) {
             if (event.messageReply.body == "") {
-                sendMessage(true, api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
+                sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
             } else {
-                sendMessage(true, api, event, "Message are been schedule to send to " + Object.keys(groups.list).length + " groups.");
+                sendMessage(api, event, "Message are been schedule to send to " + Object.keys(groups.list).length + " groups.");
                 sendMessageToAll(api, event);
             }
         }
     } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
         if (users.admin.includes(event.senderID)) {
             if (event.messageReply.senderID != currentID) {
-                sendMessage(true, api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
+                sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
             } else {
                 api.unsendMessage(event.messageReply.messageID, (err) => {
                     if (err) log(err);
@@ -1274,10 +905,10 @@ async function ai22(api, event, query, query2) {
             return;
         }
         if (event.messageReply.body == "") {
-            sendMessage(true, api, event, "You need to reply pin add to a message which is not empty to pin it.");
+            sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
         } else {
             settings.pin[event.threadID] = event.messageReply.body;
-            sendMessage(true, api, event, "Message pinned.. Enter \"pin\" to show it.");
+            sendMessage(api, event, "Message pinned.. Enter \"pin\" to show it.");
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
         }
     } else if (query == "count") {
@@ -1285,27 +916,27 @@ async function ai22(api, event, query, query2) {
             return;
         }
         if (event.messageReply.body == "") {
-            sendMessage(true, api, event, "You need to reply count to a message.");
+            sendMessage(api, event, "You need to reply count to a message.");
         } else {
-            sendMessage(true, api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
+            sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
         }
     } else if (query == "countvowels") {
         if (isGoingToFast(event)) {
             return;
         }
         if (event.messageReply.body == "") {
-            sendMessage(true, api, event, "You need to reply count --vowels to a message.");
+            sendMessage(api, event, "You need to reply count --vowels to a message.");
         } else {
-            sendMessage(true, api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
+            sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
         }
     } else if (query == "countconsonants") {
         if (isGoingToFast(event)) {
             return;
         }
         if (event.messageReply.body == "") {
-            sendMessage(true, api, event, "You need to reply count --consonants to a message.");
+            sendMessage(api, event, "You need to reply count --consonants to a message.");
         } else {
-            sendMessage(true, api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
+            sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
         }
     } else if (query.startsWith("wfind")) {
         if (isGoingToFast(event)) {
@@ -1313,16 +944,16 @@ async function ai22(api, event, query, query2) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name")
         } else {
             data.shift();
             let se = data.join(" ");
             if (event.messageReply.body == "") {
-                sendMessage(true, api, event, "You need to reply wfind text to a message.");
+                sendMessage(api, event, "You need to reply wfind text to a message.");
             } else if (event.messageReply.body.includes(se)) {
-                sendMessage(true, api, event, "I found the \"" + se + "\" on this message " + (se.split(se).length - 1) + " times.");
+                sendMessage(api, event, "I found the \"" + se + "\" on this message " + (se.split(se).length - 1) + " times.");
             } else {
-                sendMessage(true, api, event, "I cannot found any apperance of your search term on the message.");
+                sendMessage(api, event, "I cannot found any apperance of your search term on the message.");
             }
         }
     } else if (query == "totext") {
@@ -1331,26 +962,24 @@ async function ai22(api, event, query, query2) {
         }
         if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || event.messageReply.attachments[0].type != 'audio') {
-                sendMessage(true, api, event, "I cannot see an audio. Please reply totext to an audio.");
+                sendMessage(api, event, "I cannot see an audio. Please reply totext to an audio.");
             } else {
                 let url = event.messageReply.attachments[0].url;
                 let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
                 downloadFile(encodeURI(url), dir).then((response) => {
                     transcribeAudioFile(dir)
                         .then(transcription => {
-                            api.sendMessage(transcription, event.threadID, (err, messageInfo) => {
-                                if (err) log(err);
-                            }, event.messageReply.messageID);
+                            sendMessage(api, event, message, event.threadID, event.messageReply.messageID, true, false);
                             unLink(dir);
                         })
                         .catch(error => {
-                            sendMessage(true, api, event, "Unfortunately an error occured. Please try again later.");
+                            sendMessage(api, event, "Unfortunately an error occured. Please try again later.");
                             unLink(dir);
                         });
                 });
             }
         } else {
-            sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+            sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
     } else if (query.startsWith("run")) {
         if (isGoingToFast(event)) {
@@ -1359,7 +988,7 @@ async function ai22(api, event, query, query2) {
         let input = event.body;
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using run language instead.\nCategories:\nJava, Python, C, C++,\nJavaScript, PHP and Dragon" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrun python")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using run language instead.\nCategories:\nJava, Python, C, C++,\nJavaScript, PHP and Dragon" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrun python")
         } else {
             data.shift()
             let lang = data.join(" ").toLowerCase();
@@ -1375,7 +1004,7 @@ async function ai22(api, event, query, query2) {
 
                     let data = res.data + "";
                     if (data == "") {
-                        sendMessage(true, api, event, "Program died. Execution took too long.");
+                        sendMessage(api, event, "Program died. Execution took too long.");
                     } else {
                         api.sendMessage(data, event.threadID, (err, messageInfo) => {
                             if (err) log(err);
@@ -1401,22 +1030,20 @@ async function ai22(api, event, query, query2) {
 
                     let data1 = res1.data + "";
                     if (data1 == "") {
-                        sendMessage(true, api, event, "Program died. Execution took too long.");
+                        sendMessage(api, event, "Program died. Execution took too long.");
                     } else {
                         if (data1.includes("/home/runner/run/")) {
                             data1 = data1.replaceAll("/home/runner/run/", "");
                         }
-                        api.sendMessage(removeTags(data1), event.threadID, (err, messageInfo) => {
-                            if (err) log(err);
-                        }, event.messageReply.messageID);
+                        sendMessage(api, event, removeTags(data1), event.threadID, event.messageReply.messageID, true, false);
                     }
                 break;
                 case "sh":
                 case "bash":
-                    sendMessage(true, api, event, "Permission Unauthorized.");
+                    sendMessage(api, event, "Permission Unauthorized.");
                 break;
                 default:
-                    sendMessage(true, api, event, lang + " is not yet supported.")
+                    sendMessage(api, event, lang + " is not yet supported.")
                 break;
             }
         }
@@ -1426,12 +1053,12 @@ async function ai22(api, event, query, query2) {
         }
         if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1) {
-                sendMessage(true, api, event, "I cannot see an image. Please reply bgremove to an image.");
+                sendMessage(api, event, "I cannot see an image. Please reply bgremove to an image.");
             } else {
                 bgRemove(api, event);
             }
         } else {
-            sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+            sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
     } else if (query == "searchimgreverse") {
         if (isGoingToFast(event)) {
@@ -1439,8 +1066,8 @@ async function ai22(api, event, query, query2) {
         }
         if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || 
-                (event.messageReply.attachments[0].type == "photo" || event.messageReply.attachments[0].type == "animated_image")) {
-                sendMessage(true, api, event, "I cannot see an image. Please reply searchimg --reverse to an image.");
+                (event.messageReply.attachments[0].type != "photo" && event.messageReply.attachments[0].type != "animated_image" && event.messageReply.attachments[0].type != "sticker")) {
+                sendMessage(api, event, "I cannot see an image. Please reply searchimg --reverse to an image.");
             } else {
                 let filename = __dirname + '/cache/images/searchimgreverse_' + getTimestamp() + '.png'
                 downloadFile(event.messageReply.attachments[0].url, filename).then((response) => {
@@ -1449,7 +1076,7 @@ async function ai22(api, event, query, query2) {
                 });
             }
         } else {
-            sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+            sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
     } else if (query == "gphoto") {
         if (isGoingToFast(event)) {
@@ -1457,9 +1084,9 @@ async function ai22(api, event, query, query2) {
         }
         if (event.isGroup) {
             if (event.messageReply.attachments.length < 1) {
-                sendMessage(true, api, event, "I cannot see an image. Please reply gphoto to an image.");
+                sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
             } else if (event.messageReply.attachments.length > 1) {
-                sendMessage(true, api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
+                sendMessage(api, event, "Opps! I cannot set this all as group photo. Please select only one image.");
             } else if ((event.messageReply.attachments.length === 1) && (event.messageReply.attachments[0].type == 'photo')) {
                 const url = event.messageReply.attachments[0].url;
                 let time = getTimestamp();
@@ -1472,7 +1099,7 @@ async function ai22(api, event, query, query2) {
                 });
             }
         } else {
-            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
     }
 }
@@ -1493,7 +1120,7 @@ async function ai(api, event) {
         let message = {
             attachment: fs.createReadStream(__dirname + '/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
         };
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
         return;
     }
     if (event.type == "message_reply" && event.messageReply.senderID != currentID) {
@@ -1501,23 +1128,23 @@ async function ai(api, event) {
     }
     if (event.type == "message") {
         if (query == "totext") {
-            sendMessage(true, api, event, "You need to reply to a message with an audio.");
+            sendMessage(api, event, "You need to reply to a message with an audio.");
         } else if (query == "bgremove" || query == "gphoto" || query == "searchimgreverse") {
-            sendMessage(true, api, event, "You need to reply to a message with a photo.");
-        } else if (query.startsWith("run")) {
-            sendMessage(true, api, event, "You need to reply to a message which contains the code to run");
+            sendMessage(api, event, "You need to reply to a message with a photo.");
+        } else if (query.startsWith("run") || query2.startsWith("run ")) {
+            sendMessage(api, event, "You need to reply to a message which contains the code to run");
         } else if (query == "count") {
-            sendMessage(true, api, event, "You need to reply to a message to count its words.");
+            sendMessage(api, event, "You need to reply to a message to count its words.");
         } else if (query == "countvowels") {
-            sendMessage(true, api, event, "You need to reply to a message to count its vowels.");
+            sendMessage(api, event, "You need to reply to a message to count its vowels.");
         } else if (query == "countconsonants") {
-            sendMessage(true, api, event, "You need to reply to a message to count its consonants.");
+            sendMessage(api, event, "You need to reply to a message to count its consonants.");
         } else if (query.startsWith("wfind")) {
-            sendMessage(true, api, event, "You need to reply to a message to find a word from a message.");
+            sendMessage(api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
-            sendMessage(true, api, event, "You need to reply to a message to pin a message.");
+            sendMessage(api, event, "You need to reply to a message to pin a message.");
         } else if (users.admin.includes(event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
-            sendMessage(true, api, event, "You need to reply to my message to unsend it.");
+            sendMessage(api, event, "You need to reply to my message to unsend it.");
         }
         someA(api, event, query, input);
     }
@@ -1527,7 +1154,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using searchimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchimg melvin jones repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using searchimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchimg melvin jones repol")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -1536,7 +1163,7 @@ async function ai(api, event) {
                 });
                 getImages(api, event, images);
             } else {
-                sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
     } else if (query.startsWith("searchincog")) {
@@ -1545,15 +1172,15 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using searchincog text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchincog Who is Melvin Jones Repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using searchincog text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchincog Who is Melvin Jones Repol")
         } else {
             data.shift()
             getResponseData('https://api.duckduckgo.com/?q=' + data.join(" ") + '&format=json&pretty=1').then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     log(JSON.stringify(response));
-                    sendMessage(true, api, event, response.Abstract);
+                    sendMessage(api, event, response.Abstract);
                 }
             });
         }
@@ -1571,10 +1198,10 @@ async function ai(api, event) {
                     url: "https://mrepol742.github.io/project-orion/"
                 }
                 users.list.push(event.senderID);
-                sendMessage(true, api, event, message);
+                sendMessage(api, event, message);
                 fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
             } else {
-                sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
+                sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
             }
         } else {
             let text = query2;
@@ -1598,23 +1225,23 @@ async function ai(api, event) {
             let text1 = text.replace(/\s+/g, '');
             let text2 = text;
             if (/^[0-9]+$/.test(text1)) {
-                sendMessage(true, api, event, "What do you want me to do with " + input + "?");
+                sendMessage(api, event, "What do you want me to do with " + input + "?");
             } else if (!/[a-z0-9]/gi.test(text1)) {
-                sendMessage(true, api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
+                sendMessage(api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
             } else if (nsfw(text1)) {
-                sendMessage(true, api, event, "Shhhhhhh watch your mouth.");
+                sendMessage(api, event, "Shhhhhhh watch your mouth.");
             } else if (text1.startsWith("whatiswebvium")) {
-                sendMessage(true, api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
+                sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
             } else if (text1.startsWith("whocreatedwebvium")) {
-                sendMessage(true, api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
+                sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
             } else if (text1.startsWith("whoareyou") || text1.startsWith("whatisyourname")) {
-                sendMessage(true, api, event, "I'm Mj.");
+                sendMessage(api, event, "I'm Mj.");
             } else if (text1.startsWith("whoisactive")) {
-                sendMessage(true, api, event, "Me");
+                sendMessage(api, event, "Me");
             } else if (text1.includes("pornsite") || text1.startsWith("whatissex") || text1.startsWith("whatssex") || text1.startsWith("fuckyou") || text1.startsWith("curseyou")) {
                 blockUser(api, event, event.senderID);
             } else if (text1 == "sim") {
-                sendMessage(true, api, event, "Me? noooo...");
+                sendMessage(api, event, "Me? noooo...");
             } else if (text1 == "callme") {
                 let id;
                 if ((event.type == "message_reply" && event.senderID != currentID)) {
@@ -1635,7 +1262,7 @@ async function ai(api, event) {
                         }]
                         */
                     };
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                 });
             } else if (text1 == "whoami" || text1 == "whatsmyname" || text1 == "whoiam" || text1 == "iamcalled" || text1 == "theycallme" || text1 == "iamknownas" || text1 == "mynameis" || text1 == "doyouknowme" || text1 == "whatismyname") {
                 let id;
@@ -1661,67 +1288,67 @@ async function ai(api, event) {
                             }]
                             */
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 });
             } else if (text1 == "howitwork" || text1 == "howyoufunction") {
-                sendMessage(true, api, event, "We do this by emulating the browser. This means doing the exact same GET/POST requests and tricking Facebook into thinking we're accessing the website normally.");
+                sendMessage(api, event, "We do this by emulating the browser. This means doing the exact same GET/POST requests and tricking Facebook into thinking we're accessing the website normally.");
             } else if (text1 == "whoownyou") {
-                sendMessage(true, api, event, "Melvin Jones Repol.")
+                sendMessage(api, event, "Melvin Jones Repol.")
             } else if (text1.startsWith("whomadeyou") || text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou") || text1.startsWith("whoprogramyou")) {
-                sendMessage(true, api, event, "Melvin Jones Repol created me.");
+                sendMessage(api, event, "Melvin Jones Repol created me.");
             } else if (text1.startsWith("howoldareyou") || text1.startsWith("howyoungareyou") || text1.startsWith("whatisyourage") || text1.startsWith("whatsyourage")) {
-                sendMessage(true, api, event, "I'm 20 years old.");
+                sendMessage(api, event, "I'm 20 years old.");
             } else if (text1.startsWith("whereyoufrom") || text1.startsWith("whereareyoufrom") || text1.startsWith("wheredoyoufrom")) {
-                sendMessage(true, api, event, "Somewhere in the place they called the Philippines.");
+                sendMessage(api, event, "Somewhere in the place they called the Philippines.");
             } else if (text1.startsWith("areyouhuman") || text1.startsWith("areyoubot") || text1.startsWith("areyouthebot")) {
-                sendMessage(true, api, event, "Scientifically, Programmatically and Technologically Human.");
+                sendMessage(api, event, "Scientifically, Programmatically and Technologically Human.");
             } else if (text1 == "dumb" || text1 == "dick" || text1 == "pussy" || text1 == "fuckyou" || text1 == "damnyou" || text1 == "fyou" || text1 == "fckyou") {
-                sendMessage(true, api, event, "I'm far intelligent than you human(s).");
+                sendMessage(api, event, "I'm far intelligent than you human(s).");
             } else if (text1 == "bot" || text1 == "ai" || text1 == "robot") {
-                sendMessage(true, api, event, "Who are you to call me that!.")
+                sendMessage(api, event, "Who are you to call me that!.")
             } else if (text1.startsWith("areyoumj")) {
-                sendMessage(true, api, event, "Yes i am indeed Mj.");
+                sendMessage(api, event, "Yes i am indeed Mj.");
             } else if (text1 == "thank" || text1 == "thankyou" || text1 == "thanksbro" || text1 == "thanks" || text1.startsWith("ilikeyou")) {
-                sendMessage(true, api, event, "You're welcome.");
+                sendMessage(api, event, "You're welcome.");
             } else if (text1 == "whatareyou") {
-                sendMessage(true, api, event, "A human.");
+                sendMessage(api, event, "A human.");
             } else if (text1 == "wascorrect") {
-                sendMessage(true, api, event, "Yeah i knew it.");
+                sendMessage(api, event, "Yeah i knew it.");
             } else if (text1 == "bye" || text1 == "goodbye") {
-                sendMessage(true, api, event, "bye bye.");
+                sendMessage(api, event, "bye bye.");
             } else if (text1 == "ok" || text1 == "okay" || text1 == "nice" || text1.startsWith("hmmm")) {
-                sendMessage(true, api, event, "Yeahh..");
+                sendMessage(api, event, "Yeahh..");
             } else if (text1 == "time" || text1.startsWith("whatsthetime") || text1.startsWith("whatisthetime") ||
                 text1 == "todayis" || text1.startsWith("timetoday") || text1.startsWith("whatsthedatetoday") ||
                 text1.startsWith("whatisthedatetoday") || text1.startsWith("whatdatetoday") || text1.startsWith("whatisthetimenow") ||
                 text1.startsWith("whatsthetimenow") || text1 == "date" || text1.startsWith("whatsthedate") || text1.startsWith("whatisthedate") ||
                 text1.startsWith("datetoday") || text1.startsWith("whattimeisitnow") || text1.startsWith("whatdateisitnow")) {
-                sendMessage(true, api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
+                sendMessage(api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
             } else if (text1.startsWith("iloveyou") || text1.startsWith("loveme") || text1.startsWith("doyoulikeme") || text1.startsWith("doyouloveme") || text1.startsWith("whydontyouloveme") || text1.startsWith("imissyou") || text1.startsWith("iwantyou")) {
-                sendMessage(true, api, event, "I've already a girl and i love her so much >3.");
+                sendMessage(api, event, "I've already a girl and i love her so much >3.");
             } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
-                sendMessage(true, api, event, "huhhhhhhhhh uh.");
+                sendMessage(api, event, "huhhhhhhhhh uh.");
             } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" ||
                 (text1.startsWith("whois") && isMe(text2))) {
                 let message = {
                     body: "Melvin Jones 'Mj' Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\n\nhttps://mrepol742.github.io",
                     url: "https://mrepol742.github.io"
                 }
-                sendMessage(true, api, event, message);
+                sendMessage(api, event, message);
             } else if (text1.startsWith("whois") && (text2.includes("pat") || text1.includes("patrickelcano") || text2.includes("0x3ef8") || text1.includes("jaypatrickcano") || text1.includes("patrickcano"))) {
                 let mss = {
                     body: "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\n\nhttps://0x3ef8.github.io",
                     url: "https://0x3ef8.github.io"
                 }
-                sendMessage(true, api, event, mss);
+                sendMessage(api, event, mss);
             } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
-                sendMessage(true, api, event, "Do you mean cmd? You can call cmd to open my command list.");
+                sendMessage(api, event, "Do you mean cmd? You can call cmd to open my command list.");
             } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using cmd number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncmd 2");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncmd 2");
                 //} else if (text1.split('').length < 10) {
-                //    sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
             } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
                 return;
             } else if (!query.startsWith("search") && (text.split(" ").length < 2 || text.indexOf(" ") == -1) && !/^[0-9]+$/.test(text1)) {
@@ -1729,19 +1356,19 @@ async function ai(api, event) {
                     return;
                 }
                 if (text1.startsWith("what")) {
-                    sendMessage(true, api, event, "what is it?");
+                    sendMessage(api, event, "what is it?");
                 } else if (text1.startsWith("when")) {
-                    sendMessage(true, api, event, "when is the?");
+                    sendMessage(api, event, "when is the?");
                 } else if (text1.startsWith("where")) {
-                    sendMessage(true, api, event, "where is it?");
+                    sendMessage(api, event, "where is it?");
                 } else if (text1.startsWith("how")) {
-                    sendMessage(true, api, event, "how what?");
+                    sendMessage(api, event, "how what?");
                 } else if (text1.startsWith("which")) {
-                    sendMessage(true, api, event, "which of the?");
+                    sendMessage(api, event, "which of the?");
                 } else if (text1.endsWith("?")) {
-                    sendMessage(true, api, event, text);
+                    sendMessage(api, event, text);
                 } else {
-                    sendMessage(true, api, event, text + "?");
+                    sendMessage(api, event, text + "?");
                 }
             } else {
                 if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
@@ -1774,7 +1401,7 @@ async function ai(api, event) {
                     }
                 }
 
-                sendMessage(true, api, event, message);
+                sendMessage(api, event, message);
             }
         }
     } else if (query.startsWith("chatgpt")) {
@@ -1783,12 +1410,12 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using chatgpt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchatgpt what is matter?")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using chatgpt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchatgpt what is matter?")
         } else {
             data.shift();
             getResponseData("https://api.amosayomide05.cf/gpt/?question=" + data.join(" ") + "&string_id=unique_id").then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
+                    sendMessage(api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
                 } else {
                     sendMessage(false, api, event, response.response);
                 }
@@ -1800,7 +1427,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using openai text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nopenai what is matter?")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using openai text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nopenai what is matter?")
         } else {
             data.shift();
             try {
@@ -1813,9 +1440,9 @@ async function ai(api, event) {
                     frequency_penalty: 0,
                     presence_penalty: 0,
                 });
-                sendMessage(true, api, event, response.data.choices[0].text);
+                sendMessage(api, event, response.data.choices[0].text);
             } catch (err) {
-                sendMessage(true, api, event, "OpenAI is at capacity right now. Please try it again later.");
+                sendMessage(api, event, "OpenAI is at capacity right now. Please try it again later.");
             }
         }
     } else if (query.startsWith("createcode")) {
@@ -1824,7 +1451,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using createcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncreatecode hello world in python")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using createcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncreatecode hello world in python")
         } else {
             data.shift();
             try {
@@ -1833,17 +1460,17 @@ async function ai(api, event) {
                     prompt: data.join(" "),
                     max_tokens: 2000
                 });
-                sendMessage(true, api, event, response.data.choices[0].text);
+                sendMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status == 500) {
-                        sendMessage(true, api, event, "Mj is currently down. Please try it again later.");
+                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
                     } else if (error.response.status == 429) {
-                        sendMessage(true, api, event, "Mj is at capacity right now. Please try it again later.");
+                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
                     } else if (error.response.status == 503) {
-                        sendMessage(true, api, event, "It seems like there are problems with the server. Please try it again later.");
+                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
                     } else {
-                        sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
                 }
             }
@@ -1854,7 +1481,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using createimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncreateimg a cat")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using createimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncreateimg a cat")
         } else {
             data.shift();
             try {
@@ -1870,21 +1497,21 @@ async function ai(api, event) {
                         let message = {
                             attachment: fs.createReadStream(dir)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(dir);
                     });
                 }
-                sendMessage(true, api, event, response.data.choices[0].text);
+                sendMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status == 500) {
-                        sendMessage(true, api, event, "Mj is currently down. Please try it again later.");
+                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
                     } else if (error.response.status == 429) {
-                        sendMessage(true, api, event, "Mj is at capacity right now. Please try it again later.");
+                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
                     } else if (error.response.status == 503) {
-                        sendMessage(true, api, event, "It seems like there are problems with the server. Please try it again later.");
+                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
                     } else {
-                        sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
                 }
             }
@@ -1895,7 +1522,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using quiz topic instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nquiz math");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using quiz topic instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nquiz math");
         } else {
             data.shift();
             try {
@@ -1916,20 +1543,20 @@ async function ai(api, event) {
                 if (options && options.length > 0) {
                     let correctAnswer = options[0].substring(0, 1);
                     log("Quiz: " + quiz + "\nQuiz Parts: " + quizParts + "\nQuestion: " + question + "\nOptions: " + options + "\nCorrect Answer: " + correctAnswer);
-                    sendMessage(true, api, event, "Question: " + question + "\nOptions:\n" + options.join("\n"));
+                    sendMessage(api, event, "Question: " + question + "\nOptions:\n" + options.join("\n"));
                 } else {
-                    sendMessage(true, api, event, "Error: No options generated for this question.");
+                    sendMessage(api, event, "Error: No options generated for this question.");
                 }
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status == 500) {
-                        sendMessage(true, api, event, "Mj is currently down. Please try it again later.");
+                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
                     } else if (error.response.status == 429) {
-                        sendMessage(true, api, event, "Mj is at capacity right now. Please try it again later.");
+                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
                     } else if (error.response.status == 503) {
-                        sendMessage(true, api, event, "It seems like there are problems with the server. Please try it again later.");
+                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
                     } else {
-                        sendMessage(true, api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
                 }
             }
@@ -1995,7 +1622,7 @@ _______  Cache  _______
    ⦿ Cache 4: ` + ((Object.keys(threadIdMV).length) + (Object.keys(cmd).length)) + `
 _______________________
 `;
-            sendMessage(true, api, event, message);
+            sendMessage(api, event, message);
             threadIdMV = {};
             cmd = {};
         }
@@ -2003,73 +1630,73 @@ _______________________
         if (users.admin.includes(event.senderID)) {
             settings.preference.isDebugEnabled = true;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Debug mode enabled.");
+            sendMessage(api, event, "Debug mode enabled.");
         }
     } else if (query == "debugoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.isDebugEnabled = false;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Konnichiwa i am back.");
+            sendMessage(api, event, "Konnichiwa i am back.");
         }
     } else if (query == "setautomarkreadon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkRead = true;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Automatically marked read messages enabled.");
+            sendMessage(api, event, "Automatically marked read messages enabled.");
         }
     } else if (query == "setautomarkreadoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkRead = false;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Automatically marked read messages disabled.");
+            sendMessage(api, event, "Automatically marked read messages disabled.");
         }
     } else if (query == "setonlineon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.online = true;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Account status is set to Online.");
+            sendMessage(api, event, "Account status is set to Online.");
         }
     } else if (query == "setonlineoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.online = false;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Account status is set to Offline.");
+            sendMessage(api, event, "Account status is set to Offline.");
         }
     } else if (query == "setselfistenon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.selfListen = true;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Listening to own account messages is enabled.");
+            sendMessage(api, event, "Listening to own account messages is enabled.");
         }
     } else if (query == "setselfistenoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.selfListen = false;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Listening to own account messages is disabled.");
+            sendMessage(api, event, "Listening to own account messages is disabled.");
         }
     } else if (query == "setautomarkdeliveryon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkDelivery = true;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Automatically marked messages when delivered enabled.");
+            sendMessage(api, event, "Automatically marked messages when delivered enabled.");
         }
     } else if (query == "setautomarkdeliveryoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkDelivery = false;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Automatically marked messages when delivered disabled.");
+            sendMessage(api, event, "Automatically marked messages when delivered disabled.");
         }
     } else if (query == "ssetsendtypingindicatoron") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.sendTypingIndicator = true;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Send typing indicator when AI sending messages enabled.");
+            sendMessage(api, event, "Send typing indicator when AI sending messages enabled.");
         }
     } else if (query == "setsendtypingindicatoroff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.sendTypingIndicator = false;
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Send typing indicator when AI sending messages disabled.");
+            sendMessage(api, event, "Send typing indicator when AI sending messages disabled.");
         }
     } else if (query.startsWith("ttsjap") || query.startsWith("sayjap")) {
         if (isGoingToFast(event)) {
@@ -2077,7 +1704,7 @@ _______________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using sayjap text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsayjap I am melvin jones repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using sayjap text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsayjap I am melvin jones repol")
         } else {
             try {
                 data.shift();
@@ -2095,11 +1722,11 @@ _______________________
                                     }
                                 })
                         }
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                     });
                 });
             } catch {
-                sendMessage(true, api, event, "Unfortunately an error occured,");
+                sendMessage(api, event, "Unfortunately an error occured,");
             }
         }
     } else if (query2.startsWith("tts ") || query2.startsWith("say ")) {
@@ -2108,17 +1735,17 @@ _______________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using say text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsay I am melvin jones repol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using say text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsay I am melvin jones repol")
         } else {
             data.shift();
             const url = GoogleTTS.getAudioUrl(data.join(" "), voice);
             let time = getTimestamp();
             let filename = __dirname + '/cache/audios/tts_' + time + '.mp3'
-            downloadFile(encodeURI(url), filename).then((response) => {
+            downloadFile(url, filename).then((response) => {
                 let message = {
                     attachment: fs.createReadStream(filename),
                 };
-                sendMessage(true, api, event, message);
+                sendMessage(api, event, message);
                 unLink(filename);
             });
         }
@@ -2138,10 +1765,11 @@ _______________________
                 count1++;
             }
         }
+        let a = new Date().toString().split(" ");
         let message = `
 _______  Statistics  _______
 
-   ⦿ Date: ` + getFormattedDate() + `
+   ⦿ Server Date: ` + a[0] + " " + a[1] + " " + a[2] + " " + a[3] + " " + a[4] + `
    ⦿ Your Messages: ` + numberWithCommas(count) + `
    ⦿ Your Unsend Messages: ` + numberWithCommas(count1) + `
    ⦿ Total Messages: ` + numberWithCommas(Object.keys(msgs).length) + `
@@ -2154,7 +1782,7 @@ _______  Statistics  _______
    ⦿ Total Tokens: ` + settings.token.total_tokens + `
 ___________________________
 `;
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else if (query == "uptime") {
         if (isGoingToFast(event)) {
             return;
@@ -2167,7 +1795,7 @@ _______  Uptime  _______
    ` + seconds_con + `
 _______________________
 `;
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else if (query == "sysinfo") {
         if (isGoingToFast(event)) {
             return;
@@ -2181,11 +1809,13 @@ _______________________
             let external = convertBytes(process.memoryUsage().external);
             let arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
             let avg_load = os.loadavg();
+            let a = new Date().toString().split(" ");
             let message = `
 _______  System Info  _______
 
-   ⦿ Date: ` + getFormattedDate() + `
-   ⦿ Uptime: ` + seconds_con + `
+   ⦿ Server Date: ` + a[0] + " " + a[1] + " " + a[2] + " " + a[3] + " " + a[4] + `
+   ⦿ Server Uptime: ` + seconds_con + `
+   ⦿ Server Location: ` + getCountryOrigin(os.cpus()[0].model) + `
    ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
    ⦿ CPU Usage: ` + getLoad() + `%
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
@@ -2204,23 +1834,23 @@ _______  System Info  _______
    ⦿ Crash: ` + crashes + ` crash caught
 _____________________________
 `;
-            sendMessage(true, api, event, message);
+            sendMessage(api, event, message);
     } else if (query.startsWith("dns4")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using dns4 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns4 google.com")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using dns4 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns4 google.com")
         } else {
             data.shift();
             dns.resolve4(data.join(" "), (err, addresses) => {
                 if (err) {
                     log(err);
-                    sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
+                    sendMessage(api, event, "Houston! An error occured. Please try it again later.");
                     return;
                 }
-                sendMessage(true, api, event, addresses[0]);
+                sendMessage(api, event, addresses[0]);
             });
         }
     } else if (query.startsWith("dns6")) {
@@ -2229,16 +1859,16 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using dns6 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns6 google.com")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using dns6 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns6 google.com")
         } else {
             data.shift();
             dns.resolve6(data.join(" "), (err, addresses) => {
                 if (err) {
                     log(err);
-                    sendMessage(true, api, event, "Houston! An error occured. Please try it again later.");
+                    sendMessage(api, event, "Houston! An error occured. Please try it again later.");
                     return;
                 }
-                sendMessage(true, api, event, addresses[0]);
+                sendMessage(api, event, addresses[0]);
             });
         }
     } else if (query.startsWith("ping")) {
@@ -2247,7 +1877,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using ping url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nping google.com")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using ping url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nping google.com")
         } else {
             try {
                 data.shift();
@@ -2260,7 +1890,7 @@ _____________________________
                         });
                 });
             } catch (a) {
-                sendMessage(true, api, event, "Unfortunately an error occured please check your parameters for errors.");
+                sendMessage(api, event, "Unfortunately an error occured please check your parameters for errors.");
             }
         }
     } else if (query2.startsWith("mean ")) {
@@ -2268,10 +1898,10 @@ _____________________________
             return;
         }
         if (input.split(" ").length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using mean numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmean 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mean numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmean 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(4))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
+                sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
             let arr = input.substring(5).split(" ").map(Number);
@@ -2280,37 +1910,37 @@ _____________________________
             for (i = 0; i < arr.length; i++) {
                 total += arr[i];
             }
-            sendMessage(true, api, event, "The mean value is " + (total / arr.length));
+            sendMessage(api, event, "The mean value is " + (total / arr.length));
         }
     } else if (query.startsWith("median")) {
         if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using median numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmedian 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using median numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmedian 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(6))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
+                sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
             let arr = input.substring(7).split(" ").map(Number);
             let length = arr.length;
             arr.sort((a, b) => a - b);
             if (length % 2 === 0) {
-                sendMessage(true, api, event, "The median value is " + ((arr[length / 2 - 1] + arr[length / 2]) / 2));
+                sendMessage(api, event, "The median value is " + ((arr[length / 2 - 1] + arr[length / 2]) / 2));
                 return;
             }
-            sendMessage(true, api, event, "The median value is " + (arr[(length - 1) / 2]));
+            sendMessage(api, event, "The median value is " + (arr[(length - 1) / 2]));
         }
     } else if (query2.startsWith("mode ")) {
         if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using mode numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmode 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mode numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmode 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(4))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
+                sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
             let arr = input.substring(5).split(" ").map(Number);
@@ -2332,39 +1962,39 @@ _____________________________
                 }
             }
 
-            sendMessage(true, api, event, "The mode value is " + max);
+            sendMessage(api, event, "The mode value is " + max);
         }
     } else if (query.startsWith("range")) {
         if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using range numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrange 4 5 6 3 6 7 3 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using range numbers instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrange 4 5 6 3 6 7 3 5")
         } else {
             if (!/^\d+$/.test(query.substring(5))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
+                sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
             let arr = input.substring(6).split(" ").map(Number);
             arr.sort((a, b) => a - b);
-            sendMessage(true, api, event, "The range value is " + [arr[0], arr[arr.length - 1]]);
+            sendMessage(api, event, "The range value is " + [arr[0], arr[arr.length - 1]]);
         }
     } else if (query.startsWith("divisible")) {
         if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using divisible number number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndivisible 5 8")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using divisible number number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndivisible 5 8")
         } else {
             if (!/^\d+$/.test(query.substring(9))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
+                sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
             let arr = input.substring(10).split(" ").map(Number);
             if (arr[0] % arr[1] == 0) {
-                sendMessage(true, api, event, arr[0] + " is divisible by " + arr[1]);
+                sendMessage(api, event, arr[0] + " is divisible by " + arr[1]);
             } else {
-                sendMessage(true, api, event, arr[0] + " is not divisible by " + arr[1]);
+                sendMessage(api, event, arr[0] + " is not divisible by " + arr[1]);
             }
         }
     } else if (query.startsWith("factorial")) {
@@ -2372,47 +2002,47 @@ _____________________________
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using factorial number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfactorial 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using factorial number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfactorial 5")
         } else {
             if (!/^\d+$/.test(query.substring(9))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
+                sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
             let num = parseInt(input.substring(10));
-            sendMessage(true, api, event, "The factorial of " + num + " is " + factorial(num));
+            sendMessage(api, event, "The factorial of " + num + " is " + factorial(num));
         }
     } else if (query.startsWith("findgcd")) {
         if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using findGCD number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfindGCD 5")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfindGCD 5")
         } else {
             if (!/^\d+$/.test(query.substring(7))) {
-                sendMessage(true, api, event, "Seem's like there's an invalid token somewhere..");
+                sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
             let num = parseInt(input.substring(8));
-            sendMessage(true, api, event, "The GCD of " + num + " is " + findGCD(num));
+            sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
         }
     } else if (query2.startsWith("roi ")) {
         if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using roi revenue cost instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nroi 23000 6000")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nroi 23000 6000")
         } else {
             let revenue = input.split(" ")[1];
             let cost = input.split(" ")[2];
             let calcu = (revenue - cost) / cost;
-            sendMessage(true, api, event, "The return of investment is " + calcu);
+            sendMessage(api, event, "The return of investment is " + calcu);
         }
     } else if (query.startsWith("problem")) {
         if (isGoingToFast(event)) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using problem equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nproblem 5*5/9")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nproblem 5*5/9")
         } else {
             let text = input;
             text = text.substring(8)
@@ -2423,7 +2053,7 @@ _____________________________
                 } catch (err) {
                     res = "You enter an invalid token in the equation. Please try it again.";
                 }
-                sendMessage(true, api, event, res + "");
+                sendMessage(api, event, res + "");
             } else {
                 let res;
                 try {
@@ -2431,7 +2061,7 @@ _____________________________
                 } catch (err) {
                     res = "You enter an invalid token in the equation. Please try it again.";
                 }
-                sendMessage(true, api, event, res + "");
+                sendMessage(api, event, res + "");
             }
         }
     } else if (query == "covid") {
@@ -2451,10 +2081,10 @@ _____________________________
             let message = {
                 body: "⦿ Deaths " + numberWithCommas(data.data.data['deaths']) + "\n⦿ Confirmed: " + numberWithCommas(data.data.data['confirmed']) + "\n⦿ Location: " + data.data.data['location'],
             }
-            sendMessage(true, api, event, message);
+            sendMessage(api, event, message);
         }).catch(function(error) {
             log(error);
-            sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+            sendMessage(api, event, "An unknown error as been occured. Please try again later.")
         });
     } else if (query.startsWith("covid")) {
         if (isGoingToFast(event)) {
@@ -2462,7 +2092,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using covid country instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncovid Philippines");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using covid country instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncovid Philippines");
         } else {
             data.shift();
             let country = data.join(" ");
@@ -2483,13 +2113,13 @@ _____________________________
                     let message = {
                         body: "⦿ Deaths " + numberWithCommas(data.data.data['deaths']) + "\n⦿ Confirmed: " + numberWithCommas(data.data.data['confirmed']),
                     }
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                 } else {
-                    sendMessage(true, api, event, "Country not found.");
+                    sendMessage(api, event, "Country not found.");
                 }
             }).catch(function(error) {
                 log(error);
-                sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+                sendMessage(api, event, "An unknown error as been occured. Please try again later.")
             });
         }
     } else if (query2.startsWith("nba ")) {
@@ -2498,7 +2128,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using nba name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnba Stephen Curry");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using nba name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnba Stephen Curry");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -2524,11 +2154,11 @@ _____________________________
                     "⦿ Team: " + data.data.data[0].team.full_name + "\n" +
                     "⦿ Division: " + data.data.data[0].team.division + "\n";
 
-                sendMessage(true, api, event, message);
+                sendMessage(api, event, message);
 
             }).catch(function(error) {
                 log(error);
-                sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+                sendMessage(api, event, "An unknown error as been occured. Please try again later.")
             });
         }
     } else if (query.startsWith("urlshort")) {
@@ -2541,7 +2171,7 @@ _____________________________
                 body: "Opps! I didnt get it. You should try using linkshort url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlink https://mrepol742.github.io",
                 url: "https://mrepol742.github.io"
             }
-            sendMessage(true, api, event, message);
+            sendMessage(api, event, message);
         } else {
             data.shift();
             let encodedParams = new URLSearchParams();
@@ -2563,10 +2193,10 @@ _____________________________
                     body: data.result_url,
                     url: data.result_url
                 }
-                sendMessage(true, api, event, message);
+                sendMessage(api, event, message);
             }).catch(function(error) {
                 log(error);
-                sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+                sendMessage(api, event, "An unknown error as been occured. Please try again later.")
             });
         }
     } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
@@ -2588,7 +2218,7 @@ _____________________________
             let name = info[id]['firstName'];
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using phub text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nphub why i am here again.");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using phub text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nphub why i am here again.");
             } else {
                 data.shift()
                 let phublink = 'https://manhict.tech/api/phubcmt?text=' + data.join(" ") + '&uid=' + id + '&name=' + name + '&apikey=' + settings.apikey.manhict;
@@ -2602,7 +2232,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
@@ -2610,7 +2240,7 @@ _____________________________
                 const youtube = await new Youtubei();
                 const search = await youtube.search(vdName);
                 if (search.videos[0] === undefined) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -2648,7 +2278,7 @@ _____________________________
                             if (err) log(err)
                             if (data.length > limit) {
                                 log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
-                                sendMessage(true, api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
+                                sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                                 threadIdMV[event.threadID] = true;
                                 unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
                             } else {
@@ -2656,7 +2286,7 @@ _____________________________
 
                                 getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
                                     if (response == null) {
-                                        sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                                        sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                                     } else {
                                         let title = response.result.s_title;
                                         let image = response.result.s_image;
@@ -2666,7 +2296,7 @@ _____________________________
                                             body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
                                             attachment: fs.createReadStream(__dirname + '/cache/videos/video_' + time + '.mp4')
                                         };
-                                        sendMessage(true, api, event, message);
+                                        sendMessage(api, event, message);
                                     }
                                     threadIdMV[event.threadID] = true;
                                     unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
@@ -2677,7 +2307,7 @@ _____________________________
                     stream.on('error', (err) => log(err));
                 }
             } else {
-                sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
     } else if (query.startsWith("video")) {
@@ -2686,14 +2316,14 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Youtubei();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -2731,14 +2361,14 @@ _____________________________
                             if (err) log(err)
                             if (data.length > limit) {
                                 log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
-                                sendMessage(true, api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
+                                sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                             } else {
                                 log("Done.");
                                 let message = {
                                     body: search.videos[0].title,
                                     attachment: fs.createReadStream(__dirname + '/cache/videos/video_' + time + '.mp4')
                                 }
-                                sendMessage(true, api, event, message);
+                                sendMessage(api, event, message);
                             }
                             threadIdMV[event.threadID] = true;
                             unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
@@ -2747,7 +2377,7 @@ _____________________________
                     stream.on('error', (err) => log(err));
                 }
             } else {
-                sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
     } else if (query.startsWith("musiclyric")) {
@@ -2756,7 +2386,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using musiclyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using musiclyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
@@ -2764,7 +2394,7 @@ _____________________________
                 const youtube = await new Youtubei();
                 const search = await youtube.search(vdName);
                 if (search.videos[0] === undefined) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -2799,7 +2429,7 @@ _____________________________
                             if (err) log(err)
                             if (data.length > limit) {
                                 log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
-                                sendMessage(true, api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
+                                sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                                 threadIdMV[event.threadID] = true;
                                 unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
                             } else {
@@ -2808,7 +2438,7 @@ _____________________________
 
                                 getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
                                     if (response == null) {
-                                        sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                                        sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                                     } else {
                                         let title = response.result.s_title;
                                         let image = response.result.s_image;
@@ -2818,7 +2448,7 @@ _____________________________
                                             body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
                                             attachment: fs.createReadStream(__dirname + '/cache/audios/music_' + time + '.mp3')
                                         };
-                                        sendMessage(true, api, event, message);
+                                        sendMessage(api, event, message);
                                     }
                                     threadIdMV[event.threadID] = true;
                                     unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
@@ -2829,7 +2459,7 @@ _____________________________
                     stream.on('error', (err) => log(err));
                 }
             } else {
-                sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
     } else if (query.startsWith("music")) {
@@ -2838,14 +2468,14 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift()
                 const youtube = await new Youtubei();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park")
                 } else {
                     let timeleft = 3;
                     let downloadTimer = setInterval(function() {
@@ -2880,14 +2510,14 @@ _____________________________
                             if (err) log(err)
                             if (data.length > limit) {
                                 log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
-                                sendMessage(true, api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
+                                sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                             } else {
                                 log("Finish downloading music.");
                                 let message = {
                                     body: search.videos[0].title,
                                     attachment: fs.createReadStream(__dirname + '/cache/audios/music_' + time + '.mp3')
                                 }
-                                sendMessage(true, api, event, message);
+                                sendMessage(api, event, message);
                             }
                             threadIdMV[event.threadID] = true;
                             unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
@@ -2896,7 +2526,7 @@ _____________________________
                     stream.on('error', (err) => log(err));
                 }
             } else {
-                sendMessage(true, api, event, "Hold on... There is still a request in progress.");
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
     } else if (query.startsWith("lyrics")) {
@@ -2905,13 +2535,13 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using lyrics text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlyrics In The End by Linkin Park")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using lyrics text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlyrics In The End by Linkin Park")
         } else {
             data.shift();
             let text = data.join(" ");
             getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     let title = response.result.s_title;
                     let image = response.result.s_image;
@@ -2924,7 +2554,7 @@ _____________________________
                             body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, '').replaceAll("\n\n", "\n"),
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -2936,7 +2566,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using encodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencodeBinary fundamentals in engineering")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using encodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencodeBinary fundamentals in engineering")
         } else {
             data.shift();
             let Input = data.join(" ");
@@ -2945,7 +2575,7 @@ _____________________________
             for (i = 0; i < Input.length; i++) {
                 output += Input[i].charCodeAt(0).toString(2) + ' ';
             }
-            sendMessage(true, api, event, output);
+            sendMessage(api, event, output);
         }
     } else if (input.startsWith("decodebinary")) {
         if (isGoingToFast(event)) {
@@ -2953,7 +2583,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using decodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecodeBinary 01100001 01100010 01100011")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using decodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecodeBinary 01100001 01100010 01100011")
         } else {
             data.shift();
             let binary = data.join(" ");
@@ -2963,7 +2593,7 @@ _____________________________
             for (i = 0; i < binaryString.length; i++) {
                 stringOutput += String.fromCharCode(parseInt(binaryString[i], 2));
             }
-            sendMessage(true, api, event, stringOutput);
+            sendMessage(api, event, stringOutput);
         }
     } else if (query.startsWith("encode64")) {
         if (isGoingToFast(event)) {
@@ -2971,12 +2601,12 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using encode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencode64 fundamentals in engineering")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using encode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencode64 fundamentals in engineering")
         } else {
             data.shift();
             let buff = Buffer.from(data.join(" "));
             let base64data = buff.toString('base64');
-            sendMessage(true, api, event, base64data);
+            sendMessage(api, event, base64data);
         }
     } else if (query.startsWith("decode64")) {
         if (isGoingToFast(event)) {
@@ -2984,12 +2614,12 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using decode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using decode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n")
         } else {
             data.shift();
             let buff = Buffer.from(data.join(" "), 'base64');
             let base642text = buff.toString('ascii');
-            sendMessage(true, api, event, base642text);
+            sendMessage(api, event, base642text);
         }
     } else if (query.startsWith("reverse")) {
         if (isGoingToFast(event)) {
@@ -2997,20 +2627,20 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using reverse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nreverse fundamentals in engineering")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using reverse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nreverse fundamentals in engineering")
         } else {
             data.shift();
             let splitString = data.join(" ").split("");
             let reverseArray = splitString.reverse();
             let joinArray = reverseArray.join("");
-            sendMessage(true, api, event, joinArray);
+            sendMessage(api, event, joinArray);
         }
     } else if (query == "pinremove") {
         if (isGoingToFast(event)) {
             return;
         }
         settings.pin[event.threadID] = undefined
-        sendMessage(true, api, event, "Pinned message removed.");
+        sendMessage(api, event, "Pinned message removed.");
         fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
     } else if (query == "pin") {
         if (isGoingToFast(event)) {
@@ -3018,12 +2648,12 @@ _____________________________
         }
         if (settings.pin[event.threadID] == undefined) {
             if (event.isGroup) {
-                sendMessage(true, api, event, "There is no pinned message on this group chat.");
+                sendMessage(api, event, "There is no pinned message on this group chat.");
             } else {
-                sendMessage(true, api, event, "There is no pinned message on this chat.");
+                sendMessage(api, event, "There is no pinned message on this chat.");
             }
         } else {
-            sendMessage(true, api, event, settings.pin[event.threadID]);
+            sendMessage(api, event, settings.pin[event.threadID]);
         }
     } else if (query.startsWith("dictionary")) {
         if (isGoingToFast(event)) {
@@ -3031,7 +2661,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using dictionary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndictionary computer");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using dictionary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndictionary computer");
         } else {
             try {
                 let response = await google.search(input, options1);
@@ -3042,11 +2672,11 @@ _____________________________
                         body: content,
                         attachment: fs.createReadStream(dir)
                     };
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                     unLink(dir);
                 });
             } catch (error) {
-                sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
+                sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
     } else if (query == "everyone" || query == "all") {
@@ -3065,7 +2695,7 @@ _____________________________
                     id: info.participantIDs[i]
                 })
             }
-            sendMessageOnly(true, api, event, message);
+            sendMessageOnly(api, event, message);
         });
     } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
         if (isGoingToFast(event)) {
@@ -3073,10 +2703,10 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
             let ss = await aiResponse(settings.preference.text_complextion, input, true);
-            sendMessage(true, api, event, ss);
+            sendMessage(api, event, ss);
         }
     } else if (query.startsWith("baybayin")) {
         if (isGoingToFast(event)) {
@@ -3084,14 +2714,14 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using baybayin text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbaybayin ako ay filipino")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using baybayin text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbaybayin ako ay filipino")
         } else {
             data.shift()
             getResponseData('https://api-baybayin-transliterator.vercel.app/?text=' + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    sendMessage(true, api, event, response.baybay);
+                    sendMessage(api, event, response.baybay);
                 }
             });
         }
@@ -3101,14 +2731,14 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using doublestruck text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndoublestruck Hello World")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using doublestruck text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndoublestruck Hello World")
         } else {
             data.shift()
             getResponseData('https://api.popcat.xyz/doublestruck?text=' + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    sendMessage(true, api, event, response.text);
+                    sendMessage(api, event, response.text);
                 }
             });
         }
@@ -3118,13 +2748,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using translate text to language instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate Hello to Tagalog")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using translate text to language instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate Hello to Tagalog")
         } else {
             try {
                 let response = await google.search(input, options1);
-                sendMessage(true, api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
+                sendMessage(api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
             } catch (error) {
-                sendMessage(true, api, event, "Unfortunately, i cannot find any relevant results to your query.");
+                sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
     } else if (query.startsWith("weather")) {
@@ -3133,7 +2763,7 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using weather location instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nweather caloocan city")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using weather location instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nweather caloocan city")
         } else {
             data.shift()
             WeatherJS.find({
@@ -3161,7 +2791,7 @@ _____________________________
                         body: m,
                         attachment: fs.createReadStream(filename)
                     };
-                    sendMessage(true, api, event, message)
+                    sendMessage(api, event, message)
                     unLink(filename);
                 });
             })
@@ -3172,7 +2802,7 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using facts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacts computer")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using facts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacts computer")
         } else {
             data.shift()
             let url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
@@ -3184,9 +2814,9 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/wyr").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, "Would you rather " + response.ops1 + " or " + response.ops2);
+                sendMessage(api, event, "Would you rather " + response.ops1 + " or " + response.ops2);
             }
         });
     } else if (query == "meowfacts") {
@@ -3195,9 +2825,9 @@ _____________________________
         }
         getResponseData("https://meowfacts.herokuapp.com/").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response.data[0]);
+                sendMessage(api, event, response.data[0]);
             }
         });
     } else if (query == "mathfacts") {
@@ -3206,9 +2836,9 @@ _____________________________
         }
         getResponseData("http://numbersapi.com/random/math").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response);
+                sendMessage(api, event, response);
             }
         });
     } else if (query == "datefacts") {
@@ -3217,9 +2847,9 @@ _____________________________
         }
         getResponseData("http://numbersapi.com/random/date").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response);
+                sendMessage(api, event, response);
             }
         });
     } else if (query == "triviafacts") {
@@ -3228,9 +2858,9 @@ _____________________________
         }
         getResponseData("http://numbersapi.com/random/trivia").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response);
+                sendMessage(api, event, response);
             }
         });
     } else if (query == "yearfacts") {
@@ -3239,9 +2869,9 @@ _____________________________
         }
         getResponseData("http://numbersapi.com/random/year").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response);
+                sendMessage(api, event, response);
             }
         });
     } else if (query == "8ball") {
@@ -3250,9 +2880,9 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/8ball").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response.answer);
+                sendMessage(api, event, response.answer);
             }
         });
     } else if (query.startsWith("instagram") || query2.startsWith("ig ")) {
@@ -3261,7 +2891,7 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using instagram username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninstagram melvinjonesrepol")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninstagram melvinjonesrepol")
         } else {
             data.shift()
             let userN = data.join(" ");
@@ -3270,7 +2900,7 @@ _____________________________
             }
             getResponseData('https://manhict.tech/api/igInfo?query=' + userN + '&apikey=' + settings.apikey.manhict).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately instagram user \"" + userN + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately instagram user \"" + userN + "\" was not found.");
                 } else {
                     let username = response.result.username;
                     let fullname = response.result.fullname;
@@ -3289,7 +2919,7 @@ _____________________________
                             body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified + "\n\n" + biography,
                             attachment: fs.createReadStream(dir)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(dir);
                     });
                 }
@@ -3312,13 +2942,13 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using tiktok username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntiktok mrepol742")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntiktok mrepol742")
         } else {
             data.shift()
             let userN = data.join(" ");
             getResponseData('https://manhict.tech/api/tikInfo?query=' + userN + "&apikey=" + settings.apikey.manhict).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately tiktok user \"" + userN + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately tiktok user \"" + userN + "\" was not found.");
                 } else {
                     let username = response.result.uniqueId;
                     let name = response.result.nickname;
@@ -3336,7 +2966,7 @@ _____________________________
                             body: name + " @" + username + "\n⦿ Hearts: " + heart + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Videos: " + video + "\n⦿ Digg: " + digg + "\n\n" + bio,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -3348,13 +2978,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using soundcloud username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsoundcloud Denvau")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using soundcloud username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsoundcloud Denvau")
         } else {
             data.shift()
             let userN = data.join(" ");
             getResponseData('https://manhict.tech/api/scInfo?query=' + encodeURI(userN) + "&apikey=" + settings.apikey.manhict).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately soundcloud user \"" + userN + "\" was not found.");
                 } else {
                     let name = response.result['full_name'];
                     let username = response.result['username'];
@@ -3375,7 +3005,7 @@ _____________________________
                             body: name + " @" + username + "\n⦿ Location: " + location + "\n⦿ Likes: " + likes + "\n⦿ Playlist: " + playlist + "\n⦿ Playlist Likes: " + playlistLikes + "\n⦿ Tracks: " + trackCount + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n\n" + bio + "\n" + permalinkUrl,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -3387,7 +3017,7 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using github username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngithub mrepol742")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using github username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngithub mrepol742")
         } else {
             data.shift()
             let userN = data.join(" ");
@@ -3396,7 +3026,7 @@ _____________________________
             }
             getResponseData('https://api.github.com/users/' + userN).then((response) => {
                 if (response == null || response.message == "Not Found") {
-                    sendMessage(true, api, event, "Unfortunately github user \"" + userN + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately github user \"" + userN + "\" was not found.");
                 } else {
                     let name = response.name;
                     let email = response.email;
@@ -3421,7 +3051,7 @@ _____________________________
                             body: "⦿ Name: " + name + "\n⦿ Email: " + email + "\n⦿ Location: " + location + "\n⦿ Company: " + company + "\n⦿ Website: " + url + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Public Repository: " + public_repos + "\n⦿ Public Gists: " + public_gists + "\n\n" + bio + "\nhttps://github.com/" + userN,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -3433,13 +3063,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using element name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nelement hydrogen")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using element name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nelement hydrogen")
         } else {
             data.shift()
             let symbol = data.join(" ");
             getResponseData('https://api.popcat.xyz/periodic-table?element=' + symbol).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately element \"" + symbol + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately element \"" + symbol + "\" was not found.");
                 } else {
                     let name = response.name;
                     let symbol = response.symbol;
@@ -3458,7 +3088,7 @@ _____________________________
                             body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -3470,13 +3100,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using npm name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnpm mrepol742")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using npm name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnpm mrepol742")
         } else {
             data.shift()
             let name = data.join(" ");
             getResponseData('https://api.popcat.xyz/npm?q=' + name).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately npm \"" + name + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately npm \"" + name + "\" was not found.");
                 } else {
                     let name = response.name;
                     let version = response.version;
@@ -3486,7 +3116,13 @@ _____________________________
                     let downloads_this_year = response.downloads_this_year;
                     let repository = response.repository;
                     let author_email = response.author_email;
-                    sendMessage(true, api, event, "⦿ Name: " + name + " v" + version + "\n⦿ Author: " + author + "\n⦿ Email: " + author_email + "\n⦿ Updated on: " + last_published + "\n⦿ Repository: " + repository + "\n\n" + description);
+                    let message = {
+                        body: "⦿ Name: " + name + " v" + version + "\n⦿ Author: " + author + "\n⦿ Email: " + author_email + "\n⦿ Updated on: " + last_published + "\n⦿ Repository: " + repository + "\n\n" + description,
+                    }
+                    if (repository != "None") {
+                        message["url"] = repository;
+                    }
+                    sendMessage(api, event, message);
                 }
             });
         }
@@ -3496,14 +3132,14 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using steam name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsteam minecraft")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using steam name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsteam minecraft")
         } else {
             data.shift()
             let name = data.join(" ");
             getResponseData('https://api.popcat.xyz/steam?q=' + name).then((response) => {
                 if (response == null) {
                     log(JSON.stringify(response));
-                    sendMessage(true, api, event, "Unfortunately the \"" + name + "\" was not found on steam.");
+                    sendMessage(api, event, "Unfortunately the \"" + name + "\" was not found on steam.");
                 } else {
                     let name = response.name;
                     let developers = response.developers;
@@ -3519,7 +3155,7 @@ _____________________________
                             body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -3531,13 +3167,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using imdb name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nimdb iron man")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using imdb name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nimdb iron man")
         } else {
             data.shift()
             let name = data.join(" ");
             getResponseData('https://api.popcat.xyz/imdb?q=' + name).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately imdb \"" + name + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately imdb \"" + name + "\" was not found.");
                 } else {
                     let title = response.title;
                     let year = response.year;
@@ -3553,7 +3189,7 @@ _____________________________
                             body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -3565,13 +3201,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using itunes title instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nitunes in the end")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using itunes title instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nitunes in the end")
         } else {
             data.shift()
             let name = data.join(" ");
             getResponseData('https://api.popcat.xyz/itunes?q=' + name).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately the \"" + name + "\" was not found in itunes music.");
+                    sendMessage(api, event, "Unfortunately the \"" + name + "\" was not found in itunes music.");
                 } else {
                     let name = response.name;
                     let artist = response.artist;
@@ -3587,7 +3223,7 @@ _____________________________
                             body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -3599,7 +3235,7 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/car").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately car run away.");
+                sendMessage(api, event, "Unfortunately car run away.");
             } else {
                 let image = response.image;
                 let title = response.title;
@@ -3610,7 +3246,7 @@ _____________________________
                         body: title,
                         attachment: fs.createReadStream(filename)
                     };
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                     unLink(filename);
                 });
             }
@@ -3621,7 +3257,7 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately color fades away.");
+                sendMessage(api, event, "Unfortunately color fades away.");
             } else {
                 let hex = response.hex;
                 let name = response.name;
@@ -3633,7 +3269,7 @@ _____________________________
                         body: name + " #" + hex,
                         attachment: fs.createReadStream(filename)
                     };
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                     unLink(filename);
                 });
             }
@@ -3644,27 +3280,27 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately i forgot the line.");
+                sendMessage(api, event, "Unfortunately i forgot the line.");
             } else {
-                sendMessage(true, api, event, response.pickupline);
+                sendMessage(api, event, response.pickupline);
             }
         });
     } else if (query == "fbi") {
         let message = {
             attachment: fs.createReadStream(__dirname + '/assets/fbi/fbi_' + Math.floor(Math.random() * 4) + '.jpg')
         };
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else if (query.startsWith("gemoji")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using gemoji emoji instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngemoji 😂")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using gemoji emoji instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngemoji 😂")
         } else {
             data.shift()
             if (!pictographic.test(data.join(" "))) {
-                sendMessage(true, api, event, "Unable to set the chat quick reaction. Invalid emoji.");
+                sendMessage(api, event, "Unable to set the chat quick reaction. Invalid emoji.");
             }
             api.changeThreadEmoji(data.join(" "), event.threadID, (err) => {
                 if (err) return log(err);
@@ -3675,12 +3311,12 @@ _____________________________
             return;
         }
         if (isGoingToFast1(event, userWhoSendDamnReports, 30)) {
-            sendMessage(true, api, event, "Please wait a while. Before sending another report.");
+            sendMessage(api, event, "Please wait a while. Before sending another report.");
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using sendReport text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsendReport There is a problem in ______ that cause ______.")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using sendReport text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsendReport There is a problem in ______ that cause ______.")
         } else {
             data.shift()
             let report = "report " + event.senderID + " " + data.join(" ");
@@ -3688,66 +3324,66 @@ _____________________________
             api.sendMessage(report, currentID, (err, messageInfo) => {
                 if (err) log(err);
             });
-            sendMessage(true, api, event, "The engineers have been notified.");
+            sendMessage(api, event, "The engineers have been notified.");
         }
     } else if (query.startsWith("acceptmessagerequest")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using acceptmessagerequest [threadid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptmessagerequest 0000000000000")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using acceptmessagerequest [threadid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptmessagerequest 0000000000000")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 api.handleMessageRequest(data.join(" "), true, (err) => {
                     if (err) log(err);
                 });
-                sendMessage(true, api, event, "Message Request Accepted!");
+                sendMessage(api, event, "Message Request Accepted!");
             }
         }
     } else if (query.startsWith("changebio")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using changebio [text] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchangebio Hello There")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using changebio [text] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchangebio Hello There")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 api.changeBio(data.join(" "), true, (err) => {
                     if (err) log(err);
                 });
-                sendMessage(true, api, event, "Bio Message is now set to `" + data.join(" ") + "`");
+                sendMessage(api, event, "Bio Message is now set to `" + data.join(" ") + "`");
             }
         }
     } else if (query.startsWith("acceptfriendrequest")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using acceptfriendrequest [uid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptfriendrequest 0000000000000")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using acceptfriendrequest [uid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptfriendrequest 0000000000000")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 api.handleFriendRequest(data.join(" "), true, (err) => {
                     if (err) log(err);
                 });
-                sendMessage(true, api, event, "Friend Request Accepted!");
+                sendMessage(api, event, "Friend Request Accepted!");
             }
         }
     } else if (query.startsWith("setmaxtokens")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setMaxTokens [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetMaxTokens 1000.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setMaxTokens [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetMaxTokens 1000.")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 if (num > 4000) {
-                    sendMessage(true, api, event, "Opps! the limit is 4000.");
+                    sendMessage(api, event, "Opps! the limit is 4000.");
                 } else if (num < 10) {
-                    sendMessage(true, api, event, "Opps! the minimum value 10");
+                    sendMessage(api, event, "Opps! the minimum value 10");
                 } else {
                     settings.preference.max_tokens = num;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Max Tokens is now set to " + num);
+                    sendMessage(api, event, "Max Tokens is now set to " + num);
                 }
             }
         }
@@ -3755,18 +3391,18 @@ _____________________________
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setTemperature [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTemperature 0.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setTemperature [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTemperature 0.")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 if (num > 1) {
-                    sendMessage(true, api, event, "Opps! the limit is 1.");
+                    sendMessage(api, event, "Opps! the limit is 1.");
                 } else if (num < -0) {
-                    sendMessage(true, api, event, "Opps! the minimum value 0.1");
+                    sendMessage(api, event, "Opps! the minimum value 0.1");
                 } else {
                     settings.preference.temperature = num;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Temperature is now set to " + num);
+                    sendMessage(api, event, "Temperature is now set to " + num);
                 }
             }
         }
@@ -3774,18 +3410,18 @@ _____________________________
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setFrequencyPenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetFrequencyPenalty 1.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setFrequencyPenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetFrequencyPenalty 1.")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 if (num > 2) {
-                    sendMessage(true, api, event, "Opps! the limit is 2.");
+                    sendMessage(api, event, "Opps! the limit is 2.");
                 } else if (num < -2) {
-                    sendMessage(true, api, event, "Opps! the minimum value -2");
+                    sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.preference.frequency_penalty = num;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Frequency Penalty is now set to " + num);
+                    sendMessage(api, event, "Frequency Penalty is now set to " + num);
                 }
             }
         }
@@ -3793,18 +3429,18 @@ _____________________________
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setPresencePenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPresencePenalty 1.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setPresencePenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPresencePenalty 1.")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 if (num > 2) {
-                    sendMessage(true, api, event, "Opps! the limit is 2.");
+                    sendMessage(api, event, "Opps! the limit is 2.");
                 } else if (num < -2) {
-                    sendMessage(true, api, event, "Opps! the minimum value -2");
+                    sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.preference.presence_penalty = num;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Presence Penalty is now set to " + num);
+                    sendMessage(api, event, "Presence Penalty is now set to " + num);
                 }
             }
         }
@@ -3812,31 +3448,31 @@ _____________________________
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it.")
+                sendMessage(api, event, "Opps! I didnt get it.")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 settings.preference.text_complextion = num;
                 fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                sendMessage(true, api, event, "Text Complextion is now set to " + num);
+                sendMessage(api, event, "Text Complextion is now set to " + num);
             }
         }
     } else if (query.startsWith("setmaximage")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it.")
+                sendMessage(api, event, "Opps! I didnt get it.")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 if (num > 25) {
-                    sendMessage(true, api, event, "Opps! the limit is 25.");
+                    sendMessage(api, event, "Opps! the limit is 25.");
                 } else if (num < 1) {
-                    sendMessage(true, api, event, "Opps! the minimum value is 1.");
+                    sendMessage(api, event, "Opps! the minimum value is 1.");
                 } else {
                     settings.preference.max_image = num;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Max Image is now set to " + num);
+                    sendMessage(api, event, "Max Image is now set to " + num);
                 }
             }
         }
@@ -3844,18 +3480,18 @@ _____________________________
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setProbabilityMass [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetProbabilityMass 0.1.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setProbabilityMass [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetProbabilityMass 0.1.")
             } else {
                 data.shift();
                 let num = data.join(" ");
                 if (num > 1) {
-                    sendMessage(true, api, event, "Opps! the limit is 1.");
+                    sendMessage(api, event, "Opps! the limit is 1.");
                 } else if (num < -0) {
-                    sendMessage(true, api, event, "Opps! the minimum value is 0.");
+                    sendMessage(api, event, "Opps! the minimum value is 0.");
                 } else {
                     settings.preference.probability_mass = num;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Probability Mass is now set to " + num);
+                    sendMessage(api, event, "Probability Mass is now set to " + num);
                 }
             }
         }
@@ -3863,17 +3499,17 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTimezone Asia/Manila")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setTimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTimezone Asia/Manila")
             } else {
                 data.shift();
                 let pref = data.join(" ");
                 if (isValidTimeZone(pref)) {
                     settings.preference.timezone = pref;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Timezone is now set to " + pref);
-                    sendMessage(true, api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
+                    sendMessage(api, event, "Timezone is now set to " + pref);
+                    sendMessage(api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
                 } else {
-                    sendMessage(true, api, event, "Timezone " + pref + " is invalid. Please input valid timezones.")
+                    sendMessage(api, event, "Timezone " + pref + " is invalid. Please input valid timezones.")
                 }
             }
         }
@@ -3881,7 +3517,7 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setPrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPrefix $")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setPrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPrefix $")
             } else {
                 data.shift();
                 let pref = data.join(" ");
@@ -3889,9 +3525,9 @@ _____________________________
                 if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
                     settings.preference.prefix = pref;
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "Prefix is now set to " + pref);
+                    sendMessage(api, event, "Prefix is now set to " + pref);
                 } else {
-                    sendMessage(true, api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
+                    sendMessage(api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..")
                 }
             }
         }
@@ -3900,25 +3536,25 @@ _____________________________
             if (settings.preference.prefix != "null" || settings.preference.prefix != undefined) {
                 settings.preference.prefix = "null";
                 fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                sendMessage(true, api, event, "Prefix reset to default values.");
+                sendMessage(api, event, "Prefix reset to default values.");
             }
         }
     } else if (query.startsWith("ignoreprefix")) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa")
             } else {
                 let pre = data.shift();
                 let pre2 = formatQuery(pre.replace(/\s+/g, ''));
                 if (pre2.startsWith("mj") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.preference.prefix)) {
-                    sendMessage(true, api, event, "Unable to do such an action.");
+                    sendMessage(api, event, "Unable to do such an action.");
                 } else if (!settings.ignored_prefixes.includes(pre)) {
                     settings.ignored_prefixes.push(pre);
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "`" + pre + "` is now ignored.");
+                    sendMessage(api, event, "`" + pre + "` is now ignored.");
                 } else {
-                    sendMessage(true, api, event, "It's already ignored.");
+                    sendMessage(api, event, "It's already ignored.");
                 }
             }
         }
@@ -3926,15 +3562,15 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using unignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunignorePrefix alexa")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using unignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunignorePrefix alexa")
             } else {
                 let pre = data.shift();
                 if (settings.ignored_prefixes.includes(pre)) {
                     settings.ignored_prefixes = settings.ignored_prefixes.filter(item => item !== pre);
                     fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                    sendMessage(true, api, event, "`" + pre + "` is now unignored.");
+                    sendMessage(api, event, "`" + pre + "` is now unignored.");
                 } else {
-                    sendMessage(true, api, event, "It is not in ignored list.");
+                    sendMessage(api, event, "It is not in ignored list.");
                 }
             }
         }
@@ -3942,11 +3578,11 @@ _____________________________
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using addPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddPing https://google.com")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using addPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddPing https://google.com")
             } else {
                 data.shift();
                 settings.url.push(data.join(" "));
-                sendMessage(true, api, event, "Noted.");
+                sendMessage(api, event, "Noted.");
                 fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             }
         }
@@ -3954,15 +3590,15 @@ _____________________________
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using remPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremPing https://google.com")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using remPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremPing https://google.com")
             } else {
                 data.shift();
                 let url = data.join(" ");
                 if (settings.url.includes(url)) {
                     settings.url.pop(url);
-                    sendMessage(true, api, event, "The url has been removed from the list.");
+                    sendMessage(api, event, "The url has been removed from the list.");
                 } else {
-                    sendMessage(true, api, event, "The url is not on the list.");
+                    sendMessage(api, event, "The url is not on the list.");
                 }
                 fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             }
@@ -3970,7 +3606,7 @@ _____________________________
     } else if (query.startsWith("adduser")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
         } else {
             data.shift();
             let pref = data.join(" ");
@@ -3987,20 +3623,20 @@ _____________________________
                                 log("add_user " + event.threadID + " " + pref);
                             });
                         } else {
-                            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                         }
                     });
                 } else {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
                 }
             } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
             }
         }
     } else if (query.startsWith("gcolor")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nTheme:\nDefaultBlue, HotPink, AquaBlue, BrightPurple\nCoralPink, Orange, Green, LavenderPurple\nRed, Yellow, TealBlue, Aqua\nMango, Berry, Citrus, Candy" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead.\n\nTheme:\nDefaultBlue, HotPink, AquaBlue, BrightPurple\nCoralPink, Orange, Green, LavenderPurple\nRed, Yellow, TealBlue, Aqua\nMango, Berry, Citrus, Candy" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
         } else {
             data.shift();
             let pref = data.join(" ").toLowerCase();
@@ -4010,7 +3646,7 @@ _____________________________
                 });
                 log("change_color " + event.threadID + " " + gcolor[pref]);
             } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
             }
         }
     } else if (query.startsWith("welcomeuser")) {
@@ -4019,7 +3655,7 @@ _____________________________
                 let arr = gc.participantIDs;
                 let data = input.split(" ");
                 if (data.length < 2) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two")
                 } else {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
@@ -4034,10 +3670,10 @@ _____________________________
                             id = event.messageReply.senderID;
                         } else {
                             api.getUserID(user.replace("@", ""), (err, data) => {
-                                if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 api.getUserInfo(data[0].userID, (err, data1) => {
                                     if (err) return log(err);
-                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/");
+                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?");
                                 });
                             });
                             return;
@@ -4047,11 +3683,11 @@ _____________________________
                     }
                     api.getUserInfo(id, (err, data1) => {
                         if (err) return log(err);
-                        welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/");
+                        welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?");
                     });
                 }
             } else {
-                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         }
     } else if (query.startsWith("kickuser")) {
@@ -4066,7 +3702,7 @@ _____________________________
                     }
                     let data = input.split(" ");
                     if (data.length < 2) {
-                        sendMessage(true, api, event, "Opps! I didnt get it. You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two")
+                        sendMessage(api, event, "Opps! I didnt get it. You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two")
                     } else {
                         let id = Object.keys(event.mentions)[0];
                         if (id === undefined) {
@@ -4081,7 +3717,7 @@ _____________________________
                                 id = event.messageReply.senderID;
                             } else {
                                 api.getUserID(user.replace("@", ""), (err, data) => {
-                                    if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                                    if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                     removeUser(api, event, data[0].userID);
                                     api.getUserInfo(data[0].userID, (err, data1) => {
                                         if (err) return log(err);
@@ -4100,7 +3736,7 @@ _____________________________
                         });
                     }
                 } else {
-                    sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             });
         }
@@ -4108,7 +3744,7 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two")
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4124,25 +3760,32 @@ _____________________________
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return log(err);
-                            users.bot.push(data[0].userID);
-                            fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
-                            sendMessage(true, api, event, "Noted.");
+                            if (users.bot.includes(data[0].userID)) {
+                                sendMessage(api, event, "I already knew it.");
+                            } else {
+                                users.bot.push(data[0].userID);
+                                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+                                sendMessage(api, event, "Noted.");
+                            }
                         });
                         return;
                     }
                 } else if (isMyId(id)) {
                     return;
                 }
-                users.bot.push(id);
-                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
-                sendMessage(true, api, event, "Noted.");
+                if (users.bot.includes(data[0].userID)) {
+                    sendMessage(api, event, "I already knew it.");
+                } else {
+                    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+                    sendMessage(api, event, "Noted.");
+                }
             }
         }
     } else if (query.startsWith("isnotbot")) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using isNotBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisNotBot @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using isNotBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisNotBot @Zero Two")
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4158,25 +3801,33 @@ _____________________________
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return log(err);
-                            users.bot.pop(data[0].userID);
-                            fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
-                            sendMessage(true, api, event, "Noted.");
+                            if (!users.bot.includes(data[0].userID)) {
+                                sendMessage(api, event, "It seems like that account is not a bot.");
+                            } else {
+                                users.bot = users.bot.filter(item => item !== data[0].userID);
+                                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+                                sendMessage(api, event, "Noted.");
+                            }
                         });
                         return;
                     }
                 } else if (isMyId(id)) {
                     return;
                 }
-                users.bot.pop(id);
-                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
-                sendMessage(true, api, event, "Noted.");
+                if (!users.bot.includes(data[0].userID)) {
+                    sendMessage(api, event, "It seems like that account is not a bot.");
+                } else {
+                    users.bot = users.bot.filter(item => item !== data[0].userID);
+                    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+                    sendMessage(api, event, "Noted.");
+                }
             }
         }
     } else if (query.startsWith("blockuser")) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using blockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblockUser @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using blockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblockUser @Zero Two")
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4205,14 +3856,14 @@ _____________________________
     } else if (query == "mute") {
         users.muted.push(event.senderID);
         userPresence[event.threadID] = null;
-        sendMessage(true, api, event, "You have been muted. Enter `unmute` for you to use my commands again.");
+        sendMessage(api, event, "You have been muted. Enter `unmute` for you to use my commands again.");
         fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     } else if (query.startsWith("blockgroup")) {
         if (users.admin.includes(event.senderID)) {
             if (event.isGroup) {
                 blockGroup(api, event, event.threadID);
             } else {
-                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         }
     } else if (query.startsWith("smartreplyon")) {
@@ -4227,7 +3878,7 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two")
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4242,7 +3893,7 @@ _____________________________
                         id = event.messageReply.senderID;
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
-                            if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             unblockUser(api, event, data[0].userID);
                         });
                         return;
@@ -4257,12 +3908,12 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2 && !data[1].includes(":")) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using setKey name:key instead.")
             } else {
                 let inp = data[1].split(":");
                 keys[inp[0]] = inp[1];
                 fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-                sendMessage(true, api, event, "Successfully saved " + inp[0] + ".");
+                sendMessage(api, event, "Successfully saved " + inp[0] + ".");
             }
         }
     } else if (query.startsWith("listkey")) {
@@ -4274,7 +3925,7 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two")
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4289,7 +3940,7 @@ _____________________________
                         id = event.messageReply.senderID;
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
-                            if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             addAdmin(api, event, data[0].userID);
                         });
                         return;
@@ -4302,7 +3953,7 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.lenght < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two")
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4317,7 +3968,7 @@ _____________________________
                         id = event.messageReply.senderID;
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
-                            if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             remAdmin(api, event, data[0].userID);
                         });
                         return;
@@ -4332,73 +3983,73 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             settings.preference.onUnsend = true
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Resending of unsend messages and attachments are now enabled.");
+            sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if ((query == "unsendoff") && settings.preference.onUnsend) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onUnsend = false
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Resending of unsend messages and attachments is been disabled.");
+            sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
         }
     } else if ((query == "antileaveon") && !settings.preference.antiLeave) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.antiLeave = true
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Readding of user who left is now enabled.");
+            sendMessage(api, event, "Readding of user who left is now enabled.");
         }
     } else if ((query == "antileaveoff") && settings.preference.antiLeave) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.antiLeave = false
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Readding of user who left is been disabled.");
+            sendMessage(api, event, "Readding of user who left is been disabled.");
         }
     } else if ((query == "tagalogsupporton") && !settings.preference.tagalog) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.tagalog = true
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Tagalog Support is now enabled.");
+            sendMessage(api, event, "Tagalog Support is now enabled.");
         }
     } else if ((query == "tagalogsupportoff") && settings.preference.tagalog) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.tagalog = false
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Tagalog Support is been disabled.");
+            sendMessage(api, event, "Tagalog Support is been disabled.");
         }
     } else if ((query == "delayon") && !settings.preference.onDelay) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onDelay = true
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Delay on messages, replies and reaction are now enabled.");
+            sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
         }
     } else if ((query == "delayoff") && settings.preference.onDelay) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onDelay = false
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Delay on messages, replies and reaction is been disabled.");
+            sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
         }
     } else if ((query == "nsfwon") && !settings.preference.onNsfw) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onNsfw = true
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Not Safe For Work are now enabled.");
+            sendMessage(api, event, "Not Safe For Work are now enabled.");
         }
     } else if ((query == "nsfwoff") && settings.preference.onNsfw) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onNsfw = false
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Not Safe For Work is been disabled.");
+            sendMessage(api, event, "Not Safe For Work is been disabled.");
         }
     } else if ((query == "simultaneousexecutionon") && !settings.preference.preventSimultaneousExecution) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.preventSimultaneousExecution = true
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Prevention of simulataneous execution are now enabled.");
+            sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
         }
     } else if ((query == "simultaneousexecutionoff") && settings.preference.preventSimultaneousExecution) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.preventSimultaneousExecution = false
             fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
-            sendMessage(true, api, event, "Prevention of simulataneous execution is now disabled.");
+            sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
         if (isGoingToFast(event)) {
@@ -4408,9 +4059,9 @@ _____________________________
             if (err) return log(err);
             if (gc.isGroup) {
                 let arr = gc.participantIDs;
-                sendMessage(true, api, event, "This group has about " + arr.length + " members.")
+                sendMessage(api, event, "This group has about " + arr.length + " members.")
             } else {
-                sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
     } else if (query.startsWith("gname")) {
@@ -4420,7 +4071,7 @@ _____________________________
         if (event.isGroup) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3")
             } else {
                 data.shift()
                 api.setTitle(data.join(" "), event.threadID, (err, obj) => {
@@ -4428,23 +4079,23 @@ _____________________________
                 });
             }
         } else {
-            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
     } else if (query == "gname") {
         if (isGoingToFast(event)) {
             return;
         }
         if (event.isGroup) {
-            sendMessage(true, api, event, gc.threadName);
+            sendMessage(api, event, gc.threadName);
         } else {
-            sendMessage(true, api, event, "Unfortunately this is a personal chat and not a group chat.");
+            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
     } else if (query == "groupid" || query == "guid" || query == "uid") {
         if (isGoingToFast(event)) {
             return;
         }
         if (event.type == "message" && !(groups.list[event.threadID] === undefined) && (query == "guid" || query == "groupid")) {
-            sendMessage(true, api, event, "The " + groups.list[event.threadID] + " guid is " + event.threadID);
+            sendMessage(api, event, "The " + groups.list[event.threadID] + " guid is " + event.threadID);
         } else if (event.type == "message_reply") {
             let id1;
             if (isMyId(id1)) {
@@ -4464,16 +4115,16 @@ _____________________________
                     }]
                     */
                 }
-                sendMessage(true, api, event, message);
+                sendMessage(api, event, message);
             });
         } else {
-            sendMessage(true, api, event, "Your uid is " + event.senderID);
+            sendMessage(api, event, "Your uid is " + event.senderID);
         }
     } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
         if (isGoingToFast(event)) {
             return;
         }
-        sendMessage(true, api, event, help + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, help);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(event)) {
             return;
@@ -4481,71 +4132,71 @@ _____________________________
         let num = query.substring(3);
         switch (num) {
             case "2":
-                sendMessage(true, api, event, help1 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help1);
                 break;
             case "3":
-                sendMessage(true, api, event, help2 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help2);
                 break;
             case "4":
-                sendMessage(true, api, event, help3 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help3);
                 break;
             case "5":
-                sendMessage(true, api, event, help4 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help4);
                 break;
             case "6":
-                sendMessage(true, api, event, help5 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help5);
                 break;
             case "7":
-                sendMessage(true, api, event, help6 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help6);
                 break;
             case "8":
-                sendMessage(true, api, event, help7 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help7);
                 break;
             case "9":
-                sendMessage(true, api, event, help8 + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+                sendMessage(api, event, help8);
                 break;
             default:
-                sendMessage(true, api, event, "Seem's like that's too far from the command list pages.");
+                sendMessage(api, event, "Seem's like that's too far from the command list pages.");
                 break;
         }
     } else if (query == "cmdadmin") {
         if (isGoingToFast(event)) {
             return;
         }
-        sendMessage(true, api, event, helpadmin + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, helpadmin);
     } else if (query == "cmdroot") {
         if (isGoingToFast(event)) {
             return;
         }
-        sendMessage(true, api, event, helproot + "\n\n> " + qot[Math.floor(Math.random() * qot.length)]);
+        sendMessage(api, event, helproot);
     } else if (query == "cmdall") {
         if (isGoingToFast(event)) {
             return;
         }
         let message = {
-            body: "Due to the limitations on messenger platform.\nAll command list are now moved to: https://mrepol742.github.io/project-orion/#cmdall\n\n> " + qot[Math.floor(Math.random() * qot.length)],
+            body: "Due to the limitations on messenger platform.\nAll command list are now moved to: https://mrepol742.github.io/project-orion/#cmdall",
             url: "https://mrepol742.github.io/project-orion/#cmdall"
         }
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(event)) {
             return;
         }
-        sendMessage(true, api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
+        sendMessage(api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
     } else if (query.startsWith("wiki")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using wiki text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwiki Google")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwiki Google")
         } else {
             let txt = input.substring("5");
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + txt).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately the wiki " + txt + " was not found.");
+                    sendMessage(api, event, "Unfortunately the wiki " + txt + " was not found.");
                 } else {
-                    sendMessage(true, api, event, response.extract);
+                    sendMessage(api, event, response.extract);
                 }
             });
         }
@@ -4555,7 +4206,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using lovetest name:name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest Edogawa Conan: Ran Mouri")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest name:name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest Edogawa Conan: Ran Mouri")
         } else {
             let text = input;
             text = text.substring(9).split(":");
@@ -4578,10 +4229,10 @@ _____________________________
                 var name2 = data.sname;
                 var percent = data.percentage + "%";
                 var result = data.result;
-                sendMessage(true, api, event, name1 + " ❤️ " + name2 + "\n\n⦿ Percentage: " + percent + "\n" + result);
+                sendMessage(api, event, name1 + " ❤️ " + name2 + "\n\n⦿ Percentage: " + percent + "\n" + result);
             }).catch(function(error) {
                 log(error);
-                sendMessage(true, api, event, "An unknown error as been occured. Please try again later.")
+                sendMessage(api, event, "An unknown error as been occured. Please try again later.")
             });
         }
     } else if (query.startsWith("kiss")) {
@@ -4590,7 +4241,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4607,7 +4258,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         kiss(api, event, data[0].userID)
                     });
                     return;
@@ -4623,7 +4274,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4640,7 +4291,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         gun(api, event, data[0].userID);
                     });
                     return;
@@ -4656,7 +4307,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4673,7 +4324,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         wanted(api, event, data[0].userID);
                     });
                     return;
@@ -4689,7 +4340,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4706,7 +4357,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         clown(api, event, data[0].userID);
                     });
                     return;
@@ -4722,7 +4373,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4739,7 +4390,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         drip(api, event, data[0].userID);
                     });
                     return;
@@ -4755,7 +4406,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4772,7 +4423,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         communist(api, event, data[0].userID);
                     });
                     return;
@@ -4788,7 +4439,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4805,7 +4456,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         advert(api, event, data[0].userID);
                     });
                     return;
@@ -4821,7 +4472,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4838,7 +4489,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         uncover(api, event, data[0].userID);
                     });
                     return;
@@ -4854,7 +4505,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4871,7 +4522,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         jail(api, event, id = data[0].userID);
                     });
                     return;
@@ -4887,7 +4538,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4904,7 +4555,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         invert(api, event, data[0].userID);
                     });
                 }
@@ -4919,13 +4570,13 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
         } else {
             if ((input.split('@').length - 1) >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
                     return;
                 }
                 if (isMyId(id1)) {
@@ -4944,7 +4595,7 @@ _____________________________
                                 body: "New Lovers >3",
                                 attachment: fs.createReadStream(dir)
                             };
-                            sendMessage(true, api, event, image);
+                            sendMessage(api, event, image);
                             unLink(dir);
                         });
                     }).catch(function(err) {
@@ -4954,7 +4605,7 @@ _____________________________
                     log(err);
                 });
             } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri")
             }
         }
     } else if (query.startsWith("www")) {
@@ -4963,13 +4614,13 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
         } else {
             if ((input.split('@').length - 1) >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
                     return;
                 }
                 if (isMyId(id1)) {
@@ -4988,7 +4639,7 @@ _____________________________
                                 body: "Hmmmm.. Who?",
                                 attachment: fs.createReadStream(dir)
                             };
-                            sendMessage(true, api, event, image);
+                            sendMessage(api, event, image);
                             unLink(dir);
                         });
                     }).catch(function(err) {
@@ -4998,7 +4649,7 @@ _____________________________
                     log(err);
                 });
             } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri")
             }
         }
     } else if (query.startsWith("pet")) {
@@ -5007,7 +4658,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5024,7 +4675,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         pet(api, event, id);
                     });
                     return;
@@ -5040,10 +4691,10 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using formatnumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nformatnumbers 326346436")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using formatnumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nformatnumbers 326346436")
         } else {
             data.shift();
-            sendMessage(true, api, event, numberWithCommas(data.join(" ")));
+            sendMessage(api, event, numberWithCommas(data.join(" ")));
         }
     } else if (query.startsWith("mnm")) {
         if (isGoingToFast(event)) {
@@ -5051,7 +4702,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5068,7 +4719,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         mnm(api, event, data[0].userID);
                     });
                     return;
@@ -5084,7 +4735,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5101,7 +4752,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         greyscale(api, event, data[0].userID);
                     });
                     return;
@@ -5118,7 +4769,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5135,7 +4786,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         jokeover(api, event, data[0].userID);
                     });
                     return;
@@ -5151,7 +4802,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5168,7 +4819,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         blur(api, event, data[0].userID);
                     });
                     return;
@@ -5184,7 +4835,7 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using facebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacebook @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5201,7 +4852,7 @@ _____________________________
                     id = event.messageReply.senderID;
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                         id = data[0].userID;
                     });
                 }
@@ -5228,7 +4879,7 @@ _____________________________
                             body: msg,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, image);
+                        sendMessage(api, event, image);
                         unLink(filename);
                     });
                 }
@@ -5242,13 +4893,13 @@ _____________________________
         text = text.substring(6)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using morse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmorse .... . .-.. .-.. ---");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using morse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmorse .... . .-.. .-.. ---");
         } else {
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    sendMessage(true, api, event, response.morse);
+                    sendMessage(api, event, response.morse);
                 }
             });
         }
@@ -5260,13 +4911,13 @@ _____________________________
         text = text.substring(7)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using lulcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlulcat meowww");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlulcat meowww");
         } else {
             getResponseData("https://api.popcat.xyz/lulcat?text=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    sendMessage(true, api, event, response.text);
+                    sendMessage(api, event, response.text);
                 }
             });
         }
@@ -5278,13 +4929,13 @@ _____________________________
         text = text.substring(5)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using mock text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmock i have no idea");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mock text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmock i have no idea");
         } else {
             getResponseData("https://api.popcat.xyz/mock?text=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    sendMessage(true, api, event, response.text);
+                    sendMessage(api, event, response.text);
                 }
             });
         }
@@ -5294,7 +4945,7 @@ _____________________________
         }
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately the code throws an exception.");
+                sendMessage(api, event, "Unfortunately the code throws an exception.");
             } else {
                 let url = response.url;
                 let title = response.title;
@@ -5305,7 +4956,7 @@ _____________________________
                         body: title,
                         attachment: fs.createReadStream(filename)
                     };
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                     unLink(filename);
                 });
             }
@@ -5316,9 +4967,9 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/joke").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately the joke is me.");
+                sendMessage(api, event, "Unfortunately the joke is me.");
             } else {
-                sendMessage(true, api, event, response.joke);
+                sendMessage(api, event, response.joke);
             }
         });
     } else if (query == "barrier") {
@@ -5329,16 +4980,16 @@ _____________________________
             body: "Anti horny barrier activated.",
             attachment: fs.createReadStream(__dirname + '/assets/barrier.jpg')
         };
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else if (query == "fact") {
         if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/fact").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately the fact is not true.");
+                sendMessage(api, event, "Unfortunately the fact is not true.");
             } else {
-                sendMessage(true, api, event, response.fact);
+                sendMessage(api, event, response.fact);
             }
         });
     } else if (query == "thoughts") {
@@ -5347,9 +4998,9 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately i never had any shower thoughts anymore.");
+                sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.");
             } else {
-                sendMessage(true, api, event, response.result);
+                sendMessage(api, event, response.result);
             }
         });
     } else if (query.startsWith("nickname")) {
@@ -5360,7 +5011,7 @@ _____________________________
         text = text.substring(9)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
         } else {
             if (input.includes("@")) {
                 let id = Object.keys(event.mentions)[0];
@@ -5370,7 +5021,7 @@ _____________________________
                     } else {
                         data.shift();
                         api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
-                            if (err) return sendMessage(true, api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                             changeNickname(api, event, data[0].userID, text);
                         });
                         return;
@@ -5380,7 +5031,7 @@ _____________________________
                 }
                 changeNickname(api, event, id, text);
             } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
             }
         }
     } else if (query.startsWith("drake")) {
@@ -5391,7 +5042,7 @@ _____________________________
         text = text.substring(6).split(":");
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrake error: bug");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrake error: bug");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/drake_" + getTimestamp() + ".png");
         }
@@ -5403,7 +5054,7 @@ _____________________________
         text = text.substring(5);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using pika text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npika hayssss");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using pika text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npika hayssss");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + text, __dirname + "/cache/images/pika_" + getTimestamp() + ".png");
         }
@@ -5413,7 +5064,7 @@ _____________________________
         }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 parseImage(api, event, response.image, __dirname + '/cache/images/meme.png');
             }
@@ -5431,7 +5082,7 @@ _____________________________
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using oogway text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\noogway bug is not an error");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using oogway text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\noogway bug is not an error");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + text, __dirname + "/cache/images/oogway_" + getTimestamp() + ".png");
         }
@@ -5443,11 +5094,11 @@ _____________________________
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using hanime category instead.\n\nCategories: \nwaifu, neko, trap, blowjob" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using hanime category instead.\n\nCategories: \nwaifu, neko, trap, blowjob" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
         } else {
             getResponseData("https://api.waifu.pics/nsfw/" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "It seem like i cannot find any relavant result about " + text);
+                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + text);
                 } else {
                     parseImage(api, event, response.url, __dirname + "/cache/images/animensfw_" + getTimestamp() + ".png");
                 }
@@ -5459,7 +5110,7 @@ _____________________________
         }
         getResponseData("https://zenzapis.xyz/randomanime/hololive?apikey=9c4c44db3725").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let time = getTimestamp();
                 let filename = __dirname + "/cache/images/hololive_" + time + ".png";
@@ -5470,7 +5121,7 @@ _____________________________
                             fs.createReadStream(filename)
                         ]
                     }
-                    sendMessage(true, api, event, message);
+                    sendMessage(api, event, message);
                     unLink(filename);
                 });
             }
@@ -5481,7 +5132,7 @@ _____________________________
         }
         getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let time = getTimestamp();
                 let fmmale = __dirname + "/cache/images/animecouple_male_" + time + ".png";
@@ -5494,7 +5145,7 @@ _____________________________
                                 fs.createReadStream(fmfemale)
                             ]
                         }
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(fmmale);
                         unLink(fmfemale);
                     });
@@ -5507,7 +5158,7 @@ _____________________________
         }
         getResponseData('https://gogoanime.consumet.stream/anime-movies').then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately an error occured.");
+                    sendMessage(api, event, "Unfortunately an error occured.");
                 } else {
                     let list = "";
                     let i;
@@ -5526,7 +5177,7 @@ _____________________________
                             body: "Top Popular Anime Movies\n" + list,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -5537,7 +5188,7 @@ _____________________________
         }
         getResponseData('https://gogoanime.consumet.stream/top-airing').then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately an error occured.");
+                    sendMessage(api, event, "Unfortunately an error occured.");
                 } else {
                     let list = "";
                     let i;
@@ -5556,7 +5207,7 @@ _____________________________
                             body: "Top Popular Anime Series\n" + list,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -5567,13 +5218,13 @@ _____________________________
             }
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using animegenre genre instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimegenre action")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using animegenre genre instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimegenre action")
             } else {
                 data.shift()
                 let name = data.join(" ");
                 getResponseData('https://gogoanime.consumet.stream/genre/' + name).then((response) => {
                     if (response == null) {
-                        sendMessage(true, api, event, "Invalid genre \"" + name + "\".");
+                        sendMessage(api, event, "Invalid genre \"" + name + "\".");
                     } else {
                         let list = "";
                         let i;
@@ -5592,7 +5243,7 @@ _____________________________
                                 body: list,
                                 attachment: fs.createReadStream(filename)
                             };
-                            sendMessage(true, api, event, message);
+                            sendMessage(api, event, message);
                             unLink(filename);
                         });
                     }
@@ -5604,13 +5255,13 @@ _____________________________
             }
             let data = input.split(" ")
             if (data.length < 2) {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using animesearch text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimesearch Detective Conan")
+                sendMessage(api, event, "Opps! I didnt get it. You should try using animesearch text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimesearch Detective Conan")
             } else {
                 data.shift()
                 let name = data.join(" ");
                 getResponseData('https://gogoanime.consumet.stream/search?keyw=' + name).then((response) => {
                     if (response == null) {
-                        sendMessage(true, api, event, "Unfortunately there was no search output found for \"" + name + "\".");
+                        sendMessage(api, event, "Unfortunately there was no search output found for \"" + name + "\".");
                     } else {
                         let list = "";
                         let i;
@@ -5629,7 +5280,7 @@ _____________________________
                                 body: "Here are the results:\n" + list,
                                 attachment: fs.createReadStream(filename)
                             };
-                            sendMessage(true, api, event, message);
+                            sendMessage(api, event, message);
                             unLink(filename);
                         });
                     }
@@ -5641,13 +5292,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using animeinfo text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimeinfo Detective Conan")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using animeinfo text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimeinfo Detective Conan")
         } else {
             data.shift()
             let name = data.join(" ").replaceAll(" ", "-");
             getResponseData('https://gogoanime.consumet.stream/anime-details/' + name).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately anime \"" + name + "\" was not found.");
+                    sendMessage(api, event, "Unfortunately anime \"" + name + "\" was not found.");
                 } else {
                     let title = response.animeTitle;
                     let otherT = response.otherNames;
@@ -5665,7 +5316,7 @@ _____________________________
                             body: "⦿ Title: " + title + " (" + otherT + ") " + year + "\n⦿ Genres: " + genres + "\n⦿ Type: " + type + "\n⦿ Status: " + status+ "\n⦿ Episodes: " + ep + "\n\n" + synopsis,
                             attachment: fs.createReadStream(filename)
                         };
-                        sendMessage(true, api, event, message);
+                        sendMessage(api, event, message);
                         unLink(filename);
                     });
                 }
@@ -5679,11 +5330,11 @@ _____________________________
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using anime category instead.\n\nCategories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanime waifu");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using anime category instead.\n\nCategories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanime waifu");
         } else {
             getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "I cannot find any relavant result about " + text);
+                    sendMessage(api, event, "I cannot find any relavant result about " + text);
                 } else {
                     parseImage(api, event, response.url, __dirname + "/cache/images/anime_" + getTimestamp() + ".png");
                 }
@@ -5697,7 +5348,7 @@ _____________________________
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using trump text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntrump bug is not an error");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntrump bug is not an error");
         } else {
             parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + "/cache/images/trump_" + getTimestamp() + ".png");
         }
@@ -5713,7 +5364,7 @@ _____________________________
                 body: "Opps! I didnt get it. You should try using qrcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nqrcode https://mrepol742.github.io",
                 url: "https://mrepol742.github.io"
             }
-            sendMessage(true, api, event, message);
+            sendMessage(api, event, message);
         } else {
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + text, __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
         }
@@ -5725,7 +5376,7 @@ _____________________________
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using alert text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nalert hello world");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using alert text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nalert hello world");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + text, __dirname + "/cache/images/alert_" + getTimestamp() + ".png");
         }
@@ -5737,7 +5388,7 @@ _____________________________
         text = text.substring(8);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using caution text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncaution bug is not an error");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using caution text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncaution bug is not an error");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + text, __dirname + "/cache/images/caution_" + getTimestamp() + ".png");
         }
@@ -5749,7 +5400,7 @@ _____________________________
         text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using biden text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbiden i am leaving twitter");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using biden text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbiden i am leaving twitter");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/biden?text=" + text, __dirname + "/cache/images/biden_" + getTimestamp() + ".png");
         }
@@ -5765,12 +5416,12 @@ _____________________________
                 body: "Opps! I didnt get it. You should try using website url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwebsite https://mrepol742.github.io",
                 url: "https://mrepol742.github.io"
             }
-            sendMessage(true, api, event, message);
+            sendMessage(api, event, message);
         } else {
             if (text.startsWith("https://") || text.startsWith("http://")) {
                 parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + text, __dirname + "/cache/images/website_" + getTimestamp() + ".png");
             } else {
-                sendMessage(true, api, event, "It looks like you send invalid url. Does it have https or http scheme?");
+                sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
     } else if (query2.startsWith("god ")) {
@@ -5781,7 +5432,7 @@ _____________________________
         text = text.substring(4);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using god text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngod explicit content");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using god text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngod explicit content");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + text, __dirname + "/cache/images/god_" + getTimestamp() + ".png");
         }
@@ -5793,7 +5444,7 @@ _____________________________
         text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using sadcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsadcat meoww");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsadcat meoww");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
         }
@@ -5803,15 +5454,15 @@ _____________________________
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
             data.shift()
             let txt = data.join(" ");
             getResponseData('https://api.simsimi.net/v2/?text=' + txt + '&lc=ph&cf=false&name=' + mjme[Math.floor(Math.random() * mjme.length)]).then((response) => {
                 if (response == null) {
-                    sendMessage(true, api, event, "Unfortunately i am not simp anymore.");
+                    sendMessage(api, event, "Unfortunately i am not simp anymore.");
                 } else {
-                    sendMessage(true, api, event, response['success']);
+                    sendMessage(api, event, response['success']);
                 }
             });
         }
@@ -5823,7 +5474,7 @@ _____________________________
         text = text.substring(5).split(":");
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npooh color: colour");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npooh color: colour");
         } else {
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/pooh_" + getTimestamp() + ".png");
         }
@@ -5845,7 +5496,7 @@ _____________________________
         text = text.substring(10);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using landscape text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlandscape night");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using landscape text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlandscape night");
         } else {
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
         }
@@ -5877,7 +5528,7 @@ _____________________________
         text = text.substring(9);
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using portrait text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nportrait rgb");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using portrait text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nportrait rgb");
         } else {
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
         }
@@ -5887,9 +5538,9 @@ _____________________________
         }
         getResponseData("https://animechan.vercel.app/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
-                sendMessage(true, api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
+                sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
             }
         });
     } else if (query == "advice") {
@@ -5898,14 +5549,14 @@ _____________________________
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 let i;
                 for (i = 0; i < response.length; i++) {
                     result = response[i].q;
                 }
-                sendMessage(true, api, event, result);
+                sendMessage(api, event, result);
             }
         });
     } else if (query2.startsWith("time ")) {
@@ -5914,31 +5565,31 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
         } else {
             data.shift()
             if (isValidTimeZone(data.join(" "))) {
-                sendMessage(true, api, event, "It's " + getMonth(body) + " " + getDayN(body) + ", " + getDay(body) + " " + formateDate(body));
+                sendMessage(api, event, "It's " + getMonth(body) + " " + getDayN(body) + ", " + getDay(body) + " " + formateDate(body));
             } else {
-                sendMessage(true, api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
             }
         }
     } else if (query == "time") {
-        sendMessage(true, api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
+        sendMessage(api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
     } else if (query.startsWith("inspiration")) {
         if (isGoingToFast(event)) {
             return;
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 let i;
                 for (i = 0; i < response.length; i++) {
                     result = response[i].a + " says\n" + response[i].q;
                 }
-                sendMessage(true, api, event, result);
+                sendMessage(api, event, result);
             }
         });
     } else if (query.startsWith("motivation") || query.startsWith("motivate")) {
@@ -5947,14 +5598,14 @@ _____________________________
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 let i;
                 for (i = 0; i < response.length; i++) {
                     result = response[i].q + "\n\nby " + response[i].a;
                 }
-                sendMessage(true, api, event, result);
+                sendMessage(api, event, result);
             }
         });
     } else if (query == "newyear") {
@@ -5972,7 +5623,7 @@ _____________________________
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
         };
-        sendMessage(true, api, event, message)
+        sendMessage(api, event, message)
     } else if (query == "christmas") {
         if (isGoingToFast(event)) {
             return;
@@ -5988,21 +5639,21 @@ _____________________________
         let message = {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
         };
-        sendMessage(true, api, event, message)
+        sendMessage(api, event, message)
     } else if (query == "verserandom") {
         if (isGoingToFast(event)) {
             return;
         }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 let i;
                 for (i = 0; i < response.length; i++) {
                     result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
                 }
-                sendMessage(true, api, event, result);
+                sendMessage(api, event, result);
             }
         });
     } else if (query == "versetoday") {
@@ -6011,14 +5662,14 @@ _____________________________
         }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) {
-                sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
             } else {
                 let result;
                 let i;
                 for (i = 0; i < response.length; i++) {
                     result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
                 }
-                sendMessage(true, api, event, result);
+                sendMessage(api, event, result);
             }
         });
     } else if (query.startsWith("verse")) {
@@ -6027,13 +5678,13 @@ _____________________________
         }
         let data = input.split(" ")
         if (data.length < 2) {
-            sendMessage(true, api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
         } else {
             data.shift()
             let body = data.join(" ");
             getResponseData("http://labs.bible.org/api/?passage=" + body + "&type=json").then((r) => {
                 if (r == null) {
-                    sendMessage(true, api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
+                    sendMessage(api, event, "Opps! I didnt get it. You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
                 } else {
                     let result = ""
                     let total = r.length
@@ -6041,36 +5692,37 @@ _____________________________
                     for (i = 0; i < total; i++) {
                         result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse;
                     }
-                    sendMessage(true, api, event, result);
+                    sendMessage(api, event, result);
                 }
             })
         }
     } else if (query == "refreshstate") {
         if (users.admin.includes(event.senderID)) {
             fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
-            sendMessage(true, api, event, "The AppState refreshed.");
+            log("app_state refresh");
+            sendMessage(api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
     } else if (query == "savestate") {
         if (users.admin.includes(event.senderID)) {
             saveState();
-            sendMessage(true, api, event, "The state have saved successfully.");
+            sendMessage(api, event, "The state have saved successfully.");
             messagesD = getFormattedDate();
         }
     } else if (query == "test" || query == "hello world" || query == "hi world") {
-        sendMessage(true, api, event, "Hello World");
+        sendMessage(api, event, "Hello World");
     } else if (query == "about") {
         let message = {
             body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
             url: "https://mrepol742.github.io/project-orion/"
         }
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else if (query == "copyright") {
         let message = {
             body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://mrepol742.github.io/project-orion/",
             url: "https://mrepol742.github.io/project-orion/"
         }
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else if (query == "license") {
         let message = {
             body: "/*\n* Copyright Ⓒ MREPOL742 - All Rights Reserved\n" +
@@ -6080,7 +5732,7 @@ _____________________________
                 "*/\n\nUNDER PRIVACY POLICY OF THE WEBVIUM PROJECT 2023.\nhttps://mrepol742.github.io/webvium/privacypolicy/\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
             url: "https://mrepol742.github.io/webvium/privacypolicy/"
         }
-        sendMessage(true, api, event, message);
+        sendMessage(api, event, message);
     } else {
         if (event.isGroup) {
             if (event.type == "message_reply" && event.senderID != currentID) {
@@ -6100,16 +5752,16 @@ _____________________________
 
 function someA(api, event, query, input) {
     if (query == "sup" || query == "wassup") {
-        sendMessage(true, api, event, sup[Math.floor(Math.random() * sup.length)]);
+        sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
     } else if (query == "hi" || query == "hello" || query == "hey" || query == "hwfar" || query == "yo") {
-        sendMessage(true, api, event, hey[Math.floor(Math.random() * hey.length)]);
+        sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
     } else if (query.startsWith("okay")) {
-        sendMessage(true, api, event, "Yup");
+        sendMessage(api, event, "Yup");
         return true;
     } else if (query == "idk") {
-        sendMessage(true, api, event, "I dont know too...");
+        sendMessage(api, event, "I dont know too...");
         return true;
     }
     return false;
@@ -6119,7 +5771,7 @@ function reaction(api, event, query, input) {
     if (containsAny(query, happyEE) || (input.includes("😂") || input.includes("🤣") || input.includes("😆"))) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
-            sendMessage(true, api, event, funD[Math.floor(Math.random() * funD.length)])
+            sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)])
         }
     } else if (containsAny(input.toLowerCase(), sadEE)) {
         reactMessage(api, event, ":sad:");
@@ -6137,31 +5789,31 @@ function reaction(api, event, query, input) {
 function someR(api, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
         reactMessage(api, event, ":love:");
-        sendMessage(true, api, event, goodev[Math.floor(Math.random() * goodev.length)]);
+        sendMessage(api, event, goodev[Math.floor(Math.random() * goodev.length)]);
         if (!isEvening(settings.preference.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
         json
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         reactMessage(api, event, ":love:");
-        sendMessage(true, api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
+        sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
         if (!isMorning(settings.preference.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night")) {
         reactMessage(api, event, ":love:");
-        sendMessage(true, api, event, goodni[Math.floor(Math.random() * goodni.length)]);
+        sendMessage(api, event, goodni[Math.floor(Math.random() * goodni.length)]);
         if (!isNight(settings.preference.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
         reactMessage(api, event, ":love:");
-        sendMessage(true, api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
+        sendMessage(api, event, goodaf[Math.floor(Math.random() * goodaf.length)]);
         if (!isAfternoon(settings.preference.timezone)) {
-            sendMessageOnly(true, api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
+            sendMessageOnly(api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
     }
@@ -6174,12 +5826,24 @@ function parseImage(api, event, url, dir) {
         let image = {
             attachment: fs.createReadStream(dir)
         };
-        sendMessage(true, api, event, image);
+        sendMessage(api, event, image);
         unLink(dir);
     });
 }
 
-async function sendMessage(bn, api, event, message) {
+async function sendMessage(api, event, message, thread_id, message_id, bn, voice) {
+    if (bn === undefined) {
+        bn = true;
+    }
+    if (voice === undefined) {
+        voice = true;
+    }
+    if (thread_id === undefined) {
+        thread_id = event.threadID;
+    }
+    if (message_id === undefined) {
+        message_id = event.messageID;
+    }
     if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await wait(2000);
     }
@@ -6191,7 +5855,7 @@ async function sendMessage(bn, api, event, message) {
     } else if (event.isGroup && event.senderID != currentID) {
         if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
-            if ((typeof message === "string") && message.trim().length < 200 &&
+            if (voice && (typeof message === "string") && message.trim().length < 200 &&
                 groups.tts.includes(event.threadID)) {
                 const url = GoogleTTS.getAudioUrl(message, voice);
                 let time = getTimestamp();
@@ -6200,27 +5864,49 @@ async function sendMessage(bn, api, event, message) {
                     let message = {
                         attachment: fs.createReadStream(dir),
                     };
-                    api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
-                        if (err) log(err);
-                    }, event.messageID);
+                    api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
+                        if (err) {
+                            log(err);
+                        api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+                            if (err) log(err);
+                        }, message_id);
+                        }
+                    }, message_id);
                     unLink(dir);
                 });
             } else {
-                api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
-                    if (err) log(err);
-                }, event.messageID);
+                api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
+                    if (err) {
+                        log(err);
+                    api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+                        if (err) log(err);
+                    }, message_id);
+                }
+                }, message_id);
             }
         } else {
             log("send_message " + event.threadID + " " + JSON.stringify(message));
-            sendMMMS(api, event, message);
+            sendMMMS(api, message, thread_id, message_id, voice);
         }
     } else {
         log("send_message " + event.threadID + " " + JSON.stringify(message));
-        sendMMMS(api, event, message);
+        sendMMMS(api, message, thread_id, message_id, voice);
     }
 }
 
-async function sendMessageOnly(bn, api, event, message) {
+async function sendMessageOnly(api, event, message, thread_id, message_id, bn, voice) {
+    if (bn === undefined) {
+        bn = true;
+    }
+    if (voice === undefined) {
+        voice = true;
+    }
+    if (thread_id === undefined) {
+        thread_id = event.threadID;
+    }
+    if (message_id === undefined) {
+        message_id = event.messageID;
+    }
     if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await wait(2000);
     }
@@ -6228,16 +5914,16 @@ async function sendMessageOnly(bn, api, event, message) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
-        sendMMMS(api, event, "It appears the AI sends a blank message. Please try again.");
+        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, voice);
     } else {
         log("send_message " + event.threadID + " " + JSON.stringify(message));
-        sendMMMS(api, event, message);
+        sendMMMS(api, message, thread_id, message_id, voice);
     }
 }
 
-async function sendMMMS(api, event, message) {
-    if ((typeof message === "string") && message.trim().length < 200 &&
-        groups.tts.includes(event.threadID)) {
+async function sendMMMS(api, message, thread_id, message_id, voiceE) {
+    if (voiceE && (typeof message === "string") && message.trim().length < 200 &&
+        groups.tts.includes(thread_id)) {
         const url = GoogleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
         let dir = __dirname + '/cache/audios/tts_' + time + '.mp3';
@@ -6245,14 +5931,24 @@ async function sendMMMS(api, event, message) {
             let message = {
                 attachment: fs.createReadStream(dir),
             };
-            api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
-                if (err) log(err);
-            }, event.messageID);
+            api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
+                if (err) {
+                    log(err);
+                api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+                    if (err) log(err);
+                }, message_id);
+            }
+            }, message_id);
             unLink(dir);
         });
     } else {
-        api.sendMessage(updateFont(message), event.threadID, (err, messageInfo) => {
-            if (err) log(err);
+        api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
+            if (err) {
+                log(err);
+            api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+                if (err) log(err);
+            }, message_id);
+        }
         });
     }
 }
@@ -6263,10 +5959,10 @@ async function reactMessage(api, event, reaction) {
     }
     await wait(4000);
     if (reaction === undefined) {
-        log("react_message undefined" + event.messageID);
+        log("react_message undefined " + event.messageID);
         return;
     }
-    log("react_message " + event.messageID + " " + reaction);
+    log("react_message " + event.threadID + " " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID, (err) => {
         if (err) log(err);
     });
@@ -6282,15 +5978,28 @@ function formatQuery(string) {
 
 function log(data) {
     if (typeof data === "string") {
-        console.log('\x1b[36m', getFormattedDate() + " ~", '\x1b[0m', data.normalize('NFKC'));
+        let d = data.normalize('NFKC').split(" ");
+        if (d[0].includes("_")) {
+            let db = d[0];
+            let db1 = d[1];
+            d.shift();
+            if (db1.length > 14 && /^\d+$/.test(parseInt(db1))) {
+                d.shift();
+                console.log('\x1b[36m', getCurrentTime(),'\x1b[0m',"|",'\x1b[40m', db ,'\x1b[0m','\x1b[34m', db1 ,'\x1b[0m', d.join(" "));
+            } else {
+                console.log('\x1b[36m', getCurrentTime(),'\x1b[0m',"|",'\x1b[40m', db ,'\x1b[0m', d.join(" "));
+            }
+        } else {
+            console.log('\x1b[36m', getCurrentTime(),'\x1b[0m',"|", d.join(" "));
+        }
     } else {
         let da = JSON.stringify(data);
         if (da == "") {
             return;
         }
-        console.log('\x1b[36m', getFormattedDate() + " ~", '\x1b[0m', da.normalize('NFKC'));
+        console.log('\x1b[36m', getCurrentTime(), '\x1b[0m', " |", da.normalize('NFKC'));
     }
-}
+  }
 
 function getFormattedDate() {
     return new Date().toLocaleString("en-US", {
@@ -6497,8 +6206,7 @@ async function getImages(api, event, images) {
     for (i = 0;
         (i < parseInt(settings.preference.max_image) && i < images.length); i++) {
         let url = images[i].url;
-        if (url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") &&
-            !url.endsWith(".svg.png") && !url.startsWith("https://upload.wikimedia.org")) {
+        if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com")) {
             await wait(1000);
             let fname = __dirname + "/cache/images/findimg_" + i + "_" + time + ".png";
             downloadFile(encodeURI(url), fname).then((response) => {
@@ -6511,7 +6219,6 @@ async function getImages(api, event, images) {
     let accm = [];
     let i1;
     for (i1 = 0; i1 < name.length; i1++) {
-        log(name[i1]);
         accm.push(fs.createReadStream(name[i1]));
     }
     let message = {
@@ -6521,7 +6228,7 @@ async function getImages(api, event, images) {
     api.sendMessage(message, event.threadID, (err, messageInfo) => {
         if (err) {
             log(err);
-            sendMessage(true, api, event, "Seem's like i am having an issue finding it.");
+            sendMessage(api, event, "Seem's like i am having an issue finding it.");
         }
         let i2;
         for (i2 = 0; i2 < name.length; i2++) {
@@ -6825,84 +6532,84 @@ function blockUser(api, event, id) {
         return;
     }
     if (users.blocked.includes(id)) {
-        sendMessage(true, api, event, "It's already blocked.");
+        sendMessage(api, event, "It's already blocked.");
         return;
     }
     users.blocked.push(id);
     if (users.admin.includes(id)) {
         users.admin = users.admin.filter(item => item !== id);
-        sendMessage(true, api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
+        sendMessage(api, event, "The user " + id + " is blocked and it's admin status is being revoked.");
     } else {
-        sendMessage(true, api, event, "The user " + id + " is blocked.");
+        sendMessage(api, event, "The user " + id + " is blocked.");
     }
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function blockGroup(api, event, id) {
     if (groups.blocked.includes(id)) {
-        sendMessage(true, api, event, "Group is already blocked.");
+        sendMessage(api, event, "Group is already blocked.");
         return;
     }
     groups.blocked.push(id);
-    sendMessage(true, api, event, "The group " + id + " is blocked.");
+    sendMessage(api, event, "The group " + id + " is blocked.");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function unblockGroup(api, event, id) {
     if (!groups.blocked.includes(id)) {
-        sendMessage(true, api, event, "The group is not blocked.");
+        sendMessage(api, event, "The group is not blocked.");
         return;
     }
     groups.blocked = groups.blocked.filter(item => item !== id);
-    sendMessage(true, api, event, "The group " + id + " can now use my commands.");
+    sendMessage(api, event, "The group " + id + " can now use my commands.");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function enableTTS(api, event, id) {
     groups.tts.push(id);
-    sendMessage(true, api, event, "Speech Synthesis is turn on for thread " + id);
+    sendMessage(api, event, "Speech Synthesis is turn on for thread " + id);
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function disableTTS(api, event, id) {
     groups.tts = groups.tts.filter(item => item != id);
-    sendMessage(true, api, event, "Speech Synthesis is turn off for thread " + id);
+    sendMessage(api, event, "Speech Synthesis is turn off for thread " + id);
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function enableSmartReply(api, event, id) {
     users.smart_reply.push(id);
-    sendMessage(true, api, event, "Smart Reply is turn on for thread " + id);
+    sendMessage(api, event, "Smart Reply is turn on for thread " + id);
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function disableSmartReply(api, event, id) {
     users.smart_reply = users.smart_reply.filter(item => item !== id);
-    sendMessage(true, api, event, "Smart Reply is turn off for thread " + id);
+    sendMessage(api, event, "Smart Reply is turn off for thread " + id);
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function unblockUser(api, event, id) {
     if (!users.blocked.includes(id)) {
-        sendMessage(true, api, event, "The user is not blocked.");
+        sendMessage(api, event, "The user is not blocked.");
         return;
     }
     users.blocked = users.blocked.filter(item => item !== id);
-    sendMessage(true, api, event, "The user " + id + " can now use my commands.");
+    sendMessage(api, event, "The user " + id + " can now use my commands.");
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function addAdmin(api, event, id) {
     if (users.blocked.includes(id)) {
-        sendMessage(true, api, event, "I am unable to grand admin permission on a blocked user.");
+        sendMessage(api, event, "I am unable to grand admin permission on a blocked user.");
         return;
     }
     if (users.admin.includes(id)) {
-        sendMessage(true, api, event, "It's already an admin!");
+        sendMessage(api, event, "It's already an admin!");
         return;
     }
     users.admin.push(id);
-    sendMessage(true, api, event, "Admin permission granted.");
+    sendMessage(api, event, "Admin permission granted.");
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
@@ -6911,11 +6618,11 @@ function remAdmin(api, event, id) {
         return;
     }
     if (!users.admin.includes(id)) {
-        sendMessage(true, api, event, "The user has no admin rights to take away.");
+        sendMessage(api, event, "The user has no admin rights to take away.");
         return;
     }
     users.admin = users.admin.filter(item => item !== id);
-    sendMessage(true, api, event, "Admin permission removed.");
+    sendMessage(api, event, "Admin permission removed.");
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
@@ -6933,7 +6640,7 @@ function changeNickname(api, event, id, text) {
             text.substring(name.length + 2);
         }
         api.changeNickname(inp, event.threadID, id, (err) => {
-            if (err) return sendMessage(true, api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
+            if (err) return sendMessage(api, event, "Unfortunately there was an error occured while changing \"" + name + "\" nickname.");
         });
     })
 }
@@ -6941,7 +6648,7 @@ function changeNickname(api, event, id, text) {
 function kiss(api, event, id) {
     getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
         if (response == null) {
-            sendMessage(true, api, event, "Unfortunately, There is a problem processing your request.");
+            sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
         } else {
             api.getUserInfo(id, (err, info) => {
                 if (err) return log(err);
@@ -6960,7 +6667,7 @@ function kiss(api, event, id) {
                         }]
                         */
                     };
-                    sendMessage(true, api, event, image);
+                    sendMessage(api, event, image);
                     unLink(filename);
                 });
             })
@@ -7098,7 +6805,7 @@ function welcomeUser(api, event, name, gname, Tmem, id, message1) {
                 }]
                 */
             };
-            sendMessageOnly(true, api, event, message);
+            sendMessageOnly(api, event, message, event.threadID, event.messageID, false, false);
             unLink(filename);
         });
     }).catch(function(err) {
@@ -7112,7 +6819,7 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
         let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + encodeURI(name) + "&text2=" + encodeURI(gname) + "&text3=" + getSuffix(Tmem) + " Member&avatar=" + encodeURIComponent(response.request.res.responseUrl);
         downloadFile(url, filename).then((response) => {
             let message = {
-                body: "Thank you for joining " + name + " but now you're leaving us.\n\n> " + qot[Math.floor(Math.random() * qot.length)],
+                body: "Thank you for joining " + name + " but now you're leaving us.",
                 attachment: fs.createReadStream(filename),
                 /*
                 mentions: [{
@@ -7121,7 +6828,7 @@ function byebyeUser(api, event, name, gname, Tmem, id) {
                 }]
                 */
             };
-            sendMessageOnly(true, api, event, message);
+            sendMessageOnly(api, event, message, event.threadID, event.messageID, false, false);
             log("leave_member " + name);
             unLink(filename);
         });
@@ -7310,7 +7017,7 @@ async function sendMessageToAll(api, event) {
             api.sendMessage(body, gp);
         }
     }
-    sendMessage(true, api, event, "Message successfully send to " + count + " groups.")
+    sendMessage(api, event, "Message successfully send to " + count + " groups.")
 }
 
 function numberWithCommas(x) {
@@ -7541,7 +7248,7 @@ async function searchimgr(api, event, filename) {
         body: reverse.results[0].title + "\n\n" + reverse.results[0].url,
         url: reverse.results[0].url
     }
-    sendMessage(true, api, event, message);
+    sendMessage(api, event, message, event.threadID, event.messageID, false, false);
 }
 
 async function transcribeAudioFile(filePath) {
@@ -7593,9 +7300,23 @@ ____________________________
     return setInterval(func, time);
     }
 
-    function getBody(event) {
-        if (event.type == "message_reply") {
-            return event.messageReply.body;
+    function getCountryOrigin(model) {
+        if (model.includes("Celeron") && model.includes("N4000") && model.includes("1.10GHz")) {
+            return "The Philippines";
         }
-        return event.body;
+        return "USA";
     }
+
+    function tConvert (time) {
+        time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+        if (time.length > 1) {
+          time = time.slice(1);
+          time[5] = +time[0] < 12 ? ' AM' : ' PM';
+          time[0] = +time[0] % 12 || 12;
+        }
+        return time.join('');
+      }
+
+      function getCurrentTime() {
+        return  tConvert(today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
+      }
