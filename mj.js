@@ -1767,12 +1767,11 @@ ___________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let second_process = process.uptime();
-        let seconds_con = secondsToTime(second_process);
         let message = `
 _______  Uptime  _______
 
-   ` + seconds_con + `
+   ⦿ Server: ` + secondsToTime(process.uptime()) + `
+   ⦿ OS: ` + secondsToTime(os.uptime()) + `
 _______________________
 `;
         sendMessage(api, event, message);
@@ -1780,31 +1779,24 @@ _______________________
         if (isGoingToFast(event)) {
             return;
         }
-            let osFreeMem = convertBytes(os.freemem());
-            let osTotalMem = convertBytes(os.totalmem());
-            let seconds_con = secondsToTime(process.uptime());
-            let rss = convertBytes(process.memoryUsage().rss);
-            let heapTotal = convertBytes(process.memoryUsage().heapTotal);
-            let heapUsed = convertBytes(process.memoryUsage().heapUsed);
-            let external = convertBytes(process.memoryUsage().external);
-            let arrayBuffers = convertBytes(process.memoryUsage().arrayBuffers);
             let avg_load = os.loadavg();
             let a = new Date().toString().split(" ");
             let message = `
 _______  System Info  _______
 
    ⦿ Server Date: ` + a[0] + " " + a[1] + " " + a[2] + " " + a[3] + " " + a[4] + `
-   ⦿ Server Uptime: ` + seconds_con + `
+   ⦿ Server Uptime: ` + secondsToTime(process.uptime()) + `
    ⦿ Server Location: ` + getCountryOrigin(os.cpus()[0].model) + `
    ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
    ⦿ CPU Usage: ` + getLoad() + `%
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
-   ⦿ RAM: ` + osFreeMem + `/` + osTotalMem + `
+   ⦿ OS Uptime: ` + secondsToTime(os.uptime()) + `
+   ⦿ RAM: ` + convertBytes(os.freemem()) + `/` + convertBytes(os.totalmem()) + `
    ⦿ ROM: ` + convertBytes((process.memoryUsage().rss+process.memoryUsage().heapUsed)*2) + "/10GB" + `
-   ⦿ RSS: ` + rss + `
-   ⦿ Heap: ` + heapUsed + `/` + heapTotal + `
-   ⦿ External: ` + external + `
-   ⦿ Array Buffers: ` + arrayBuffers + `
+   ⦿ RSS: ` + convertBytes(process.memoryUsage().rss) + `
+   ⦿ Heap: ` + convertBytes(process.memoryUsage().heapUsed) + `/` + convertBytes(process.memoryUsage().heapTotal) + `
+   ⦿ External: ` + convertBytes(process.memoryUsage().external) + `
+   ⦿ Array Buffers: ` + convertBytes(process.memoryUsage().arrayBuffers) + `
    ⦿ Average Load: ` + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + `%
    ⦿ Save State: ` + messagesD + `
    ⦿ Fb State: ` + fb_stateD + `
@@ -2245,11 +2237,10 @@ _____________________________
 
                     stream.on('start', () => {
                         threadIdMV[event.threadID] = false;
-                        log("Starting download of video file.");
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading " + info.video_details.title);
+                        log("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
@@ -2257,13 +2248,11 @@ _____________________________
                         fs.readFile(__dirname + '/cache/videos/video_' + time + '.mp4', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
-                                log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
+                                log("upload_error Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
                                 sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                                 threadIdMV[event.threadID] = true;
                                 unLink(__dirname + '/cache/videos/video_' + time + '.mp4')
                             } else {
-                                log("Done.");
-
                                 getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
                                     if (response == null) {
                                         sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
@@ -2328,11 +2317,10 @@ _____________________________
 
                     stream.on('start', () => {
                         threadIdMV[event.threadID] = false;
-                        log("Starting download of video file.");
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading " + info.video_details.title);
+                        log("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
@@ -2340,10 +2328,9 @@ _____________________________
                         fs.readFile(__dirname + '/cache/videos/video_' + time + '.mp4', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
-                                log("Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
+                                log("upload_error Unable to upload the video to the file limit. The file size is " + (data.length / 1024 / 1024));
                                 sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                             } else {
-                                log("Done.");
                                 let message = {
                                     body: search.videos[0].title,
                                     attachment: fs.createReadStream(__dirname + '/cache/videos/video_' + time + '.mp4')
@@ -2396,11 +2383,10 @@ _____________________________
 
                     stream.on('start', () => {
                         threadIdMV[event.threadID] = false;
-                        log("Starting the download of music file.");
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading " + info.video_details.title);
+                        log("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
@@ -2408,14 +2394,11 @@ _____________________________
                         fs.readFile(__dirname + '/cache/audios/music_' + time + '.mp3', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
-                                log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
+                                log("upload_error Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
                                 sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                                 threadIdMV[event.threadID] = true;
                                 unLink(__dirname + '/cache/audios/music_' + time + '.mp3');
                             } else {
-                                log("Finish downloading music.");
-
-
                                 getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
                                     if (response == null) {
                                         sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
@@ -2477,11 +2460,10 @@ _____________________________
 
                     stream.on('start', () => {
                         threadIdMV[event.threadID] = false;
-                        log("Starting the download of music file.");
                     });
                     stream.on('info', (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading " + info.video_details.title);
+                        log("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on('end', () => {
@@ -2489,10 +2471,9 @@ _____________________________
                         fs.readFile(__dirname + '/cache/audios/music_' + time + '.mp3', function(err, data) {
                             if (err) log(err)
                             if (data.length > limit) {
-                                log("Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
+                                log("upload_error Unable to upload the music to the file limit. The file size is " + (data.length / 1024 / 1024));
                                 sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                             } else {
-                                log("Finish downloading music.");
                                 let message = {
                                     body: search.videos[0].title,
                                     attachment: fs.createReadStream(__dirname + '/cache/audios/music_' + time + '.mp3')
@@ -3756,6 +3737,7 @@ _____________________________
                 if (users.bot.includes(data[0].userID)) {
                     sendMessage(api, event, "I already knew it.");
                 } else {
+                    users.bot.push(data[0].userID);
                     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     sendMessage(api, event, "Noted.");
                 }
@@ -6493,37 +6475,31 @@ function secondsToTime(e) {
     let constructTime = "";
     if (h >= 1) {
         if (h == 1) {
-            constructTime += h + " hour";
+            constructTime += h + " hour ";
         } else {
-            constructTime += h + " hours";
-        }
-    }
-    if (constructTime.includes("hour")) {
-        if (h >= 1 && m >= 1) {
-            constructTime += " and ";
-        } else {
-            constructTime += ", ";
+            constructTime += h + " hours ";
         }
     }
     if (m >= 1) {
         if (m == 1) {
-            constructTime += m + " minute";
+            constructTime += m + " minute ";
         } else {
-            constructTime += m + " minutes";
+            constructTime += m + " minutes ";
         }
-    }
-    if (constructTime.includes("minute")) {
-        constructTime += " and ";
     }
     if (s >= 1) {
         if (s == 1) {
             constructTime += s + " second";
-        } else {
+        } else { 
             constructTime += s + " seconds";
         }
     }
     constructTime += ".";
-    return constructTime;
+    let test = constructTime.split(" ");
+    if (test.length > 6) {
+        return constructTime.replaceAll("hour ", "hour, ").replaceAll("hours ", "hours, ").replaceAll("minute ", "minute and ").replaceAll("minutes ", "minutes and ");
+    }
+    return constructTime.replaceAll("minute ", "minute and ").replaceAll("minutes ", "minutes and ");
 }
 
 function removeUser(api, event, id) {
@@ -6684,112 +6660,112 @@ function kiss(api, event, id) {
     });
 }
 
-function gun(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function gun(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function wanted(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function wanted(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function clown(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function clown(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/clown?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function drip(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function drip(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/drip?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function communist(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function communist(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/communist?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function advert(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function advert(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/ad?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function uncover(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function uncover(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function jail(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function jail(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/jail?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function invert(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function invert(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/invert?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function pet(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function pet(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/pet?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function mnm(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function mnm(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function greyscale(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function greyscale(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function jokeover(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function jokeover(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
     });
 }
 
-function blur(api, event, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function blur(api, event, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         parseImage(api, event, "https://api.popcat.xyz/blur?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
     }).catch(function(err) {
         log(err);
@@ -6800,8 +6776,8 @@ function getTimestamp() {
     return Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 90000) + Math.floor(Math.random() * 20000);
 }
 
-function welcomeUser(api, event, name, gname, Tmem, id, message1) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function welcomeUser(api, event, name, gname, Tmem, id, message1) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         let filename = __dirname + "/cache/images/welcome_img_" + getTimestamp() + ".png";
         downloadFile(getWelcomeImage(name, gname, Tmem, id) + encodeURIComponent(response.request.res.responseUrl), filename).then((response) => {
             let message = {
@@ -6822,8 +6798,8 @@ function welcomeUser(api, event, name, gname, Tmem, id, message1) {
     });
 }
 
-function byebyeUser(api, event, name, gname, Tmem, id) {
-    axios.get(getProfilePic(id)).then(function(response) {
+async function byebyeUser(api, event, name, gname, Tmem, id) {
+    await axios.get(getProfilePic(id)).then(function(response) {
         let filename = __dirname + "/cache/images/byebye_" + getTimestamp() + ".jpg";
         let url = "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + encodeURI(name) + "&text2=" + encodeURI(gname) + "&text3=" + getSuffix(Tmem) + " Member&avatar=" + encodeURIComponent(response.request.res.responseUrl);
         downloadFile(url, filename).then((response) => {
@@ -7358,6 +7334,7 @@ ____________________________
                     res.writeHead(200);
                     res.end(JSON.stringify({status:getStatus()}));
                     break
+                
                 default:
                     res.writeHead(200);
                     res.end(homepage);
