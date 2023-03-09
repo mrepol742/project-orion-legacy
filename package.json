@@ -1,6 +1,6 @@
 {
     "name": "@mrepol742/project-orion",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
     "main": "mj.js",
     "homepage": "https://mrepol742.github.io/project-orion/",
