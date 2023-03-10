@@ -1867,11 +1867,9 @@ ___________________________
         let osAverage = 0;
         for (time in settings.uptime.server) {
             serverAverage += settings.uptime.server[time];
-            log(serverAverage);
         }
         for (time1 in settings.uptime.os) {
             osAverage += settings.uptime.os[time1];
-            log(osAverage);
         }
         serverAverage += process.uptime();
         osAverage += os.uptime();

@@ -1,17 +1,12 @@
 {
   "name": "@mrepol742/project-orion-facebook-api",
   "version": "1.0.0",
-  "description": "A Facebook chat API that doesn't rely on XMPP. Will NOT be deprecated after April 30th 2015.",
+  "description": "Project Orion Facebook API.",
   "repository": {
     "type": "git",
     "url": "git://github.com/mrepol742/project-orion.git"
   },
-  "keywords": [
-    "facebook",
-    "chat",
-    "api",
-    "fca"
-  ],
+  "keywords": [],
   "bugs": {
     "url": "https://github.com/mrepol742/project-orion/issues"
   },
@@ -20,12 +15,12 @@
   "dependencies": {
     "bluebird": "^2.11.0",
     "cheerio": "^0.22.0",
-    "https-proxy-agent": "^4.0.0",
-    "mqtt": "^3.0.0",
+    "https-proxy-agent": "^5.0.1",
+    "mqtt": "^4.3.7",
     "npmlog": "^1.2.0",
     "prettier": "^2.8.4",
-    "request": "^2.53.0",
-    "websocket-stream": "^5.5.0"
+    "request": "^2.88.2",
+    "websocket-stream": "^5.5.2"
   },
   "engines": {
     "node": ">=18.x"

@@ -1,5 +1,3 @@
-npm update
-
 git add .
 git commit -m "Initial Commit"
 
