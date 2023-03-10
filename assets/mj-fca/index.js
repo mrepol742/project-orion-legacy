@@ -519,7 +519,7 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
     // At the end we call the callback or catch an exception
     mainPromise
         .then(function () {
-            utils.logged("fca_status connected 200");
+            utils.logged("fca_status online");
             return callback(null, api);
         })
         .catch(function (e) {

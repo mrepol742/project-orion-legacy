@@ -1,6 +1,8 @@
 const fca = require("./assets/mj-fca/");
 const utils = require("./assets/mj-fca/utils.js");
 
+utils.logged("project_orion online");
+
 /*
  *
  * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
@@ -57,14 +59,20 @@ let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let msgs = JSON.parse(fs.readFileSync(__dirname + "/data/msgs.json", "utf8"));
 let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/data/unsend_msgs.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
+utils.logged("settings_loaded " + JSON.stringify(settings.preference));
+utils.logged("data_loaded_users " + JSON.stringify({users: users.list.length, muted: users.muted.length, bot: users.bot.length, admin: users.admin.length, blocked: users.blocked.length}));
+utils.logged("data_loaded_groups " + JSON.stringify({groups: Object.keys(groups.list).length, blocked: groups.blocked.length}));
+utils.logged("data_message " + JSON.stringify({messages: Object.keys(msgs).length, unsend_messages: Object.keys(unsend_msgs).length}));
 
 const server = http.createServer(getRoutes());
 let homepage = fs.readFileSync(__dirname + "/index.html");
 let errorpage = fs.readFileSync(__dirname + "/404.html");
 let threadpage = fs.readFileSync(__dirname + "/thread_ui.html");
+utils.logged("html_resource " + JSON.stringify({hompage: (homepage ? true : false), errorpage: (errorpage ? true : false), threadpage: (threadpage ? true : false)}));
 
 server.listen(3000, function () {
-    utils.logged("server_start 3000");
+    utils.logged("server_status online");
+    utils.logged("server_port 3000");
 });
 
 task(function () {
@@ -82,11 +90,11 @@ task(function () {
             utils.logged("ping_url_unsupported " + surl);
         }
     }
-    pingD = getFormattedDate();
+    pingD = utils.getCurrentTime();
 }, Math.floor(1800000 * Math.random() + 1200000));
 
 task(function () {
-    gitD = getFormattedDate();
+    gitD = utils.getCurrentTime();
 }, Math.floor(1800000 * Math.random() + 1200000));
 
 const config = new Configuration({
@@ -105,6 +113,8 @@ const options = {
     online: settings.preference.online,
     forceLogin: true,
 };
+utils.logged("login_options " + JSON.stringify(options));
+
 const options1 = {
     page: 0,
     safe: true,
@@ -114,42 +124,34 @@ const options1 = {
     },
 };
 
-utils.logged("login_options " + JSON.stringify(options, null, 4));
-utils.logged("settings_options " + JSON.stringify(settings.preference));
-
 const openai = new OpenAIApi(config);
+let listen;
 
 process.on("beforeExit", (code) => {
     utils.logged("process_before_exit " + code);
 });
 
-process.on("exit", (code) => {
-    utils.logged("process_exit goodbye :( " + code);
-});
-
-process.on("SIGINT", function () {
-    let currentDate = new Date();
-    settings.uptime.server[currentDate.getDay()] = process.uptime();
-    settings.uptime.os[currentDate.getDay()] = os.uptime();
-    saveState();
-    utils.logged("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
+process.on('SIGHUP', function () {
     process.exit();
 });
+process.on("SIGTERM", function() {
+    process.exit();
+});
+process.on("SIGINT", function () {
+    process.exit();
+});
+
 
 fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     if (err) {
         if (err.error) {
-            let currentDate = new Date();
-            settings.uptime.server[currentDate.getDay()] = process.uptime();
-            settings.uptime.os[currentDate.getDay()] = os.uptime();
-            saveState();
             process.exit();
         } else {
             utils.logged(err);
         }
+        return;
     }
 
-    /*
     process.on("uncaughtException", (err, origin) => {
         caughtException(api, err);
     });
@@ -157,11 +159,27 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     process.on("unhandledRejection", (reason, promise) => {
         caughtException(api, reason);
     });
-    */
+
+    process.on("exit", (code) => {
+        let currentDate = new Date();
+        settings.uptime.server[currentDate.getDay()] = process.uptime();
+        settings.uptime.os[currentDate.getDay()] = os.uptime();
+        saveState();
+        console.log("\n");
+        utils.logged("save_state");
+        fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
+        utils.logged("login_state saved")
+        listen.stopListening();
+        utils.logged("fca_status offline");
+        server.close();
+        utils.logged("server_status offline");
+        utils.logged("project_orion offline");
+        utils.logged("process_exit goodbye :( " + code);
+    });
 
     task(function () {
         saveState();
-        messagesD = getFormattedDate();
+        messagesD = utils.getCurrentTime();
         utils.logged("save_state");
     }, Math.floor(1800000 * Math.random() + 1200000));
 
@@ -176,7 +194,7 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
 
     task(function () {
         fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
-        fb_stateD = getFormattedDate();
+        fb_stateD = utils.getCurrentTime();
         utils.logged("login_state refresh");
     }, Math.floor(1800000 * Math.random() + 1200000));
 
@@ -199,7 +217,7 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
 
     api.setOptions(options);
 
-    api.listenMqtt((err, event) => {
+    listen = api.listenMqtt((err, event) => {
         /*
         {
 ERR! markAsDelivered   __ar: 1,
@@ -218,7 +236,14 @@ ERR! markAsDelivered }
 
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
 */
-        if (err) return utils.logged(err);
+        if (err) {
+            if (err.error) {
+                process.exit();
+            } else {
+                utils.logged(err);
+            }
+            return;
+        }
 
         if (isAppState) {
             currentID = api.getCurrentUserID();
@@ -227,10 +252,10 @@ ERR! markAsDelivered }
             isAppState = false;
         }
 
-        if (event.type == "message") {
+        if (event.type == "message" || event.type == "message_reply") {
             let body = event.body;
             let result = !!body.match(/^[!@#$%&*~|?/_]/);
-            if (!result && isMyId(event.senderID)) {
+            if (!result && (isMyId(event.senderID) || (event.type == "message_reply" && isMyId(event.messageReply.senderID)))) {
                 return;
             }
             if (result) {
@@ -1763,21 +1788,12 @@ _______________________
                 count1++;
             }
         }
-        let a = new Date().toString().split(" ");
         let message =
             `
 _______  Statistics  _______
 
    ⦿ Server Date: ` +
-            a[0] +
-            " " +
-            a[1] +
-            " " +
-            a[2] +
-            " " +
-            a[3] +
-            " " +
-            a[4] +
+            new Date().toLocaleString() +
             `
    ⦿ Your Messages: ` +
             numberWithCommas(count) +
@@ -1858,22 +1874,13 @@ _______________________
             return;
         }
         let avg_load = os.loadavg();
-        let a = new Date().toString().split(" ");
         let rom = process.memoryUsage().rss + process.memoryUsage().heapUsed + process.memoryUsage().external + process.memoryUsage().arrayBuffers;
         let message =
             `
 _______  System Info  _______
 
    ⦿ Server Date: ` +
-            a[0] +
-            " " +
-            a[1] +
-            " " +
-            a[2] +
-            " " +
-            a[3] +
-            " " +
-            a[4] +
+             new Date().toLocaleString() +
             `
    ⦿ Server Uptime: ` +
             secondsToTime(process.uptime()) +
@@ -2817,8 +2824,16 @@ _____________________________
                     id: info.participantIDs[i],
                 });
             }
-            sendMessageOnly(api, event, message);
+            sendMessage(api, event, message, event.threadID, event.messageID, true, false);
         });
+      /*  const a = "\u200E";
+        let message = {
+            body: "@everyone",
+            mentions: {
+                '5819745318103902': '@everyone'
+            }
+        }
+        sendMessage(api, event, message);*/
     } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
         if (isGoingToFast(event)) {
             return;
@@ -6006,13 +6021,13 @@ _____________________________
             fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
             utils.logged("login_state refresh");
             sendMessage(api, event, "The AppState refreshed.");
-            fb_stateD = getFormattedDate();
+            fb_stateD = utils.getCurrentTime();
         }
     } else if (query == "savestate") {
         if (users.admin.includes(event.senderID)) {
             saveState();
             sendMessage(api, event, "The state have saved successfully.");
-            messagesD = getFormattedDate();
+            messagesD = utils.getCurrentTime();
         }
     } else if (query == "test" || query == "hello world" || query == "hi world") {
         sendMessage(api, event, "Hello World");

@@ -12,7 +12,7 @@ function logged(data) {
         let d = data.normalize("NFKC").split(" ");
         if (d[0].includes("_")) {
             let db = d[0];
-            let db1 = d[1];
+            let db1 = d[1] + "";
             d.shift();
             if (db1.length > 14 && /^\d+$/.test(parseInt(db1))) {
                 d.shift();
@@ -36,7 +36,8 @@ function getCurrentTime() {
     let today = new Date();
     let hour = today.getHours();
     let suffix = hour >= 12 ? "PM" : "AM";
-    return (hour = ((hour + 11) % 12) + 1 + ":" + today.getMinutes() + ":" + today.getSeconds() + " " + suffix);
+    let hour12  = ((hour + 11) % 12) + 1;
+    return (hour12 + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes() + ":" + (today.getSeconds()<10?'0':'') + today.getSeconds() + " " + suffix);
 }
 
 function setProxy(url) {
@@ -1225,5 +1226,6 @@ module.exports = {
     getAppState,
     getAdminTextMessageType,
     setProxy,
-    logged
+    logged,
+    getCurrentTime
 };
