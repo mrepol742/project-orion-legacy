@@ -91,8 +91,8 @@ let help3 = `
 _______  Project Orion 4/9  _______
 
    ⦿ mnm [mention|me|name|url|uid|reply]
-   ⦿ getfbinfo [mention|me|name|url|uid|reply]
-   ⦿ nickname @mention|@me [text]
+   ⦿ trump [mention|me|name|url|uid|reply]
+   ⦿ nickname @mention|@me:[text]
    ⦿ invert [mention|me|name|url|uid|reply]
    ⦿ greyscale [mention|me|name|url|uid|reply]
    ⦿ ship @mention @mention
@@ -235,6 +235,10 @@ _______  Project Orion 9/9  _______
    ⦿ facts [text]
    ⦿ encode64 [text]
    ⦿ decode64 [text]
+   ⦿ parseFacebook [mention|me|name|url|uid|reply]
+   ⦿ parseImage [url]
+   ⦿ encrypt [text]
+   ⦿ decrypt [text] [key1]:[key2]
 __________________________________
 `;
 
@@ -253,6 +257,7 @@ _______  Project Orion Admin  _______
    ⦿ clearCache
    ⦿ refreshState
    ⦿ saveState
+   ⦿ fontIgnore [mention|name|url|uid|reply]
    ⦿ isBot [mention|name|url|uid|reply]
    ⦿ isNotBot [mention|name|url|uid|reply]
    ⦿ addAdmin [mention|name|url|uid|reply]
@@ -298,7 +303,7 @@ _______  Project Orion Root  _______
    ⦿ setSendTypingIndicator [on|off]
    ⦿ setAutoMarkDelivery [on|off]
    ⦿ setPresence [on|off]
-   ⦿ setReportingThreat [uid]
+   ⦿ setReportingThread [uid]
 ____________________________________
 `;
 
@@ -315,3 +320,5 @@ module.exports = {
     helpadmin: helpadmin,
     helproot: helproot,
 }
+
+// total commands 226

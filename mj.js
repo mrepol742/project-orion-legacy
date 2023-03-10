@@ -47,6 +47,7 @@ let messagesD = "No data";
 let fb_stateD = "No data";
 let pingD = "No data";
 let gitD = "No data";
+let threadInfo = {};
 let isCalled = true;
 let isAppState = true;
 let commandCalls = 0;
@@ -66,6 +67,9 @@ let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8")
 
 const server = http.createServer(getRoutes());
 let homepage = fs.readFileSync(__dirname + "/index.html");
+let errorpage = fs.readFileSync(__dirname + "/404.html");
+let threadpage = fs.readFileSync(__dirname + "/thread_ui.html");
+
 server.listen(3000, function() {
     log("server_start 3000");
 });
@@ -127,16 +131,19 @@ process.on('beforeExit', (code) => {
 });
 
 process.on('exit', (code) => {
-    log('process_exit ' + code);
+    log('process_exit goodbye :( ' + code);
 });
 
 process.on('SIGINT', function() {
-    log("process_exit\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
+    let currentDate = new Date();
+    settings.uptime.server[currentDate.getDay()] = process.uptime();
+    settings.uptime.os[currentDate.getDay()] = os.uptime();
     saveState();
+    log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     process.exit();
 });
 
-fca(loadAppState("nf9372fh4ce83g"), (err, api) => {
+fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     if (err) return log(err);
 
     process.on('uncaughtException', (err, origin) => {
@@ -180,7 +187,36 @@ fca(loadAppState("nf9372fh4ce83g"), (err, api) => {
                     api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!",
                         time, (err, messageInfo) => {
                             if (err) log(err);
-                        });
+                        });const fca = require("./assets/mj-fca/");
+
+                        /*
+                         *
+                         * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
+                         *
+                         * License under the Mrepol742 License, version 1.0 (the "License");
+                         * you may not use this file except in compliance with the License.
+                         * You may obtain a copy of the License at
+                         *
+                         *     https://github.com/mrepol742/Project-Orion/blob/master/LICENSE
+                         *
+                         * Unless required by the applicable law or agreed in writing, software
+                         * distributed under the License is distributed on an "AS IS" BASIS,
+                         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                         * See the License for the specific language governing permissions and
+                         * limitations under the License.
+                         */
+                        
+                        const { FormData, dns, fs, http, https, os, crypto, WeatherJS, 
+                                Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi,
+                              } = require('./require.js')
+                        const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, mjme,
+                                goodev, goodmo, goodni, goodaf, sqq, days, months, happyEE,
+                                sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn,
+                                qot1, example,
+                              } = require('./arrays.js')
+                        const { help, help1, help2, help3, help4, help5, help6, help7, help8,
+                                helpadmin, helproot,
+                              } = require('./cmd.js')
                 }
             }
         }
@@ -949,7 +985,7 @@ async function ai22(api, event, query, query2) {
                 downloadFile(encodeURI(url), dir).then((response) => {
                     transcribeAudioFile(dir)
                         .then(transcription => {
-                            sendMessage(api, event, message, event.threadID, event.messageReply.messageID, true, false);
+                            sendMessage(api, event, transcription, event.threadID, event.messageReply.messageID, true, false);
                             unLink(dir);
                         })
                         .catch(error => {
@@ -960,6 +996,25 @@ async function ai22(api, event, query, query2) {
             }
         } else {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
+        }
+    } else if (query2.startsWith("decrypt ")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let input = event.body;
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecrypt fwegerghergerg:gergergergerg")
+        } else {
+            data.shift();
+            let a = data.join(" ").split(":");
+            let body = event.messageReply.body;
+            body = body.normalize('NFKC');
+            try {
+            sendMessage(api, event, decrypt(body, a[0], a[1]));
+            } catch (err) {
+                sendMessage(api, event, "Invalid Key!");
+            }
         }
     } else if (query.startsWith("run")) {
         if (isGoingToFast(event)) {
@@ -1688,7 +1743,8 @@ _______________________
         } else {
             try {
                 data.shift();
-                let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(data.join(" ")) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
+                let text = data.join(" ").substring(0, 200) + "...";
+                let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(text) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
                 let time = getTimestamp();
                 var file = fs.createWriteStream(__dirname + "/cache/audios/ttsjap_" + time + ".mp3");
                 var gifRequest = https.get(responses, function(gifResponse) {
@@ -1718,7 +1774,8 @@ _______________________
             sendMessage(api, event, "Opps! I didnt get it. You should try using say text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsay I am melvin jones repol")
         } else {
             data.shift();
-            const url = GoogleTTS.getAudioUrl(data.join(" "), voice);
+            let text = data.join(" ").substring(0, 200) + "...";
+            const url = GoogleTTS.getAudioUrl(text, voice);
             let time = getTimestamp();
             let filename = __dirname + '/cache/audios/tts_' + time + '.mp3'
             downloadFile(url, filename).then((response) => {
@@ -1728,6 +1785,19 @@ _______________________
                 sendMessage(api, event, message);
                 unLink(filename);
             });
+        }
+    } else if (query2.startsWith("encrypt ")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using encrypt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencrypt Hello World")
+        } else {
+            data.shift();
+            const key = crypto.randomBytes(32);
+            const iv = crypto.randomBytes(16);
+            sendMessage(api, event, encrypt(data.join(" "), key, iv) + "\n\nKey1: " + key.toString("hex") + "\nKey2: " + iv.toString("hex"));
         }
     } else if (query == "stats") {
         if (isGoingToFast(event)) {
@@ -1767,11 +1837,25 @@ ___________________________
         if (isGoingToFast(event)) {
             return;
         }
+        let serverAverage = 0;
+        let osAverage = 0;
+        for (time in settings.uptime.server) {
+            serverAverage += settings.uptime.server[time];
+            log(serverAverage);
+        }
+        for (time1 in settings.uptime.os) {
+            osAverage += settings.uptime.os[time1];
+            log(osAverage);
+        }
+        serverAverage += process.uptime();
+        osAverage += os.uptime();
         let message = `
 _______  Uptime  _______
 
    ⦿ Server: ` + secondsToTime(process.uptime()) + `
+   ⦿ Server (Average): ` + secondsToTime(serverAverage/7) + `
    ⦿ OS: ` + secondsToTime(os.uptime()) + `
+   ⦿ OS (Average): ` + secondsToTime(osAverage/7) + `
 _______________________
 `;
         sendMessage(api, event, message);
@@ -1781,6 +1865,7 @@ _______________________
         }
             let avg_load = os.loadavg();
             let a = new Date().toString().split(" ");
+            let rom = (process.memoryUsage().rss + process.memoryUsage().heapUsed + process.memoryUsage().external + process.memoryUsage().arrayBuffers);
             let message = `
 _______  System Info  _______
 
@@ -1792,7 +1877,7 @@ _______  System Info  _______
    ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
    ⦿ OS Uptime: ` + secondsToTime(os.uptime()) + `
    ⦿ RAM: ` + convertBytes(os.freemem()) + `/` + convertBytes(os.totalmem()) + `
-   ⦿ ROM: ` + convertBytes((process.memoryUsage().rss+process.memoryUsage().heapUsed)*2) + "/10GB" + `
+   ⦿ ROM: ` + convertBytes(rom) + "/32GB" + `
    ⦿ RSS: ` + convertBytes(process.memoryUsage().rss) + `
    ⦿ Heap: ` + convertBytes(process.memoryUsage().heapUsed) + `/` + convertBytes(process.memoryUsage().heapTotal) + `
    ⦿ External: ` + convertBytes(process.memoryUsage().external) + `
@@ -2173,6 +2258,10 @@ _____________________________
         }
     } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
         if (isGoingToFast(event)) {
+            return;
+        }
+        if (true) {
+            sendMessage(api, event, "Maintenance");
             return;
         }
         let id;
@@ -2850,6 +2939,10 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
+        if (true) {
+            sendMessage(api, event, "Maintenance");
+            return;
+        }
         let data = input.split(" ")
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninstagram melvinjonesrepol")
@@ -2901,6 +2994,10 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
+        if (true) {
+            sendMessage(api, event, "Maintenance");
+            return;
+        }
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntiktok mrepol742")
@@ -2935,6 +3032,10 @@ _____________________________
         }
     } else if (query.startsWith("soundcloud")) {
         if (isGoingToFast(event)) {
+            return;
+        }
+        if (true) {
+            sendMessage(api, event, "Maintenance");
             return;
         }
         let data = input.split(" ")
@@ -3734,10 +3835,10 @@ _____________________________
                 } else if (isMyId(id)) {
                     return;
                 }
-                if (users.bot.includes(data[0].userID)) {
+                if (users.bot.includes(id)) {
                     sendMessage(api, event, "I already knew it.");
                 } else {
-                    users.bot.push(data[0].userID);
+                    users.bot.push(id);
                     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     sendMessage(api, event, "Noted.");
                 }
@@ -3776,10 +3877,10 @@ _____________________________
                 } else if (isMyId(id)) {
                     return;
                 }
-                if (!users.bot.includes(data[0].userID)) {
+                if (!users.bot.includes(id)) {
                     sendMessage(api, event, "It seems like that account is not a bot.");
                 } else {
-                    users.bot = users.bot.filter(item => item !== data[0].userID);
+                    users.bot = users.bot.filter(item => item !== id);
                     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     sendMessage(api, event, "Noted.");
                 }
@@ -3876,6 +3977,34 @@ _____________________________
                 keys[inp[0]] = inp[1];
                 fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8")
                 sendMessage(api, event, "Successfully saved " + inp[0] + ".");
+            }
+        }
+    } else if (query.startsWith("fontignore")) {
+        if (users.admin.includes(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using fontignore @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfontignore @Zero Two")
+            } else {
+                let id = Object.keys(event.mentions)[0];
+                if (id === undefined) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            fontIgnore(api, event, data[0].userID);
+                        });
+                        return;
+                    }
+                }
+                fontIgnore(api, event, id);
             }
         }
     } else if (query.startsWith("addadmin")) {
@@ -4021,6 +4150,24 @@ _____________________________
                 sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
+    } else if (query.startsWith("ginfo")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        if (event.isGroup) {
+            api.getThreadInfo(event.threadID, (err, a) => {
+                if (err) log(err);
+                let construct = "";
+                let usern = a.userInfo.length;
+                for (b in a.userInfo) {
+                     construct +=  a.userInfo[b].name + "<br>"
+                }
+threadInfo["/" +a.threadID] = {threadName: a.threadName, messageCount: a.messageCount, membersCount: usern, members: construct, icon:a.imageSrc};
+sendMessage(api, event, "This group information can be see at http://0.0.0.0:3000/" + a.threadID)
+            });
+        } else {
+            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
     } else if (query.startsWith("gname")) {
         if (isGoingToFast(event)) {
             return;
@@ -4148,8 +4295,8 @@ _____________________________
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using wiki text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwiki Google")
         } else {
-            let txt = input.substring("5");
-            getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + txt).then((response) => {
+            data.shift();
+            getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately the wiki " + txt + " was not found.");
                 } else {
@@ -4165,8 +4312,8 @@ _____________________________
         if (data.length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest name:name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest Edogawa Conan: Ran Mouri")
         } else {
-            let text = input;
-            text = text.substring(9).split(":");
+            data.shift();
+            let text = data.join(" ").split(":");
             const options = {
                 method: 'GET',
                 url: 'https://love-calculator.p.rapidapi.com/getPercentage',
@@ -4786,13 +4933,13 @@ _____________________________
             }
             blur(api, event, id);
         }
-    } else if (query.startsWith("getfbinfo")) {
+    } else if (query.startsWith("parsefacebook")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using getfbinfo @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngetfbinfo @Zero Two")
+            sendMessage(api, event, "Opps! I didnt get it. You should try using parseFacebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nparseFacebook @Zero Two")
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4863,13 +5010,12 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(6)
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using morse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmorse .... . .-.. .-.. ---");
         } else {
-            getResponseData("https://api.popcat.xyz/texttomorse?text=" + text).then((response) => {
+            data.shift();
+            getResponseData("https://api.popcat.xyz/texttomorse?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
@@ -4881,13 +5027,12 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(7)
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlulcat meowww");
         } else {
-            getResponseData("https://api.popcat.xyz/lulcat?text=" + text).then((response) => {
+            data.shift();
+            getResponseData("https://api.popcat.xyz/lulcat?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
@@ -4899,13 +5044,12 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(5)
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using mock text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmock i have no idea");
         } else {
-            getResponseData("https://api.popcat.xyz/mock?text=" + text).then((response) => {
+            data.shift();
+            getResponseData("https://api.popcat.xyz/mock?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
@@ -4981,29 +5125,28 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(9)
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention:nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two:Darling");
         } else {
             if (input.includes("@")) {
+                data.shift();
+                let name = data.join(" ").split(":");
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
-                    if (input.includes("@me")) {
+                    if (name[0] == "@me") {
                         id = event.senderID;
                     } else {
-                        data.shift();
-                        api.getUserID(data.join(" ").replace("@", ""), (err, data) => {
+                        api.getUserID(name[0].replace("@", ""), (err, data) => {
                             if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            changeNickname(api, event, data[0].userID, text);
+                            changeNickname(api, event, data[0].userID, name[1]);
                         });
                         return;
                     }
                 } else if (isMyId(id)) {
                     id = event.senderID;
                 }
-                changeNickname(api, event, id, text);
+                changeNickname(api, event, id, name[1]);
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
             }
@@ -5012,25 +5155,24 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(6).split(":");
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using drake text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrake error: bug");
         } else {
+            data.shift();
+            let text = data.join(" ").split(":");
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/drake_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("pika")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(5);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using pika text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npika hayssss");
         } else {
-            parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + text, __dirname + "/cache/images/pika_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + data.join(" "), __dirname + "/cache/images/pika_" + getTimestamp() + ".png");
         }
     } else if (query == "meme") {
         if (isGoingToFast(event)) {
@@ -5052,25 +5194,23 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using oogway text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\noogway bug is not an error");
         } else {
-            parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + text, __dirname + "/cache/images/oogway_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + data.join(" "), __dirname + "/cache/images/oogway_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("hanime")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using hanime category instead.\n\nCategories: \nwaifu, neko, trap, blowjob" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
         } else {
-            getResponseData("https://api.waifu.pics/nsfw/" + text).then((response) => {
+            data.shift();
+            getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "It seem like i cannot find any relavant result about " + text);
                 } else {
@@ -5296,17 +5436,16 @@ _____________________________
                 }
             });
         }
-    } else if (query.startsWith("anime")) {
+    } else if (query2.startsWith("anime ")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using anime category instead.\n\nCategories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanime waifu");
         } else {
-            getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
+            data.shift();
+            getResponseData("https://api.waifu.pics/sfw/" + data.join(" ")).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "I cannot find any relavant result about " + text);
                 } else {
@@ -5318,20 +5457,34 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntrump bug is not an error");
         } else {
+            data.shift();
+            let text = data.join(" ").substring(0, 57) + "...";
             parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + "/cache/images/trump_" + getTimestamp() + ".png");
+        }
+    } else if (query.startsWith("parseimage")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using parseImage url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nparseImage https://mrepol742.github.io/favicon.ico");
+        } else {
+            data.shift();
+            let url = data.join(" ");
+            if (url.startsWith("https://") || url.startsWith("http://")) {
+                parseImage(api, event,url, __dirname + "/cache/images/parseImage_" + getTimestamp() + ".png");
+            } else {
+                sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
+            }
         }
     } else if (query.startsWith("qrcode")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
@@ -5340,50 +5493,57 @@ _____________________________
             }
             sendMessage(api, event, message);
         } else {
-            parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + text, __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + data.join(" "), __dirname + "/cache/images/qrcode_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("alert")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using alert text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nalert hello world");
         } else {
-            parseImage(api, event, "https://api.popcat.xyz/alert?text=" + text, __dirname + "/cache/images/alert_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://api.popcat.xyz/alert?text=" + data.join(" "), __dirname + "/cache/images/alert_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("caution")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(8);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using caution text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncaution bug is not an error");
         } else {
-            parseImage(api, event, "https://api.popcat.xyz/caution?text=" + text, __dirname + "/cache/images/caution_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://api.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/images/caution_" + getTimestamp() + ".png");
+        }
+    } else if (query.startsWith("trump")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using trump text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntrump i am leaving twitter");
+        } else {
+            data.shift();
+            parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + data.join(" "), __dirname + "/cache/images/trump_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("biden")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(6);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using biden text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbiden i am leaving twitter");
         } else {
-            parseImage(api, event, "https://api.popcat.xyz/biden?text=" + text, __dirname + "/cache/images/biden_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://api.popcat.xyz/biden?text=" + data.join(" "), __dirname + "/cache/images/biden_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("website")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(8);
         let data = input.split(" ");
         if (data.length < 2) {
             let messaage = {
@@ -5392,6 +5552,8 @@ _____________________________
             }
             sendMessage(api, event, message);
         } else {
+            data.shift();
+            let text = data.join(" ");
             if (text.startsWith("https://") || text.startsWith("http://")) {
                 parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + text, __dirname + "/cache/images/website_" + getTimestamp() + ".png");
             } else {
@@ -5402,25 +5564,23 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(4);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using god text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngod explicit content");
         } else {
-            parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + text, __dirname + "/cache/images/god_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + data.join(" "), __dirname + "/cache/images/god_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("sadcat")) {
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(7);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using sadcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsadcat meoww");
         } else {
-            parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + text, __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
         }
     } else if (query2.startsWith("sim ")) {
         if (isGoingToFast(event)) {
@@ -5444,12 +5604,12 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(5).split(":");
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using pooh text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npooh color: colour");
         } else {
+            data.shift();
+            let text = data.join(" ").split(":")
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/images/pooh_" + getTimestamp() + ".png");
         }
     } else if (query == "landscape") {
@@ -5466,13 +5626,12 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(10);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using landscape text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlandscape night");
         } else {
-            parseImage(api, event, "https://source.unsplash.com/1600x900/?" + text, __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/cache/images/landscape_" + getTimestamp() + ".png");
         }
     } else if (query == "cosplay") {
         if (isGoingToFast(event)) {
@@ -5498,13 +5657,12 @@ _____________________________
         if (isGoingToFast(event)) {
             return;
         }
-        let text = input;
-        text = text.substring(9);
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using portrait text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nportrait rgb");
         } else {
-            parseImage(api, event, "https://source.unsplash.com/900x1600/?" + text, __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
+            data.shift();
+            parseImage(api, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/images/portrait_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("animequote")) {
         if (isGoingToFast(event)) {
@@ -5829,7 +5987,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     } else if (event.isGroup && event.senderID != currentID) {
         if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
-            if (voice && (typeof message === "string") && message.trim().length < 200 &&
+            if (voice && (typeof message === "string") && message.length < 200 &&
                 groups.tts.includes(event.threadID)) {
                 const url = GoogleTTS.getAudioUrl(message, voice);
                 let time = getTimestamp();
@@ -5838,10 +5996,10 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                     let message = {
                         attachment: fs.createReadStream(dir),
                     };
-                    api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
+                    api.sendMessage(message, thread_id, (err, messageInfo) => {
                         if (err) {
                             log(err);
-                        api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+                        api.sendMessage(updateFont("Unable to send message. Please try it again later.", event.senderID), thread_id, (err, messageInfo) => {
                             if (err) log(err);
                         }, message_id);
                         }
@@ -5849,17 +6007,17 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                     unLink(dir);
                 });
             } else {
-                api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
-                    sendMessageErr(api, thread_id, message_id, err);
+                api.sendMessage(updateFont(message, event.senderID), thread_id, (err, messageInfo) => {
+                    sendMessageErr(api, thread_id, message_id, event.senderID, err);
                 }, message_id);
             }
         } else {
             log("send_message " + event.threadID + " " + JSON.stringify(message));
-            sendMMMS(api, message, thread_id, message_id, voice);
+            sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
         }
     } else {
         log("send_message " + event.threadID + " " + JSON.stringify(message));
-        sendMMMS(api, message, thread_id, message_id, voice);
+        sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
     }
 }
 
@@ -5883,15 +6041,15 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
-        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, voice);
+        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice);
     } else {
         log("send_message " + event.threadID + " " + JSON.stringify(message));
-        sendMMMS(api, message, thread_id, message_id, voice);
+        sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
     }
 }
 
-async function sendMMMS(api, message, thread_id, message_id, voiceE) {
-    if (voiceE && (typeof message === "string") && message.trim().length < 200 &&
+async function sendMMMS(api, message, thread_id, message_id, id, voiceE) {
+    if (voiceE && (typeof message === "string") && message.length < 200 &&
         groups.tts.includes(thread_id)) {
         const url = GoogleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
@@ -5900,10 +6058,10 @@ async function sendMMMS(api, message, thread_id, message_id, voiceE) {
             let message = {
                 attachment: fs.createReadStream(dir),
             };
-            api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
+            api.sendMessage(message, thread_id, (err, messageInfo) => {
                 if (err) {
                     log(err);
-                    api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+                    api.sendMessage(updateFont("Unable to send message. Please try it again later.", id), thread_id, (err, messageInfo) => {
                         if (err) log(err);
                     }, message_id);
                 }
@@ -5911,33 +6069,33 @@ async function sendMMMS(api, message, thread_id, message_id, voiceE) {
             unLink(dir);
         });
     } else {
-        api.sendMessage(updateFont(message), thread_id, (err, messageInfo) => {
-            sendMessageErr(api, thread_id, message_id, err);
+        api.sendMessage(updateFont(message, id), thread_id, (err, messageInfo) => {
+            sendMessageErr(api, thread_id, message_id, id, err);
         });
     }
 }
 
-function sendMessageErr(api, thread_id, message_id, err) {
+function sendMessageErr(api, thread_id, message_id, id, err) {
     if (err) {
         log(err);
         if (err.error == 1545049) {
-            api.sendMessage(updateFont("Message is too long to be sent."), thread_id, (err, messageInfo) => {
+            api.sendMessage(updateFont("Message is too long to be sent.", id), thread_id, (err, messageInfo) => {
                 if (err) log(err);
             }, message_id);
         } else if (err.error == 1545051) {
-            api.sendMessage(updateFont("Failure to send the response due to an invalid image."), thread_id, (err, messageInfo) => {
+            api.sendMessage(updateFont("Failure to send the response due to an invalid image.", id), thread_id, (err, messageInfo) => {
                 if (err) log(err);
             }, message_id);
         } else if (err.error == 1404102) {
-            api.sendMessage(updateFont("Failure to send message because the reponse contains url in which prohibited in Facebook."), thread_id, (err, messageInfo) => {
+            api.sendMessage(updateFont("Failure to send message because the reponse contains url in which prohibited in Facebook.", id), thread_id, (err, messageInfo) => {
                 if (err) log(err);
             }, message_id);
         } else if (err.error == 1545023) {
-            api.sendMessage(updateFont("The AI response seems empty. No idea why thought."), thread_id, (err, messageInfo) => {
+            api.sendMessage(updateFont("The AI response seems empty. No idea why thought.", id), thread_id, (err, messageInfo) => {
                 if (err) log(err);
             }, message_id);
         } else {
-            api.sendMessage(updateFont("Unable to send message. Please try it again later."), thread_id, (err, messageInfo) => {
+            api.sendMessage(updateFont("Unable to send message. Please try it again later.", id), thread_id, (err, messageInfo) => {
                 if (err) log(err);
             }, message_id);
         }
@@ -6216,16 +6374,12 @@ async function getImages(api, event, images) {
         body: "",
         attachment: accm
     };
-    api.sendMessage(message, event.threadID, (err, messageInfo) => {
-        if (err) {
-            log(err);
-            sendMessage(api, event, "Seem's like i am having an issue finding it.");
-        }
-        let i2;
-        for (i2 = 0; i2 < name.length; i2++) {
-            unLink(name[i2])
-        }
-    }, event.messageID)
+    sendMessage(api, event, message);
+    await wait(2000);
+    let i2;
+    for (i2 = 0; i2 < name.length; i2++) {
+        unLink(name[i2])
+    }
 }
 
 async function unsendPhoto(api, event, d) {
@@ -6261,15 +6415,12 @@ async function unsendPhoto(api, event, d) {
                 body: constructMMM,
                 attachment: accm
             }
-            api.sendMessage(message1, event.threadID, (err, messageInfo) => {
-                if (err) {
-                    log(err);
-                }
-                let i3;
+            sendMessageOnly(api, event, message1);
+            await wait(2000);
+            let i3;
                 for (i3 = 0; i3 < images.length; i3++) {
                     unLink(images[i3])
                 }
-            })
             log("unsend_photo " + d[1][0]);
         } else {
             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -6287,15 +6438,12 @@ async function unsendPhoto(api, event, d) {
                 }]
                 */
             }
-            api.sendMessage(message1, event.threadID, (err, messageInfo) => {
-                if (err) {
-                    log(err);
-                }
-                let i2;
-                for (i2 = 0; i2 < images.length; i2++) {
-                    unLink(images[i2])
-                }
-            })
+            sendMessageOnly(api, event, message1);
+            await wait(2000);
+            let i2;
+            for (i2 = 0; i2 < images.length; i2++) {
+                unLink(images[i2])
+            }
             log("unsend_photo_group " + d[1][0]);
         }
     });
@@ -6334,15 +6482,12 @@ async function unsendGif(api, event, d) {
                 body: constructMMM,
                 attachment: accm
             }
-            api.sendMessage(message1, event.threadID, (err, messageInfo) => {
-                if (err) {
-                    log(err);
-                }
-                let i3;
+            sendMessageOnly(api, event, message1);
+            await wait(2000);
+            let i3;
                 for (i3 = 0; i3 < images.length; i3++) {
                     unLink(images[i3])
                 }
-            })
             log("unsend_gif " + d[1][0]);
         } else {
             let constructMMM = data[event.senderID]['firstName'] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -6360,15 +6505,12 @@ async function unsendGif(api, event, d) {
                 }]
                 */
             }
-            api.sendMessage(message1, event.threadID, (err, messageInfo) => {
-                if (err) {
-                    log(err);
-                }
-                let i2;
+            sendMessageOnly(api, event, message1);
+            await wait(2000);
+            let i2;
                 for (i2 = 0; i2 < images.length; i2++) {
                     unLink(images[i2])
                 }
-            })
             log("unsend_gif_group " + d[1][0]);
         }
     });
@@ -6426,27 +6568,12 @@ async function bgRemove(api, event) {
     let message1 = {
         attachment: accm
     }
-    if (groups.list[event.threadID] === undefined) {
-        api.sendMessage(message1, event.threadID, (err, messageInfo) => {
-            if (err) {
-                log(err);
-            }
-            let i22;
+    sendMessage(api, event, message1);
+        await wait(2000)
+        let i22;
             for (i22 = 0; i22 < url.length; i22++) {
                 unLink(__dirname + '/cache/images/removebg_' + i22 + '_' + time + '.png')
             }
-        }, event.messageID);
-    } else {
-        api.sendMessage(message1, event.threadID, (err, messageInfo) => {
-            if (err) {
-                log(err);
-            }
-            let i2;
-            for (i2 = 0; i2 < url.length; i2++) {
-                unLink(__dirname + '/cache/images/removebg_' + i2 + '_' + time + '.png')
-            }
-        });
-    }
 }
 
 async function unLink(dir) {
@@ -6496,7 +6623,7 @@ function secondsToTime(e) {
     }
     constructTime += ".";
     let test = constructTime.split(" ");
-    if (test.length > 6) {
+    if (test.length > 5) {
         return constructTime.replaceAll("hour ", "hour, ").replaceAll("hours ", "hours, ").replaceAll("minute ", "minute and ").replaceAll("minutes ", "minutes and ");
     }
     return constructTime.replaceAll("minute ", "minute and ").replaceAll("minutes ", "minutes and ");
@@ -6581,6 +6708,16 @@ function unblockUser(api, event, id) {
     }
     users.blocked = users.blocked.filter(item => item !== id);
     sendMessage(api, event, "The user " + id + " can now use my commands.");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+}
+
+function fontIgnore(api, event, id) {
+    if (users.font_ignore.includes(id)) {
+        sendMessage(api, event, "I already got it!");
+        return;
+    }
+    users.font_ignore.push(id);
+    sendMessage(api, event, "Custom font deactive for user " + id);
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
@@ -7168,7 +7305,10 @@ function maven(text) {
     }).join("");
 }
 
-  function updateFont(message) {
+  function updateFont(message, id) {
+    if (users.font_ignore.includes(id)) {
+        return message;
+    }
     if (typeof message === "string") {
         if (message == "\u200Eeveryone") {
             return message;
@@ -7246,11 +7386,15 @@ async function searchimgr(api, event, filename) {
     let reverse = await google.search(img, {
         ris: true
     })
+  try {
     let message = {
-        body: reverse.results[0].title + "\n\n" + reverse.results[0].url,
+        body: checkFound(reverse.results[0].title) + "\n\n" + reverse.results[0].url,
         url: reverse.results[0].url
     }
     sendMessage(api, event, message, event.threadID, event.messageID, false, false);
+} catch (err) {
+    sendMessage(api, event, "Unable to find any relevant results on this image.", event.threadID, event.messageID, false, false);
+}
 }
 
 async function transcribeAudioFile(filePath) {
@@ -7274,13 +7418,23 @@ async function transcribeAudioFile(filePath) {
   }
 
   function getAppState(api) {
-    return JSON.stringify(api.getAppState());
+    const key = crypto.randomBytes(32);
+    const iv = crypto.randomBytes(16);
+    settings.key[0] = key.toString("hex");
+    settings.key[1] = iv.toString("hex");
+    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
+    return encrypt(JSON.stringify(api.getAppState()), settings.key[0], settings.key[1]);
   }
 
-  function loadAppState(text) {
+  function loadAppState(key, key1) {
     let state = fs.readFileSync(__dirname + "/data/" + settings.preference.app_state, "utf8");
+    if (state.includes("facebook.com")) {
+        return {
+            appState: JSON.parse(state)
+        };
+    }
     return {
-        appState: JSON.parse(state)
+        appState: JSON.parse(decrypt(state, key, key1))
     };
   }
 
@@ -7317,27 +7471,61 @@ ____________________________
       }
 
       function getStatus() {
-          if (settings.preference.isStop) {
+         if (settings.preference.isStop) {
           return "Offline";
         } else if (settings.preference.isDebugEnabled) {
           return "Maintenance";
-           } else {
-       return "Online";
-    }
+        }
+        return "Online";
       }
 
       function getRoutes() {
         return function(req, res) {
             res.setHeader("Content-Type", "text/html");
+            if (!(threadInfo[req.url] === undefined)) {
+                res.writeHead(200);
+                let hh =threadpage + ""
+                let construct = "";
+                construct += "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
+                construct += "<b>Members Count: </b>" + threadInfo[req.url].membersCount + "<br>";
+                construct += "<b>Name</b><br>";
+                construct += threadInfo[req.url].members;
+                let page = hh.replaceAll("%THREAD_NAME%", threadInfo[req.url].threadName)
+                .replaceAll("%THREAD_INFO%", construct).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
+                res.end(page);
+                return;
+            }
             switch (req.url) {
                 case "/status":
                     res.writeHead(200);
                     res.end(JSON.stringify({status:getStatus()}));
-                    break
-                
-                default:
+                    break;
+                case "/":
+                case "/home":
+                case "/homepage":
                     res.writeHead(200);
                     res.end(homepage);
+                    break;
+                default:
+                    res.writeHead(200);
+                    res.end(errorpage);
+                    break;
             }
         };
       }
+
+      function encrypt(text, key, iv) {
+        let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key.toString('hex'), 'hex'), Buffer.from(iv.toString('hex'), 'hex'));
+        let encrypted = cipher.update(text);
+        encrypted = Buffer.concat([encrypted, cipher.final()]);
+        return encrypted.toString('hex');
+     }
+
+    
+ function decrypt(text, key, iv) {
+    let encryptedText = Buffer.from(text, 'hex');
+    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'));
+    let decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    return decrypted.toString();
+ }

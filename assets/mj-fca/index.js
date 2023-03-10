@@ -234,10 +234,7 @@ function buildAPI(globalOptions, html, jar) {
     'httpGet',
     'httpPost',
 
-    // Deprecated features
-    "getThreadListDeprecated",
-    'getThreadHistoryDeprecated',
-    'getThreadInfoDeprecated',
+ 
   ];
 
   var defaultFuncs = utils.makeDefaults(html, userID, ctx);

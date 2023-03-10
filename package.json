@@ -5,9 +5,9 @@
     "main": "mj.js",
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
-        "release": "node mj.js",
-        "debug": "node --inspect mj.js",
-        "test": "node --inspect test.js"
+        "release": "clear && node mj.js",
+        "debug": "clear && node --inspect mj.js",
+        "test": "clear && node --inspect test.js"
     },
     "keywords": [],
     "author": {
