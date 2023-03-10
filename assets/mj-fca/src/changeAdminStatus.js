@@ -1,7 +1,6 @@
 "use strict";
 
 const utils = require("../utils");
-const log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function changeAdminStatus(threadID, adminIDs, adminStatus, callback) {
@@ -69,7 +68,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback();
             })
             .catch(function (err) {
-                log.error("changeAdminStatus", err);
+                utils.logged("fca_admin_status " + err);
                 return callback(err);
             });
 

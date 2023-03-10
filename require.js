@@ -1,3 +1,5 @@
+"use strict";
+
 const FormData = require('form-data');
 const dns = require("dns");
 const fs = require("fs");

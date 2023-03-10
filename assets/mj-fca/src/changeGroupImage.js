@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 var bluebird = require("bluebird");
 
 module.exports = function (defaultFuncs, api, ctx) {
@@ -33,7 +32,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, resData);
             })
             .catch(function (err) {
-                log.error("handleUpload", err);
+                utils.logged("fca_group_image_upload " + err);
                 return callback(err);
             });
     }
@@ -110,7 +109,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                     return callback();
                 })
                 .catch(function (err) {
-                    log.error("changeGroupImage", err);
+                    utils.logged("fca_group_image " + err);
                     return callback(err);
                 });
         });

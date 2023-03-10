@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function markAsDelivered(threadID, messageID, callback) {
@@ -42,7 +41,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("markAsDelivered", err);
+                utils.logged("fca_mark_delivered " + err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
                     ctx.loggedIn = false;
                 }

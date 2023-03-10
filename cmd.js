@@ -1,3 +1,5 @@
+"use strict";
+
 let help = `
 _______  Project Orion 1/9  _______
 

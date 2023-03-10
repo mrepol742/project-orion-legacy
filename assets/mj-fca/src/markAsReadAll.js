@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function markAsReadAll(callback) {
@@ -37,7 +36,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("markAsReadAll", err);
+                utils.logged("fca_mark_read_all " + err);
                 return callback(err);
             });
 

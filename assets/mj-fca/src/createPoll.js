@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function createPoll(title, threadID, options, callback) {
@@ -56,7 +55,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("createPoll", err);
+                utils.logged("fca_create_poll " + err);
                 return callback(err);
             });
 

@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return async function markAsRead(threadID, read, callback) {
@@ -38,7 +37,7 @@ module.exports = function (defaultFuncs, api, ctx) {
 
             if (resData.error) {
                 let err = resData.error;
-                log.error("markAsRead", err);
+                utils.logged("fca_mark_read " + err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
                     ctx.loggedIn = false;
                 }

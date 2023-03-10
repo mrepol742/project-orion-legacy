@@ -2,57 +2,14 @@
 
 var utils = require("./utils");
 var cheerio = require("cheerio");
-var log = require("npmlog");
+
 var checkVerified = null;
-
-var defaultLogRecordSize = 100;
-log.maxRecordSize = defaultLogRecordSize;
-
-function logged(data) {
-    if (typeof data === "string") {
-        let d = data.normalize("NFKC").split(" ");
-        if (d[0].includes("_")) {
-            let db = d[0];
-            let db1 = d[1];
-            d.shift();
-            if (db1.length > 14 && /^\d+$/.test(parseInt(db1))) {
-                d.shift();
-                console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", "\x1b[40m", db, "\x1b[0m", "\x1b[34m", db1, "\x1b[0m", d.join(" "));
-            } else {
-                console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", "\x1b[40m", db, "\x1b[0m", d.join(" "));
-            }
-        } else {
-            console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", d.join(" "));
-        }
-    } else {
-        let da = JSON.stringify(data);
-        if (da == "") {
-            return;
-        }
-        console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", " |", da.normalize("NFKC"));
-    }
-}
-
-function getCurrentTime() {
-    let today = new Date();
-    let hour = today.getHours();
-    let suffix = hour >= 12 ? "PM" : "AM";
-    return (hour = ((hour + 11) % 12) + 1 + ":" + today.getMinutes() + ":" + today.getSeconds() + " " + suffix);
-}
 
 function setOptions(globalOptions, options) {
     Object.keys(options).map(function (key) {
         switch (key) {
             case "online":
                 globalOptions.online = Boolean(options.online);
-                break;
-            case "logLevel":
-                log.level = options.logLevel;
-                globalOptions.logLevel = options.logLevel;
-                break;
-            case "logRecordSize":
-                log.maxRecordSize = options.logRecordSize;
-                globalOptions.logRecordSize = options.logRecordSize;
                 break;
             case "selfListen":
                 globalOptions.selfListen = Boolean(options.selfListen);
@@ -97,7 +54,7 @@ function setOptions(globalOptions, options) {
                 globalOptions.emitReady = Boolean(options.emitReady);
                 break;
             default:
-                logged("fca_options", "Unrecognized option given to setOptions: " + key);
+                utils.logged("fca_options", "Unrecognized option given to setOptions: " + key);
                 break;
         }
     });
@@ -113,11 +70,11 @@ function buildAPI(globalOptions, html, jar) {
     }
 
     if (html.indexOf("/checkpoint/block/?next") > -1) {
-        logged("fca_login Checkpoint detected. Please log in with a browser to verify.");
+        utils.logged("fca_login Checkpoint detected. Please log in with a browser to verify.");
     }
 
     var userID = maybeCookie[0].cookieString().split("=")[1].toString();
-    logged("fca_uid " + userID);
+    utils.logged("fca_uid " + userID);
 
     try {
         clearInterval(checkVerified);
@@ -135,24 +92,24 @@ function buildAPI(globalOptions, html, jar) {
         irisSeqID = oldFBMQTTMatch[1];
         mqttEndpoint = oldFBMQTTMatch[2];
         region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
-        logged("fca_region " + region);
+        utils.logged("fca_region " + region);
     } else {
         let newFBMQTTMatch = html.match(/{"app_id":"219994525426954","endpoint":"(.+?)","iris_seq_id":"(.+?)"}/);
         if (newFBMQTTMatch) {
             irisSeqID = newFBMQTTMatch[2];
             mqttEndpoint = newFBMQTTMatch[1].replace(/\\\//g, "/");
             region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
-            logged("fca_region " + region);
+            utils.logged("fca_region " + region);
         } else {
             let legacyFBMQTTMatch = html.match(/(\["MqttWebConfig",\[\],{fbid:")(.+?)(",appID:219994525426954,endpoint:")(.+?)(",pollingEndpoint:")(.+?)(3790])/);
             if (legacyFBMQTTMatch) {
                 mqttEndpoint = legacyFBMQTTMatch[4];
                 region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
-                logged("fca_login Cannot get sequence ID with new RegExp. Fallback to old RegExp (without seqID)...");
-                logged("fca_region " + region);
-                logged("fca_login [Unused] Polling endpoint: " + legacyFBMQTTMatch[6]);
+                utils.logged("fca_login Cannot get sequence ID with new RegExp. Fallback to old RegExp (without seqID)...");
+                utils.logged("fca_region " + region);
+                utils.logged("fca_login [Unused] Polling endpoint: " + legacyFBMQTTMatch[6]);
             } else {
-                logged("fca_login Cannot get MQTT region & sequence ID.");
+                utils.logged("fca_login Cannot get MQTT region & sequence ID.");
                 noMqttData = html;
             }
         }
@@ -290,7 +247,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
         });
         // ---------- Very Hacky Part Ends -----------------
 
-        logged("fca_login", "Logging in...");
+        utils.logged("fca_login Logging in...");
         return utils
             .post("https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&lwv=110", jar, form, loginOptions)
             .then(utils.saveCookies(jar))
@@ -302,7 +259,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
 
                 // This means the account has login approvals turned on.
                 if (headers.location.indexOf("https://www.facebook.com/checkpoint/") > -1) {
-                    logged("lfca_login", "You have login approvals turned on.");
+                    utils.logged("fca_login You have login approvals turned on.");
                     var nextURL = "https://www.facebook.com/checkpoint/?next=https%3A%2F%2Fwww.facebook.com%2Fhome.php";
 
                     return utils
@@ -427,7 +384,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
                                                         JSON.parse(res.body.replace(/for\s*\(\s*;\s*;\s*\)\s*;\s*/, ""));
                                                     } catch (ex) {
                                                         clearInterval(checkVerified);
-                                                        logged("fca_login", "Verified from browser. Logging in...");
+                                                        utils.logged("fca_login Verified from browser. Logging in...");
                                                         if (callback === prCallback) {
                                                             callback = function (err, api) {
                                                                 if (err) {
@@ -440,7 +397,7 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
                                                     }
                                                 })
                                                 .catch((ex) => {
-                                                    logged("fca_login " + ex);
+                                                    utils.logged("fca_login " + ex);
                                                     if (callback === prCallback) {
                                                         prReject(ex);
                                                     } else {
@@ -562,11 +519,11 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
     // At the end we call the callback or catch an exception
     mainPromise
         .then(function () {
-            logged("fca_status connected 200");
+            utils.logged("fca_status connected 200");
             return callback(null, api);
         })
         .catch(function (e) {
-            logged("fca_status" + (e.error || e));
+            utils.logged("fca_status " + (e.error || e));
             callback(e);
         });
 }
@@ -586,7 +543,6 @@ function login(loginData, options, callback) {
         autoMarkDelivery: true,
         autoMarkRead: false,
         autoReconnect: true,
-        logRecordSize: defaultLogRecordSize,
         online: true,
         emitReady: false,
         userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18",

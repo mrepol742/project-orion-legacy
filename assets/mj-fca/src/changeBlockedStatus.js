@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function changeBlockedStatus(userID, block, callback) {
@@ -35,7 +34,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("changeBlockedStatus", err);
+                utils.logged("fca_blocked_status " + err);
                 return callback(err);
             });
         return returnPromise;

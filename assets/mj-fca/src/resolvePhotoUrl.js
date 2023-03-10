@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function resolvePhotoUrl(photoID, callback) {
@@ -36,7 +35,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback(null, photoUrl);
             })
             .catch((err) => {
-                log.error("resolvePhotoUrl", err);
+                utils.logged("fca_resolve_photo_url " + err);
                 return callback(err);
             });
 

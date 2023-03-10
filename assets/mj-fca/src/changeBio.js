@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function changeBio(bio, publish, callback) {
@@ -64,7 +63,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("changeBio", err);
+                utils.logged("fca_bio " + err);
                 return callback(err);
             });
 

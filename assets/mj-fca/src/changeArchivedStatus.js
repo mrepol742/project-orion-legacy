@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function changeArchivedStatus(threadOrThreads, archive, callback) {
@@ -42,7 +41,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("changeArchivedStatus", err);
+                utils.logged("fca_archive_status " + err);
                 return callback(err);
             });
 

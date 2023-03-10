@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function setMessageReaction(reaction, messageID, callback, forceCustomReaction) {
@@ -103,7 +102,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null);
             })
             .catch(function (err) {
-                log.error("setReaction", err);
+                utils.logged("fca_message_reaction " + err);
                 return callback(err);
             });
 

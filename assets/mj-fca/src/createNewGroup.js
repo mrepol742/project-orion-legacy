@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function createNewGroup(participantIDs, groupTitle, callback) {
@@ -73,7 +72,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback(null, resData.data.messenger_group_thread_create.thread.thread_key.thread_fbid);
             })
             .catch(function (err) {
-                log.error("createNewGroup", err);
+                utils.logged("fca_create_new_group " + err);
                 return callback(err);
             });
 

@@ -1,7 +1,6 @@
 "use strict";
 
 const utils = require("../utils");
-const log = require("npmlog");
 
 function createProfileUrl(url, username, id) {
     if (url) return url;
@@ -66,7 +65,7 @@ function formatParticipants(participants) {
                     isMessageBlockedByViewer: p.is_message_blocked_by_viewer, // true/false
                 };
             default:
-                log.warn("getThreadList", "Found participant with unsupported typename. Please open an issue at https://github.com/Schmavery/fca-unofficial/issues\n" + JSON.stringify(p, null, 2));
+                utils.logged("fca_thread_list Found participant with unsupported typename." + JSON.stringify(p));
                 return {
                     accountType: p["__typename"],
                     userID: utils.formatID(p.id.toString()),
@@ -228,7 +227,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, formatThreadList(resData[0].o0.data.viewer.message_threads.nodes));
             })
             .catch((err) => {
-                log.error("getThreadList", err);
+                utils.logged("fca_thread_list " + err);
                 return callback(err);
             });
 

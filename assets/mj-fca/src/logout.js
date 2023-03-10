@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function logout(callback) {
@@ -54,11 +53,11 @@ module.exports = function (defaultFuncs, api, ctx) {
             })
             .then(function () {
                 ctx.loggedIn = false;
-                log.info("logout", "Logged out successfully.");
+                utils.logged("fca_logout Logged out successfully.");
                 callback();
             })
             .catch(function (err) {
-                log.error("logout", err);
+                utils.logged("fca_logout " + err);
                 return callback(err);
             });
 

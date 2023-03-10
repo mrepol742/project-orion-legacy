@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function forwardAttachment(attachmentID, userOrUsers, callback) {
@@ -47,7 +46,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("forwardAttachment", err);
+                utils.logged("fca_forward_attachment " + err);
                 return callback(err);
             });
 

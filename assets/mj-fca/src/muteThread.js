@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     // muteSecond: -1=permanent mute, 0=unmute, 60=one minute, 3600=one hour, etc.
@@ -39,7 +38,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("muteThread", err);
+                utils.logged("fca_mute " + err);
                 return callback(err);
             });
 

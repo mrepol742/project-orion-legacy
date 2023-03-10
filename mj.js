@@ -1,4 +1,5 @@
 const fca = require("./assets/mj-fca/");
+const utils = require("./assets/mj-fca/utils.js");
 
 /*
  *
@@ -63,7 +64,7 @@ let errorpage = fs.readFileSync(__dirname + "/404.html");
 let threadpage = fs.readFileSync(__dirname + "/thread_ui.html");
 
 server.listen(3000, function () {
-    log("server_start 3000");
+    utils.logged("server_start 3000");
 });
 
 task(function () {
@@ -71,14 +72,14 @@ task(function () {
         let surl = settings.url[url];
         if (surl.startsWith("https://")) {
             https.get(surl, function (res) {
-                log("ping_url " + surl);
+                utils.logged("ping_url " + surl);
             });
         } else if (surl.startsWith("http://")) {
             http.get(surl, function (res) {
-                log("ping_url " + surl);
+                utils.logged("ping_url " + surl);
             });
         } else {
-            log("ping_url_unsupported " + surl);
+            utils.logged("ping_url_unsupported " + surl);
         }
     }
     pingD = getFormattedDate();
@@ -113,17 +114,17 @@ const options1 = {
     },
 };
 
-log("fca_options " + JSON.stringify(options, null, 4));
-log("settings_options " + JSON.stringify(settings.preference));
+utils.logged("login_options " + JSON.stringify(options, null, 4));
+utils.logged("settings_options " + JSON.stringify(settings.preference));
 
 const openai = new OpenAIApi(config);
 
 process.on("beforeExit", (code) => {
-    log("process_before_exit " + code);
+    utils.logged("process_before_exit " + code);
 });
 
 process.on("exit", (code) => {
-    log("process_exit goodbye :( " + code);
+    utils.logged("process_exit goodbye :( " + code);
 });
 
 process.on("SIGINT", function () {
@@ -131,13 +132,24 @@ process.on("SIGINT", function () {
     settings.uptime.server[currentDate.getDay()] = process.uptime();
     settings.uptime.os[currentDate.getDay()] = os.uptime();
     saveState();
-    log("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
+    utils.logged("\n\n\tCaught interrupt signal\n\tProject Orion OFFLINE");
     process.exit();
 });
 
 fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
-    if (err) return log(err);
+    if (err) {
+        if (err.error) {
+            let currentDate = new Date();
+            settings.uptime.server[currentDate.getDay()] = process.uptime();
+            settings.uptime.os[currentDate.getDay()] = os.uptime();
+            saveState();
+            process.exit();
+        } else {
+            utils.logged(err);
+        }
+    }
 
+    /*
     process.on("uncaughtException", (err, origin) => {
         caughtException(api, err);
     });
@@ -145,15 +157,16 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     process.on("unhandledRejection", (reason, promise) => {
         caughtException(api, reason);
     });
+    */
 
     task(function () {
         saveState();
         messagesD = getFormattedDate();
-        log("save_state");
+        utils.logged("save_state");
     }, Math.floor(1800000 * Math.random() + 1200000));
 
     task(function () {
-        log("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
+        utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
         cmd = {};
         acGG = [];
         commandCalls = 0;
@@ -164,7 +177,7 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     task(function () {
         fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
         fb_stateD = getFormattedDate();
-        log("fca_state refresh");
+        utils.logged("login_state refresh");
     }, Math.floor(1800000 * Math.random() + 1200000));
 
     task(function () {
@@ -175,9 +188,9 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
                 let isPast = new Date().getTime() - past < min ? false : true;
                 if (isPast) {
                     userPresence[time] = null;
-                    log("user_presence " + time);
+                    utils.logged("user_presence " + time);
                     api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", time, (err, messageInfo) => {
-                        if (err) log(err);
+                        if (err) utils.logged(err);
                     });
                 }
             }
@@ -205,12 +218,12 @@ ERR! markAsDelivered }
 
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
 */
-        if (err) return log(err);
+        if (err) return utils.logged(err);
 
         if (isAppState) {
             currentID = api.getCurrentUserID();
             fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
-            log("app_state refresh");
+            utils.logged("login_state refresh");
             isAppState = false;
         }
 
@@ -333,7 +346,7 @@ ERR! markAsDelivered }
                 } else if (query == "restart") {
                     saveState();
                     fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
-                    log("app_state refresh");
+                    utils.logged("login_state refresh");
                     let rs = [];
                     rs.push(event.threadID);
                     rs.push(event.messageID);
@@ -361,16 +374,16 @@ ERR! markAsDelivered }
 
             if (groups.list[event.threadID] === undefined && event.isGroup) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (err) return log(err);
+                    if (err) return utils.logged(err);
                     if (gc.isGroup && groups.list[event.threadID] === undefined) {
                         groups.list[event.threadID] = gc.threadName;
                         api.muteThread(event.threadID, -1, (err) => {
-                            if (err) log(err);
+                            if (err) utils.logged(err);
                         });
                         api.changeNickname("Edogawa Conan", event.threadID, currentID, (err) => {
-                            if (err) return log(err);
+                            if (err) return utils.logged(err);
                         });
-                        log("new_group " + event.threadID + " group_name " + gc.threadName);
+                        utils.logged("new_group " + event.threadID + " group_name " + gc.threadName);
                         sendMessageOnly(api, event, "Hello guys.");
                         reactMessage(api, event, gc.emoji);
                     }
@@ -433,7 +446,7 @@ ERR! markAsDelivered }
             case "message_reaction":
                 if (!isMyId(event.userID) && !isMyId(event.senderID) && !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) && event.senderID != event.userID && !(event.reaction === undefined)) {
                     emo.push(event.messageID);
-                    log("react_message " + event.threadID + " " + event.messageID + " " + event.reaction);
+                    utils.logged("react_message " + event.threadID + " " + event.messageID + " " + event.reaction);
                     reactMessage(api, event, event.reaction);
                 }
                 break;
@@ -443,7 +456,7 @@ ERR! markAsDelivered }
                     break;
                 }
                 unsend_msgs[event.messageID] = d;
-                log("message_unsend " + d[0]);
+                utils.logged("message_unsend " + d[0]);
                 if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID) || groups.blocked.includes(event.threadID)) {
                     break;
                 }
@@ -454,14 +467,14 @@ ERR! markAsDelivered }
                     unsendGif(api, event, d);
                 } else if (d[0] == "share") {
                     api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                         if (groups.list[event.threadID] === undefined) {
                             let message = {
                                 body: "You deleted this link.\n\n" + d[1][2],
                                 url: d[1][3],
                             };
                             sendMessageOnly(api, event, message);
-                            log("unsend_share " + d[1][0] + " " + message);
+                            utils.logged("unsend_share " + d[1][0] + " " + message);
                         } else {
                             let message = {
                                 body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
@@ -475,7 +488,7 @@ ERR! markAsDelivered }
                                 */
                             };
                             sendMessageOnly(api, event, message);
-                            log("unsend_share_group " + d[1][0] + " " + message);
+                            utils.logged("unsend_share_group " + d[1][0] + " " + message);
                         }
                     });
                 } else if (d[0] == "file") {
@@ -488,7 +501,7 @@ ERR! markAsDelivered }
                         fileResponse.pipe(file);
                         file.on("finish", function () {
                             api.getUserInfo(event.senderID, (err, data) => {
-                                if (err) return log(err);
+                                if (err) return utils.logged(err);
                                 if (groups.list[event.threadID] === undefined) {
                                     let constructMMM = "You deleted this file.\n";
                                     if (!(d[1][4] === undefined)) {
@@ -499,7 +512,7 @@ ERR! markAsDelivered }
                                         attachment: fs.createReadStream(filename),
                                     };
                                     sendMessageOnly(api, event, message);
-                                    log("unsend_file " + d[1][0] + " " + filename);
+                                    utils.logged("unsend_file " + d[1][0] + " " + filename);
                                 } else {
                                     let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                     if (!(d[1][4] === undefined)) {
@@ -517,7 +530,7 @@ ERR! markAsDelivered }
                                         */
                                     };
                                     sendMessageOnly(api, event, message);
-                                    log("unsend_file_group " + d[1][0] + " " + filename);
+                                    utils.logged("unsend_file_group " + d[1][0] + " " + filename);
                                 }
                                 unLink(filename);
                             });
@@ -525,7 +538,7 @@ ERR! markAsDelivered }
                     });
                 } else if (d[0] == "location") {
                     api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                         if (groups.list[event.threadID] === undefined) {
                             let constructMMM = "You deleted this location.\n";
                             let message1 = {
@@ -533,7 +546,7 @@ ERR! markAsDelivered }
                                 url: d[1][3],
                             };
                             sendMessageOnly(api, event, message1);
-                            log("unsend_location " + d[1][0] + " " + d[1][2]);
+                            utils.logged("unsend_location " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                             let message1 = {
@@ -548,12 +561,12 @@ ERR! markAsDelivered }
                                 */
                             };
                             sendMessageOnly(api, event, message1);
-                            log("unsend_location " + d[1][0] + " " + d[1][2]);
+                            utils.logged("unsend_location " + d[1][0] + " " + d[1][2]);
                         }
                     });
                 } else if (d[0] == "location_sharing") {
                     api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                         if (groups.list[event.threadID] === undefined) {
                             let constructMMM = "You deleted this live location.\n";
                             let message1 = {
@@ -565,7 +578,7 @@ ERR! markAsDelivered }
                                 },
                             };
                             sendMessageOnly(api, event, message1);
-                            log("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
+                            utils.logged("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                             let message1 = {
@@ -584,12 +597,12 @@ ERR! markAsDelivered }
                                 */
                             };
                             sendMessageOnly(api, event, message1);
-                            log("unsend_location_sharing_group " + d[1][0] + " " + d[1][2]);
+                            utils.logged("unsend_location_sharing_group " + d[1][0] + " " + d[1][2]);
                         }
                     });
                 } else if (d[0] == "sticker") {
                     api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                         if (groups.list[event.threadID] === undefined) {
                             let constructMMM = "You deleted this sticker.\n";
                             let message = {
@@ -600,7 +613,7 @@ ERR! markAsDelivered }
                             };
                             sendMessageOnly(api, event, message);
                             sendMessageOnly(api, event, message1);
-                            log("unsend_sticker " + d[1][0] + " " + d[1][2]);
+                            utils.logged("unsend_sticker " + d[1][0] + " " + d[1][2]);
                         } else {
                             let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                             let message = {
@@ -618,7 +631,7 @@ ERR! markAsDelivered }
                             };
                             sendMessageOnly(api, event, message);
                             sendMessageOnly(api, event, message1);
-                            log("unsend_sticker_group " + d[1][0] + " " + d[1][2]);
+                            utils.logged("unsend_sticker_group " + d[1][0] + " " + d[1][2]);
                         }
                     });
                 } else if (d[0] == "video") {
@@ -629,7 +642,7 @@ ERR! markAsDelivered }
                         gifResponse.pipe(file);
                         file.on("finish", function () {
                             api.getUserInfo(event.senderID, (err, data) => {
-                                if (err) return log(err);
+                                if (err) return utils.logged(err);
                                 if (groups.list[event.threadID] === undefined) {
                                     let constructMMM = "You deleted this video.\n";
                                     if (!(d[1][3] === undefined)) {
@@ -640,7 +653,7 @@ ERR! markAsDelivered }
                                         attachment: fs.createReadStream(filename),
                                     };
                                     sendMessageOnly(api, event, message);
-                                    log("unsend_video " + d[1][0] + " " + filename);
+                                    utils.logged("unsend_video " + d[1][0] + " " + filename);
                                 } else {
                                     let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                     if (!(d[1][3] === undefined)) {
@@ -658,7 +671,7 @@ ERR! markAsDelivered }
                                         */
                                     };
                                     sendMessageOnly(api, event, message);
-                                    log("unsend_video_group " + d[1][0] + " " + filename);
+                                    utils.logged("unsend_video_group " + d[1][0] + " " + filename);
                                 }
                                 unLink(filename);
                             });
@@ -672,7 +685,7 @@ ERR! markAsDelivered }
                         gifResponse.pipe(file);
                         file.on("finish", function () {
                             api.getUserInfo(event.senderID, (err, data) => {
-                                if (err) return log(err);
+                                if (err) return utils.logged(err);
                                 if (groups.list[event.threadID] === undefined) {
                                     let constructMMM = "You deleted this voice message.\n";
                                     if (!(d[1][3] === undefined)) {
@@ -683,7 +696,7 @@ ERR! markAsDelivered }
                                         attachment: fs.createReadStream(filename),
                                     };
                                     sendMessageOnly(api, event, message);
-                                    log("unsend_audio " + d[1][0] + " " + filename);
+                                    utils.logged("unsend_audio " + d[1][0] + " " + filename);
                                 } else {
                                     let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                     if (!(d[1][3] === undefined)) {
@@ -701,7 +714,7 @@ ERR! markAsDelivered }
                                         */
                                     };
                                     sendMessageOnly(api, event, message);
-                                    log("unsend_audio_group " + d[1][0] + " " + filename);
+                                    utils.logged("unsend_audio_group " + d[1][0] + " " + filename);
                                 }
                                 unLink(filename);
                             });
@@ -709,11 +722,11 @@ ERR! markAsDelivered }
                     });
                 } else {
                     api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                         if (groups.list[event.threadID] === undefined) {
                             let message = "You deleted this message.\n\n" + d[2];
                             sendMessageOnly(api, event, message);
-                            log("unsend_message " + d[0] + " " + message);
+                            utils.logged("unsend_message " + d[0] + " " + message);
                         } else {
                             let message = {
                                 body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
@@ -726,23 +739,23 @@ ERR! markAsDelivered }
                                 */
                             };
                             sendMessageOnly(api, event, message);
-                            log("unsend_message_group " + d[0] + " " + message);
+                            utils.logged("unsend_message_group " + d[0] + " " + message);
                         }
                     });
                 }
                 break;
             case "event":
-                log("event_message " + event.threadID + " " + event.logMessageType);
+                utils.logged("event_message " + event.threadID + " " + event.logMessageType);
                 switch (event.logMessageType) {
                     default:
-                        log("event_error " + JSON.stringify(event));
+                        utils.logged("event_error " + JSON.stringify(event));
                         break;
                     case "log:subscribe":
                         if (event.logMessageData.addedParticipants.length == 1 && event.logMessageData.addedParticipants[0].userFbId == currentID) {
                             break;
                         }
                         api.getThreadInfo(event.threadID, (err, gc) => {
-                            if (err) return log(err);
+                            if (err) return utils.logged(err);
                             if (gc.isGroup) {
                                 let gname = gc.threadName;
                                 let i = 0;
@@ -766,12 +779,12 @@ ERR! markAsDelivered }
                                         } else {
                                             gret += names[a][1] + ", ";
                                         }
-                                        log("new_member_multi " + names[a][0] + " " + names[a][1]);
+                                        utils.logged("new_member_multi " + names[a][0] + " " + names[a][1]);
                                     }
                                     gret += ". How are you all doin?";
                                 } else {
                                     gret = "How are you " + names[0][1] + "?";
-                                    log("new_member " + names[0][0] + " " + names[0][1]);
+                                    utils.logged("new_member " + names[0][0] + " " + names[0][1]);
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
@@ -786,17 +799,17 @@ ERR! markAsDelivered }
                             break;
                         }
                         api.getThreadInfo(event.threadID, (err, gc) => {
-                            if (err) log(err);
+                            if (err) utils.logged(err);
                             api.getUserInfo(parseInt(id), (err, data) => {
-                                if (err) return log(err);
+                                if (err) return utils.logged(err);
                                 for (let prop in data) {
                                     if (data.hasOwnProperty(prop) && data[prop].name) {
                                         let gcn = gc.threadName;
                                         let arr = gc.participantIDs;
                                         if (settings.preference.antiLeave) {
                                             api.addUserToGroup(prop, event.threadID, (err) => {
-                                                if (err) log(err);
-                                                log("add_user " + event.threadID + " " + prop);
+                                                if (err) utils.logged(err);
+                                                utils.logged("add_user " + event.threadID + " " + prop);
                                             });
                                         }
                                         byebyeUser(api, event, data[prop].name, gcn, arr.length, prop);
@@ -807,7 +820,7 @@ ERR! markAsDelivered }
                         break;
                     case "log:thread-name":
                         api.getUserInfo(event.author, (err, data) => {
-                            if (err) return log(err);
+                            if (err) return utils.logged(err);
                             let constructMMM;
                             if (groups.list[event.threadID] == null || groups.list[event.threadID] === undefined) {
                                 groups.list[event.threadID] = event.logMessageData.name;
@@ -842,7 +855,7 @@ ERR! markAsDelivered }
 
 function wait(ms) {
     return new Promise((resolve) => {
-        log("wait_timeout " + ms);
+        utils.logged("wait_timeout " + ms);
         setTimeout(resolve, ms);
     });
 }
@@ -863,7 +876,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
             } else {
                 api.unsendMessage(event.messageReply.messageID, (err) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 });
             }
         }
@@ -996,7 +1009,7 @@ async function ai22(api, event, query, query2) {
                             data,
                             event.threadID,
                             (err, messageInfo) => {
-                                if (err) log(err);
+                                if (err) utils.logged(err);
                             },
                             event.messageReply.messageID
                         );
@@ -1083,7 +1096,7 @@ async function ai22(api, event, query, query2) {
                 let filename = __dirname + "/cache/images/gphoto_" + time + ".png";
                 downloadFile(url, dir).then((response) => {
                     api.changeGroupImage(fs.createReadStream(filename), event.threadID, (err) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                     });
                     unLink(filename);
                 });
@@ -1169,7 +1182,7 @@ async function ai(api, event) {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    log(JSON.stringify(response));
+                    utils.logged(JSON.stringify(response));
                     sendMessage(api, event, response.Abstract);
                 }
             });
@@ -1181,7 +1194,7 @@ async function ai(api, event) {
 
         if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
             if (!users.list.includes(event.senderID)) {
-                log("new_user " + event.senderID);
+                utils.logged("new_user " + event.senderID);
                 users.list.push(event.senderID);
                 fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                 reactMessage(api, event, ":heart:");
@@ -1234,7 +1247,7 @@ async function ai(api, event) {
                     id = event.senderID;
                 }
                 api.getUserInfo(id, (err, info) => {
-                    if (err) return log(err);
+                    if (err) return utils.logged(err);
                     let name = info[id]["firstName"];
                     let message = {
                         body: "Yes " + name + "?",
@@ -1256,7 +1269,7 @@ async function ai(api, event) {
                     id = event.senderID;
                 }
                 api.getUserInfo(id, (err, info) => {
-                    if (err) return log(err);
+                    if (err) return utils.logged(err);
                     let name = info[id]["firstName"];
                     let time = getTimestamp();
                     let filename = __dirname + "/cache/images/whoiam_" + time + ".png";
@@ -1493,7 +1506,7 @@ async function ai(api, event) {
                 const response = await openai.createImage({
                     prompt: data.join(" "),
                     n: 1,
-                    size: "256x256",
+                    size: "512x512",
                 });
                 let url = response.data.data[0].url;
                 if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -1521,51 +1534,6 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (query.startsWith("quiz")) {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using quiz topic instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nquiz math");
-        } else {
-            data.shift();
-            try {
-                const completion = await openai.createCompletion({
-                    model: "text-davinci-003",
-                    prompt: "Generate a multiple choice quiz on " + data.join(" ") + " with 10 questions.\nQuestion:",
-                    temperature: 0.7,
-                    max_tokens: 256,
-                    top_p: 1,
-                    frequency_penalty: 0,
-                    presence_penalty: 0,
-                    stop: ["A.", "B.", "C.", "D."],
-                });
-                const quiz = completion.data.choices[0].text.trim();
-                const quizParts = quiz.split("\n");
-                const question = quizParts[0];
-                const options = quizParts.slice(1, 5);
-                if (options && options.length > 0) {
-                    let correctAnswer = options[0].substring(0, 1);
-                    log("Quiz: " + quiz + "\nQuiz Parts: " + quizParts + "\nQuestion: " + question + "\nOptions: " + options + "\nCorrect Answer: " + correctAnswer);
-                    sendMessage(api, event, "Question: " + question + "\nOptions:\n" + options.join("\n"));
-                } else {
-                    sendMessage(api, event, "Error: No options generated for this question.");
-                }
-            } catch (error) {
-                if (!(error.response === undefined)) {
-                    if (error.response.status == 500) {
-                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
-                    } else if (error.response.status == 429) {
-                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
-                    } else if (error.response.status == 503) {
-                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
-                    } else {
-                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                    }
-                }
-            }
-        }
     } else if (query == "clearcache") {
         if (users.admin.includes(event.senderID)) {
             let count = 0;
@@ -1574,7 +1542,7 @@ async function ai(api, event) {
             let count3 = 0;
             fs.readdir(__dirname + "/cache/audios/", function (err, files) {
                 if (err) {
-                    return log(err);
+                    return utils.logged(err);
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
@@ -1585,7 +1553,7 @@ async function ai(api, event) {
             });
             fs.readdir(__dirname + "/cache/images/", function (err, files) {
                 if (err) {
-                    return log(err);
+                    return utils.logged(err);
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
@@ -1596,7 +1564,7 @@ async function ai(api, event) {
             });
             fs.readdir(__dirname + "/cache/videos/", function (err, files) {
                 if (err) {
-                    return log(err);
+                    return utils.logged(err);
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
@@ -1607,7 +1575,7 @@ async function ai(api, event) {
             });
             fs.readdir(__dirname + "/cache/files/", function (err, files) {
                 if (err) {
-                    return log(err);
+                    return utils.logged(err);
                 }
                 files.forEach(function (file) {
                     if (!file.endsWith(".gitkeep")) {
@@ -1989,7 +1957,7 @@ _____________________________
             data.shift();
             dns.resolve4(data.join(" "), (err, addresses) => {
                 if (err) {
-                    log(err);
+                    utils.logged(err);
                     sendMessage(api, event, "Houston! An error occured. Please try it again later.");
                     return;
                 }
@@ -2007,7 +1975,7 @@ _____________________________
             data.shift();
             dns.resolve6(data.join(" "), (err, addresses) => {
                 if (err) {
-                    log(err);
+                    utils.logged(err);
                     sendMessage(api, event, "Houston! An error occured. Please try it again later.");
                     return;
                 }
@@ -2028,7 +1996,7 @@ _____________________________
 
                 hosts.forEach(function (host) {
                     ping.promise.probe(host).then(function (res) {
-                        console.log(res);
+                        console.utils.logged(res);
                     });
                 });
             } catch (a) {
@@ -2227,7 +2195,7 @@ _____________________________
                 sendMessage(api, event, message);
             })
             .catch(function (error) {
-                log(error);
+                utils.logged(error);
                 sendMessage(api, event, "An unknown error as been occured. Please try again later.");
             });
     } else if (query.startsWith("covid")) {
@@ -2265,7 +2233,7 @@ _____________________________
                     }
                 })
                 .catch(function (error) {
-                    log(error);
+                    utils.logged(error);
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
@@ -2318,7 +2286,7 @@ _____________________________
                     sendMessage(api, event, message);
                 })
                 .catch(function (error) {
-                    log(error);
+                    utils.logged(error);
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
@@ -2357,7 +2325,7 @@ _____________________________
                     sendMessage(api, event, message);
                 })
                 .catch(function (error) {
-                    log(error);
+                    utils.logged(error);
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
@@ -2380,7 +2348,7 @@ _____________________________
             }
         }
         api.getUserInfo(id, (err, info) => {
-            if (err) return log(err);
+            if (err) return utils.logged(err);
             let name = info[id]["firstName"];
             let data = input.split(" ");
             if (data.length < 2) {
@@ -2433,15 +2401,15 @@ _____________________________
                     });
                     stream.on("info", (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading_file " + info.video_details.title);
+                        utils.logged("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on("end", () => {
                         let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + "/cache/videos/video_" + time + ".mp4", function (err, data) {
-                            if (err) log(err);
+                            if (err) utils.logged(err);
                             if (data.length > limit) {
-                                log("upload_error Unable to upload the video to the file limit. The file size is " + data.length / 1024 / 1024);
+                                utils.logged("upload_error Unable to upload the video to the file limit. The file size is " + data.length / 1024 / 1024);
                                 sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                                 threadIdMV[event.threadID] = true;
                                 unLink(__dirname + "/cache/videos/video_" + time + ".mp4");
@@ -2466,7 +2434,7 @@ _____________________________
                             }
                         });
                     });
-                    stream.on("error", (err) => log(err));
+                    stream.on("error", (err) => utils.logged(err));
                 }
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -2513,15 +2481,15 @@ _____________________________
                     });
                     stream.on("info", (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading_file " + info.video_details.title);
+                        utils.logged("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on("end", () => {
                         let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + "/cache/videos/video_" + time + ".mp4", function (err, data) {
-                            if (err) log(err);
+                            if (err) utils.logged(err);
                             if (data.length > limit) {
-                                log("upload_error Unable to upload the video to the file limit. The file size is " + data.length / 1024 / 1024);
+                                utils.logged("upload_error Unable to upload the video to the file limit. The file size is " + data.length / 1024 / 1024);
                                 sendMessage(api, event, "Unfortunately i cannot send your video due to the size restrictions on messenger platform.");
                             } else {
                                 let message = {
@@ -2534,7 +2502,7 @@ _____________________________
                             unLink(__dirname + "/cache/videos/video_" + time + ".mp4");
                         });
                     });
-                    stream.on("error", (err) => log(err));
+                    stream.on("error", (err) => utils.logged(err));
                 }
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -2579,15 +2547,15 @@ _____________________________
                     });
                     stream.on("info", (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading_file " + info.video_details.title);
+                        utils.logged("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on("end", () => {
                         let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + "/cache/audios/music_" + time + ".mp3", function (err, data) {
-                            if (err) log(err);
+                            if (err) utils.logged(err);
                             if (data.length > limit) {
-                                log("upload_error Unable to upload the music to the file limit. The file size is " + data.length / 1024 / 1024);
+                                utils.logged("upload_error Unable to upload the music to the file limit. The file size is " + data.length / 1024 / 1024);
                                 sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                                 threadIdMV[event.threadID] = true;
                                 unLink(__dirname + "/cache/audios/music_" + time + ".mp3");
@@ -2612,7 +2580,7 @@ _____________________________
                             }
                         });
                     });
-                    stream.on("error", (err) => log(err));
+                    stream.on("error", (err) => utils.logged(err));
                 }
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -2656,15 +2624,15 @@ _____________________________
                     });
                     stream.on("info", (info) => {
                         threadIdMV[event.threadID] = false;
-                        log("downloading_file " + info.video_details.title);
+                        utils.logged("downloading_file " + info.video_details.title);
                         reactMessage(api, event, ":heart:");
                     });
                     stream.on("end", () => {
                         let limit = 50 * 1024 * 1024;
                         fs.readFile(__dirname + "/cache/audios/music_" + time + ".mp3", function (err, data) {
-                            if (err) log(err);
+                            if (err) utils.logged(err);
                             if (data.length > limit) {
-                                log("upload_error Unable to upload the music to the file limit. The file size is " + data.length / 1024 / 1024);
+                                utils.logged("upload_error Unable to upload the music to the file limit. The file size is " + data.length / 1024 / 1024);
                                 sendMessage(api, event, "Unfortunately i cannot send your music due to the size restrictions on messenger platform.");
                             } else {
                                 let message = {
@@ -2677,7 +2645,7 @@ _____________________________
                             unLink(__dirname + "/cache/audios/music_" + time + ".mp3");
                         });
                     });
-                    stream.on("error", (err) => log(err));
+                    stream.on("error", (err) => utils.logged(err));
                 }
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
@@ -2835,7 +2803,7 @@ _____________________________
         }
     } else if (query == "everyone" || query == "all") {
         api.getThreadInfo(event.threadID, (err, info) => {
-            if (err) return log(err);
+            if (err) return utils.logged(err);
 
             const a = "\u200E";
             let message = {
@@ -2926,7 +2894,7 @@ _____________________________
                     degreeType: "C",
                 },
                 (err, r) => {
-                    if (err) return log(err);
+                    if (err) return utils.logged(err);
                     let d = r[0];
                     let time = getTimestamp();
                     let filename = __dirname + "/cache/images/weather_" + time + ".png";
@@ -3378,7 +3346,7 @@ _____________________________
             let name = data.join(" ");
             getResponseData("https://api.popcat.xyz/steam?q=" + name).then((response) => {
                 if (response == null) {
-                    log(JSON.stringify(response));
+                    utils.logged(JSON.stringify(response));
                     sendMessage(api, event, 'Unfortunately the "' + name + '" was not found on steam.');
                 } else {
                     let name = response.name;
@@ -3543,7 +3511,7 @@ _____________________________
                 sendMessage(api, event, "Unable to set the chat quick reaction. Invalid emoji.");
             }
             api.changeThreadEmoji(data.join(" "), event.threadID, (err) => {
-                if (err) return log(err);
+                if (err) return utils.logged(err);
             });
         }
     } else if (query.startsWith("sendreport")) {
@@ -3560,9 +3528,9 @@ _____________________________
         } else {
             data.shift();
             let report = "report " + event.senderID + " " + data.join(" ");
-            log(report);
+            utils.logged(report);
             api.sendMessage(report, currentID, (err, messageInfo) => {
-                if (err) log(err);
+                if (err) utils.logged(err);
             });
             sendMessage(api, event, "The engineers have been notified.");
         }
@@ -3575,7 +3543,7 @@ _____________________________
                 data.shift();
                 let num = data.join(" ");
                 api.handleMessageRequest(data.join(" "), true, (err) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 });
                 sendMessage(api, event, "Message Request Accepted!");
             }
@@ -3589,7 +3557,7 @@ _____________________________
                 data.shift();
                 let num = data.join(" ");
                 api.changeBio(data.join(" "), true, (err) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 });
                 sendMessage(api, event, "Bio Message is now set to `" + data.join(" ") + "`");
             }
@@ -3603,7 +3571,7 @@ _____________________________
                 data.shift();
                 let num = data.join(" ");
                 api.handleFriendRequest(data.join(" "), true, (err) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 });
                 sendMessage(api, event, "Friend Request Accepted!");
             }
@@ -3853,14 +3821,14 @@ _____________________________
             if (pref.split("").length >= 15) {
                 if (/^\d+$/.test(pref)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                         if (gc.isGroup) {
                             if (!JSON.stringify(gc.adminIDs).includes(currentID) && gc.approvalMode) {
                                 sendMessage("The user " + pref + " has been added and its on member approval lists.");
                             }
                             api.addUserToGroup(pref, event.threadID, (err) => {
-                                if (err) log(err);
-                                log("add_user " + event.threadID + " " + pref);
+                                if (err) utils.logged(err);
+                                utils.logged("add_user " + event.threadID + " " + pref);
                             });
                         } else {
                             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -3889,9 +3857,9 @@ _____________________________
             let pref = data.join(" ").toLowerCase();
             if (gcolorn.includes(pref)) {
                 api.changeThreadColor(gcolor[pref], event.threadID, (err) => {
-                    if (err) return log(err);
+                    if (err) return utils.logged(err);
                 });
-                log("change_color " + event.threadID + " " + gcolor[pref]);
+                utils.logged("change_color " + event.threadID + " " + gcolor[pref]);
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
             }
@@ -3919,7 +3887,7 @@ _____________________________
                             api.getUserID(user.replace("@", ""), (err, data) => {
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 api.getUserInfo(data[0].userID, (err, data1) => {
-                                    if (err) return log(err);
+                                    if (err) return utils.logged(err);
                                     welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?");
                                 });
                             });
@@ -3929,7 +3897,7 @@ _____________________________
                         return;
                     }
                     api.getUserInfo(id, (err, data1) => {
-                        if (err) return log(err);
+                        if (err) return utils.logged(err);
                         welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?");
                     });
                 }
@@ -3940,7 +3908,7 @@ _____________________________
     } else if (query.startsWith("kickuser")) {
         if (users.admin.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return log(err);
+                if (err) return utils.logged(err);
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
                     if (!JSON.stringify(gc.adminIDs).includes(currentID)) {
@@ -3967,7 +3935,7 @@ _____________________________
                                     if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                     removeUser(api, event, data[0].userID);
                                     api.getUserInfo(data[0].userID, (err, data1) => {
-                                        if (err) return log(err);
+                                        if (err) return utils.logged(err);
                                         byebyeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
                                     });
                                 });
@@ -3978,7 +3946,7 @@ _____________________________
                         }
                         removeUser(api, event, id);
                         api.getUserInfo(id, (err, data1) => {
-                            if (err) return log(err);
+                            if (err) return utils.logged(err);
                             byebyeUser(api, event, data1.name, gc.threadName, arr.length, id);
                         });
                     }
@@ -4006,7 +3974,7 @@ _____________________________
                         id = event.messageReply.senderID;
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
-                            if (err) return log(err);
+                            if (err) return utils.logged(err);
                             if (users.bot.includes(data[0].userID)) {
                                 sendMessage(api, event, "I already knew it.");
                             } else {
@@ -4048,7 +4016,7 @@ _____________________________
                         id = event.messageReply.senderID;
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
-                            if (err) return log(err);
+                            if (err) return utils.logged(err);
                             if (!users.bot.includes(data[0].userID)) {
                                 sendMessage(api, event, "It seems like that account is not a bot.");
                             } else {
@@ -4090,7 +4058,7 @@ _____________________________
                         id = event.messageReply.senderID;
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
-                            if (err) return log(err);
+                            if (err) return utils.logged(err);
                             blockUser(api, event, data[0].userID);
                         });
                         return;
@@ -4327,7 +4295,7 @@ _____________________________
             return;
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return log(err);
+            if (err) return utils.logged(err);
             if (gc.isGroup) {
                 let arr = gc.participantIDs;
                 sendMessage(api, event, "This group has about " + arr.length + " members.");
@@ -4341,7 +4309,7 @@ _____________________________
         }
         if (event.isGroup) {
             api.getThreadInfo(event.threadID, (err, a) => {
-                if (err) log(err);
+                if (err) utils.logged(err);
                 let construct = "";
                 let usern = a.userInfo.length;
                 for (b in a.userInfo) {
@@ -4370,7 +4338,7 @@ _____________________________
             } else {
                 data.shift();
                 api.setTitle(data.join(" "), event.threadID, (err, obj) => {
-                    if (err) return log(err);
+                    if (err) return utils.logged(err);
                 });
             }
         } else {
@@ -4399,7 +4367,7 @@ _____________________________
                 id1 = event.messageReply.senderID;
             }
             api.getUserInfo(id1, (err, info) => {
-                if (err) return log(err);
+                if (err) return utils.logged(err);
                 let message = {
                     body: info[id1]["firstName"] + " uid is " + id1,
                     /*
@@ -4527,7 +4495,7 @@ _____________________________
                     sendMessage(api, event, name1 + " ❤️ " + name2 + "\n\n⦿ Percentage: " + percent + "\n" + result);
                 })
                 .catch(function (error) {
-                    log(error);
+                    utils.logged(error);
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
@@ -4889,7 +4857,7 @@ _____________________________
                             .then(function (response) {
                                 let url = "https://api.popcat.xyz/ship?user1=" + aaa + "&user2=" + encodeURIComponent(response.request.res.responseUrl);
                                 let dir = __dirname + "/cache/images/ship_" + getTimestamp() + ".png";
-                                log("parse_image " + url);
+                                utils.logged("parse_image " + url);
                                 downloadFile(url, dir).then((response) => {
                                     let image = {
                                         body: "New Lovers >3",
@@ -4900,11 +4868,11 @@ _____________________________
                                 });
                             })
                             .catch(function (err) {
-                                log(err);
+                                utils.logged(err);
                             });
                     })
                     .catch(function (err) {
-                        log(err);
+                        utils.logged(err);
                     });
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri");
@@ -4939,7 +4907,7 @@ _____________________________
                             .then(function (response) {
                                 let url = "https://api.popcat.xyz/whowouldwin?image1=" + aaa + "&image2=" + encodeURIComponent(response.request.res.responseUrl);
                                 let dir = __dirname + "/cache/images/www_" + getTimestamp() + ".png";
-                                log("parse_image " + url);
+                                utils.logged("parse_image " + url);
                                 downloadFile(url, dir).then((response) => {
                                     let image = {
                                         body: "Hmmmm.. Who?",
@@ -4950,11 +4918,11 @@ _____________________________
                                 });
                             })
                             .catch(function (err) {
-                                log(err);
+                                utils.logged(err);
                             });
                     })
                     .catch(function (err) {
-                        log(err);
+                        utils.logged(err);
                     });
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri");
@@ -5167,8 +5135,8 @@ _____________________________
                 id = event.senderID;
             }
             api.getUserInfo(id, async (err, ret) => {
-                if (err) return log(err);
-                log(JSON.stringify(ret));
+                if (err) return utils.logged(err);
+                utils.logged(JSON.stringify(ret));
                 let name = ret[id].name;
                 let vanity = ret[id].vanity;
                 if (vanity == "") {
@@ -5796,7 +5764,7 @@ _____________________________
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
             data.shift();
-            let txt = data.join(" ");
+            let txt = data.join(" ").substring(0, 996) + "...";
             getResponseData("https://api.simsimi.net/v2/?text=" + txt + "&lc=ph&cf=false&name=" + mjme[Math.floor(Math.random() * mjme.length)]).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately i am not simp anymore.");
@@ -6036,7 +6004,7 @@ _____________________________
     } else if (query == "refreshstate") {
         if (users.admin.includes(event.senderID)) {
             fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
-            log("app_state refresh");
+            utils.logged("login_state refresh");
             sendMessage(api, event, "The AppState refreshed.");
             fb_stateD = getFormattedDate();
         }
@@ -6159,7 +6127,7 @@ function someR(api, event, query) {
 }
 
 function parseImage(api, event, url, dir) {
-    log("parse_image " + url);
+    utils.logged("parse_image " + url);
     downloadFile(url, dir).then((response) => {
         let image = {
             attachment: fs.createReadStream(dir),
@@ -6192,7 +6160,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
         sendMMMS(api, event, "It appears the AI sends a blank message. Please try again.");
     } else if (event.isGroup && event.senderID != currentID) {
         if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
-            log("send_message_reply " + event.threadID + " " + JSON.stringify(message));
+            utils.logged("send_message_reply " + event.threadID + " " + JSON.stringify(message));
             if (voice && typeof message === "string" && message.length < 200 && groups.tts.includes(event.threadID)) {
                 const url = GoogleTTS.getAudioUrl(message, voice);
                 let time = getTimestamp();
@@ -6206,12 +6174,12 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                         thread_id,
                         (err, messageInfo) => {
                             if (err) {
-                                log(err);
+                                utils.logged(err);
                                 api.sendMessage(
                                     updateFont("Unable to send message. Please try it again later.", event.senderID),
                                     thread_id,
                                     (err, messageInfo) => {
-                                        if (err) log(err);
+                                        if (err) utils.logged(err);
                                     },
                                     message_id
                                 );
@@ -6232,11 +6200,11 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                 );
             }
         } else {
-            log("send_message " + event.threadID + " " + JSON.stringify(message));
+            utils.logged("send_message " + event.threadID + " " + JSON.stringify(message));
             sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
         }
     } else {
-        log("send_message " + event.threadID + " " + JSON.stringify(message));
+        utils.logged("send_message " + event.threadID + " " + JSON.stringify(message));
         sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
     }
 }
@@ -6263,7 +6231,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
         sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice);
     } else {
-        log("send_message " + event.threadID + " " + JSON.stringify(message));
+        utils.logged("send_message " + event.threadID + " " + JSON.stringify(message));
         sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
     }
 }
@@ -6282,12 +6250,12 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE) {
                 thread_id,
                 (err, messageInfo) => {
                     if (err) {
-                        log(err);
+                        utils.logged(err);
                         api.sendMessage(
                             updateFont("Unable to send message. Please try it again later.", id),
                             thread_id,
                             (err, messageInfo) => {
-                                if (err) log(err);
+                                if (err) utils.logged(err);
                             },
                             message_id
                         );
@@ -6306,13 +6274,13 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE) {
 
 function sendMessageErr(api, thread_id, message_id, id, err) {
     if (err) {
-        log(err);
+        utils.logged(err);
         if (err.error == 1545049) {
             api.sendMessage(
                 updateFont("Message is too long to be sent.", id),
                 thread_id,
                 (err, messageInfo) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 },
                 message_id
             );
@@ -6321,7 +6289,7 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
                 updateFont("Failure to send the response due to an invalid image.", id),
                 thread_id,
                 (err, messageInfo) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 },
                 message_id
             );
@@ -6330,7 +6298,7 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
                 updateFont("Failure to send message because the reponse contains url in which prohibited in Facebook.", id),
                 thread_id,
                 (err, messageInfo) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 },
                 message_id
             );
@@ -6339,7 +6307,7 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
                 updateFont("The AI response seems empty. No idea why thought.", id),
                 thread_id,
                 (err, messageInfo) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 },
                 message_id
             );
@@ -6348,7 +6316,7 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
                 updateFont("Unable to send message. Please try it again later.", id),
                 thread_id,
                 (err, messageInfo) => {
-                    if (err) log(err);
+                    if (err) utils.logged(err);
                 },
                 message_id
             );
@@ -6362,12 +6330,12 @@ async function reactMessage(api, event, reaction) {
     }
     await wait(4000);
     if (reaction === undefined) {
-        log("react_message undefined " + event.messageID);
+        utils.logged("react_message undefined " + event.messageID);
         return;
     }
-    log("react_message " + event.threadID + " " + event.messageID + " " + reaction);
+    utils.logged("react_message " + event.threadID + " " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID, (err) => {
-        if (err) log(err);
+        if (err) utils.logged(err);
     }, true);
 }
 
@@ -6377,31 +6345,6 @@ function formatQuery(string) {
     let specialCharacters = normal.replace(normalize, "");
     let latin = specialCharacters.replace(latinC, "");
     return latin.toLowerCase();
-}
-
-function log(data) {
-    if (typeof data === "string") {
-        let d = data.normalize("NFKC").split(" ");
-        if (d[0].includes("_")) {
-            let db = d[0];
-            let db1 = d[1];
-            d.shift();
-            if (db1.length > 14 && /^\d+$/.test(parseInt(db1))) {
-                d.shift();
-                console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", "\x1b[40m", db, "\x1b[0m", "\x1b[34m", db1, "\x1b[0m", d.join(" "));
-            } else {
-                console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", "\x1b[40m", db, "\x1b[0m", d.join(" "));
-            }
-        } else {
-            console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", d.join(" "));
-        }
-    } else {
-        let da = JSON.stringify(data);
-        if (da == "") {
-            return;
-        }
-        console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", " |", da.normalize("NFKC"));
-    }
 }
 
 function getFormattedDate() {
@@ -6426,7 +6369,7 @@ function containsAny(str, substrings) {
 function isGoingToFast(event) {
     let input = event.body;
     commandCalls = commandCalls + 1;
-    log("event_body " + event.senderID + " " + input);
+    utils.logged("event_body " + event.senderID + " " + input);
     if (!settings.preference.preventSimultaneousExecution) {
         return false;
     }
@@ -6435,7 +6378,7 @@ function isGoingToFast(event) {
             if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
                 let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 20;
                 if (seconds > 3) {
-                    log("block_user " + event.senderID + " " + seconds);
+                    utils.logged("block_user " + event.senderID + " " + seconds);
                     return true;
                 }
                 return false;
@@ -6450,7 +6393,7 @@ function isGoingToFast(event) {
 function isGoingToFast1(event, list, time) {
     if (!(list[event.threadID] === undefined)) {
         if (Math.floor(Date.now() / 1000) < list[event.threadID]) {
-            log("going_to_fast " + event.threadID + " " + ((list[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * time)));
+            utils.logged("going_to_fast " + event.threadID + " " + ((list[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * time)));
             return true;
         }
     }
@@ -6463,19 +6406,19 @@ const checkFound = (text) => {
 };
 
 async function getResponseData(url) {
-    log("response_data " + url);
+    utils.logged("response_data " + url);
     let data = await axios
         .get(encodeURI(url))
         .then((response) => {
             if (response.data.error === undefined) {
                 return response.data;
             } else {
-                log("response_null " + url);
+                utils.logged("response_null " + url);
                 return null;
             }
         })
         .catch((err) => {
-            log("response_data_err " + err);
+            utils.logged("response_data_err " + err);
             return null;
         });
     return data;
@@ -6633,7 +6576,7 @@ async function getImages(api, event, images) {
             let fname = __dirname + "/cache/images/findimg_" + i + "_" + time + ".png";
             downloadFile(encodeURI(url), fname).then((response) => {
                 name.push(fname);
-                log(url);
+                utils.logged(url);
             });
         }
     }
@@ -6673,7 +6616,7 @@ async function unsendPhoto(api, event, d) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
-        if (err) return log(err);
+        if (err) return utils.logged(err);
         if (groups.list[event.threadID] === undefined) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
@@ -6693,7 +6636,7 @@ async function unsendPhoto(api, event, d) {
             for (i3 = 0; i3 < images.length; i3++) {
                 unLink(images[i3]);
             }
-            log("unsend_photo " + d[1][0]);
+            utils.logged("unsend_photo " + d[1][0]);
         } else {
             let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
             if (!(d[1][3] === undefined)) {
@@ -6715,7 +6658,7 @@ async function unsendPhoto(api, event, d) {
             for (i2 = 0; i2 < images.length; i2++) {
                 unLink(images[i2]);
             }
-            log("unsend_photo_group " + d[1][0]);
+            utils.logged("unsend_photo_group " + d[1][0]);
         }
     });
 }
@@ -6738,7 +6681,7 @@ async function unsendGif(api, event, d) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
-        if (err) return log(err);
+        if (err) return utils.logged(err);
         if (groups.list[event.threadID] === undefined) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
@@ -6758,7 +6701,7 @@ async function unsendGif(api, event, d) {
             for (i3 = 0; i3 < images.length; i3++) {
                 unLink(images[i3]);
             }
-            log("unsend_gif " + d[1][0]);
+            utils.logged("unsend_gif " + d[1][0]);
         } else {
             let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
             if (!(d[1][3] === undefined)) {
@@ -6780,7 +6723,7 @@ async function unsendGif(api, event, d) {
             for (i2 = 0; i2 < images.length; i2++) {
                 unLink(images[i2]);
             }
-            log("unsend_gif_group " + d[1][0]);
+            utils.logged("unsend_gif_group " + d[1][0]);
         }
     });
 }
@@ -6815,14 +6758,14 @@ async function bgRemove(api, event) {
                 encoding: null,
             })
                 .then((res) => {
-                    log(res.status);
+                    utils.logged(res.status);
                     if (res.status == 200) {
                         fs.writeFileSync(dataUrl, res.data);
-                        log("done " + dataUrl);
+                        utils.logged("done " + dataUrl);
                     }
                 })
                 .catch((error) => {
-                    return log(error);
+                    return utils.logged(error);
                 });
         });
     }
@@ -6848,8 +6791,8 @@ async function bgRemove(api, event) {
 async function unLink(dir) {
     await wait(1000 * 120);
     fs.unlink(dir, (err) => {
-        if (err) log(err);
-        log("un_link " + dir);
+        if (err) utils.logged(err);
+        utils.logged("un_link " + dir);
     });
 }
 
@@ -6918,8 +6861,8 @@ function removeUser(api, event, id) {
         return;
     }
     api.removeUserFromGroup(id, event.threadID, (err) => {
-        if (err) log(err);
-        log("user_remove " + event.threadID + " " + id);
+        if (err) utils.logged(err);
+        utils.logged("user_remove " + event.threadID + " " + id);
     });
 }
 
@@ -7037,7 +6980,7 @@ function changeNickname(api, event, id, text) {
         return;
     }
     api.getUserInfo(id, (err, info) => {
-        if (err) return log(err);
+        if (err) return utils.logged(err);
         let name = info[id]["name"];
         let inp;
         if (text.startsWith("@me")) {
@@ -7057,7 +7000,7 @@ function kiss(api, event, id) {
             sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
         } else {
             api.getUserInfo(id, (err, info) => {
-                if (err) return log(err);
+                if (err) return utils.logged(err);
                 let name = info[id]["firstName"];
                 let time = getTimestamp();
                 let filename = __dirname + "/cache/images/kiss_" + time + ".png";
@@ -7088,7 +7031,7 @@ async function gun(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/gun_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7099,7 +7042,7 @@ async function wanted(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/wanted_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7110,7 +7053,7 @@ async function clown(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/clown?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/clown_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7121,7 +7064,7 @@ async function drip(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/drip?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/drip_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7132,7 +7075,7 @@ async function communist(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/communist?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/communist_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7143,7 +7086,7 @@ async function advert(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/ad?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/advert_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7154,7 +7097,7 @@ async function uncover(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/uncover_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7165,7 +7108,7 @@ async function jail(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/jail?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jail_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7176,7 +7119,7 @@ async function invert(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/invert?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/invert_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7187,7 +7130,7 @@ async function pet(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/pet?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/pet_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7198,7 +7141,7 @@ async function mnm(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/mnm_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7209,7 +7152,7 @@ async function greyscale(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/greyscale_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7220,7 +7163,7 @@ async function jokeover(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/jokeover_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7231,7 +7174,7 @@ async function blur(api, event, id) {
             parseImage(api, event, "https://api.popcat.xyz/blur?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/images/blur_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7260,7 +7203,7 @@ async function welcomeUser(api, event, name, gname, Tmem, id, message1) {
             });
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7292,12 +7235,12 @@ async function byebyeUser(api, event, name, gname, Tmem, id) {
                 */
                 };
                 sendMessageOnly(api, event, message, event.threadID, event.messageID, false, false);
-                log("leave_member " + name);
+                utils.logged("leave_member " + name);
                 unLink(filename);
             });
         })
         .catch(function (err) {
-            log(err);
+            utils.logged(err);
         });
 }
 
@@ -7338,10 +7281,10 @@ function saveEvent(event) {
         return;
     }
     if (event.attachments.length != 0) {
-        log("attachments_type " + event.threadID + " " + event.attachments[0].type);
+        utils.logged("attachments_type " + event.threadID + " " + event.attachments[0].type);
         switch (event.attachments[0].type) {
             case "error":
-                log("attachments_error " + JSON.stringify(event.attachments));
+                utils.logged("attachments_error " + JSON.stringify(event.attachments));
                 break;
             case "photo":
                 let photo = [];
@@ -7432,11 +7375,11 @@ async function aiResponse(complextion, text, repeat) {
         return text2;
     } catch (error) {
         if (repeat) {
-            log("attempt_initiated");
+            utils.logged("attempt_initiated");
             return await aiResponse(getNewComplextion(settings.preference.text_complextion), text, false);
         }
         if (!(error.response === undefined)) {
-            log(error.response.status);
+            utils.logged(error.response.status);
             if (error.response.status == 500) {
                 return "Mj is currently down. Please try it again later.";
             } else if (error.response.status == 429 || error.response.status == 401) {
@@ -7761,7 +7704,7 @@ async function transcribeAudioFile(filePath) {
         });
         return response.data;
     } catch (error) {
-        log(error);
+        utils.logged(error);
     }
 }
 
@@ -7797,9 +7740,9 @@ ________  Exception  ________
         `
 ____________________________
         `;
-    log(message);
+    utils.logged(message);
     api.sendMessage(message, currentID, (err, messageInfo) => {
-        if (err) log(err);
+        if (err) utils.logged(err);
     });
 }
 
@@ -7812,13 +7755,6 @@ function getCountryOrigin(model) {
         return "The Philippines";
     }
     return "USA";
-}
-
-function getCurrentTime() {
-    let today = new Date();
-    let hour = today.getHours();
-    let suffix = hour >= 12 ? "PM" : "AM";
-    return (hour = ((hour + 11) % 12) + 1 + ":" + today.getMinutes() + ":" + today.getSeconds() + " " + suffix);
 }
 
 function getStatus() {

@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     function makeTypingIndicator(typ, threadID, callback, isGroup) {
@@ -29,7 +28,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                     return callback();
                 })
                 .catch(function (err) {
-                    log.error("sendTypingIndicator", err);
+                    utils.logged("fca_typing_indicator " + err);
                     if (utils.getType(err) == "Object" && err.error === "Not logged in") {
                         ctx.loggedIn = false;
                     }
@@ -57,7 +56,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                         return callback();
                     })
                     .catch(function (err) {
-                        log.error("sendTypingIndicator", err);
+                        utils.logged("fca_typing_indicator " + err);
                         if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
                             ctx.loggedIn = false;
                         }

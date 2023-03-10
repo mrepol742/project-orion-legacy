@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 function formatAttachmentsGraphQLResponse(attachment) {
     switch (attachment.__typename) {
@@ -545,7 +544,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, formatMessagesGraphQLResponse(resData[0]));
             })
             .catch(function (err) {
-                log.error("getThreadHistoryGraphQL", err);
+                utils.logged("fca_thread_history " + err);
                 return callback(err);
             });
 

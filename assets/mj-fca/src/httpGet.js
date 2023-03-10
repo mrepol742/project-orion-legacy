@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function httpGet(url, form, callback, notAPI) {
@@ -34,7 +33,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                     callback(null, resData.body.toString());
                 })
                 .catch(function (err) {
-                    log.error("httpGet", err);
+                    utils.logged("fca_http_get " + err);
                     return callback(err);
                 });
         } else {
@@ -44,7 +43,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                     callback(null, resData.body.toString());
                 })
                 .catch(function (err) {
-                    log.error("httpGet", err);
+                    utils.logged("fca_http_get " + err);
                     return callback(err);
                 });
         }

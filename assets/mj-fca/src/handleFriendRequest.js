@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function handleFriendRequest(userID, accept, callback) {
@@ -48,7 +47,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("handleFriendRequest", err);
+                utils.logged("fca_friend_request " + err);
                 return callback(err);
             });
 

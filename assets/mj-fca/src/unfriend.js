@@ -1,7 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function unsendMessage(userID, callback) {
@@ -39,7 +38,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                log.error("unfriend", err);
+                utils.logged("fca_unfriend " +  err);
                 return callback(err);
             });
 

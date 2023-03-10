@@ -1,8 +1,6 @@
 "use strict";
 
 var utils = require("../utils");
-var log = require("npmlog");
-
 function formatEventReminders(reminder) {
     return {
         reminderID: reminder.id,
@@ -165,7 +163,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, formatThreadGraphQLResponse(resData[0]));
             })
             .catch(function (err) {
-                log.error("getThreadInfoGraphQL", err);
+                utils.logged("fca_thread_info " + err);
                 return callback(err);
             });
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-redeclare */
 "use strict";
+
 var utils = require("../utils");
-var log = require("npmlog");
 var mqtt = require("mqtt");
 var websocket = require("websocket-stream");
 var HttpsProxyAgent = require("https-proxy-agent");
@@ -135,7 +135,7 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
     var mqttClient = ctx.mqttClient;
 
     mqttClient.on("error", function (err) {
-        log.error("listenMqtt", err);
+        utils.logged("fca_listen_mqtt " + err);
         mqttClient.end();
         if (ctx.globalOptions.autoReconnect) {
             getSeqID();
@@ -197,7 +197,7 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
         try {
             var jsonMessage = JSON.parse(message);
         } catch (ex) {
-            return log.error("listenMqtt", ex);
+            return utils.logged("fca_listen_mqtt " + ex);
         }
         if (topic === "/t_ms") {
             if (ctx.tmsWait && typeof ctx.tmsWait == "function") {
@@ -594,7 +594,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                                           })();
                                     break;
                                 case "UserMessage":
-                                    log.info("ff-Return", {
+                                    utils.logged("fca_user_message " + JSON.stringify({
                                         type: "message",
                                         senderID: utils.formatID(fetchData.message_sender.id),
                                         body: fetchData.message.text || "",
@@ -623,7 +623,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                                         mentions: {},
                                         timestamp: parseInt(fetchData.timestamp_precise),
                                         isGroup: fetchData.message_sender.id != tid.toString(),
-                                    });
+                                    }));
                                     globalCallback(null, {
                                         type: "message",
                                         senderID: utils.formatID(fetchData.message_sender.id),
@@ -690,12 +690,12 @@ function markDelivery(ctx, api, threadID, messageID) {
     if (threadID && messageID) {
         api.markAsDelivered(threadID, messageID, (err) => {
             if (err) {
-                log.error("markAsDelivered", err);
+                utils.logged("fca_mark_delivered " + err);
             } else {
                 if (ctx.globalOptions.autoMarkRead) {
                     api.markAsRead(threadID, (err) => {
                         if (err) {
-                            log.error("markAsDelivered", err);
+                            utils.logged("fca_mark_delivered " + err);
                         }
                     });
                 }
@@ -735,7 +735,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 }
             })
             .catch((err) => {
-                log.error("getSeqId", err);
+                utils.logged("fca_get_seq_id " + err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in") {
                     ctx.loggedIn = false;
                 }
