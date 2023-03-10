@@ -7,7 +7,8 @@
     "scripts": {
         "release": "clear && node mj.js",
         "debug": "clear && node --inspect mj.js",
-        "test": "clear && node --inspect test.js"
+        "test": "clear && node --inspect test.js",
+        "prettier": "npm prettier mj.js --write"
     },
     "keywords": [],
     "author": {
@@ -29,7 +30,11 @@
         "google-tts-api": "^2.0.2",
         "googlethis": "^1.7.1",
         "openai": "^3.2.1",
+        "prettier": "^2.8.4",
         "weather-js": "^2.0.0",
         "youtubei.js": "^1.4.5"
+    },
+    "engines": {
+        "node": ">=18.x"
     }
 }

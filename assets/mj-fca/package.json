@@ -2,11 +2,6 @@
   "name": "@mrepol742/project-orion-facebook-api",
   "version": "1.0.0",
   "description": "A Facebook chat API that doesn't rely on XMPP. Will NOT be deprecated after April 30th 2015.",
-  "scripts": {
-    "test": "mocha",
-    "lint": "./node_modules/.bin/eslint **.js",
-    "prettier": "prettier utils.js src/* --write"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/mrepol742/project-orion.git"
@@ -20,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/mrepol742/project-orion/issues"
   },
-  "author": "Avery, David, Maude, Benjamin, UIRI",
+  "author": "Melvin Jones Repol",
   "license": "MIT",
   "dependencies": {
     "bluebird": "^2.11.0",
@@ -28,49 +23,11 @@
     "https-proxy-agent": "^4.0.0",
     "mqtt": "^3.0.0",
     "npmlog": "^1.2.0",
+    "prettier": "^2.8.4",
     "request": "^2.53.0",
     "websocket-stream": "^5.5.0"
   },
   "engines": {
-    "node": ">=10.x"
-  },
-  "devDependencies": {
-    "eslint": "^7.5.0",
-    "mocha": "^7.0.1",
-    "prettier": "^1.11.1"
-  },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "es2017": true,
-      "node": true
-    },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-      "sourceType": "module"
-    },
-    "rules": {
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
-      "semi": [
-        "error",
-        "always"
-      ],
-      "no-unused-vars": [
-        1,
-        {
-          "argsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_"
-        }
-      ],
-      "no-empty": [
-        "error",
-        {
-          "allowEmptyCatch": true
-        }
-      ]
-    }
+    "node": ">=18.x"
   }
 }
