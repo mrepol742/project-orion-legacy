@@ -367,15 +367,12 @@ ERR! markAsDelivered }
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) log(err);
                         });
-                        api.changeNickname("⦿ Mj", event.threadID, currentID, (err) => {
+                        api.changeNickname("Edogawa Conan", event.threadID, currentID, (err) => {
                             if (err) return log(err);
                         });
                         log("new_group " + event.threadID + " group_name " + gc.threadName);
-                        let message = {
-                            body: "How are you all?\n\n" + qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
-                            url: "https://mrepol742.github.io/project-orion/",
-                        };
-                        sendMessageOnly(api, event, message, event.threadID, event.messageID, false, false);
+                        sendMessageOnly(api, event, "Hello guys.");
+                        reactMessage(api, event, gc.emoji);
                     }
                 });
             } else if (!acGG.includes(event.threadID) && !(groups.list[event.threadID] === undefined)) {
@@ -398,7 +395,7 @@ ERR! markAsDelivered }
                 let input = event.body;
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, "");
-                if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
+                if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {Maintenance
                     if (isGoingToFast1(event, threadMaintenance, 15)) {
                         return;
                     }
@@ -437,7 +434,7 @@ ERR! markAsDelivered }
                 if (!isMyId(event.userID) && !isMyId(event.senderID) && !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) && event.senderID != event.userID && !(event.reaction === undefined)) {
                     emo.push(event.messageID);
                     log("react_message " + event.threadID + " " + event.messageID + " " + event.reaction);
-                    sendMessageReaction(api, event);
+                    reactMessage(api, event, event.reaction);
                 }
                 break;
             case "message_unsend":
@@ -1184,16 +1181,12 @@ async function ai(api, event) {
 
         if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
             if (!users.list.includes(event.senderID)) {
-                let message = {
-                    body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
-                    url: "https://mrepol742.github.io/project-orion/",
-                };
+                log("new_user " + event.senderID);
                 users.list.push(event.senderID);
-                sendMessage(api, event, message);
                 fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
-            } else {
-                sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-            }
+                reactMessage(api, event, ":heart:");
+            } 
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
             let text = query2;
             if (query.startsWith("repol")) {
@@ -1843,7 +1836,7 @@ _______  Statistics  _______
    ⦿ Block Users: ` +
             blockedUserC +
             "/" +
-            users.blocked.length +
+            (users.blocked.length + users.bot.length) +
             `
    ⦿ Block Groups: ` +
             blockedGroupC +
@@ -6375,7 +6368,7 @@ async function reactMessage(api, event, reaction) {
     log("react_message " + event.threadID + " " + event.messageID + " " + reaction);
     api.setMessageReaction(reaction, event.messageID, (err) => {
         if (err) log(err);
-    });
+    }, true);
 }
 
 function formatQuery(string) {
@@ -7576,18 +7569,6 @@ function isValidTimeZone(tz) {
     } catch (ex) {
         return false;
     }
-}
-
-async function sendMessageReaction(api, event) {
-    await wait(4000);
-    api.setMessageReaction(
-        event.reaction,
-        event.messageID,
-        (err) => {
-            if (err) log(err);
-        },
-        true
-    );
 }
 
 function getFormat(attach) {
