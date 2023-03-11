@@ -74,10 +74,21 @@ utils.logged("server_cert loaded");
 const server = https.createServer(options2, getRoutes());
 const server1 = http.createServer(getRoutes());
 
-let homepage = fs.readFileSync(__dirname + "/index.html");
-let errorpage = fs.readFileSync(__dirname + "/404.html");
-let threadpage = fs.readFileSync(__dirname + "/thread_ui.html");
-utils.logged("html_resource " + JSON.stringify({hompage: (homepage ? true : false), errorpage: (errorpage ? true : false), threadpage: (threadpage ? true : false)}));
+let homepage = fs.readFileSync(__dirname + "/assets/index.html");
+let errorpage = fs.readFileSync(__dirname + "/assets/404.html");
+let threadpage = fs.readFileSync(__dirname + "/assets/thread_ui.html");
+let googlev = fs.readFileSync(__dirname + "/assets/google022983bf0cf659ae.html");
+let webmanifest = fs.readFileSync(__dirname + "/assets/site.webmanifest");
+let servicew = fs.readFileSync(__dirname + "/assets/sw.js");
+let herop = fs.readFileSync(__dirname + "/assets/hero.png");
+let background = [];
+
+let i23;
+for (i23 = 0; i23 < 9; i23++) {
+    background.push(fs.readFileSync(__dirname + "/assets/background/background" + i23 + ".jpeg"));
+}
+
+utils.logged("web_resource_loaded finish");
 
 server.listen(3000, function () {
     utils.logged("server_info https");
@@ -7829,8 +7840,8 @@ function getStatus() {
 function getRoutes() {
     return function (req, res) {
         res.setHeader("Content-Type", "text/html");
+        res.writeHead(200);
         if (!(threadInfo[req.url] === undefined)) {
-            res.writeHead(200);
             let hh = threadpage + "";
             let construct = "";
             construct += "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
@@ -7842,18 +7853,27 @@ function getRoutes() {
             return;
         }
         switch (req.url) {
+            case "/google022983bf0cf659ae.html":
+                res.end(googlev);
+                break;
+                case "/hero.png":
+                    red.end(herop);
+                    break;
+            case "/site.webmanifest":
+                res.end(webmanifest);
+                break;
+                case "/sw.js":
+                    res.end(servicew);
+                    break;
             case "/status":
-                res.writeHead(200);
                 res.end(JSON.stringify({ status: getStatus() }));
                 break;
             case "/":
             case "/home":
             case "/homepage":
-                res.writeHead(200);
                 res.end(homepage);
                 break;
             default:
-                res.writeHead(200);
                 res.end(errorpage);
                 break;
         }

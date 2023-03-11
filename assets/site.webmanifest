@@ -1,0 +1,72 @@
+{
+  "name": "Melvin Jones Repol",
+  "short_name": "Mrepol742",
+  "description": "I'm a Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting. The creator of Webvium. A Self Taught Programer.",
+  "dir": "ltr",
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/index.html",
+  "scope": "/",
+  "orientation": "portrait",
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "web",
+      "url": "https://mrepol742.github.io/webvium?utm_source=webmanifest"
+    },
+    {
+      "platform": "web",
+      "url": "https://mrepol742.github.io/webviumdev?utm_source=webmanifest"
+    },
+    {
+      "platform": "web",
+      "url": "https://mrepol742.github.io/webviumvpn?utm_source=webmanifest"
+    },
+    {
+      "platform": "web",
+      "url": "https://mrepol742.github.io/download?utm_source=webmanifest"
+    },
+    {
+      "platform": "galaxy_store",
+      "url": "https://galaxy.store/webvium?utm_source=webmanifest"
+    },
+    {
+      "platform": "galaxy_store",
+      "url": "https://galaxy.store/webviumdm?utm_source=webmanifest"
+    },
+    {
+      "platform": "uptodown",
+      "url": "https://webvium.en.uptodown.com/android?utm_source=webmanifest"
+    },
+    {
+      "platform": "amazon",
+      "url": "https://www.amazon.com/dp/B09TLFJ86L?utm_source=webmanifest"
+    },
+    {
+      "platform": "uptodown",
+      "url": "https://webvium-vpn.en.uptodown.com/android?utm_source=webmanifest"
+    },
+    {
+      "platform": "amazon",
+      "url": "https://www.amazon.com/dp/B09TRT8PGF?utm_source=webmanifest"
+    },
+    {
+      "platform": "getjar",
+      "url": "https://www.getjar.mobi/mobile/990692/Webvium-Browser-Fast-and-Lightweight?utm_source=webmanifest"
+    }
+  ]
+}
