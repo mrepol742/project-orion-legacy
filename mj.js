@@ -64,15 +64,28 @@ utils.logged("data_loaded_users " + JSON.stringify({users: users.list.length, mu
 utils.logged("data_loaded_groups " + JSON.stringify({groups: Object.keys(groups.list).length, blocked: groups.blocked.length}));
 utils.logged("data_message " + JSON.stringify({messages: Object.keys(msgs).length, unsend_messages: Object.keys(unsend_msgs).length}));
 
-const server = http.createServer(getRoutes());
+const options2 = {
+    key: fs.readFileSync(__dirname + "/assets/client-key.pem"),
+    cert: fs.readFileSync(__dirname + "/assets/client-cert.pem")
+};
+utils.logged("server_cert loaded");
+
+  
+const server = https.createServer(options2, getRoutes());
+const server1 = http.createServer(getRoutes());
+
 let homepage = fs.readFileSync(__dirname + "/index.html");
 let errorpage = fs.readFileSync(__dirname + "/404.html");
 let threadpage = fs.readFileSync(__dirname + "/thread_ui.html");
 utils.logged("html_resource " + JSON.stringify({hompage: (homepage ? true : false), errorpage: (errorpage ? true : false), threadpage: (threadpage ? true : false)}));
 
 server.listen(3000, function () {
+    utils.logged("server_info https");
     utils.logged("server_status online");
-    utils.logged("server_port 3000");
+});
+server1.listen(3001, function () {
+    utils.logged("server_info http");
+    utils.logged("server_status online");
 });
 
 task(function () {
@@ -80,11 +93,11 @@ task(function () {
         let surl = settings.url[url];
         if (surl.startsWith("https://")) {
             https.get(surl, function (res) {
-                utils.logged("ping_url " + surl);
+                utils.logged("ping_url " + res.statusCode + " " + surl);
             });
         } else if (surl.startsWith("http://")) {
             http.get(surl, function (res) {
-                utils.logged("ping_url " + surl);
+                utils.logged("ping_url " + res.statusCode + " " + surl);
             });
         } else {
             utils.logged("ping_url_unsupported " + surl);
@@ -132,20 +145,21 @@ process.on("beforeExit", (code) => {
 });
 
 process.on('SIGHUP', function () {
-    process.exit();
+    process.exit(0);
 });
 process.on("SIGTERM", function() {
-    process.exit();
+    process.exit(0);
 });
 process.on("SIGINT", function () {
-    process.exit();
+    process.exit(0);
 });
 
 
 fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     if (err) {
         if (err.error) {
-            process.exit();
+            utils.logged("project_orion offline");
+            process.exit(1);
         } else {
             utils.logged(err);
         }
@@ -162,19 +176,23 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
 
     process.on("exit", (code) => {
         let currentDate = new Date();
-        settings.uptime.server[currentDate.getDay()] = process.uptime();
-        settings.uptime.os[currentDate.getDay()] = os.uptime();
+        settings.uptime.server[currentDate.getDay()] += process.uptime();
+        if (settings.uptime.os > os.uptime()) {
+            settings.uptime.os += os.uptime();
+        } else {
+            settings.uptime.os = os.uptime();
+        }
         saveState();
         console.log("\n");
         utils.logged("save_state");
         fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
-        utils.logged("login_state saved")
+        utils.logged("login_state saved");
         listen.stopListening();
         utils.logged("fca_status offline");
         server.close();
         utils.logged("server_status offline");
-        utils.logged("project_orion offline");
         utils.logged("process_exit goodbye :( " + code);
+        utils.logged("project_orion offline");
     });
 
     task(function () {
@@ -199,7 +217,7 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     }, Math.floor(1800000 * Math.random() + 1200000));
 
     task(function () {
-        let min = 120000;
+        let min = Math.floor(600000 + Math.random() + 300000);
         for (time in userPresence) {
             if (userPresence[time] != null) {
                 let past = new Date(userPresence[time]).getTime();
@@ -219,6 +237,8 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
 
     listen = api.listenMqtt((err, event) => {
         /*
+
+        3252001 temporarily blocked
         {
 ERR! markAsDelivered   __ar: 1,
 ERR! markAsDelivered   error: 3252001,
@@ -238,7 +258,7 @@ ERR! markAsDelivered }
 */
         if (err) {
             if (err.error) {
-                process.exit();
+                process.exit(1);
             } else {
                 utils.logged(err);
             }
@@ -317,7 +337,6 @@ ERR! markAsDelivered }
                     if (users.muted.includes(event.senderID)) {
                         users.muted = users.muted.filter((item) => item !== event.senderID);
                         sendMessage(api, event, "You can now use my commands.");
-                        fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     }
                 } else if (query == "status") {
                     if (isGoingToFast(event)) {
@@ -358,7 +377,6 @@ ERR! markAsDelivered }
                 if (query == "stop") {
                     sendMessage(api, event, "Program stopped its state.");
                     settings.preference.isStop = true;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     return;
                 } else if (query == "destroy") {
                     sendMessage(api, event, "Program destroyed its state.");
@@ -366,17 +384,13 @@ ERR! markAsDelivered }
                 } else if (query == "resume") {
                     sendMessage(api, event, "Program resumed its state.");
                     settings.preference.isStop = false;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     return;
                 } else if (query == "restart") {
                     saveState();
-                    fs.writeFileSync(__dirname + "/data/" + settings.preference.app_state, getAppState(api), "utf8");
-                    utils.logged("login_state refresh");
                     let rs = [];
                     rs.push(event.threadID);
                     rs.push(event.messageID);
                     settings.restart = rs;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Restarting program...");
                     setTimeout(function () {
                         process.exit(0);
@@ -402,6 +416,7 @@ ERR! markAsDelivered }
                     if (err) return utils.logged(err);
                     if (gc.isGroup && groups.list[event.threadID] === undefined) {
                         groups.list[event.threadID] = gc.threadName;
+                        groups.active.push(event.threadID);
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) utils.logged(err);
                         });
@@ -458,7 +473,6 @@ ERR! markAsDelivered }
         if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled) {
             api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
             settings.restart = [];
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             isCalled = false;
         }
 
@@ -821,6 +835,8 @@ ERR! markAsDelivered }
                     case "log:unsubscribe":
                         let id = event.logMessageData.leftParticipantFbId;
                         if (id == currentID) {
+                            groups.active.pop(event.threadID);
+                            utils.logged("leaving_group " + event.threadID);
                             break;
                         }
                         api.getThreadInfo(event.threadID, (err, gc) => {
@@ -865,7 +881,6 @@ ERR! markAsDelivered }
                             };
                             sendMessage(api, event, message);
                         });
-                        fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
                         break;
                     case "log:thread-icon":
                     case "log:thread-color":
@@ -880,7 +895,6 @@ ERR! markAsDelivered }
 
 function wait(ms) {
     return new Promise((resolve) => {
-        utils.logged("wait_timeout " + ms);
         setTimeout(resolve, ms);
     });
 }
@@ -888,7 +902,7 @@ function wait(ms) {
 async function ai22(api, event, query, query2) {
     if (query == "notify") {
         if (isMyId(event.senderID)) {
-            if (event.messageReply.body == "") {
+            if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
                 sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
             } else {
                 sendMessage(api, event, "Message are been schedule to send to " + Object.keys(groups.list).length + " groups.");
@@ -914,7 +928,6 @@ async function ai22(api, event, query, query2) {
         } else {
             settings.pin[event.threadID] = event.messageReply.body;
             sendMessage(api, event, 'Message pinned.. Enter "pin" to show it.');
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
         }
     } else if (query == "count") {
         if (isGoingToFast(event)) {
@@ -1221,7 +1234,6 @@ async function ai(api, event) {
             if (!users.list.includes(event.senderID)) {
                 utils.logged("new_user " + event.senderID);
                 users.list.push(event.senderID);
-                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                 reactMessage(api, event, ":heart:");
             } 
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -1413,7 +1425,7 @@ async function ai(api, event) {
                 let ss = await aiResponse(settings.preference.text_complextion, text, true);
 
                 if (query.startsWith("misaka")) {
-                    ss += " MISAKA MISAKA says.";
+                    ss = "Misaka misaka says \n" + ss;
                 }
 
                 let message = {
@@ -1460,9 +1472,43 @@ async function ai(api, event) {
                 if (response == null) {
                     sendMessage(api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
                 } else {
-                    sendMessage(false, api, event, response.response);
+                    sendMessage(api, event, response.response, event.threadID, event.messageID, false, true);
                 }
             });
+        }
+    } else if (query.startsWith("qwert")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using qwert text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nqwert what is matter?");
+        } else {
+            data.shift();
+            try {
+                const response = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: "Marv is a chatbot that reluctantly answers questions with sarcastic responses:\n\nYou: " + data.join(" ") + "\nMarv: ",
+                    temperature: 0.5,
+                    max_tokens: 60,
+                    top_p: 0.3,
+                    frequency_penalty: 0.5,
+                    presence_penalty: 0,
+                });
+                sendMessage(api, event, response.data.choices[0].text);
+            } catch (error) {
+                if (!(error.response === undefined)) {
+                    if (error.response.status == 500) {
+                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
+                    } else if (error.response.status == 429) {
+                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
+                    } else if (error.response.status == 503) {
+                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    } else {
+                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    }
+                }
+            }
         }
     } else if (query.startsWith("openai")) {
         if (isGoingToFast(event)) {
@@ -1638,73 +1684,61 @@ _______________________
     } else if (query == "debugon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.isDebugEnabled = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Debug mode enabled.");
         }
     } else if (query == "debugoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.isDebugEnabled = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Konnichiwa i am back.");
         }
     } else if (query == "setautomarkreadon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkRead = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Automatically marked read messages enabled.");
         }
     } else if (query == "setautomarkreadoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkRead = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Automatically marked read messages disabled.");
         }
     } else if (query == "setonlineon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.online = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Account status is set to Online.");
         }
     } else if (query == "setonlineoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.online = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Account status is set to Offline.");
         }
     } else if (query == "setselfistenon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.selfListen = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Listening to own account messages is enabled.");
         }
     } else if (query == "setselfistenoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.selfListen = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Listening to own account messages is disabled.");
         }
     } else if (query == "setautomarkdeliveryon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkDelivery = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Automatically marked messages when delivered enabled.");
         }
     } else if (query == "setautomarkdeliveryoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.autoMarkDelivery = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Automatically marked messages when delivered disabled.");
         }
     } else if (query == "ssetsendtypingindicatoron") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.sendTypingIndicator = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Send typing indicator when AI sending messages enabled.");
         }
     } else if (query == "setsendtypingindicatoroff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.sendTypingIndicator = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Send typing indicator when AI sending messages disabled.");
         }
     } else if (query.startsWith("ttsjap") || query.startsWith("sayjap")) {
@@ -1845,11 +1879,13 @@ ___________________________
         for (time in settings.uptime.server) {
             serverAverage += settings.uptime.server[time];
         }
-        for (time1 in settings.uptime.os) {
-            osAverage += settings.uptime.os[time1];
+        osAverage = settings.uptime.os;
+        if (osAverage > os.uptime()) {
+            osAverage += os.uptime();
+        } else {
+            osAverage = os.uptime();
         }
         serverAverage += process.uptime();
-        osAverage += os.uptime();
         let message =
             `
 _______  Uptime  _______
@@ -2770,7 +2806,6 @@ _____________________________
         }
         settings.pin[event.threadID] = undefined;
         sendMessage(api, event, "Pinned message removed.");
-        fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
     } else if (query == "pin") {
         if (isGoingToFast(event)) {
             return;
@@ -3080,7 +3115,7 @@ _____________________________
                     let reels = new Intl.NumberFormat().format(response.result.reels);
                     let followers = new Intl.NumberFormat().format(response.result.followers);
                     let following = new Intl.NumberFormat().format(response.result.following);
-                    let private = response.result.private ? "Yes" : "No";
+                    let isPrivate = response.result.private ? "Yes" : "No";
                     let verified = response.result.verified ? "Yes" : "No";
                     let profilepic = response.result.profilePicture;
                     let time = getTimestamp();
@@ -3088,7 +3123,7 @@ _____________________________
                     let dir = __dirname + "/cache/images/instaprofile_" + time + ".png";
                     downloadFile(encodeURI(url), dir).then((response) => {
                         let message = {
-                            body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + private + "\nVerified: " + verified + "\n\n" + biography,
+                            body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + isPrivate + "\nVerified: " + verified + "\n\n" + biography,
                             attachment: fs.createReadStream(dir),
                         };
                         sendMessage(api, event, message);
@@ -3605,7 +3640,6 @@ _____________________________
                     sendMessage(api, event, "Opps! the minimum value 10");
                 } else {
                     settings.preference.max_tokens = num;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Max Tokens is now set to " + num);
                 }
             }
@@ -3624,7 +3658,6 @@ _____________________________
                     sendMessage(api, event, "Opps! the minimum value 0.1");
                 } else {
                     settings.preference.temperature = num;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Temperature is now set to " + num);
                 }
             }
@@ -3643,9 +3676,38 @@ _____________________________
                     sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.preference.frequency_penalty = num;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Frequency Penalty is now set to " + num);
                 }
+            }
+        }
+    } else if (query.startsWith("deleteuserinfo")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using deleteUserInfo @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndeleteUserInfo @Zero Two");
+            } else {
+                let id = Object.keys(event.mentions)[0];
+                if (id === undefined) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (user.includes("@me")) {
+                        id = event.senderID;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            deleteUserInfo(api, event, data[0].userID);
+                        });
+                        return;
+                    }
+                }
+                deleteUserInfo(api, event, id);
             }
         }
     } else if (query.startsWith("setpresencepenalty")) {
@@ -3662,7 +3724,6 @@ _____________________________
                     sendMessage(api, event, "Opps! the minimum value -2");
                 } else {
                     settings.preference.presence_penalty = num;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Presence Penalty is now set to " + num);
                 }
             }
@@ -3676,7 +3737,6 @@ _____________________________
                 data.shift();
                 let num = data.join(" ");
                 settings.preference.text_complextion = num;
-                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                 sendMessage(api, event, "Text Complextion is now set to " + num);
             }
         }
@@ -3694,7 +3754,6 @@ _____________________________
                     sendMessage(api, event, "Opps! the minimum value is 1.");
                 } else {
                     settings.preference.max_image = num;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Max Image is now set to " + num);
                 }
             }
@@ -3713,7 +3772,6 @@ _____________________________
                     sendMessage(api, event, "Opps! the minimum value is 0.");
                 } else {
                     settings.preference.probability_mass = num;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Probability Mass is now set to " + num);
                 }
             }
@@ -3728,7 +3786,6 @@ _____________________________
                 let pref = data.join(" ");
                 if (isValidTimeZone(pref)) {
                     settings.preference.timezone = pref;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Timezone is now set to " + pref);
                     sendMessage(api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
                 } else {
@@ -3747,7 +3804,6 @@ _____________________________
                 let first = pref.split("");
                 if (/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(first)) {
                     settings.preference.prefix = pref;
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "Prefix is now set to " + pref);
                 } else {
                     sendMessage(api, event, "Unable to set prefix to " + first + " due to some reasons. Please use only symbols such as ! @ # $ etc..");
@@ -3758,7 +3814,6 @@ _____________________________
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.prefix != "null" || settings.preference.prefix != undefined) {
                 settings.preference.prefix = "null";
-                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                 sendMessage(api, event, "Prefix reset to default values.");
             }
         }
@@ -3774,7 +3829,6 @@ _____________________________
                     sendMessage(api, event, "Unable to do such an action.");
                 } else if (!settings.ignored_prefixes.includes(pre)) {
                     settings.ignored_prefixes.push(pre);
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "`" + pre + "` is now ignored.");
                 } else {
                     sendMessage(api, event, "It's already ignored.");
@@ -3790,7 +3844,6 @@ _____________________________
                 let pre = data.shift();
                 if (settings.ignored_prefixes.includes(pre)) {
                     settings.ignored_prefixes = settings.ignored_prefixes.filter((item) => item !== pre);
-                    fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                     sendMessage(api, event, "`" + pre + "` is now unignored.");
                 } else {
                     sendMessage(api, event, "It is not in ignored list.");
@@ -3806,7 +3859,6 @@ _____________________________
                 data.shift();
                 settings.url.push(data.join(" "));
                 sendMessage(api, event, "Noted.");
-                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             }
         }
     } else if (query.startsWith("remping")) {
@@ -3823,7 +3875,6 @@ _____________________________
                 } else {
                     sendMessage(api, event, "The url is not on the list.");
                 }
-                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             }
         }
     } else if (query.startsWith("adduser")) {
@@ -3994,7 +4045,6 @@ _____________________________
                                 sendMessage(api, event, "I already knew it.");
                             } else {
                                 users.bot.push(data[0].userID);
-                                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                                 sendMessage(api, event, "Noted.");
                             }
                         });
@@ -4007,7 +4057,6 @@ _____________________________
                     sendMessage(api, event, "I already knew it.");
                 } else {
                     users.bot.push(id);
-                    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     sendMessage(api, event, "Noted.");
                 }
             }
@@ -4036,7 +4085,6 @@ _____________________________
                                 sendMessage(api, event, "It seems like that account is not a bot.");
                             } else {
                                 users.bot = users.bot.filter((item) => item !== data[0].userID);
-                                fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                                 sendMessage(api, event, "Noted.");
                             }
                         });
@@ -4049,7 +4097,6 @@ _____________________________
                     sendMessage(api, event, "It seems like that account is not a bot.");
                 } else {
                     users.bot = users.bot.filter((item) => item !== id);
-                    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
                     sendMessage(api, event, "Noted.");
                 }
             }
@@ -4086,9 +4133,10 @@ _____________________________
         }
     } else if (query == "mute") {
         users.muted.push(event.senderID);
-        userPresence[event.threadID] = null;
+        if (!(userPresence[event.threadID] === undefined)) {
+            userPresence[event.threadID] = null;
+        }
         sendMessage(api, event, "You have been muted. Enter `unmute` for you to use my commands again.");
-        fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     } else if (query.startsWith("blockgroup")) {
         if (users.admin.includes(event.senderID)) {
             if (event.isGroup) {
@@ -4143,7 +4191,6 @@ _____________________________
             } else {
                 let inp = data[1].split(":");
                 keys[inp[0]] = inp[1];
-                fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
                 sendMessage(api, event, "Successfully saved " + inp[0] + ".");
             }
         }
@@ -4236,73 +4283,61 @@ _____________________________
     } else if (query == "unsendon" && !settings.preference.onUnsend) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onUnsend = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if (query == "unsendoff" && settings.preference.onUnsend) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onUnsend = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
         }
     } else if (query == "antileaveon" && !settings.preference.antiLeave) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.antiLeave = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Readding of user who left is now enabled.");
         }
     } else if (query == "antileaveoff" && settings.preference.antiLeave) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.antiLeave = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Readding of user who left is been disabled.");
         }
     } else if (query == "tagalogsupporton" && !settings.preference.tagalog) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.tagalog = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Tagalog Support is now enabled.");
         }
     } else if (query == "tagalogsupportoff" && settings.preference.tagalog) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.tagalog = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Tagalog Support is been disabled.");
         }
     } else if (query == "delayon" && !settings.preference.onDelay) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onDelay = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
         }
     } else if (query == "delayoff" && settings.preference.onDelay) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onDelay = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
         }
     } else if (query == "nsfwon" && !settings.preference.onNsfw) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onNsfw = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Not Safe For Work are now enabled.");
         }
     } else if (query == "nsfwoff" && settings.preference.onNsfw) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.onNsfw = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Not Safe For Work is been disabled.");
         }
     } else if (query == "simultaneousexecutionon" && !settings.preference.preventSimultaneousExecution) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.preventSimultaneousExecution = true;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
         }
     } else if (query == "simultaneousexecutionoff" && settings.preference.preventSimultaneousExecution) {
         if (users.admin.includes(event.senderID)) {
             settings.preference.preventSimultaneousExecution = false;
-            fs.writeFileSync(__dirname + "/data/settings.json", JSON.stringify(settings), "utf8");
             sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
         }
     } else if (query == "gmember") {
@@ -4337,7 +4372,7 @@ _____________________________
                     members: construct,
                     icon: a.imageSrc,
                 };
-                sendMessage(api, event, "This group information can be see at http://0.0.0.0:3000/" + a.threadID);
+                sendMessage(api, event, "This group information can be see at https://%DOMAIN_ADDRESS%/" + a.threadID);
             });
         } else {
             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -6098,7 +6133,7 @@ function reaction(api, event, query, input) {
         reactMessage(api, event, ":sad:");
     } else if (containsAny(input.toLowerCase(), angryEE)) {
         reactMessage(api, event, ":angry:");
-    } else if (containsAny(query, loveEE) || query == "bot" || query == "good") {
+    } else if (containsAny(query, loveEE) || query == "good") {
         reactMessage(api, event, ":love:");
     } else if (query == "tsk") {
         reactMessage(api, event, ":like:");
@@ -6190,14 +6225,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                         (err, messageInfo) => {
                             if (err) {
                                 utils.logged(err);
-                                api.sendMessage(
-                                    updateFont("Unable to send message. Please try it again later.", event.senderID),
-                                    thread_id,
-                                    (err, messageInfo) => {
-                                        if (err) utils.logged(err);
-                                    },
-                                    message_id
-                                );
+                                sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, id);
                             }
                         },
                         message_id
@@ -6266,14 +6294,7 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE) {
                 (err, messageInfo) => {
                     if (err) {
                         utils.logged(err);
-                        api.sendMessage(
-                            updateFont("Unable to send message. Please try it again later.", id),
-                            thread_id,
-                            (err, messageInfo) => {
-                                if (err) utils.logged(err);
-                            },
-                            message_id
-                        );
+                        sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, id);
                     }
                 },
                 message_id
@@ -6291,56 +6312,37 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
     if (err) {
         utils.logged(err);
         if (err.error == 1545049) {
-            api.sendMessage(
-                updateFont("Message is too long to be sent.", id),
-                thread_id,
-                (err, messageInfo) => {
-                    if (err) utils.logged(err);
-                },
-                message_id
-            );
+            sendMessageError(api, "Message is too long to be sent.", thread_id, message_id, id);
         } else if (err.error == 1545051) {
-            api.sendMessage(
-                updateFont("Failure to send the response due to an invalid image.", id),
-                thread_id,
-                (err, messageInfo) => {
-                    if (err) utils.logged(err);
-                },
-                message_id
-            );
+            sendMessageError(api, "Failure to send the response due to an invalid image.", thread_id, message_id, id);
         } else if (err.error == 1404102) {
-            api.sendMessage(
-                updateFont("Failure to send message because the reponse contains url in which prohibited in Facebook.", id),
-                thread_id,
-                (err, messageInfo) => {
-                    if (err) utils.logged(err);
-                },
-                message_id
-            );
+            sendMessageError(api, "Failure to send message because the reponse contains url in which prohibited in Facebook.", thread_id, message_id, id);
         } else if (err.error == 1545023) {
-            api.sendMessage(
-                updateFont("The AI response seems empty. No idea why thought.", id),
-                thread_id,
-                (err, messageInfo) => {
-                    if (err) utils.logged(err);
-                },
-                message_id
-            );
+            sendMessageError(api, "The AI response seems empty. No idea why thought.", thread_id, message_id, id);
+        } else if (err.error == "Invalid url") {
+            sendMessageError(api, "The message contains invalid link so it was not sent.", thread_id, message_id, id);
         } else {
-            api.sendMessage(
-                updateFont("Unable to send message. Please try it again later.", id),
-                thread_id,
-                (err, messageInfo) => {
-                    if (err) utils.logged(err);
-                },
-                message_id
-            );
+            sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, id);
         }
     }
 }
 
+function sendMessageError(api, message, thread_id, message_id, id) {
+    api.sendMessage(
+        updateFont(message, id),
+        thread_id,
+        (err, messageInfo) => {
+            if (err) utils.logged(err);
+        },
+        message_id
+    );
+}
+
 async function reactMessage(api, event, reaction) {
     if (isMyId(event.senderID)) {
+        return;
+    }
+    if (emo.includes(event.messageID)) {
         return;
     }
     await wait(4000);
@@ -6896,7 +6898,6 @@ function blockUser(api, event, id) {
     } else {
         sendMessage(api, event, "The user " + id + " is blocked.");
     }
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function blockGroup(api, event, id) {
@@ -6906,7 +6907,6 @@ function blockGroup(api, event, id) {
     }
     groups.blocked.push(id);
     sendMessage(api, event, "The group " + id + " is blocked.");
-    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function unblockGroup(api, event, id) {
@@ -6916,31 +6916,26 @@ function unblockGroup(api, event, id) {
     }
     groups.blocked = groups.blocked.filter((item) => item !== id);
     sendMessage(api, event, "The group " + id + " can now use my commands.");
-    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function enableTTS(api, event, id) {
     groups.tts.push(id);
     sendMessage(api, event, "Speech Synthesis is turn on for thread " + id);
-    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function disableTTS(api, event, id) {
     groups.tts = groups.tts.filter((item) => item != id);
     sendMessage(api, event, "Speech Synthesis is turn off for thread " + id);
-    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
 }
 
 function enableSmartReply(api, event, id) {
     users.smart_reply.push(id);
     sendMessage(api, event, "Smart Reply is turn on for thread " + id);
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function disableSmartReply(api, event, id) {
     users.smart_reply = users.smart_reply.filter((item) => item !== id);
     sendMessage(api, event, "Smart Reply is turn off for thread " + id);
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function unblockUser(api, event, id) {
@@ -6950,7 +6945,6 @@ function unblockUser(api, event, id) {
     }
     users.blocked = users.blocked.filter((item) => item !== id);
     sendMessage(api, event, "The user " + id + " can now use my commands.");
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function fontIgnore(api, event, id) {
@@ -6960,7 +6954,50 @@ function fontIgnore(api, event, id) {
     }
     users.font_ignore.push(id);
     sendMessage(api, event, "Custom font deactive for user " + id);
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+}
+
+function deleteUserInfo(api, event, userId) {
+    let count = 0;
+    for (b in msgs) {
+        let type = msgs[b][0];
+        if (type == "photo" || type == "animated_image" || type == "sticker" || type == "video" || type == "audio" || type == "audio" || type == "file" || type == "location" || type == "share") {
+            let userIdinMessage = msgs[b][1][1];
+            if (userId == userIdinMessage) {
+                delete msgs[b];
+                count++;
+              //  utils.logged(messageId);
+            }
+        } else {
+            let userIdinMessage1 = msgs[b][1];
+            if (userId == userIdinMessage1) {
+                delete msgs[b];
+                count++;
+              //  utils.logged(messageId);
+         
+            }
+        }
+    }
+
+    for (b in unsend_msgs) {
+        let type = unsend_msgs[b][0];
+        if (type == "photo" || type == "animated_image" || type == "sticker" || type == "video" || type == "audio" || type == "audio" || type == "file" || type == "location" || type == "share") {
+            let userIdinMessage = unsend_msgs[b][1][1];
+            if (userId == userIdinMessage) {
+                delete unsend_msgs[b];
+                count++;
+              //  utils.logged(messageId);
+            }
+        } else {
+            let userIdinMessage1 = unsend_msgs[b][1];
+            if (userId == userIdinMessage1) {
+                delete unsend_msgs[b];
+                count++;
+              //  utils.logged(messageId);
+            }
+        }
+    }
+    sendMessage(api, event, count + " deleted messages userid " + userId);
+ //   fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function addAdmin(api, event, id) {
@@ -6974,7 +7011,6 @@ function addAdmin(api, event, id) {
     }
     users.admin.push(id);
     sendMessage(api, event, "Admin permission granted.");
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function remAdmin(api, event, id) {
@@ -6987,7 +7023,6 @@ function remAdmin(api, event, id) {
     }
     users.admin = users.admin.filter((item) => item !== id);
     sendMessage(api, event, "Admin permission removed.");
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function changeNickname(api, event, id, text) {
@@ -7432,29 +7467,39 @@ async function sendMessageToAll(api, event) {
     let message = event.messageReply.body;
     let time = getTimestamp();
     let count = 0;
-    let format = getFormat(event.messageReply.attachments[0].type);
+    let accm = [];
 
     if (event.messageReply.attachments.length != 0) {
+        let format = getFormat(event.messageReply.attachments[0].type);
         for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
             await wait(1000);
             let dir = __dirname + "/cache/files/notify_" + i55 + "_" + time + format;
             downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
-            count++;
+        }
+        let i1;
+        for (i1 = 0; i1 < count; i1++) {
+            accm.push(fs.createReadStream(__dirname + "/cache/files/notify_" + i1 + "_" + time + format));
         }
     }
-    let accm = [];
-    let i1;
-    for (i1 = 0; i1 < count; i1++) {
-        accm.push(fs.createReadStream(__dirname + "/cache/files/notify_" + i1 + "_" + time + format));
-    }
-    for (gp in group) {
-        if (!groups.blocked.includes(gp)) {
-            await wait(20000);
+    for (gp in groups.active) {
+        if (!groups.blocked.includes(groups.active[gp])) {
+            await wait(5000);
             let body = {
-                body: message + "\n\n" + "\n> Notification From The Developer",
-                attachment: accm,
+                body: message
             };
-            api.sendMessage(body, gp);
+            if (accm.length > 0) {
+                body["attachment"] = accm;
+            }
+            api.sendMessage(body, groups.active[gp], (err, messageInfo) => {
+                if (err) {
+                    utils.logged(err);
+                    utils.logged("inactive_group " + gp);
+                    groups.active.pop(groups.active[gp]);
+                    return;
+                }
+                count++;
+            });
+
         }
     }
     sendMessage(api, event, "Message successfully send to " + count + " groups.");
@@ -7755,7 +7800,7 @@ ________  Exception  ________
         `
 ____________________________
         `;
-    utils.logged(message);
+    utils.logged("caught_exception " + JSON.stringify(err));
     api.sendMessage(message, currentID, (err, messageInfo) => {
         if (err) utils.logged(err);
     });

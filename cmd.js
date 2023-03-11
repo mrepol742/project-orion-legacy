@@ -34,6 +34,7 @@ _______  Project Orion 1/9  _______
     ⦿ misaka [text]
     ⦿ openai [text]
     ⦿ chatgpt [text]
+    ⦿ qwert [text]
 __________________________________
 `;
 
@@ -241,6 +242,7 @@ _______  Project Orion 9/9  _______
    ⦿ parseImage [url]
    ⦿ encrypt [text]
    ⦿ decrypt [text] [key1]:[key2]
+   ⦿ ginfo
 __________________________________
 `;
 
@@ -306,6 +308,7 @@ _______  Project Orion Root  _______
    ⦿ setAutoMarkDelivery [on|off]
    ⦿ setPresence [on|off]
    ⦿ setReportingThread [uid]
+   ⦿ deleteUserInfo [mention|name|url|uid|reply]
 ____________________________________
 `;
 
@@ -323,4 +326,4 @@ module.exports = {
     helproot: helproot,
 }
 
-// total commands 226
+// total commands 228

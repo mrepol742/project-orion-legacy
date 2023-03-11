@@ -74,7 +74,7 @@ function buildAPI(globalOptions, html, jar) {
     }
 
     var userID = maybeCookie[0].cookieString().split("=")[1].toString();
-    utils.logged("fca_uid " + userID);
+    utils.logged("fca_login " + userID);
 
     try {
         clearInterval(checkVerified);
@@ -92,21 +92,21 @@ function buildAPI(globalOptions, html, jar) {
         irisSeqID = oldFBMQTTMatch[1];
         mqttEndpoint = oldFBMQTTMatch[2];
         region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
-        utils.logged("fca_region " + region);
+        utils.logged("fca_location " + region);
     } else {
         let newFBMQTTMatch = html.match(/{"app_id":"219994525426954","endpoint":"(.+?)","iris_seq_id":"(.+?)"}/);
         if (newFBMQTTMatch) {
             irisSeqID = newFBMQTTMatch[2];
             mqttEndpoint = newFBMQTTMatch[1].replace(/\\\//g, "/");
             region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
-            utils.logged("fca_region " + region);
+            utils.logged("fca_location " + region);
         } else {
             let legacyFBMQTTMatch = html.match(/(\["MqttWebConfig",\[\],{fbid:")(.+?)(",appID:219994525426954,endpoint:")(.+?)(",pollingEndpoint:")(.+?)(3790])/);
             if (legacyFBMQTTMatch) {
                 mqttEndpoint = legacyFBMQTTMatch[4];
                 region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
                 utils.logged("fca_login Cannot get sequence ID with new RegExp. Fallback to old RegExp (without seqID)...");
-                utils.logged("fca_region " + region);
+                utils.logged("fca_location " + region);
                 utils.logged("fca_login [Unused] Polling endpoint: " + legacyFBMQTTMatch[6]);
             } else {
                 utils.logged("fca_login Cannot get MQTT region & sequence ID.");
