@@ -1,6 +1,6 @@
 {
     "name": "@mrepol742/project-orion",
-    "version": "1.0.17",
+    "version": "1.0.18",
     "description": "I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
     "main": "mj.js",
     "homepage": "https://mrepol742.github.io/project-orion/",
@@ -33,9 +33,9 @@
         "weather-js": "^2.0.0",
         "youtubei.js": "^1.4.5"
     },
-     "devDependencies": {
-    "prettier": "^2.8.4"
-  },
+    "devDependencies": {
+        "prettier": "^2.8.4"
+    },
     "engines": {
         "node": ">=18.x"
     }
