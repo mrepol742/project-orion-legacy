@@ -1,21 +1,18 @@
 "use strict";
 
-const FormData = require('form-data');
+const FormData = require("form-data");
 const dns = require("dns");
 const fs = require("fs");
-const http = require('http');
-const https = require('https');
-const os = require('os');
-const crypto = require('crypto')
-const WeatherJS = require("weather-js")
-const Youtubei = require('youtubei.js');
-const GoogleTTS = require('google-tts-api');
-const google = require('googlethis');
+const http = require("http");
+const https = require("https");
+const os = require("os");
+const crypto = require("crypto");
+const WeatherJS = require("weather-js");
+const Youtubei = require("youtubei.js");
+const GoogleTTS = require("google-tts-api");
+const google = require("googlethis");
 const axios = require("axios");
-const {
-    Configuration,
-    OpenAIApi
-} = require("openai");
+const { Configuration, OpenAIApi } = require("openai");
 
 module.exports = {
     FormData: FormData,
@@ -31,5 +28,5 @@ module.exports = {
     google: google,
     axios: axios,
     Configuration: Configuration,
-    OpenAIApi: OpenAIApi
-}
+    OpenAIApi: OpenAIApi,
+};

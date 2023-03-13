@@ -21,7 +21,7 @@ utils.logged("project_orion online");
  */
 
 const { FormData, dns, fs, http, https, os, crypto, WeatherJS, Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi } = require("./require.js");
-const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, mjme, goodev, goodmo, goodni, goodaf, sqq, days, months, happyEE, sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example } = require("./arrays.js");
+const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, mjme, goodev, goodmo, goodni, goodaf, sqq, days, months, happyEE, sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim} = require("./arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot } = require("./cmd.js");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
@@ -33,6 +33,7 @@ let thread = {};
 let acGG = [];
 let cmd1 = {};
 let emo = [];
+let emoRR = [];
 let userPresence = {};
 let threadMaintenance = {};
 let threadUnsending = {};
@@ -60,17 +61,16 @@ let msgs = JSON.parse(fs.readFileSync(__dirname + "/data/msgs.json", "utf8"));
 let unsend_msgs = JSON.parse(fs.readFileSync(__dirname + "/data/unsend_msgs.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 utils.logged("settings_loaded " + JSON.stringify(settings.preference));
-utils.logged("data_loaded_users " + JSON.stringify({users: users.list.length, muted: users.muted.length, bot: users.bot.length, admin: users.admin.length, blocked: users.blocked.length}));
-utils.logged("data_loaded_groups " + JSON.stringify({groups: Object.keys(groups.list).length, blocked: groups.blocked.length}));
-utils.logged("data_message " + JSON.stringify({messages: Object.keys(msgs).length, unsend_messages: Object.keys(unsend_msgs).length}));
+utils.logged("data_loaded_users " + JSON.stringify({ users: users.list.length, muted: users.muted.length, bot: users.bot.length, admin: users.admin.length, blocked: users.blocked.length }));
+utils.logged("data_loaded_groups " + JSON.stringify({ groups: Object.keys(groups.list).length, blocked: groups.blocked.length }));
+utils.logged("data_message " + JSON.stringify({ messages: Object.keys(msgs).length, unsend_messages: Object.keys(unsend_msgs).length }));
 
 const options2 = {
     key: fs.readFileSync(__dirname + "/assets/client-key.pem"),
-    cert: fs.readFileSync(__dirname + "/assets/client-cert.pem")
+    cert: fs.readFileSync(__dirname + "/assets/client-cert.pem"),
 };
 utils.logged("server_cert loaded");
 
-  
 const server = https.createServer(options2, getRoutes());
 const server1 = http.createServer(getRoutes());
 
@@ -155,16 +155,15 @@ process.on("beforeExit", (code) => {
     utils.logged("process_before_exit " + code);
 });
 
-process.on('SIGHUP', function () {
+process.on("SIGHUP", function () {
     process.exit(0);
 });
-process.on("SIGTERM", function() {
+process.on("SIGTERM", function () {
     process.exit(0);
 });
 process.on("SIGINT", function () {
     process.exit(0);
 });
-
 
 fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
     if (err) {
@@ -201,6 +200,7 @@ fca(loadAppState(settings.key[0], settings.key[1]), (err, api) => {
         listen.stopListening();
         utils.logged("fca_status offline");
         server.close();
+        server1.close();
         utils.logged("server_status offline");
         utils.logged("process_exit goodbye :( " + code);
         utils.logged("project_orion offline");
@@ -459,7 +459,8 @@ ERR! markAsDelivered }
                 let input = event.body;
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, "");
-                if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {Maintenance
+                if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
+                    Maintenance;
                     if (isGoingToFast1(event, threadMaintenance, 15)) {
                         return;
                     }
@@ -996,6 +997,7 @@ async function ai22(api, event, query, query2) {
                 let url = event.messageReply.attachments[0].url;
                 let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
                 downloadFile(encodeURI(url), dir).then((response) => {
+
                     transcribeAudioFile(dir)
                         .then((transcription) => {
                             sendMessage(api, event, transcription, event.threadID, event.messageReply.messageID, true, false);
@@ -1241,14 +1243,27 @@ async function ai(api, event) {
             return;
         }
 
-        if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "misaka" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
+        if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "melvin" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
             if (!users.list.includes(event.senderID)) {
                 utils.logged("new_user " + event.senderID);
                 users.list.push(event.senderID);
                 reactMessage(api, event, ":heart:");
-            } 
+            }
+            if (!users.listv2.find(user => event.senderID === user.id)) {
+                api.getUserInfo(event.senderID, async (err, data1) => {
+                    if (err) return utils.logged(err);
+                    utils.logged("new_user_v2 " + event.senderID);
+                    users.listv2.push({
+                        id: event.senderID,
+                        name: data1[event.senderID].name,
+                        firstName: data1[event.senderID].firstName
+                    });
+                    reactMessage(api, event, ":heart:");
+                });
+                }
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
+                       
             let text = query2;
             if (query.startsWith("repol")) {
                 text = input.substring(6);
@@ -1262,7 +1277,7 @@ async function ai(api, event) {
                 text = input.substring(28);
             } else if (query.startsWith("melvinjones")) {
                 text = input.substring(13);
-            } else if (query.startsWith("search") || query.startsWith("misaka")) {
+            } else if (query.startsWith("melvin") || query.startsWith("search")) {
                 text = input.substring(7);
             } else if (input.startsWith(settings.preference.prefix)) {
                 text = input.substring(settings.preference.prefix.length);
@@ -1279,10 +1294,6 @@ async function ai(api, event) {
                 sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
             } else if (text1.startsWith("whocreatedwebvium")) {
                 sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
-            } else if (text1.startsWith("whoareyou") || text1.startsWith("whatisyourname")) {
-                sendMessage(api, event, "I'm Mj.");
-            } else if (text1.startsWith("whoisactive")) {
-                sendMessage(api, event, "Me");
             } else if (text1.includes("pornsite") || text1.startsWith("whatissex") || text1.startsWith("whatssex") || text1.startsWith("fuckyou") || text1.startsWith("curseyou")) {
                 blockUser(api, event, event.senderID);
             } else if (text1 == "sim") {
@@ -1339,67 +1350,14 @@ async function ai(api, event) {
                 });
             } else if (text1 == "howitwork" || text1 == "howyoufunction") {
                 sendMessage(api, event, "We do this by emulating the browser. This means doing the exact same GET/POST requests and tricking Facebook into thinking we're accessing the website normally.");
-            } else if (text1 == "whoownyou") {
-                sendMessage(api, event, "Melvin Jones Repol.");
-            } else if (text1.startsWith("whomadeyou") || text1.startsWith("whocreatedyou") || text1.startsWith("whoisyourowner") || text1.startsWith("whowroteyou") || text1.startsWith("whoisyourmaker") || text1.startsWith("whobuiltyou") || text1.startsWith("whoprogramyou")) {
-                sendMessage(api, event, "Melvin Jones Repol created me.");
-            } else if (text1.startsWith("howoldareyou") || text1.startsWith("howyoungareyou") || text1.startsWith("whatisyourage") || text1.startsWith("whatsyourage")) {
-                sendMessage(api, event, "I'm 20 years old.");
-            } else if (text1.startsWith("whereyoufrom") || text1.startsWith("whereareyoufrom") || text1.startsWith("wheredoyoufrom")) {
-                sendMessage(api, event, "Somewhere in the place they called the Philippines.");
-            } else if (text1.startsWith("areyouhuman") || text1.startsWith("areyoubot") || text1.startsWith("areyouthebot")) {
-                sendMessage(api, event, "Scientifically, Programmatically and Technologically Human.");
             } else if (text1 == "dumb" || text1 == "dick" || text1 == "pussy" || text1 == "fuckyou" || text1 == "damnyou" || text1 == "fyou" || text1 == "fckyou") {
                 sendMessage(api, event, "I'm far intelligent than you human(s).");
-            } else if (text1 == "bot" || text1 == "ai" || text1 == "robot") {
-                sendMessage(api, event, "Who are you to call me that!.");
-            } else if (text1.startsWith("areyoumj")) {
-                sendMessage(api, event, "Yes i am indeed Mj.");
-            } else if (text1 == "thank" || text1 == "thankyou" || text1 == "thanksbro" || text1 == "thanks" || text1.startsWith("ilikeyou")) {
-                sendMessage(api, event, "You're welcome.");
-            } else if (text1 == "whatareyou") {
-                sendMessage(api, event, "A human.");
-            } else if (text1 == "wascorrect") {
-                sendMessage(api, event, "Yeah i knew it.");
             } else if (text1 == "bye" || text1 == "goodbye") {
                 sendMessage(api, event, "bye bye.");
             } else if (text1 == "ok" || text1 == "okay" || text1 == "nice" || text1.startsWith("hmmm")) {
                 sendMessage(api, event, "Yeahh..");
-            } else if (
-                text1 == "time" ||
-                text1.startsWith("whatsthetime") ||
-                text1.startsWith("whatisthetime") ||
-                text1 == "todayis" ||
-                text1.startsWith("timetoday") ||
-                text1.startsWith("whatsthedatetoday") ||
-                text1.startsWith("whatisthedatetoday") ||
-                text1.startsWith("whatdatetoday") ||
-                text1.startsWith("whatisthetimenow") ||
-                text1.startsWith("whatsthetimenow") ||
-                text1 == "date" ||
-                text1.startsWith("whatsthedate") ||
-                text1.startsWith("whatisthedate") ||
-                text1.startsWith("datetoday") ||
-                text1.startsWith("whattimeisitnow") ||
-                text1.startsWith("whatdateisitnow")
-            ) {
-                sendMessage(api, event, "It's " + getMonth(settings.preference.timezone) + " " + getDayN(settings.preference.timezone) + ", " + getDay(settings.preference.timezone) + " " + formateDate(settings.preference.timezone));
-            } else if (text1.startsWith("iloveyou") || text1.startsWith("loveme") || text1.startsWith("doyoulikeme") || text1.startsWith("doyouloveme") || text1.startsWith("whydontyouloveme") || text1.startsWith("imissyou") || text1.startsWith("iwantyou")) {
-                sendMessage(api, event, "I've already a girl and i love her so much >3.");
             } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
                 sendMessage(api, event, "huhhhhhhhhh uh.");
-            } else if (text1 == "melvinjonesrepol" || text1 == "mrepol742" || text1 == "melvinjones" || text1 == "melvinjonesgallanorepol" || (text1.startsWith("whois") && isMe(text2))) {
-                let message = {
-                    body: "Melvin Jones 'Mj' Repol\n\nA self taught Software Engineer with experience in Web Development, SEO, Data Analyst and Computer Troubleshooting.\n\nhttps://mrepol742.github.io",
-                    url: "https://mrepol742.github.io",
-                };
-                sendMessage(api, event, message);
-            } else if (text1.startsWith("whois") && (text2.includes("pat") || text1.includes("patrickelcano") || text2.includes("0x3ef8") || text1.includes("jaypatrickcano") || text1.includes("patrickcano"))) {
-                let mss = {
-                    body: "Jay Patrick Cano is a self-taught front-end developer in the Philippines. He also been involved in many back-end projects in the past. He  been learning these things for the last two years, and it feels like learning more is a part of my life.\n\nhttps://0x3ef8.github.io",
-                    url: "https://0x3ef8.github.io",
-                };
-                sendMessage(api, event, mss);
             } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
                 sendMessage(api, event, "Do you mean cmd? You can call cmd to open my command list.");
             } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
@@ -1431,43 +1389,9 @@ async function ai(api, event) {
                 if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
                     text += ".";
                 }
-
-                // initiate results simulatenoesly
-                let ss = await aiResponse(settings.preference.text_complextion, text, true);
-
-                if (query.startsWith("misaka")) {
-                    ss = "Misaka misaka says \n" + ss;
-                }
-
-                let message = {
-                    body: maven(ss),
-                };
-
-                let arraySS = ss.split(/\s+/);
-
-                for (sss in arraySS) {
-                    if (
-                        arraySS[sss].startsWith("https://") ||
-                        arraySS[sss].startsWith("http://") ||
-                        arraySS[sss].endsWith(".com") ||
-                        arraySS[sss].endsWith(".net") ||
-                        arraySS[sss].endsWith(".org") ||
-                        arraySS[sss].endsWith(".co") ||
-                        arraySS[sss].endsWith(".edu") ||
-                        arraySS[sss].endsWith(".gov") ||
-                        arraySS[sss].endsWith(".info") ||
-                        arraySS[sss].endsWith(".xyz") ||
-                        arraySS[sss].endsWith(".me")
-                    ) {
-                        message = {
-                            body: maven(ss),
-                            url: arraySS[sss],
-                        };
-                        break;
-                    }
-                }
-
-                sendMessage(api, event, message);
+                getUserName(event.senderID, await function (name) {
+                    doAiThing(api, event, text, name);
+                });
             }
         }
     } else if (query.startsWith("chatgpt")) {
@@ -1476,37 +1400,128 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using chatgpt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchatgpt what is matter?");
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
             data.shift();
-            getResponseData("https://api.amosayomide05.cf/gpt/?question=" + data.join(" ") + "&string_id=unique_id").then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "ChatGPT3 is at capacity right now. Please try it again later.");
-                } else {
-                    sendMessage(api, event, response.response, event.threadID, event.messageID, false, true);
-                }
-            });
+            try {
+            const completion = await openai.createChatCompletion({
+                model: "gpt-3.5-turbo",
+                messages: [{role: "user", content: data.join(" ")}],
+              });
+              sendMessage(api, event,completion.data.choices[0].message.content);
+            } catch (err) {
+                sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
+            }
         }
-    } else if (query.startsWith("qwert")) {
+    } else if (query.startsWith("misaka")) {
         if (isGoingToFast(event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using qwert text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nqwert what is matter?");
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
             data.shift();
             try {
                 const response = await openai.createCompletion({
                     model: "text-davinci-003",
-                    prompt: "Marv is a chatbot that reluctantly answers questions with sarcastic responses:\n\nYou: " + data.join(" ") + "\nMarv: ",
+                    prompt: "Misaka is a chatbot that reluctantly answers questions using childish responses: Created by Melvin Jones Repol.\n\nYou: " + data.join(" ") + "\nMisaka: ",
                     temperature: 0.5,
                     max_tokens: 60,
                     top_p: 0.3,
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                sendMessage(api, event, response.data.choices[0].text);
+                let text = response.data.choices[0].text;
+                if (response.data.choices[0].finish_reason == "length") {
+                    if (!text.endsWith(".")) {
+                        text = "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
+                    }
+                    text = "This is what i only know.\n" + text;
+                }
+                sendAiMessage(api, event, text);
+            } catch (error) {
+                if (!(error.response === undefined)) {
+                    if (error.response.status == 500) {
+                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
+                    } else if (error.response.status == 429) {
+                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
+                    } else if (error.response.status == 503) {
+                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    } else {
+                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    }
+                }
+            }
+        }
+    } else if (query2.startsWith("sim ")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, heySim[Math.floor(Math.random() * heySim.length)]);
+        } else {
+            data.shift();
+            try {
+                const response = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: "Sim is a chatbot that reluctantly answers questions using sexy responses: Created by Melvin Jones Repol.\n\nYou: " + data.join(" ") + "\nSim: ",
+                    temperature: 0.5,
+                    max_tokens: 60,
+                    top_p: 0.3,
+                    frequency_penalty: 0.5,
+                    presence_penalty: 0,
+                });
+                let text = response.data.choices[0].text;
+                if (response.data.choices[0].finish_reason == "length") {
+                    if (!text.endsWith(".")) {
+                        text = "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
+                    }
+                    text = "This is what i only know.\n" + text;
+                }
+                sendAiMessage(api, event, text);
+            } catch (error) {
+                if (!(error.response === undefined)) {
+                    if (error.response.status == 500) {
+                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
+                    } else if (error.response.status == 429) {
+                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
+                    } else if (error.response.status == 503) {
+                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    } else {
+                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                    }
+                }
+            }
+        }
+    } else if (query.startsWith("melbin")) {
+        if (isGoingToFast(event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, heyMelbin[Math.floor(Math.random() * heyMelbin.length)]);
+        } else {
+            data.shift();
+            try {
+                const response = await openai.createCompletion({
+                    model: "text-davinci-003",
+                    prompt: "Melbin is a chatbot that reluctantly answers questions using sarcastic responses: Created by Melvin Jones Repol: \n\nYou: " + data.join(" ") + "\nMelbin: ",
+                    temperature: 0.5,
+                    max_tokens: 60,
+                    top_p: 0.3,
+                    frequency_penalty: 0.5,
+                    presence_penalty: 0,
+                });
+                let text = response.data.choices[0].text;
+                if (response.data.choices[0].finish_reason == "length") {
+                    if (!text.endsWith(".")) {
+                        text = "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again. Ask questions briefly, in this platform AI are so limited on words it can send.";
+                    }
+                    text = "This is what i only know.\n" + text;
+                }
+                sendAiMessage(api, event, text);
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status == 500) {
@@ -1527,7 +1542,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using openai text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nopenai what is matter?");
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
             data.shift();
             try {
@@ -1542,7 +1557,7 @@ async function ai(api, event) {
                 });
                 sendMessage(api, event, response.data.choices[0].text);
             } catch (err) {
-                sendMessage(api, event, "OpenAI is at capacity right now. Please try it again later.");
+                sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
             }
         }
     } else if (query.startsWith("createcode")) {
@@ -1560,7 +1575,7 @@ async function ai(api, event) {
                     prompt: data.join(" "),
                     max_tokens: 2000,
                 });
-                sendMessage(api, event, response.data.choices[0].text);
+                sendAiMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status == 500) {
@@ -1601,7 +1616,6 @@ async function ai(api, event) {
                         unLink(dir);
                     });
                 }
-                sendMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status == 500) {
@@ -1611,7 +1625,7 @@ async function ai(api, event) {
                     } else if (error.response.status == 503) {
                         sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
                     } else {
-                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                        sendMessage(api, event, idknow[Math.createimgfloor(Math.random() * idknow.length)]);
                     }
                 }
             }
@@ -1622,50 +1636,28 @@ async function ai(api, event) {
             let count1 = 0;
             let count2 = 0;
             let count3 = 0;
-            fs.readdir(__dirname + "/cache/audios/", function (err, files) {
-                if (err) {
-                    return utils.logged(err);
-                }
-                files.forEach(function (file) {
-                    if (!file.endsWith(".gitkeep")) {
-                        count++;
-                        unLink(__dirname + "/cache/audios/" + file);
+            let a = ["audios", "images", "videos", "files"]
+            for (typ in a) {
+                fs.readdir(__dirname + "/cache/" + a[typ], function (err, files) {
+                    if (err) {
+                        return utils.logged(err);
                     }
+                    files.forEach(function (file) {
+                        if (!file.endsWith(".gitkeep")) {
+                            if (a[typ] == "audios") {
+                                count++;
+                            } else if (a[typ] == "images") {
+                                count1++;
+                            } else if (a[typ] == "videos") {
+                                count2++;
+                            } else {
+                                count3++;
+                            }
+                            unLink(__dirname + "/cache/" + a[typ] + file);
+                        }
+                    });
                 });
-            });
-            fs.readdir(__dirname + "/cache/images/", function (err, files) {
-                if (err) {
-                    return utils.logged(err);
-                }
-                files.forEach(function (file) {
-                    if (!file.endsWith(".gitkeep")) {
-                        count1++;
-                        unLink(__dirname + "/cache/images/" + file);
-                    }
-                });
-            });
-            fs.readdir(__dirname + "/cache/videos/", function (err, files) {
-                if (err) {
-                    return utils.logged(err);
-                }
-                files.forEach(function (file) {
-                    if (!file.endsWith(".gitkeep")) {
-                        count2++;
-                        unLink(__dirname + "/cache/videos/" + file);
-                    }
-                });
-            });
-            fs.readdir(__dirname + "/cache/files/", function (err, files) {
-                if (err) {
-                    return utils.logged(err);
-                }
-                files.forEach(function (file) {
-                    if (!file.endsWith(".gitkeep")) {
-                        count3++;
-                        unLink(__dirname + "/cache/files/" + file);
-                    }
-                });
-            });
+            }
             await wait(1000);
             let message =
                 `
@@ -1857,6 +1849,11 @@ _______  Statistics  _______
             `/` +
             numberWithCommas(users.list.length) +
             `
+    ⦿ Users (v2): ` +
+            numberWithCommas(Object.keys(cmd).length) +
+            `/` +
+            numberWithCommas(users.listv2.length) +
+            `
    ⦿ Groups: ` +
             acGG.length +
             `/` +
@@ -1874,9 +1871,6 @@ _______  Statistics  _______
             `
    ⦿ Command Call: ` +
             commandCalls +
-            `
-   ⦿ Total Tokens: ` +
-            settings.token.total_tokens +
             `
 ___________________________
 `;
@@ -1927,8 +1921,9 @@ _______________________
 _______  System Info  _______
 
    ⦿ Server Date: ` +
-             new Date().toLocaleString() +
+            new Date().toLocaleString() +
             `
+   ⦿ Server Protocol: http(s) with SSL
    ⦿ Server Uptime: ` +
             secondsToTime(process.uptime()) +
             `
@@ -2872,7 +2867,7 @@ _____________________________
             }
             sendMessage(api, event, message, event.threadID, event.messageID, true, false);
         });
-      /*  const a = "\u200E";
+        /*  const a = "\u200E";
         let message = {
             body: "@everyone",
             mentions: {
@@ -2888,7 +2883,7 @@ _____________________________
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
-            let ss = await aiResponse(settings.preference.text_complextion, input, true);
+            let ss = await aiResponse(settings.preference.text_complextion, input, true, "You");
             sendMessage(api, event, ss);
         }
     } else if (query.startsWith("baybayin")) {
@@ -3836,7 +3831,7 @@ _____________________________
             } else {
                 let pre = data.shift();
                 let pre2 = formatQuery(pre.replace(/\s+/g, ""));
-                if (pre2.startsWith("mj") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.preference.prefix)) {
+                if (pre2.startsWith("mj") || pre2.startsWith("melvin") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.preference.prefix)) {
                     sendMessage(api, event, "Unable to do such an action.");
                 } else if (!settings.ignored_prefixes.includes(pre)) {
                     settings.ignored_prefixes.push(pre);
@@ -3965,7 +3960,7 @@ _____________________________
                                 if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                 api.getUserInfo(data[0].userID, (err, data1) => {
                                     if (err) return utils.logged(err);
-                                    welcomeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?");
+                                    welcomeUser(api, event, data1[data[0].userID].name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?");
                                 });
                             });
                             return;
@@ -3975,7 +3970,7 @@ _____________________________
                     }
                     api.getUserInfo(id, (err, data1) => {
                         if (err) return utils.logged(err);
-                        welcomeUser(api, event, data1.name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?");
+                        welcomeUser(api, event, data1[id].name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?");
                     });
                 }
             } else {
@@ -4013,7 +4008,7 @@ _____________________________
                                     removeUser(api, event, data[0].userID);
                                     api.getUserInfo(data[0].userID, (err, data1) => {
                                         if (err) return utils.logged(err);
-                                        byebyeUser(api, event, data1.name, gc.threadName, arr.length, data[0].userID);
+                                        byebyeUser(api, event, data1[data[0].userID].name, gc.threadName, arr.length, data[0].userID);
                                     });
                                 });
                                 return;
@@ -4024,7 +4019,7 @@ _____________________________
                         removeUser(api, event, id);
                         api.getUserInfo(id, (err, data1) => {
                             if (err) return utils.logged(err);
-                            byebyeUser(api, event, data1.name, gc.threadName, arr.length, id);
+                            byebyeUser(api, event, data1[id].name, gc.threadName, arr.length, id);
                         });
                     }
                 } else {
@@ -5816,24 +5811,6 @@ _____________________________
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/images/sadcat_" + getTimestamp() + ".png");
         }
-    } else if (query2.startsWith("sim ")) {
-        if (isGoingToFast(event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-        } else {
-            data.shift();
-            let txt = data.join(" ").substring(0, 996) + "...";
-            getResponseData("https://api.simsimi.net/v2/?text=" + txt + "&lc=ph&cf=false&name=" + mjme[Math.floor(Math.random() * mjme.length)]).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "Unfortunately i am not simp anymore.");
-                } else {
-                    sendMessage(api, event, response["success"]);
-                }
-            });
-        }
     } else if (query2.startsWith("pooh ")) {
         if (isGoingToFast(event)) {
             return;
@@ -6138,7 +6115,16 @@ function reaction(api, event, query, input) {
     if (containsAny(query, happyEE) || input.includes("😂") || input.includes("🤣") || input.includes("😆")) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
-            sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
+            if (event.type == "message_reply") {
+                if (emoRR.includes(event.messageReply.messageID)) {
+                    sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
+                    return;
+                }
+                emoRR.push(event.messageReply.messageID);
+                sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)], event.threadID, event.messageReply.messageID);
+            } else {
+                sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
+            }
         }
     } else if (containsAny(input.toLowerCase(), sadEE)) {
         reactMessage(api, event, ":sad:");
@@ -6161,7 +6147,6 @@ function someR(api, event, query) {
             sendMessageOnly(api, event, "It's currently " + formateDate(settings.preference.timezone) + " in the " + getDayNightTime(settings.preference.timezone) + " over here.");
         }
         return true;
-        json;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         reactMessage(api, event, ":love:");
         sendMessage(api, event, goodmo[Math.floor(Math.random() * goodmo.length)]);
@@ -6362,9 +6347,14 @@ async function reactMessage(api, event, reaction) {
         return;
     }
     utils.logged("react_message " + event.threadID + " " + event.messageID + " " + reaction);
-    api.setMessageReaction(reaction, event.messageID, (err) => {
-        if (err) utils.logged(err);
-    }, true);
+    api.setMessageReaction(
+        reaction,
+        event.messageID,
+        (err) => {
+            if (err) utils.logged(err);
+        },
+        true
+    );
 }
 
 function formatQuery(string) {
@@ -6504,7 +6494,7 @@ function getProfilePic(id) {
 }
 
 function isMe(query) {
-    return query.includes("melvin jones repol") || query.includes("melvin jones") || query.includes("melvin jones gallano repol") || query.includes("mj") || query.includes("mrepol742");
+    return query.includes("melvin jones repol") || query.includes("melvin") || query.includes("melvin jones") || query.includes("melvin jones gallano repol") || query.includes("mj") || query.includes("mrepol742");
 }
 
 function isMorning(tz) {
@@ -6976,15 +6966,14 @@ function deleteUserInfo(api, event, userId) {
             if (userId == userIdinMessage) {
                 delete msgs[b];
                 count++;
-              //  utils.logged(messageId);
+                //  utils.logged(messageId);
             }
         } else {
             let userIdinMessage1 = msgs[b][1];
             if (userId == userIdinMessage1) {
                 delete msgs[b];
                 count++;
-              //  utils.logged(messageId);
-         
+                //  utils.logged(messageId);
             }
         }
     }
@@ -6996,19 +6985,19 @@ function deleteUserInfo(api, event, userId) {
             if (userId == userIdinMessage) {
                 delete unsend_msgs[b];
                 count++;
-              //  utils.logged(messageId);
+                //  utils.logged(messageId);
             }
         } else {
             let userIdinMessage1 = unsend_msgs[b][1];
             if (userId == userIdinMessage1) {
                 delete unsend_msgs[b];
                 count++;
-              //  utils.logged(messageId);
+                //  utils.logged(messageId);
             }
         }
     }
     sendMessage(api, event, count + " deleted messages userid " + userId);
- //   fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+    //   fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
 }
 
 function addAdmin(api, event, id) {
@@ -7413,13 +7402,10 @@ function saveEvent(event) {
     }
 }
 
-async function aiResponse(complextion, text, repeat) {
+async function aiResponse(complextion, text, repeat, user) {
     try {
-        const ai = await openai.createCompletion(generateParamaters(complextion, text));
+        const ai = await openai.createCompletion(generateParamaters(complextion, text, user));
         let text1 = ai.data.choices[0].text;
-        settings.token.prompt_tokens = settings.token.prompt_tokens + ai.data.usage.prompt_tokens;
-        settings.token.completion_tokens = settings.token.completion_tokens + ai.data.usage.completion_tokens;
-        settings.token.total_tokens = settings.token.total_tokens + ai.data.usage.total_tokens;
 
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
@@ -7427,17 +7413,11 @@ async function aiResponse(complextion, text, repeat) {
             }
             text1 = "This is what i only know.\n" + text1;
         }
-
-        let text2 = text1.replace(/\n\s*\n/g, "\n");
-        if (text2.startsWith("?") || text2.startsWith("!") || text2.startsWith(".") || text2.startsWith("-")) {
-            text2 = text2.slice(1);
-        }
-
-        return text2;
+        return text1;
     } catch (error) {
         if (repeat) {
             utils.logged("attempt_initiated");
-            return await aiResponse(getNewComplextion(settings.preference.text_complextion), text, false);
+            return await aiResponse(getNewComplextion(settings.preference.text_complextion), text, false, user);
         }
         if (!(error.response === undefined)) {
             utils.logged(error.response.status);
@@ -7455,10 +7435,16 @@ async function aiResponse(complextion, text, repeat) {
     }
 }
 
-function generateParamaters(complextion, text) {
+function generateParamaters(complextion, text, user) {
     return {
         model: complextion,
-        prompt: text,
+        prompt:
+            "Melvin Jones Repol built Mj, a chatbot that mimics a human. He is Filipino and twenty years old. His social handle is @mrepol742, and his website address is https://mrepol742.github.io. His wife is Marvyil Alexa Guno. Date: " +
+            new Date().toLocaleString() +
+            " He is " + user + "." +
+            "\n\n" + user + ": " +
+            text +
+            "\nMj: ",
         temperature: parseInt(settings.preference.temperature),
         max_tokens: parseInt(settings.preference.max_tokens),
         top_p: parseInt(settings.preference.probability_mass),
@@ -7496,7 +7482,7 @@ async function sendMessageToAll(api, event) {
         if (!groups.blocked.includes(groups.active[gp])) {
             await wait(5000);
             let body = {
-                body: message
+                body: message,
             };
             if (accm.length > 0) {
                 body["attachment"] = accm;
@@ -7510,7 +7496,6 @@ async function sendMessageToAll(api, event) {
                 }
                 count++;
             });
-
         }
     }
     sendMessage(api, event, "Message successfully send to " + count + " groups.");
@@ -7667,6 +7652,8 @@ function maven(text) {
 }
 
 function updateFont(message, id) {
+    return message;
+    /*
     if (users.font_ignore.includes(id)) {
         return message;
     }
@@ -7682,6 +7669,7 @@ function updateFont(message, id) {
     }
     message.body = maven(body);
     return message;
+    */
 }
 
 function removeTags(str) {
@@ -7766,8 +7754,7 @@ async function transcribeAudioFile(filePath) {
     formData.append("output", "txt");
 
     try {
-        const api_url = "http://stt.amosayomide05.cf:9000/asr?task=transcribe&output=txt";
-        const response = await axios.post(api_url, formData, {
+        const response = await axios.post("http://stt.amosayomide05.cf:9000/asr?task=transcribe&output=txt", formData, {
             headers: {
                 ...formData.getHeaders(),
                 accept: "application/json",
@@ -7839,8 +7826,6 @@ function getStatus() {
 
 function getRoutes() {
     return function (req, res) {
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(200);
         if (!(threadInfo[req.url] === undefined)) {
             let hh = threadpage + "";
             let construct = "";
@@ -7849,31 +7834,92 @@ function getRoutes() {
             construct += "<b>Name</b><br>";
             construct += threadInfo[req.url].members;
             let page = hh.replaceAll("%THREAD_NAME%", threadInfo[req.url].threadName).replaceAll("%THREAD_INFO%", construct).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
+            res.setHeader("Content-Type", "text/html");
+            res.writeHead(200);
             res.end(page);
             return;
         }
         switch (req.url) {
             case "/google022983bf0cf659ae.html":
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
                 res.end(googlev);
                 break;
-                case "/hero.png":
-                    red.end(herop);
-                    break;
+            case "/hero.png":
+                res.setHeader("Content-Type", "image/png");
+                res.writeHead(200);
+                res.end(herop);
+                break;
+            case "/background0.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[0]);
+                break;
+            case "/background1.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[1]);
+                break;
+            case "/background2.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[2]);
+                break;
+            case "/background3.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[3]);
+                break;
+            case "/background4.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[4]);
+                break;
+            case "/background5.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[5]);
+                break;
+            case "/background6.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[6]);
+                break;
+            case "/background7.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[7]);
+                break;
+            case "/background8.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[8]);
+                break;
             case "/site.webmanifest":
+                res.setHeader("Content-Type", "application/json");
+                res.writeHead(200);
                 res.end(webmanifest);
                 break;
-                case "/sw.js":
-                    res.end(servicew);
-                    break;
+            case "/sw.js":
+                res.setHeader("Content-Type", "text/javascript");
+                res.writeHead(200);
+                res.end(servicew);
+                break;
             case "/status":
+                res.setHeader("Content-Type", "application/json");
+                res.writeHead(200);
                 res.end(JSON.stringify({ status: getStatus() }));
                 break;
             case "/":
             case "/home":
             case "/homepage":
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
                 res.end(homepage);
                 break;
             default:
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
                 res.end(errorpage);
                 break;
         }
@@ -7893,4 +7939,104 @@ function decrypt(text, key, iv) {
     let decrypted = decipher.update(encryptedText);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();
+}
+
+
+async function sendAiMessage(api, event, ss) {
+    if (/\[(y|Y)our\s?(n|N)ame\]/g.test(ss)) {
+        api.getUserInfo(event.senderID, async (err, data1) => {
+            if (err) return utils.logged(err);
+            sendAiMessage(api, event, ss.replace(/\[(y|Y)our\s?(n|N)ame\]/g, data1[event.senderID].name));
+        });
+        return;
+    }
+    if (event.type == "message_reply") {
+        if (/\[(n|N)ame\]/g.test(ss)) {
+            api.getUserInfo(event.messageReply.senderID, async (err, data1) => {
+                if (err) return utils.logged(err);
+                sendAiMessage(api, event, ss.replace(/\[(n|N)ame\]/g, data1[event.messageReply.senderID].name));
+            });
+            return;
+        }
+    }
+    let message = {
+        body: ss,
+        mentions: []
+
+    };
+
+    if (/\[(a|A)ttached\s?(p|P)hoto\]/g.test(ss) || /\[(r|R)andom\s?(p|P)hoto\]/g.test(ss)) {
+        message.body = message.body.replace(/\[(a|A)ttached\s?(p|P)hoto\]/g, "").replace(/\[(r|R)andom\s?(p|P)hoto\]/g, "");
+        let dir = __dirname + "/cache/images/attch_" + getTimestamp() + ".png";
+       await downloadFile("https://source.unsplash.com/900x1600/?random", dir).then((response) => {
+            message["attachment"] = fs.createReadStream(dir);
+    });
+    } else if ((/\[(a|A)ttached\s?/g.test(ss))) {
+        let potaina = ss.match(/\[(.*?)\]/);
+if (potaina) {
+    let ditopota = potaina[1];
+  message.body = message.body.replace(ditopota, "");
+
+  let dir = __dirname + "/cache/images/attch_" + getTimestamp() + ".png";
+  await downloadFile("https://source.unsplash.com/900x1600/?" + ditopota.replace("Attached", ""), dir).then((response) => {
+       message["attachment"] = fs.createReadStream(dir);
+});
+}
+    }
+
+    for (userID in event.mentions) {
+        message.mentions.push({
+            tag: formatMention(event.mentions[userID], ss),
+            id: userID,
+        });
+    }
+
+    let arraySS = ss.split(/\s+/);
+
+    for (sss in arraySS) {
+        if (
+            arraySS[sss].startsWith("https://") ||
+            arraySS[sss].startsWith("http://") ||
+            arraySS[sss].endsWith(".com") ||
+            arraySS[sss].endsWith(".net") ||
+            arraySS[sss].endsWith(".org") ||
+            arraySS[sss].endsWith(".co") ||
+            arraySS[sss].endsWith(".edu") ||
+            arraySS[sss].endsWith(".gov") ||
+            arraySS[sss].endsWith(".info") ||
+            arraySS[sss].endsWith(".xyz") ||
+            arraySS[sss].endsWith(".me") ||
+            arraySS[sss].endsWith(".io")
+        ) {
+            message["url"] = arraySS[sss];
+            break;
+        }
+    }
+    sendMessage(api, event, message);
+}
+
+async function getUserName(id, cb) {
+    if (!users.listv2.find(user => id === user.id)) {
+        return "You";
+    }
+    users.listv2.find(user => {
+        if (user.id == id) {
+           cb(user.firstName);
+        }
+    })
+}
+
+async function doAiThing(api, event, text, name) {
+    let ss = await aiResponse(settings.preference.text_complextion, text, true, name);
+    sendAiMessage(api, event, ss);
+}
+
+function formatMention(name, text) {
+    if ((name === undefined) || name == "") {
+        return;
+    }
+    if (text.includes("@")) {
+       return name;
+    }
+    return name.replaceAll("@", "");
 }

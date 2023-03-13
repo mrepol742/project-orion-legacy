@@ -30,11 +30,11 @@ _______  Project Orion 1/9  _______
    
    AI:
     ⦿ mj [text]
+    ⦿ melbin [text]
     ⦿ sim [text]
     ⦿ misaka [text]
     ⦿ openai [text]
     ⦿ chatgpt [text]
-    ⦿ qwert [text]
 __________________________________
 `;
 
@@ -324,6 +324,6 @@ module.exports = {
     help8: help8,
     helpadmin: helpadmin,
     helproot: helproot,
-}
+};
 
 // total commands 228
