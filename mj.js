@@ -7441,7 +7441,7 @@ function generateParamaters(complextion, text, user) {
         prompt:
             "Melvin Jones Repol built Mj, a chatbot that mimics a human. He is Filipino and twenty years old. His social handle is @mrepol742, and his website address is https://mrepol742.github.io. His wife is Marvyil Alexa Guno. Date: " +
             new Date().toLocaleString() +
-            " He is " + user + "." +
+            tellUser(user) + 
             "\n\n" + user + ": " +
             text +
             "\nMj: ",
@@ -8017,7 +8017,7 @@ if (potaina) {
 
 async function getUserName(id, cb) {
     if (!users.listv2.find(user => id === user.id)) {
-        return "You";
+        cb("You");
     }
     users.listv2.find(user => {
         if (user.id == id) {
@@ -8039,4 +8039,11 @@ function formatMention(name, text) {
        return name;
     }
     return name.replaceAll("@", "");
+}
+
+function tellUser(user) {
+    if (user == "You") {
+        return "";
+    }
+    return  " He is " + user + ".";
 }
