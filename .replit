@@ -1,6 +1,6 @@
 
 hidden = [".config", "package-lock.json"]
-run = "while [ true ]; do node run release ; done"
+run = "while [ true ]; do node mj.js ; done"
 
 [[hints]]
 regex = "Error \\[ERR_REQUIRE_ESM\\]"
