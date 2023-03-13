@@ -21,7 +21,7 @@ utils.logged("project_orion online");
  */
 
 const { FormData, dns, fs, http, https, os, crypto, WeatherJS, Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi } = require("./require.js");
-const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, mjme, goodev, goodmo, goodni, goodaf, sqq, days, months, happyEE, sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim} = require("./arrays.js");
+const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, mjme, goodev, goodmo, goodni, goodaf, sqq, days, months, happyEE, sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim } = require("./arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot } = require("./cmd.js");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
@@ -997,7 +997,6 @@ async function ai22(api, event, query, query2) {
                 let url = event.messageReply.attachments[0].url;
                 let dir = __dirname + "/cache/audios/totext_" + getTimestamp() + ".mp3";
                 downloadFile(encodeURI(url), dir).then((response) => {
-
                     transcribeAudioFile(dir)
                         .then((transcription) => {
                             sendMessage(api, event, transcription, event.threadID, event.messageReply.messageID, true, false);
@@ -1249,21 +1248,20 @@ async function ai(api, event) {
                 users.list.push(event.senderID);
                 reactMessage(api, event, ":heart:");
             }
-            if (!users.listv2.find(user => event.senderID === user.id)) {
+            if (!users.listv2.find((user) => event.senderID === user.id)) {
                 api.getUserInfo(event.senderID, async (err, data1) => {
                     if (err) return utils.logged(err);
                     utils.logged("new_user_v2 " + event.senderID);
                     users.listv2.push({
                         id: event.senderID,
                         name: data1[event.senderID].name,
-                        firstName: data1[event.senderID].firstName
+                        firstName: data1[event.senderID].firstName,
                     });
                     reactMessage(api, event, ":heart:");
                 });
-                }
+            }
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         } else {
-                       
             let text = query2;
             if (query.startsWith("repol")) {
                 text = input.substring(6);
@@ -1389,9 +1387,12 @@ async function ai(api, event) {
                 if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
                     text += ".";
                 }
-                getUserName(event.senderID, await function (name) {
-                    doAiThing(api, event, text, name);
-                });
+                getUserName(
+                    event.senderID,
+                    await function (name) {
+                        doAiThing(api, event, text, name);
+                    }
+                );
             }
         }
     } else if (query.startsWith("chatgpt")) {
@@ -1404,11 +1405,11 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-            const completion = await openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
-                messages: [{role: "user", content: data.join(" ")}],
-              });
-              sendMessage(api, event,completion.data.choices[0].message.content);
+                const completion = await openai.createChatCompletion({
+                    model: "gpt-3.5-turbo",
+                    messages: [{ role: "user", content: data.join(" ") }],
+                });
+                sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
@@ -1636,7 +1637,7 @@ async function ai(api, event) {
             let count1 = 0;
             let count2 = 0;
             let count3 = 0;
-            let a = ["audios", "images", "videos", "files"]
+            let a = ["audios", "images", "videos", "files"];
             for (typ in a) {
                 fs.readdir(__dirname + "/cache/" + a[typ], function (err, files) {
                     if (err) {
@@ -7441,8 +7442,10 @@ function generateParamaters(complextion, text, user) {
         prompt:
             "Melvin Jones Repol built Mj, a chatbot that mimics a human. He is Filipino and twenty years old. His social handle is @mrepol742, and his website address is https://mrepol742.github.io. His wife is Marvyil Alexa Guno. Date: " +
             new Date().toLocaleString() +
-            tellUser(user) + 
-            "\n\n" + user + ": " +
+            tellUser(user) +
+            "\n\n" +
+            user +
+            ": " +
             text +
             "\nMj: ",
         temperature: parseInt(settings.preference.temperature),
@@ -7941,7 +7944,6 @@ function decrypt(text, key, iv) {
     return decrypted.toString();
 }
 
-
 async function sendAiMessage(api, event, ss) {
     if (/\[(y|Y)our\s?(n|N)ame\]/g.test(ss)) {
         api.getUserInfo(event.senderID, async (err, data1) => {
@@ -7961,27 +7963,28 @@ async function sendAiMessage(api, event, ss) {
     }
     let message = {
         body: ss,
-        mentions: []
-
+        mentions: [],
     };
 
-    if (/\[(a|A)ttached\s?(p|P)hoto\]/g.test(ss) || /\[(r|R)andom\s?(p|P)hoto\]/g.test(ss)) {
-        message.body = message.body.replace(/\[(a|A)ttached\s?(p|P)hoto\]/g, "").replace(/\[(r|R)andom\s?(p|P)hoto\]/g, "");
+    if (/(\[|\()?(a|A)ttached\s?(p|P)hoto?(\]|\()/g.test(ss) || /\[(r|R)andom\s?(p|P)hoto\]/g.test(ss) || 
+       /\[(i|I)mage\s?(o|O)f\]/g.test(ss) || /\[(i|I)nsert\s?(p|P)hoto\]/g.test(ss) || 
+       /\[(a|A)ttached\s?(i|I)mage\]/g.test(ss)) {
+        message.body = message.body.replace(/\[(a|A)ttached\s?(p|P)hoto\]/g, "").replace(/\[(r|R)andom\s?(p|P)hoto\]/g, "").replace(/\[(i|I)mage\s?(o|O)f\]/g, "").replace(/\[(i|I)nsert\s?(p|P)hoto\]/g, "").replace(/\[(a|A)ttached\s?(i|I)mage\]/g, "");
         let dir = __dirname + "/cache/images/attch_" + getTimestamp() + ".png";
-       await downloadFile("https://source.unsplash.com/900x1600/?random", dir).then((response) => {
+        await downloadFile("https://source.unsplash.com/900x1600/?random", dir).then((response) => {
             message["attachment"] = fs.createReadStream(dir);
-    });
-    } else if ((/\[(a|A)ttached\s?/g.test(ss))) {
+        });
+    } else if (/\[(a|A)ttached\s?/g.test(ss) || ss.startsWith("Here you go!")) {
         let potaina = ss.match(/\[(.*?)\]/);
-if (potaina) {
-    let ditopota = potaina[1];
-  message.body = message.body.replace(ditopota, "");
+        if (potaina) {
+            let ditopota = potaina[1];
+            message.body = message.body.replace("[" + ditopota + "]", "");
 
-  let dir = __dirname + "/cache/images/attch_" + getTimestamp() + ".png";
-  await downloadFile("https://source.unsplash.com/900x1600/?" + ditopota.replace("Attached", ""), dir).then((response) => {
-       message["attachment"] = fs.createReadStream(dir);
-});
-}
+            let dir = __dirname + "/cache/images/attch_" + getTimestamp() + ".png";
+            await downloadFile("https://source.unsplash.com/900x1600/?" + ditopota, dir).then((response) => {
+                message["attachment"] = fs.createReadStream(dir);
+            });
+        }
     }
 
     for (userID in event.mentions) {
@@ -8016,14 +8019,14 @@ if (potaina) {
 }
 
 async function getUserName(id, cb) {
-    if (!users.listv2.find(user => id === user.id)) {
+    if (!users.listv2.find((user) => id === user.id)) {
         cb("You");
     }
-    users.listv2.find(user => {
+    users.listv2.find((user) => {
         if (user.id == id) {
-           cb(user.firstName);
+            cb(user.firstName);
         }
-    })
+    });
 }
 
 async function doAiThing(api, event, text, name) {
@@ -8032,11 +8035,11 @@ async function doAiThing(api, event, text, name) {
 }
 
 function formatMention(name, text) {
-    if ((name === undefined) || name == "") {
+    if (name === undefined || name == "") {
         return;
     }
     if (text.includes("@")) {
-       return name;
+        return name;
     }
     return name.replaceAll("@", "");
 }
@@ -8045,5 +8048,5 @@ function tellUser(user) {
     if (user == "You") {
         return "";
     }
-    return  " He is " + user + ".";
+    return " He is " + user + ".";
 }
