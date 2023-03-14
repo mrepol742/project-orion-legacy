@@ -23,4 +23,13 @@ for (id in aa.listv2) {
     //console.log(aa.listv2[id].id)
 }
 
-console.log(aa.listv2.find(user => {user.id === "42444424"}))
+for (let i = 0; i < aa.listv2.length; i++) {
+    console.log(aa.listv2[i].id)
+    if (aa.listv2[i].id == "42444424") {
+        aa.listv2[i]["birthday"] = "12-2-2002";
+        aa.listv2[i]["location"] = "mars";
+        aa.listv2[i]["gender"] = ""
+    }
+}
+
+    console.log(aa);

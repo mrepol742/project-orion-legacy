@@ -5,7 +5,7 @@ var utils = require("../utils");
 var mqtt = require("mqtt");
 var websocket = require("websocket-stream");
 var HttpsProxyAgent = require("https-proxy-agent");
-const EventEmitter = require("events");
+var EventEmitter = require("events");
 
 var identity = function () {};
 var form = {};

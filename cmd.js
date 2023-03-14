@@ -6,9 +6,7 @@ _______  Project Orion 1/9  _______
    ⦿ cmd 
    ⦿ cmd [number|all]
    ⦿ cmd [admin|root]
-   ⦿ stats
-   ⦿ uptime 
-   ⦿ sysinfo
+   ⦿ stats|uptime|sysinfo
    ⦿ sendReport [text]
    ⦿ search [text]
    ⦿ searchincog [text]
@@ -35,6 +33,7 @@ _______  Project Orion 1/9  _______
     ⦿ misaka [text]
     ⦿ openai [text]
     ⦿ chatgpt [text]
+    ⦿ chad [text]
 __________________________________
 `;
 
@@ -243,6 +242,9 @@ _______  Project Orion 9/9  _______
    ⦿ encrypt [text]
    ⦿ decrypt [text] [key1]:[key2]
    ⦿ ginfo
+   ⦿ setBirthday [date]
+   ⦿ setGender [gender]
+   ⦿ setUsername [username]
 __________________________________
 `;
 
@@ -326,4 +328,4 @@ module.exports = {
     helproot: helproot,
 };
 
-// total commands 228
+// total commands 232

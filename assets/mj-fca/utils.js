@@ -28,6 +28,9 @@ function logged(data) {
         if (da == "") {
             return;
         }
+        if (da.length == 0) {
+            return;
+        }
         console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", " |", da.normalize("NFKC"));
     }
 }
@@ -78,6 +81,7 @@ function isReadableStream(obj) {
     return obj instanceof stream.Stream && (getType(obj._read) === "Function" || getType(obj._read) === "AsyncFunction") && getType(obj._readableState) === "Object";
 }
 
+
 function get(url, jar, qs, options, ctx) {
     // I'm still confused about this
     if (getType(qs) === "Object") {
@@ -89,7 +93,7 @@ function get(url, jar, qs, options, ctx) {
     }
     var op = {
         headers: getHeaders(url, options, ctx),
-        timeout: 60000,
+        timeout: 90000,
         qs: qs,
         url: url,
         method: "GET",
@@ -105,7 +109,7 @@ function get(url, jar, qs, options, ctx) {
 function post(url, jar, form, options, ctx, customHeader) {
     var op = {
         headers: getHeaders(url, options, ctx, customHeader),
-        timeout: 60000,
+        timeout: 90000,
         url: url,
         method: "POST",
         form: form,
@@ -123,7 +127,7 @@ function postFormData(url, jar, form, qs, options, ctx) {
     headers["Content-Type"] = "multipart/form-data";
     var op = {
         headers: headers,
-        timeout: 60000,
+        timeout: 90000,
         url: url,
         method: "POST",
         formData: form,
@@ -148,7 +152,7 @@ function generateThreadingID(clientID) {
     var k = Date.now();
     var l = Math.floor(Math.random() * 4294967295);
     var m = clientID;
-    return "<" + k + ":" + l + "-" + m + "@mail.projektitan.com>";
+    return "<" + k + ":" + l + "-" + m + "@gmail.com>";
 }
 
 function binaryToDecimal(data) {
