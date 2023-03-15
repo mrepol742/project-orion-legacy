@@ -3,7 +3,7 @@
 var utils = require("../utils");
 
 module.exports = function (defaultFuncs, api, ctx) {
-    return function changeThreadColor(color, threadID, callback) {
+    return function setThreadColor(color, threadID, callback) {
         var resolveFunc = function () {};
         var rejectFunc = function () {};
         var returnPromise = new Promise(function (resolve, reject) {

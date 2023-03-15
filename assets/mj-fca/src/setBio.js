@@ -3,7 +3,7 @@
 var utils = require("../utils");
 
 module.exports = function (defaultFuncs, api, ctx) {
-    return function changeBio(bio, publish, callback) {
+    return function setBio(bio, publish, callback) {
         var resolveFunc = function () {};
         var rejectFunc = function () {};
         var returnPromise = new Promise(function (resolve, reject) {

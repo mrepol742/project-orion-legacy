@@ -3,7 +3,7 @@
 var utils = require("../utils");
 
 module.exports = function (defaultFuncs, api, ctx) {
-    return function changeBlockedStatus(userID, block, callback) {
+    return function setArchivedStatus(threadOrThreads, archive, callback) {
         var resolveFunc = function () {};
         var rejectFunc = function () {};
         var returnPromise = new Promise(function (resolve, reject) {
@@ -20,11 +20,18 @@ module.exports = function (defaultFuncs, api, ctx) {
             };
         }
 
+        var form = {};
+
+        if (utils.getType(threadOrThreads) === "Array") {
+            for (var i = 0; i < threadOrThreads.length; i++) {
+                form["ids[" + threadOrThreads[i] + "]"] = archive;
+            }
+        } else {
+            form["ids[" + threadOrThreads + "]"] = archive;
+        }
+
         defaultFuncs
-            .post(`https://www.facebook.com/messaging/${block ? "" : "un"}block_messages/`, ctx.jar, {
-                fbid: userID,
-            })
-            .then(utils.saveCookies(ctx.jar))
+            .post("https://www.facebook.com/ajax/mercury/change_archived_status.php", ctx.jar, form)
             .then(utils.parseAndCheckLogin(ctx, defaultFuncs))
             .then(function (resData) {
                 if (resData.error) {
@@ -34,9 +41,10 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_blocked_status " + err);
+                utils.logged("fca_archive_status " + err);
                 return callback(err);
             });
+
         return returnPromise;
     };
 };

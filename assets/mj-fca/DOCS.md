@@ -2,13 +2,13 @@
 
 * [`login`](#login)
 * [`api.addUserToGroup`](#addUserToGroup)
-* [`api.changeAdminStatus`](#changeAdminStatus)
-* [`api.changeArchivedStatus`](#changeArchivedStatus)
-* [`api.changeBlockedStatus`](#changeBlockedStatus)
-* [`api.changeGroupImage`](#changeGroupImage)
-* [`api.changeNickname`](#changeNickname)
-* [`api.changeThreadColor`](#changeThreadColor)
-* [`api.changeThreadEmoji`](#changeThreadEmoji)
+* [`api.setAdminStatus`](#setAdminStatus)
+* [`api.setArchivedStatus`](#setArchivedStatus)
+* [`api.setBlockedStatus`](#setBlockedStatus)
+* [`api.setGroupImage`](#setGroupImage)
+* [`api.setNickname`](#setNickname)
+* [`api.setThreadColor`](#setThreadColor)
+* [`api.setThreadEmoji`](#setThreadEmoji)
 * [`api.createNewGroup`](#createNewGroup)
 * [`api.createPoll`](#createPoll)
 * [`api.deleteMessage`](#deleteMessage)
@@ -105,7 +105,7 @@ __Arguments__
 __Example (Email & Password)__
 
 ```js
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({email: "FB_EMAIL", password: "FB_PASSWORD"}, (err, api) => {
     if(err) return console.error(err);
@@ -117,7 +117,7 @@ __Example (Email & Password then save appState to file)__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({email: "FB_EMAIL", password: "FB_PASSWORD"}, (err, api) => {
     if(err) return console.error(err);
@@ -130,7 +130,7 @@ __Example (AppState loaded from file)__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -144,7 +144,7 @@ __Example__:
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 const readline = require("readline");
 
 var rl = readline.createInterface({
@@ -191,8 +191,8 @@ __Arguments__
 
 ---------------------------------------
 
-<a name="changeAdminStatus"></a>
-### api.changeAdminStatus(threadID, adminIDs, adminStatus[, callback])
+<a name="setAdminStatus"></a>
+### api.setAdminStatus(threadID, adminIDs, adminStatus[, callback])
 
 Given a adminID, or an array of adminIDs, will set the admin status of the user(s) to `adminStatus`.
 
@@ -206,17 +206,17 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if (err) return console.error(err);
 
     let threadID = "0000000000000000";
     let newAdmins = ["111111111111111", "222222222222222"];
-    api.changeAdminStatus(threadID, newAdmins, true, editAdminsCallback);
+    api.setAdminStatus(threadID, newAdmins, true, editAdminsCallback);
 
     let adminToRemove = "333333333333333";
-    api.changeAdminStatus(threadID, adminToRemove, false, editAdminsCallback);
+    api.setAdminStatus(threadID, adminToRemove, false, editAdminsCallback);
 
 });
 
@@ -228,8 +228,8 @@ function editAdminsCallback(err) {
 
 ---------------------------------------
 
-<a name="changeArchivedStatus"></a>
-### api.changeArchivedStatus(threadOrThreads, archive[, callback])
+<a name="setArchivedStatus"></a>
+### api.setArchivedStatus(threadOrThreads, archive[, callback])
 
 Given a threadID, or an array of threadIDs, will set the archive status of the threads to `archive`. Archiving a thread will hide it from the logged-in user's inbox until the next time a message is sent or received.
 
@@ -242,12 +242,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.changeArchivedStatus("000000000000000", true, (err) => {
+    api.setArchivedStatus("000000000000000", true, (err) => {
         if(err) return console.error(err);
     });
 });
@@ -255,8 +255,8 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 ---------------------------------------
 
-<a name="changeBlockedStatus"></a>
-### api.changeBlockedStatus(userID, block[, callback])
+<a name="setBlockedStatus"></a>
+### api.setBlockedStatus(userID, block[, callback])
 
 Prevents a user from privately contacting you. (Messages in a group chat will still be seen by both parties).
 
@@ -268,8 +268,8 @@ __Arguments__
 
 ---------------------------------------
 
-<a name="changeGroupImage"></a>
-### api.changeGroupImage(image, threadID[, callback])
+<a name="setGroupImage"></a>
+### api.setGroupImage(image, threadID[, callback])
 
 Will change the group chat's image to the given image.
 
@@ -282,12 +282,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.changeGroupImage(fs.createReadStream("./avatar.png"), "000000000000000", (err) => {
+    api.setGroupImage(fs.createReadStream("./avatar.png"), "000000000000000", (err) => {
         if(err) return console.error(err);
     });
 });
@@ -295,8 +295,8 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 ---------------------------------------
 
-<a name="changeNickname"></a>
-### api.changeNickname(nickname, threadID, participantID[, callback])
+<a name="setNickname"></a>
+### api.setNickname(nickname, threadID, participantID[, callback])
 
 Will change the thread user nickname to the one provided.
 
@@ -310,12 +310,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.changeNickname("Example", "000000000000000", "000000000000000", (err) => {
+    api.setNickname("Example", "000000000000000", "000000000000000", (err) => {
         if(err) return console.error(err);
     });
 });
@@ -323,8 +323,8 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 ---------------------------------------
 
-<a name="changeThreadColor"></a>
-### api.changeThreadColor(color, threadID[, callback])
+<a name="setThreadColor"></a>
+### api.setThreadColor(color, threadID[, callback])
 
 Will change the thread color to the given hex string color ("#0000ff"). Set it
 to empty string if you want the default.
@@ -340,12 +340,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.changeThreadColor("#0000ff", "000000000000000", (err) => {
+    api.setThreadColor("#0000ff", "000000000000000", (err) => {
         if(err) return console.error(err);
     });
 });
@@ -353,8 +353,8 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 ---------------------------------------
 
-<a name="changeThreadEmoji"></a>
-### api.changeThreadEmoji(emoji, threadID[, callback])
+<a name="setThreadEmoji"></a>
+### api.setThreadEmoji(emoji, threadID[, callback])
 
 Will change the thread emoji to the one provided.
 
@@ -369,12 +369,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.changeThreadEmoji("💯", "000000000000000", (err) => {
+    api.setThreadEmoji("💯", "000000000000000", (err) => {
         if(err) return console.error(err);
     });
 });
@@ -409,7 +409,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -437,7 +437,7 @@ __Arguments__
 __Example__
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -470,7 +470,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -527,7 +527,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -557,7 +557,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -924,7 +924,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -956,7 +956,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -978,7 +978,7 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 <a name="threadColors"></a>
 ### api.threadColors
 
-A dictionary mapping names of all currently valid thread themes to their theme ID that are accepted by [`api.changeThreadColor`](#changeThreadColor). These themes, listed below, are the ones present in the palette UI used for selecting thread themes on the Messenger client.
+A dictionary mapping names of all currently valid thread themes to their theme ID that are accepted by [`api.setThreadColor`](#setThreadColor). These themes, listed below, are the ones present in the palette UI used for selecting thread themes on the Messenger client.
 
 - DefaultBlue: `196241301102133`
 - HotPink: `169463077092846`
@@ -1311,7 +1311,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 // Simple echo bot. He'll repeat anything that you say.
 // Will stop when you say '/stop'
@@ -1406,7 +1406,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -1451,7 +1451,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -1539,7 +1539,7 @@ __Tip__: to find your own ID, you can look inside the cookies. The `userID` is u
 __Example (Basic Message)__
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -1553,7 +1553,7 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 __Example (File upload)__
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -1570,7 +1570,7 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 __Example (Mention)__
 ```js
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 login({email: "EMAIL", password: "PASSWORD"}, (err, api) => {
     if(err) return console.error(err);
@@ -1594,7 +1594,7 @@ login({email: "EMAIL", password: "PASSWORD"}, (err, api) => {
 
 __Example (Location)__
 ```js
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 login({email: "EMAIL", password: "PASSWORD"}, (err, api) => {
     if(err) return console.error(err);
     var yourID = "000000000000000";
@@ -1674,7 +1674,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("mj-fca");
 
 // Simple echo bot. This will send messages forever.
 

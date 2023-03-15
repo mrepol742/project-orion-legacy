@@ -245,6 +245,8 @@ _______  Project Orion 9/9  _______
    ⦿ setBirthday [date]
    ⦿ setGender [gender]
    ⦿ setUsername [username]
+   ⦿ setAddress [address]
+   ⦿ setBio [info]
 __________________________________
 `;
 
@@ -328,4 +330,4 @@ module.exports = {
     helproot: helproot,
 };
 
-// total commands 232
+// total commands 234

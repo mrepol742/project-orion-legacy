@@ -3,14 +3,13 @@
 var utils = require("../utils");
 
 module.exports = function (defaultFuncs, api, ctx) {
-    return function changeThreadEmoji(emoji, threadID, callback) {
+    return function setNickname(nickname, threadID, participantID, callback) {
         var resolveFunc = function () {};
         var rejectFunc = function () {};
         var returnPromise = new Promise(function (resolve, reject) {
             resolveFunc = resolve;
             rejectFunc = reject;
         });
-
         if (!callback) {
             callback = function (err) {
                 if (err) {
@@ -19,18 +18,23 @@ module.exports = function (defaultFuncs, api, ctx) {
                 resolveFunc();
             };
         }
+
         var form = {
-            emoji_choice: emoji,
+            nickname: nickname,
+            participant_id: participantID,
             thread_or_other_fbid: threadID,
         };
 
         defaultFuncs
-            .post("https://www.facebook.com/messaging/save_thread_emoji/?source=thread_settings&__pc=EXP1%3Amessengerdotcom_pkg", ctx.jar, form)
+            .post("https://www.facebook.com/messaging/save_thread_nickname/?source=thread_settings&dpr=1", ctx.jar, form)
             .then(utils.parseAndCheckLogin(ctx, defaultFuncs))
             .then(function (resData) {
+                if (resData.error === 1545014) {
+                    throw { error: "Trying to change nickname of user isn't in thread" };
+                }
                 if (resData.error === 1357031) {
                     throw {
-                        error: "Trying to change emoji of a chat that doesn't exist. Have at least one message in the thread before trying to change the emoji.",
+                        error: "Trying to change user nickname of a thread that doesn't exist. Have at least one message in the thread before trying to change the user nickname.",
                     };
                 }
                 if (resData.error) {
@@ -40,7 +44,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_thread_emoji " + err);
+                utils.logged("fca_nickname " + err);
                 return callback(err);
             });
 

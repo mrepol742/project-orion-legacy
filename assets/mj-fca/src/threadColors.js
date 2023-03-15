@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function (_defaultFuncs, _api, _ctx) {
-    // Currently the only colors that can be passed to api.changeThreadColor(); may change if Facebook adds more
+    // Currently the only colors that can be passed to api.setThreadColor(); may change if Facebook adds more
     return {
         //Old hex colors.
         ////MessengerBlue: null,

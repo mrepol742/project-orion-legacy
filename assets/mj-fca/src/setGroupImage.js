@@ -37,7 +37,7 @@ module.exports = function (defaultFuncs, api, ctx) {
             });
     }
 
-    return function changeGroupImage(image, threadID, callback) {
+    return function setGroupImage(image, threadID, callback) {
         if (!callback && (utils.getType(threadID) === "Function" || utils.getType(threadID) === "AsyncFunction")) {
             throw { error: "please pass a threadID as a second argument." };
         }

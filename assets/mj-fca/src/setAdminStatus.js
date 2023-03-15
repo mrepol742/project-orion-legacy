@@ -3,9 +3,9 @@
 const utils = require("../utils");
 
 module.exports = function (defaultFuncs, api, ctx) {
-    return function changeAdminStatus(threadID, adminIDs, adminStatus, callback) {
+    return function setAdminStatus(threadID, adminIDs, adminStatus, callback) {
         if (utils.getType(threadID) !== "String") {
-            throw { error: "changeAdminStatus: threadID must be a string" };
+            throw { error: "setAdminStatus: threadID must be a string" };
         }
 
         if (utils.getType(adminIDs) === "String") {
@@ -13,11 +13,11 @@ module.exports = function (defaultFuncs, api, ctx) {
         }
 
         if (utils.getType(adminIDs) !== "Array") {
-            throw { error: "changeAdminStatus: adminIDs must be an array or string" };
+            throw { error: "setAdminStatus: adminIDs must be an array or string" };
         }
 
         if (utils.getType(adminStatus) !== "Boolean") {
-            throw { error: "changeAdminStatus: adminStatus must be a string" };
+            throw { error: "setAdminStatus: adminStatus must be a string" };
         }
 
         var resolveFunc = function () {};
@@ -37,7 +37,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         }
 
         if (utils.getType(callback) !== "Function" && utils.getType(callback) !== "AsyncFunction") {
-            throw { error: "changeAdminStatus: callback is not a function" };
+            throw { error: "setAdminStatus: callback is not a function" };
         }
 
         let form = {
