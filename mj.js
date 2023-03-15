@@ -21,7 +21,7 @@ utils.logged("project_orion online");
  */
 
 const { FormData, dns, fs, http, https, os, crypto, WeatherJS, Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi } = require("./require.js");
-const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, sqq, days, months, happyEE, sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim } = require("./arrays.js");
+const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, sqq, days, months, happyEE, sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim, filterWW } = require("./arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot } = require("./cmd.js");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
@@ -51,7 +51,6 @@ let oldCPUTime = 0;
 let oldCPUIdle = 0;
 let crashes = 0;
 let currentID;
-let bookID = "";
 let blockedUserC = 0;
 let blockedGroupC = 0;
 
@@ -1189,13 +1188,6 @@ async function ai(api, event) {
         }
     }
     reaction(api, event, query, input);
-    if (nsfw(query)) {
-        let message = {
-            attachment: fs.createReadStream(__dirname + "/assets/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
-        };
-        sendMessage(api, event, message);
-        return;
-    }
     if (event.type == "message_reply" && event.messageReply.senderID != currentID) {
         return;
     }
@@ -1221,7 +1213,20 @@ async function ai(api, event) {
         }
         someA(api, event, query, input);
     }
-    if (query.startsWith("searchimg")) {
+if (containsAny(query2, filterWW) && !settings.preference.onNsfw) {
+    let id = event.senderID;
+    if (isMyId(id)) {
+        return;
+    }
+    users.blocked.push(id);
+    if (users.admin.includes(id)) {
+        users.admin = users.admin.filter((item) => item !== id);
+        sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
+    } else {
+        sendMessage(api, event, "You have been blocked.");
+    }
+    sendMessageOnly(api, event, "We don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.");
+} else if (query.startsWith("searchimg")) {
         if (isGoingToFast(event)) {
             return;
         }
@@ -1264,12 +1269,30 @@ async function ai(api, event) {
 
         if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "melvin" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
             /*
+            Old data entry its here just incase needed
             if (!users.list.includes(event.senderID)) {
                 utils.logged("new_user " + event.senderID);
                 users.list.push(event.senderID);
                 reactMessage(api, event, ":heart:");
             }
             */
+            let welCC = hey[Math.floor(Math.random() * hey.length)];
+            if (welCC.startsWith("How ")) {
+                getUserName(
+                    event.senderID,
+                    await function (name) {
+                        let aa = "";
+                        if (name.firstName != "User") {
+                            aa += "Hello " + name.firstName + ". ";
+                        }
+                        aa += welCC;
+                        sendMessage(api, event, aa);
+                    }
+                );
+            } else {
+                sendMessage(api, event, welCC);
+            }
+        } else {
             if (!users.listv2.find((user) => event.senderID === user.id)) {
                 api.getUserInfo(event.senderID, async (err, data1) => {
                     if (err) return utils.logged(err);
@@ -1288,23 +1311,6 @@ async function ai(api, event) {
                     reactMessage(api, event, ":heart:");
                 });
             }
-            let welCC = hey[Math.floor(Math.random() * hey.length)];
-            if (welCC.startsWith("How ")) {
-                getUserName(
-                    event.senderID,
-                    await function (name) {
-                        let aa = "";
-                        if (name.firstName != "User") {
-                            aa += "Hello " + name.firstName + ". ";
-                        }
-                        aa += welCC;
-                        sendMessage(api, event, aa);
-                    }
-                );
-            } else {
-                sendMessage(api, event, welCC);
-            }
-        } else {
             let text = query2;
             if (query.startsWith("repol")) {
                 text = input.substring(6);
@@ -1329,14 +1335,10 @@ async function ai(api, event) {
                 sendMessage(api, event, "What do you want me to do with " + input + "?");
             } else if (!/[a-z0-9]/gi.test(text1)) {
                 sendMessage(api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
-            } else if (nsfw(text1)) {
-                sendMessage(api, event, "Shhhhhhh watch your mouth.");
             } else if (text1.startsWith("whatiswebvium")) {
                 sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
             } else if (text1.startsWith("whocreatedwebvium")) {
                 sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
-            } else if (text1.includes("pornsite") || text1.startsWith("whatissex") || text1.startsWith("whatssex") || text1.startsWith("fuckyou") || text1.startsWith("curseyou")) {
-                blockUser(api, event, event.senderID);
             } else if (text1 == "sim") {
                 sendMessage(api, event, "Me? noooo...");
             } else if (text1 == "bye" || text1 == "goodbye") {
@@ -1415,7 +1417,7 @@ async function ai(api, event) {
             try {
                 const response = await openai.createCompletion({
                     model: "text-davinci-003",
-                    prompt: "Misaka is a AI that reluctantly answers questions using childish responses: Created by Melvin Jones Repol.\n\nYou: " + data.join(" ") + "\nMisaka: ",
+                    prompt: "You are Misaka an AI trained by Melvin Jones Repol, to reluctantly replies using childish, wrong spelling and mix cases messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
                     max_tokens: 60,
                     top_p: 0.3,
@@ -1478,7 +1480,7 @@ async function ai(api, event) {
             try {
                 const response = await openai.createCompletion({
                     model: "text-davinci-003",
-                    prompt: "Sim is a AI that reluctantly answers questions using sexy responses: Created by Melvin Jones Repol.\n\nUser: " + data.join(" ") + "\nSim: ",
+                    prompt: "You are Sim an AI trained by Melvin Jones Repol, to reluctantly replies using sexy and hony messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
                     max_tokens: 60,
                     top_p: 0.3,
@@ -1519,7 +1521,7 @@ async function ai(api, event) {
             try {
                 const response = await openai.createCompletion({
                     model: "text-davinci-003",
-                    prompt: "Melbin is a AI that reluctantly answers questions using sarcastic responses: Created by Melvin Jones Repol: \n\nYou: " + data.join(" ") + "\nMelbin: ",
+                    prompt: "You are Melbin an AI trained by Melvin Jones Repol, to reluctantly replies using sarcastic and funny messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
                     max_tokens: 60,
                     top_p: 0.3,
@@ -4207,7 +4209,7 @@ _____________________________
                 sendMessage(api, event, "Opps! I didnt get it. You should try using setKey name:key instead.");
             } else {
                 let inp = data[1].split(":");
-                keys[inp[0]] = inp[1];
+                settings.apikey[inp[0]] = inp[1];
                 sendMessage(api, event, "Successfully saved " + inp[0] + ".");
             }
         }
@@ -6582,28 +6584,6 @@ function countConsonants(str) {
         }
     }
     return countConsonants;
-}
-
-function nsfw(text) {
-    return (
-        (text.includes("jabol") ||
-            text.includes("nude") ||
-            text.includes("hentai") ||
-            text.includes("milf") ||
-            text.includes("masturbate") ||
-            text.includes("pussy") ||
-            text.includes("dick") ||
-            text.includes("horny") ||
-            text.includes("blowjob") ||
-            text.includes("lolli ") ||
-            text.includes("sex ") ||
-            text.includes("jakol ") ||
-            text.includes("kantot ") ||
-            text.includes("jabol ") ||
-            text.includes("porn ") ||
-            text.includes("sex ")) &&
-        !settings.preference.onNsfw
-    );
 }
 
 function getProfilePic(id) {
