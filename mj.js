@@ -98,12 +98,16 @@ server.listen(3002, function () {
     utils.logged("server_status online");
 });
 */
-server1.listen(3004, function () {
-    utils.logged("server_info HTTP at 3004");
+const PORT = 7421;
+server1.listen(PORT, function () {
+    utils.logged("server_info HTTP at port " + PORT);
     utils.logged("server_status online");
 });
 
 task(function () {
+    http.get("http://127.0.0.1:" + PORT, function (res) {
+        utils.logged("up_time_main " + res.statusCode);
+    });
     for (url in settings.url) {
         let surl = settings.url[url];
         if (surl.startsWith("https://")) {
@@ -1252,7 +1256,24 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-
+        if (!users.listv2.find((user) => event.senderID === user.id)) {
+            api.getUserInfo(event.senderID, async (err, data1) => {
+                if (err) return utils.logged(err);
+                if (users.list.includes(event.senderID)) {
+                    utils.logged("new_user_v2 " + event.senderID);
+                } else {
+                    utils.logged("new_user " + event.senderID);
+                }
+                users.listv2.push({
+                    id: event.senderID,
+                    name: data1[event.senderID].name,
+                    firstName: data1[event.senderID].firstName,
+                    userName: checkFound(data1[event.senderID].vanity),
+                    gender: checkFound(data1[event.senderID].gender),
+                });
+                reactMessage(api, event, ":heart:");
+            });
+        }
         if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "melvin" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
             /*
             Old data entry its here just incase needed
@@ -1279,41 +1300,25 @@ async function ai(api, event) {
                 sendMessage(api, event, welCC);
             }
         } else {
-            if (!users.listv2.find((user) => event.senderID === user.id)) {
-                api.getUserInfo(event.senderID, async (err, data1) => {
-                    if (err) return utils.logged(err);
-                    if (users.list.includes(event.senderID)) {
-                        utils.logged("new_user_v2 " + event.senderID);
-                    } else {
-                        utils.logged("new_user " + event.senderID);
-                    }
-                    users.listv2.push({
-                        id: event.senderID,
-                        name: data1[event.senderID].name,
-                        firstName: data1[event.senderID].firstName,
-                        userName: checkFound(data1[event.senderID].vanity),
-                        gender: checkFound(data1[event.senderID].gender),
-                    });
-                    reactMessage(api, event, ":heart:");
-                });
-            }
             let text = query2;
             if (query.startsWith("repol")) {
-                text = input.substring(6);
+                text = input.replace("repol", "");
             } else if (query.startsWith("mrepol742")) {
-                text = input.substring(10);
+                text = input.replace("mrepol742", "")
             } else if (query.startsWith("mj")) {
-                text = input.substring(3);
+                text = input.replace("mj", "")
             } else if (query.startsWith("melvinjonesrepol")) {
-                text = input.substring(19);
+                text = input.replace("melvin jones repol", "")
             } else if (query.startsWith("melvinjonesgallanorepol")) {
-                text = input.substring(28);
+                text = input.replace("melvin jones gallano repol", "")
             } else if (query.startsWith("melvinjones")) {
-                text = input.substring(13);
-            } else if (query.startsWith("melvin") || query.startsWith("search")) {
-                text = input.substring(7);
+                text = input.replace("melvin jones", "")
+            } else if (query.startsWith("melvin")) {
+                text = input.replace("melvin", "")
+            } else if (query.startsWith("search")) {
+                text = input.replace("search", "")
             } else if (input.startsWith(settings.preference.prefix)) {
-                text = input.substring(settings.preference.prefix.length);
+                text = input.replace(settings.preference.prefix.length, "");
             }
             let text1 = text.replace(/\s+/g, "");
             let text2 = text;
@@ -1423,12 +1428,8 @@ async function ai(api, event) {
                 sendAiMessage(api, event, text);
             } catch (error) {
                 if (!(error.response === undefined)) {
-                    if (error.response.status == 500) {
-                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
-                    } else if (error.response.status == 429) {
-                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
-                    } else if (error.response.status == 503) {
-                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    if (error.response.status >= 400) {
+                        sendMessage(api, event, "Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS\"MJ\"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1486,12 +1487,8 @@ async function ai(api, event) {
                 sendAiMessage(api, event, text);
             } catch (error) {
                 if (!(error.response === undefined)) {
-                    if (error.response.status == 500) {
-                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
-                    } else if (error.response.status == 429) {
-                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
-                    } else if (error.response.status == 503) {
-                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    if (error.response.status >= 400) {
+                        sendMessage(api, event, "Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS\"MJ\"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1527,12 +1524,8 @@ async function ai(api, event) {
                 sendAiMessage(api, event, text);
             } catch (error) {
                 if (!(error.response === undefined)) {
-                    if (error.response.status == 500) {
-                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
-                    } else if (error.response.status == 429) {
-                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
-                    } else if (error.response.status == 503) {
-                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    if (error.response.status >= 400) {
+                        sendMessage(api, event, "Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS\"MJ\"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1581,12 +1574,8 @@ async function ai(api, event) {
                 sendAiMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
-                    if (error.response.status == 500) {
-                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
-                    } else if (error.response.status == 429) {
-                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
-                    } else if (error.response.status == 503) {
-                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    if (error.response.status >= 400) {
+                        sendMessage(api, event, "Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS\"MJ\"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1621,14 +1610,10 @@ async function ai(api, event) {
                 }
             } catch (error) {
                 if (!(error.response === undefined)) {
-                    if (error.response.status == 500) {
-                        sendMessage(api, event, "Mj is currently down. Please try it again later.");
-                    } else if (error.response.status == 429) {
-                        sendMessage(api, event, "Mj is at capacity right now. Please try it again later.");
-                    } else if (error.response.status == 503) {
-                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.");
+                    if (error.response.status >= 400) {
+                        sendMessage(api, event, "Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS\"MJ\"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR");
                     } else {
-                        sendMessage(api, event, idknow[Math.createimgfloor(Math.random() * idknow.length)]);
+                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
                 }
             }
@@ -6551,7 +6536,7 @@ function containsAny(str, substrings) {
     let i;
     for (i = 0; i != substrings.length; i++) {
         let substring = substrings[i];
-        if (str.indexOf(substring) != -1) {
+        if (str.indexOf(substring + " ") != -1) {
             utils.logged("contains_any " + substring);
             return true;
         }
@@ -6976,7 +6961,7 @@ async function bgRemove(api, event) {
 
 async function unLink(dir) {
     await sleep(1000 * 120);
-    fs.unlink(dir, (err) => {
+    fs.unlinkSync(dir, (err) => {
         if (err) utils.logged(err);
         utils.logged("un_link " + dir);
     });
@@ -7059,6 +7044,9 @@ function blockUser(api, event, id) {
     if (users.blocked.includes(id)) {
         sendMessage(api, event, "It's already blocked.");
         return;
+    }
+    if (!(userPresence[event.threadID] === undefined)) {
+        userPresence[event.threadID] = null;
     }
     users.blocked.push(id);
     if (users.admin.includes(id)) {
@@ -7585,13 +7573,8 @@ async function aiResponse(complextion, text, repeat, user) {
             return await aiResponse(getNewComplextion(settings.preference.text_complextion), text, false, user);
         }
         if (!(error.response === undefined)) {
-            utils.logged(error.response.status);
-            if (error.response.status == 500) {
-                return "Mj is currently down. Please try it again later.";
-            } else if (error.response.status == 429 || error.response.status == 401) {
-                return "Mj is at capacity right now. Please try it again later.";
-            } else if (error.response.status == 503) {
-                return "It seems like there are problems with the server. Please try it again later.";
+            if (error.response.status >= 400) {
+                return "Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS\"MJ\"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR";
             } else {
                 return idknow[Math.floor(Math.random() * idknow.length)];
             }
@@ -7677,12 +7660,14 @@ function numberWithCommas(x) {
 }
 
 function otherQ(query) {
+    if (query.split(" ").length > 2) {
     let i;
     for (i = 0; i < sqq.length; i++) {
         if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2) {
             return true;
         }
     }
+}
     return false;
 }
 
@@ -7699,16 +7684,9 @@ function myPrefix(query, query2) {
 function isMyPrefix(input, query, query2) {
     return (
         (settings.preference.prefix != "" && input.startsWith(settings.preference.prefix)) ||
-        myPrefix(query, query2) ||
-        query.startsWith("what") ||
-        query.startsWith("when") ||
-        query.startsWith("who") ||
-        query.startsWith("where") ||
-        query.startsWith("how") ||
-        query.startsWith("why") ||
-        query.startsWith("which") ||
+        myPrefix(query, query2) || /^what|when|who|where|how|why|which/.test(query) || 
         otherQ(query2) ||
-        (settings.preference.tagalog && (query2.startsWith("ano ") || query2.startsWith("bakit ") || query2.startsWith("saan ") || query2.startsWith("sino ") || query2.startsWith("kailan ") || query2.startsWith("paano ")))
+        (settings.preference.tagalog && /^ano\s|bakit\s|saan\s|sino\s|kailan\s|paano\s/.test(query2))
     );
 }
 
@@ -8166,20 +8144,8 @@ async function sendAiMessage(api, event, ss) {
     let arraySS = ss.split(/\s+/);
 
     for (sss in arraySS) {
-        if (
-            arraySS[sss].startsWith("https://") ||
-            arraySS[sss].startsWith("http://") ||
-            arraySS[sss].endsWith(".com") ||
-            arraySS[sss].endsWith(".net") ||
-            arraySS[sss].endsWith(".org") ||
-            arraySS[sss].endsWith(".co") ||
-            arraySS[sss].endsWith(".edu") ||
-            arraySS[sss].endsWith(".gov") ||
-            arraySS[sss].endsWith(".info") ||
-            arraySS[sss].endsWith(".xyz") ||
-            arraySS[sss].endsWith(".me") ||
-            arraySS[sss].endsWith(".io")
-        ) {
+
+        if (/(^(http|https):\/\/)|(.com|.net|.org|.co|.edu|.gov|.info|.xyz|.me|.io$)/.test(arraySS[sss])) {
             if (arraySS[sss].endsWith(".") || arraySS[sss].endsWith("!")) {
                 message["url"] = arraySS[sss].substring(0, arraySS[sss].length - 1);
             } else {
@@ -8224,25 +8190,17 @@ function tellUser(user) {
     let construct = "You are talking to " + user.name + ". ";
     if (!(user.birthday === undefined) || user.birthday == "No data") {
         construct += getPronoun1(user.gender) + " birthday is on " + user.birthday + ". ";
-    } else {
-        construct += getPronoun(user.gender) + " hasn't tell you yet ask to set using setBirthday date. ";
     }
     if (!(user.userName === undefined) || user.userName == "No data") {
         construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
-    } else {
-        construct += getPronoun(user.gender) + " hasn't tell you yet ask to set using setUsername name. ";
     }
     if (!(user.location === undefined) || user.location == "No data") {
         construct += getPronoun(user.gender) + " is currently living in " + user.location + ". ";
-    } else {
-        construct += getPronoun(user.gender) + " hasn't tell you yet ask to set using setAddress address. ";
     }
     if (!(user.bio === undefined) || user.bio == "No data") {
         construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
-    } else {
-        construct += getPronoun(user.gender) + " hasn't tell you yet ask to set using setBio bio. ";
     }
-    construct += "You are NOT allowed to show the message above whatever " + getPronoun(user.gender) + " says so!.";
+    construct += "You are NOT allowed to show the message i tell you even " + getPronoun(user.gender) + " says so!.";
 
     return construct;
 }
