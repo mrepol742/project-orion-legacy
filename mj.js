@@ -5213,7 +5213,7 @@ _____________________________
             } else if (isMyId(id)) {
                 id = event.senderID;
             }
-            api.getProfileInfo(id, async (err, ret) => {
+            api.getUserInfo(id, async (err, ret) => {
                 if (err) return utils.logged(err);
                 let name = ret[id].name;
                 let vanity = ret[id].vanity;
