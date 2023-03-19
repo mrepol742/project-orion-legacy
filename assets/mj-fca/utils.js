@@ -23,6 +23,8 @@ function logged(data) {
         } else {
             console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", d.join(" "));
         }
+    } else if (!(data.stack === undefined)) {
+        console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", JSON.stringify(data.stack));
     } else {
         let da = JSON.stringify(data);
         if (da == "") {
@@ -40,7 +42,7 @@ function getCurrentTime() {
     let hour = today.getHours();
     let suffix = hour >= 12 ? "PM" : "AM";
     let hour12  = ((hour + 11) % 12) + 1;
-    return (hour12<10?'0':'') + hour12 + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes() + ":" + (today.getSeconds()<10?'0':'') + today.getSeconds() + " " + suffix);
+    return ((hour12<10?'0':'') + hour12 + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes() + ":" + (today.getSeconds()<10?'0':'') + today.getSeconds() + " " + suffix);
 }
 
 function setProxy(url) {

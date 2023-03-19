@@ -14,7 +14,7 @@ let idknow = [
     "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.",
 ];
 let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
-let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify", "write", "create"];
+let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify", "write", "create", "okay"];
 let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let happyEE = ["haha", "ahah", "ahha", "funny ", "insane ", "lol", "lmao", "lmfao", "silly ", "laugh ", "hilarious", "absurd", "ridicolous"];
@@ -55,6 +55,48 @@ let qot1 = [
 ];
 
 let filterWW = [
+    "ina mo",
+    "tang-ina",
+    "wala kang silbi",
+    "wala kang kwenta",
+    "g4gu",
+    "gagu",
+    "baliw ka",
+    "hayup ka",
+    "ulol",
+    "b1l4t",
+    "bilat",
+    "taena",
+    "tae",
+    "bobo",
+    "pangit mo",
+    "g4g0",
+    "gag0",
+    "gago",
+    "t4ng1n4",
+    "t4ngina",
+    "tangina",
+    "liit tt",
+    "kain tt",
+    "t4mod",
+    "tam0d",
+    "t4m0d",
+    "t1t1",
+    "p3p3",
+    "pepe",
+    "tite",
+    "tamd",
+    "tamod",
+    "eat me",
+    "ughhh",
+    "ugh",
+    "1yut",
+    "1yut1n",
+    "iyutin",
+    "iyutan",
+    "kantotan",
+    "iyut",
+    "kantot",
     "ahole",
     "anus",
     "ash0le",
@@ -347,8 +389,6 @@ let filterWW = [
     "nutsack",
     "phuck",
     "pimpis",
-    "pusse",
-    "pussy",
     "scrotum",
     "sh!t",
     "shemale",

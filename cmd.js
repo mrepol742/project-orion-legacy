@@ -12,7 +12,6 @@ _______  Project Orion 1/9  _______
    ⦿ searchincog [text]
    ⦿ searchimg [text]
    ⦿ searchimg --reverse
-   ⦿ createcode [text]
    ⦿ createimg [text]
    ⦿ dictionary [text]
    ⦿ say [text]
@@ -31,6 +30,7 @@ _______  Project Orion 1/9  _______
     ⦿ melbin [text]
     ⦿ sim [text]
     ⦿ misaka [text]
+    ⦿ codex [text]
     ⦿ openai [text]
     ⦿ chatgpt [text]
     ⦿ chad [text]
