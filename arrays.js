@@ -102,7 +102,7 @@ let filterWW = [
     "ash0le",
     "ash0les",
     "asholes",
-    "ass",
+    " ass",
     "Ass Monkey",
     "Assface",
     "assh0le",
