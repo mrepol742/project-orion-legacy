@@ -7940,6 +7940,7 @@ function getAppState(api) {
         login.key = key.toString("hex");
         login.iv = iv.toString("hex");
     });
+    fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
     return encrypt(JSON.stringify(api.getAppState()), key.toString("hex"), iv.toString("hex"));
 }
 
