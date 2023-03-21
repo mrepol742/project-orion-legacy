@@ -79,9 +79,8 @@ const server1 = http.createServer(getRoutes());
 let homepage = fs.readFileSync(__dirname + "/assets/index.html");
 let errorpage = fs.readFileSync(__dirname + "/assets/404.html");
 let threadpage = fs.readFileSync(__dirname + "/assets/thread_ui.html");
+let privacypolicy = fs.readFileSync(__dirname + "/assets/privacypolicy.html");
 let googlev = fs.readFileSync(__dirname + "/assets/google022983bf0cf659ae.html");
-let webmanifest = fs.readFileSync(__dirname + "/assets/site.webmanifest");
-let servicew = fs.readFileSync(__dirname + "/assets/sw.js");
 let herop = fs.readFileSync(__dirname + "/assets/hero.png");
 let faviconpng = fs.readFileSync(__dirname + "/assets/favicon.png");
 let faviconico = fs.readFileSync(__dirname + "/assets/favicon.ico");
@@ -4343,8 +4342,13 @@ _____________________________
                 if (err) utils.logged(err);
                 let construct = "";
                 let usern = a.userInfo.length;
+        
                 for (b in a.userInfo) {
-                    construct += a.userInfo[b].name + "<br>";
+                   // utils.logged(a.userInfo[b])
+                    construct += "<div class=\"relative w-40 h-40 rounded-full overflow-hidden\">";
+                    construct += "<img src=\"" + getProfilePic(a.userInfo[b].id) + "\" alt=\"Avatar\" class=\"object-cover w-full h-full\" />";
+                    construct += "<div class=\"absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4\">" + a.userInfo[b].name + "</div>";
+                    construct += "</div>";
                 }
                 threadInfo["/" + a.threadID] = {
                     threadName: a.threadName,
@@ -7962,11 +7966,10 @@ function getRoutes() {
         utils.logged("server_url " + req.url);
         if (!(threadInfo[req.url] === undefined)) {
             let hh = threadpage + "";
-            let construct = "";
-            construct += "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
+            let construct = "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
             construct += "<b>Members Count: </b>" + threadInfo[req.url].membersCount + "<br>";
-            let membercons = "";
-            membercons += threadInfo[req.url].members;
+            let membercons = threadInfo[req.url].members;
+
             let page = hh.replaceAll("%THREAD_NAME%", threadInfo[req.url].threadName).replaceAll("%THREAD_INFO_SUMMARY%", construct).replaceAll("%THREAD_INFO%", membercons).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
@@ -7978,6 +7981,11 @@ function getRoutes() {
                 res.setHeader("Content-Type", "image/x-icon");
                 res.writeHead(200);
                 res.end(faviconico);
+                break;
+            case "/privacypolicy":
+                res.setHeader("Content-Type", "image/x-icon");
+                res.writeHead(200);
+                res.end(privacypolicy);
                 break;
             case "/favicon.png":
                 res.setHeader("Content-Type", "image/png");
@@ -8038,16 +8046,6 @@ function getRoutes() {
                 res.setHeader("Content-Type", "image/jpeg");
                 res.writeHead(200);
                 res.end(background[8]);
-                break;
-            case "/site.webmanifest":
-                res.setHeader("Content-Type", "application/json");
-                res.writeHead(200);
-                res.end(webmanifest);
-                break;
-            case "/sw.js":
-                res.setHeader("Content-Type", "text/javascript");
-                res.writeHead(200);
-                res.end(servicew);
                 break;
             case "/status":
                 res.setHeader("Content-Type", "application/json");
