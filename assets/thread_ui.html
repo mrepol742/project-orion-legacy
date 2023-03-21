@@ -9,6 +9,8 @@
     </title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
+    <link rel="shortcut icon" href="%THREAD_ICON%">
+    <link rel="apple-touch-icon" href="%THREAD_ICON%">
     <meta name="author" content="Melvin Jones Repol" />
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
     <!--Replace with your tailwind.css once created-->
@@ -65,18 +67,20 @@
       <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
         <!--Left Col-->
         <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
-          <p class="uppercase tracking-loose w-full">Group Information</p>
+          <img src="%THREAD_ICON%" width="200px" style="border-radius: 50%; border: none;"/>
           <h1 class="my-4 text-5xl font-bold leading-tight">
             %THREAD_NAME%
-          </h1>
-          <p class="leading-normal text-2xl mb-8">
-            %THREAD_INFO%
-          </p>
+          </h1> 
+          <h3 class="my-4 text-2xl font-bold leading-normal">
+          %THREAD_INFO_SUMMARY%
+          </h3>
         
         </div>
         <!--Right Col-->
         <div class="w-full md:w-3/5 py-6 text-center">
-          <img class="w-full md:w-4/5 z-50" src="https://mrepol742.github.io/project-orion/hero.png" />
+          <p class="text-2xl mb-8">
+            %THREAD_INFO%
+          </p>
         </div>
       </div>
     </div>

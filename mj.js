@@ -1,6 +1,5 @@
 const fca = require("./assets/mj-fca/");
 const utils = require("./assets/mj-fca/utils.js");
-const server = require("./server.js");
 
 utils.logged("project_orion online");
 
@@ -64,12 +63,61 @@ utils.logged("settings_loaded finish");
 utils.logged("data_loaded_users finish");
 utils.logged("data_loaded_groups finish");
 
-server.start(7421);
+/*
+const options2 = {
+    key: fs.readFileSync(__dirname + "/assets/client-key.pem"),
+    cert: fs.readFileSync(__dirname + "/assets/client-cert.pem"),
+};
+utils.logged("server_cert loaded");
+*/
+/*
+const server = https.createServer(options2, getRoutes());
+*/
+
+const server1 = http.createServer(getRoutes());
+
+let homepage = fs.readFileSync(__dirname + "/assets/index.html");
+let errorpage = fs.readFileSync(__dirname + "/assets/404.html");
+let threadpage = fs.readFileSync(__dirname + "/assets/thread_ui.html");
+let googlev = fs.readFileSync(__dirname + "/assets/google022983bf0cf659ae.html");
+let webmanifest = fs.readFileSync(__dirname + "/assets/site.webmanifest");
+let servicew = fs.readFileSync(__dirname + "/assets/sw.js");
+let herop = fs.readFileSync(__dirname + "/assets/hero.png");
+let faviconpng = fs.readFileSync(__dirname + "/assets/favicon.png");
+let faviconico = fs.readFileSync(__dirname + "/assets/favicon.ico");
+
+let background = [];
+
+let i23;
+for (i23 = 0; i23 < 9; i23++) {
+    background.push(fs.readFileSync(__dirname + "/assets/background/background" + i23 + ".jpeg"));
+}
+
+utils.logged("web_resource_loaded finish");
+
+const PORT = 7421;
+/*
+server.listen((PORT + 1), function () {
+    utils.logged("server_info HTTPS at " + (PORT + 1));
+    utils.logged("server_status online");
+});
+*/
+server1.listen(PORT, function () {
+    utils.logged("server_info HTTP at port " + PORT);
+    utils.logged("server_status online");
+});
 
 task(function () {
-    http.get("http://127.0.0.1:" + PORT, function (res) {
+    if (!(server === undefined)) {
+        https.get("http://127.0.0.1:" + (PORT + 1) + "/status/", function (res) {
+            utils.logged("up_time_main " + res.statusCode);
+        });
+    }
+    if (!(server1 === undefined)) {
+    http.get("http://127.0.0.1:" + PORT + "/status/", function (res) {
         utils.logged("up_time_main " + res.statusCode);
     });
+}
     for (url in settings.url) {
         let surl = settings.url[url];
         if (surl.startsWith("https://")) {
@@ -96,7 +144,6 @@ utils.logged("task_git initiated");
 const openaiConfig = new Configuration({
     apiKey: settings.apikey.ai,
 });
-
 const videoOptions = {
     format: "mp4",
     quality: "480p",
@@ -229,7 +276,10 @@ fca(fca_state, (err, api) => {
         utils.logged("save_state");
         listen.stopListening();
         utils.logged("fca_status offline");
+        /*
         server.close();
+        */
+        server1.close();
         utils.logged("server_status offline");
         utils.logged("process_exit goodbye :( " + code);
         utils.logged("project_orion offline");
@@ -4305,7 +4355,13 @@ _____________________________
                     members: construct,
                     icon: a.imageSrc,
                 };
-                sendMessage(api, event, "This group information can be see at https://%DOMAIN_ADDRESS%/" + a.threadID);
+                
+                let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
+                let message = {
+                    body: "This group information can be see at " + urll,
+                    url: urll;
+                }
+                sendMessage(api, event, message);
             });
         } else {
             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -7892,6 +7948,128 @@ function getCountryOrigin(model) {
         return "The Philippines";
     }
     return "USA";
+}
+
+function getStatus() {
+    if (settings.preference.isStop) {
+        return "Offline";
+    } else if (settings.preference.isDebugEnabled) {
+        return "Maintenance";
+    }
+    return "Online";
+}
+
+function getRoutes() {
+    return function (req, res) {
+        utils.logged("server_url " + req.url);
+        if (!(threadInfo[req.url] === undefined)) {
+            let hh = threadpage + "";
+            let construct = "";
+            construct += "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
+            construct += "<b>Members Count: </b>" + threadInfo[req.url].membersCount + "<br>";
+            let membercons = "";
+            membercons += threadInfo[req.url].members;
+            let page = hh.replaceAll("%THREAD_NAME%", threadInfo[req.url].threadName).replaceAll("%THREAD_INFO_SUMMARY%", construct).replaceAll("%THREAD_INFO%", membercons).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
+            res.setHeader("Content-Type", "text/html");
+            res.writeHead(200);
+            res.end(page);
+            return;
+        }
+        switch (req.url) {
+            case "/favicon.ico":
+                res.setHeader("Content-Type", "image/x-icon");
+                res.writeHead(200);
+                res.end(faviconico);
+                break;
+            case "/favicon.png":
+                res.setHeader("Content-Type", "image/png");
+                res.writeHead(200);
+                res.end(faviconpng);
+                break;
+            case "/google022983bf0cf659ae.html":
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
+                res.end(googlev);
+                break;
+            case "/hero.png":
+                res.setHeader("Content-Type", "image/png");
+                res.writeHead(200);
+                res.end(herop);
+                break;
+            case "/background0.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[0]);
+                break;
+            case "/background1.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[1]);
+                break;
+            case "/background2.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[2]);
+                break;
+            case "/background3.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[3]);
+                break;
+            case "/background4.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[4]);
+                break;
+            case "/background5.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[5]);
+                break;
+            case "/background6.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[6]);
+                break;
+            case "/background7.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[7]);
+                break;
+            case "/background8.jpeg":
+                res.setHeader("Content-Type", "image/jpeg");
+                res.writeHead(200);
+                res.end(background[8]);
+                break;
+            case "/site.webmanifest":
+                res.setHeader("Content-Type", "application/json");
+                res.writeHead(200);
+                res.end(webmanifest);
+                break;
+            case "/sw.js":
+                res.setHeader("Content-Type", "text/javascript");
+                res.writeHead(200);
+                res.end(servicew);
+                break;
+            case "/status":
+                res.setHeader("Content-Type", "application/json");
+                res.writeHead(200);
+                res.end(JSON.stringify({ status: getStatus() }));
+                break;
+            case "/":
+            case "/home":
+            case "/homepage":
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
+                res.end(homepage);
+                break;
+            default:
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
+                res.end(errorpage);
+                break;
+        }
+    };
 }
 
 function encrypt(text, key, iv) {
