@@ -4359,7 +4359,7 @@ _____________________________
                 let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
                 let message = {
                     body: "This group information can be see at " + urll,
-                    url: urll;
+                    url: urll
                 }
                 sendMessage(api, event, message);
             });
