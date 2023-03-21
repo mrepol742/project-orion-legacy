@@ -251,7 +251,6 @@ fca(fca_state, (err, api) => {
         return;
     }
 
-    /*
     process.on("uncaughtException", (err, origin) => {
         caughtException(api, err);
     });
@@ -259,8 +258,7 @@ fca(fca_state, (err, api) => {
     process.on("unhandledRejection", (reason, promise) => {
         caughtException(api, reason);
     });
-    */
-
+    
     process.on("exit", (code) => {
         let currentDate = new Date();
         settings.uptime.server[currentDate.getDay()] += process.uptime();
