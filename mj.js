@@ -1,5 +1,6 @@
 const fca = require("./assets/mj-fca/");
 const utils = require("./assets/mj-fca/utils.js");
+const server = require("./server.js");
 
 utils.logged("project_orion online");
 
@@ -56,66 +57,14 @@ let blockedUserC = 0;
 let blockedGroupC = 0;
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
+let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
+let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 
-let users;
-getKey("users", function (users) {
-    if (users == "null") {
-        users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
-    } else {
-        users = JSON.parse(decrypt(fs.readFileSync(__dirname + "/data/users.json", "utf8"), users.key, users.iv));
-    }
-});
-let groups;
-getKey("groups", function (groups) {
-    if (groups == "null") {
-        groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
-    } else {
-        groups = JSON.parse(decrypt(fs.readFileSync(__dirname + "/data/groups.json", "utf8"), groups.key, groups.iv));
-    }
-});
 utils.logged("settings_loaded finish");
 utils.logged("data_loaded_users finish");
 utils.logged("data_loaded_groups finish");
 
-/*
-const options2 = {
-    key: fs.readFileSync(__dirname + "/assets/client-key.pem"),
-    cert: fs.readFileSync(__dirname + "/assets/client-cert.pem"),
-};
-utils.logged("server_cert loaded");
-*/
-/*
-const server = https.createServer(options2, getRoutes());
-*/
-
-const server1 = http.createServer(getRoutes());
-
-let homepage = fs.readFileSync(__dirname + "/assets/index.html");
-let errorpage = fs.readFileSync(__dirname + "/assets/404.html");
-let threadpage = fs.readFileSync(__dirname + "/assets/thread_ui.html");
-let googlev = fs.readFileSync(__dirname + "/assets/google022983bf0cf659ae.html");
-let webmanifest = fs.readFileSync(__dirname + "/assets/site.webmanifest");
-let servicew = fs.readFileSync(__dirname + "/assets/sw.js");
-let herop = fs.readFileSync(__dirname + "/assets/hero.png");
-let background = [];
-
-let i23;
-for (i23 = 0; i23 < 9; i23++) {
-    background.push(fs.readFileSync(__dirname + "/assets/background/background" + i23 + ".jpeg"));
-}
-
-utils.logged("web_resource_loaded finish");
-/*
-server.listen(3002, function () {
-    utils.logged("server_info HTTPS at 3002");
-    utils.logged("server_status online");
-});
-*/
-const PORT = 7421;
-server1.listen(PORT, function () {
-    utils.logged("server_info HTTP at port " + PORT);
-    utils.logged("server_status online");
-});
+server.start(7421);
 
 task(function () {
     http.get("http://127.0.0.1:" + PORT, function (res) {
@@ -147,6 +96,7 @@ utils.logged("task_git initiated");
 const openaiConfig = new Configuration({
     apiKey: settings.apikey.ai,
 });
+
 const videoOptions = {
     format: "mp4",
     quality: "480p",
@@ -254,6 +204,7 @@ fca(fca_state, (err, api) => {
         return;
     }
 
+    /*
     process.on("uncaughtException", (err, origin) => {
         caughtException(api, err);
     });
@@ -261,6 +212,7 @@ fca(fca_state, (err, api) => {
     process.on("unhandledRejection", (reason, promise) => {
         caughtException(api, reason);
     });
+    */
 
     process.on("exit", (code) => {
         let currentDate = new Date();
@@ -277,10 +229,7 @@ fca(fca_state, (err, api) => {
         utils.logged("save_state");
         listen.stopListening();
         utils.logged("fca_status offline");
-        /*
         server.close();
-        */
-        server1.close();
         utils.logged("server_status offline");
         utils.logged("process_exit goodbye :( " + code);
         utils.logged("project_orion offline");
@@ -6499,9 +6448,9 @@ function isGoingToFast(api, event) {
         api.getUserInfo(event.senderID, async (err, data1) => {
             if (err) return utils.logged(err);
             if (users.list.includes(event.senderID)) {
-                utils.logged("new_user_v2 " + event.senderID);
+                utils.logged("new_user_v2 " + event.senderID + " user_name " + data1[event.senderID].name);
             } else {
-                utils.logged("new_user " + event.senderID);
+                utils.logged("new_user " + event.senderID + " user_name " + data1[event.senderID].name);
             }
             users.listv2.push({
                 id: event.senderID,
@@ -7683,36 +7632,8 @@ function isMyPrefix(input, query, query2) {
 }
 
 function saveState() {
-    const ukey = crypto.randomBytes(32);
-    const uiv = crypto.randomBytes(16);
-    const gkey = crypto.randomBytes(32);
-    const giv = crypto.randomBytes(16);
-    getKey("users", async function (users) {
-        if (users == "null") {
-            settings.key.push({
-                id: "users",
-                key: ukey.toString("hex"),
-                iv: uiv.toString("hex"),
-            });
-        } else {
-        users.key = ukey.toString("hex");
-        users.iv = uiv.toString("hex");
-        }
-    });
-    getKey("groups", async function (groups) {
-        if (groups == "null") {
-            settings.key.push({
-                id: "groups",
-                key: gkey.toString("hex"),
-                iv: giv.toString("hex"),
-            });
-        } else {
-        groups.key = gkey.toString("hex");
-        groups.iv = giv.toString("hex");
-        }
-    });
-    fs.writeFileSync(__dirname + "/data/users.json", encrypt(JSON.stringify(users), ukey.toString("hex"), uiv.toString("hex")), "utf8");
-    fs.writeFileSync(__dirname + "/data/groups.json", encrypt(JSON.stringify(groups), gkey.toString("hex"), giv.toString("hex")), "utf8");
+    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
+    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
 }
 
@@ -7940,7 +7861,6 @@ function getAppState(api) {
         login.key = key.toString("hex");
         login.iv = iv.toString("hex");
     });
-    fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
     return encrypt(JSON.stringify(api.getAppState()), key.toString("hex"), iv.toString("hex"));
 }
 
@@ -7972,117 +7892,6 @@ function getCountryOrigin(model) {
         return "The Philippines";
     }
     return "USA";
-}
-
-function getStatus() {
-    if (settings.preference.isStop) {
-        return "Offline";
-    } else if (settings.preference.isDebugEnabled) {
-        return "Maintenance";
-    }
-    return "Online";
-}
-
-function getRoutes() {
-    return function (req, res) {
-        if (!(threadInfo[req.url] === undefined)) {
-            let hh = threadpage + "";
-            let construct = "";
-            construct += "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
-            construct += "<b>Members Count: </b>" + threadInfo[req.url].membersCount + "<br>";
-            construct += "<b>Name</b><br>";
-            construct += threadInfo[req.url].members;
-            let page = hh.replaceAll("%THREAD_NAME%", threadInfo[req.url].threadName).replaceAll("%THREAD_INFO%", construct).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
-            res.setHeader("Content-Type", "text/html");
-            res.writeHead(200);
-            res.end(page);
-            return;
-        }
-        switch (req.url) {
-            case "/google022983bf0cf659ae.html":
-                res.setHeader("Content-Type", "text/html");
-                res.writeHead(200);
-                res.end(googlev);
-                break;
-            case "/hero.png":
-                res.setHeader("Content-Type", "image/png");
-                res.writeHead(200);
-                res.end(herop);
-                break;
-            case "/background0.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[0]);
-                break;
-            case "/background1.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[1]);
-                break;
-            case "/background2.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[2]);
-                break;
-            case "/background3.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[3]);
-                break;
-            case "/background4.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[4]);
-                break;
-            case "/background5.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[5]);
-                break;
-            case "/background6.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[6]);
-                break;
-            case "/background7.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[7]);
-                break;
-            case "/background8.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[8]);
-                break;
-            case "/site.webmanifest":
-                res.setHeader("Content-Type", "application/json");
-                res.writeHead(200);
-                res.end(webmanifest);
-                break;
-            case "/sw.js":
-                res.setHeader("Content-Type", "text/javascript");
-                res.writeHead(200);
-                res.end(servicew);
-                break;
-            case "/status":
-                res.setHeader("Content-Type", "application/json");
-                res.writeHead(200);
-                res.end(JSON.stringify({ status: getStatus() }));
-                break;
-            case "/":
-            case "/home":
-            case "/homepage":
-                res.setHeader("Content-Type", "text/html");
-                res.writeHead(200);
-                res.end(homepage);
-                break;
-            default:
-                res.setHeader("Content-Type", "text/html");
-                res.writeHead(200);
-                res.end(errorpage);
-                break;
-        }
-    };
 }
 
 function encrypt(text, key, iv) {
