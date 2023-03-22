@@ -19,7 +19,6 @@ let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let happyEE = ["haha", "ahah", "ahha", "funny ", "insane ", "lol", "lmao", "lmfao", "silly ", "laugh ", "hilarious", "absurd", "ridicolous"];
 let sadEE = ["pain", "painful", "cry ", "crying ", "sad ", "tired", "sick ", "depressed", "miserable ", "heartbroken", "sorry", "traumatic", "truma", "pitiful", "depressing", "depress", "unfortunate", "awful"];
-let angryEE = ["angry", "irate", "irritated", "furious", "bitter", "hostile", "outraged", "incensed", "mad ", "filthy", "displeased", "provoked", "annoyed", "fury ", "rage ", "ire "];
 let loveEE = ["love", "thank", "delight", "pleasure", "regards", "respect", "dear", "darling", "boyfriend", "girlfriend", "sweetheart", "angel", "honey", "adore", "treasure", "devotion", "friend"];
 let sizesM = ["Bytes", "KB", "MB", "GB", "TB"];
 let sendEffects = ["(sent with gift wrap effect)", "(sent with fire effect)", "(sent with celebration effect)", "(sent with love effect)"];
@@ -556,7 +555,6 @@ module.exports = {
     months: months,
     happyEE: happyEE,
     sadEE: sadEE,
-    angryEE: angryEE,
     loveEE: loveEE,
     sizesM: sizesM,
     sendEffects: sendEffects,

@@ -21,7 +21,7 @@ utils.logged("project_orion online");
  */
 
 const { FormData, dns, fs, http, https, os, crypto, WeatherJS, Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi } = require("./require.js");
-const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, sqq, days, months, happyEE, sadEE, angryEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim, filterWW } = require("./arrays.js");
+const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, sqq, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim, filterWW } = require("./arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot } = require("./cmd.js");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
@@ -107,16 +107,18 @@ server1.listen(PORT, function () {
 });
 
 task(function () {
+    /*
     if (!(server === undefined)) {
         https.get("http://127.0.0.1:" + (PORT + 1) + "/status/", function (res) {
             utils.logged("up_time_main " + res.statusCode);
         });
     }
+    */
     if (!(server1 === undefined)) {
-    http.get("http://127.0.0.1:" + PORT + "/status/", function (res) {
-        utils.logged("up_time_main " + res.statusCode);
-    });
-}
+        http.get("http://127.0.0.1:" + PORT + "/status/", function (res) {
+            utils.logged("up_time_main " + res.statusCode);
+        });
+    }
     for (url in settings.url) {
         let surl = settings.url[url];
         if (surl.startsWith("https://")) {
@@ -230,26 +232,27 @@ getKey("login", function (login) {
     let state = fs.readFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", "utf8");
     let fca_state;
     if (state.includes("facebook.com") || state.includes("messenger.com")) {
-        fca_state =  {
+        fca_state = {
             appState: JSON.parse(state),
         };
     } else {
-        fca_state =  {
-        appState: JSON.parse(decrypt(state, login.key, login.iv)),
-    };
-}
-
-fca(fca_state, (err, api) => {
-    if (err) {
-        if (err.error) {
-            utils.logged("project_orion offline");
-            process.exit(1);
-        } else {
-            utils.logged(err);
-        }
-        return;
+        fca_state = {
+            appState: JSON.parse(decrypt(state, login.key, login.iv)),
+        };
     }
 
+    fca(fca_state, (err, api) => {
+        if (err) {
+            if (err.error) {
+                utils.logged("project_orion offline");
+                process.exit(1);
+            } else {
+                utils.logged(err);
+            }
+            return;
+        }
+
+        /*
     process.on("uncaughtException", (err, origin) => {
         caughtException(api, err);
     });
@@ -257,84 +260,85 @@ fca(fca_state, (err, api) => {
     process.on("unhandledRejection", (reason, promise) => {
         caughtException(api, reason);
     });
-    
-    process.on("exit", (code) => {
-        let currentDate = new Date();
-        settings.uptime.server[currentDate.getDay()] += process.uptime();
-        if (settings.uptime.os > os.uptime()) {
-            settings.uptime.os += os.uptime();
-        } else {
-            settings.uptime.os = os.uptime();
-        }
-        console.log("");
-        fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", getAppState(api), "utf8");
-        utils.logged("login_state saved");
-        saveState();
-        utils.logged("save_state");
-        listen.stopListening();
-        utils.logged("fca_status offline");
-        /*
+    */
+
+        process.on("exit", (code) => {
+            let currentDate = new Date();
+            settings.uptime.server[currentDate.getDay()] += process.uptime();
+            if (settings.uptime.os > os.uptime()) {
+                settings.uptime.os += os.uptime();
+            } else {
+                settings.uptime.os = os.uptime();
+            }
+            console.log("");
+            fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", getAppState(api), "utf8");
+            utils.logged("login_state saved");
+            saveState();
+            utils.logged("save_state");
+            listen.stopListening();
+            utils.logged("fca_status offline");
+            /*
         server.close();
         */
-        server1.close();
-        utils.logged("server_status offline");
-        utils.logged("process_exit goodbye :( " + code);
-        utils.logged("project_orion offline");
-    });
+            server1.close();
+            utils.logged("server_status offline");
+            utils.logged("process_exit goodbye :( " + code);
+            utils.logged("project_orion offline");
+        });
 
-    task(function () {
-        saveState();
-        messagesD = utils.getCurrentTime();
-        utils.logged("save_state");
-    }, Math.floor(1800000 * Math.random() + 1200000));
-    utils.logged("task_save_state initiated");
+        task(function () {
+            saveState();
+            messagesD = utils.getCurrentTime();
+            utils.logged("save_state");
+        }, Math.floor(1800000 * Math.random() + 1200000));
+        utils.logged("task_save_state initiated");
 
-    task(function () {
-        utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
-        cmd = {};
-        acGG = [];
-        commandCalls = 0;
-        blockedGroupC = 0;
-        blockedUserC = 0;
-    }, 60 * 10 * 1000);
-    utils.logged("task_clear_list initiated");
+        task(function () {
+            utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
+            cmd = {};
+            acGG = [];
+            commandCalls = 0;
+            blockedGroupC = 0;
+            blockedUserC = 0;
+        }, 60 * 10 * 1000);
+        utils.logged("task_clear_list initiated");
 
-    task(function () {
-        fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", getAppState(api), "utf8");
-        fb_stateD = utils.getCurrentTime();
-        utils.logged("cookie_state synchronized");
-    }, Math.floor(1800000 * Math.random() + 1200000));
-    utils.logged("task_login_state initiated");
+        task(function () {
+            fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", getAppState(api), "utf8");
+            fb_stateD = utils.getCurrentTime();
+            utils.logged("cookie_state synchronized");
+        }, Math.floor(1800000 * Math.random() + 1200000));
+        utils.logged("task_login_state initiated");
 
-    task(function () {
-        let min = Math.floor(600000 + Math.random() + 300000);
-        for (time in userPresence) {
-            if (userPresence[time] != null) {
-                let past = new Date(userPresence[time]).getTime();
-                let isPast = new Date().getTime() - past < min ? false : true;
-                if (isPast) {
-                    userPresence[time] = null;
-                    utils.logged("user_presence " + time);
-                    api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", time, (err, messageInfo) => {
-                        if (err) utils.logged(err);
-                    });
+        task(function () {
+            let min = Math.floor(600000 + Math.random() + 300000);
+            for (time in userPresence) {
+                if (userPresence[time] != null) {
+                    let past = new Date(userPresence[time]).getTime();
+                    let isPast = new Date().getTime() - past < min ? false : true;
+                    if (isPast) {
+                        userPresence[time] = null;
+                        utils.logged("user_presence " + time);
+                        api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", time, (err, messageInfo) => {
+                            if (err) utils.logged(err);
+                        });
+                    }
                 }
             }
-        }
-    }, 60 * 2 * 1000);
-    utils.logged("task_user_presence initiated");
+        }, 60 * 2 * 1000);
+        utils.logged("task_user_presence initiated");
 
-    api.setOptions({
-        listenEvents: true,
-        selfListen: settings.preference.selfListen,
-        autoMarkRead: settings.preference.autoMarkRead,
-        autoMarkDelivery: settings.preference.autoMarkDelivery,
-        online: settings.preference.online,
-        forceLogin: true,
-    });
+        api.setOptions({
+            listenEvents: true,
+            selfListen: settings.preference.selfListen,
+            autoMarkRead: settings.preference.autoMarkRead,
+            autoMarkDelivery: settings.preference.autoMarkDelivery,
+            online: settings.preference.online,
+            forceLogin: true,
+        });
 
-    listen = api.listenMqtt(async (err, event) => {
-        /*
+        listen = api.listenMqtt(async (err, event) => {
+            /*
 
         3252001 temporarily blocked
         {
@@ -354,560 +358,537 @@ ERR! markAsDelivered }
 
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
 */
-        if (err) {
-            if (err.error) {
-                process.exit(1);
-            } else {
-                utils.logged(err);
-            }
-            return;
-        }
-
-        if (isAppState) {
-            currentID = api.getCurrentUserID();
-            if (settings.preference.login_id != currentID) {
-                unLink(__dirname + "/data/" + settings.preference.login_id + ".json");
-                settings.preference.login_id = currentID;
-            }
-            fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", getAppState(api), "utf8");
-            utils.logged("cookie_state synchronized");
-            isAppState = false;
-        }
-
-        if ((event.type == "message" || event.type == "message_reply") && isMyId(event.senderID)) {
-            let body = event.body;
-            let result = !!body.match(/^[!@#$%&*~|?/_]/);
-            if (result) {
-                event.body = body.slice(1);
-            } else {
-                return;
-            }
-        }
-
-        if (event.type == "message" || event.type == "message_reply") {
-            let mainInput = event.body;
-            for (effects in sendEffects) {
-                if (mainInput.endsWith(sendEffects[effects])) {
-                    event.body = mainInput.replace(sendEffects[effects], "");
-                }
-            }
-
-            let input = event.body.toLowerCase();
-
-            if (input == "911") {
-                if (isGoingToFast(api, event)) {
-                    return;
-                }
-                sendMessage(api, event, "Have an emergency? Don't wait call 911!");
-                return;
-            } else if (input == "same") {
-                if (isGoingToFast(api, event)) {
-                    return;
-                }
-                sendMessage(api, event, "(2)");
-                return;
-            } else if (input == "k" || input == "y") {
-                if (isGoingToFast(api, event)) {
-                    return;
-                }
-                sendMessage(api, event, "women");
-                return;
-            } else if (input == "wdym") {
-                if (isGoingToFast(api, event)) {
-                    return;
-                }
-                sendMessage(api, event, "what do you mean?");
-                return;
-            }
-            let query2 = formatQuery(input);
-            let query = query2.replace(/\s+/g, "");
-
-            if (event.type == "message" || (event.type == "message_reply" && (event.senderID != currentID || event.messageReply.senderID != currentID))) {
-                if (query == "unblockgroup") {
-                    if (users.admin.includes(event.senderID)) {
-                        if (event.isGroup) {
-                            unblockGroup(api, event, event.threadID);
-                        } else {
-                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                        }
-                    }
-                } else if (query == "unmute") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (users.muted.includes(event.senderID)) {
-                        users.muted = users.muted.filter((item) => item !== event.senderID);
-                        sendMessage(api, event, "You can now use my commands.");
-                    }
-                } else if (query == "status") {
-                    if (isGoingToFast(api, event)) {
-                        return;
-                    }
-                    if (settings.preference.error == "3252001") {
-                        // bug this can be initiate if api.markAllAsRead is the reason or attachments
-                        sendMessage(api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
-                    } else if (settings.preference.error == "1404078") {
-                        sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
-                    } else if (users.muted.includes(event.senderID)) {
-                        sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
-                    } else if (groups.blocked.includes(event.threadID)) {
-                        sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
-                    } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                        sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
-                    } else if (settings.preference.isStop) {
-                        sendMessage(api, event, "The program is currently offline.");
-                    } else if (settings.preference.isDebugEnabled) {
-                        sendMessage(api, event, "The program is currently under maintenance.");
-                    } else {
-                        sendMessage(api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS.");
-                    }
-                } else if (users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                    saveEvent(event);
-                    return;
-                }
-            }
-
-            if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && !users.admin.includes(event.senderID)) {
-                if (groups.blocked.includes(event.threadID) && event.type != "message_unsend") {
-                    saveEvent(event);
-                    return;
-                }
-            }
-
-            if (isMyId(event.senderID)) {
-                if (query == "stop") {
-                    sendMessage(api, event, "Program stopped its state.");
-                    settings.preference.isStop = true;
-                    return;
-                } else if (query == "destroy") {
-                    sendMessage(api, event, "Program destroyed its state.");
-                    return;
-                } else if (query == "resume") {
-                    sendMessage(api, event, "Program resumed its state.");
-                    settings.preference.isStop = false;
-                    return;
-                } else if (query == "restart") {
-                    saveState();
-                    let rs = [];
-                    rs.push(event.threadID);
-                    rs.push(event.messageID);
-                    settings.restart = rs;
-                    sendMessage(api, event, "Restarting program...");
-                    setTimeout(function () {
-                        process.exit(0);
-                    }, 3000);
-                }
-            }
-
-            if (event.senderID != currentID && event.isGroup) {
-                if (thread[event.threadID] === undefined) {
-                    // hacky trick to prevent [0] from being nulled
-                    thread[event.threadID] = [0000001];
-                    thread[event.threadID].push(event.senderID);
-                } else if (thread[event.threadID].length < 2) {
-                    thread[event.threadID].push(event.senderID);
+            if (err) {
+                if (err.error) {
+                    process.exit(1);
                 } else {
-                    thread[event.threadID].shift();
-                    thread[event.threadID].push(event.senderID);
+                    utils.logged(err);
+                }
+                return;
+            }
+
+            if (isAppState) {
+                currentID = api.getCurrentUserID();
+                if (settings.preference.login_id != currentID) {
+                    unLink(__dirname + "/data/" + settings.preference.login_id + ".json");
+                    settings.preference.login_id = currentID;
+                }
+                fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", getAppState(api), "utf8");
+                utils.logged("cookie_state synchronized");
+                isAppState = false;
+            }
+
+            if ((event.type == "message" || event.type == "message_reply") && isMyId(event.senderID)) {
+                let body = event.body;
+                let result = !!body.match(/^[!@#$%&*~|?/_]/);
+                if (result) {
+                    event.body = body.slice(1);
+                } else {
+                    return;
                 }
             }
 
-            if (!groups.listv2.find((thread) => event.threadID === thread.id) && event.isGroup) {
-                api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (err) return utils.logged(err);
+            if (event.type == "message" || event.type == "message_reply") {
+                let mainInput = event.body;
+                for (effects in sendEffects) {
+                    if (mainInput.endsWith(sendEffects[effects])) {
+                        event.body = mainInput.replace(sendEffects[effects], "");
+                    }
+                }
 
-                    /*
+                let input = event.body.toLowerCase();
+                let query2 = formatQuery(input);
+                let query = query2.replace(/\s+/g, "");
+
+                if (event.type == "message" || (event.type == "message_reply" && (event.senderID != currentID || event.messageReply.senderID != currentID))) {
+                    if (query == "unblockgroup") {
+                        if (users.admin.includes(event.senderID)) {
+                            if (event.isGroup) {
+                                unblockGroup(api, event, event.threadID);
+                            } else {
+                                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                            }
+                        }
+                    } else if (query == "unmute") {
+                        if (isGoingToFast(api, event)) {
+                            return;
+                        }
+                        if (users.muted.includes(event.senderID)) {
+                            users.muted = users.muted.filter((item) => item !== event.senderID);
+                            sendMessage(api, event, "You can now use my commands.");
+                        }
+                    } else if (query == "status") {
+                        if (isGoingToFast(api, event)) {
+                            return;
+                        }
+                        if (settings.preference.error == "3252001") {
+                            // bug this can be initiate if api.markAllAsRead is the reason or attachments
+                            sendMessage(api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
+                        } else if (settings.preference.error == "1404078") {
+                            sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
+                        } else if (users.muted.includes(event.senderID)) {
+                            sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
+                        } else if (groups.blocked.includes(event.threadID)) {
+                            sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
+                        } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
+                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
+                        } else if (settings.preference.isStop) {
+                            sendMessage(api, event, "The program is currently offline.");
+                        } else if (settings.preference.isDebugEnabled) {
+                            sendMessage(api, event, "The program is currently under maintenance.");
+                        } else {
+                            sendMessage(api, event, "PROJECT ORION ONLINE AND WAITING FOR COMMANDS.");
+                        }
+                    } else if (users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
+                        saveEvent(event);
+                        return;
+                    }
+                }
+
+                if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && !users.admin.includes(event.senderID)) {
+                    if (groups.blocked.includes(event.threadID) && event.type != "message_unsend") {
+                        saveEvent(event);
+                        return;
+                    }
+                }
+
+                if (isMyId(event.senderID)) {
+                    if (query == "stop") {
+                        sendMessage(api, event, "Program stopped its state.");
+                        settings.preference.isStop = true;
+                        return;
+                    } else if (query == "destroy") {
+                        sendMessage(api, event, "Program destroyed its state.");
+                        return;
+                    } else if (query == "resume") {
+                        sendMessage(api, event, "Program resumed its state.");
+                        settings.preference.isStop = false;
+                        return;
+                    } else if (query == "restart") {
+                        saveState();
+                        let rs = [];
+                        rs.push(event.threadID);
+                        rs.push(event.messageID);
+                        settings.restart = rs;
+                        sendMessage(api, event, "Restarting program...");
+                        setTimeout(function () {
+                            process.exit(0);
+                        }, 3000);
+                    }
+                }
+
+                if (event.senderID != currentID && event.isGroup) {
+                    if (thread[event.threadID] === undefined) {
+                        // hacky trick to prevent [0] from being nulled
+                        thread[event.threadID] = [0000001];
+                        thread[event.threadID].push(event.senderID);
+                    } else if (thread[event.threadID].length < 2) {
+                        thread[event.threadID].push(event.senderID);
+                    } else {
+                        thread[event.threadID].shift();
+                        thread[event.threadID].push(event.senderID);
+                    }
+                }
+
+                if (!groups.list.find((thread) => event.threadID === thread.id) && event.isGroup) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (err) return utils.logged(err);
+
+                        /*
                         groups.list[event.threadID] = gc.threadName;
                         groups.active.push(event.threadID);
                         */
-                    let par = gc.participantIDs;
-                    groups.listv2.push({
-                        id: event.threadID,
-                        name: gc.threadName,
-                        members: par.length,
-                    });
-
-                    api.muteThread(event.threadID, -1, (err) => {
-                        if (err) utils.logged(err);
-                    });
-
-                    api.setNickname("Edogawa Conan", event.threadID, currentID, (err) => {
-                        if (err) return utils.logged(err);
-                    });
-
-                    if (!(groups.list[event.threadID] === undefined)) {
-                        utils.logged("new_group_v2 " + event.threadID + " group_name " + gc.threadName);
-                    } else {
-                        utils.logged("new_group " + event.threadID + " group_name " + gc.threadName);
-                    }
-                });
-            } else if (!acGG.includes(event.threadID) && !(groups.list[event.threadID] === undefined)) {
-                acGG.push(event.threadID);
-            }
-        } else if (groups.blocked.includes(event.threadID)) {
-            if (event.type == "message" || event.type == "message_reply") {
-                saveEvent(event);
-                blockedGroupC++;
-            }
-            return;
-        } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) && (event.type == "message" || event.type == "message_reply")) {
-            blockedUserC++;
-            saveEvent(event);
-            return;
-        }
-
-        if (settings.preference.isDebugEnabled && !isMyId(event.senderID)) {
-            if (event.type == "message" || event.type == "message_reply") {
-                let input = event.body;
-                let query2 = formatQuery(input);
-                let query = query2.replace(/\s+/g, "");
-                if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
-                    if (isGoingToFast1(event, threadMaintenance, 15)) {
-                        return;
-                    }
-                    let message = {
-                        body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
-                        attachment: fs.createReadStream(__dirname + "/assets/maintenance.jpg"),
-                    };
-                    sendMessage(api, event, message);
-                }
-                saveEvent(event);
-            }
-            return;
-        }
-
-        if (settings.preference.isStop && !isMyId(event.senderID)) {
-            if (event.type == "message" || event.type == "message_reply") {
-                saveEvent(event);
-            }
-            return;
-        }
-
-        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled) {
-            api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
-            settings.restart = [];
-            isCalled = false;
-        }
-
-        switch (event.type) {
-            case "message":
-            case "message_reply":
-                saveEvent(event);
-                ai(api, event);
-                break;
-            case "message_reaction":
-                if (!isMyId(event.userID) && !isMyId(event.senderID) && !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) && event.senderID != event.userID && !(event.reaction === undefined)) {
-                    emo.push(event.messageID);
-                    utils.logged("react_message " + event.threadID + " " + event.messageID + " " + event.reaction);
-                    reactMessage(api, event, event.reaction);
-                }
-                break;
-            case "message_unsend":
-                let d = msgs[event.messageID];
-                if (d === undefined || isMyId(event.senderID)) {
-                    break;
-                }
-                utils.logged("message_unsend " + d[0]);
-                if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID) || groups.blocked.includes(event.threadID)) {
-                    break;
-                }
-
-                if (d[0] == "photo") {
-                    unsendPhoto(api, event, d);
-                } else if (d[0] == "animated_images") {
-                    unsendGif(api, event, d);
-                } else if (d[0] == "share") {
-                    api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return utils.logged(err);
-                        if (groups.list[event.threadID] === undefined) {
-                            let message = {
-                                body: "You deleted this link.\n\n" + d[1][2],
-                                url: d[1][3],
-                            };
-                            sendMessageOnly(api, event, message);
-                            utils.logged("unsend_share " + d[1][0] + " " + message);
-                        } else {
-                            let message = {
-                                body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
-                                url: d[1][3],
-                                /*
-                                mentions: [{
-                                    tag: '@' + data[event.senderID]['firstName'],
-                                    id: event.senderID,
-                                    fromIndex: 0
-                                }]
-                                */
-                            };
-                            sendMessageOnly(api, event, message);
-                            utils.logged("unsend_share_group " + d[1][0] + " " + message);
-                        }
-                    });
-                } else if (d[0] == "file") {
-                    let time = getTimestamp();
-                    let filename = __dirname + "/cache/files/" + d[1][2] + "_" + time;
-                    let file = fs.createWriteStream(filename);
-                    let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
-                    let decodeurl = decodeURIComponent(fileurl);
-                    let fileRequest = https.get(decodeurl, function (fileResponse) {
-                        fileResponse.pipe(file);
-                        file.on("finish", function () {
-                            api.getUserInfo(event.senderID, (err, data) => {
-                                if (err) return utils.logged(err);
-                                if (groups.list[event.threadID] === undefined) {
-                                    let constructMMM = "You deleted this file.\n";
-                                    if (!(d[1][4] === undefined)) {
-                                        constructMMM += d[1][4];
-                                    }
-                                    let message = {
-                                        body: constructMMM,
-                                        attachment: fs.createReadStream(filename),
-                                    };
-                                    sendMessageOnly(api, event, message);
-                                    utils.logged("unsend_file " + d[1][0] + " " + filename);
-                                } else {
-                                    let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                    if (!(d[1][4] === undefined)) {
-                                        constructMMM += d[1][4];
-                                    }
-                                    let message = {
-                                        body: constructMMM,
-                                        attachment: fs.createReadStream(filename),
-                                        /*
-                                        mentions: [{
-                                            tag: '@' + data[event.senderID]['firstName'],
-                                            id: event.senderID,
-                                            fromIndex: 0
-                                        }]
-                                        */
-                                    };
-                                    sendMessageOnly(api, event, message);
-                                    utils.logged("unsend_file_group " + d[1][0] + " " + filename);
-                                }
-                                unLink(filename);
-                            });
+                        let par = gc.participantIDs;
+                        groups.list.push({
+                            id: event.threadID,
+                            name: gc.threadName,
+                            members: par.length,
                         });
-                    });
-                } else if (d[0] == "location") {
-                    api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return utils.logged(err);
-                        if (groups.list[event.threadID] === undefined) {
-                            let constructMMM = "You deleted this location.\n";
-                            let message1 = {
-                                body: constructMMM + d[1][2],
-                                url: d[1][3],
-                            };
-                            sendMessageOnly(api, event, message1);
-                            utils.logged("unsend_location " + d[1][0] + " " + d[1][2]);
-                        } else {
-                            let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                            let message1 = {
-                                body: constructMMM + d[1][2],
-                                url: d[1][3],
-                                /*
-                                mentions: [{
-                                    tag: '@' + data[event.senderID]['firstName'],
-                                    id: event.senderID,
-                                    fromIndex: 0
-                                }],
-                                */
-                            };
-                            sendMessageOnly(api, event, message1);
-                            utils.logged("unsend_location " + d[1][0] + " " + d[1][2]);
-                        }
-                    });
-                } else if (d[0] == "location_sharing") {
-                    api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return utils.logged(err);
-                        if (groups.list[event.threadID] === undefined) {
-                            let constructMMM = "You deleted this live location.\n";
-                            let message1 = {
-                                body: constructMMM + d[1][2],
-                                location: {
-                                    latitude: d[1][3],
-                                    longitude: d[1][4],
-                                    current: true,
-                                },
-                            };
-                            sendMessageOnly(api, event, message1);
-                            utils.logged("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
-                        } else {
-                            let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                            let message1 = {
-                                body: constructMMM + d[1][2],
-                                location: {
-                                    latitude: d[1][3],
-                                    longitude: d[1][4],
-                                    current: true,
-                                },
-                                /*
-                                mentions: [{
-                                    tag: '@' + data[event.senderID]['firstName'],
-                                    id: event.senderID,
-                                    fromIndex: 0
-                                }],
-                                */
-                            };
-                            sendMessageOnly(api, event, message1);
-                            utils.logged("unsend_location_sharing_group " + d[1][0] + " " + d[1][2]);
-                        }
-                    });
-                } else if (d[0] == "sticker") {
-                    api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return utils.logged(err);
-                        if (groups.list[event.threadID] === undefined) {
-                            let constructMMM = "You deleted this sticker.\n";
-                            let message = {
-                                body: constructMMM,
-                            };
-                            let message1 = {
-                                sticker: d[1][2],
-                            };
-                            sendMessageOnly(api, event, message);
-                            sendMessageOnly(api, event, message1);
-                            utils.logged("unsend_sticker " + d[1][0] + " " + d[1][2]);
-                        } else {
-                            let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                            let message = {
-                                body: constructMMM,
-                                /*
-                                mentions: [{
-                                    tag: '@' + data[event.senderID]['firstName'],
-                                    id: event.senderID,
-                                    fromIndex: 0
-                                }]
-                                */
-                            };
-                            let message1 = {
-                                sticker: d[1][2],
-                            };
-                            sendMessageOnly(api, event, message);
-                            sendMessageOnly(api, event, message1);
-                            utils.logged("unsend_sticker_group " + d[1][0] + " " + d[1][2]);
-                        }
-                    });
-                } else if (d[0] == "video") {
-                    let time1 = getTimestamp();
-                    let filename = __dirname + "/cache/videos/unsend_video_" + time1 + ".mp4";
-                    let file = fs.createWriteStream(filename);
-                    let gifRequest = https.get(d[1][2], function (gifResponse) {
-                        gifResponse.pipe(file);
-                        file.on("finish", function () {
-                            api.getUserInfo(event.senderID, (err, data) => {
-                                if (err) return utils.logged(err);
-                                if (groups.list[event.threadID] === undefined) {
-                                    let constructMMM = "You deleted this video.\n";
-                                    if (!(d[1][3] === undefined)) {
-                                        constructMMM += d[1][3];
-                                    }
-                                    let message = {
-                                        body: constructMMM,
-                                        attachment: fs.createReadStream(filename),
-                                    };
-                                    sendMessageOnly(api, event, message);
-                                    utils.logged("unsend_video " + d[1][0] + " " + filename);
-                                } else {
-                                    let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                    if (!(d[1][3] === undefined)) {
-                                        constructMMM += d[1][3];
-                                    }
-                                    let message = {
-                                        body: constructMMM,
-                                        attachment: fs.createReadStream(filename),
-                                        /*
-                                        mentions: [{
-                                            tag: '@' + data[event.senderID]['firstName'],
-                                            id: event.senderID,
-                                            fromIndex: 0
-                                        }]
-                                        */
-                                    };
-                                    sendMessageOnly(api, event, message);
-                                    utils.logged("unsend_video_group " + d[1][0] + " " + filename);
-                                }
-                                unLink(filename);
-                            });
+
+                        api.muteThread(event.threadID, -1, (err) => {
+                            if (err) utils.logged(err);
                         });
-                    });
-                } else if (d[0] == "audio") {
-                    let time2 = getTimestamp();
-                    let filename = __dirname + "/cache/audios/unsend_audio_" + time2 + ".mp3";
-                    let file = fs.createWriteStream(filename);
-                    let gifRequest = https.get(d[1][2], function (gifResponse) {
-                        gifResponse.pipe(file);
-                        file.on("finish", function () {
-                            api.getUserInfo(event.senderID, (err, data) => {
-                                if (err) return utils.logged(err);
-                                if (groups.list[event.threadID] === undefined) {
-                                    let constructMMM = "You deleted this voice message.\n";
-                                    if (!(d[1][3] === undefined)) {
-                                        constructMMM += d[1][3];
-                                    }
-                                    let message = {
-                                        body: constructMMM,
-                                        attachment: fs.createReadStream(filename),
-                                    };
-                                    sendMessageOnly(api, event, message);
-                                    utils.logged("unsend_audio " + d[1][0] + " " + filename);
-                                } else {
-                                    let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                    if (!(d[1][3] === undefined)) {
-                                        constructMMM += d[1][3];
-                                    }
-                                    let message = {
-                                        body: constructMMM,
-                                        attachment: fs.createReadStream(filename),
-                                        /*
-                                        mentions: [{
-                                            tag: '@' + data[event.senderID]['firstName'],
-                                            id: event.senderID,
-                                            fromIndex: 0
-                                        }]
-                                        */
-                                    };
-                                    sendMessageOnly(api, event, message);
-                                    utils.logged("unsend_audio_group " + d[1][0] + " " + filename);
-                                }
-                                unLink(filename);
-                            });
-                        });
-                    });
-                } else {
-                    api.getUserInfo(event.senderID, (err, data) => {
-                        if (err) return utils.logged(err);
-                        if (groups.list[event.threadID] === undefined) {
-                            let message = "You deleted this message.\n\n" + d[2];
-                            sendMessageOnly(api, event, message);
-                            utils.logged("unsend_message " + d[0] + " " + message);
-                        } else {
-                            let message = {
-                                body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
-                                /*
-                                mentions: [{
-                                    tag: '@' + data[event.senderID]['firstName'],
-                                    id: event.senderID,
-                                    fromIndex: 0
-                                }]
-                                */
-                            };
-                            sendMessageOnly(api, event, message);
-                            utils.logged("unsend_message_group " + d[0] + " " + message);
-                        }
-                    });
-                }
-                break;
-            case "event":
-                utils.logged("event_message " + event.threadID + " " + event.logMessageType);
-                switch (event.logMessageType) {
-                    default:
-                        utils.logged("event_error " + JSON.stringify(event));
-                        break;
-                    case "log:subscribe":
-                        if (event.logMessageData.addedParticipants.length == 1 && event.logMessageData.addedParticipants[0].userFbId == currentID) {
-                            break;
-                        }
-                        api.getThreadInfo(event.threadID, (err, gc) => {
+
+                        api.setNickname("Edogawa Conan", event.threadID, currentID, (err) => {
                             if (err) return utils.logged(err);
-                            if (gc.isGroup) {
+                        });
+
+                        utils.logged("new_group " + event.threadID + " group_name " + gc.threadName);
+                    });
+                } else if (!acGG.includes(event.threadID) && groups.list.find((thread) => event.threadID === thread.id)) {
+                    acGG.push(event.threadID);
+                }
+            } else if (groups.blocked.includes(event.threadID)) {
+                if (event.type == "message" || event.type == "message_reply") {
+                    saveEvent(event);
+                    blockedGroupC++;
+                }
+                return;
+            } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) && (event.type == "message" || event.type == "message_reply")) {
+                blockedUserC++;
+                saveEvent(event);
+                return;
+            }
+
+            if (settings.preference.isDebugEnabled && !isMyId(event.senderID)) {
+                if (event.type == "message" || event.type == "message_reply") {
+                    let input = event.body;
+                    let query2 = formatQuery(input);
+                    let query = query2.replace(/\s+/g, "");
+                    if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
+                        if (isGoingToFast1(event, threadMaintenance, 15)) {
+                            return;
+                        }
+                        let message = {
+                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                            attachment: fs.createReadStream(__dirname + "/assets/maintenance.jpg"),
+                        };
+                        sendMessage(api, event, message);
+                    }
+                    saveEvent(event);
+                }
+                return;
+            }
+
+            if (settings.preference.isStop && !isMyId(event.senderID)) {
+                if (event.type == "message" || event.type == "message_reply") {
+                    saveEvent(event);
+                }
+                return;
+            }
+
+            if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled) {
+                api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
+                settings.restart = [];
+                isCalled = false;
+            }
+
+            switch (event.type) {
+                case "message":
+                case "message_reply":
+                    saveEvent(event);
+                    ai(api, event);
+                    break;
+                case "message_reaction":
+                    if (!isMyId(event.userID) && !isMyId(event.senderID) && !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) && event.senderID != event.userID && !(event.reaction === undefined)) {
+                        emo.push(event.messageID);
+                        utils.logged("react_message " + event.threadID + " " + event.messageID + " " + event.reaction);
+                        reactMessage(api, event, event.reaction);
+                    }
+                    break;
+                case "message_unsend":
+                    let d = msgs[event.messageID];
+                    if (d === undefined || isMyId(event.senderID)) {
+                        break;
+                    }
+                    utils.logged("message_unsend " + d[0]);
+                    if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID) || groups.blocked.includes(event.threadID)) {
+                        break;
+                    }
+
+                    if (d[0] == "photo") {
+                        unsendPhoto(api, event, d);
+                    } else if (d[0] == "animated_images") {
+                        unsendGif(api, event, d);
+                    } else if (d[0] == "share") {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return utils.logged(err);
+                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                let message = {
+                                    body: "You deleted this link.\n\n" + d[1][2],
+                                    url: d[1][3],
+                                };
+                                sendMessageOnly(api, event, message);
+                                utils.logged("unsend_share " + d[1][0] + " " + message);
+                            } else {
+                                let message = {
+                                    body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
+                                    url: d[1][3],
+                                    /*
+                                mentions: [{
+                                    tag: '@' + data[event.senderID]['firstName'],
+                                    id: event.senderID,
+                                    fromIndex: 0
+                                }]
+                                */
+                                };
+                                sendMessageOnly(api, event, message);
+                                utils.logged("unsend_share_group " + d[1][0] + " " + message);
+                            }
+                        });
+                    } else if (d[0] == "file") {
+                        let time = getTimestamp();
+                        let filename = __dirname + "/cache/files/" + d[1][2] + "_" + time;
+                        let file = fs.createWriteStream(filename);
+                        let fileurl = d[1][3].replace("https://l.facebook.com/l.php?u=", "");
+                        let decodeurl = decodeURIComponent(fileurl);
+                        let fileRequest = https.get(decodeurl, function (fileResponse) {
+                            fileResponse.pipe(file);
+                            file.on("finish", function () {
+                                api.getUserInfo(event.senderID, (err, data) => {
+                                    if (err) return utils.logged(err);
+                                    if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                        let constructMMM = "You deleted this file.\n";
+                                        if (!(d[1][4] === undefined)) {
+                                            constructMMM += d[1][4];
+                                        }
+                                        let message = {
+                                            body: constructMMM,
+                                            attachment: fs.createReadStream(filename),
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                        utils.logged("unsend_file " + d[1][0] + " " + filename);
+                                    } else {
+                                        let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                        if (!(d[1][4] === undefined)) {
+                                            constructMMM += d[1][4];
+                                        }
+                                        let message = {
+                                            body: constructMMM,
+                                            attachment: fs.createReadStream(filename),
+                                            /*
+                                        mentions: [{
+                                            tag: '@' + data[event.senderID]['firstName'],
+                                            id: event.senderID,
+                                            fromIndex: 0
+                                        }]
+                                        */
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                        utils.logged("unsend_file_group " + d[1][0] + " " + filename);
+                                    }
+                                    unLink(filename);
+                                });
+                            });
+                        });
+                    } else if (d[0] == "location") {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return utils.logged(err);
+                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                let constructMMM = "You deleted this location.\n";
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    url: d[1][3],
+                                };
+                                sendMessageOnly(api, event, message1);
+                                utils.logged("unsend_location " + d[1][0] + " " + d[1][2]);
+                            } else {
+                                let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    url: d[1][3],
+                                    /*
+                                mentions: [{
+                                    tag: '@' + data[event.senderID]['firstName'],
+                                    id: event.senderID,
+                                    fromIndex: 0
+                                }],
+                                */
+                                };
+                                sendMessageOnly(api, event, message1);
+                                utils.logged("unsend_location " + d[1][0] + " " + d[1][2]);
+                            }
+                        });
+                    } else if (d[0] == "location_sharing") {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return utils.logged(err);
+                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                let constructMMM = "You deleted this live location.\n";
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    location: {
+                                        latitude: d[1][3],
+                                        longitude: d[1][4],
+                                        current: true,
+                                    },
+                                };
+                                sendMessageOnly(api, event, message1);
+                                utils.logged("unsend_location_sharing " + d[1][0] + " " + d[1][2]);
+                            } else {
+                                let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let message1 = {
+                                    body: constructMMM + d[1][2],
+                                    location: {
+                                        latitude: d[1][3],
+                                        longitude: d[1][4],
+                                        current: true,
+                                    },
+                                    /*
+                                mentions: [{
+                                    tag: '@' + data[event.senderID]['firstName'],
+                                    id: event.senderID,
+                                    fromIndex: 0
+                                }],
+                                */
+                                };
+                                sendMessageOnly(api, event, message1);
+                                utils.logged("unsend_location_sharing_group " + d[1][0] + " " + d[1][2]);
+                            }
+                        });
+                    } else if (d[0] == "sticker") {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return utils.logged(err);
+                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                let constructMMM = "You deleted this sticker.\n";
+                                let message = {
+                                    body: constructMMM,
+                                };
+                                let message1 = {
+                                    sticker: d[1][2],
+                                };
+                                sendMessageOnly(api, event, message);
+                                sendMessageOnly(api, event, message1);
+                                utils.logged("unsend_sticker " + d[1][0] + " " + d[1][2]);
+                            } else {
+                                let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                let message = {
+                                    body: constructMMM,
+                                    /*
+                                mentions: [{
+                                    tag: '@' + data[event.senderID]['firstName'],
+                                    id: event.senderID,
+                                    fromIndex: 0
+                                }]
+                                */
+                                };
+                                let message1 = {
+                                    sticker: d[1][2],
+                                };
+                                sendMessageOnly(api, event, message);
+                                sendMessageOnly(api, event, message1);
+                                utils.logged("unsend_sticker_group " + d[1][0] + " " + d[1][2]);
+                            }
+                        });
+                    } else if (d[0] == "video") {
+                        let time1 = getTimestamp();
+                        let filename = __dirname + "/cache/videos/unsend_video_" + time1 + ".mp4";
+                        let file = fs.createWriteStream(filename);
+                        let gifRequest = https.get(d[1][2], function (gifResponse) {
+                            gifResponse.pipe(file);
+                            file.on("finish", function () {
+                                api.getUserInfo(event.senderID, (err, data) => {
+                                    if (err) return utils.logged(err);
+                                    if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                        let constructMMM = "You deleted this video.\n";
+                                        if (!(d[1][3] === undefined)) {
+                                            constructMMM += d[1][3];
+                                        }
+                                        let message = {
+                                            body: constructMMM,
+                                            attachment: fs.createReadStream(filename),
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                        utils.logged("unsend_video " + d[1][0] + " " + filename);
+                                    } else {
+                                        let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                        if (!(d[1][3] === undefined)) {
+                                            constructMMM += d[1][3];
+                                        }
+                                        let message = {
+                                            body: constructMMM,
+                                            attachment: fs.createReadStream(filename),
+                                            /*
+                                        mentions: [{
+                                            tag: '@' + data[event.senderID]['firstName'],
+                                            id: event.senderID,
+                                            fromIndex: 0
+                                        }]
+                                        */
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                        utils.logged("unsend_video_group " + d[1][0] + " " + filename);
+                                    }
+                                    unLink(filename);
+                                });
+                            });
+                        });
+                    } else if (d[0] == "audio") {
+                        let time2 = getTimestamp();
+                        let filename = __dirname + "/cache/audios/unsend_audio_" + time2 + ".mp3";
+                        let file = fs.createWriteStream(filename);
+                        let gifRequest = https.get(d[1][2], function (gifResponse) {
+                            gifResponse.pipe(file);
+                            file.on("finish", function () {
+                                api.getUserInfo(event.senderID, (err, data) => {
+                                    if (err) return utils.logged(err);
+                                    if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                        let constructMMM = "You deleted this voice message.\n";
+                                        if (!(d[1][3] === undefined)) {
+                                            constructMMM += d[1][3];
+                                        }
+                                        let message = {
+                                            body: constructMMM,
+                                            attachment: fs.createReadStream(filename),
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                        utils.logged("unsend_audio " + d[1][0] + " " + filename);
+                                    } else {
+                                        let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                                        if (!(d[1][3] === undefined)) {
+                                            constructMMM += d[1][3];
+                                        }
+                                        let message = {
+                                            body: constructMMM,
+                                            attachment: fs.createReadStream(filename),
+                                            /*
+                                        mentions: [{
+                                            tag: '@' + data[event.senderID]['firstName'],
+                                            id: event.senderID,
+                                            fromIndex: 0
+                                        }]
+                                        */
+                                        };
+                                        sendMessageOnly(api, event, message);
+                                        utils.logged("unsend_audio_group " + d[1][0] + " " + filename);
+                                    }
+                                    unLink(filename);
+                                });
+                            });
+                        });
+                    } else {
+                        api.getUserInfo(event.senderID, (err, data) => {
+                            if (err) return utils.logged(err);
+                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                let message = "You deleted this message.\n\n" + d[2];
+                                sendMessageOnly(api, event, message);
+                                utils.logged("unsend_message " + d[0] + " " + message);
+                            } else {
+                                let message = {
+                                    body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
+                                    /*
+                                mentions: [{
+                                    tag: '@' + data[event.senderID]['firstName'],
+                                    id: event.senderID,
+                                    fromIndex: 0
+                                }]
+                                */
+                                };
+                                sendMessageOnly(api, event, message);
+                                utils.logged("unsend_message_group " + d[0] + " " + message);
+                            }
+                        });
+                    }
+                    break;
+                case "event":
+                    utils.logged("event_message " + event.threadID + " " + event.logMessageType);
+                    switch (event.logMessageType) {
+                        default:
+                            utils.logged("event_error " + JSON.stringify(event));
+                            break;
+                        case "log:subscribe":
+                            api.getThreadInfo(event.threadID, (err, gc) => {
+                                if (err) return utils.logged(err);
+                                getGroupProfile(event.threadID, async function (group) {
+                                    if (group.name != undefined) {
+                                        let arr = gc.participantIDs;
+                                        group["members"] = arr.length;
+                                    }
+                                });
+                                if (event.logMessageData.addedParticipants.length == 1 && event.logMessageData.addedParticipants[0].userFbId == currentID) {
+                                    utils.logged("add_user root");
+                                    return;
+                                }
+
                                 let gname = gc.threadName;
                                 let i = 0;
                                 let names = [];
@@ -943,76 +924,75 @@ ERR! markAsDelivered }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
                                 let arr = gc.participantIDs;
-                                welcomeUser(api, event, name, gname, arr.length, id, gret);
-                            }
-                        });
-                        break;
-                    case "log:unsubscribe":
-                        let id = event.logMessageData.leftParticipantFbId;
-                        if (id == currentID) {
-                            groups.active.pop(event.threadID);
-                            utils.logged("leaving_group " + event.threadID);
+                                sendMessage(api, event, gret + " Welcome to " + gname);
+                            });
                             break;
-                        }
-                        api.getThreadInfo(event.threadID, (err, gc) => {
-                            if (err) utils.logged(err);
-                            api.getUserInfo(parseInt(id), (err, data) => {
-                                if (err) return utils.logged(err);
-                                for (let prop in data) {
-                                    if (data.hasOwnProperty(prop) && data[prop].name) {
-                                        let gcn = gc.threadName;
+                        case "log:unsubscribe":
+                            api.getThreadInfo(event.threadID, (err, gc) => {
+                                if (err) utils.logged(err);
+                                getGroupProfile(event.threadID, async function (group) {
+                                    if (group.name != undefined) {
                                         let arr = gc.participantIDs;
-                                        if (data[prop].name == "Facebook user") {
-                                            sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
-                                        } else if (users.blocked.includes(prop) || users.bot.includes(prop)) {
-                                            return;
-                                        } else {
-                                            if (settings.preference.antiLeave) {
-                                                api.addUserToGroup(prop, event.threadID, (err) => {
-                                                    if (err) utils.logged(err);
-                                                    utils.logged("add_user " + event.threadID + " " + prop);
-                                                });
+                                        group["members"] = arr.length;
+                                    }
+                                });
+                                let id = event.logMessageData.leftParticipantFbId;
+                                if (id == currentID) {
+                                    groups.active.pop(event.threadID);
+                                    utils.logged("leaving_group root");
+                                    return;
+                                }
+                                api.getUserInfo(parseInt(id), (err, data) => {
+                                    if (err) return utils.logged(err);
+                                    for (let prop in data) {
+                                        if (data.hasOwnProperty(prop) && data[prop].name) {
+                                            let gcn = gc.threadName;
+                                            let arr = gc.participantIDs;
+                                            if (data[prop].name == "Facebook user") {
+                                                sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
+                                            } else if (users.blocked.includes(prop) || users.bot.includes(prop)) {
+                                                return;
+                                            } else {
+                                                if (settings.preference.antiLeave) {
+                                                    api.addUserToGroup(prop, event.threadID, (err) => {
+                                                        if (err) utils.logged(err);
+                                                        utils.logged("add_user " + event.threadID + " " + prop);
+                                                        sendMessage(api, event, "You think " + data[prop].name + ", you can leave us all here alone!!");
+                                                    });
+                                                } else {
+                                                    sendMessage(api, event, "Goodbye " + data[prop].name + ", im sad to see you going away. :(");
+                                                }
                                             }
-                                            byebyeUser(api, event, data[prop].name, gcn, arr.length, prop);
                                         }
                                     }
-                                }
+                                });
                             });
-                        });
-                        break;
-                    case "log:thread-name":
-                        api.getUserInfo(event.author, (err, data) => {
-                            if (err) return utils.logged(err);
-                            let constructMMM;
-                            groups.list[event.threadID] = event.logMessageData.name;
-                            if (groups.list[event.threadID] == null || groups.list[event.threadID] === undefined) {
-                                constructMMM = data[event.author]["firstName"] + " set the group name to " + event.logMessageData.name;
-                            } else {
-                                constructMMM = data[event.author]["firstName"] + " has changed the groupname from \n" + groups.list[event.threadID] + "\nto\n" + event.logMessageData.name;
-                            }
-                            let message = {
-                                body: constructMMM,
-                                /*
-                                mentions: [{
-                                    tag: '@' + data[event.author]['firstName'],
-                                    id: event.author,
-                                    fromIndex: 0
-                                }]
-                                */
-                            };
-                            sendMessage(api, event, message);
-                        });
-                        break;
-                    case "log:thread-icon":
-                    case "log:thread-color":
-                    case "log:user-nickname":
-                        sendMessage(api, event, "Feature comming soon\n\n" + JSON.stringify(event.logMessageData));
-                        break;
-                }
-                break;
-        }
+                            break;
+                        case "log:thread-name":
+                            api.getUserInfo(event.author, (err, data) => {
+                                if (err) return utils.logged(err);
+                                getGroupProfile(event.threadID, async function (group) {
+                                    let msgs;
+                                    if (group.name != undefined) {
+                                        msgs = data[event.author]["firstName"] + " has changed the groupname from \n" + group.name + "\nto\n" + event.logMessageData.name;
+                                        group["name"] = event.logMessageData.name;
+                                    } else {
+                                        msgs = data[event.author]["firstName"] + " set the group name to " + event.logMessageData.name;
+                                    }
+                                    sendMessage(api, event, msgs);
+                                });
+                            });
+                            break;
+                        case "log:thread-icon":
+                        case "log:thread-color":
+                        case "log:user-nickname":
+                            sendMessage(api, event, "Feature comming soon\n\n" + JSON.stringify(event.logMessageData));
+                            break;
+                    }
+                    break;
+            }
+        });
     });
-});
 });
 
 function sleep(ms) {
@@ -1027,7 +1007,7 @@ async function ai22(api, event, query, query2) {
             if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
                 sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
             } else {
-                sendMessage(api, event, "Message are been schedule to send to " + Object.keys(groups.list).length + " groups.");
+                sendMessage(api, event, "Message are been schedule to send to " + groups.list.length + " groups.");
                 sendMessageToAll(api, event);
             }
         }
@@ -1360,7 +1340,7 @@ async function ai(api, event) {
             if (welCC.startsWith("How ")) {
                 getUserProfile(event.senderID, async function (name) {
                     let aa = "";
-                    if (name.firstName != "User") {
+                    if (name.firstName != undefined) {
                         aa += "Hello " + name.firstName + ". ";
                     }
                     aa += welCC;
@@ -1446,7 +1426,7 @@ async function ai(api, event) {
                             sendAiMessage(api, event, ss);
                         });
                     } else {
-                        let ss = await aiResponse(settings.preference.text_complextion, text, true, user, { name: "Uknown" });
+                        let ss = await aiResponse(settings.preference.text_complextion, text, true, user, { name: undefined });
                         sendAiMessage(api, event, ss);
                     }
                 });
@@ -1895,20 +1875,10 @@ _______  Statistics  _______
             `/` +
             numberWithCommas(users.list.length) +
             `
-   ⦿ Users (v2): ` +
-            numberWithCommas(Object.keys(cmd).length) +
-            `/` +
-            numberWithCommas(users.listv2.length) +
-            `
    ⦿ Groups: ` +
             acGG.length +
             `/` +
-            numberWithCommas(Object.keys(groups.list).length) +
-            `
-   ⦿ Groups (v2): ` +
-            acGG.length +
-            `/` +
-            numberWithCommas(groups.listv2.length) +
+            numberWithCommas(groups.list.length) +
             `
    ⦿ Block Users: ` +
             blockedUserC +
@@ -2872,7 +2842,7 @@ _____________________________
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
-            let ss = await aiResponse(settings.preference.text_complextion, input, true, { firstName: "User" }, { name: "Unknown" });
+            let ss = await aiResponse(settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined });
             sendMessage(api, event, ss);
         }
     } else if (query.startsWith("baybayin")) {
@@ -3894,47 +3864,6 @@ _____________________________
                 sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
             }
         }
-    } else if (query.startsWith("welcomeuser")) {
-        if (users.admin.includes(event.senderID)) {
-            if (event.isGroup) {
-                let arr = gc.participantIDs;
-                let data = input.split(" ");
-                if (data.length < 2) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using welcomeuser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwelcomeuser @Zero Two");
-                } else {
-                    let id = Object.keys(event.mentions)[0];
-                    if (id === undefined) {
-                        data.shift();
-                        let user = data.join(" ");
-                        let attem = getIdFromUrl(user);
-                        if (/^[0-9]+$/.test(attem)) {
-                            id = attem;
-                        } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                            id = user;
-                        } else if (event.type == "message_reply") {
-                            id = event.messageReply.senderID;
-                        } else {
-                            api.getUserID(user.replace("@", ""), (err, data) => {
-                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                api.getUserInfo(data[0].userID, (err, data1) => {
-                                    if (err) return utils.logged(err);
-                                    welcomeUser(api, event, data1[data[0].userID].name, gc.threadName, arr.length, data[0].userID, "How are you @" + data1.name + "?");
-                                });
-                            });
-                            return;
-                        }
-                    } else if (isMyId(id)) {
-                        return;
-                    }
-                    api.getUserInfo(id, (err, data1) => {
-                        if (err) return utils.logged(err);
-                        welcomeUser(api, event, data1[id].name, gc.threadName, arr.length, id, "How are you @" + data1.name + "?");
-                    });
-                }
-            } else {
-                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-            }
-        }
     } else if (query.startsWith("kickuser")) {
         if (users.admin.includes(event.senderID)) {
             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -3964,10 +3893,6 @@ _____________________________
                                 api.getUserID(user.replace("@", ""), (err, data) => {
                                     if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
                                     removeUser(api, event, data[0].userID);
-                                    api.getUserInfo(data[0].userID, (err, data1) => {
-                                        if (err) return utils.logged(err);
-                                        byebyeUser(api, event, data1[data[0].userID].name, gc.threadName, arr.length, data[0].userID);
-                                    });
                                 });
                                 return;
                             }
@@ -3975,10 +3900,6 @@ _____________________________
                             return;
                         }
                         removeUser(api, event, id);
-                        api.getUserInfo(id, (err, data1) => {
-                            if (err) return utils.logged(err);
-                            byebyeUser(api, event, data1[id].name, gc.threadName, arr.length, id);
-                        });
                     }
                 } else {
                     sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -4342,12 +4263,12 @@ _____________________________
                 if (err) utils.logged(err);
                 let construct = "";
                 let usern = a.userInfo.length;
-        
+
                 for (b in a.userInfo) {
-                   // utils.logged(a.userInfo[b])
-                    construct += "<div class=\"relative w-40 h-40 rounded-full overflow-hidden\">";
-                    construct += "<img src=\"" + getProfilePic(a.userInfo[b].id) + "\" alt=\"Avatar\" class=\"object-cover w-full h-full\" />";
-                    construct += "<div class=\"absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4\">" + a.userInfo[b].name + "</div>";
+                    // utils.logged(a.userInfo[b])
+                    construct += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
+                    construct += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
+                    construct += '<div class="absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4">' + a.userInfo[b].name + "</div>";
                     construct += "</div>";
                 }
                 threadInfo["/" + a.threadID] = {
@@ -4357,12 +4278,12 @@ _____________________________
                     members: construct,
                     icon: a.imageSrc,
                 };
-                
+
                 let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
                 let message = {
                     body: "This group information can be see at " + urll,
-                    url: urll
-                }
+                    url: urll,
+                };
                 sendMessage(api, event, message);
             });
         } else {
@@ -4398,8 +4319,14 @@ _____________________________
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (event.type == "message" && !(groups.list[event.threadID] === undefined) && (query == "guid" || query == "groupid")) {
-            sendMessage(api, event, "The " + groups.list[event.threadID] + " guid is " + event.threadID);
+        if (event.type == "message" && groups.list.find((thread) => event.threadID === thread.id) && (query == "guid" || query == "groupid")) {
+            getGroupProfile(event.threadID, async function (group) {
+                if (group.name != undefined) {
+                    sendMessage(api, event, "The " + group.name + " guid is " + group.id);
+                } else {
+                    sendMessage(api, event, "This group id is " + event.threadID);
+                }
+            });
         } else if (event.type == "message_reply") {
             let id1;
             if (isMyId(id1)) {
@@ -6056,7 +5983,7 @@ _____________________________
             data.shift();
             let body = data.join(" ");
             getUserProfile(event.senderID, async function (name) {
-                if (name.firstName != "User") {
+                if (name.firstName != undefined) {
                     if (isValidDateFormat(body)) {
                         name["birthday"] = body;
                         sendMessage(api, event, "Hello " + name.firstName + " you have successfully set your birthday to " + body + ".");
@@ -6077,7 +6004,7 @@ _____________________________
             data.shift();
             let body = data.join(" ");
             getUserProfile(event.senderID, async function (name) {
-                if (name.firstName != "User") {
+                if (name.firstName != undefined) {
                     if (body.length > 10) {
                         name["location"] = body;
                         sendMessage(api, event, "Hello " + name.firstName + " you have successfully set your location to " + body + ".");
@@ -6098,7 +6025,7 @@ _____________________________
             data.shift();
             let body = data.join(" ");
             getUserProfile(event.senderID, async function (name) {
-                if (name.firstName != "User") {
+                if (name.firstName != undefined) {
                     name["bio"] = body;
                     sendMessage(api, event, "Hello " + name.firstName + " you have successfully set your bio.");
                 }
@@ -6115,7 +6042,7 @@ _____________________________
             data.shift();
             let body = data.join(" ");
             getUserProfile(event.senderID, async function (name) {
-                if (name.firstName != "User") {
+                if (name.firstName != undefined) {
                     if (body.startsWith("@")) {
                         body = body.slice(1);
                     }
@@ -6135,7 +6062,7 @@ _____________________________
             data.shift();
             let body = data.join(" ").toLowerCase();
             getUserProfile(event.senderID, async function (name) {
-                if (name.firstName != "User") {
+                if (name.firstName != undefined) {
                     if (body == "male" || body == "female") {
                         name["gender"] = getGenderCode(body);
                         sendMessage(api, event, "Hello " + name.firstName + " you have successfully set your gender to " + body + ".");
@@ -6194,16 +6121,22 @@ function reaction(api, event, query, input) {
                 sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
             }
         }
-    } else if (containsAny(input.toLowerCase(), sadEE)) {
+    } else if (containsAny(query, sadEE)) {
         reactMessage(api, event, ":sad:");
-    } else if (containsAny(input.toLowerCase(), angryEE)) {
-        reactMessage(api, event, ":angry:");
     } else if (containsAny(query, loveEE) || query == "good") {
         reactMessage(api, event, ":love:");
     } else if (query == "tsk") {
         reactMessage(api, event, ":like:");
     } else if (query == "nice" || query == "uwu") {
         reactMessage(api, event, ":heart:");
+    } else if (query == "911") {
+        sendMessage(api, event, "Have an emergency? Don't wait call 911!");
+    } else if (query == "same") {
+        sendMessage(api, event, "(2)");
+    } else if (query == "k" || query == "y") {
+        sendMessage(api, event, "women");
+    } else if (query == "wdym") {
+        sendMessage(api, event, "what do you mean?");
     }
 }
 
@@ -6212,7 +6145,7 @@ function someR(api, event, query) {
         reactMessage(api, event, ":love:");
         getUserProfile(event.senderID, async function (name) {
             let construct = "Good evening";
-            if (name.firstName != "User") {
+            if (name.firstName != undefined) {
                 construct += " " + name.firstName;
             }
             if (!isEvening(settings.preference.timezone)) {
@@ -6226,7 +6159,7 @@ function someR(api, event, query) {
         reactMessage(api, event, ":love:");
         getUserProfile(event.senderID, async function (name) {
             let construct = "Good morning";
-            if (name.firstName != "User") {
+            if (name.firstName != undefined) {
                 construct += " " + name.firstName;
             }
             if (!isMorning(settings.preference.timezone)) {
@@ -6240,7 +6173,7 @@ function someR(api, event, query) {
         reactMessage(api, event, ":love:");
         getUserProfile(event.senderID, async function (name) {
             let construct = "Good night";
-            if (name.firstName != "User") {
+            if (name.firstName != undefined) {
                 construct += " " + name.firstName;
             }
             if (!isNight(settings.preference.timezone)) {
@@ -6254,7 +6187,7 @@ function someR(api, event, query) {
         reactMessage(api, event, ":love:");
         getUserProfile(event.senderID, async function (name) {
             let construct = "Good afternon";
-            if (name.firstName != "User") {
+            if (name.firstName != undefined) {
                 construct += " " + name.firstName;
             }
             if (!isAfternoon(settings.preference.timezone)) {
@@ -6295,7 +6228,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await sleep(2000);
     }
-    if (groups.list[event.threadID] === undefined && event.senderID != currentID) {
+    if (groups.list.find((thread) => event.threadID === thread.id) && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -6360,7 +6293,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
     if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await sleep(2000);
     }
-    if (groups.list[event.threadID] === undefined && event.senderID != currentID) {
+    if (groups.list.find((thread) => event.threadID === thread.id) && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -6502,7 +6435,7 @@ function isGoingToFast(api, event) {
     let input = event.body;
     commandCalls++;
     utils.logged("event_body " + event.senderID + " " + JSON.stringify(input));
-    if (!users.listv2.find((user) => event.senderID === user.id)) {
+    if (!users.list.find((user) => event.senderID === user.id)) {
         api.getUserInfo(event.senderID, async (err, data1) => {
             if (err) return utils.logged(err);
             if (users.list.includes(event.senderID)) {
@@ -6510,7 +6443,7 @@ function isGoingToFast(api, event) {
             } else {
                 utils.logged("new_user " + event.senderID + " user_name " + data1[event.senderID].name);
             }
-            users.listv2.push({
+            users.list.push({
                 id: event.senderID,
                 name: data1[event.senderID].name,
                 firstName: data1[event.senderID].firstName,
@@ -6759,7 +6692,7 @@ async function unsendPhoto(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return utils.logged(err);
-        if (groups.list[event.threadID] === undefined) {
+        if (groups.list.find((thread) => event.threadID === thread.id)) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " photos. \n";
@@ -6824,7 +6757,7 @@ async function unsendGif(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return utils.logged(err);
-        if (groups.list[event.threadID] === undefined) {
+        if (groups.list.find((thread) => event.threadID === thread.id)) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " gifs. \n";
@@ -7023,7 +6956,7 @@ async function blockUser(api, event, id) {
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
             let aa = "";
-            if (name.firstName != "User") {
+            if (name.firstName != undefined) {
                 aa += name.firstName;
             } else {
                 aa += "The user " + id;
@@ -7094,7 +7027,7 @@ async function unblockUser(api, event, id) {
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
             let aa = "";
-            if (name.firstName != "User") {
+            if (name.firstName != undefined) {
                 aa += name.firstName;
             } else {
                 aa += "The user " + id;
@@ -7121,7 +7054,7 @@ async function addAdmin(api, event, id) {
         if (event.isGroup) {
             getUserProfile(id, async function (name) {
                 let aa = "Sorry ";
-                if (name.firstName != "User") {
+                if (name.firstName != undefined) {
                     aa += name.firstName;
                 } else {
                     aa += id;
@@ -7138,7 +7071,7 @@ async function addAdmin(api, event, id) {
         if (event.isGroup) {
             getUserProfile(id, async function (name) {
                 let aa = "";
-                if (name.firstName != "User") {
+                if (name.firstName != undefined) {
                     aa += name.firstName;
                 } else {
                     aa += "The user " + id;
@@ -7155,7 +7088,7 @@ async function addAdmin(api, event, id) {
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
             let aa = "";
-            if (name.firstName != "User") {
+            if (name.firstName != undefined) {
                 aa += name.firstName;
             } else {
                 aa += "The user " + id;
@@ -7385,68 +7318,6 @@ async function blur(api, event, id) {
 
 function getTimestamp() {
     return Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 90000) + Math.floor(Math.random() * 20000);
-}
-
-async function welcomeUser(api, event, name, gname, Tmem, id, message1) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            let filename = __dirname + "/cache/images/welcome_img_" + getTimestamp() + ".png";
-            downloadFile(getWelcomeImage(name, gname, Tmem, id) + encodeURIComponent(response.request.res.responseUrl), filename).then((response) => {
-                let message = {
-                    body: message1,
-                    attachment: fs.createReadStream(filename),
-                    /*
-                mentions: [{
-                    tag: name,
-                    id: id
-                }]
-                */
-                };
-                sendMessageOnly(api, event, message, event.threadID, event.messageID, false, false);
-                unLink(filename);
-            });
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function byebyeUser(api, event, name, gname, Tmem, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            let filename = __dirname + "/cache/images/byebye_" + getTimestamp() + ".jpg";
-            let url =
-                "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" +
-                Math.floor(Math.random() * 9) +
-                ".jpeg&text1=" +
-                encodeURI(name) +
-                "&text2=" +
-                encodeURI(gname) +
-                "&text3=" +
-                getSuffix(Tmem) +
-                " Member&avatar=" +
-                encodeURIComponent(response.request.res.responseUrl);
-            downloadFile(url, filename).then((response) => {
-                let message = {
-                    body: "Thank you for joining " + name + " but now you're leaving us.",
-                    attachment: fs.createReadStream(filename),
-                    /*
-                mentions: [{
-                    tag: name,
-                    id: id
-                }]
-                */
-                };
-                sendMessageOnly(api, event, message, event.threadID, event.messageID, false, false);
-                utils.logged("leave_member " + name);
-                unLink(filename);
-            });
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
 }
 
 function factorial(num) {
@@ -7919,6 +7790,8 @@ function getAppState(api) {
         login.key = key.toString("hex");
         login.iv = iv.toString("hex");
     });
+    // temporary solution for replit not calling SIGINT
+    fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
     return encrypt(JSON.stringify(api.getAppState()), key.toString("hex"), iv.toString("hex"));
 }
 
@@ -7969,8 +7842,8 @@ function getRoutes() {
             let construct = "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
             construct += "<b>Members Count: </b>" + threadInfo[req.url].membersCount + "<br>";
             let membercons = threadInfo[req.url].members;
-
-            let page = hh.replaceAll("%THREAD_NAME%", threadInfo[req.url].threadName).replaceAll("%THREAD_INFO_SUMMARY%", construct).replaceAll("%THREAD_INFO%", membercons).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
+            let na = threadInfo[req.url].threadName;
+            let page = hh.replaceAll("%THREAD_NAME%", na.replaceAll("<", "&lt;")).replaceAll("%THREAD_INFO_SUMMARY%", construct).replaceAll("%THREAD_INFO%", membercons).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
             res.end(page);
@@ -8233,10 +8106,10 @@ async function simulDD(arr, format) {
 }
 
 function getUserProfile(id, cb) {
-    if (!users.listv2.find((user) => id === user.id)) {
-        cb({ firstName: "User" });
+    if (!users.list.find((user) => id === user.id)) {
+        cb({ firstName: undefined });
     }
-    users.listv2.find((user) => {
+    users.list.find((user) => {
         if (user.id == id) {
             cb(user);
         }
@@ -8244,10 +8117,10 @@ function getUserProfile(id, cb) {
 }
 
 function getGroupProfile(id, cb) {
-    if (!groups.listv2.find((thread) => id === thread.id)) {
-        cb({ name: "Unknown" });
+    if (!groups.list.find((thread) => id === thread.id)) {
+        cb({ name: undefined });
     }
-    groups.listv2.find((thread) => {
+    groups.list.find((thread) => {
         if (thread.id == id) {
             cb(thread);
         }
@@ -8256,7 +8129,7 @@ function getGroupProfile(id, cb) {
 
 function getKey(id, cb) {
     if (!settings.key.find((key) => id === key.id)) {
-        cb("null");
+        cb(undefined);
     }
     settings.key.find((key) => {
         if (key.id == id) {
@@ -8277,23 +8150,28 @@ function formatMention(name, text) {
 
 function tellUser(user, group) {
     let construct = "";
-    if (user.firstName != "User") {
+    if (user.firstName != undefined) {
         construct += "You are talking to " + user.name + ". ";
-        if (!(user.birthday === undefined) || user.birthday == "No data") {
+        if (!(user.birthday === undefined)) {
             construct += getPronoun1(user.gender) + " birthday is on " + user.birthday + ". ";
         }
-        if (!(user.userName === undefined) || user.userName == "No data") {
+        if (!(user.userName === undefined)) {
             construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
         }
-        if (!(user.location === undefined) || user.location == "No data") {
+        if (!(user.location === undefined)) {
             construct += getPronoun(user.gender) + " is currently living in " + user.location + ". ";
         }
-        if (!(user.bio === undefined) || user.bio == "No data") {
+        if (!(user.bio === undefined)) {
             construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
         }
     }
-    if (group.name != "Unknown") {
-        construct += "You are in " + group.name + " group, it's member is " + group.members + ". ";
+    if (group.name != undefined) {
+        construct += "You are in " + group.name + " group";
+        if (!(group.members === undefined)) {
+            construct += ", it's member is " + group.members + ". ";
+        } else {
+            construct += ". ";
+        }
     }
     construct += "If " + getPronoun(user.gender).toLowerCase() + " is asking for images format the response to [picture=type of picture " + getPronoun(user.gender).toLowerCase() + " asked]. ";
     //construct += "If " + getPronoun(user.gender).toLowerCase() + " asking for musics format the response to [music=type of music " + getPronoun(user.gender).toLowerCase() + " asked]. ";
@@ -8302,7 +8180,7 @@ function tellUser(user, group) {
 }
 
 function getPronoun(gender) {
-    if (gender === undefined || gender == "No data") {
+    if (gender === undefined) {
         return "This person";
     }
     let gg = gender == 1 ? "female" : "male";
@@ -8313,7 +8191,7 @@ function getPronoun(gender) {
 }
 
 function getPronoun1(gender) {
-    if (gender === undefined || gender == "No data") {
+    if (gender === undefined) {
         return "This person";
     }
     let gg = gender == 1 ? "female" : "male";
@@ -8358,4 +8236,15 @@ function getGenderCode(gender) {
         return 2;
     }
     return 1;
+}
+
+function pad(value) {
+    return value < 10 ? '0' + value : value;
+}
+function createOffset(date) {
+    var sign = (date.getTimezoneOffset() > 0) ? "-" : "+";
+    var offset = Math.abs(date.getTimezoneOffset());
+    var hours = pad(Math.floor(offset / 60));
+    var minutes = pad(offset % 60);
+    return sign + hours + ":" + minutes;
 }
