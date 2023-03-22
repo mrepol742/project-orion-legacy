@@ -5,7 +5,7 @@ _______  Project Orion 1/9  _______
 
    ⦿ cmd 
    ⦿ cmd [number|all]
-   ⦿ cmd [admin|root]
+   ⦿ cmd [user|admin|root]
    ⦿ stats|uptime|sysinfo
    ⦿ sendReport [text]
    ⦿ search [text]
@@ -94,7 +94,7 @@ _______  Project Orion 4/9  _______
 
    ⦿ mnm [mention|me|name|url|uid|reply]
    ⦿ trump [mention|me|name|url|uid|reply]
-   ⦿ nickname @mention|@me:[text]
+   ⦿ parseFacebook [mention|me|name|url|uid|reply]
    ⦿ invert [mention|me|name|url|uid|reply]
    ⦿ greyscale [mention|me|name|url|uid|reply]
    ⦿ ship @mention @mention
@@ -237,16 +237,10 @@ _______  Project Orion 9/9  _______
    ⦿ facts [text]
    ⦿ encode64 [text]
    ⦿ decode64 [text]
-   ⦿ parseFacebook [mention|me|name|url|uid|reply]
    ⦿ parseImage [url]
    ⦿ encrypt [text]
    ⦿ decrypt [text] [key1]:[key2]
    ⦿ ginfo
-   ⦿ setBirthday [date]
-   ⦿ setGender [gender]
-   ⦿ setUsername [username]
-   ⦿ setAddress [address]
-   ⦿ setBio [info]
 __________________________________
 `;
 
@@ -259,8 +253,6 @@ _______  Project Orion Admin  _______
    ⦿ nsfw [on|off]
    ⦿ debug [on|off]
    ⦿ antiLeave [on|off]
-   ⦿ welcomeMessage [on|off]
-   ⦿ leavingMessage [on|off]
    ⦿ simultaneousExecution [on|off]
    ⦿ clearCache
    ⦿ refreshState
@@ -282,6 +274,18 @@ _______  Project Orion Admin  _______
    ⦿ remPrefix
    ⦿ ignore [prefix]
    ⦿ setkey [name]:[key]
+____________________________________
+`;
+
+let helpuser = `
+_______  Project Orion User  _______
+
+   ⦿ setBirthday [date]
+   ⦿ setGender [gender]
+   ⦿ setUsername [username]
+   ⦿ setAddress [address]
+   ⦿ setBio [info]
+   ⦿ setNickname [text]
 ____________________________________
 `;
 
@@ -312,7 +316,6 @@ _______  Project Orion Root  _______
    ⦿ setAutoMarkDelivery [on|off]
    ⦿ setPresence [on|off]
    ⦿ setReportingThread [uid]
-   ⦿ deleteUserInfo [mention|name|url|uid|reply]
 ____________________________________
 `;
 
@@ -328,6 +331,7 @@ module.exports = {
     help8: help8,
     helpadmin: helpadmin,
     helproot: helproot,
+    helpuser: helpuser,
 };
 
-// total commands 234
+// total commands 230

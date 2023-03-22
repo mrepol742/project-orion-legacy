@@ -19,7 +19,7 @@
     <link rel="icon" href="%THREAD_ICON%" type="image/png">
     <style>
       .gradient {
-        background: linear-gradient(20deg, #24C6DC 30%, #514A9D 70%);
+        background: linear-gradient(20deg, #24C6DC 30%, #%THREAD_COLOR% 70%);
       }
     </style>
   </head>
@@ -57,19 +57,19 @@
     <div class="pt-24">
       <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
         <div class="flex flex-col  md:w-2/5 justify-center items-start text-center md:text-left">
-          <img src="%THREAD_ICON%" class="object-cover w-72 h-72"/>
+          <img src="%THREAD_ICON%" class="object-cover rounded-full" width="200"/>
           <h1 class="my-4 text-5xl font-bold leading-tight">
             %THREAD_NAME%
           </h1> 
           <p>
             %THREAD_INFO_SUMMARY%
           </p>
-        
+
         </div>
         <div class="w-full md:w-3/5 py-6 text-center">
           <p class="text-2xl mb-8">
-
-            <div class="grid gap-4 grid-cols-3">
+           Members
+            <div class="grid grid-cols-2 md:grid-cols-3">
               %THREAD_INFO%
           </div>
           </p>

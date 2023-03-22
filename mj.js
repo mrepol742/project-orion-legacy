@@ -22,7 +22,7 @@ utils.logged("project_orion online");
 
 const { FormData, dns, fs, http, https, os, crypto, WeatherJS, Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi } = require("./require.js");
 const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, sqq, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim, filterWW } = require("./arrays.js");
-const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot } = require("./cmd.js");
+const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser } = require("./cmd.js");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
@@ -84,13 +84,6 @@ let googlev = fs.readFileSync(__dirname + "/assets/google022983bf0cf659ae.html")
 let herop = fs.readFileSync(__dirname + "/assets/hero.png");
 let faviconpng = fs.readFileSync(__dirname + "/assets/favicon.png");
 let faviconico = fs.readFileSync(__dirname + "/assets/favicon.ico");
-
-let background = [];
-
-let i23;
-for (i23 = 0; i23 < 9; i23++) {
-    background.push(fs.readFileSync(__dirname + "/assets/background/background" + i23 + ".jpeg"));
-}
 
 utils.logged("web_resource_loaded finish");
 
@@ -593,7 +586,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "share") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                 let message = {
                                     body: "You deleted this link.\n\n" + d[1][2],
                                     url: d[1][3],
@@ -627,7 +620,7 @@ ERR! markAsDelivered }
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
                                     if (err) return utils.logged(err);
-                                    if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                    if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                         let constructMMM = "You deleted this file.\n";
                                         if (!(d[1][4] === undefined)) {
                                             constructMMM += d[1][4];
@@ -664,7 +657,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "location") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                 let constructMMM = "You deleted this location.\n";
                                 let message1 = {
                                     body: constructMMM + d[1][2],
@@ -692,7 +685,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "location_sharing") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                 let constructMMM = "You deleted this live location.\n";
                                 let message1 = {
                                     body: constructMMM + d[1][2],
@@ -728,7 +721,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "sticker") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                 let constructMMM = "You deleted this sticker.\n";
                                 let message = {
                                     body: constructMMM,
@@ -768,7 +761,7 @@ ERR! markAsDelivered }
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
                                     if (err) return utils.logged(err);
-                                    if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                    if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                         let constructMMM = "You deleted this video.\n";
                                         if (!(d[1][3] === undefined)) {
                                             constructMMM += d[1][3];
@@ -811,7 +804,7 @@ ERR! markAsDelivered }
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
                                     if (err) return utils.logged(err);
-                                    if (groups.list.find((thread) => event.threadID === thread.id)) {
+                                    if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                         let constructMMM = "You deleted this voice message.\n";
                                         if (!(d[1][3] === undefined)) {
                                             constructMMM += d[1][3];
@@ -848,7 +841,7 @@ ERR! markAsDelivered }
                     } else {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (groups.list.find((thread) => event.threadID === thread.id)) {
+                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
                                 let message = "You deleted this message.\n\n" + d[2];
                                 sendMessageOnly(api, event, message);
                                 utils.logged("unsend_message " + d[0] + " " + message);
@@ -4261,22 +4254,60 @@ _____________________________
         if (event.isGroup) {
             api.getThreadInfo(event.threadID, (err, a) => {
                 if (err) utils.logged(err);
-                let construct = "";
+                let inf = "";
                 let usern = a.userInfo.length;
-
+                 utils.logged(JSON.stringify(a));
                 for (b in a.userInfo) {
-                    // utils.logged(a.userInfo[b])
-                    construct += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
-                    construct += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
-                    construct += '<div class="absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4">' + a.userInfo[b].name + "</div>";
-                    construct += "</div>";
+                    inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
+                    inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
+                    inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
+                    inf += '<div class="absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4">' + a.userInfo[b].name + "</div>";
+                    inf += "</div>";
+                    inf += "</div>";
                 }
+                let summ =  "<b>Message Count: </b>" + a.messageCount + "<br>";
+                summ += "<b>Members Count: </b>" + usern + "<br>";
+                if (a.emoji != null) {
+                    summ += "<b>Emoji: </b> " + a.emoji + "<br>";
+                }
+                summ += "<b>Color: </b> " + a.color + "<br>";
+                summ += "<b>Admins:</b><br>";
+                let i;
+                for (i = 0; i < a.adminIDs.length; i++) {
+                    let i2;
+                    for (i2 = 0; i2 < a.userInfo.length; i2++) {
+                       let id = a.adminIDs[i].id;
+                       if (a.userInfo[i2].id == id) {
+                          summ += a.userInfo[i2].name + "<br>";
+                       }
+                    }
+                }
+                if (a.approvalMode) {
+            
+if (a.approvalQueue.length == 0) {
+    summ += "<b>Approval: Yes</b><br>";
+} else {
+    summ += "<b>Approval List: </b><br>";
+                    let i33;
+                  for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
+                    let i23;
+                    for (i23 = 0; i23 < a.userInfo.length; i23++) {
+                       let id3 = a.approvalQueue[i33].id;
+                       if (a.userInfo[i23].id == id3) {
+                          summ += a.userInfo[i23].name + "<br>";
+                       }
+                    }
+                }
+            }
+                }
+                
+
                 threadInfo["/" + a.threadID] = {
                     threadName: a.threadName,
-                    messageCount: a.messageCount,
-                    membersCount: usern,
-                    members: construct,
+                    summary: summ,
+                    info: inf,
                     icon: a.imageSrc,
+                    color: a.color
                 };
 
                 let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
@@ -4400,6 +4431,11 @@ _____________________________
             return;
         }
         sendMessage(api, event, helproot);
+    } else if (query == "cmduser") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        sendMessage(api, event, helpuser);
     } else if (query == "cmdall") {
         if (isGoingToFast(api, event)) {
             return;
@@ -5243,36 +5279,6 @@ _____________________________
                 sendMessage(api, event, response.result);
             }
         });
-    } else if (query.startsWith("nickname")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention:nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two:Darling");
-        } else {
-            if (input.includes("@")) {
-                data.shift();
-                let name = data.join(" ").split(":");
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    if (name[0] == "@me") {
-                        id = event.senderID;
-                    } else {
-                        api.getUserID(name[0].replace("@", ""), (err, data) => {
-                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            setNickname(api, event, data[0].userID, name[1]);
-                        });
-                        return;
-                    }
-                } else if (isMyId(id)) {
-                    id = event.senderID;
-                }
-                setNickname(api, event, id, name[1]);
-            } else {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using nickname @mention nickname instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnickname @Zero Two Darling");
-            }
-        }
     } else if (query.startsWith("drake")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5972,6 +5978,19 @@ _____________________________
             url: "https://mrepol742.github.io/webvium/privacypolicy/",
         };
         sendMessage(api, event, message);
+    } else if (query.startsWith("setnickname")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using setnickname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetnickname Darling");
+        } else {
+            data.shift();
+            api.setNickname(data.join(" "), event.threadID, event.senderID, (err) => {
+                if (err) return utils.logged(err);
+            });
+        }
     } else if (query.startsWith("setbirthday")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -6228,7 +6247,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await sleep(2000);
     }
-    if (groups.list.find((thread) => event.threadID === thread.id) && event.senderID != currentID) {
+    if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -6293,7 +6312,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
     if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await sleep(2000);
     }
-    if (groups.list.find((thread) => event.threadID === thread.id) && event.senderID != currentID) {
+    if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != currentID) {
         userPresence[event.threadID] = new Date();
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
@@ -6692,7 +6711,7 @@ async function unsendPhoto(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return utils.logged(err);
-        if (groups.list.find((thread) => event.threadID === thread.id)) {
+        if (!(groups.list.find((thread) => event.threadID === thread.id))) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " photos. \n";
@@ -6757,7 +6776,7 @@ async function unsendGif(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return utils.logged(err);
-        if (groups.list.find((thread) => event.threadID === thread.id)) {
+        if (!(groups.list.find((thread) => event.threadID === thread.id))) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " gifs. \n";
@@ -7111,25 +7130,6 @@ function remAdmin(api, event, id) {
     }
     users.admin = users.admin.filter((item) => item !== id);
     sendMessage(api, event, "Admin permission removed.");
-}
-
-function setNickname(api, event, id, text) {
-    if (isMyId(id)) {
-        return;
-    }
-    api.getUserInfo(id, (err, info) => {
-        if (err) return utils.logged(err);
-        let name = info[id]["name"];
-        let inp;
-        if (text.startsWith("@me")) {
-            inp = text.substring(4);
-        } else {
-            text.substring(name.length + 2);
-        }
-        api.setNickname(inp, event.threadID, id, (err) => {
-            if (err) return sendMessage(api, event, 'Unfortunately there was an error occured while changing "' + name + '" nickname.');
-        });
-    });
 }
 
 function kiss(api, event, id) {
@@ -7839,11 +7839,10 @@ function getRoutes() {
         utils.logged("server_url " + req.url);
         if (!(threadInfo[req.url] === undefined)) {
             let hh = threadpage + "";
-            let construct = "<b>Message Count: </b>" + threadInfo[req.url].messageCount + "<br>";
-            construct += "<b>Members Count: </b>" + threadInfo[req.url].membersCount + "<br>";
-            let membercons = threadInfo[req.url].members;
+            let summary = threadInfo[req.url].summary;
+            let info = threadInfo[req.url].info;
             let na = threadInfo[req.url].threadName;
-            let page = hh.replaceAll("%THREAD_NAME%", na.replaceAll("<", "&lt;")).replaceAll("%THREAD_INFO_SUMMARY%", construct).replaceAll("%THREAD_INFO%", membercons).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
+            let page = hh.replaceAll("%THREAD_COLOR%", threadInfo[req.url].color).replaceAll("%THREAD_NAME%", na.replaceAll("<", "&lt;")).replaceAll("%THREAD_INFO_SUMMARY%", summary).replaceAll("%THREAD_INFO%", info).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
             res.end(page);
@@ -7875,50 +7874,6 @@ function getRoutes() {
                 res.writeHead(200);
                 res.end(herop);
                 break;
-            case "/background0.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[0]);
-                break;
-            case "/background1.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[1]);
-                break;
-            case "/background2.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[2]);
-                break;
-            case "/background3.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[3]);
-                break;
-            case "/background4.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[4]);
-                break;
-            case "/background5.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[5]);
-                break;
-            case "/background6.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[6]);
-                break;
-            case "/background7.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[7]);
-                break;
-            case "/background8.jpeg":
-                res.setHeader("Content-Type", "image/jpeg");
-                res.writeHead(200);
-                res.end(background[8]);
                 break;
             case "/status":
                 res.setHeader("Content-Type", "application/json");
@@ -7979,8 +7934,8 @@ async function sendAiMessage(api, event, ss) {
     };
 
     if (/\[(p|P)icture=/.test(ss)) {
+        let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
         try {
-            let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
             let images = await google.image(sqq, googleImageOptions);
             let fname = __dirname + "/cache/images/attch_" + getTimestamp() + ".png";
             let url = nonUU(images);
@@ -7990,11 +7945,14 @@ async function sendAiMessage(api, event, ss) {
                 message.body = mss.replace("[" + sqq + "]", "");
                 message["attachment"] = fs.createReadStream(fname);
             });
-        } catch (err) {}
-    }
-    if (/\[(m|M)usic=/.test(ss)) {
+        } catch (err) {
+            utils.logged(err);
+            let mss = message.body;
+            message.body = mss.replace("[" + sqq + "]", "Unable to show the photo of " + sqq);
+        }
+    } else if (/\[(m|M)usic=/.test(ss)) {
+        let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
         try {
-            let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
             const search = await youtube.search(sqq);
             if (!(search.videos[0] === undefined)) {
                 const stream = await youtube.download(search.videos[0].id, audioOptions);
@@ -8021,7 +7979,17 @@ async function sendAiMessage(api, event, ss) {
                 });
                 stream.on("error", (err) => utils.logged(err));
             }
-        } catch (err) {}
+        } catch (err) {
+            utils.logged(err);
+            let mss = message.body;
+            message.body = mss.replace("[" + sqq + "]", "Unable to send your music " + sqq);
+        }
+    } else if (/\[(v|V)ideo=/.test(ss)) {
+        let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
+        try {
+        } catch (err) {
+            utils.logged(err);
+        }
     }
 
     for (userID in event.mentions) {
@@ -8044,7 +8012,16 @@ async function sendAiMessage(api, event, ss) {
                 } else {
                     message["url"] = arraySS[sss];
                 }
-                break;
+                break;function pad(value) {
+                    return value < 10 ? '0' + value : value;
+                }
+                function createOffset(date) {
+                    var sign = (date.getTimezoneOffset() > 0) ? "-" : "+";
+                    var offset = Math.abs(date.getTimezoneOffset());
+                    var hours = pad(Math.floor(offset / 60));
+                    var minutes = pad(offset % 60);
+                    return sign + hours + ":" + minutes;
+                }
             }
         }
     }
@@ -8236,15 +8213,4 @@ function getGenderCode(gender) {
         return 2;
     }
     return 1;
-}
-
-function pad(value) {
-    return value < 10 ? '0' + value : value;
-}
-function createOffset(date) {
-    var sign = (date.getTimezoneOffset() > 0) ? "-" : "+";
-    var offset = Math.abs(date.getTimezoneOffset());
-    var hours = pad(Math.floor(offset / 60));
-    var minutes = pad(offset % 60);
-    return sign + hours + ":" + minutes;
 }
