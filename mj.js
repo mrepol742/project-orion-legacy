@@ -1415,11 +1415,11 @@ async function ai(api, event) {
                 getUserProfile(event.senderID, async function (user) {
                     if (event.isGroup) {
                         getGroupProfile(event.threadID, async function (group) {
-                            let ss = await aiResponse(settings.preference.text_complextion, text, true, user, group);
+                            let ss = await aiResponse(event, settings.preference.text_complextion, text, true, user, group);
                             sendAiMessage(api, event, ss);
                         });
                     } else {
-                        let ss = await aiResponse(settings.preference.text_complextion, text, true, user, { name: undefined });
+                        let ss = await aiResponse(event, settings.preference.text_complextion, text, true, user, { name: undefined });
                         sendAiMessage(api, event, ss);
                     }
                 });
@@ -2835,7 +2835,7 @@ _____________________________
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
-            let ss = await aiResponse(settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined });
+            let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined });
             sendMessage(api, event, ss);
         }
     } else if (query.startsWith("baybayin")) {
@@ -7428,9 +7428,9 @@ function saveEvent(event) {
     }
 }
 
-async function aiResponse(complextion, text, repeat, user, group) {
+async function aiResponse(event, complextion, text, repeat, user, group) {
     try {
-        const ai = await openai.createCompletion(generateParamaters(complextion, text, user, group));
+        const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group));
         let text1 = ai.data.choices[0].text;
 
         if (ai.data.choices[0].finish_reason == "length") {
@@ -7445,7 +7445,7 @@ async function aiResponse(complextion, text, repeat, user, group) {
     } catch (error) {
         if (repeat) {
             utils.logged("attempt_initiated " + text);
-            return aiResponse(getNewComplextion(settings.preference.text_complextion), text, false, user, group);
+            return aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group);
         }
         if (!(error.response === undefined)) {
             if (error.response.status >= 400) {
@@ -7458,18 +7458,23 @@ async function aiResponse(complextion, text, repeat, user, group) {
     }
 }
 
-function generateParamaters(complextion, text, user, group) {
+function generateParamaters(event, complextion, text, user, group) {
     let pro =
         "You are an AI trained by Melvin Jones Repol to respond like human. Melvin Jones is a Filipino, a 21 years old software engineer, his social handle is @mrepol742, his site is https://mrepol742.github.io and his happily married to Marvyil Alexa Repol." +
         "\nKnowledge cutoff: 2021-06" +
         "\nCurrent date: " +
         new Date() +
         "\n" +
-        tellUser(user, group) +
-        "\n\n" +
-        user.firstName +
-        ": " +
-        text +
+        tellUser(user, group) + "\n\n";
+    if (event.type == "message_reply") {
+        if (event.messageReply.senderID == currentID) {
+            pro += "You: ";
+        } else {
+            pro += user.firstName + ": ";
+        }
+        pro += event.messageReply.body;
+    }
+    pro += user.firstName + ": " + text +
         "\nYou: ";
     return {
         model: complextion,
