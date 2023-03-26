@@ -3011,26 +3011,17 @@ _____________________________
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
                     threadInfo["/reversedns/" + dataa] = {
-                        threadName: a.threadName,
-                        summary: summ,
-                        info: inf,
-                        icon: a.imageSrc,
-                        color: a.color,
+                        name: "Reverse DNS",
+                        query: dataa,
+                        response:  response.data[0]
                     };
     
                     let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
                     let message = {
-                        body: "This group information can be see at " + urll,
+                        body: "Results are found here " + urll,
                         url: urll,
                     };
                     sendMessage(api, event, message);
-
-
-
-
-
-
-                    sendMessage(api, event, response.data[0]);
                 }
             });
         }
