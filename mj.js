@@ -3003,7 +3003,7 @@ _____________________________
             let dataa = data.join(" ");
             if (dataa.startsWith("https://")) {
                 dataa = dataa.slice(9);
-            } elseif (dataa.startsWith("http://")) {
+            } else if (dataa.startsWith("http://")) {
                 dataa = dataa.slice(8);
             }
             getResponseData("https://api.hackertarget.com/reversedns/?q=" + dataa).then((response) => {
