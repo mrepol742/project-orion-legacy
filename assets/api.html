@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>
-      %THREAD_NAME% | Project Orion
+      %API_NAME% | Project Orion
     </title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-    <link rel="shortcut icon" href="%THREAD_ICON%">
-    <link rel="apple-touch-icon" href="%THREAD_ICON%">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
     <meta name="author" content="Melvin Jones Repol" />
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Maven+Pro&display=swap" rel="stylesheet">
-    <link rel="icon" href="%THREAD_ICON%" type="image/png">
     <meta name="robots" content="noindex">
     <style>
       .gradient {
-        background: linear-gradient(20deg, #24C6DC 30%, #%THREAD_COLOR% 70%);
+        background: linear-gradient(20deg, #24C6DC 30%, #514A9D 70%);
       }
     </style>
   </head>
@@ -58,20 +58,19 @@
     <div class="pt-24">
       <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
         <div class="flex flex-col  md:w-2/5 justify-center items-start text-center md:text-left">
-          <img src="%THREAD_ICON%" class="object-cover rounded-full" width="200"/>
           <h1 class="my-4 text-5xl font-bold leading-tight">
-            %THREAD_NAME%
+            %API_NAME%
           </h1> 
           <p>
-            %THREAD_INFO_SUMMARY%
+            %API_QUERY%
           </p>
 
         </div>
         <div class="w-full md:w-3/5 py-6 text-center">
           <p class="text-2xl mb-8">
-           Members
+           Output
             <div class="grid grid-cols-2 md:grid-cols-3">
-              %THREAD_INFO%
+              %API_RESPONSE%
           </div>
           </p>
         </div>

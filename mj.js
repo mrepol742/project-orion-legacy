@@ -45,6 +45,7 @@ let fb_stateD = "No data";
 let pingD = "No data";
 let gitD = "No data";
 let threadInfo = {};
+let reverseDNS = {};
 let isCalled = true;
 let isAppState = true;
 let commandCalls = 0;
@@ -78,6 +79,7 @@ const server1 = http.createServer(getRoutes());
 
 let homepage = fs.readFileSync(__dirname + "/assets/index.html");
 let errorpage = fs.readFileSync(__dirname + "/assets/404.html");
+let apipage = fs.readFileSync(__dirname + "/assets/api.html");
 let threadpage = fs.readFileSync(__dirname + "/assets/thread_ui.html");
 let privacypolicy = fs.readFileSync(__dirname + "/assets/privacypolicy.html");
 let googlev = fs.readFileSync(__dirname + "/assets/google022983bf0cf659ae.html");
@@ -245,15 +247,13 @@ getKey("login", function (login) {
             return;
         }
 
-        /*
-    process.on("uncaughtException", (err, origin) => {
-        caughtException(api, err);
-    });
+        process.on("uncaughtException", (err, origin) => {
+            caughtException(api, err);
+        });
 
-    process.on("unhandledRejection", (reason, promise) => {
-        caughtException(api, reason);
-    });
-    */
+        process.on("unhandledRejection", (reason, promise) => {
+            caughtException(api, reason);
+        });
 
         process.on("exit", (code) => {
             let currentDate = new Date();
@@ -513,13 +513,11 @@ ERR! markAsDelivered }
                 }
             } else if (groups.blocked.includes(event.threadID)) {
                 if (event.type == "message" || event.type == "message_reply") {
-                    saveEvent(event);
                     blockedGroupC++;
                 }
                 return;
             } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) && (event.type == "message" || event.type == "message_reply")) {
                 blockedUserC++;
-                saveEvent(event);
                 return;
             }
 
@@ -586,7 +584,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "share") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                            if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let message = {
                                     body: "You deleted this link.\n\n" + d[1][2],
                                     url: d[1][3],
@@ -620,7 +618,7 @@ ERR! markAsDelivered }
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
                                     if (err) return utils.logged(err);
-                                    if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                                    if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                         let constructMMM = "You deleted this file.\n";
                                         if (!(d[1][4] === undefined)) {
                                             constructMMM += d[1][4];
@@ -657,7 +655,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "location") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                            if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let constructMMM = "You deleted this location.\n";
                                 let message1 = {
                                     body: constructMMM + d[1][2],
@@ -685,7 +683,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "location_sharing") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                            if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let constructMMM = "You deleted this live location.\n";
                                 let message1 = {
                                     body: constructMMM + d[1][2],
@@ -721,7 +719,7 @@ ERR! markAsDelivered }
                     } else if (d[0] == "sticker") {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                            if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let constructMMM = "You deleted this sticker.\n";
                                 let message = {
                                     body: constructMMM,
@@ -761,7 +759,7 @@ ERR! markAsDelivered }
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
                                     if (err) return utils.logged(err);
-                                    if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                                    if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                         let constructMMM = "You deleted this video.\n";
                                         if (!(d[1][3] === undefined)) {
                                             constructMMM += d[1][3];
@@ -804,7 +802,7 @@ ERR! markAsDelivered }
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
                                     if (err) return utils.logged(err);
-                                    if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                                    if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                         let constructMMM = "You deleted this voice message.\n";
                                         if (!(d[1][3] === undefined)) {
                                             constructMMM += d[1][3];
@@ -841,7 +839,7 @@ ERR! markAsDelivered }
                     } else {
                         api.getUserInfo(event.senderID, (err, data) => {
                             if (err) return utils.logged(err);
-                            if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+                            if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let message = "You deleted this message.\n\n" + d[2];
                                 sendMessageOnly(api, event, message);
                                 utils.logged("unsend_message " + d[0] + " " + message);
@@ -1478,7 +1476,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13' + encrypt(error.response.status, crypto.randomBytes(32), crypto.randomBytes(16)));
+                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1538,7 +1536,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13' + encrypt(error.response.status, crypto.randomBytes(32), crypto.randomBytes(16)));
+                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1576,7 +1574,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13' + encrypt(error.response.status, crypto.randomBytes(32), crypto.randomBytes(16)));
+                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1630,7 +1628,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13' + encrypt(error.response.status, crypto.randomBytes(32), crypto.randomBytes(16)));
+                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1666,7 +1664,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13' + encrypt(error.response.status, crypto.randomBytes(32), crypto.randomBytes(16)));
+                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1696,7 +1694,7 @@ async function ai(api, event) {
                             } else {
                                 count3++;
                             }
-                            unLink(__dirname + "/cache/" + a[typ] + file);
+                            unLink(__dirname + "/cache/" + a[typ] + "/" + file);
                         }
                     });
                 });
@@ -1757,12 +1755,12 @@ _______________________
             settings.preference.online = false;
             sendMessage(api, event, "Account status is set to Offline.");
         }
-    } else if (query == "setselfistenon") {
+    } else if (query == "setselflistenon") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.selfListen = true;
             sendMessage(api, event, "Listening to own account messages is enabled.");
         }
-    } else if (query == "setselfistenoff") {
+    } else if (query == "setselflistenoff") {
         if (users.admin.includes(event.senderID)) {
             settings.preference.selfListen = false;
             sendMessage(api, event, "Listening to own account messages is disabled.");
@@ -2053,17 +2051,19 @@ _____________________________
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using ping url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nping google.com");
         } else {
-            try {
-                data.shift();
-                let hosts = ["google.com"];
-
-                hosts.forEach(function (host) {
-                    ping.promise.probe(host).then(function (res) {
-                        console.utils.logged(res);
-                    });
+            data.shift();
+            let aa = data.join(" ");
+            if (aa.startsWith("https://")) {
+                https.get(aa, function (res) {
+                    sendMessage(api, event, "HTTPS Status Code " + res.statusCode);
                 });
-            } catch (a) {
-                sendMessage(api, event, "Unfortunately an error occured please check your parameters for errors.");
+            } else {
+                if (!aa.startsWith("http://")) {
+                    aa = "http://" + aa;
+                }
+                http.get(aa, function (res) {
+                    sendMessage(api, event, "HTTP Status Code " + res.statusCode);
+                });
             }
         }
     } else if (query2.startsWith("mean ")) {
@@ -2991,6 +2991,49 @@ _____________________________
                 sendMessage(api, event, response.data[0]);
             }
         });
+    } else if (query.startsWith("reversedns")) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using reversedns url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nreversedns google.com");
+        } else {
+            data.shift();
+            let dataa = data.join(" ");
+            if (dataa.startsWith("https://")) {
+                dataa = dataa.slice(9);
+            } elseif (dataa.startsWith("http://")) {
+                dataa = dataa.slice(8);
+            }
+            getResponseData("https://api.hackertarget.com/reversedns/?q=" + dataa).then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
+                } else {
+                    threadInfo["/reversedns/" + dataa] = {
+                        threadName: a.threadName,
+                        summary: summ,
+                        info: inf,
+                        icon: a.imageSrc,
+                        color: a.color,
+                    };
+    
+                    let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
+                    let message = {
+                        body: "This group information can be see at " + urll,
+                        url: urll,
+                    };
+                    sendMessage(api, event, message);
+
+
+
+
+
+
+                    sendMessage(api, event, response.data[0]);
+                }
+            });
+        }
     } else if (query == "mathfacts") {
         if (isGoingToFast(api, event)) {
             return;
@@ -3939,46 +3982,6 @@ _____________________________
                 }
             }
         }
-    } else if (query.startsWith("isnotbot")) {
-        if (users.admin.includes(event.senderID)) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using isNotBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisNotBot @Zero Two");
-            } else {
-                let id = Object.keys(event.mentions)[0];
-                if (id === undefined) {
-                    data.shift();
-                    let user = data.join(" ");
-                    let attem = getIdFromUrl(user);
-                    if (/^[0-9]+$/.test(attem)) {
-                        id = attem;
-                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                        id = user;
-                    } else if (event.type == "message_reply") {
-                        id = event.messageReply.senderID;
-                    } else {
-                        api.getUserID(user.replace("@", ""), (err, data) => {
-                            if (err) return utils.logged(err);
-                            if (!users.bot.includes(data[0].userID)) {
-                                sendMessage(api, event, "It seems like that account is not a bot.");
-                            } else {
-                                users.bot = users.bot.filter((item) => item !== data[0].userID);
-                                sendMessage(api, event, "Noted.");
-                            }
-                        });
-                        return;
-                    }
-                } else if (isMyId(id)) {
-                    return;
-                }
-                if (!users.bot.includes(id)) {
-                    sendMessage(api, event, "It seems like that account is not a bot.");
-                } else {
-                    users.bot = users.bot.filter((item) => item !== id);
-                    sendMessage(api, event, "Noted.");
-                }
-            }
-        }
     } else if (query.startsWith("blockuser")) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
@@ -4098,22 +4101,6 @@ _____________________________
                     }
                 }
                 fontIgnore(api, event, id);
-            }
-        }
-    } else if (query.startsWith("addprofanity")) {
-        if (users.admin.includes(event.senderID)) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using addProfanity text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddProfanity d**k");
-            } else {
-                data.shift();
-                let bd = data.join(" ");
-                if (filterWW.includes(bd)) {
-                    sendMessage(api, event, "It's already in my dictionary.");
-                } else {
-                    filterWW.push(bd);
-                    sendMessage(api, event, "Noted.");
-                }
             }
         }
     } else if (query.startsWith("addadmin")) {
@@ -4256,7 +4243,7 @@ _____________________________
                 if (err) utils.logged(err);
                 let inf = "";
                 let usern = a.userInfo.length;
-                 utils.logged(JSON.stringify(a));
+                utils.logged(JSON.stringify(a));
                 for (b in a.userInfo) {
                     inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
                     inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
@@ -4265,7 +4252,7 @@ _____________________________
                     inf += "</div>";
                     inf += "</div>";
                 }
-                let summ =  "<b>Message Count: </b>" + a.messageCount + "<br>";
+                let summ = "<b>Message Count: </b>" + a.messageCount + "<br>";
                 summ += "<b>Members Count: </b>" + usern + "<br>";
                 if (a.emoji != null) {
                     summ += "<b>Emoji: </b> " + a.emoji + "<br>";
@@ -4276,38 +4263,36 @@ _____________________________
                 for (i = 0; i < a.adminIDs.length; i++) {
                     let i2;
                     for (i2 = 0; i2 < a.userInfo.length; i2++) {
-                       let id = a.adminIDs[i].id;
-                       if (a.userInfo[i2].id == id) {
-                          summ += a.userInfo[i2].name + "<br>";
-                       }
+                        let id = a.adminIDs[i].id;
+                        if (a.userInfo[i2].id == id) {
+                            summ += a.userInfo[i2].name + "<br>";
+                        }
                     }
                 }
                 if (a.approvalMode) {
-            
-if (a.approvalQueue.length == 0) {
-    summ += "<b>Approval: Yes</b><br>";
-} else {
-    summ += "<b>Approval List: </b><br>";
-                    let i33;
-                  for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
-                    let i23;
-                    for (i23 = 0; i23 < a.userInfo.length; i23++) {
-                       let id3 = a.approvalQueue[i33].id;
-                       if (a.userInfo[i23].id == id3) {
-                          summ += a.userInfo[i23].name + "<br>";
-                       }
+                    if (a.approvalQueue.length == 0) {
+                        summ += "<b>Approval: Yes</b><br>";
+                    } else {
+                        summ += "<b>Approval List: </b><br>";
+                        let i33;
+                        for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
+                            let i23;
+                            for (i23 = 0; i23 < a.userInfo.length; i23++) {
+                                let id3 = a.approvalQueue[i33].id;
+                                if (a.userInfo[i23].id == id3) {
+                                    summ += a.userInfo[i23].name + "<br>";
+                                }
+                            }
+                        }
                     }
                 }
-            }
-                }
-                
 
                 threadInfo["/" + a.threadID] = {
                     threadName: a.threadName,
                     summary: summ,
                     info: inf,
                     icon: a.imageSrc,
-                    color: a.color
+                    color: a.color,
                 };
 
                 let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
@@ -4341,8 +4326,12 @@ if (a.approvalQueue.length == 0) {
         if (isGoingToFast(api, event)) {
             return;
         }
+
         if (event.isGroup) {
-            sendMessage(api, event, gc.threadName);
+            api.getThreadInfo(event.threadID, (err, gc) => {
+                if (err) return utils.logged(err);
+                sendMessage(api, event, gc.threadName);
+            });
         } else {
             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
@@ -6711,7 +6700,7 @@ async function unsendPhoto(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return utils.logged(err);
-        if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+        if (!groups.list.find((thread) => event.threadID === thread.id)) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " photos. \n";
@@ -6776,7 +6765,7 @@ async function unsendGif(api, event, d) {
     }
     api.getUserInfo(event.senderID, (err, data) => {
         if (err) return utils.logged(err);
-        if (!(groups.list.find((thread) => event.threadID === thread.id))) {
+        if (!groups.list.find((thread) => event.threadID === thread.id)) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
                 constructMMM += " gifs. \n";
@@ -7037,11 +7026,12 @@ function disableSmartReply(api, event, id) {
 }
 
 async function unblockUser(api, event, id) {
-    if (!users.blocked.includes(id)) {
+    if (!users.blocked.includes(id) && !users.bot.includes(id)) {
         sendMessage(api, event, "It is not block.");
         return;
     }
 
+    users.bot = users.bot.filter((item) => item !== id);
     users.blocked = users.blocked.filter((item) => item !== id);
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
@@ -7465,7 +7455,8 @@ function generateParamaters(event, complextion, text, user, group) {
         "\nCurrent date: " +
         new Date() +
         "\n" +
-        tellUser(user, group) + "\n\n";
+        tellUser(user, group) +
+        "\n\n";
     if (event.type == "message_reply") {
         if (event.messageReply.senderID == currentID) {
             pro += "You: ";
@@ -7474,8 +7465,7 @@ function generateParamaters(event, complextion, text, user, group) {
         }
         pro += event.messageReply.body;
     }
-    pro += user.firstName + ": " + text +
-        "\nYou: ";
+    pro += user.firstName + ": " + text + "\nYou: ";
     return {
         model: complextion,
         prompt: pro,
@@ -7812,11 +7802,9 @@ ________  Exception  ________
 ____________________________
         `;
     utils.logged(err);
-    /*
     api.sendMessage(message, currentID, (err, messageInfo) => {
         if (err) utils.logged(err);
     });
-    */
 }
 
 function task(func, time) {
@@ -7851,8 +7839,17 @@ function getRoutes() {
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
             res.end(page);
-            return;
-        }
+        } else if (!(reverseDNS[req.url] === undefined)) {
+ 
+
+        } else if (!(httpheaders[req.url] === undefined)) {
+
+        } else if (!(zonetransfer[req.url] === undefined)) {
+
+        } else if (!(dnslookup[req.url] === undefined)) {
+
+        } else {
+
         switch (req.url) {
             case "/favicon.ico":
                 res.setHeader("Content-Type", "image/x-icon");
@@ -7898,6 +7895,7 @@ function getRoutes() {
                 res.end(errorpage);
                 break;
         }
+    }
     };
 }
 
@@ -7933,6 +7931,7 @@ async function sendAiMessage(api, event, ss) {
             return;
         }
     }
+
     let message = {
         body: ss,
         mentions: [],
@@ -7953,7 +7952,7 @@ async function sendAiMessage(api, event, ss) {
         } catch (err) {
             utils.logged(err);
             let mss = message.body;
-            message.body = mss.replace("[" + sqq + "]", "Unable to show the photo of " + sqq);
+            message.body = mss.replace("[" + sqq + "]", '\nSegmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
         }
     } else if (/\[(m|M)usic=/.test(ss)) {
         let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
@@ -7987,13 +7986,23 @@ async function sendAiMessage(api, event, ss) {
         } catch (err) {
             utils.logged(err);
             let mss = message.body;
-            message.body = mss.replace("[" + sqq + "]", "Unable to send your music " + sqq);
+            message.body = mss.replace("[" + sqq + "]", '\nSegmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
         }
     } else if (/\[(v|V)ideo=/.test(ss)) {
         let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
         try {
         } catch (err) {
             utils.logged(err);
+            let mss = message.body;
+            message.body = mss.replace("[" + sqq + "]", '\nSegmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+        }
+    } else if (/\[(l|L)atest=/.test(ss)) {
+        let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
+        try {
+        } catch (err) {
+            utils.logged(err);
+            let mss = message.body;
+            message.body = mss.replace("[" + sqq + "]", '\nSegmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
         }
     }
 
@@ -8011,22 +8020,13 @@ async function sendAiMessage(api, event, ss) {
         let arraySS = ss.split(/\s+/);
 
         for (sss in arraySS) {
-            if (/(^(http|https):\/\/)|(\.com|\.net|\.org|\.co|\.edu|\.gov|\.info|\.xyz|\.me|\.io$)/.test(arraySS[sss])) {
+            if (/^(http|https):\/\//.test(arraySS[sss])) {
                 if (arraySS[sss].endsWith(".") || arraySS[sss].endsWith("!")) {
                     message["url"] = arraySS[sss].substring(0, arraySS[sss].length - 1);
                 } else {
                     message["url"] = arraySS[sss];
                 }
-                break;function pad(value) {
-                    return value < 10 ? '0' + value : value;
-                }
-                function createOffset(date) {
-                    var sign = (date.getTimezoneOffset() > 0) ? "-" : "+";
-                    var offset = Math.abs(date.getTimezoneOffset());
-                    var hours = pad(Math.floor(offset / 60));
-                    var minutes = pad(offset % 60);
-                    return sign + hours + ":" + minutes;
-                }
+                break;
             }
         }
     }

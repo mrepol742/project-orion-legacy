@@ -5,7 +5,8 @@ _______  Project Orion 1/9  _______
 
    ⦿ cmd 
    ⦿ cmd [number|all]
-   ⦿ cmd [user|admin|root]
+   ⦿ cmd [user|group]
+   ⦿ cmd [admin|root]
    ⦿ stats|uptime|sysinfo
    ⦿ sendReport [text]
    ⦿ search [text]
@@ -43,7 +44,7 @@ _______  Project Orion 2/9  _______
    ⦿ thoughts
    ⦿ lulcat [text]
    ⦿ gemoji [emoji]
-   ⦿ gname [text]
+   ⦿ ig [username]
    ⦿ wiki [text]
    ⦿ urlshort [url]
    ⦿ pickup
@@ -85,7 +86,7 @@ _______  Project Orion 3/9  _______
    ⦿ imdb [title]
    ⦿ steam [name]
    ⦿ npm [name]
-   ⦿ gname
+   ⦿ wfind [text]
 __________________________________
 `;
 
@@ -143,9 +144,9 @@ __________________________________
 
 let help5 = `
 _______  Project Orion 6/9  _______
-
-   ⦿ uid
-   ⦿ guid
+ 
+   ⦿ totext
+   ⦿ nba [name]
    ⦿ doublestruck [text]
    ⦿ count
    ⦿ count --vowels
@@ -185,7 +186,7 @@ _______  Project Orion 7/9  _______
    ⦿ divisible [number] [number]
    ⦿ factorial [number]
    ⦿ findGCD [number]
-   ⦿ smartReply [on|off]
+   ⦿ tiktok [username]
    ⦿ summ [text]
    ⦿ gcolor [theme]
        DefaultBlue, HotPink, AquaBlue, BrightPurple
@@ -199,15 +200,16 @@ let help7 = `
 _______  Project Orion 8/9  _______
 
    ⦿ conan
-   ⦿ addUser [uid]
-   ⦿ gphoto
+   ⦿ encrypt [text]
+   ⦿ decrypt [text] [key1]:[key2]
+   ⦿ facts [text]
    ⦿ cosplay
    ⦿ motor
    ⦿ darkjoke
    ⦿ blackpink
    ⦿ hololive
-   ⦿ mute
-   ⦿ unmute
+   ⦿ encode64 [text]
+   ⦿ decode64 [text]
    ⦿ tagalogSupport [on|off]
    ⦿ textToSpeech [on|off]
    ⦿ meowfacts
@@ -216,7 +218,6 @@ _______  Project Orion 8/9  _______
    ⦿ musiclyric [title]
    ⦿ videolyric [title]
    ⦿ formatNumbers [numbers]
-   ⦿ everyone
    ⦿ fbi
  __________________________________
 `;
@@ -229,18 +230,8 @@ _______  Project Orion 9/9  _______
    ⦿ yearfacts
    ⦿ covid
    ⦿ covid [country]
-   ⦿ nba [name]
-   ⦿ totext
-   ⦿ ig [username]
-   ⦿ tiktok [username]
-   ⦿ wfind [text]
-   ⦿ facts [text]
-   ⦿ encode64 [text]
-   ⦿ decode64 [text]
    ⦿ parseImage [url]
-   ⦿ encrypt [text]
-   ⦿ decrypt [text] [key1]:[key2]
-   ⦿ ginfo
+   ⦿ ping [url]
 __________________________________
 `;
 
@@ -259,7 +250,6 @@ _______  Project Orion Admin  _______
    ⦿ saveState
    ⦿ fontIgnore [mention|name|url|uid|reply]
    ⦿ isBot [mention|name|url|uid|reply]
-   ⦿ isNotBot [mention|name|url|uid|reply]
    ⦿ addAdmin [mention|name|url|uid|reply]
    ⦿ remAdmin [mention|name|url|uid|reply]
    ⦿ kickUser [mention|name|url|uid|reply]
@@ -267,9 +257,6 @@ _______  Project Orion Admin  _______
    ⦿ unblockUser [mention|name|url|uid|reply]
    ⦿ blockGroup
    ⦿ unblockGroup
-   ⦿ listblocks
-   ⦿ listadmins
-   ⦿ listmuted
    ⦿ setPrefix [prefix]
    ⦿ remPrefix
    ⦿ ignore [prefix]
@@ -280,12 +267,29 @@ ____________________________________
 let helpuser = `
 _______  Project Orion User  _______
 
+   ⦿ uid 
+   ⦿ mute
+   ⦿ unmute
+   ⦿ smartReply [on|off]
    ⦿ setBirthday [date]
    ⦿ setGender [gender]
    ⦿ setUsername [username]
    ⦿ setAddress [address]
    ⦿ setBio [info]
    ⦿ setNickname [text]
+____________________________________
+`;
+
+
+let helpthread = `
+_______  Project Orion Group  _______
+
+   ⦿ gname
+   ⦿ ginfo
+   ⦿ guid
+   ⦿ gphoto
+   ⦿ addUser [uid]
+   ⦿ everyone
 ____________________________________
 `;
 
