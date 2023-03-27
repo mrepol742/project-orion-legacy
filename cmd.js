@@ -131,7 +131,7 @@ _______  Project Orion 5/9  _______
    ⦿ animecouples
    ⦿ trump [text]
    ⦿ mock [text]
-   ⦿ reverse [text]
+   ⦿ reverseText [text]
    ⦿ itunes [title]
    ⦿ coding
    ⦿ newyear
@@ -267,6 +267,7 @@ ____________________________________
 let helpuser = `
 _______  Project Orion User  _______
 
+   ⦿ setTimezone [timezone]
    ⦿ uid 
    ⦿ mute
    ⦿ unmute
@@ -281,7 +282,7 @@ ____________________________________
 `;
 
 
-let helpthread = `
+let helpgroup = `
 _______  Project Orion Group  _______
 
    ⦿ gname
@@ -307,7 +308,6 @@ _______  Project Orion Root  _______
    ⦿ acceptFriendRequest [uid]
    ⦿ changeBio [text]
    ⦿ setMaxImage [integer]
-   ⦿ setTimezone [timezone]
    ⦿ setTextComplextion [complextion]
    ⦿ setMaxTokens [integer]
    ⦿ setTemperature [integer]
@@ -336,6 +336,7 @@ module.exports = {
     helpadmin: helpadmin,
     helproot: helproot,
     helpuser: helpuser,
+    helpgroup: helpgroup,
 };
 
 // total commands 230

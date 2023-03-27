@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>
-      %API_NAME% | Project Orion
+      Status | Project Orion
     </title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -17,7 +17,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Maven+Pro&display=swap" rel="stylesheet">
-    <meta name="robots" content="noindex">
     <style>
       .gradient {
         background: linear-gradient(20deg, #24C6DC 30%, #514A9D 70%);
@@ -59,19 +58,19 @@
       <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
         <div class="flex flex-col  md:w-2/5 justify-center items-start text-center md:text-left">
           <h1 class="my-4 text-5xl font-bold leading-tight">
-            %API_NAME%
+            %SERVER_STATUS%
           </h1> 
           <p>
-            %API_QUERY%
+            %SERVER_UPTIME%
           </p>
 
         </div>
         <div class="w-full md:w-3/5 py-6 text-center">
           <p class="text-2xl mb-8">
-           Output
-            <div class="grid grid-cols-2 md:grid-cols-3">
-              %API_RESPONSE%
-          </div>
+            %SERVER_INFO%
+       <br><br>
+            %SERVER_STATS%
+ 
           </p>
         </div>
 
@@ -207,6 +206,10 @@ https://mrepol742.github.io/
         }
         return false;
       }
+
+      setInterval(function() {
+  window.location.reload();
+}, 3000);
     </script>
   </body>
 </html>

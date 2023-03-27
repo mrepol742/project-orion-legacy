@@ -5,18 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>
-      Privacy Policy | Project Orion
+      %PERSON_NAME% | Project Orion
     </title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
+    <link rel="shortcut icon" href="%PERSON_ICON%">
+    <link rel="apple-touch-icon" href="%PERSON_ICON%">
     <meta name="author" content="Melvin Jones Repol" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/favicon.png">
     <link rel="stylesheet" href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Maven+Pro&display=swap" rel="stylesheet">
+    <link rel="icon" href="%PERSON_ICON%" type="image/png">
+    <meta name="robots" content="noindex">
     <style>
       .gradient {
         background: linear-gradient(20deg, #24C6DC 30%, #514A9D 70%);
@@ -48,6 +49,9 @@
               <a class="toggleColour inline-block text-white no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="https://mrepol742.github.io/webvium/">Project Webvium</a>
             </li>
             <li class="mr-3">
+              <a class="toggleColour inline-block text-white no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="/privacypolicy">Privacy Policy</a>
+            </li>
+            <li class="mr-3">
               <a class="toggleColour inline-block text-white no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="/status">Status</a>
             </li>
           </ul>
@@ -56,23 +60,24 @@
     </nav>
     <div class="pt-24">
       <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
-       
-        <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
-
+        <div class="flex flex-col  md:w-2/5 justify-center items-start text-center md:text-left">
+          <img src="%THREAD_ICON%" class="object-cover rounded-full" width="200"/>
           <h1 class="my-4 text-5xl font-bold leading-tight">
-           Privacy Policy
-          </h1>
-          <p class="leading-normal text-2xl mb-8">
-            We don't store your your Data.<br>
-            We physically can't. We have nowhere to store it. We don't even have a server database to store it.
-            So even if Elon Musk asked nicely to see your data, we wouldn't have anything to show him.
+            %PERSON_NAME%
+          </h1> 
+          <p>
+            %PERSON_USERNAME%
           </p>
-        
+
         </div>
-         
         <div class="w-full md:w-3/5 py-6 text-center">
-          <img class="w-full md:w-4/5 z-50" src="/hero.png" />
+          <p class="text-2xl mb-8">
+           Profile
+              %PERSON_INFO%
+             </p>
         </div>
+
+
       </div>
     </div>
     <div class="relative -mt-12 lg:-mt-24">
@@ -94,6 +99,7 @@
         </g>
       </svg>
     </div>
+    
     <footer class="bg-white">
       <div class="container mx-auto px-8">
         <div class="w-full flex flex-col md:flex-row py-6">
