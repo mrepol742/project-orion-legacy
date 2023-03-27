@@ -1683,7 +1683,7 @@ async function ai(api, event) {
             let count3 = 0;
             let a = ["audios", "images", "videos", "files"];
             for (typ in a) {
-                fs.readdir(__dirname + "/cache/" + a[typ], function (err, files) {
+                fs.readdir(__dirname + "/cache/" + a[typ] + "/", function (err, files) {
                     if (err) {
                         return utils.logged(err);
                     }
