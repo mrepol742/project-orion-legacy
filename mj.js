@@ -230,7 +230,9 @@ process.on("SIGINT", function () {
 getKey("login", function (login) {
     let state = fs.readFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", "utf8");
     let fca_state;
-    if (state.includes("facebook.com") || state.includes("messenger.com")) {
+    if (state.includes("ERROR")) {
+        return utils.logged("login_stopped cookies state invalid.");
+    } else if (state.includes("facebook.com") || state.includes("messenger.com")) {
         fca_state = {
             appState: JSON.parse(state),
         };
@@ -242,12 +244,13 @@ getKey("login", function (login) {
 
     fca(fca_state, (err, api) => {
         if (err) {
-            if (err.error) {
-                utils.logged("project_orion offline");
-                process.exit(1);
-            } else {
+            utils.logged("fca_error_received initiating logout process while keeping the server alive");
+            api.logout((err) => {
                 utils.logged(err);
-            }
+            });
+            fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", "ERROR", "utf8");
+            utils.logged("cookies_state overriden");
+            utils.logged(err);
             return;
         }
 
@@ -356,12 +359,9 @@ ERR! markAsDelivered }
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
 */
             if (err) {
-                if (err.error) {
-                    process.exit(1);
-                } else {
-                    utils.logged(err);
-                }
-                return;
+                utils.logged("inner_listen_error");
+                utils.logged(err);
+                return listen.stopListening();
             }
 
             if (isAppState) {
@@ -1683,22 +1683,23 @@ async function ai(api, event) {
             let count3 = 0;
             let a = ["audios", "images", "videos", "files"];
             for (typ in a) {
-                fs.readdir(__dirname + "/cache/" + a[typ] + "/", function (err, files) {
+                let type = a[typ];
+                fs.readdir(__dirname + "/cache/" + type + "/", function (err, files) {
                     if (err) {
                         return utils.logged(err);
                     }
                     files.forEach(function (file) {
                         if (!file.endsWith(".gitkeep")) {
-                            if (a[typ] == "audios") {
+                            if (type == "audios") {
                                 count++;
-                            } else if (a[typ] == "images") {
+                            } else if (type == "images") {
                                 count1++;
-                            } else if (a[typ] == "videos") {
+                            } else if (type == "videos") {
                                 count2++;
                             } else {
                                 count3++;
                             }
-                            unLink(__dirname + "/cache/" + a[typ] + "/" + file);
+                            unLink(__dirname + "/cache/" + type + "/" + file);
                         }
                     });
                 });
@@ -5372,7 +5373,8 @@ _______________________
             );
         } else {
             data.shift();
-            getResponseData("https://api.waifu.pics/sfw/" + data.join(" ")).then((response) => {
+            let text = data.join(" ");
+            getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "I cannot find any relavant result about " + text);
                 } else {
