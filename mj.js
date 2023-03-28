@@ -245,9 +245,6 @@ getKey("login", function (login) {
     fca(fca_state, (err, api) => {
         if (err) {
             utils.logged("fca_error_received initiating logout process while keeping the server alive");
-            api.logout((err) => {
-                utils.logged(err);
-            });
             fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", "ERROR", "utf8");
             utils.logged("cookies_state overriden");
             utils.logged(err);
