@@ -185,9 +185,9 @@ const googleImageOptions = {
 };
 
 const openai = new OpenAIApi(openaiConfig);
-const youtube = new Youtubei();
 
 let listen;
+let listenStatus = 0;
 
 process.on("beforeExit", (code) => {
     utils.logged("process_before_exit " + code);
@@ -202,9 +202,10 @@ process.on("SIGTERM", function () {
 process.on("SIGINT", function () {
     process.exit(0);
 });
+
 /*
   Guest
-  * has access to AI only
+  * No personalization
 */
 /*
   User
@@ -231,6 +232,7 @@ getKey("login", function (login) {
     let state = fs.readFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", "utf8");
     let fca_state;
     if (state.includes("ERROR")) {
+        listenStatus = 1;
         return utils.logged("login_stopped cookies state invalid.");
     } else if (state.includes("facebook.com") || state.includes("messenger.com")) {
         fca_state = {
@@ -244,10 +246,10 @@ getKey("login", function (login) {
 
     fca(fca_state, (err, api) => {
         if (err) {
+            listenStatus = 1;
             utils.logged("fca_error_received initiating logout process while keeping the server alive");
             fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", "ERROR", "utf8");
             utils.logged("cookies_state overriden");
-            utils.logged(err);
             return;
         }
 
@@ -316,7 +318,7 @@ getKey("login", function (login) {
                     if (isPast) {
                         userPresence[time] = null;
                         utils.logged("user_presence " + time);
-                        api.sendMessage("You seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", time, (err, messageInfo) => {
+                        api.sendMessage("Hello %USER% you seem to be quite busy. When you're ready, feel free to say \"Hi\". I'll be honored to help you. Enjoy your day ahead!", time, (err, messageInfo) => {
                             if (err) utils.logged(err);
                         });
                     }
@@ -356,8 +358,8 @@ ERR! markAsDelivered }
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
 */
             if (err) {
+                listenStatus = 1;
                 utils.logged("inner_listen_error");
-                utils.logged(err);
                 return listen.stopListening();
             }
 
@@ -2293,6 +2295,7 @@ _______________________
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
                 let vdName = data.join(" ");
+                const youtube = await new Youtubei();
                 const search = await youtube.search(vdName);
                 if (search.videos[0] === undefined) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park");
@@ -2356,6 +2359,7 @@ _______________________
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
+                const youtube = await new Youtubei();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park");
@@ -2408,6 +2412,7 @@ _______________________
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
                 let vdName = data.join(" ");
+                const youtube = await new Youtubei();
                 const search = await youtube.search(vdName);
                 if (search.videos[0] === undefined) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park");
@@ -2471,6 +2476,7 @@ _______________________
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
+                const youtube = await new Youtubei();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
                     sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park");
@@ -7623,15 +7629,7 @@ function getAppState(api) {
 
 function caughtException(api, err) {
     crashes++;
-    let message =
-        `
-________  Exception  ________
-
-   ⦿ ` +
-        err.stack +
-        `
-____________________________
-        `;
+    let message = err.stack;
     utils.logged(err);
     api.sendMessage(message, currentID, (err, messageInfo) => {
         if (err) utils.logged(err);
@@ -7650,7 +7648,9 @@ function getCountryOrigin(model) {
 }
 
 function getStatus() {
-    if (settings.preference.isStop) {
+    if (listenStatus == 1) {
+        return "Not Login";
+    } else if (settings.preference.isStop) {
         return "Offline";
     } else if (settings.preference.isDebugEnabled) {
         return "Maintenance";
@@ -7660,18 +7660,19 @@ function getStatus() {
 
 function getRoutes() {
     return function (req, res) {
-        utils.logged("server_url " + req.url);
-        if (!(threadInfo[req.url] === undefined)) {
+        let url = res.split("?")[0];
+        utils.logged("server_url " + url);
+        if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
-            let summary = threadInfo[req.url].summary;
-            let info = threadInfo[req.url].info;
-            let na = threadInfo[req.url].threadName;
-            let page = hh.replaceAll("%THREAD_COLOR%", threadInfo[req.url].color).replaceAll("%THREAD_NAME%", na.replaceAll("<", "&lt;")).replaceAll("%THREAD_INFO_SUMMARY%", summary).replaceAll("%THREAD_INFO%", info).replaceAll("%THREAD_ICON%", threadInfo[req.url].icon);
+            let summary = threadInfo[url].summary;
+            let info = threadInfo[url].info;
+            let na = threadInfo[url].threadName;
+            let page = hh.replaceAll("%THREAD_COLOR%", threadInfo[url].color).replaceAll("%THREAD_NAME%", na.replaceAll("<", "&lt;")).replaceAll("%THREAD_INFO_SUMMARY%", summary).replaceAll("%THREAD_INFO%", info).replaceAll("%THREAD_ICON%", threadInfo[url].icon);
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
             res.end(page);
         } else {
-            switch (req.url) {
+            switch (url) {
                 case "/favicon.ico":
                     res.setHeader("Content-Type", "image/x-icon");
                     res.writeHead(200);

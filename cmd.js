@@ -1,7 +1,7 @@
 "use strict";
 
 let help = `
-_______  Project Orion 1/9  _______
+Hello %USER%, here is the page 1 of 9 command list.
 
    ⦿ cmd 
    ⦿ cmd [number|all]
@@ -14,32 +14,26 @@ _______  Project Orion 1/9  _______
    ⦿ searchimg [text]
    ⦿ searchimg --reverse
    ⦿ createimg [text]
-   ⦿ dictionary [text]
-   ⦿ say [text]
-   ⦿ baybayin [text]
-   ⦿ weather [location]
-   ⦿ music [text]
-   ⦿ video [text]
-   ⦿ lyrics [text]
-   ⦿ github [username]
    ⦿ run [lang] [reply]
        Java, Python, C, C++,
        JavaScript, PHP and Dragon
    
-   AI:
+   And here's the AI commands,
+
     ⦿ mj [text]
     ⦿ melbin [text]
-    ⦿ sim [text]
+    ⦿ sim [text]furher
     ⦿ misaka [text]
     ⦿ codex [text]
     ⦿ openai [text]
     ⦿ chatgpt [text]
     ⦿ chad [text]
-__________________________________
+
+If you have further questions, i am here to help you.
 `;
 
 let help1 = `
-_______  Project Orion 2/9  _______
+Hello %USER%, here is the page 2 of 9 command list.
 
    ⦿ thoughts
    ⦿ lulcat [text]
@@ -61,15 +55,16 @@ _______  Project Orion 2/9  _______
    ⦿ pika [text]
    ⦿ god [text]
    ⦿ qrcode [text]
-__________________________________
+
+Some of my commands works in any means you could imagine.
 `;
 
 let help2 = `
-_______  Project Orion 3/9  _______
+Hello %USER%, here is the page 3 of 9 command list.
 
    ⦿ verse today
    ⦿ verse random
-   ⦿ verse [book] [chapter]:[verse]
+   ⦿ verse [book] [chapter]: [verse]
    ⦿ animeqoute
    ⦿ bgremove
    ⦿ motivate
@@ -87,37 +82,39 @@ _______  Project Orion 3/9  _______
    ⦿ steam [name]
    ⦿ npm [name]
    ⦿ wfind [text]
-__________________________________
+
+The : divides the query into 2 sections the first one and second one.
 `;
 
 let help3 = `
-_______  Project Orion 4/9  _______
+Hello %USER%, here is the page 4 of 9 command list.
 
-   ⦿ mnm [mention|me|name|url|uid|reply]
-   ⦿ trump [mention|me|name|url|uid|reply]
-   ⦿ parseFacebook [mention|me|name|url|uid|reply]
-   ⦿ invert [mention|me|name|url|uid|reply]
-   ⦿ greyscale [mention|me|name|url|uid|reply]
+   ⦿ mnm ^^
+   ⦿ trump ^^
+   ⦿ parseFacebook ^^
+   ⦿ invert ^^
+   ⦿ greyscale ^^
    ⦿ ship @mention @mention
    ⦿ www @mention @mention
-   ⦿ jokeover [mention|me|name|url|uid|reply]
+   ⦿ jokeover ^^
    ⦿ translate [text] to [language]
-   ⦿ kiss [mention|me|name|url|uid|reply]
-   ⦿ pet [mention|me|name|url|uid|reply]
-   ⦿ jail [mention|me|name|url|uid|reply]
-   ⦿ communist [mention|me|name|url|uid|reply]
-   ⦿ wanted [mention|me|name|url|uid|reply]
-   ⦿ gun [mention|me|name|url|uid|reply]
-   ⦿ drip [mention|me|name|url|uid|reply]
-   ⦿ clown [mention|me|name|url|uid|reply]
-   ⦿ uncover [mention|me|name|url|uid|reply]
-   ⦿ advert [mention|me|name|url|uid|reply]
-   ⦿ blur [mention|me|name|url|uid|reply]
-__________________________________
+   ⦿ kiss ^^
+   ⦿ pet ^^
+   ⦿ jail ^^
+   ⦿ communist ^^
+   ⦿ wanted ^^
+   ⦿ gun ^^
+   ⦿ drip ^^
+   ⦿ clown ^^
+   ⦿ uncover ^^
+   ⦿ advert ^^
+   ⦿ blur ^^
+
+The ^^ means my command support mentioned, reply, uid etc.. to work.
 `;
 
 let help4 = `
-_______  Project Orion 5/9  _______
+Hello %USER%, here is the page 5 of 9 command list.
 
    ⦿ phub [text]
    ⦿ morse [text]
@@ -139,11 +136,12 @@ _______  Project Orion 5/9  _______
    ⦿ barrier
    ⦿ fact
    ⦿ thoughts
-__________________________________
+
+If you have any issues please let me know.
 `;
 
 let help5 = `
-_______  Project Orion 6/9  _______
+Hello %USER%, here is the page 6 of 9 command list.
  
    ⦿ totext
    ⦿ nba [name]
@@ -168,11 +166,12 @@ _______  Project Orion 6/9  _______
    ⦿ animetop
    ⦿ animetop --movie
    ⦿ hanime [category]
-__________________________________
+
+You can only add one category to the command else it won't gonna work. Trust Me.
 `;
 
 let help6 = `
-_______  Project Orion 7/9  _______
+Hello %USER%, here is the page 7 of 9 command list.
 
    ⦿ encodeBinary [text]
    ⦿ decodeBinary [text]
@@ -193,11 +192,12 @@ _______  Project Orion 7/9  _______
        CoralPink, Orange, Green, LavenderPurple
        Red, Yellow, TealBlue, Aqua
        Mango, Berry, Citrus, Candy
-__________________________________
+
+I hate math, are you too??
 `;
 
 let help7 = `
-_______  Project Orion 8/9  _______
+Hello %USER%, here is the page 8 of 9 command list.
 
    ⦿ conan
    ⦿ encrypt [text]
@@ -219,11 +219,12 @@ _______  Project Orion 8/9  _______
    ⦿ videolyric [title]
    ⦿ formatNumbers [numbers]
    ⦿ fbi
- __________________________________
+
+Wow, do you like me?
 `;
 
 let help8 = `
-_______  Project Orion 9/9  _______
+Hello %USER%, here is the last page of the command list.
 
    ⦿ datefacts
    ⦿ triviafacts
@@ -232,11 +233,20 @@ _______  Project Orion 9/9  _______
    ⦿ covid [country]
    ⦿ parseImage [url]
    ⦿ ping [url]
-__________________________________
+   ⦿ dictionary [text]
+   ⦿ say [text]
+   ⦿ baybayin [text]
+   ⦿ weather [location]
+   ⦿ music [text]
+   ⦿ video [text]
+   ⦿ lyrics [text]
+   ⦿ github [username]
+
+This is the end. Yes i know.
 `;
 
 let helpadmin = `
-_______  Project Orion Admin  _______
+Hello %USER%, this is the admin panel.
 
    ⦿ unsend
    ⦿ unsend [on|off]
@@ -248,24 +258,25 @@ _______  Project Orion Admin  _______
    ⦿ clearCache
    ⦿ refreshState
    ⦿ saveState
-   ⦿ fontIgnore [mention|name|url|uid|reply]
-   ⦿ isBot [mention|name|url|uid|reply]
-   ⦿ addAdmin [mention|name|url|uid|reply]
-   ⦿ remAdmin [mention|name|url|uid|reply]
-   ⦿ kickUser [mention|name|url|uid|reply]
-   ⦿ blockUser [mention|name|url|uid|reply]
-   ⦿ unblockUser [mention|name|url|uid|reply]
+   ⦿ fontIgnore ^^
+   ⦿ isBot ^^
+   ⦿ addAdmin ^^
+   ⦿ remAdmin ^^
+   ⦿ kickUser ^^
+   ⦿ blockUser ^^
+   ⦿ unblockUser ^^
    ⦿ blockGroup
    ⦿ unblockGroup
    ⦿ setPrefix [prefix]
    ⦿ remPrefix
    ⦿ ignore [prefix]
    ⦿ setkey [name]:[key]
-____________________________________
+
+You guessed it, Only admins of the AI can used this commands.
 `;
 
 let helpuser = `
-_______  Project Orion User  _______
+Hello %USER%, this is the command list for user.
 
    ⦿ setTimezone [timezone]
    ⦿ uid 
@@ -278,12 +289,13 @@ _______  Project Orion User  _______
    ⦿ setAddress [address]
    ⦿ setBio [info]
    ⦿ setNickname [text]
-____________________________________
+
+You can set those information to enable awesome features.
 `;
 
 
 let helpgroup = `
-_______  Project Orion Group  _______
+Hello %USER%, this is the command list for groups.
 
    ⦿ gname
    ⦿ ginfo
@@ -291,11 +303,12 @@ _______  Project Orion Group  _______
    ⦿ gphoto
    ⦿ addUser [uid]
    ⦿ everyone
-____________________________________
+
+You can set those information to enable awesome features.
 `;
 
 let helproot = `
-_______  Project Orion Root  _______
+Hello %USER%, you reached the root user command list.
 
    ⦿ stop
    ⦿ resume
@@ -320,7 +333,8 @@ _______  Project Orion Root  _______
    ⦿ setAutoMarkDelivery [on|off]
    ⦿ setPresence [on|off]
    ⦿ setReportingThread [uid]
-____________________________________
+
+Only the AI Administrator can use this command.
 `;
 
 module.exports = {
