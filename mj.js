@@ -1863,7 +1863,7 @@ _______________________
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, getUptime());
+        sendMessage(api, event, "Hello %USER% the server is up for about " + secondsToTime(process.uptime()) + " and the operating system is active for " + secondsToTime(os.uptime()));
     } else if (query == "sysinfo") {
         if (isGoingToFast(api, event)) {
             return;
@@ -7660,9 +7660,18 @@ function getStatus() {
 
 function getRoutes() {
     return function (req, res) {
-        let url = res.split("?")[0];
+        let ress = res.url;
+        let url = ress.split("?")[0];
         utils.logged("server_url " + url);
-        if (!(threadInfo[url] === undefined)) {
+        if (url == "/ai") {
+            if (res.method == "POST") {
+
+            } else {
+                res.setHeader("Content-Type", "text/plain");
+            res.writeHead(200);
+            res.end("Invalid request method");
+            }
+        } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
             let info = threadInfo[url].info;
