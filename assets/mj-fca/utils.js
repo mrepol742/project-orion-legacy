@@ -38,7 +38,10 @@ function logged(data) {
 }
 
 function getCurrentTime() {
-    let today = new Date();
+    let today = new Date(new Date()
+    .toLocaleString("en-US", {
+        timeZone: "Asia/Manila",
+    }));
     let hour = today.getHours();
     let suffix = hour >= 12 ? "PM" : "AM";
     let hour12  = ((hour + 11) % 12) + 1;
