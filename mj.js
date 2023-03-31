@@ -7660,10 +7660,10 @@ function getStatus() {
 
 function getRoutes() {
     return function (req, res) {
-        let ress = res.url;
+        let ress = req.url;
         let url = ress.split("?")[0];
         utils.logged("server_url " + url);
-        if (url == "/ai") {
+        if (url == "/chat" && url == "/chat/index.html") {
             if (res.method == "POST") {
 
             } else {
@@ -7723,12 +7723,6 @@ function getRoutes() {
                 case "/profile":
                 case "/profile/index.html":
 
-                    break;
-                case "/chat":
-                case "/chat/index.html":
-                    res.setHeader("Content-Type", "image/png");
-                    res.writeHead(200);
-                    res.end("COMMING SOON");
                     break;
                 case "/status":
                 case "/status/index.html":
