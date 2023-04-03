@@ -1,56 +1,45 @@
-const fs = require('fs');
+const assert = require('assert')
+const { createServer } = require('http')
+const { connect } = require('net')
 
-let count = 0;
-let count1 = 0;
-let count2 = 0;
-let count3 = 0;
-let a = ["audios", "images", "videos", "files"];
-for (typ in a) {
-   let type = a[typ];
-    fs.readdir(__dirname + "/cache/" + type + "/", function (err, files) {
-        if (err) {
-            return console.log(err);
-        }
-        files.forEach(function (file) {
-            if (!file.endsWith(".gitkeep")) {
-                if (type == "audios") {
-                    count++;
-                } else if (type == "images") {
-                    count1++;
-                } else if (type == "videos") {
-                    count2++;
-                } else {
-                    count3++;
-                }
-                unlink(__dirname + "/cache/" + type + "/" + file);
-            }
-        });
-    });
-}
+const server = createServer(
+  { headersTimeout: 5000, requestTimeout: 10000, connectionsCheckingInterval: 500 },
+  function connectionListener(_, res) {
+    res.writeHead(204, { connection: 'close' })
+    res.end('')
+  }
+)
+ 
 
-function unlink(dir) {
-   fs.unlinkSync(dir, (err) => {
-      if (err) console.log(err);
-     console.log("un_link " + dir);
-  });
-}
+server.listen(1234, function() {
+  console.log("started")
+  const client = connect(server.address().port)
+  const request = ['GET / HTTP/1.1\r\n', 'Host: localhost', '\r\n\r\n']
+  let response = ''
+  let sentPackets = 0
 
-let message =
-    `
-_______  Cache  _______
+  function sendPacket() {
+    client.write(request.shift())
+    console.log("send packet")
+    sentPackets++
+  }
 
-⦿ Cache 0: ` +
-    count +
-    ` file(s)
-⦿ Cache 1: ` +
-    count1 +
-    ` file(s)
-⦿ Cache 2: ` +
-    count2 +
-    ` file(s)
-⦿ Cache 3: ` +
-    count3 +
-    ` file(s)
-_______________________
-`;
-console.log(message)
+  function verifyResult() {
+    assert.strictEqual(response, 'HTTP/1.1 408 Request Timeout\r\nConnection: close\r\n\r\n')
+    assert(sentPackets, 2)
+    console.log("Server close")
+ //   server.close()
+  }
+
+  client.on('data', function (chunk) {
+    response += chunk.toString('utf-8')
+  })
+
+  client.on('end', verifyResult)
+
+  client.resume()
+
+  setTimeout(sendPacket, 600).unref()
+  setTimeout(sendPacket, 4000).unref()
+  setTimeout(sendPacket, 6000).unref()
+})

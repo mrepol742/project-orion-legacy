@@ -21,7 +21,7 @@ utils.logged("project_orion online");
  */
 
 const { FormData, dns, fs, http, https, os, crypto, WeatherJS, Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi } = require("./require.js");
-const { isMyPrefixList, sup, hey, unsendMessage, idknow, funD, sqq, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim, filterWW } = require("./arrays.js");
+const { sup, hey, unsendMessage, idknow, funD, sqq, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim, filterWW } = require("./arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./cmd.js");
 
 let threadInfo = {};
@@ -1052,7 +1052,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
         }
-    } else if (query.startsWith("wfind")) {
+    } else if (/(wfind|wfind\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1095,7 +1095,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
-    } else if (query2.startsWith("decrypt ")) {
+    } else if (/(decrypt|decrypt\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1114,7 +1114,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "Invalid Key!");
             }
         }
-    } else if (query.startsWith("run")) {
+    } else if (/(run|run\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1283,7 +1283,7 @@ async function ai(api, event) {
         }
         someA(api, event, query, input);
     }
-    if (query.startsWith("searchimg")) {
+    if (/(searchimg|searchimg\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1299,7 +1299,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (query.startsWith("searchincog")) {
+    } else if (/(searchincog|searchincog\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1321,7 +1321,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "melvin" || query == "mj" || query == "repol" || query == "mrepol742" || query == "melvinjonesrepol" || query == "melvinjonesgallanorepol" || query == "melvinjones") {
+        if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "melvin" || query == "mj" || query == "repol" || query == "mrepol742") {
             /*
             Old data entry its here just incase needed
             if (!users.list.includes(event.senderID)) {
@@ -1426,7 +1426,7 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (query.startsWith("chatgpt")) {
+    } else if (/(chatgpt|chatgpt\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1448,7 +1448,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
         }
-    } else if (query.startsWith("misaka")) {
+    } else if (/(misaka|misaka\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1486,7 +1486,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (query.startsWith("chad")) {
+    } else if (/(chad|chad\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1508,7 +1508,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
         }
-    } else if (query.startsWith("sim")) {
+    } else if (/(sim|sim\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1546,7 +1546,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (query.startsWith("melbin")) {
+    } else if (/(melbin|melbin\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1584,7 +1584,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (query.startsWith("openai")) {
+    } else if (/(openai|openai\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1608,7 +1608,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
             }
         }
-    } else if (query.startsWith("codex")) {
+    } else if (/(codex|codex\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1638,7 +1638,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (query.startsWith("createimg")) {
+    } else if (/(createimg|createimg\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -7380,11 +7380,7 @@ function otherQ(query) {
 
 function myPrefix(query, query2) {
     let i;
-    for (i = 0; i < isMyPrefixList.length; i++) {
-        if (query.startsWith(isMyPrefixList[i]) || (query.endsWith(isMyPrefixList[i]) && (query2.endsWith("?") || query2.endsWith(".") || query2.endsWith("!")))) {
-            return true;
-        }
-    }
+    
     return false;
 }
 
