@@ -529,7 +529,7 @@ ERR! markAsDelivered }
                     let input = event.body;
                     let query2 = formatQuery(input);
                     let query = query2.replace(/\s+/g, "");
-                    if (myPrefix(query, query2) && (event.type == "message" || event.type == "message_reply")) {
+                    if (/^(melvin|mj|mrepol742)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
                         if (isGoingToFast1(event, threadMaintenance, 15)) {
                             return;
                         }
@@ -1283,6 +1283,9 @@ async function ai(api, event) {
         }
         someA(api, event, query, input);
     }
+
+    let findPr = findPrefix(event);
+
     if (/(searchimg|searchimg\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -1317,11 +1320,12 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (isMyPrefix(input, query, query2)) {
+    } else if (isMyPrefix(input, query, query2) || findPr != false) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if ((settings.preference.prefix != "" && input == settings.preference.prefix) || query == "melvin" || query == "mj" || query == "repol" || query == "mrepol742") {
+        let data = input.split(" ");
+        if (data.length < 2 || query == findPr) {
             /*
             Old data entry its here just incase needed
             if (!users.list.includes(event.senderID)) {
@@ -1344,26 +1348,7 @@ async function ai(api, event) {
                 sendMessage(api, event, welCC);
             }
         } else {
-            let text = input;
-            if (query.startsWith("repol")) {
-                text = input.replace("repol", "");
-            } else if (query.startsWith("mrepol742")) {
-                text = input.replace("mrepol742", "");
-            } else if (query.startsWith("mj")) {
-                text = input.replace("mj", "");
-            } else if (query.startsWith("melvinjonesrepol")) {
-                text = input.replace("melvin jones repol", "");
-            } else if (query.startsWith("melvinjonesgallanorepol")) {
-                text = input.replace("melvin jones gallano repol", "");
-            } else if (query.startsWith("melvinjones")) {
-                text = input.replace("melvin jones", "");
-            } else if (query.startsWith("melvin")) {
-                text = input.replace("melvin", "");
-            } else if (query.startsWith("search")) {
-                text = input.replace("search", "");
-            } else if (input.startsWith(settings.preference.prefix)) {
-                text = input.replace(settings.preference.prefix.length, "");
-            }
+            let text = data.shift();
             let text1 = text.replace(/\s+/g, "");
             let text2 = text;
             if (/^[0-9]+$/.test(text1)) {
@@ -7378,14 +7363,17 @@ function otherQ(query) {
     return false;
 }
 
-function myPrefix(query, query2) {
-    let i;
-    
-    return false;
+function isMyPrefix(input, query, query2) {
+    return (settings.preference.prefix != "" && input.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742)/.test(query2) || /^what|when|who|where|how|why|which/.test(query) || otherQ(query2) || (settings.preference.tagalog && /^ano\s|bakit\s|saan\s|sino\s|kailan\s|paano\s/.test(query2));
 }
 
-function isMyPrefix(input, query, query2) {
-    return (settings.preference.prefix != "" && input.startsWith(settings.preference.prefix)) || myPrefix(query, query2) || /^what|when|who|where|how|why|which/.test(query) || otherQ(query2) || (settings.preference.tagalog && /^ano\s|bakit\s|saan\s|sino\s|kailan\s|paano\s/.test(query2));
+function findPrefix(event) {
+    for (userID in event.mentions) {
+        if (userID == currentID) {
+            return event.mentions[userID];
+        }
+    }
+    return false;
 }
 
 function saveState() {
