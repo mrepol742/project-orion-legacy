@@ -1320,7 +1320,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (isMyPrefix(input, query, query2) || findPr != false) {
+    } else if (isMyPrefix(query, query2) || findPr != false) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1348,7 +1348,9 @@ async function ai(api, event) {
                 sendMessage(api, event, welCC);
             }
         } else {
+          if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742)/.test(query2)) {
             data.shift();
+        }
             let text = data.join(" ");
             let text1 = text.replace(/\s+/g, "");
             let text2 = text;
@@ -7364,8 +7366,8 @@ function otherQ(query) {
     return false;
 }
 
-function isMyPrefix(input, query, query2) {
-    return (settings.preference.prefix != "" && input.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742)/.test(query2) || /^what|when|who|where|how|why|which/.test(query) || otherQ(query2) || (settings.preference.tagalog && /^ano\s|bakit\s|saan\s|sino\s|kailan\s|paano\s/.test(query2));
+function isMyPrefix(query, query2) {
+    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742)/.test(query2) || /^what|when|who|where|how|why|which/.test(query) || otherQ(query2) || (settings.preference.tagalog && /^ano\s|bakit\s|saan\s|sino\s|kailan\s|paano\s/.test(query2));
 }
 
 function findPrefix(event) {
