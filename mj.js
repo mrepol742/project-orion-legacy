@@ -1348,7 +1348,8 @@ async function ai(api, event) {
                 sendMessage(api, event, welCC);
             }
         } else {
-            let text = data.shift();
+            data.shift();
+            let text = data.join(" ");
             let text1 = text.replace(/\s+/g, "");
             let text2 = text;
             if (/^[0-9]+$/.test(text1)) {
