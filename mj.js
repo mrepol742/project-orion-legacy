@@ -1320,12 +1320,12 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (isMyPrefix(query, query2) || findPr != false) {
+    } else if (isMyPrefix(query, query2) || (findPr != false && input.startsWith(findPr))) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2 || query == findPr) {
+        if (data.length < 2 || (findPr != false && query == findPr)) {
             /*
             Old data entry its here just incase needed
             if (!users.list.includes(event.senderID)) {
