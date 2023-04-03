@@ -966,7 +966,7 @@ ERR! markAsDelivered }
                                     } else {
                                         msgs = data[event.author]["firstName"] + " set the group name to " + event.logMessageData.name;
                                     }
-                                    let message {
+                                    let message = {
                                         body: msgs,
 
                                     }
