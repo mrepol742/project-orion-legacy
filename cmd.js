@@ -46,7 +46,7 @@ Hello %USER%, here is the page 2 of 9 command list.
    ⦿ landscape [text]
    ⦿ portrait
    ⦿ portrait [text]
-   ⦿ problem [equation]
+   ⦿ solve [equation]
    ⦿ roi [revenue] [cost]
    ⦿ pin add
    ⦿ pin remove

@@ -598,13 +598,11 @@ ERR! markAsDelivered }
                                 let message = {
                                     body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[1][2],
                                     url: d[1][3],
-                                    /*
                                 mentions: [{
                                     tag: '@' + data[event.senderID]['firstName'],
                                     id: event.senderID,
                                     fromIndex: 0
                                 }]
-                                */
                                 };
                                 sendMessageOnly(api, event, message);
                                 utils.logged("unsend_share_group " + d[1][0] + " " + message);
@@ -640,13 +638,11 @@ ERR! markAsDelivered }
                                         let message = {
                                             body: constructMMM,
                                             attachment: fs.createReadStream(filename),
-                                            /*
                                         mentions: [{
                                             tag: '@' + data[event.senderID]['firstName'],
                                             id: event.senderID,
                                             fromIndex: 0
                                         }]
-                                        */
                                         };
                                         sendMessageOnly(api, event, message);
                                         utils.logged("unsend_file_group " + d[1][0] + " " + filename);
@@ -671,13 +667,11 @@ ERR! markAsDelivered }
                                 let message1 = {
                                     body: constructMMM + d[1][2],
                                     url: d[1][3],
-                                    /*
                                 mentions: [{
                                     tag: '@' + data[event.senderID]['firstName'],
                                     id: event.senderID,
                                     fromIndex: 0
                                 }],
-                                */
                                 };
                                 sendMessageOnly(api, event, message1);
                                 utils.logged("unsend_location " + d[1][0] + " " + d[1][2]);
@@ -707,13 +701,11 @@ ERR! markAsDelivered }
                                         longitude: d[1][4],
                                         current: true,
                                     },
-                                    /*
                                 mentions: [{
                                     tag: '@' + data[event.senderID]['firstName'],
                                     id: event.senderID,
                                     fromIndex: 0
                                 }],
-                                */
                                 };
                                 sendMessageOnly(api, event, message1);
                                 utils.logged("unsend_location_sharing_group " + d[1][0] + " " + d[1][2]);
@@ -737,13 +729,11 @@ ERR! markAsDelivered }
                                 let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
                                 let message = {
                                     body: constructMMM,
-                                    /*
                                 mentions: [{
                                     tag: '@' + data[event.senderID]['firstName'],
                                     id: event.senderID,
                                     fromIndex: 0
                                 }]
-                                */
                                 };
                                 let message1 = {
                                     sticker: d[1][2],
@@ -781,13 +771,11 @@ ERR! markAsDelivered }
                                         let message = {
                                             body: constructMMM,
                                             attachment: fs.createReadStream(filename),
-                                            /*
                                         mentions: [{
                                             tag: '@' + data[event.senderID]['firstName'],
                                             id: event.senderID,
                                             fromIndex: 0
                                         }]
-                                        */
                                         };
                                         sendMessageOnly(api, event, message);
                                         utils.logged("unsend_video_group " + d[1][0] + " " + filename);
@@ -824,13 +812,11 @@ ERR! markAsDelivered }
                                         let message = {
                                             body: constructMMM,
                                             attachment: fs.createReadStream(filename),
-                                            /*
                                         mentions: [{
                                             tag: '@' + data[event.senderID]['firstName'],
                                             id: event.senderID,
                                             fromIndex: 0
                                         }]
-                                        */
                                         };
                                         sendMessageOnly(api, event, message);
                                         utils.logged("unsend_audio_group " + d[1][0] + " " + filename);
@@ -849,13 +835,11 @@ ERR! markAsDelivered }
                             } else {
                                 let message = {
                                     body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d[2],
-                                    /*
                                 mentions: [{
                                     tag: '@' + data[event.senderID]['firstName'],
                                     id: event.senderID,
                                     fromIndex: 0
                                 }]
-                                */
                                 };
                                 sendMessageOnly(api, event, message);
                                 utils.logged("unsend_message_group " + d[0] + " " + message);
@@ -918,7 +902,16 @@ ERR! markAsDelivered }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
                                 let arr = gc.participantIDs;
-                                sendMessage(api, event, gret + " Welcome to " + gname);
+                                let url = encodeURI("https://graph.facebook.com/" + names[0][0] + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                                let filename = __dirname + "/cache/images/facebook_" + getTimestamp() + ".jpg";
+                                downloadFile(url, filename).then((response) => {
+                                    let message = {
+                                        body: gret,
+                                        attachment: fs.createReadStream(filename),
+                                    }
+                                    sendMessage(api, event, message);
+                                    unLink(filename);
+                                });
                             });
                             break;
                         case "log:unsubscribe":
@@ -942,10 +935,10 @@ ERR! markAsDelivered }
                                         if (data.hasOwnProperty(prop) && data[prop].name) {
                                             let gcn = gc.threadName;
                                             let arr = gc.participantIDs;
-                                            if (data[prop].name == "Facebook user") {
-                                                sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
-                                            } else if (users.blocked.includes(prop) || users.bot.includes(prop)) {
+                                            if (users.blocked.includes(prop) || users.bot.includes(prop)) {
                                                 return;
+                                            } else if (data[prop].name == "Facebook user") {
+                                                sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
                                             } else {
                                                 if (settings.preference.antiLeave) {
                                                     api.addUserToGroup(prop, event.threadID, (err) => {
@@ -973,7 +966,11 @@ ERR! markAsDelivered }
                                     } else {
                                         msgs = data[event.author]["firstName"] + " set the group name to " + event.logMessageData.name;
                                     }
-                                    sendMessage(api, event, msgs);
+                                    let message {
+                                        body: msgs,
+
+                                    }
+                                    sendMessage(api, event, message);
                                 });
                             });
                             break;
@@ -1320,7 +1317,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (isMyPrefix(query, query2) || (findPr != false && input.startsWith(findPr))) {
+    } else if (isMyPrefix(query, query2) || (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr)))) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1350,8 +1347,11 @@ async function ai(api, event) {
         } else {
           if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742)/.test(query2)) {
             data.shift();
-        }
+         }
             let text = data.join(" ");
+            if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
+               text = text.replace(findPr, "");
+            }
             let text1 = text.replace(/\s+/g, "");
             let text2 = text;
             if (/^[0-9]+$/.test(text1)) {
@@ -1777,7 +1777,7 @@ _______________________
             settings.preference.sendTypingIndicator = false;
             sendMessage(api, event, "Send typing indicator when AI sending messages disabled.");
         }
-    } else if (query.startsWith("ttsjap") || query.startsWith("sayjap")) {
+    } else if (/(ttsjap|sayjap\s|ttsjap\s|sayjap)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1808,7 +1808,7 @@ _______________________
                 sendMessage(api, event, "Unfortunately an error occured,");
             }
         }
-    } else if (query2.startsWith("tts ") || query2.startsWith("say ")) {
+    } else if (/(tts|tts\s|say|say\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1829,7 +1829,7 @@ _______________________
                 unLink(filename);
             });
         }
-    } else if (query2.startsWith("encrypt ")) {
+    } else if (/(encrypt|encrypt\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1857,7 +1857,7 @@ _______________________
             return;
         }
         sendMessage(api, event, getSysinfo());
-    } else if (query.startsWith("dns4")) {
+    } else if (/(dns4|dns4\s|dns|dns\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1875,7 +1875,7 @@ _______________________
                 sendMessage(api, event, addresses[0]);
             });
         }
-    } else if (query.startsWith("dns6")) {
+    } else if (/(dns6|dns\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1893,7 +1893,7 @@ _______________________
                 sendMessage(api, event, addresses[0]);
             });
         }
-    } else if (query.startsWith("ping")) {
+    } else if (/(ping|ping\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1905,18 +1905,18 @@ _______________________
             let aa = data.join(" ");
             if (aa.startsWith("https://")) {
                 https.get(aa, function (res) {
-                    sendMessage(api, event, "HTTPS Status Code " + res.statusCode);
+                    sendMessage(api, event, "Pong " + res.statusCode);
                 });
             } else {
                 if (!aa.startsWith("http://")) {
                     aa = "http://" + aa;
                 }
                 http.get(aa, function (res) {
-                    sendMessage(api, event, "HTTP Status Code " + res.statusCode);
+                    sendMessage(api, event, "Pong " + res.statusCode);
                 });
             }
         }
-    } else if (query2.startsWith("mean ")) {
+    } else if (/(mean|mean\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1935,7 +1935,7 @@ _______________________
             }
             sendMessage(api, event, "The mean value is " + total / arr.length);
         }
-    } else if (query.startsWith("median")) {
+    } else if (/(median|median\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1955,7 +1955,7 @@ _______________________
             }
             sendMessage(api, event, "The median value is " + arr[(length - 1) / 2]);
         }
-    } else if (query2.startsWith("mode ")) {
+    } else if (/(mode|mode\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1987,7 +1987,7 @@ _______________________
 
             sendMessage(api, event, "The mode value is " + max);
         }
-    } else if (query.startsWith("range")) {
+    } else if (/(range|range\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2002,7 +2002,7 @@ _______________________
             arr.sort((a, b) => a - b);
             sendMessage(api, event, "The range value is " + [arr[0], arr[arr.length - 1]]);
         }
-    } else if (query.startsWith("divisible")) {
+    } else if (/(divisible|divisible\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2020,7 +2020,7 @@ _______________________
                 sendMessage(api, event, arr[0] + " is not divisible by " + arr[1]);
             }
         }
-    } else if (query.startsWith("factorial")) {
+    } else if (/(factorial|factorial\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2034,7 +2034,7 @@ _______________________
             let num = parseInt(input.substring(10));
             sendMessage(api, event, "The factorial of " + num + " is " + factorial(num));
         }
-    } else if (query.startsWith("findgcd")) {
+    } else if (/(findgcd|findgcd\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2048,7 +2048,7 @@ _______________________
             let num = parseInt(input.substring(8));
             sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
         }
-    } else if (query2.startsWith("roi ")) {
+    } else if (/(roi|roi\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2060,12 +2060,12 @@ _______________________
             let calcu = (revenue - cost) / cost;
             sendMessage(api, event, "The return of investment is " + calcu);
         }
-    } else if (query.startsWith("problem")) {
+    } else if (/(solve|solve\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         if (input.split(" ").length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using problem equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nproblem 5*5/9");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using solve equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsolve 5*5/9");
         } else {
             let text = input;
             text = text.substring(8);
@@ -2087,6 +2087,7 @@ _______________________
                 sendMessage(api, event, res + "");
             }
         }
+        // TODO: covid and covid
     } else if (query == "covid") {
         if (isGoingToFast(api, event)) {
             return;
@@ -2111,7 +2112,7 @@ _______________________
                 utils.logged(error);
                 sendMessage(api, event, "An unknown error as been occured. Please try again later.");
             });
-    } else if (query.startsWith("covid")) {
+    } else if (/(covid|covid\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2150,7 +2151,7 @@ _______________________
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (query2.startsWith("nba ")) {
+    } else if (/(nba|nba\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2203,7 +2204,7 @@ _______________________
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (query.startsWith("urlshort")) {
+    } else if (/(urlshort|urlshort\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2242,7 +2243,8 @@ _______________________
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (query.startsWith("phub") || query.startsWith("pornhub")) {
+        // TODO: fix error
+    } else if (/(phub|pornhub\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2272,7 +2274,7 @@ _______________________
                 parseImage(api, event, phublink, __dirname + "/cache/images/phubmeme_" + getTimestamp() + ".jpg");
             }
         });
-    } else if (query.startsWith("videolyric")) {
+    } else if (/(videolyric|videolyric\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2337,7 +2339,7 @@ _______________________
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (query.startsWith("video")) {
+    } else if (/(video|video\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2389,7 +2391,7 @@ _______________________
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (query.startsWith("musiclyric")) {
+    } else if (/(musiclyric|musiclyric\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2454,7 +2456,7 @@ _______________________
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (query.startsWith("music")) {
+    } else if (/(music|music\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2506,7 +2508,7 @@ _______________________
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (query.startsWith("lyrics")) {
+    } else if (/(lyrics|lyrics\s|lyric|lyric\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2537,7 +2539,7 @@ _______________________
                 }
             });
         }
-    } else if (input.startsWith("encodebinary")) {
+    } else if (/(encodebinary|encodebinary\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2554,7 +2556,7 @@ _______________________
             }
             sendMessage(api, event, output);
         }
-    } else if (input.startsWith("decodebinary")) {
+    } else if (/(decodebinary|decodebinary\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2572,7 +2574,7 @@ _______________________
             }
             sendMessage(api, event, stringOutput);
         }
-    } else if (query.startsWith("encode64")) {
+    } else if (/(encode64|encode64\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2585,7 +2587,7 @@ _______________________
             let base64data = buff.toString("base64");
             sendMessage(api, event, base64data);
         }
-    } else if (query.startsWith("decode64")) {
+    } else if (/(decode64|decode64\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2598,7 +2600,7 @@ _______________________
             let base642text = buff.toString("ascii");
             sendMessage(api, event, base642text);
         }
-    } else if (query.startsWith("reversetext")) {
+    } else if (/(reversetext|reversetext\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2631,7 +2633,7 @@ _______________________
         } else {
             sendMessage(api, event, settings.pin[event.threadID]);
         }
-    } else if (query.startsWith("dictionary")) {
+    } else if (/(dictionary|dictionary\s|dict|dict\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2681,7 +2683,7 @@ _______________________
             }
         }
         sendMessage(api, event, message);*/
-    } else if (query.startsWith("summarize") || query2.startsWith("summ ")) {
+    } else if (/(summarize|summarize\s|summ|summ\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2692,7 +2694,7 @@ _______________________
             let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined });
             sendMessage(api, event, ss);
         }
-    } else if (query.startsWith("baybayin")) {
+    } else if (/(baybayin|baybayin\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2709,7 +2711,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("doublestruck")) {
+    } else if (/(doublestruck|doublestruck\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2726,7 +2728,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("translate")) {
+    } else if (/(translate|translate\s|trans|trans\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2741,7 +2743,7 @@ _______________________
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
-    } else if (query.startsWith("weather")) {
+    } else if (/(weather|weather\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2811,7 +2813,7 @@ _______________________
                 }
             );
         }
-    } else if (query.startsWith("facts")) {
+    } else if (/(facts|facts\s|fact|fact\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2900,7 +2902,8 @@ _______________________
                 sendMessage(api, event, response.answer);
             }
         });
-    } else if (query.startsWith("instagram") || query2.startsWith("ig ")) {
+        // TODO: fix error
+    } else if (/(instagram|instagram\s|insta|insta\s|ig|ig\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2944,7 +2947,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("profilepic")) {
+    } else if (/(profilepicture|profilepicture\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2955,7 +2958,8 @@ _______________________
             id = event.senderID;
         }
         parseImage(api, event, getProfilePic(id), __dirname + "/cache/images/profilepic_" + getTimestamp() + ".png");
-    } else if (query.startsWith("tiktok")) {
+        // TODO: fix error
+    } else if (/(tiktok|tiktok\s|tk|tk\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2995,7 +2999,8 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("soundcloud")) {
+        // TODO: fix error
+    } else if (/(soundcloud|soundcloud|sc|sc\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3059,7 +3064,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("github")) {
+    } else if (/(github|github\s|gh|gh\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3127,7 +3132,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("element")) {
+    } else if (/(element|element\s|symbol|symbol\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3164,7 +3169,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("npm")) {
+    } else if (/(npm|npm\s|nodejs|nodejs\s|node|node\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3196,7 +3201,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("steam")) {
+    } else if (/(steam|steam\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3231,7 +3236,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("imdb")) {
+    } else if (/(imdb|imdb\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3265,7 +3270,7 @@ _______________________
                 }
             });
         }
-    } else if (query.startsWith("itunes")) {
+    } else if (/(itunes|itunes\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3360,7 +3365,7 @@ _______________________
             attachment: fs.createReadStream(__dirname + "/assets/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
         sendMessage(api, event, message);
-    } else if (query.startsWith("gemoji")) {
+    } else if (/(gemoji|gemoji\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3376,7 +3381,7 @@ _______________________
                 if (err) return utils.logged(err);
             });
         }
-    } else if (query.startsWith("sendreport")) {
+    } else if (/(sendreport|sendreport\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3396,7 +3401,7 @@ _______________________
             });
             sendMessage(api, event, "The engineers have been notified.");
         }
-    } else if (query.startsWith("acceptmessagerequest")) {
+    } else if (/(acceptmessagerequest|acceptmessagerequest\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -3410,7 +3415,7 @@ _______________________
                 sendMessage(api, event, "Message Request Accepted!");
             }
         }
-    } else if (query.startsWith("changebio")) {
+    } else if (/(changebio|changebio\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -3424,7 +3429,7 @@ _______________________
                 sendMessage(api, event, "Bio Message is now set to `" + data.join(" ") + "`");
             }
         }
-    } else if (query.startsWith("acceptfriendrequest")) {
+    } else if (/(acceptfriendrequest|acceptfriendrequest\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -3438,7 +3443,7 @@ _______________________
                 sendMessage(api, event, "Friend Request Accepted!");
             }
         }
-    } else if (query.startsWith("setmaxtokens")) {
+    } else if (/(setmaxtoken|setmaxtoken\s|setmaxtokens|setmaxtokens\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -3456,7 +3461,7 @@ _______________________
                 }
             }
         }
-    } else if (query.startsWith("settemperature")) {
+    } else if (/(settemperature|settemperature\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -3474,7 +3479,7 @@ _______________________
                 }
             }
         }
-    } else if (query.startsWith("setfrequencypenalty")) {
+    } else if (/(setfrequencypenalty|setfrequencypenalty\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -6556,13 +6561,11 @@ async function unsendPhoto(api, event, d) {
             let message1 = {
                 body: constructMMM,
                 attachment: accm,
-                /*
                 mentions: [{
                     tag: '@' + data[event.senderID]['firstName'],
                     id: event.senderID,
                     fromIndex: 0
                 }]
-                */
             };
             sendMessageOnly(api, event, message1);
             let i2;
@@ -6621,13 +6624,11 @@ async function unsendGif(api, event, d) {
             let message1 = {
                 body: constructMMM,
                 attachment: accm,
-                /*
                 mentions: [{
                     tag: '@' + data[event.senderID]['firstName'],
                     id: event.senderID,
                     fromIndex: 0
                 }]
-                */
             };
             sendMessageOnly(api, event, message1);
             let i2;
@@ -7278,7 +7279,8 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
 
 function generateParamaters(event, complextion, text, user, group) {
     let pro =
-        "You are an AI trained by Melvin Jones Repol to respond like human. Melvin Jones Repol is a Filipino a 21 years old software engineer his social handle is @mrepol742 his site is https://mrepol742.github.io and his happily married to Marvyil Alexa Repol." +
+        "You are an AI trained by Melvin Jones Repol to respond like human person." +
+        "\nYou: Melvin Jones Repol is a Filipino a 20 years old software engineer his social handle is @mrepol742 his site is https://mrepol742.github.io and his happily married to Marvyil Alexa Repol."
         "\nKnowledge cutoff: 2021-06" +
         tellUser(user, group) +
         "\n\n";
@@ -7288,7 +7290,7 @@ function generateParamaters(event, complextion, text, user, group) {
         } else {
             pro += user.firstName + ": ";
         }
-        pro += event.messageReply.body;
+        pro += event.messageReply.body + "\n";
     }
     pro += user.firstName + ": " + text + "\nYou: ";
     return {
@@ -7358,7 +7360,7 @@ function otherQ(query) {
     if (query.split(" ").length > 2) {
         let i;
         for (i = 0; i < sqq.length; i++) {
-            if (query.startsWith(sqq[i] + " ") && query.split(" ").length > 2) {
+            if (query.startsWith(sqq[i] + " ")) {
                 return true;
             }
         }
@@ -7983,18 +7985,21 @@ function tellUser(user, group) {
         } else {
             construct += "\nCurrent date: " + getTimeDate("Asia/Manila") + "\n";
         }
-        construct += "You are talking to " + user.name + ". ";
+        construct += user.name + ": ";
         if (!(user.birthday === undefined)) {
-            construct += getPronoun1(user.gender) + " birthday is on " + user.birthday + ". ";
+            construct += "My birthday is on " + user.birthday + ", ";
+            let day = user.birthday;
+            let dates = day.split("/");
+            construct += calculateAge(new Date(dates[2], dates[0], dates[13])) + " years old, ";
         }
         if (!(user.userName === undefined)) {
-            construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
+            construct += "my username is " + user.userName + ", ";
         }
         if (!(user.location === undefined)) {
-            construct += getPronoun(user.gender) + " is currently living in " + user.location + ". ";
+            construct += "i am currently living in " + user.location + ", ";
         }
         if (!(user.bio === undefined)) {
-            construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
+            construct += "i like " + user.bio + ". ";
         }
     } 
     if (group.name != undefined) {
@@ -8222,4 +8227,11 @@ _______  Uptime  _______
 _______________________
 `
     );
+}
+
+function calculateAge(dob) { 
+    let diff_ms = Date.now() - dob.getTime();
+    let age_dt = new Date(diff_ms); 
+  
+    return Math.abs(age_dt.getUTCFullYear() - 1970);
 }
