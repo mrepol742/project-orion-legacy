@@ -1,45 +1,16 @@
-const assert = require('assert')
-const { createServer } = require('http')
-const { connect } = require('net')
-
-const server = createServer(
-  { headersTimeout: 5000, requestTimeout: 10000, connectionsCheckingInterval: 500 },
-  function connectionListener(_, res) {
-    res.writeHead(204, { connection: 'close' })
-    res.end('')
-  }
-)
- 
-
-server.listen(1234, function() {
-  console.log("started")
-  const client = connect(server.address().port)
-  const request = ['GET / HTTP/1.1\r\n', 'Host: localhost', '\r\n\r\n']
-  let response = ''
-  let sentPackets = 0
-
-  function sendPacket() {
-    client.write(request.shift())
-    console.log("send packet")
-    sentPackets++
-  }
-
-  function verifyResult() {
-    assert.strictEqual(response, 'HTTP/1.1 408 Request Timeout\r\nConnection: close\r\n\r\n')
-    assert(sentPackets, 2)
-    console.log("Server close")
- //   server.close()
-  }
-
-  client.on('data', function (chunk) {
-    response += chunk.toString('utf-8')
+const axios = require('axios') //you can use any http client
+const tf = require('@tensorflow/tfjs-node')
+const nsfw = require('nsfwjs')
+async function fn() {
+  const pic = await axios.get(`https://mrepol742.github.io/favicon.png`, {
+    responseType: 'arraybuffer',
   })
-
-  client.on('end', verifyResult)
-
-  client.resume()
-
-  setTimeout(sendPacket, 600).unref()
-  setTimeout(sendPacket, 4000).unref()
-  setTimeout(sendPacket, 6000).unref()
-})
+  const model = await nsfw.load() // To load a local model, nsfw.load('file://./path/to/model/')
+  // Image must be in tf.tensor3d format
+  // you can convert image to tf.tensor3d with tf.node.decodeImage(Uint8Array,channels)
+  const image = await tf.node.decodeImage(pic.data,3)
+  const predictions = await model.classify(image)
+  image.dispose() // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
+  console.log(predictions)
+}
+fn()
