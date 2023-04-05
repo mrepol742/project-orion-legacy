@@ -21,7 +21,7 @@ utils.logged("project_orion online");
  */
 
 const { FormData, dns, fs, http, https, os, crypto, WeatherJS, Youtubei, GoogleTTS, google, axios, Configuration, OpenAIApi } = require("./require.js");
-const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, qot1, example, heyMelbin, heySim, filterWW } = require("./arrays.js");
+const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim } = require("./arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./cmd.js");
 
 let threadInfo = {};
@@ -6026,7 +6026,7 @@ Hello %USER%, here is the current system information as of ` +
         sendMessage(api, event, "Hello World");
     } else if (query == "about") {
         let message = {
-            body: qot1[Math.floor(Math.random() * qot1.length)] + "\n\nhttps://mrepol742.github.io/project-orion/",
+            body: "I am an AI trained by Melvin Jones Repol to respond like a human. I am programmed to understand and respond to questions and commands. I am able to learn from my interactions with you and can adapt to different situations. I can provide helpful information and advice when needed. Lastly, i am here to help you in any way i can.\n\nhttps://mrepol742.github.io/project-orion/",
             url: "https://mrepol742.github.io/project-orion/",
         };
         sendMessage(api, event, message);
