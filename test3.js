@@ -1,16 +1,14 @@
-const axios = require('axios') //you can use any http client
-const tf = require('@tensorflow/tfjs-node')
-const nsfw = require('nsfwjs')
-async function fn() {
-  const pic = await axios.get(`https://mrepol742.github.io/favicon.png`, {
-    responseType: 'arraybuffer',
-  })
-  const model = await nsfw.load() // To load a local model, nsfw.load('file://./path/to/model/')
-  // Image must be in tf.tensor3d format
-  // you can convert image to tf.tensor3d with tf.node.decodeImage(Uint8Array,channels)
-  const image = await tf.node.decodeImage(pic.data,3)
-  const predictions = await model.classify(image)
-  image.dispose() // Tensor memory must be managed explicitly (it is not sufficient to let a tf.Tensor go out of scope for its memory to be released).
-  console.log(predictions)
+const axios = require("axios");
+const FormData = require("form-data");
+
+async function doa() {
+const form_data = new FormData();
+form_data.append("query", "I am Test 3");
+form_data.append("query1", "I am Test 3");
+form_data.append("query2", "I am Test 3");
+let res = await axios.post("http://127.0.0.1:7421/chat", form_data, {
+    headers: form_data.getHeaders(),
+});
+console.log( res.data )
 }
-fn()
+doa();

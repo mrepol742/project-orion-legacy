@@ -89,6 +89,7 @@ let herop = fs.readFileSync(__dirname + "/assets/hero.png");
 let faviconpng = fs.readFileSync(__dirname + "/assets/favicon.png");
 let faviconico = fs.readFileSync(__dirname + "/assets/favicon.ico");
 let banner = fs.readFileSync(__dirname + "/assets/banner.png");
+let bannerlogo = fs.readFileSync(__dirname + "/assets/logo.png");
 let robots = fs.readFileSync(__dirname + "/assets/robots.txt");
 let sitemappage = fs.readFileSync(__dirname + "/assets/sitemap.xml");
 let cmdlist = fs.readFileSync(__dirname + "/cmd.js");
@@ -2626,7 +2627,7 @@ Hello %USER%, here is the current system information as of ` +
                 const youtube = await new Youtubei();
                 const search = await youtube.search(data.join(" "));
                 if (search.videos[0] === undefined) {
-                    sendMessage(api, event, "Opps! I didnt get it. You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park");
+                    sendMessage(api, event, "I'm having an issue finding the music please try it again later.");
                 } else {
                     const stream = youtube.download(search.videos[0].id, audioOptions);
                     let time = getTimestamp();
@@ -7901,16 +7902,37 @@ function getStatus() {
 }
 
 function getRoutes() {
-    return function (req, res) {
+    return async function (req, res) {
         let ress = req.url;
         let url = ress.split("?")[0];
-        utils.logged("server_url " + url);
-        if (url == "/chat" && url == "/chat/index.html") {
-            if (res.method == "POST") {
-            } else {
+        utils.logged(req.method + " " + url);
+        if (url == "/chat" || url == "/chat/index.html") {
+           if (req.method == "POST") {
+            var qs = require('querystring');
+            var body = '';
+            req.setEncoding('utf8');
+            req.on('data', function (data) {
+                body += data;
+                if (body.length > 1e6) { 
+                    // FUCKING FLOOD ATTTTTTTACK
+                    request.connection.destroy();
+                }
+            });
+            req.on('end', function () {
+                let POST = qs.parse(body)
+                console.log(POST)
+                /*
+                let response = await aiResponse({type: "message"}, "text-davinci-003", POST, true, 
+                { name: undefined }, { name: undefined });
                 res.setHeader("Content-Type", "text/plain");
                 res.writeHead(200);
-                res.end("Invalid request method");
+                res.end(response);
+                */
+            });
+            } else {
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
+                res.end(homepage);
             }
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
@@ -7943,6 +7965,11 @@ function getRoutes() {
                     res.setHeader("Content-Type", "image/png");
                     res.writeHead(200);
                     res.end(banner);
+                    break;
+                    case "/logo.png":
+                    res.setHeader("Content-Type", "image/png");
+                    res.writeHead(200);
+                    res.end(bannerlogo);
                     break;
                 case "/google022983bf0cf659ae.html":
                     res.setHeader("Content-Type", "text/html");
@@ -8274,6 +8301,7 @@ function tellUser(user, group) {
             construct += ". ";
         }
     }
+    construct += "You are programmed using NodeJS for backend, HTML, CSS & JS for frontend, you are not open source and licensed under The Mrepol742 Licensed, you are created by Melvin Jones on Nov 2022, your webpage is at https://mrepol742.github.io/project-orion/.";
     construct += "If " + getPronoun(user.gender).toLowerCase() + " ask for images format the response to [picture=type of picture " + getPronoun(user.gender).toLowerCase() + " asked]. ";
     //construct += "If " + getPronoun(user.gender).toLowerCase() + " ask to play an audio format the response to [music=type of music " + getPronoun(user.gender).toLowerCase() + " asked]. ";
     //construct += "If " + getPronoun(user.gender).toLowerCase() + " ask for latest information [latest=information " + getPronoun(user.gender).toLowerCase() + " asked]. ";
