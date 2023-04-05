@@ -13,7 +13,6 @@ let idknow = [
     "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.",
 ];
 let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
-let sqq = ["in", "having", "an", "do", "does", "with", "are", "was", "the", "as far", "can you", "a", "did", "give", "example", "these", "those", "on", "is", "if", "for", "about", "gave", "there", "describe", "list", "identify", "write", "create", "okay"];
 let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let happyEE = ["haha", "ahah", "ahha", "funny ", "insane ", "lol", "lmao", "lmfao", "silly ", "laugh ", "hilarious", "absurd", "ridicolous"];
@@ -548,7 +547,6 @@ module.exports = {
     unsendMessage: unsendMessage,
     idknow: idknow,
     funD: funD,
-    sqq: sqq,
     days: days,
     months: months,
     happyEE: happyEE,

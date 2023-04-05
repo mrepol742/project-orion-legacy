@@ -22,12 +22,14 @@ Hello %USER%, here is the page 1 of 9 command list.
 
     ⦿ mj [text]
     ⦿ melbin [text]
-    ⦿ sim [text]furher
+    ⦿ sim [text]
     ⦿ misaka [text]
     ⦿ codex [text]
     ⦿ openai [text]
     ⦿ chatgpt [text]
     ⦿ chad [text]
+    ⦿ bing [text]
+    ⦿ bard [text]
 
 If you have further questions, i am here to help you.
 `;
