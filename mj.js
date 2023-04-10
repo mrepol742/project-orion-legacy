@@ -6570,7 +6570,7 @@ function isGoingToFast(api, event) {
             reactMessage(api, event, ":heart:");
         });
     }
-    if (isBlockedSentence(input.normalize("NFD").replace(/\p{Diacritic}/gu, "")) && !settings.preference.onNsfw) {
+    if (isBlockedSentence(input.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase()) && !settings.preference.onNsfw) {
         let id = event.senderID;
         if (isMyId(id)) {
             return false;
