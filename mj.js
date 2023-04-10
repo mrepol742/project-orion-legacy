@@ -6786,15 +6786,13 @@ async function getImages(api, event, images) {
     let name = [];
     let i;
     for (i = 0; i < parseInt(settings.preference.max_image) && i < images.length; i++) {
-        let url = images[i].url;
-        if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com")) {
-            await sleep(500);
-            let fname = __dirname + "/cache/images/findimg_" + i + "_" + time + ".png";
-            await downloadFile(encodeURI(url), fname).then((response) => {
-                name.push(fname);
-                utils.logged(url);
-            });
-        }
+        let url = nonUU(images);
+        await sleep(500);
+        let fname = __dirname + "/cache/images/findimg_" + i + "_" + time + ".png";
+        await downloadFile(encodeURI(url), fname).then((response) => {
+            name.push(fname);
+            utils.logged(url);
+        });
     }
     await sleep(1000);
     let message = {
@@ -8257,13 +8255,11 @@ async function sendAiMessage(api, event, ss) {
 }
 
 function nonUU(images) {
-    let location;
-    for (location = 0; location < images.length; location++) {
-        let url = images[location].url;
-        if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com")) {
-            return url;
-        }
-    }
+   let url = images[Math.floor(Math.random() * images.length)].url;
+   if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com")) {
+    return url;
+    } 
+    return nonUU(images);
 }
 
 async function simulDD(arr, format) {
