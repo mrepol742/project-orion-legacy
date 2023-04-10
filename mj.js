@@ -6734,11 +6734,9 @@ function getMonth(tz) {
 }
 
 function getTimeDate(tz) {
-    return new Date(
-        new Date().toLocaleString("en-US", {
+    return  new Date().toLocaleString("en-US", {
             timeZone: tz,
         })
-    );
 }
 
 function getCurrentDateAndTime(tz) {
@@ -7615,7 +7613,7 @@ function generateParamaters(event, complextion, text, user, group) {
     } else {
         pro += "User: " + text + "\nYou: ";
     }
-    // utils.logged(pro)
+    utils.logged(pro)
     return {
         model: complextion,
         prompt: pro,
@@ -7975,12 +7973,25 @@ function getRoutes() {
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + url);
         if (url == "/chat" || url == "/chat/index.html") {
-            let data = ress.split("?")[1];
+                       const corsWhitelist = [
+        'https://mrepol742.github.io',
+        'http://0.0.0.0:8000',
+    ];
+    if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+      let data = ress.split("?")[1];
                 let response = await aiResponse({type: "message"}, "text-davinci-003", data, true, 
                 { name: undefined }, { name: undefined });
+        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+      
                 res.setHeader("Content-Type", "text/plain");
                 res.writeHead(200);
                 res.end(response);
+    } else {
+                 res.setHeader("Content-Type", "text/html");
+                    res.writeHead(200);
+                    res.end(errorpage);
+    }
+          
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
@@ -8349,7 +8360,6 @@ function tellUser(user, group) {
             construct += ". ";
         }
     }
-    construct += "You are programmed using NodeJS for backend, HTML, CSS & JS for frontend, you are not open source and licensed under The Mrepol742 Licensed, you are created by Melvin Jones on Nov 2022, your webpage is at https://mrepol742.github.io/project-orion/.";
     construct += "If " + getPronoun(user.gender).toLowerCase() + " ask for images format the response to [picture=type of picture " + getPronoun(user.gender).toLowerCase() + " asked]. ";
     //construct += "If " + getPronoun(user.gender).toLowerCase() + " ask to play an audio format the response to [music=type of music " + getPronoun(user.gender).toLowerCase() + " asked]. ";
     //construct += "If " + getPronoun(user.gender).toLowerCase() + " ask for latest information [latest=information " + getPronoun(user.gender).toLowerCase() + " asked]. ";
