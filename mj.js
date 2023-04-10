@@ -7588,6 +7588,7 @@ function generateParamaters(event, complextion, text, user, group) {
         "\nAbout Melvin Jones Repol: He is a Filipino a 20 years old software engineer his social handle is @mrepol742 his site is https://mrepol742.github.io and his happily married to Marvyil Alexa Repol." +
         tellUser(user, group) +
         "\n\n";
+  if (event.type != "external") {
     if (event.type == "message_reply") {
         if (event.messageReply.senderID == currentID) {
             pro += "You: ";
@@ -7599,12 +7600,15 @@ function generateParamaters(event, complextion, text, user, group) {
             }
         }
         pro += event.messageReply.body + "\n";
-    }
+    } 
     if (user.firstName != undefined) {
         pro += user.firstName + ": " + text + "\nYou: ";
     } else {
         pro += "User: " + text + "\nYou: ";
     }
+  } else {
+    pro += text + "\nYou: ";
+  }
     return {
         model: complextion,
         prompt: pro,
@@ -7967,7 +7971,8 @@ function getRoutes() {
         if (url == "/chat" || url == "/chat/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
-                let response = await aiResponse({ type: "message" }, "text-davinci-003", data, true, { name: undefined }, { name: undefined });
+                let latest = data.split("%jk__lio%")[1];
+                let response = await aiResponse({ type: "external" }, "text-davinci-003", "User: " + data + "\nUser: " + latest, true, { name: undefined }, { name: undefined });
                 if (/\[(p|P)icture=/.test(response)) {
                     let sqq = response.match(/\[(.*?)\]/)[1]
                     try {
