@@ -7835,7 +7835,6 @@ function removeTags(str) {
 
 async function downloadFile(fileUrl, outputLocationPath) {
     const writer = fs.createWriteStream(outputLocationPath);
-
     return axios({
         method: "get",
         url: fileUrl,
@@ -7855,7 +7854,9 @@ async function downloadFile(fileUrl, outputLocationPath) {
                 }
             });
         });
-    });
+    }).catch(function (error) {
+   
+  });
 }
 
 function getLoad() {
@@ -8249,7 +8250,7 @@ async function sendAiMessage(api, event, ss) {
 
 function nonUU(images) {
    let url = images[Math.floor(Math.random() * images.length)].url;
-   if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com")) {
+   if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com")  && (url.startsWith("https://") || url.startsWith("http://"))) {
     return url;
     } 
     return nonUU(images);
