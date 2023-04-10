@@ -38,6 +38,7 @@ let threadUnsending = {};
 let userWhoSendDamnReports = {};
 let msgs = {};
 let nwww = {};
+const corsWhitelist = ["https://mrepol742.github.io", "http://0.0.0.0:8000"];
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
@@ -6734,9 +6735,9 @@ function getMonth(tz) {
 }
 
 function getTimeDate(tz) {
-    return  new Date().toLocaleString("en-US", {
-            timeZone: tz,
-        })
+    return new Date().toLocaleString("en-US", {
+        timeZone: tz,
+    });
 }
 
 function getCurrentDateAndTime(tz) {
@@ -7613,7 +7614,7 @@ function generateParamaters(event, complextion, text, user, group) {
     } else {
         pro += "User: " + text + "\nYou: ";
     }
-    utils.logged(pro)
+    utils.logged(pro);
     return {
         model: complextion,
         prompt: pro,
@@ -7973,25 +7974,30 @@ function getRoutes() {
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + url);
         if (url == "/chat" || url == "/chat/index.html") {
-                       const corsWhitelist = [
-        'https://mrepol742.github.io',
-        'http://0.0.0.0:8000',
-    ];
-    if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
-      let data = ress.split("?")[1];
-                let response = await aiResponse({type: "message"}, "text-davinci-003", data, true, 
-                { name: undefined }, { name: undefined });
-        res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-      
+            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+                let data = ress.split("?")[1];
+                let response = await aiResponse({ type: "message" }, "text-davinci-003", data, true, { name: undefined }, { name: undefined });
+                if (/\[(p|P)icture=/.test(response)) {
+                    let sqq = response.match(/(\[|\()(.*?)(\]|\))/)[2];
+                    try {
+                        let images = await google.image(sqq, googleImageOptions);
+                        let fname = __dirname + "/cache/images/attch_" + getTimestamp() + ".png";
+                        let url = nonUU(images);
+                        response = response.replace("[" + sqq + "]", "[url=" + url + "]")
+                        response = response.replace("[" + sqq + "]", "")
+                    } catch (err) {
+                        response = response.replace("[" + sqq + "]", '\nSegmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+                    }
+                }
+                res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
                 res.setHeader("Content-Type", "text/plain");
                 res.writeHead(200);
                 res.end(response);
-    } else {
-                 res.setHeader("Content-Type", "text/html");
-                    res.writeHead(200);
-                    res.end(errorpage);
-    }
-          
+            } else {
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
+                res.end(errorpage);
+            }
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
@@ -8132,7 +8138,7 @@ async function sendAiMessage(api, event, ss) {
             utils.logged("download_attach " + url);
             await downloadFile(url, fname).then((response) => {
                 let mss = message.body;
-                message.body = mss.replace("[" + sqq + "]", "");
+                message.body = mss.replaceAll("[" + sqq + "]", "");
                 message["attachment"] = fs.createReadStream(fname);
             });
         } catch (err) {
