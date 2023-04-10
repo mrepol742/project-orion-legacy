@@ -1292,7 +1292,14 @@ async function ai(api, event) {
     reaction(api, event, query, input);
     if (event.type == "message_reply" && !users.admin.includes(event.senderID)) {
         if (event.messageReply.senderID != currentID) {
-            if (event.messageReply.senderID != event.senderID && isSecondaryPrefix(input)) {
+            if (event.messageReply.senderID != event.senderID) {
+                if (isSecondaryPrefix(input)) {
+                    return;
+                }
+                return;
+            }
+        } else {
+            if (isSecondaryPrefix(input)) {
                 return;
             }
         }
@@ -7968,33 +7975,12 @@ function getRoutes() {
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + url);
         if (url == "/chat" || url == "/chat/index.html") {
-            if (req.method == "POST") {
-                var qs = require("querystring");
-                var body = "";
-                req.setEncoding("utf8");
-                req.on("data", function (data) {
-                    body += data;
-                    if (body.length > 1e6) {
-                        // FUCKING FLOOD ATTTTTTTACK
-                        request.connection.destroy();
-                    }
-                });
-                req.on("end", function () {
-                    let POST = qs.parse(body);
-                    console.log(POST);
-                    /*
-                let response = await aiResponse({type: "message"}, "text-davinci-003", POST, true, 
+            let data = ress.split("?")[1];
+                let response = await aiResponse({type: "message"}, "text-davinci-003", data, true, 
                 { name: undefined }, { name: undefined });
                 res.setHeader("Content-Type", "text/plain");
                 res.writeHead(200);
                 res.end(response);
-                */
-                });
-            } else {
-                res.setHeader("Content-Type", "text/html");
-                res.writeHead(200);
-                res.end(homepage);
-            }
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
