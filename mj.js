@@ -1291,15 +1291,8 @@ async function ai(api, event) {
         }
     }
     reaction(api, event, query, input);
-    if (event.type == "message_reply" && !users.admin.includes(event.senderID)) {
-        if (event.messageReply.senderID != currentID) {
-            if (event.messageReply.senderID != event.senderID) {
-                if (isSecondaryPrefix(input)) {
-                    return;
-                }
-                return;
-            }
-        } else {
+    if (event.type == "message_reply") {
+        if (event.messageReply.senderID != currentID && event.messageReply.senderID != event.senderID) {
             if (isSecondaryPrefix(input)) {
                 return;
             }
