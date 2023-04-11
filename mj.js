@@ -7993,6 +7993,23 @@ function getRoutes() {
                 res.writeHead(200);
                 res.end(errorpage);
             }
+        } else if (url == "/search" || url == "/search/index.html") {
+            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+                let data = ress.split("?")[1];
+                res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+                res.setHeader("Content-Type", "application/json");
+                res.writeHead(200);
+                try {
+                    let results = await google.search(data, googleSearchOptions);
+                    res.end(results.results);
+                } catch (err) {
+                    res.end(JSON.stringify(err));
+                }
+            } else {
+                res.setHeader("Content-Type", "text/html");
+                res.writeHead(200);
+                res.end(errorpage);
+             }
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
