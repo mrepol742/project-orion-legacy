@@ -1293,7 +1293,7 @@ async function ai(api, event) {
     reaction(api, event, query, input);
     if (event.type == "message_reply") {
         if (event.messageReply.senderID != currentID || event.messageReply.senderID != event.senderID) {
-            if (isSecondaryPrefix(input)) {
+            if (!isSecondaryPrefix(input)) {
                 return;
             }
         }
