@@ -8030,6 +8030,27 @@ async function getRoutes() {
                 res.writeHead(200);
                 res.end(errorpage);
              }
+        } else if (url == "/searchimg" || url == "/searchimg/index.html") {
+                if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+                    let data = ress.split("?")[1];
+                    let results = [];
+                    try {
+                        const images = await google.image(data, { safe: true, strictSSL: false });
+                        let i;
+                        for (i = 0; i < images.results.length; i++) {
+                            results.push(images.results[i]);
+                        }
+                        res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+                        res.setHeader("Content-Type", "application/json");
+                        res.writeHead(200);
+                        res.end(JSON.stringify(results));
+                    } catch (err) {
+                    }
+                } else {
+                    res.setHeader("Content-Type", "text/html");
+                    res.writeHead(200);
+                    res.end(errorpage);
+                 }
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
