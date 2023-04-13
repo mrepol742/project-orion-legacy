@@ -7963,11 +7963,11 @@ function getStatus() {
     return "Online";
 }
 
-function getRoutes() {
+async function getRoutes() {
     return async function (req, res) {
         let ress = req.url;
         let url = ress.split("?")[0];
-        utils.logged(req.method + " " + url);
+        utils.logged(req.method + " " + req.headers.origin + " " + url);
         if (url == "/chat" || url == "/chat/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
@@ -7996,14 +7996,34 @@ function getRoutes() {
         } else if (url == "/search" || url == "/search/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
-                res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-                res.setHeader("Content-Type", "application/json");
-                res.writeHead(200);
+                let results = [];
                 try {
-                    let results = await google.search(data, googleSearchOptions);
-                    res.end(results.results);
+                    let response1 = await google.search(data, {
+                        page: 0,
+                        safe: true,
+                        parse_ads: false
+                    });
+                    let i;
+                    for (i = 0; i < response1.results.length; i++) {
+                        results.push(response1.results[i]);
+                    }
+                    try {
+                        let response2 = await google.search(data, {
+                            page: 1,
+                            safe: true,
+                            parse_ads: false
+                        });
+                        let i1;
+                        for (i1 = 0; i1 < response2.results.length; i1++) {
+                            results.push(response2.results[i1]);
+                        }
+                        res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+                        res.setHeader("Content-Type", "application/json");
+                        res.writeHead(200);
+                        res.end(JSON.stringify(results));
+                    } catch (err) {
+                    }
                 } catch (err) {
-                    res.end(JSON.stringify(err));
                 }
             } else {
                 res.setHeader("Content-Type", "text/html");
