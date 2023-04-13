@@ -7963,7 +7963,7 @@ function getStatus() {
     return "Online";
 }
 
-async function getRoutes() {
+function getRoutes() {
     return async function (req, res) {
         let ress = req.url;
         let url = ress.split("?")[0];
