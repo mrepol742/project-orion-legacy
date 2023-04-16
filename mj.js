@@ -8037,8 +8037,8 @@ function getRoutes() {
                     try {
                         const images = await google.image(data, { safe: true, strictSSL: false });
                         let i;
-                        for (i = 0; i < images.results.length; i++) {
-                            results.push(images.results[i]);
+                        for (i = 0; i < images.length; i++) {
+                            results.push(images[i]);
                         }
                         res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
                         res.setHeader("Content-Type", "application/json");
