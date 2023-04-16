@@ -6223,16 +6223,14 @@ function reaction(api, event, query, input) {
     if (containsAny(query, happyEE) || input.includes("😂") || input.includes("🤣") || input.includes("😆")) {
         reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
-            if (event.type == "message_reply") {
-                if (emoRR.includes(event.messageReply.messageID) && event.messageReply.senderID != currentID) {
+                let num = Math.floor(Math.random() * 10);
+                if (num % 2 == 0) {
                     sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
                     return;
+                } else {
+                    sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)], event.threadID, event.messageReply.messageID);
                 }
                 emoRR.push(event.messageReply.messageID);
-                sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)], event.threadID, event.messageReply.messageID);
-            } else {
-                sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
-            }
         }
     } else if (containsAny(query, sadEE)) {
         reactMessage(api, event, ":sad:");
@@ -6444,9 +6442,16 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE) {
             unLink(dir);
         });
     } else {
+        let num = Math.floor(Math.random() * 10);
+        if (num % 2 == 0) {
         api.sendMessage(updateFont(message, id), thread_id, (err, messageInfo) => {
             sendMessageErr(api, thread_id, message_id, id, err);
         });
+    } else {
+        api.sendMessage(updateFont(message, id), thread_id, (err, messageInfo) => {
+            sendMessageErr(api, thread_id, message_id, id, err);
+        }, message_id);
+    }
     }
 }
 
@@ -6514,14 +6519,6 @@ function formatQuery(string) {
     let latin = normal1.replace(latinC, "");
     // format to lowercase
     return latin.toLowerCase();
-}
-
-function getFormattedDate() {
-    return new Date()
-        .toLocaleString("en-US", {
-            timeZone: "Asia/Manila",
-        })
-        .replace(",", "");
 }
 
 function containsAny(str, substrings) {
@@ -7488,7 +7485,7 @@ function saveEvent(event) {
                 for (i = 0; i < event.attachments.length; i++) {
                     photo.push(event.attachments[i].url);
                 }
-                let data = [getFormattedDate(), event.senderID, photo];
+                let data = [getTimeDate("Asia/Manila"), event.senderID, photo];
                 if (event.body != "" && typeof event.body === "string") {
                     data.push(event.body);
                 }
@@ -7501,62 +7498,62 @@ function saveEvent(event) {
                 for (i1 = 0; i1 < event.attachments.length; i1++) {
                     animated_images.push(event.attachments[i1].url);
                 }
-                let data1 = [getFormattedDate(), event.senderID, animated_images];
+                let data1 = [getTimeDate("Asia/Manila"), event.senderID, animated_images];
                 if (event.body != "" && typeof event.body === "string") {
                     data1.push(event.body);
                 }
                 msgs[event.messageID] = ["animated_images", data1];
                 break;
             case "sticker":
-                let data2 = [getFormattedDate(), event.senderID, event.attachments[0].ID];
+                let data2 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].ID];
                 msgs[event.messageID] = ["sticker", data2];
                 break;
             case "video":
-                let data3 = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                let data3 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].url];
                 if (event.body != "" && typeof event.body === "string") {
                     data3.push(event.body);
                 }
                 msgs[event.messageID] = ["video", data3];
                 break;
             case "audio":
-                let data4 = [getFormattedDate(), event.senderID, event.attachments[0].url];
+                let data4 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].url];
                 if (event.body != "" && typeof event.body === "string") {
                     data4.push(event.body);
                 }
                 msgs[event.messageID] = ["audio", data4];
                 break;
             case "file":
-                let data5 = [getFormattedDate(), event.senderID, event.attachments[0].filename, event.attachments[0].url];
+                let data5 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].filename, event.attachments[0].url];
                 if (event.body != "" && typeof event.body === "string") {
                     data5.push(event.body);
                 }
                 msgs[event.messageID] = ["file", data5];
                 break;
             case "location":
-                msgs[event.messageID] = ["location", [getFormattedDate(), event.senderID, event.attachments[0].address, event.attachments[0].facebookUrl]];
+                msgs[event.messageID] = ["location", [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].address, event.attachments[0].facebookUrl]];
                 break;
             case "share":
                 utils.logged(event.attachments[0]);
                 try {
-                    msgs[event.messageID] = ["location_sharing", [getFormattedDate(), event.senderID, event.attachments[0].title, event.attachments[0].target.coordinate["latitude"], event.attachments[0].target.coordinate["longitude"]]];
+                    msgs[event.messageID] = ["location_sharing", [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].title, event.attachments[0].target.coordinate["latitude"], event.attachments[0].target.coordinate["longitude"]]];
                 } catch (err) {
                     if (event.attachments[0].url == null) {
                         let data = event.body;
                         if ((data.startsWith("https://") || data.startsWith("http://")) && data.includes("facebook.com")) {
-                            msgs[event.messageID] = ["share", [getFormattedDate(), event.senderID, event.body, event.body]];
+                            msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body, event.body]];
                         } else {
-                            msgs[event.messageID] = ["share", [getFormattedDate(), event.senderID, event.body + "\n" + event.attachments[0].title, event.attachments[0].image]];
+                            msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body + "\n" + event.attachments[0].title, event.attachments[0].image]];
                         }
                     } else if (!(event.attachments[0].playableUrl === undefined) && event.attachments[0].playableUrl != null) {
-                        msgs[event.messageID] = ["share", [getFormattedDate(), event.senderID, event.body, event.attachments[0].playableUrl]];
+                        msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body, event.attachments[0].playableUrl]];
                     } else {
-                        msgs[event.messageID] = ["share", [getFormattedDate(), event.senderID, event.body, event.attachments[0].url]];
+                        msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body, event.attachments[0].url]];
                     }
                 }
                 break;
         }
     } else {
-        msgs[event.messageID] = [getFormattedDate(), event.senderID, event.body];
+        msgs[event.messageID] = [getTimeDate("Asia/Manila"), event.senderID, event.body];
     }
 }
 

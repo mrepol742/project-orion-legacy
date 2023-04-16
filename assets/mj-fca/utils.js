@@ -38,11 +38,14 @@ function logged(data) {
 }
 
 function getCurrentTime() {
-    let today = new Date();
-    let hour = today.getHours();
-    let suffix = hour >= 12 ? "PM" : "AM";
-    let hour12  = ((hour + 11) % 12) + 1;
-    return ((hour12<10?'0':'') + hour12 + ":" + (today.getMinutes()<10?'0':'') + today.getMinutes() + ":" + (today.getSeconds()<10?'0':'') + today.getSeconds() + " " + suffix);
+    let options = {
+        timeZone: "Asia/Manila",
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+      },
+    formatter = new Intl.DateTimeFormat([], options);
+    return formatter.format(new Date());
 }
 
 function setProxy(url) {
