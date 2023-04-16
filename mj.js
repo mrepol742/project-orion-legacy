@@ -5880,7 +5880,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             let body = data.join(" ");
             if (isValidTimeZone(body)) {
-                sendMessage(api, event, "It's " + getMonth(body) + " " + getDayN(body) + ", " + getDay(body) + " " + formateDate(body));
+                sendMessage(api, event, "It's " + getCurrentDateAndTime(body));
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
             }
@@ -5888,9 +5888,9 @@ Hello %USER%, here is the current system information as of ` +
     } else if (query == "time") {
         getUserProfile(event.senderID, async function (name) {
             if (name.firstName != undefined && !(name.timezone === undefined)) {
-                sendMessage(api, event, "It's " + getMonth(name.timezone) + " " + getDayN(name.timezone) + ", " + getDay(name.timezone) + " " + formateDate(name.timezone));
+                sendMessage(api, event, "It's " + getCurrentDateAndTime(name.timezone));
             } else {
-                sendMessage(api, event, "It's " + getMonth("Asia/Manila") + " " + getDayN("Asia/Manila") + ", " + getDay("Asia/Manila") + " " + formateDate("Asia/Manila"));
+                sendMessage(api, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
             }
         });
     } else if (query.startsWith("inspiration")) {
@@ -6260,7 +6260,7 @@ function someR(api, event, query) {
                 construct += " " + name.firstName;
             }
             if (!isEvening()) {
-                construct += ", It's already " + getDayNightTime() + " here";
+                construct += ", It's " + getDayNightTime() + " here";
             }
             construct += ". How are you doing?";
             sendMessage(api, event, construct);
@@ -6274,7 +6274,7 @@ function someR(api, event, query) {
                 construct += " " + name.firstName;
             }
             if (!isMorning()) {
-                construct += ", It's already " + getDayNightTime() + " here";
+                construct += ", It's " + getDayNightTime() + " here";
             }
             construct += ". How are you doing?";
             sendMessage(api, event, construct);
@@ -6288,7 +6288,7 @@ function someR(api, event, query) {
                 construct += " " + name.firstName;
             }
             if (!isNight()) {
-                construct += ", It's already " + getDayNightTime() + " here";
+                construct += ", It's " + getDayNightTime() + " here";
             }
             construct += ". How are you doing?";
             sendMessage(api, event, construct);
@@ -6302,7 +6302,7 @@ function someR(api, event, query) {
                 construct += " " + name.firstName;
             }
             if (!isAfternoon()) {
-                construct += ", It's already " + getDayNightTime() + " here";
+                construct += ", It's " + getDayNightTime() + " here";
             }
             construct += ". How are you doing?";
             sendMessage(api, event, construct);
@@ -6701,41 +6701,8 @@ function getDayNightTime() {
     return "night";
 }
 
-function formateDate(tz) {
-    var hours = getTimeDate(tz).getHours();
-    var minutes = getTimeDate(tz).getMinutes();
-    var ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    var strTime = hours + ":" + minutes + " " + ampm;
-    return strTime;
-}
-
-function getDay(tz) {
-    return days[getTimeDate(tz).getDay()];
-}
-
-function getDayN(tz) {
-    return getTimeDate(tz).getDate();
-}
-
-function getMonth(tz) {
-    return months[getTimeDate(tz).getMonth()];
-}
-
 function getTimeDate(tz) {
-    let options = {
-        timeZone: tz,
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      },
-    formatter = new Intl.DateTimeFormat([], options);
-    return formatter.format(new Date());
+    return new Date(getCurrentDateAndTime(tz));
 }
 
 function getCurrentDateAndTime(tz) {
@@ -6748,11 +6715,10 @@ function getCurrentDateAndTime(tz) {
             minute: "numeric",
             second: "numeric",
             hour12: false,
-            timeZoneName: "short",
         },
         formatter = new Intl.DateTimeFormat([], options);
 
-    return formatter.format(new Date()) + " " + tz;
+    return formatter.format(new Date());
 }
 
 function getSuffix(i) {
@@ -7485,7 +7451,7 @@ function saveEvent(event) {
                 for (i = 0; i < event.attachments.length; i++) {
                     photo.push(event.attachments[i].url);
                 }
-                let data = [getTimeDate("Asia/Manila"), event.senderID, photo];
+                let data = [getCurrentDateAndTime("Asia/Manila"), event.senderID, photo];
                 if (event.body != "" && typeof event.body === "string") {
                     data.push(event.body);
                 }
@@ -7498,62 +7464,62 @@ function saveEvent(event) {
                 for (i1 = 0; i1 < event.attachments.length; i1++) {
                     animated_images.push(event.attachments[i1].url);
                 }
-                let data1 = [getTimeDate("Asia/Manila"), event.senderID, animated_images];
+                let data1 = [getCurrentDateAndTime("Asia/Manila"), event.senderID, animated_images];
                 if (event.body != "" && typeof event.body === "string") {
                     data1.push(event.body);
                 }
                 msgs[event.messageID] = ["animated_images", data1];
                 break;
             case "sticker":
-                let data2 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].ID];
+                let data2 = [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.attachments[0].ID];
                 msgs[event.messageID] = ["sticker", data2];
                 break;
             case "video":
-                let data3 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].url];
+                let data3 = [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.attachments[0].url];
                 if (event.body != "" && typeof event.body === "string") {
                     data3.push(event.body);
                 }
                 msgs[event.messageID] = ["video", data3];
                 break;
             case "audio":
-                let data4 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].url];
+                let data4 = [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.attachments[0].url];
                 if (event.body != "" && typeof event.body === "string") {
                     data4.push(event.body);
                 }
                 msgs[event.messageID] = ["audio", data4];
                 break;
             case "file":
-                let data5 = [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].filename, event.attachments[0].url];
+                let data5 = [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.attachments[0].filename, event.attachments[0].url];
                 if (event.body != "" && typeof event.body === "string") {
                     data5.push(event.body);
                 }
                 msgs[event.messageID] = ["file", data5];
                 break;
             case "location":
-                msgs[event.messageID] = ["location", [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].address, event.attachments[0].facebookUrl]];
+                msgs[event.messageID] = ["location", [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.attachments[0].address, event.attachments[0].facebookUrl]];
                 break;
             case "share":
                 utils.logged(event.attachments[0]);
                 try {
-                    msgs[event.messageID] = ["location_sharing", [getTimeDate("Asia/Manila"), event.senderID, event.attachments[0].title, event.attachments[0].target.coordinate["latitude"], event.attachments[0].target.coordinate["longitude"]]];
+                    msgs[event.messageID] = ["location_sharing", [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.attachments[0].title, event.attachments[0].target.coordinate["latitude"], event.attachments[0].target.coordinate["longitude"]]];
                 } catch (err) {
                     if (event.attachments[0].url == null) {
                         let data = event.body;
                         if ((data.startsWith("https://") || data.startsWith("http://")) && data.includes("facebook.com")) {
-                            msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body, event.body]];
+                            msgs[event.messageID] = ["share", [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.body, event.body]];
                         } else {
-                            msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body + "\n" + event.attachments[0].title, event.attachments[0].image]];
+                            msgs[event.messageID] = ["share", [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.body + "\n" + event.attachments[0].title, event.attachments[0].image]];
                         }
                     } else if (!(event.attachments[0].playableUrl === undefined) && event.attachments[0].playableUrl != null) {
-                        msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body, event.attachments[0].playableUrl]];
+                        msgs[event.messageID] = ["share", [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.body, event.attachments[0].playableUrl]];
                     } else {
-                        msgs[event.messageID] = ["share", [getTimeDate("Asia/Manila"), event.senderID, event.body, event.attachments[0].url]];
+                        msgs[event.messageID] = ["share", [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.body, event.attachments[0].url]];
                     }
                 }
                 break;
         }
     } else {
-        msgs[event.messageID] = [getTimeDate("Asia/Manila"), event.senderID, event.body];
+        msgs[event.messageID] = [getCurrentDateAndTime("Asia/Manila"), event.senderID, event.body];
     }
 }
 
@@ -8389,13 +8355,13 @@ function formatMention(name, text) {
 function tellUser(user, group) {
     let construct = "";
     if (user.firstName == undefined) {
-        construct += "\nCurrent date: " + secondsToTime(getTimeDate("Asia/Manila").getTime()) + "\n";
+        construct += "\nCurrent date: " + getCurrentDateAndTime("Asia/Manila") + " Asia/Manila\n";
     }
     if (user.firstName != undefined) {
         if (!(user.timezone === undefined)) {
-            construct += "\nCurrent date: " + secondsToTime(getTimeDate(user.timezone).getTime()) + "\n";
+            construct += "\nCurrent date: " + getCurrentDateAndTime(user.timezone) + " " + user.timezone + "\n";
         } else {
-            construct += "\nCurrent date: " + secondsToTime(getTimeDate("Asia/Manila").getTime()) + "\n";
+            construct += "\nCurrent date: " + getCurrentDateAndTime("Asia/Manila") + " Asia/Manila\n";
         }
         construct += "You are talking to " + user.name + ". ";
         if (!(user.birthday === undefined)) {
