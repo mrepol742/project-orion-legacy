@@ -6728,9 +6728,17 @@ function getMonth(tz) {
 }
 
 function getTimeDate(tz) {
-    return new Date().toLocaleString("en-US", {
+    let options = {
         timeZone: tz,
-    });
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+      },
+    formatter = new Intl.DateTimeFormat([], options);
+    return formatter.format(new Date());
 }
 
 function getCurrentDateAndTime(tz) {
@@ -8384,13 +8392,13 @@ function formatMention(name, text) {
 function tellUser(user, group) {
     let construct = "";
     if (user.firstName == undefined) {
-        construct += "\nCurrent date: " + getTimeDate("Asia/Manila") + "\n";
+        construct += "\nCurrent date: " + secondsToTime(getTimeDate("Asia/Manila").getTime()) + "\n";
     }
     if (user.firstName != undefined) {
         if (!(user.timezone === undefined)) {
-            construct += "\nCurrent date: " + getCurrentDateAndTime(user.timezone) + "\n";
+            construct += "\nCurrent date: " + secondsToTime(getTimeDate(user.timezone).getTime()) + "\n";
         } else {
-            construct += "\nCurrent date: " + getTimeDate("Asia/Manila") + "\n";
+            construct += "\nCurrent date: " + secondsToTime(getTimeDate("Asia/Manila").getTime()) + "\n";
         }
         construct += "You are talking to " + user.name + ". ";
         if (!(user.birthday === undefined)) {
