@@ -377,6 +377,8 @@ ERR! markAsDelivered }
                     settings.preference.login_id = currentID;
                 }
                 fs.writeFileSync(__dirname + "/data/" + settings.preference.login_id + ".json", getAppState(api), "utf8");
+                // temporary solution for replit not calling SIGINT
+                fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
                 utils.logged("cookie_state synchronized");
                 isAppState = false;
             }
@@ -7898,8 +7900,6 @@ function getAppState(api) {
         login.key = key.toString("hex");
         login.iv = iv.toString("hex");
     });
-    // temporary solution for replit not calling SIGINT
-    fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
     return encrypt(JSON.stringify(api.getAppState()), key.toString("hex"), iv.toString("hex"));
 }
 
