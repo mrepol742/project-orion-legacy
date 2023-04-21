@@ -30,6 +30,7 @@ Hello %USER%, here is the page 1 of 9 command list.
     ⦿ chad [text]
     ⦿ bing [text]
     ⦿ bard [text]
+    ⦿ nraf [text]
 
 If you have further questions, i am here to help you.
 `;
@@ -355,4 +356,4 @@ module.exports = {
     helpgroup: helpgroup,
 };
 
-// total commands 230
+// total commands 231
