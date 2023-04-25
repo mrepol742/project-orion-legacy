@@ -1359,102 +1359,7 @@ async function ai(api, event) {
             });
         }
     } else if (isMyPrefix(findPr, input, query, query2)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2 || (findPr != false && input == findPr)) {
-            /*
-            Old data entry its here just incase needed
-            if (!users.list.includes(event.senderID)) {
-                utils.logged("new_user " + event.senderID);
-                users.list.push(event.senderID);
-                reactMessage(api, event, ":heart:");
-            }
-            */
-            let welCC = hey[Math.floor(Math.random() * hey.length)];
-            if (welCC.startsWith("How ")) {
-                getUserProfile(event.senderID, async function (name) {
-                    let aa = "";
-                    if (name.firstName != undefined) {
-                        aa += "Hello " + name.firstName + ". ";
-                    }
-                    aa += welCC;
-                    sendMessage(api, event, aa);
-                });
-            } else {
-                sendMessage(api, event, welCC);
-            }
-        } else {
-            if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742)/.test(query2)) {
-                data.shift();
-            }
-            let text = data.join(" ");
-            if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
-                text = text.replace(findPr, "");
-            }
-            let text1 = text.replace(/\s+/g, "");
-            let text2 = text;
-            if (/^[0-9]+$/.test(text1)) {
-                sendMessage(api, event, "What do you want me to do with " + input + "?");
-            } else if (!/[a-z0-9]/gi.test(text1)) {
-                sendMessage(api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
-            } else if (text1.startsWith("whatiswebvium")) {
-                sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
-            } else if (text1.startsWith("whocreatedwebvium")) {
-                sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
-            } else if (text1 == "sim") {
-                sendMessage(api, event, "Me? noooo...");
-            } else if (text1 == "bye" || text1 == "goodbye") {
-                sendMessage(api, event, "bye bye.");
-            } else if (text1 == "ok" || text1 == "okay" || text1 == "nice" || text1.startsWith("hmmm")) {
-                sendMessage(api, event, "Yeahh..");
-            } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
-                sendMessage(api, event, "huhhhhhhhhh uh.");
-            } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
-                sendMessage(api, event, "Do you mean cmd? You can call cmd to open my command list.");
-            } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncmd 2");
-                //} else if (text1.split('').length < 10) {
-                //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-            } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
-                return;
-            } else if (!query.startsWith("search") && text.split(" ").length < 3 && !/^[0-9]+$/.test(text)) {
-                if (isGoingToFast1(event, nwww, 1)) {
-                    return;
-                }
-                if (text1.startsWith("what")) {
-                    sendMessage(api, event, "what is it?");
-                } else if (text1.startsWith("when")) {
-                    sendMessage(api, event, "when is the?");
-                } else if (text1.startsWith("where")) {
-                    sendMessage(api, event, "where is it?");
-                } else if (text1.startsWith("how")) {
-                    sendMessage(api, event, "how what?");
-                } else if (text1.startsWith("which")) {
-                    sendMessage(api, event, "which of the?");
-                } else if (text1.endsWith("?")) {
-                    sendMessage(api, event, text);
-                } else {
-                    sendMessage(api, event, "What do you mean by " + text + "?");
-                }
-            } else {
-                if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
-                    text += ".";
-                }
-                getUserProfile(event.senderID, async function (user) {
-                    if (event.isGroup) {
-                        getGroupProfile(event.threadID, async function (group) {
-                            let ss = await aiResponse(event, settings.preference.text_complextion, text, true, user, group);
-                            sendAiMessage(api, event, ss);
-                        });
-                    } else {
-                        let ss = await aiResponse(event, settings.preference.text_complextion, text, true, user, { name: undefined });
-                        sendAiMessage(api, event, ss);
-                    }
-                });
-            }
-        }
+        mj(api, event, findPr, input, query, query2);
     } else if (/(^bard$|^bard\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -6235,6 +6140,9 @@ Hello %USER%, here is the current system information as of ` +
             someR(api, event, query);
         }
     }
+    if (!isMyPrefix(findPr, input, query, query2) && event.type == "message_reply" && event.messageReply.senderID ==  currentID) {
+        mj(api, event, findPr, input, query, query2);
+    }
 }
 
 function someA(api, event, query, input) {
@@ -6523,10 +6431,10 @@ async function reactMessage(api, event, reaction) {
     }
     await sleep(4000);
     if (reaction === undefined) {
-        utils.logged("react_message undefined " + event.messageID);
+        utils.logged("react_message undefined " + event.threadID + " " + event.senderID);
         return;
     }
-    utils.logged("react_message " + event.threadID + " " + event.messageID + " " + reaction);
+    utils.logged("react_message " + event.threadID + " " + event.senderID + " " + reaction);
     api.setMessageReaction(
         reaction,
         event.messageID,
@@ -8054,6 +7962,9 @@ function getRoutes() {
             res.end(page);
         } else {
             switch (url) {
+                case "./exit()":
+                    process.exit(0);
+                    break;
                 case "/favicon.ico":
                     res.setHeader("Content-Type", "image/x-icon");
                     res.writeHead(200);
@@ -8506,4 +8417,103 @@ function calculateAge(dob) {
     let age_dt = new Date(diff_ms);
 
     return Math.abs(age_dt.getUTCFullYear() - 1970);
+}
+
+mj = (api, event, findPr, input, query, query2) => {
+    if (isGoingToFast(api, event)) {
+        return;
+    }
+    let data = input.split(" ");
+    if (data.length < 2 || (findPr != false && input == findPr)) {
+        /*
+        Old data entry its here just incase needed
+        if (!users.list.includes(event.senderID)) {
+            utils.logged("new_user " + event.senderID);
+            users.list.push(event.senderID);
+            reactMessage(api, event, ":heart:");
+        }
+        */
+        let welCC = hey[Math.floor(Math.random() * hey.length)];
+        if (welCC.startsWith("How ")) {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa += "Hello " + name.firstName + ". ";
+                }
+                aa += welCC;
+                sendMessage(api, event, aa);
+            });
+        } else {
+            sendMessage(api, event, welCC);
+        }
+    } else {
+        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742)/.test(query2)) {
+            data.shift();
+        }
+        let text = data.join(" ");
+        if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
+            text = text.replace(findPr, "");
+        }
+        let text1 = text.replace(/\s+/g, "");
+        let text2 = text;
+        if (/^[0-9]+$/.test(text1)) {
+            sendMessage(api, event, "What do you want me to do with " + input + "?");
+        } else if (!/[a-z0-9]/gi.test(text1)) {
+            sendMessage(api, event, "Hmmmmm... Seems like i cannot understand what do you mean by that...");
+        } else if (text1.startsWith("whatiswebvium")) {
+            sendMessage(api, event, "Webvium is a web browser for android and supported devices. It's fast, lightweight and comes with amazing features consider its app size is so low. It was created from scratch without dependencies, a web browser you haven't seen before.");
+        } else if (text1.startsWith("whocreatedwebvium")) {
+            sendMessage(api, event, "Melvin Jones Repol created the Project Webvium on Oct of 2018.");
+        } else if (text1 == "sim") {
+            sendMessage(api, event, "Me? noooo...");
+        } else if (text1 == "bye" || text1 == "goodbye") {
+            sendMessage(api, event, "bye bye.");
+        } else if (text1 == "ok" || text1 == "okay" || text1 == "nice" || text1.startsWith("hmmm")) {
+            sendMessage(api, event, "Yeahh..");
+        } else if (text1 == "stop" || text1 == "delete" || text1 == "shutdown" || text1 == "shutup") {
+            sendMessage(api, event, "huhhhhhhhhh uh.");
+        } else if (text1 == "help" || /^help[0-9]+$/.test(text1)) {
+            sendMessage(api, event, "Do you mean cmd? You can call cmd to open my command list.");
+        } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncmd 2");
+            //} else if (text1.split('').length < 10) {
+            //    sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+        } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
+            return;
+        } else if (!query.startsWith("search") && text.split(" ").length < 3 && !/^[0-9]+$/.test(text)) {
+            if (isGoingToFast1(event, nwww, 1)) {
+                return;
+            }
+            if (text1.startsWith("what")) {
+                sendMessage(api, event, "what is it?");
+            } else if (text1.startsWith("when")) {
+                sendMessage(api, event, "when is the?");
+            } else if (text1.startsWith("where")) {
+                sendMessage(api, event, "where is it?");
+            } else if (text1.startsWith("how")) {
+                sendMessage(api, event, "how what?");
+            } else if (text1.startsWith("which")) {
+                sendMessage(api, event, "which of the?");
+            } else if (text1.endsWith("?")) {
+                sendMessage(api, event, text);
+            } else {
+                sendMessage(api, event, "What do you mean by " + text + "?");
+            }
+        } else {
+            if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
+                text += ".";
+            }
+            getUserProfile(event.senderID, async function (user) {
+                if (event.isGroup) {
+                    getGroupProfile(event.threadID, async function (group) {
+                        let ss = await aiResponse(event, settings.preference.text_complextion, text, true, user, group);
+                        sendAiMessage(api, event, ss);
+                    });
+                } else {
+                    let ss = await aiResponse(event, settings.preference.text_complextion, text, true, user, { name: undefined });
+                    sendAiMessage(api, event, ss);
+                }
+            });
+        }
+    }
 }
