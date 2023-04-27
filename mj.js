@@ -135,7 +135,7 @@ task(function () {
         }
     }
     pingD = utils.getCurrentTime();
-}, Math.floor(1800000 * Math.random() + 1200000));
+}, 300000);
 utils.logged("task_up_time initiated");
 
 task(function () {
