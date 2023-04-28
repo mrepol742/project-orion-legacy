@@ -66,11 +66,11 @@ function buildAPI(globalOptions, html, jar) {
     });
 
     if (maybeCookie.length === 0) {
-        throw { error: "Error retrieving userID. This can be caused by a lot of things, including getting blocked by Facebook for logging in from an unknown location. Try logging in with a browser to verify." };
+        throw { error: "Unable to get cookie." };
     }
 
     if (html.indexOf("/checkpoint/block/?next") > -1) {
-        utils.logged("fca_login Checkpoint detected. Please log in with a browser to verify.");
+        utils.logged("fca_login checkpoint");
     }
 
     var userID = maybeCookie[0].cookieString().split("=")[1].toString();
