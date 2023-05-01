@@ -8,7 +8,6 @@ const https = require("https");
 const os = require("os");
 const crypto = require("crypto");
 const WeatherJS = require("weather-js");
-const Youtubei = require("youtubei.js");
 const GoogleTTS = require("google-tts-api");
 const google = require("googlethis");
 const axios = require("axios");
@@ -23,7 +22,6 @@ module.exports = {
     os: os,
     crypto: crypto,
     WeatherJS: WeatherJS,
-    Youtubei: Youtubei,
     GoogleTTS: GoogleTTS,
     google: google,
     axios: axios,

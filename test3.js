@@ -1,13 +1,24 @@
+const { Innertube, UniversalCache, Utils } = require( 'youtubei.js' );
 const fs = require('fs');
-var uids = [];
-fs.readdir(__dirname + "/data/cookies/", function (err, files) {
-    //handling error
-    if (err) {
-        return console.log('Unable to scan directory: ' + err);
-    } 
-    for (let i = 0; i < files.length; i++) {
-        uids[i] = files[i].replace(".json", "");
-    }
-});
 
-console.log(JSON.stringify(uids));
+(async () => {
+  const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
+
+  const search = await yt.music.search('Umaba', { type: 'song' });
+  if (search.results) {
+  const stream = await yt.download(search.results[0].id, {
+    type: 'audio+video',
+    quality: 'best',
+    format: 'mp4'
+  });
+  console.log(search.results[0].id + " " + search.results[0].title);
+
+  const file = fs.createWriteStream(`test.mp4`);
+
+  for await (chunk of Utils.streamToIterable(stream)) {
+    file.write(chunk);
+  }
+  } else {
+    console.log("Unfortunately i cannot find any relevant information about ");
+  }
+})();
