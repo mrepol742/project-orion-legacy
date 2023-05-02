@@ -1,7 +1,7 @@
 const axios = require('axios');
 const FormData = require('form-data')
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = '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';
 
 const client = axios.create({
     headers: {
@@ -10,6 +10,7 @@ const client = axios.create({
   });
   
   const params = {
+    id: 'cmpl-7BlVtrcMHjzfvlpPDw8O7yKYx8FLI',
     prompt: "How are you?",
     model: "text-davinci-003",
     max_tokens: 10,
@@ -38,3 +39,5 @@ async function  aa() {
 let aaa = await createCompletions(params)
 console.log(aaa);
 }
+
+aa()
