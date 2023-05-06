@@ -54,7 +54,7 @@ function setOptions(globalOptions, options) {
                 globalOptions.emitReady = Boolean(options.emitReady);
                 break;
             default:
-                utils.logged("fca_options", "Unrecognized option given to setOptions: " + key);
+                utils.logged("fca_options", "unrecognized option ' " + key + "'");
                 break;
         }
     });
@@ -66,7 +66,7 @@ function buildAPI(globalOptions, html, jar) {
     });
 
     if (maybeCookie.length === 0) {
-        throw { error: "Unable to get cookie." };
+        throw { error: "unable to get cookie." };
     }
 
     if (html.indexOf("/checkpoint/block/?next") > -1) {
@@ -105,11 +105,11 @@ function buildAPI(globalOptions, html, jar) {
             if (legacyFBMQTTMatch) {
                 mqttEndpoint = legacyFBMQTTMatch[4];
                 region = new URL(mqttEndpoint).searchParams.get("region").toUpperCase();
-                utils.logged("fca_login Cannot get sequence ID with new RegExp. Fallback to old RegExp (without seqID)...");
+                utils.logged("fca_login unable to get sequence id");
                 utils.logged("fca_location " + region);
-                utils.logged("fca_login [Unused] Polling endpoint: " + legacyFBMQTTMatch[6]);
+                utils.logged("fca_login polling endpoint " + legacyFBMQTTMatch[6]);
             } else {
-                utils.logged("fca_login Cannot get MQTT region & sequence ID.");
+                utils.logged("fca_login unable to get MQTT region & sequence ID.");
                 noMqttData = html;
             }
         }
@@ -519,12 +519,11 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
     // At the end we call the callback or catch an exception
     mainPromise
         .then(function () {
-            utils.logged("fca_status online");
+            utils.logged("fca_status online " + api.getCurrentUserID());
             return callback(null, api);
         })
         .catch(function (e) {
             utils.logged("fca_status " + (e.error || e));
-            callback(e);
         });
 }
 
