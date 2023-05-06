@@ -5,7 +5,7 @@
     "main": "mj.js",
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
-        "release": "clear && node mj.js",
+        "release": "clear && while [ true ]; do node mj.js ; done",
         "debug": "clear && node --inspect mj.js",
         "test": "clear && node --inspect test.js",
         "prettier": "prettier mj.js --write"
