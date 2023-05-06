@@ -7739,6 +7739,13 @@ function updateFont(message, id) {
         return message;
     }
     message.body = maven(body);
+    let mentionS = message.mentions.length;
+    if (mentionS > 0) {
+        let i;
+        for (i = 0; i < mentionS; i++) {
+            message.mentions[i].tag = maven(message.mentions[i].tag);
+        }
+    }
     return message;
 }
 
