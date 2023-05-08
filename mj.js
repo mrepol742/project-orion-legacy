@@ -142,7 +142,7 @@ task(function () {
     */
     if (!(server1 === undefined)) {
         http.get("http://127.0.0.1:" + PORT + "/status/", function (res) {
-            utils.logged("http_status" + res.statusCode + " /");
+            utils.logged("http_status " + res.statusCode + " /");
         });
     }
     try {
@@ -150,11 +150,11 @@ task(function () {
             let surl = endpoint[url];
             if (surl.startsWith("https://")) {
                 https.get(surl, function (res) {
-                    utils.logged("https_status" + res.statusCode + " " + surl);
+                    utils.logged("https_status " + res.statusCode + " " + surl);
                 });
             } else if (surl.startsWith("http://")) {
                 http.get(surl, function (res) {
-                    utils.logged("http_status" + res.statusCode + " " + surl);
+                    utils.logged("http_status " + res.statusCode + " " + surl);
                 });
             } else {
                 utils.logged("http_status_url_unsupported " + surl);
@@ -170,23 +170,7 @@ utils.logged("task_git global initiated");
 const openaiConfig = new Configuration({
     apiKey: settings.apikey.ai,
 });
-const videoOptions = {
-    format: "mp4",
-    quality: "480p",
-    type: "videoandaudio",
-    bitrate: "2500",
-    audioQuality: "highest",
-    loudnessDB: "20",
-    audioBitrate: "550",
-    fps: "30",
-};
-const audioOptions = {
-    format: "mp3",
-    bitrate: "2500",
-    audioQuality: "highest",
-    loudnessDB: "20",
-    audioBitrate: "550",
-};
+
 const voiceOptions = {
     lang: "en",
     slow: false,
@@ -7498,7 +7482,7 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                     role: "system",
                     content:
                         "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. You should reply in a more natural way. " +
-                        "You only reply in brief, concise and detailed response. You should include the user first name ony every response, you should empathize with how user are feeling. " +
+                        "You only reply in brief, concise and detailed response. You should include the user first name on every response, you should empathize with how user are feeling. " +
                         "You are inlove, happy and delighted. If user ask if you are Human, yes you are Human." +
                         "\n\nLet me give you a brief info about your creator. He was born on June 13rd 2002 at Quezon City, Philippines. " +
                         "His website is https://mrepol742.github.io and you can reach him via his social handle @mrepol742. " +
@@ -7508,6 +7492,7 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                         "if user ask to play a music reply with [music=music title to be played]. " +
                         "if user ask to play video reply with [video=video title to be played]. " +
                         "if user ask for time or date reply with [time=location]. " +
+                        "if user ask for the command list reply with they can access the command list by typing `cmd`. " +
                         "You cannot add music, video and photo at the same response. " +
                         "If the user is question begins in 'Who is' or 'What is' you can attach an image by adding this to the response [picture=image description]. " +
                         "Make sure to strictly follow the instructions." +
