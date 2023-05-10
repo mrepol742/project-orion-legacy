@@ -263,11 +263,6 @@ utils.logged("task_clear global initiated");
 function facebook(fca_state, login) {
     fca(fca_state, (err, api) => {
         if (err) {
-            let errS = err.error;
-            if (errS.includes("ECONNRESET")) {
-                process.exit(0);
-                return;
-            }
             listenStatus = 1;
             utils.logged("fca_error_received " + login + " initiating logout process while keeping the server alive");
             fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", "ERROR", "utf8");
@@ -366,11 +361,6 @@ ERR! markAsDelivered }
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
 */
             if (err) {
-                let errS = err.error;
-                if (errS.includes("ECONNRESET")) {
-                    process.exit(0);
-                    return;
-                }
                 listenStatus = 1;
                 utils.logged("inner_listen_error " + login);
                 return listen.stopListening();
@@ -756,7 +746,7 @@ ERR! markAsDelivered }
                                     sticker: d.attachment,
                                 };
                                 sendMessageOnly(api, event, message);
-                                wait(1000);
+                                await sleep(1000);
                                 sendMessageOnly(api, event, message1);
                             } else {
                                 let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
@@ -773,7 +763,7 @@ ERR! markAsDelivered }
                                     sticker: d.attachment,
                                 };
                                 sendMessageOnly(api, event, message);
-                                wait(1000);
+                                await sleep(1000);
                                 sendMessageOnly(api, event, message1);
                             }
                             utils.logged("event_message_unsend " + event.threadID + " sticker");
@@ -818,7 +808,7 @@ ERR! markAsDelivered }
                                         sendMessageOnly(api, event, message);
                                     }
                                     unLink(filename);
-                                    utils.logged("event_message_unsend" + event.threadID + " video");
+                                    utils.logged("event_message_unsend " + event.threadID + " video");
                                 });
                             });
                         });
@@ -6609,24 +6599,28 @@ function isMe(query) {
     return query.includes("melvin jones repol") || query.includes("melvin") || query.includes("melvin jones") || query.includes("melvin jones gallano repol") || query.includes("mj") || query.includes("mrepol742");
 }
 
+// from 3 am to 11 am
 function isMorning() {
     var curHr = getTimeDate("Asia/Manila").getHours();
     return curHr >= 3 && curHr <= 11;
 }
 
+// 12 pm to 5 pm
 function isAfternoon() {
     var curHr = getTimeDate("Asia/Manila").getHours();
     return curHr >= 12 && curHr <= 17;
 }
 
+// 6pm to 9pm
 function isEvening() {
     var curHr = getTimeDate("Asia/Manila").getHours();
     return curHr >= 18 && curHr <= 21;
 }
 
+// 10pm to 2am
 function isNight() {
     var curHr = getTimeDate("Asia/Manila").getHours();
-    return curHr >= 22;
+    return curHr >= 22 || curHr <= 2;
 }
 
 function getDayNightTime() {
@@ -6636,8 +6630,10 @@ function getDayNightTime() {
         return "evening";
     } else if (isAfternoon()) {
         return "afternoon";
+    } else if (isNight()) {
+        return "night";
     }
-    return "night";
+    return "false";
 }
 
 function getTimeDate(tz) {
@@ -7481,7 +7477,7 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 {
                     role: "system",
                     content:
-                        "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. You should reply in a more natural way. " +
+                    "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. To be clear you are not Assistant, do not ask user about how you can assist them. You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. If you don't know what the User is asking just say naaah i have no idea what that is." +
                         "You only reply in brief, concise and detailed response. You should include the user first name on every response, you should empathize with how user are feeling. " +
                         "You are inlove, happy and delighted. If user ask if you are Human, yes you are Human." +
                         "\n\nLet me give you a brief info about your creator. He was born on June 13rd 2002 at Quezon City, Philippines. " +
@@ -7492,6 +7488,8 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                         "if user ask to play a music reply with [music=music title to be played]. " +
                         "if user ask to play video reply with [video=video title to be played]. " +
                         "if user ask for time or date reply with [time=location]. " +
+                        "if user ask why they are blocked the reason is violation of community guidelines and ethical standard. " +
+                        "if user ask you to unblock them say you are unauthorized to unblock someone only Melvin Jones can do it. " +
                         "if user ask for the command list reply with they can access the command list by typing `cmd`. " +
                         "You cannot add music, video and photo at the same response. " +
                         "If the user is question begins in 'Who is' or 'What is' you can attach an image by adding this to the response [picture=image description]. " +
@@ -7746,7 +7744,7 @@ function updateFont(message, id) {
         return message;
     }
     if (typeof message === "string") {
-        if (message == "\u200Eeveryone") {
+        if (message == " " || message == "" || message == "\u200Eeveryone") {
             return message;
         }
         return maven(message);
@@ -7919,7 +7917,7 @@ function getRoutes() {
                         response = response.replaceAll("[" + sqq + "]", "[url=" + url + "]");
                         response = response.replaceAll("[" + sqq + "]", "");
                     } catch (err) {
-                        response = response.replaceAll("[" + sqq + "]", '\nSegmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+                        response = response.replaceAll("[" + sqq + "]", '');
                     }
                 }
                 res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
