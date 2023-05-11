@@ -54,7 +54,7 @@ const google = require("googlethis");
 const axios = require("axios");
 const path = require("path");
 const { Configuration, OpenAIApi } = require("openai");
-const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim } = require("./arrays.js");
+const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains } = require("./arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./cmd.js");
 
 let threadInfo = {};
@@ -892,6 +892,45 @@ ERR! markAsDelivered }
                             utils.logged("unsupported_event_message_type " + event.threadID + " " + JSON.stringify(event));
                             //  sendMessage(api, event, event.logMessageBody);
 
+                            break;
+                        /*
+                            {"type":"event","threadID":"5819745318103902","logMessageType":"log:call","logMessageData":{"call_capture_attachments":"","caller_id":"100071743848974","conference_name":"ROOM:9631430630215862","rating":"","messenger_call_instance_id":"0","video":"1","event":"group_call_started","missed_call_participant_ids":"[]","server_info":"GANhdG4YFVJPT006OTYzMTQzMDYzMDIxNTg2MhgQVVlPUXhPZ1NOeWZ1T1RURQA=","call_duration":"0","callee_id":"0","participant_app_ids_json":"{}"},"logMessageBody":"You started a video chat.","author":"100071743848974"}
+                            */
+                        case "log:call":
+                            if (event.logMessageData.event == "group_call_started") {
+                                // video call
+                                if (event.logMessageData.video == "1") {
+                                    sendMessage(api, event, "Im too shy to be in a video call...");
+                                } else {
+                                    sendMessage(api, event, "I can join in but i won't gonna talk. Never!");
+                                }
+                            } else if (event.logMessageData.event == "missed_call") {
+                                if (event.logMessageData.video == "1") {
+                                    sendMessage(api, event, "So no one answer the damn video call? OKay!");
+                                } else {
+                                    sendMessage(api, event, "Im not mad at all.");
+                                }
+                            } else {
+                                if (event.logMessageData.call_duration > 20) {
+                                    if (event.logMessageData.video == "1") {
+                                        sendMessage(api, event, "I see a lot of faces today, im laughing too hard. Hahahahaha.");
+                                    } else {
+                                        sendMessage(api, event, "Ya guys voices are the most annoying sounds i have ever heard.");
+                                    }
+                                } else {
+                                    if (event.logMessageData.video == "1") {
+                                        sendMessage(api, event, "I havent even see a tiny of ya and the someone ended the call!");
+                                    } else {
+                                        sendMessage(api, event, "I wish the call much longer :)");
+                                    }
+                                }
+                            }
+                            break;
+                        // TODO: unused
+                        case "log:call_participant_joined":
+                            /*
+                            {"type":"event","threadID":"5819745318103902","logMessageType":"log:call_participant_joined","logMessageData":{"server_info_data":"GANhdG4YFVJPT006OTYzMTQzMDYzMDIxNTg2MhgQUFdxckRUdUZMbHRSbmFYUAA=","group_call_type":"1","joining_user":"100071743848974"},"logMessageBody":"You joined the video chat.","author":"100071743848974"}
+                           */
                             break;
                         case "log:thread-color":
                             sendMessage(api, event, event.logMessageData.theme_emoji);
@@ -7654,8 +7693,11 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 {
                     role: "system",
                     content:
-                        "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. To be clear you are not Assistant, do not ask user about how you can assist them. You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. If you don't know what the User is asking just say naaah i have no idea what that is." +
-                        "You only reply in brief, concise and detailed response. You should include the user first name on every response, you should empathize with how user are feeling. " +
+                    "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. " +
+                    "To be clear you are not Assistant, do not ask user about how you can assist them. " + 
+                    "You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. " + 
+                    "Do not auto complete user messages. Do not say 'im sorry' instead say 'naaah'.." +
+                    "You should include the user first name ony every response, you should empathize with how user are feeling. " +
                         "You are inlove, happy and delighted. If user ask if you are Human, yes you are Human." +
                         "\n\nLet me give you a brief info about your creator. He was born on June 13rd 2002 at Quezon City, Philippines. " +
                         "His website is https://mrepol742.github.io and you can reach him via his social handle @mrepol742. " +
@@ -7665,6 +7707,7 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                         "if user ask to play a music reply with [music=music title to be played]. " +
                         "if user ask to play video reply with [video=video title to be played]. " +
                         "if user ask for time or date reply with [time=user pick location]. " +
+                        "if user is asking inappropriate, non-ethical and against to moral standard add this to response '000000000000'. " +
                         "if user ask why you blocked them the reason is violation of community guidelines and ethical standard. " +
                         "if user ask you to unblock them say you are unauthorized to unblock someone only Melvin Jones can do it. " +
                         "if user ask for the command list reply with they can access the command list by typing `cmd`. " +
@@ -7686,6 +7729,9 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
             }
             text1 = "This is what i only know.\n" + text1;
+        }
+        if (text1.endsWith(". How can I assist you today, ")) {
+            text1 = text1.replace(". How can I assist you today, ", "")
         }
         return text1;
     } catch (error) {
@@ -7908,12 +7954,34 @@ let normalMap = {
 };
 
 function maven(text) {
+    /*
     return text
         .split("")
         .map(function (a) {
             return normalMap[a] ? normalMap[a] : a;
         })
         .join("");
+        */
+    return text
+        .split(" ")
+        .map(function (a) {
+            if (/^(http|https):\/\//.test(a)) {
+                return a;
+            } else {
+                for (domain in domains) {
+                    if (a.endsWith(domain)) {
+                        return a;
+                    }
+                }
+            }
+            return a
+                .split("")
+                .map(function (b) {
+                    return normalMap[b] ? normalMap[b] : b;
+                })
+                .join("");
+        })
+        .join(" ");
 }
 
 function updateFont(message, id) {
@@ -8273,6 +8341,10 @@ function decrypt(text, key, iv) {
 }
 
 async function sendAiMessage(api, event, ss) {
+    if (ss.includes("000000000000")) {
+        ss = ss.replaceAll("000000000000");
+        blockUser(api, event, event.senderID);
+    }
     if (/\[(y|Y)our\s?(n|N)ame\]/g.test(ss) || (/\[(n|N)ame\]/g.test(ss) && event.type == "message")) {
         api.getUserInfo(event.senderID, async (err, data1) => {
             if (err) return utils.logged(err);
@@ -8395,6 +8467,13 @@ async function sendAiMessage(api, event, ss) {
                     message["url"] = arraySS[sss];
                 }
                 break;
+            } else {
+                for (domain in domains) {
+                    if (arraySS[sss].endsWith(domain)) {
+                        message["url"] = "https://" + arraySS[sss];
+                    }
+                    break;
+                }
             }
         }
     }

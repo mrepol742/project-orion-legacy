@@ -785,6 +785,10 @@ function getAdminTextMessageType(type) {
             return "log:change_admins";
         case "group_thread_created":
             return "log:group_created";
+        case "messenger_call_log":
+            return "log:call";
+        case "participant_joined_group_call":
+            return "log:call_participant_joined";
         default:
             return type;
     }

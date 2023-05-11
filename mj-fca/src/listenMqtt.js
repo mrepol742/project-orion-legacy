@@ -521,6 +521,8 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                 case "group_poll":
                 case "group_thread_created":
                 case "change_thread_admins":
+                case "messenger_call_log":
+                case "participant_joined_group_call":
                     var fmtMsg;
                     try {
                         fmtMsg = utils.formatDeltaEvent(v.delta);
