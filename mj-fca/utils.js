@@ -771,6 +771,20 @@ function getAdminTextMessageType(type) {
             return "log:user-nickname";
         case "change_thread_icon":
             return "log:thread-icon";
+        case "group_poll":
+            return "log:group_poll";
+        case "change_thread_quick_reaction":
+            return "log:quick_reaction";
+        case "magic_words":
+            return "log:magic_words";
+        case "change_thread_approval_mode":
+            return "log:approval_mode";
+        case "joinable_group_link_mode_change":
+            return "log:group_link";
+        case "change_thread_admins":
+            return "log:change_admins";
+        case "group_thread_created":
+            return "log:group_created";
         default:
             return type;
     }

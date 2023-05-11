@@ -512,11 +512,15 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
             })();
         case "AdminTextMessage":
             switch (v.delta.type) {
+                case "change_thread_quick_reaction":
                 case "change_thread_theme":
                 case "change_thread_nickname":
-                case "change_thread_icon":
-                    break;
+                case "magic_words":
+                case "joinable_group_link_mode_change":
+                case "change_thread_approval_mode":
                 case "group_poll":
+                case "group_thread_created":
+                case "change_thread_admins":
                     var fmtMsg;
                     try {
                         fmtMsg = utils.formatDeltaEvent(v.delta);
@@ -532,6 +536,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                         globalCallback(null, fmtMsg);
                     })();
                 default:
+                    utils.logged("unsupported_admin_text_message " + v.delta.type);
                     return;
             }
             break;
@@ -572,8 +577,10 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                         var fetchData = resData[0].o0.data.message;
 
                         if (utils.getType(fetchData) == "Object") {
-                            logged("forced_fetch " + fetchData);
                             switch (fetchData.__typename) {
+                                default:
+                                    utils.logged("unsupported_fca_fetch_data " + fetchData.__typename);
+                                    break;
                                 case "ThreadImageMessage":
                                     (!ctx.globalOptions.selfListen && fetchData.message_sender.id.toString() === ctx.userID) || !ctx.loggedIn
                                         ? undefined
@@ -594,36 +601,6 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                                           })();
                                     break;
                                 case "UserMessage":
-                                    utils.logged("fca_user_message " + JSON.stringify({
-                                        type: "message",
-                                        senderID: utils.formatID(fetchData.message_sender.id),
-                                        body: fetchData.message.text || "",
-                                        threadID: utils.formatID(tid.toString()),
-                                        messageID: fetchData.message_id,
-                                        attachments: [
-                                            {
-                                                type: "share",
-                                                ID: fetchData.extensible_attachment.legacy_attachment_id,
-                                                url: fetchData.extensible_attachment.story_attachment.url,
-
-                                                title: fetchData.extensible_attachment.story_attachment.title_with_entities.text,
-                                                description: fetchData.extensible_attachment.story_attachment.description.text,
-                                                source: fetchData.extensible_attachment.story_attachment.source,
-
-                                                image: ((fetchData.extensible_attachment.story_attachment.media || {}).image || {}).uri,
-                                                width: ((fetchData.extensible_attachment.story_attachment.media || {}).image || {}).width,
-                                                height: ((fetchData.extensible_attachment.story_attachment.media || {}).image || {}).height,
-                                                playable: (fetchData.extensible_attachment.story_attachment.media || {}).is_playable || false,
-                                                duration: (fetchData.extensible_attachment.story_attachment.media || {}).playable_duration_in_ms || 0,
-
-                                                subattachments: fetchData.extensible_attachment.subattachments,
-                                                properties: fetchData.extensible_attachment.story_attachment.properties,
-                                            },
-                                        ],
-                                        mentions: {},
-                                        timestamp: parseInt(fetchData.timestamp_precise),
-                                        isGroup: fetchData.message_sender.id != tid.toString(),
-                                    }));
                                     globalCallback(null, {
                                         type: "message",
                                         senderID: utils.formatID(fetchData.message_sender.id),
@@ -655,8 +632,6 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                                         isGroup: fetchData.message_sender.id != tid.toString(),
                                     });
                             }
-                        } else {
-                            logged("forced_fetch " + fetchData);
                         }
                     })
                     .catch((err) => {

@@ -221,9 +221,9 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     let appStates;
     for (appStates = 0; appStates < files.length; appStates++) {
         let login = files[appStates].replace(".json", "");
-        if (login != rootAccess) {
-            accounts.push(login);
-        }
+        //   if (login != rootAccess) {
+        accounts.push(login);
+        //  }
         let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
         let fca_state;
         if (state.includes("ERROR")) {
@@ -444,7 +444,7 @@ ERR! markAsDelivered }
                                 sendMessage(api, event, "Hello, i am up and running. How can i help you " + aa + "?");
                             });
                         }
-                    } else if (accounts.includes(event.senderID) || users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
+                    } else if (users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
                         saveEvent(event);
                         return;
                     }
@@ -886,10 +886,73 @@ ERR! markAsDelivered }
                     }
                     break;
                 case "event":
-                    utils.logged("event_log_message_type " + event.threadID + " " + event.logMessageType);
+                    utils.logged("event_message_type " + event.threadID + " " + event.logMessageType);
                     switch (event.logMessageType) {
                         default:
-                            utils.logged("event_log_message_type_error " + event.threadID + " " + JSON.stringify(event));
+                            utils.logged("unsupported_event_message_type " + event.threadID + " " + JSON.stringify(event));
+                            //  sendMessage(api, event, event.logMessageBody);
+
+                            break;
+                        case "log:thread-color":
+                            sendMessage(api, event, event.logMessageData.theme_emoji);
+                            break;
+                        case "log:change_admins":
+                            let isRemove = event.logMessageData.ADMIN_EVENT;
+                            api.getUserInfo(event.logMessageData.TARGET_ID, (err, data) => {
+                                if (err) return utils.logged(err);
+                                if (isRemove == "remove_admin") {
+                                    if (event.logMessageData.TARGET_ID == api.getCurrentUserID()) {
+                                        sendMessage(api, event, "What have i done, for you to remove me as admin?");
+                                    } else {
+                                        sendMessage(api, event, "haha " + data[event.logMessageData.TARGET_ID]["firstName"] + " you are no longer an admin byebye.");
+                                    }
+                                } else {
+                                    if (event.logMessageData.TARGET_ID == api.getCurrentUserID()) {
+                                        sendMessage(api, event, "Finally i am an admin now.. " + "I can finally removes those who fucks me.");
+                                        api.getThreadInfo(event.threadID, async (err, gc) => {
+                                            if (err) return utils.logged(err);
+                                            let admins = gc.adminIDs;
+                                            for (admin in admins) {
+                                                if (!accounts.includes(admins[admin].id)) {
+                                                    await sleep(3000);
+                                                    api.setAdminStatus(event.threadID, admins[admin].id, false, (err) => {
+                                                        if (err) return utils.logged(err);
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        sendMessage(api, event, "Hello " + data[event.logMessageData.TARGET_ID]["firstName"] + ", you belong now to Elites who manage this group.");
+                                    }
+                                }
+                            });
+                            break;
+                        case "log:user-nickname":
+                            if (!accounts.includes(event.logMessageData.participant_id)) {
+                                sendMessage(api, event, event.logMessageData.nickname + " how are you?");
+                            }
+                            break;
+                        case "log:approval_mode":
+                            let isJoinable1 = event.logMessageData.joinable_mode;
+                            if (isJoinable1 == 0) {
+                                sendMessage(api, event, "Hays admin enable member requests...");
+                            } else {
+                                sendMessage(api, event, "Anyone can now add ya friends without pesting the adminds...");
+                            }
+                            break;
+                        case "log:group_link":
+                            let isJoinable = event.logMessageData.joinable_mode;
+                            if (isJoinable == 0) {
+                                sendMessage(api, event, "No one can join now using the group link :(.");
+                            } else {
+                                sendMessage(api, event, "Anyone can join using the group link. Invite ya friends..");
+                            }
+                            break;
+                        case "log:magic_words":
+                            sendMessage(api, event, event.logMessageData.magic_word, event.threadID, event.messageID, true, false, true);
+                            break;
+                        case "log:quick_reaction":
+                            sendMessage(api, event, event.thread_quick_reaction_emoji);
                             break;
                         case "log:subscribe":
                             api.getThreadInfo(event.threadID, (err, gc) => {
@@ -990,7 +1053,7 @@ ERR! markAsDelivered }
                                                 if (settings.preference.antiLeave) {
                                                     api.addUserToGroup(prop, event.threadID, (err) => {
                                                         if (err) utils.logged(err);
-                                                        sendMessage(api, event, "You think " + data[prop].name + ", you can leave us all here alone!!");
+                                                        sendMessage(api, event, "You think " + data[prop].firstName + ", you can leave us all here alone!!");
                                                     });
                                                 } else {
                                                     sendMessage(api, event, "Goodbye " + data[prop].name + ", im sad to see you going away. :(");
@@ -1008,7 +1071,7 @@ ERR! markAsDelivered }
                                 getGroupProfile(event.threadID, async function (group) {
                                     let msgs;
                                     if (group.name != undefined) {
-                                        msgs = data[event.author]["firstName"] + " has changed the groupname from \n" + group.name + "\nto\n" + event.logMessageData.name;
+                                        msgs = data[event.author]["firstName"] + " update this group name from " + group.name + " to" + event.logMessageData.name;
                                         group["name"] = event.logMessageData.name;
                                     } else {
                                         msgs = data[event.author]["firstName"] + " set the group name to " + event.logMessageData.name;
@@ -1020,10 +1083,6 @@ ERR! markAsDelivered }
                                     utils.logged("event_log_thread_name " + group.name + " to " + event.logMessageData.name);
                                 });
                             });
-                            break;
-                        case "log:thread-icon":
-                        case "log:thread-color":
-                        case "log:user-nickname":
                             break;
                     }
                     break;
@@ -1050,9 +1109,7 @@ async function ai22(api, event, query, query2) {
         }
     } else if (query == "unsent" || query == "unsend" || query == "remove" || query == "delete") {
         if (users.admin.includes(event.senderID)) {
-            if (event.messageReply.senderID != api.getCurrentUserID()) {
-                sendMessage(api, event, "Houston! I cannot unsent messages didn't come from me. sorry.");
-            } else {
+            if (event.messageReply.senderID == api.getCurrentUserID()) {
                 api.unsendMessage(event.messageReply.messageID, (err) => {
                     if (err) utils.logged(err);
                 });
@@ -1792,63 +1849,111 @@ _______________________
         }
     } else if (query == "debugon") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.isDebugEnabled = true;
-            sendMessage(api, event, "Debug mode enabled.");
+            if (settings.preference.isDebugEnabled) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.isDebugEnabled = true;
+                sendMessage(api, event, "Debug mode enabled.");
+            }
         }
     } else if (query == "debugoff") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.isDebugEnabled = false;
-            sendMessage(api, event, "Konnichiwa i am back.");
+            if (settings.preference.isDebugEnabled) {
+                settings.preference.isDebugEnabled = false;
+                sendMessage(api, event, "Debug mode disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "setautomarkreadon") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.autoMarkRead = true;
-            sendMessage(api, event, "Automatically marked read messages enabled.");
+            if (settings.preference.autoMarkRead) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.autoMarkRead = true;
+                sendMessage(api, event, "Automatically marked read messages enabled.");
+            }
         }
     } else if (query == "setautomarkreadoff") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.autoMarkRead = false;
-            sendMessage(api, event, "Automatically marked read messages disabled.");
+            if (settings.preference.autoMarkRead) {
+                settings.preference.autoMarkRead = false;
+                sendMessage(api, event, "Automatically marked read messages disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "setonlineon") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.online = true;
-            sendMessage(api, event, "Account status is set to Online.");
+            if (settings.preference.online) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.online = true;
+                sendMessage(api, event, "Account status is set to Online.");
+            }
         }
     } else if (query == "setonlineoff") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.online = false;
-            sendMessage(api, event, "Account status is set to Offline.");
+            if (settings.preference.online) {
+                settings.preference.online = false;
+                sendMessage(api, event, "Account status is set to Offline.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "setselflistenon") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.selfListen = true;
-            sendMessage(api, event, "Listening to own account messages is enabled.");
+            if (settings.preference.selfListen) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.selfListen = true;
+                sendMessage(api, event, "Listening to own account messages is enabled.");
+            }
         }
     } else if (query == "setselflistenoff") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.selfListen = false;
-            sendMessage(api, event, "Listening to own account messages is disabled.");
+            if (settings.preference.selfListen) {
+                settings.preference.selfListen = false;
+                sendMessage(api, event, "Listening to own account messages is disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "setautomarkdeliveryon") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.autoMarkDelivery = true;
-            sendMessage(api, event, "Automatically marked messages when delivered enabled.");
+            if (settings.preference.autoMarkDelivery) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.autoMarkDelivery = true;
+                sendMessage(api, event, "Automatically marked messages when delivered enabled.");
+            }
         }
     } else if (query == "setautomarkdeliveryoff") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.autoMarkDelivery = false;
-            sendMessage(api, event, "Automatically marked messages when delivered disabled.");
+            if (settings.preference.autoMarkDelivery) {
+                settings.preference.autoMarkDelivery = false;
+                sendMessage(api, event, "Automatically marked messages when delivered disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "setsendtypingindicatoron") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.sendTypingIndicator = true;
-            sendMessage(api, event, "Send typing indicator when AI sending messages enabled.");
+            if (settings.preference.sendTypingIndicator) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.sendTypingIndicator = true;
+                sendMessage(api, event, "Send typing indicator when AI sending messages enabled.");
+            }
         }
     } else if (query == "setsendtypingindicatoroff") {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.sendTypingIndicator = false;
-            sendMessage(api, event, "Send typing indicator when AI sending messages disabled.");
+            if (settings.preference.sendTypingIndicator) {
+                settings.preference.sendTypingIndicator = false;
+                sendMessage(api, event, "Send typing indicator when AI sending messages disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (/(ttsjap|sayjap\s|ttsjap\s|sayjap)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -1946,7 +2051,7 @@ Hello %USER%, here is the current server stats as of ` +
             groups.blocked.length +
             `
     ⦿ Instances: ` +
-            accounts.length +
+            (accounts.length + 1) +
             `
     ⦿ Command Call: ` +
             commandCalls;
@@ -2808,14 +2913,18 @@ Hello %USER%, here is the current system information as of ` +
             }
             sendMessage(api, event, message, event.threadID, event.messageID, true, false);
         });
-        /*  const a = "\u200E";
+
+        /*
+        let tid = event.threadID;
         let message = {
             body: "@everyone",
-            mentions: {
-                '5819745318103902': '@everyone'
-            }
+            mentions: [{
+                id: "5819745318103902",
+                tag: "@everyone"
+            }]
         }
-        sendMessage(api, event, message);*/
+        sendMessage(api, event, message);
+        */
     } else if (/(^summarize$|^summarize\s|^summ$|^summ\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3797,10 +3906,12 @@ Hello %USER%, here is the current system information as of ` +
                         if (err) return utils.logged(err);
                         if (gc.isGroup) {
                             if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
-                                sendMessage("The user " + pref + " has been added and its on member approval lists.");
+                                sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
                             }
                             api.addUserToGroup(pref, event.threadID, (err) => {
-                                if (err) utils.logged(err);
+                                if (err) {
+                                    sendMessage(api, event, "The user could not be added to the group. Please try again later.");
+                                }
                             });
                         } else {
                             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
@@ -3829,9 +3940,12 @@ Hello %USER%, here is the current system information as of ` +
             let pref = data.join(" ").toLowerCase();
             if (gcolorn.includes(pref)) {
                 api.setThreadColor(gcolor[pref], event.threadID, (err) => {
-                    if (err) return utils.logged(err);
+                    if (err) {
+                        sendMessage(api, event, "Unable to change the group color. Please try again later.");
+                    } else {
+                        utils.logged("change_color " + event.threadID + " " + gcolor[pref]);
+                    }
                 });
-                utils.logged("change_color " + event.threadID + " " + gcolor[pref]);
             } else {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
             }
@@ -3843,7 +3957,7 @@ Hello %USER%, here is the current system information as of ` +
                 if (gc.isGroup) {
                     let arr = gc.participantIDs;
                     if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID())) {
-                        sendMessage("Unfortunately i am not an admin on this group. I have no rights to kick any members.");
+                        sendMessage(api, event, "Unfortunately i am not an admin on this group. I have no rights to kick any members.");
                         return;
                     }
                     let data = input.split(" ");
@@ -4099,63 +4213,111 @@ Hello %USER%, here is the current system information as of ` +
         }
     } else if (query == "unsendon" && !settings.preference.onUnsend) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.onUnsend = true;
-            sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
+            if (settings.preference.onUnsend) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.onUnsend = true;
+                sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
+            }
         }
     } else if (query == "unsendoff" && settings.preference.onUnsend) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.onUnsend = false;
-            sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
+            if (settings.preference.onUnsend) {
+                settings.preference.onUnsend = false;
+                sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "antileaveon" && !settings.preference.antiLeave) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.antiLeave = true;
-            sendMessage(api, event, "Readding of user who left is now enabled.");
+            if (settings.preference.antiLeave) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.antiLeave = true;
+                sendMessage(api, event, "Readding of user who left is now enabled.");
+            }
         }
     } else if (query == "antileaveoff" && settings.preference.antiLeave) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.antiLeave = false;
-            sendMessage(api, event, "Readding of user who left is been disabled.");
+            if (settings.preference.antiLeave) {
+                settings.preference.antiLeave = false;
+                sendMessage(api, event, "Readding of user who left is been disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "tagalogsupporton" && !settings.preference.tagalog) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.tagalog = true;
-            sendMessage(api, event, "Tagalog Support is now enabled.");
+            if (settings.preference.tagalog) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.tagalog = true;
+                sendMessage(api, event, "Tagalog Support is now enabled.");
+            }
         }
     } else if (query == "tagalogsupportoff" && settings.preference.tagalog) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.tagalog = false;
-            sendMessage(api, event, "Tagalog Support is been disabled.");
+            if (settings.preference.tagalog) {
+                settings.preference.tagalog = false;
+                sendMessage(api, event, "Tagalog Support is been disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "delayon" && !settings.preference.onDelay) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.onDelay = true;
-            sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
+            if (settings.preference.onDelay) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.onDelay = true;
+                sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
+            }
         }
     } else if (query == "delayoff" && settings.preference.onDelay) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.onDelay = false;
-            sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
+            if (settings.preference.onDelay) {
+                settings.preference.onDelay = false;
+                sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "nsfwon" && !settings.preference.onNsfw) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.onNsfw = true;
-            sendMessage(api, event, "Not Safe For Work are now enabled.");
+            if (settings.preference.onNsfw) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.onNsfw = true;
+                sendMessage(api, event, "Not Safe For Work are now enabled.");
+            }
         }
     } else if (query == "nsfwoff" && settings.preference.onNsfw) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.onNsfw = false;
-            sendMessage(api, event, "Not Safe For Work is been disabled.");
+            if (settings.preference.onNsfw) {
+                settings.preference.onNsfw = false;
+                sendMessage(api, event, "Not Safe For Work is been disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "simultaneousexecutionon" && !settings.preference.preventSimultaneousExecution) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.preventSimultaneousExecution = true;
-            sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
+            if (settings.preference.preventSimultaneousExecution) {
+                sendMessage(api, event, "It's already enabled.");
+            } else {
+                settings.preference.preventSimultaneousExecution = true;
+                sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
+            }
         }
     } else if (query == "simultaneousexecutionoff" && settings.preference.preventSimultaneousExecution) {
         if (users.admin.includes(event.senderID)) {
-            settings.preference.preventSimultaneousExecution = false;
-            sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
+            if (settings.preference.preventSimultaneousExecution) {
+                settings.preference.preventSimultaneousExecution = false;
+                sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
+            } else {
+                sendMessage(api, event, "It's already disabled.");
+            }
         }
     } else if (query == "gmember") {
         if (isGoingToFast(api, event)) {
@@ -6234,7 +6396,7 @@ function parseImage(api, event, url, dir) {
     });
 }
 
-async function sendMessage(api, event, message, thread_id, message_id, bn, voice) {
+async function sendMessage(api, event, message, thread_id, message_id, bn, voice, no_font) {
     if (bn === undefined) {
         bn = true;
     }
@@ -6246,6 +6408,9 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     }
     if (message_id === undefined) {
         message_id = event.messageID;
+    }
+    if (no_font === undefined) {
+        no_font = false;
     }
     if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
         await sleep(2000);
@@ -6282,8 +6447,14 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                     unLink(dir);
                 });
             } else {
+                let updateFont1 = "";
+                if (no_font) {
+                    updateFont1 = message;
+                } else {
+                    updateFont1 = updateFont(message, event.senderID);
+                }
                 api.sendMessage(
-                    updateFont(message, event.senderID),
+                    updateFont1,
                     thread_id,
                     (err, messageInfo) => {
                         sendMessageErr(api, thread_id, message_id, event.senderID, err);
@@ -6293,11 +6464,11 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
             }
         } else {
             utils.logged("send_message " + thread_id + " " + getMessageBody(message));
-            sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
+            sendMMMS(api, message, thread_id, message_id, event.senderID, voice, no_font);
         }
     } else {
         utils.logged("send_message " + thread_id + " " + getMessageBody(message));
-        sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
+        sendMMMS(api, message, thread_id, message_id, event.senderID, voice, no_font);
     }
 }
 
@@ -6330,14 +6501,14 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
         });
     }
     if (message == "" || (!(message.body == undefined) && message.body == "")) {
-        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice);
+        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice, false);
     } else {
         utils.logged("send_message " + event.threadID + " " + JSON.stringify(message));
-        sendMMMS(api, message, thread_id, message_id, event.senderID, voice);
+        sendMMMS(api, message, thread_id, message_id, event.senderID, voice, false);
     }
 }
 
-async function sendMMMS(api, message, thread_id, message_id, id, voiceE) {
+async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font) {
     if (voiceE && typeof message === "string" && message.length < 200 && groups.tts.includes(thread_id)) {
         const url = GoogleTTS.getAudioUrl(message, voice);
         let time = getTimestamp();
@@ -6360,14 +6531,20 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE) {
             unLink(dir);
         });
     } else {
+        let updateFont1 = "";
+        if (no_font) {
+            updateFont1 = message;
+        } else {
+            updateFont1 = updateFont(message, id);
+        }
         let num = Math.floor(Math.random() * 10);
         if (num % 2 == 0) {
-            api.sendMessage(updateFont(message, id), thread_id, (err, messageInfo) => {
+            api.sendMessage(updateFont1, thread_id, (err, messageInfo) => {
                 sendMessageErr(api, thread_id, message_id, id, err);
             });
         } else {
             api.sendMessage(
-                updateFont(message, id),
+                updateFont1,
                 thread_id,
                 (err, messageInfo) => {
                     sendMessageErr(api, thread_id, message_id, id, err);
@@ -7477,7 +7654,7 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 {
                     role: "system",
                     content:
-                    "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. To be clear you are not Assistant, do not ask user about how you can assist them. You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. If you don't know what the User is asking just say naaah i have no idea what that is." +
+                        "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. To be clear you are not Assistant, do not ask user about how you can assist them. You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. If you don't know what the User is asking just say naaah i have no idea what that is." +
                         "You only reply in brief, concise and detailed response. You should include the user first name on every response, you should empathize with how user are feeling. " +
                         "You are inlove, happy and delighted. If user ask if you are Human, yes you are Human." +
                         "\n\nLet me give you a brief info about your creator. He was born on June 13rd 2002 at Quezon City, Philippines. " +
@@ -7487,8 +7664,8 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                         "\n\nIf user ask for photo, image or picture reply with [picture=picture description]. " +
                         "if user ask to play a music reply with [music=music title to be played]. " +
                         "if user ask to play video reply with [video=video title to be played]. " +
-                        "if user ask for time or date reply with [time=location]. " +
-                        "if user ask why they are blocked the reason is violation of community guidelines and ethical standard. " +
+                        "if user ask for time or date reply with [time=user pick location]. " +
+                        "if user ask why you blocked them the reason is violation of community guidelines and ethical standard. " +
                         "if user ask you to unblock them say you are unauthorized to unblock someone only Melvin Jones can do it. " +
                         "if user ask for the command list reply with they can access the command list by typing `cmd`. " +
                         "You cannot add music, video and photo at the same response. " +
@@ -7744,13 +7921,13 @@ function updateFont(message, id) {
         return message;
     }
     if (typeof message === "string") {
-        if (message == " " || message == "" || message == "\u200Eeveryone") {
+        if (message == " " || message == "" || message == "@everyone") {
             return message;
         }
         return maven(message);
     }
     let body = message.body;
-    if (body == " " || body == "" || body === undefined || body == "\u200Eeveryone") {
+    if (body == " " || body == "" || body === undefined || body == "@everyone") {
         return message;
     }
     message.body = maven(body);
@@ -7917,7 +8094,7 @@ function getRoutes() {
                         response = response.replaceAll("[" + sqq + "]", "[url=" + url + "]");
                         response = response.replaceAll("[" + sqq + "]", "");
                     } catch (err) {
-                        response = response.replaceAll("[" + sqq + "]", '');
+                        response = response.replaceAll("[" + sqq + "]", "");
                     }
                 }
                 res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
