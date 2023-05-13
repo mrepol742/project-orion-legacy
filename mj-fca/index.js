@@ -169,7 +169,7 @@ function buildAPI(globalOptions, html, jar) {
         "getUserID",
         "getUserInfo",
         "handleMessageRequest",
-        "listenMqtt",
+        "eventListener",
         "logout",
         "markAsDelivered",
         "markAsRead",
@@ -200,7 +200,7 @@ function buildAPI(globalOptions, html, jar) {
 
     //Removing original `listen` that uses pull.
     //Map it to listenMqtt instead for backward compatibly.
-    api.listen = api.listenMqtt;
+    api.listen = api.eventListener;
 
     return [ctx, defaultFuncs, api];
 }
@@ -519,7 +519,7 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
     // At the end we call the callback or catch an exception
     mainPromise
         .then(function () {
-            utils.logged("fca_status online " + api.getCurrentUserID());
+            utils.logged("fca_status " + api.getCurrentUserID() + " online");
             return callback(null, api);
         })
         .catch(function (e) {

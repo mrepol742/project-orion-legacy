@@ -88,7 +88,7 @@ let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", 
 let keys = JSON.parse(fs.readFileSync(__dirname + "/data/keys.json", "utf8"));
 let endpoint = JSON.parse(fs.readFileSync(__dirname + "/data/endpoint.json", "utf8"));
 
-utils.logged("settings loadded");
+utils.logged("settings_loaded finish");
 
 /*
 const options2 = {
@@ -128,8 +128,7 @@ server.listen((PORT + 1), function () {
 });
 */
 server1.listen(PORT, function () {
-    utils.logged("server_info HTTP at port " + PORT);
-    utils.logged("server_status online");
+    utils.logged("server_status " + PORT + " online");
 });
 
 task(function () {
@@ -339,7 +338,7 @@ function facebook(fca_state, login) {
 
         let isAppState = true;
 
-        listen = api.listenMqtt(async (err, event) => {
+        listen = api.eventListener(async (err, event) => {
             /*
 
     3252001 temporarily blocked
@@ -1485,7 +1484,7 @@ async function ai(api, event) {
                 });
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
-                sendMessage(api, event, "Mj is having an issues connecting to Bing AI servers right now.");
+                sendMessage(api, event, "Mj is having an issues connecting to Google servers right now.");
             }
         }
     } else if (/(^david$|^david\s)/.test(query2)) {

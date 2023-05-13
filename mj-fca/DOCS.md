@@ -25,8 +25,7 @@
 * [`api.getUserID`](#getUserID)
 * [`api.getUserInfo`](#getUserInfo)
 * [`api.handleMessageRequest`](#handleMessageRequest)
-* [`api.listen`](#listen)
-* [`api.listenMqtt`](#listenMqtt)
+* [`api.eventListener`](#eventListener)
 * [`api.logout`](#logout)
 * [`api.markAsDelivered`](#markAsDelivered)
 * [`api.markAsRead`](#markAsRead)
@@ -1013,10 +1012,8 @@ __Arguments__
 
 ---------------------------------------
 
-<a name="listen"></a>
-### api.listen([callback])
-<a name="listenMqtt"></a>
-### api.listenMqtt([callback])
+<a name="eventListener"></a>
+### api.eventListener([callback])
 
 Will call `callback` when a new message is received on this account.
 By default this won't receive events (joining/leaving a chat, title change etc...) but it can be activated with `api.setOptions({listenEvents: true})`.  This will by default ignore messages sent by the current account, you can enable listening to your own messages with `api.setOptions({selfListen: true})`. This returns an `EventEmitter` that contains function `stopListening` that will stop the `listen` loop and is guaranteed to prevent any future calls to the callback given to `listen`. An immediate call to `stopListening` when an error occurs will prevent the listen function to continue.
@@ -1096,7 +1093,7 @@ The message object will contain different fields based on its type (as determine
 	</tr>
 	<tr>
 		<td><code>logMessageType</code></td>
-		<td>String representing the type of event (<code>log:subscribe</code>, <code>log:unsubscribe</code>, <code>log:thread-name</code>, <code>log:thread-color</code>, <code>log:thread-icon</code>, <code>log:user-nickname</code>)</td>
+		<td>String representing the type of event (<code>log:subscribe</code>, <code>log:unsubscribe</code>, <code>log:thread-name</code>, <code>log:thread-color</code>, <code>log:thread-icon</code>, <code>log:user-nickname</code>, <code>log:group_poll</code>, <code>log:quick_reaction</code>, <code>log:magic_words</code>, <code>log:approval_mode</code>, <code>log:group_link</code>, <code>log:change_admins</code>, <code>log:group_created</code>, <code>log:call</code>, <code>log:call_participant_joined</code>)</td>
 	</tr>
 	<tr>
 		<td><code>threadID</code></td>

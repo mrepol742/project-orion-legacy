@@ -67,7 +67,7 @@ function getCurrentTime() {
     return (hour = ((hour + 11) % 12) + 1 + ":" + today.getMinutes() + ":" + today.getSeconds() + " " + suffix);
 }
 
-function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
+function eventListener(defaultFuncs, api, ctx, globalCallback) {
     //Don't really know what this does but I think it's for the active state?
     //TODO: Move to ctx when implemented
     var chatOn = ctx.globalOptions.online;
@@ -706,7 +706,7 @@ module.exports = function (defaultFuncs, api, ctx) {
 
                 if (resData[0].o0.data.viewer.message_threads.sync_sequence_id) {
                     ctx.lastSeqId = resData[0].o0.data.viewer.message_threads.sync_sequence_id;
-                    listenMqtt(defaultFuncs, api, ctx, globalCallback);
+                    eventListener(defaultFuncs, api, ctx, globalCallback);
                 } else {
                     throw { error: "getSeqId: no sync_sequence_id found.", res: resData };
                 }
@@ -773,7 +773,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         if (!ctx.firstListen || !ctx.lastSeqId) {
             getSeqID();
         } else {
-            listenMqtt(defaultFuncs, api, ctx, globalCallback);
+            eventListener(defaultFuncs, api, ctx, globalCallback);
         }
         ctx.firstListen = false;
         return msgEmitter;
