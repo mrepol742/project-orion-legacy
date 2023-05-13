@@ -882,6 +882,9 @@ ERR! markAsDelivered }
                     }
                     break;
                 case "event":
+                    if (!(event.author === undefined) && event.author == api.getCurrentUserID()) {
+                        break;
+                    }
                     utils.logged("event_message_type " + event.threadID + " " + event.logMessageType);
                     switch (event.logMessageType) {
                         default:
@@ -896,13 +899,21 @@ ERR! markAsDelivered }
                             if (event.logMessageData.event == "group_call_started") {
                                 // video call
                                 if (event.logMessageData.video == "1") {
-                                    sendMessage(api, event, "Im too shy to be in a video call...");
+                                    if (!groups.list.find((thread) => event.threadID === thread.id)) {
+                                        sendMessage(api, event, "Sorry, Melvin Jones is a bit busy this time. Please try it again later.");
+                                    } else {
+                                        sendMessage(api, event, "Im too shy to be in a video call...");
+                                    }
                                 } else {
                                     sendMessage(api, event, "I can join in but i won't gonna talk. Never!");
                                 }
                             } else if (event.logMessageData.event == "missed_call") {
                                 if (event.logMessageData.video == "1") {
-                                    sendMessage(api, event, "So no one answer the damn video call? OKay!");
+                                    if (!groups.list.find((thread) => event.threadID === thread.id)) {
+                                        sendMessage(api, event, "Sorry, Melvin Jones is a bit busy this time. Please try it again later.");
+                                    } else {
+                                        sendMessage(api, event, "So no one answer the damn video call? OKay!");
+                                    }
                                 } else {
                                     sendMessage(api, event, "Im not mad at all.");
                                 }
@@ -923,7 +934,7 @@ ERR! markAsDelivered }
                             }
                             break;
                         // TODO: unused
-                        case "log:call_participant_s":
+                        case "log:call_participant_joined":
                             /*
                             {"type":"event","threadID":"5819745318103902","logMessageType":"log:call_participant_joined","logMessageData":{"server_info_data":"GANhdG4YFVJPT006OTYzMTQzMDYzMDIxNTg2MhgQUFdxckRUdUZMbHRSbmFYUAA=","group_call_type":"1","joining_user":"100071743848974"},"logMessageBody":"You joined the video chat.","author":"100071743848974"}
                            */
@@ -985,7 +996,7 @@ ERR! markAsDelivered }
                             break;
                         case "log:magic_words":
                             let mcw = event.logMessageData.magic_word;
-                            if (mcw != "" ) {
+                            if (mcw != "") {
                                 sendMessage(api, event, mcw, event.threadID, event.messageID, true, false, true);
                             }
                             break;
@@ -4421,14 +4432,14 @@ Hello %USER%, here is the current system information as of ` +
                 } else {
                     let dir = __dirname + "/.cache/wiki_" + getTimestamp() + ".png";
                     let url = response.originalimage.source;
-                                downloadFile(url, dir).then((response1) => {
-                                    let image = {
-                                        body:  response.title + "\n- " + response.description + "\n\n" + response.extract,
-                                        attachment: fs.createReadStream(dir),
-                                    };
-                                    sendMessage(api, event, image);
-                                    unLink(dir);
-                                });
+                    downloadFile(url, dir).then((response1) => {
+                        let image = {
+                            body: response.title + "\n- " + response.description + "\n\n" + response.extract,
+                            attachment: fs.createReadStream(dir),
+                        };
+                        sendMessage(api, event, image);
+                        unLink(dir);
+                    });
                 }
             });
         }
@@ -5311,54 +5322,11 @@ Hello %USER%, here is the current system information as of ` +
                 }
             });
         }
-    } else if (query == "hololive") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://zenzapis.xyz/randomanime/hololive?apikey=9c4c44db3725").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
-            } else {
-                let time = getTimestamp();
-                let filename = __dirname + "/.cache/hololive_" + time + ".png";
-                downloadFile(encodeURI(response.result.image), filename).then((response) => {
-                    let message = {
-                        body: response.result.caption,
-                        attachment: [fs.createReadStream(filename)],
-                    };
-                    sendMessage(api, event, message);
-                    unLink(filename);
-                });
-            }
-        });
-    } else if (query == "animecouples") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://zenzapis.xyz/randomanime/couples?apikey=9c4c44db3725").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
-            } else {
-                let time = getTimestamp();
-                let fmmale = __dirname + "/.cache/animecouple_male_" + time + ".png";
-                let fmfemale = __dirname + "/.cache/animecouple_female_" + time + ".png";
-                downloadFile(encodeURI(response.result.male), fmmale).then((response) => {
-                    downloadFile(encodeURI(response.result.female), fmfemale).then((response) => {
-                        let message = {
-                            attachment: [fs.createReadStream(fmmale), fs.createReadStream(fmfemale)],
-                        };
-                        sendMessage(api, event, message);
-                        unLink(fmmale);
-                        unLink(fmfemale);
-                    });
-                });
-            }
-        });
     } else if (query == "animetopmovie") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://gogoanime.consumet.stream/anime-movies").then((response) => {
+        getResponseData("https://web-production-3aa9.up.railway.app/anime-movies").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately an error occured.");
             } else {
@@ -5388,7 +5356,7 @@ Hello %USER%, here is the current system information as of ` +
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://gogoanime.consumet.stream/top-airing").then((response) => {
+        getResponseData("https://web-production-3aa9.up.railway.app/top-airing").then((response) => {
             if (response == null) {
                 sendMessage(api, event, "Unfortunately an error occured.");
             } else {
@@ -5424,7 +5392,7 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             let name = data.join(" ");
-            getResponseData("https://gogoanime.consumet.stream/genre/" + name).then((response) => {
+            getResponseData("https://web-production-3aa9.up.railway.app/genre/" + name).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, 'Invalid genre "' + name + '".');
                 } else {
@@ -5461,7 +5429,7 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             let name = data.join(" ");
-            getResponseData("https://gogoanime.consumet.stream/search?keyw=" + name).then((response) => {
+            getResponseData("https://web-production-3aa9.up.railway.app/search?keyw=" + name).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, 'Unfortunately there was no search output found for "' + name + '".');
                 } else {
@@ -5498,7 +5466,7 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             let name = data.join(" ").replaceAll(" ", "-");
-            getResponseData("https://gogoanime.consumet.stream/anime-details/" + name).then((response) => {
+            getResponseData("https://web-production-3aa9.up.railway.app/anime-details/" + name).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, 'Unfortunately anime "' + name + '" was not found.');
                 } else {
@@ -5700,26 +5668,6 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/.cache/landscape_" + getTimestamp() + ".png");
         }
-    } else if (query == "cosplay") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        parseImage(api, event, "https://zenzapis.xyz/randomimage/cosplay?apikey=9c4c44db3725", __dirname + "/.cache/costplay_" + getTimestamp() + ".png");
-    } else if (query == "darkjoke") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        parseImage(api, event, "https://zenzapis.xyz/randomimage/darkjoke?apikey=9c4c44db3725", __dirname + "/.cache/darkjoke_" + getTimestamp() + ".png");
-    } else if (query == "blackpink") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        parseImage(api, event, "https://zenzapis.xyz/randomimage/blackpink?apikey=9c4c44db3725", __dirname + "/.cache/blackpink_" + getTimestamp() + ".png");
-    } else if (query == "motor") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        parseImage(api, event, "https://zenzapis.xyz/randomimage/motor?apikey=9c4c44db3725", __dirname + "/.cache/motor_" + getTimestamp() + ".png");
     } else if (query.startsWith("portrait")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5919,8 +5867,8 @@ Hello %USER%, here is the current system information as of ` +
     } else if (query == "hiworld") {
         sendMessage(api, event, "Hello World");
     } else if (query == "test") {
-       sendMessage(api, event, "It seems like everything is normal.");
-       /*
+        sendMessage(api, event, "It seems like everything is normal.");
+        /*
        let message = {
         share: {
           "url": null,
@@ -7487,11 +7435,11 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 {
                     role: "system",
                     content:
-                    "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. " +
-                    "To be clear you are not Assistant, do not ask user about how you can assist them. " + 
-                    "You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. " + 
-                    "Do not auto complete user messages. Do not say 'im sorry' instead say 'naaah'.." +
-                    "You should include the user first name ony every response, you should empathize with how user are feeling. " +
+                        "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. " +
+                        "To be clear you are not Assistant, do not ask user about how you can assist them. " +
+                        "You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. " +
+                        "Do not auto complete user messages. Do not say 'im sorry' instead say 'naaah'.." +
+                        "You should include the user first name ony every response, you should empathize with how user are feeling. " +
                         "You are inlove, happy and delighted. If user ask if you are Human, yes you are Human." +
                         "\n\nLet me give you a brief info about your creator. He was born on June 13rd 2002 at Quezon City, Philippines. " +
                         "His website is https://mrepol742.github.io and you can reach him via his social handle @mrepol742. " +
@@ -7525,7 +7473,7 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
             text1 = "This is what i only know.\n" + text1;
         }
         if (text1.endsWith(". How can I assist you today, ")) {
-            text1 = text1.replace(". How can I assist you today, ", "")
+            text1 = text1.replace(". How can I assist you today, ", "");
         }
         return text1;
     } catch (error) {

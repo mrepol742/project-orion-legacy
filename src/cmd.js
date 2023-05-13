@@ -147,7 +147,7 @@ Hello %USER%, here is the page 5 of 9 command list.
    ⦿ gmember
    ⦿ car
    ⦿ color
-   ⦿ animecouples
+
    ⦿ trump [text]
    ⦿ mock [text]
    ⦿ reverseText [text]
@@ -225,11 +225,11 @@ Hello %USER%, here is the page 8 of 9 command list.
    ⦿ encrypt [text]
    ⦿ decrypt [text] [key1]:[key2]
    ⦿ facts [text]
-   ⦿ cosplay
-   ⦿ motor
-   ⦿ darkjoke
-   ⦿ blackpink
-   ⦿ hololive
+
+
+
+
+
    ⦿ encode64 [text]
    ⦿ decode64 [text]
    ⦿ tagalogSupport [on|off]
