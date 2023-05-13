@@ -60,7 +60,7 @@ Hello %USER%, here is the page 2 of 9 command list.
    ⦿ thoughts
    ⦿ lulcat [text]
    ⦿ gemoji [emoji]
-   ⦿ ig [username]
+
    ⦿ wiki [text]
    ⦿ urlshort [url]
    ⦿ pickup
@@ -138,7 +138,7 @@ The ^^ means my command support mentioned, reply, uid etc.. to work.
 let help4 = `
 Hello %USER%, here is the page 5 of 9 command list.
 
-   ⦿ phub [text]
+
    ⦿ morse [text]
    ⦿ joke
    ⦿ profilepic
@@ -207,7 +207,7 @@ Hello %USER%, here is the page 7 of 9 command list.
    ⦿ divisible [number] [number]
    ⦿ factorial [number]
    ⦿ findGCD [number]
-   ⦿ tiktok [username]
+ 
    ⦿ summ [text]
    ⦿ gcolor [theme]
        DefaultBlue, HotPink, AquaBlue, BrightPurple

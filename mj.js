@@ -525,11 +525,11 @@ ERR! markAsDelivered }
                 }
             } else if (groups.blocked.includes(event.threadID)) {
                 if (event.type == "message" || event.type == "message_reply") {
-                    blockedGroupC++;
+                    blockedGroupC += 1;
                 }
                 return;
             } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) && (event.type == "message" || event.type == "message_reply")) {
-                blockedUserC++;
+                blockedUserC += 1;
                 return;
             }
 
@@ -988,7 +988,10 @@ ERR! markAsDelivered }
                             }
                             break;
                         case "log:magic_words":
-                            sendMessage(api, event, event.logMessageData.magic_word, event.threadID, event.messageID, true, false, true);
+                            let mcw = event.logMessageData.magic_word;
+                            if (mcw != "" ) {
+                                sendMessage(api, event, mcw, event.threadID, event.messageID, true, false, true);
+                            }
                             break;
                         case "log:quick_reaction":
                             sendMessage(api, event, event.thread_quick_reaction_emoji);
@@ -2090,7 +2093,7 @@ Hello %USER%, here is the current server stats as of ` +
             groups.blocked.length +
             `
     ⦿ Instances: ` +
-            (accounts.length + 1) +
+            accounts.length +
             `
     ⦿ Command Call: ` +
             commandCalls;
@@ -2574,37 +2577,6 @@ Hello %USER%, here is the current system information as of ` +
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-        // TODO: fix error
-    } else if (/(^phub$|^pornhub\s)/.test(query2)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        if (true) {
-            sendMessage(api, event, "Maintenance");
-            return;
-        }
-        let id;
-        if (event.type == "message") {
-            id = event.senderID;
-        } else {
-            if (isMyId(event.messageReply.senderID)) {
-                id = event.senderID;
-            } else {
-                id = event.messageReply.senderID;
-            }
-        }
-        api.getUserInfo(id, (err, info) => {
-            if (err) return utils.logged(err);
-            let name = info[id]["firstName"];
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using phub text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nphub why i am here again.");
-            } else {
-                data.shift();
-                let phublink = "https://manhict.tech/api/phubcmt?text=" + data.join(" ") + "&uid=" + id + "&name=" + name + "&apikey=" + settings.apikey.manhict;
-                parseImage(api, event, phublink, __dirname + "/cache/images/phubmeme_" + getTimestamp() + ".jpg");
-            }
-        });
     } else if (/(^videolyric$|^videolyric\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3183,52 +3155,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, response.answer);
             }
         });
-        // TODO: fix error
-    } else if (/(^instagram$|^instagram\s|^insta$|^insta\s|^ig$|^ig\s)/.test(query2)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        if (true) {
-            sendMessage(api, event, "Maintenance");
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using instagram username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninstagram melvinjonesrepol");
-        } else {
-            data.shift();
-            let userN = data.join(" ");
-            if (userN.startsWith("@")) {
-                userN = userN.slice(1);
-            }
-            getResponseData("https://manhict.tech/api/igInfo?query=" + userN + "&apikey=" + settings.apikey.manhict).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately instagram user "' + userN + '" was not found.');
-                } else {
-                    let username = response.result.username;
-                    let fullname = response.result.fullname;
-                    let biography = response.result.biography;
-                    let reels = new Intl.NumberFormat().format(response.result.reels);
-                    let followers = new Intl.NumberFormat().format(response.result.followers);
-                    let following = new Intl.NumberFormat().format(response.result.following);
-                    let isPrivate = response.result.private ? "Yes" : "No";
-                    let verified = response.result.verified ? "Yes" : "No";
-                    let profilepic = response.result.profilePicture;
-                    let time = getTimestamp();
-
-                    let dir = __dirname + "/cache/images/instaprofile_" + time + ".png";
-                    downloadFile(encodeURI(url), dir).then((response) => {
-                        let message = {
-                            body: fullname + " @" + username + "\nReels: " + reels + "\nFollowers: " + followers + "\nFollowing: " + following + "\nPrivate: " + isPrivate + "\nVerified: " + verified + "\n\n" + biography,
-                            attachment: fs.createReadStream(dir),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(dir);
-                    });
-                }
-            });
-        }
-    } else if (/(^profilepicture$|^profilepicture\s)/.test(query2)) {
+    } else if (/(^profilepicture$|^profilepicture\s|^profilepic$|^profilepic\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3239,112 +3166,6 @@ Hello %USER%, here is the current system information as of ` +
             id = event.senderID;
         }
         parseImage(api, event, getProfilePic(id), __dirname + "/cache/images/profilepic_" + getTimestamp() + ".png");
-        // TODO: fix error
-    } else if (/(^tiktok$|^tiktok\s|^tk$|^tk\s)/.test(query2)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        if (true) {
-            sendMessage(api, event, "Maintenance");
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using tiktok username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntiktok mrepol742");
-        } else {
-            data.shift();
-            let userN = data.join(" ");
-            getResponseData("https://manhict.tech/api/tikInfo?query=" + userN + "&apikey=" + settings.apikey.manhict).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately tiktok user "' + userN + '" was not found.');
-                } else {
-                    let username = response.result.uniqueId;
-                    let name = response.result.nickname;
-                    let bio = response.result.signature;
-                    let followers = response.result.followerCount;
-                    let following = response.result.followingCount;
-                    let heart = response.result.heartCount;
-                    let video = response.result.videoCount;
-                    let digg = response.result.diggCount;
-                    let avatar = response.result.avatar;
-                    let time = getTimestamp();
-                    let filename = __dirname + "/cache/images/tiktok_avatar_" + time + ".png";
-                    downloadFile(encodeURI(avatar), filename).then((response) => {
-                        let message = {
-                            body: name + " @" + username + "\n⦿ Hearts: " + heart + "\n⦿ Followers: " + followers + "\n⦿ Following: " + following + "\n⦿ Videos: " + video + "\n⦿ Digg: " + digg + "\n\n" + bio,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
-            });
-        }
-        // TODO: fix error
-    } else if (/(^soundcloud$|^soundcloud|^sc$|^sc\s)/.test(query2)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        if (true) {
-            sendMessage(api, event, "Maintenance");
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using soundcloud username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsoundcloud Denvau");
-        } else {
-            data.shift();
-            let userN = data.join(" ");
-            getResponseData("https://manhict.tech/api/scInfo?query=" + encodeURI(userN) + "&apikey=" + settings.apikey.manhict).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately soundcloud user "' + userN + '" was not found.');
-                } else {
-                    let name = response.result["full_name"];
-                    let username = response.result["username"];
-                    let bio = response.result["description"];
-                    let location = response.result["city"] + " " + response.result["country_code"];
-                    let followers = response.result["followers_count"];
-                    let following = response.result["followings_count"];
-                    let likes = response.result["likes_count"];
-                    let playlist = response.result["playlist_count"];
-                    let playlistLikes = response.result["playlist_likes_count"];
-                    let trackCount = response.result["track_count"];
-                    let permalinkUrl = response.result["permalink_url"];
-                    let avatar = response.result["avatar_url"];
-                    let time = getTimestamp();
-                    let filename = __dirname + "/cache/images/soundcloud_avatar_" + time + ".png";
-                    downloadFile(encodeURI(avatar), filename).then((response) => {
-                        let message = {
-                            body:
-                                name +
-                                " @" +
-                                username +
-                                "\n⦿ Location: " +
-                                location +
-                                "\n⦿ Likes: " +
-                                likes +
-                                "\n⦿ Playlist: " +
-                                playlist +
-                                "\n⦿ Playlist Likes: " +
-                                playlistLikes +
-                                "\n⦿ Tracks: " +
-                                trackCount +
-                                "\n⦿ Followers: " +
-                                followers +
-                                "\n⦿ Following: " +
-                                following +
-                                "\n\n" +
-                                bio +
-                                "\n" +
-                                permalinkUrl,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
-            });
-        }
     } else if (/(^github$|^github\s|^gh$|^gh\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -4647,9 +4468,18 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately the wiki " + txt + " was not found.");
+                    sendMessage(api, event, "Unfortunately the wiki " + data.join(" ") + " was not found.");
                 } else {
-                    sendMessage(api, event, response.extract);
+                    let dir = __dirname + "/cache/images/wiki_" + getTimestamp() + ".png";
+                    let url = response.originalimage.source;
+                                downloadFile(url, dir).then((response1) => {
+                                    let image = {
+                                        body:  response.title + "\n- " + response.description + "\n\n" + response.extract,
+                                        attachment: fs.createReadStream(dir),
+                                    };
+                                    sendMessage(api, event, image);
+                                    unLink(dir);
+                                });
                 }
             });
         }
@@ -5526,7 +5356,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + text);
+                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" "));
                 } else {
                     parseImage(api, event, response.url, __dirname + "/cache/images/animensfw_" + getTimestamp() + ".png");
                 }
@@ -6140,7 +5970,34 @@ Hello %USER%, here is the current system information as of ` +
     } else if (query == "hiworld") {
         sendMessage(api, event, "Hello World");
     } else if (query == "test") {
-        sendMessage(api, event, "It seems like everything is normal.");
+       sendMessage(api, event, "It seems like everything is normal.");
+       /*
+       let message = {
+        share: {
+          "url": null,
+              "title": "Reel by SIGMA CHAD MEMES",
+              "description": "Facebook",
+              "source": "",
+              "image": "https://scontent.xx.fbcdn.net/v/t51.36329-15/344783643_1239136033628951_334450389941963020_n.jpg?stp=dst-jpg_p240x240&_nc_cat=108&ccb=1-7&_nc_sid=9c38a0&_nc_ohc=mhNoipjWtwAAX9vDVHu&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=00_AfD95f-wFDSQKfCzTxepi89fcMj2J3Dm_bmbyC-uYWUwsQ&oe=6463C5A1",
+              "width": 240,
+              "height": 240,
+              "playable": false,
+              "duration": 0,
+              "playableUrl": "https://www.facebook.com/",
+              "subattachments": [],
+              "properties": {},
+              "facebookUrl": null,
+              "target": null,
+              "styleList": [
+                "messenger_generic_template",
+                "share",
+                "fallback"
+              ]
+            
+            }
+       }
+       sendMessage(api, event, message)
+       */
     } else if (query == "about") {
         let message = {
             body: "I am an AI trained by Melvin Jones Repol to respond like a human. I am programmed to understand and respond to questions and commands. I am able to learn from my interactions with you and can adapt to different situations. I can provide helpful information and advice when needed. Lastly, i am here to help you in any way i can.\n\nhttps://mrepol742.github.io/project-orion/",
@@ -6339,11 +6196,11 @@ function someA(api, event, query, input) {
 
 function reaction(api, event, query, input) {
     if (containsAny(query, happyEE) || input.includes("😂") || input.includes("🤣") || input.includes("😆")) {
-        reactMessage(api, event, ":laughing:");
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
             sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
             emo.push(event.messageID);
         }
+        reactMessage(api, event, ":laughing:");
     } else if (containsAny(query, sadEE)) {
         reactMessage(api, event, ":sad:");
     } else if (containsAny(query, loveEE) || query == "good") {
@@ -6735,7 +6592,7 @@ function isGoingToFast(api, event) {
         if (!(cmd[event.senderID] === undefined)) {
             if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
                 let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 10;
-                if (seconds > 3) {
+                if (seconds > 2) {
                     utils.logged("block_user " + event.senderID + " " + seconds);
                     return true;
                 }
@@ -7985,6 +7842,14 @@ function maven(text) {
 }
 
 function updateFont(message, id) {
+    if (typeof message === "object") {
+        if (!(message.url === undefined)) {
+            let url = message.url;
+            if (url.includes("facebook.com")) {
+                message["url"] = "";
+            }
+        }
+    }
     if (users.font_ignore.includes(id)) {
         return message;
     }
@@ -8471,8 +8336,8 @@ async function sendAiMessage(api, event, ss) {
                 for (domain in domains) {
                     if (arraySS[sss].endsWith(domain)) {
                         message["url"] = "https://" + arraySS[sss];
+                        break;
                     }
-                    break;
                 }
             }
         }
