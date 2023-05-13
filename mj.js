@@ -926,12 +926,12 @@ ERR! markAsDelivered }
                             }
                             break;
                         // TODO: unused
-                        case "log:call_participant_joined":
+                        case "log:call_participant_s":
                             /*
                             {"type":"event","threadID":"5819745318103902","logMessageType":"log:call_participant_joined","logMessageData":{"server_info_data":"GANhdG4YFVJPT006OTYzMTQzMDYzMDIxNTg2MhgQUFdxckRUdUZMbHRSbmFYUAA=","group_call_type":"1","joining_user":"100071743848974"},"logMessageBody":"You joined the video chat.","author":"100071743848974"}
                            */
                             break;
-                        case "log:thread-color":
+                        case "log:thread_color":
                             sendMessage(api, event, event.logMessageData.theme_emoji);
                             break;
                         case "log:change_admins":
@@ -965,7 +965,7 @@ ERR! markAsDelivered }
                                 }
                             });
                             break;
-                        case "log:user-nickname":
+                        case "log:user_nickname":
                             if (!accounts.includes(event.logMessageData.participant_id)) {
                                 sendMessage(api, event, event.logMessageData.nickname + " how are you?");
                             }
@@ -995,7 +995,7 @@ ERR! markAsDelivered }
                         case "log:quick_reaction":
                             sendMessage(api, event, event.thread_quick_reaction_emoji);
                             break;
-                        case "log:subscribe":
+                        case "log:group_participants_add":
                             api.getThreadInfo(event.threadID, (err, gc) => {
                                 if (err) return utils.logged(err);
                                 getGroupProfile(event.threadID, async function (group) {
@@ -1064,7 +1064,7 @@ ERR! markAsDelivered }
                                 });
                             });
                             break;
-                        case "log:unsubscribe":
+                        case "log:group_participants_left":
                             api.getThreadInfo(event.threadID, (err, gc) => {
                                 if (err) utils.logged(err);
                                 getGroupProfile(event.threadID, async function (group) {

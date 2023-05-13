@@ -766,11 +766,11 @@ function formatHistoryMessage(m) {
 function getAdminTextMessageType(type) {
     switch (type) {
         case "change_thread_theme":
-            return "log:thread-color";
+            return "log:thread_color";
         case "change_thread_nickname":
-            return "log:user-nickname";
+            return "log:user_nickname";
         case "change_thread_icon":
-            return "log:thread-icon";
+            return "log:thread_icon";
         case "group_poll":
             return "log:group_poll";
         case "change_thread_quick_reaction":
@@ -797,29 +797,24 @@ function getAdminTextMessageType(type) {
 function formatDeltaEvent(m) {
     var logMessageType;
     var logMessageData;
-
-    // log:thread-color => {theme_color}
-    // log:user-nickname => {participant_id, nickname}
-    // log:thread-icon => {thread_icon}
-    // log:thread-name => {name}
-    // log:subscribe => {addedParticipants - [Array]}
-    // log:unsubscribe => {leftParticipantFbId}
-
     switch (m.class) {
+        default:
+            utils.logged(m.class)
+            break;
         case "AdminTextMessage":
             logMessageData = m.untypedData;
             logMessageType = getAdminTextMessageType(m.type);
             break;
         case "ThreadName":
-            logMessageType = "log:thread-name";
+            logMessageType = "log:thread_name";
             logMessageData = { name: m.name };
             break;
         case "ParticipantsAddedToGroupThread":
-            logMessageType = "log:subscribe";
+            logMessageType = "log:group_participants_add";
             logMessageData = { addedParticipants: m.addedParticipants };
             break;
         case "ParticipantLeftGroupThread":
-            logMessageType = "log:unsubscribe";
+            logMessageType = "log:group_participants_left";
             logMessageData = { leftParticipantFbId: m.leftParticipantFbId };
             break;
     }

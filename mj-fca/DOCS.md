@@ -1093,7 +1093,7 @@ The message object will contain different fields based on its type (as determine
 	</tr>
 	<tr>
 		<td><code>logMessageType</code></td>
-		<td>String representing the type of event (<code>log:subscribe</code>, <code>log:unsubscribe</code>, <code>log:thread-name</code>, <code>log:thread-color</code>, <code>log:thread-icon</code>, <code>log:user-nickname</code>, <code>log:group_poll</code>, <code>log:quick_reaction</code>, <code>log:magic_words</code>, <code>log:approval_mode</code>, <code>log:group_link</code>, <code>log:change_admins</code>, <code>log:group_created</code>, <code>log:call</code>, <code>log:call_participant_joined</code>)</td>
+		<td>String representing the type of event (<code>log:group_participants_add</code>, <code>log:group_participants_left</code>, <code>log:thread_name</code>, <code>log:thread_color</code>, <code>log:thread_icon</code>, <code>log:user-nickname</code>, <code>log:group_poll</code>, <code>log:quick_reaction</code>, <code>log:magic_words</code>, <code>log:approval_mode</code>, <code>log:group_link</code>, <code>log:change_admins</code>, <code>log:group_created</code>, <code>log:call</code>, <code>log:call_participant_joined</code>)</td>
 	</tr>
 	<tr>
 		<td><code>threadID</code></td>
