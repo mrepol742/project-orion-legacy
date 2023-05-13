@@ -250,8 +250,10 @@ function eventListener(defaultFuncs, api, ctx, globalCallback) {
     });
 
     mqttClient.on("close", function () {
-        //(function () { globalCallback("Connection closed."); })();
-        // client.end();
+        utils.logged("fca_mqtt_client connection closed");
+        mqttClient.end();
+        utils.logged("executing_restart");
+        process.exit(0);
     });
 }
 

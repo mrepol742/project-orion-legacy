@@ -1,9 +1,3 @@
 /node_modules
-cache/audios/*
-!cache/audios/.gitkeep
-cache/images/*
-!cache/images/.gitkeep
-cache/videos/*
-!cache/videos/.gitkeep
-cache/files/*
-!cache/files/.gitkeep
+cache/*
+!cache/.gitkeep

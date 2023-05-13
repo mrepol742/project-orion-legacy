@@ -200,7 +200,7 @@ function buildAPI(globalOptions, html, jar) {
 
     //Removing original `listen` that uses pull.
     //Map it to listenMqtt instead for backward compatibly.
-    api.listen = api.eventListener;
+    //api.listen = api.eventListener;
 
     return [ctx, defaultFuncs, api];
 }
