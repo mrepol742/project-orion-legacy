@@ -1,3 +1,3 @@
 /node_modules
-cache/*
-!cache/.gitkeep
+.cache/*
+!.cache/.gitkeep
