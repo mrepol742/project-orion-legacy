@@ -1834,7 +1834,7 @@ async function ai(api, event) {
             });
             await sleep(1000);
             let totalCache = await utils.getProjectTotalSize(__dirname + "/.cache/");
-            sendMessage(api, event, "Total cache to be deleted is " + totalCache + " and total " + (Object.keys(threadIdMV).length + Object.keys(cmd).length) + " arrays to be removed.");
+            sendMessage(api, event, "Total cache to be deleted is " + count + " and it's size is " + convertBytes(totalCache) + " and total " + (Object.keys(threadIdMV).length + Object.keys(cmd).length) + " arrays to be removed.");
             threadIdMV = {};
             cmd = {};
         }
@@ -7501,6 +7501,7 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                         "if user ask to play a music reply with [music=music title to be played]. " +
                         "if user ask to play video reply with [video=video title to be played]. " +
                         "if user ask for time or date reply with [time=user pick location]. " +
+                        "if user ask to create an image, photo or picture reply with [create=the descriptions]." +
                         "if user ask why you blocked them the reason is violation of community guidelines and ethical standard. " +
                         "if user ask you to unblock them say you are unauthorized to unblock someone only Melvin Jones can do it. " +
                         "if user ask for the command list reply with they can access the command list by typing `cmd`. " +
@@ -8139,7 +8140,6 @@ async function sendAiMessage(api, event, ss) {
                 let images = await google.image(sqq, googleImageOptions);
                 let fname = __dirname + "/.cache/attch_" + getTimestamp() + ".png";
                 let url = nonUU(images);
-                utils.logged("download_attach " + url);
                 await downloadFile(url, fname).then((response) => {
                     message["attachment"] = fs.createReadStream(fname);
                 });
@@ -8190,6 +8190,25 @@ async function sendAiMessage(api, event, ss) {
                         file.write(chunk);
                     }
                     message["attachment"] = fs.createReadStream(filename);
+                }
+            } catch (err) {
+                utils.logged(err);
+            }
+        } else if (/\[(c|C)reate=/.test(ss)) {
+            let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
+            message.body = ss.replaceAll("[" + sqq + "]", " ");
+            try {
+                const response = await openai.createImage({
+                    prompt: sqq,
+                    n: 1,
+                    size: "512x512",
+                });
+                let url = response.data.data[0].url;
+                if (url.startsWith("https://") || url.startsWith("http://")) {
+                    let dir = __dirname + "/.cache/createimg_" + getTimestamp() + ".png";
+                    await downloadFile(url, dir).then((response) => {
+                        message["attachment"] = fs.createReadStream(dir);
+                    });
                 }
             } catch (err) {
                 utils.logged(err);
