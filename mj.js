@@ -6389,7 +6389,7 @@ function isGoingToFast(api, event) {
                 .toLowerCase()
         ) &&
             !settings.preference.onNsfw) ||
-        ((event.body != "" || event.body != " ") && event.attachments.length > 1)
+        ((event.body != "" || event.body != " ") && event.attachments.length > 0)
     ) {
         let id = event.senderID;
         if (isMyId(id)) {
