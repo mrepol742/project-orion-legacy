@@ -408,14 +408,12 @@ ERR! markAsDelivered }
                             });
                         }
                     } else if (users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                        saveEvent(event);
                         return;
                     }
                 }
 
                 if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && !users.admin.includes(event.senderID)) {
                     if (groups.blocked.includes(event.threadID) && event.type != "message_unsend") {
-                        saveEvent(event);
                         return;
                     }
                 }
@@ -511,14 +509,14 @@ ERR! markAsDelivered }
                         };
                         sendMessage(api, event, message);
                     }
-                    saveEvent(event);
+                    saveEvent(api, event);
                 }
                 return;
             }
 
             if (settings.preference.isStop && !isMyId(event.senderID)) {
                 if (event.type == "message" || event.type == "message_reply") {
-                    saveEvent(event);
+                    saveEvent(api, event);
                 }
                 return;
             }
@@ -532,7 +530,7 @@ ERR! markAsDelivered }
             switch (event.type) {
                 case "message":
                 case "message_reply":
-                    saveEvent(event);
+                    saveEvent(api, event);
                     ai(api, event);
                     break;
                 case "message_reaction":
@@ -1054,27 +1052,33 @@ ERR! markAsDelivered }
                                     utils.logged("event_log_unsubsribe " + event.threadID + " ROOT " + api.getCurrentUserID());
                                     return;
                                 }
-                                api.getUserInfo(parseInt(id), (err, data) => {
-                                    if (err) return utils.logged(err);
-                                    for (let prop in data) {
-                                        if (data.hasOwnProperty(prop) && data[prop].name) {
-                                            let gcn = gc.threadName;
-                                            let arr = gc.participantIDs;
-                                            if (users.blocked.includes(prop) || users.bot.includes(prop)) {
-                                                return;
-                                            } else if (data[prop].name == "Facebook user") {
-                                                sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
-                                                utils.logged("event_log_unsubsribe " + event.threadID + " " + prop);
+                                api.getUserInfo(id, (err, data) => {
+                                    if (err) {
+                                        return utils.logged(err);
+                                    } else {
+                                        let gcn = gc.threadName;
+                                        let arr = gc.participantIDs;
+                                        if (users.blocked.includes(id) || users.bot.includes(id)) {
+                                            return;
+                                        } else if (data[id].name == "Facebook user") {
+                                            sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
+                                            utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
+                                        } else {
+                                            if (settings.preference.antiLeave && !accounts.includes(id) && !users.admin.includes(id)) {
+                                                api.addUserToGroup(id, event.threadID, (err) => {
+                                                    if (err) utils.logged(err);
+                                                    if (event.author == id) {
+                                                        sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone!!");
+                                                    } else {
+                                                        api.getUserInfo(event.author, (err1, data1) => {
+                                                            if (err1) utils.logged(err1);
+                                                            sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No...");
+                                                        });
+                                                    }
+                                                });
                                             } else {
-                                                if (settings.preference.antiLeave) {
-                                                    api.addUserToGroup(prop, event.threadID, (err) => {
-                                                        if (err) utils.logged(err);
-                                                        sendMessage(api, event, "You think " + data[prop].firstName + ", you can leave us all here alone!!");
-                                                    });
-                                                } else {
-                                                    sendMessage(api, event, "Sayonara " + data[prop].name + ", may the force be with you :(");
-                                                    utils.logged("event_log_unsubsribe " + event.threadID + " " + data[prop].name);
-                                                }
+                                                sendMessage(api, event, "Sayonara " + data[id].name + ", may the force be with you :(");
+                                                utils.logged("event_log_unsubsribe " + event.threadID + " " + data[id].name);
                                             }
                                         }
                                     }
@@ -3966,7 +3970,7 @@ Hello %USER%, here is the current system information as of ` +
                 remAdmin(api, event, id);
             }
         }
-    } else if (query == "unsendon" && !settings.preference.onUnsend) {
+    } else if (query == "unsendon") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.onUnsend) {
                 sendMessage(api, event, "It's already enabled.");
@@ -3975,7 +3979,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
             }
         }
-    } else if (query == "unsendoff" && settings.preference.onUnsend) {
+    } else if (query == "unsendoff") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.onUnsend) {
                 settings.preference.onUnsend = false;
@@ -3984,7 +3988,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (query == "antileaveon" && !settings.preference.antiLeave) {
+    } else if (query == "antileaveon") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.antiLeave) {
                 sendMessage(api, event, "It's already enabled.");
@@ -3993,7 +3997,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "Readding of user who left is now enabled.");
             }
         }
-    } else if (query == "antileaveoff" && settings.preference.antiLeave) {
+    } else if (query == "antileaveoff") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.antiLeave) {
                 settings.preference.antiLeave = false;
@@ -4002,7 +4006,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (query == "tagalogsupporton" && !settings.preference.tagalog) {
+    } else if (query == "tagalogsupporton") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.tagalog) {
                 sendMessage(api, event, "It's already enabled.");
@@ -4011,7 +4015,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "Tagalog Support is now enabled.");
             }
         }
-    } else if (query == "tagalogsupportoff" && settings.preference.tagalog) {
+    } else if (query == "tagalogsupportoff") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.tagalog) {
                 settings.preference.tagalog = false;
@@ -4020,7 +4024,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (query == "delayon" && !settings.preference.onDelay) {
+    } else if (query == "delayon") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.onDelay) {
                 sendMessage(api, event, "It's already enabled.");
@@ -4029,7 +4033,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
             }
         }
-    } else if (query == "delayoff" && settings.preference.onDelay) {
+    } else if (query == "delayoff") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.onDelay) {
                 settings.preference.onDelay = false;
@@ -4038,7 +4042,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (query == "nsfwon" && !settings.preference.onNsfw) {
+    } else if (query == "nsfwon") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.onNsfw) {
                 sendMessage(api, event, "It's already enabled.");
@@ -4047,7 +4051,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "Not Safe For Work are now enabled.");
             }
         }
-    } else if (query == "nsfwoff" && settings.preference.onNsfw) {
+    } else if (query == "nsfwoff") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.onNsfw) {
                 settings.preference.onNsfw = false;
@@ -4056,7 +4060,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (query == "simultaneousexecutionon" && !settings.preference.preventSimultaneousExecution) {
+    } else if (query == "simultaneousexecutionon") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.preventSimultaneousExecution) {
                 sendMessage(api, event, "It's already enabled.");
@@ -4065,7 +4069,7 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
             }
         }
-    } else if (query == "simultaneousexecutionoff" && settings.preference.preventSimultaneousExecution) {
+    } else if (query == "simultaneousexecutionoff") {
         if (users.admin.includes(event.senderID)) {
             if (settings.preference.preventSimultaneousExecution) {
                 settings.preference.preventSimultaneousExecution = false;
@@ -6381,32 +6385,7 @@ function isGoingToFast(api, event) {
             reactMessage(api, event, ":heart:");
         });
     }
-    if (
-        (utils.isBlockedSentence(
-            input
-                .normalize("NFD")
-                .replace(/\p{Diacritic}/gu, "")
-                .toLowerCase()
-        ) &&
-            !settings.preference.onNsfw) ||
-        ((event.body != "" || event.body != " ") && event.attachments.length > 0)
-    ) {
-        let id = event.senderID;
-        if (isMyId(id)) {
-            return false;
-        }
-        if (event.attachments.length > 0) {
-            users.bot.push(id);
-        } else {
-            users.blocked.push(id);
-        }
-        if (users.admin.includes(id)) {
-            users.admin = users.admin.filter((item) => item !== id);
-            sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
-        } else {
-            sendMessage(api, event, "You have been blocked.");
-        }
-        sendMessageOnly(api, event, "We don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.");
+    if (isItBotOrNot(api, event)) {
         return true;
     }
     // TODO: prevent from executing if the query is default
@@ -6426,6 +6405,40 @@ function isGoingToFast(api, event) {
         }
         cmd[event.senderID] = Math.floor(Date.now() / 1000) + 10;
         return false;
+    }
+    return false;
+}
+
+function isItBotOrNot(api, event) {
+    let input = event.body;
+    let eventTypes = ["photo", "animated_image", "sticker", "audio", "video", "file"];
+    if (
+        (utils.isBlockedSentence(
+            input
+                .normalize("NFD")
+                .replace(/\p{Diacritic}/gu, "")
+                .toLowerCase()
+        ) &&
+            !settings.preference.onNsfw) ||
+        (input.trim().length > 5 && event.attachments.length != 0 && eventTypes.includes(event.attachments[0].type))
+    ) {
+        let id = event.senderID;
+        if (isMyId(id)) {
+            return false;
+        }
+        if (event.attachments.length != 0) {
+            users.bot.push(id);
+        } else {
+            users.blocked.push(id);
+        }
+        if (users.admin.includes(id)) {
+            users.admin = users.admin.filter((item) => item !== id);
+            sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
+        } else {
+            sendMessage(api, event, "You have been blocked.");
+        }
+        sendMessageOnly(api, event, "We don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.");
+        return true;
     }
     return false;
 }
@@ -7267,11 +7280,14 @@ function voiceR(api, event) {
     }
 }
 
-function saveEvent(event) {
+function saveEvent(api, event) {
     if (isMyId(event.senderID)) {
         return;
     }
     if (event.attachments.length != 0) {
+        if (isItBotOrNot(api, event)) {
+            return;
+        }
         utils.logged("event_attachment " + event.threadID + " " + event.attachments[0].type);
         switch (event.attachments[0].type) {
             case "error":
