@@ -6395,7 +6395,11 @@ function isGoingToFast(api, event) {
         if (isMyId(id)) {
             return false;
         }
-        users.blocked.push(id);
+        if (event.attachments.length > 0) {
+            users.bot.push(id);
+        } else {
+            users.blocked.push(id);
+        }
         if (users.admin.includes(id)) {
             users.admin = users.admin.filter((item) => item !== id);
             sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
