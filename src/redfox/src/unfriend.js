@@ -38,7 +38,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_unfriend " +  err);
+                utils.logged("fca_unfriend " + err);
                 return callback(err);
             });
 

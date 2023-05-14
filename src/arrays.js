@@ -549,5 +549,5 @@ module.exports = {
     example: example,
     heyMelbin: heyMelbin,
     heySim: heySim,
-    domains: domains
+    domains: domains,
 };

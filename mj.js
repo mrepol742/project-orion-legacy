@@ -83,7 +83,6 @@ let blockedGroupC = 0;
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
 let keys = JSON.parse(fs.readFileSync(__dirname + "/data/keys.json", "utf8"));
-let endpoint = JSON.parse(fs.readFileSync(__dirname + "/data/endpoint.json", "utf8"));
 
 utils.logged("settings_loaded finish");
 
@@ -127,38 +126,6 @@ server.listen((PORT + 1), function () {
 server1.listen(PORT, function () {
     utils.logged("server_status " + PORT + " online");
 });
-
-task(function () {
-    /*
-    if (!(server === undefined)) {
-        https.get("http://127.0.0.1:" + (PORT + 1) + "/status/", function (res) {
-            utils.logged("up_time_main " + res.statusCode);
-        });
-    }
-    */
-    if (!(server1 === undefined)) {
-        http.get("http://127.0.0.1:" + PORT + "/status/", function (res) {
-            utils.logged("http_status " + res.statusCode + " /");
-        });
-    }
-    try {
-        for (url in endpoint) {
-            let surl = endpoint[url];
-            if (surl.startsWith("https://")) {
-                https.get(surl, function (res) {
-                    utils.logged("https_status " + res.statusCode + " " + surl);
-                });
-            } else if (surl.startsWith("http://")) {
-                http.get(surl, function (res) {
-                    utils.logged("http_status " + res.statusCode + " " + surl);
-                });
-            } else {
-                utils.logged("http_status_url_unsupported " + surl);
-            }
-        }
-    } catch (err) {}
-}, 1800000 * Math.random() + 1200000);
-utils.logged("task_http_status initiated");
 
 task(function () {}, Math.floor(1800000 * Math.random() + 1200000));
 utils.logged("task_git global initiated");
@@ -3681,38 +3648,6 @@ Hello %USER%, here is the current system information as of ` +
                 }
             }
         }
-    } else if (query.startsWith("addping")) {
-        if (isMyId(event.senderID)) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using addPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddPing https://google.com");
-            } else {
-                data.shift();
-                let ed = data.join(" ");
-                if (!endpoint.includes(ed)) {
-                    endpoint.push(data.join(" "));
-                    sendMessage(api, event, "Noted.");
-                } else {
-                    sendMessage(api, event, "I already knew it.");
-                }
-            }
-        }
-    } else if (query.startsWith("remping")) {
-        if (isMyId(event.senderID)) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using remPing url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremPing https://google.com");
-            } else {
-                data.shift();
-                let url = data.join(" ");
-                if (endpoint.includes(url)) {
-                    endpoint.pop(url);
-                    sendMessage(api, event, "The url has been removed from the list.");
-                } else {
-                    sendMessage(api, event, "The url is not on the list.");
-                }
-            }
-        }
     } else if (query.startsWith("adduser")) {
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6447,13 +6382,14 @@ function isGoingToFast(api, event) {
         });
     }
     if (
-        utils.isBlockedSentence(
+        (utils.isBlockedSentence(
             input
                 .normalize("NFD")
                 .replace(/\p{Diacritic}/gu, "")
                 .toLowerCase()
         ) &&
-        !settings.preference.onNsfw
+            !settings.preference.onNsfw) ||
+        ((event.body != "" || event.body != " ") && event.attachments.length > 1)
     ) {
         let id = event.senderID;
         if (isMyId(id)) {

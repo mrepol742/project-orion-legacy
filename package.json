@@ -7,7 +7,7 @@
     "scripts": {
         "start": "clear && while [ true ]; do node mj.js ; done",
         "test": "clear && node --inspect mj.js",
-        "prettier": "prettier / --write"
+        "prettier": "prettier ./ --write"
     },
     "keywords": [],
     "author": {

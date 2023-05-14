@@ -52,16 +52,16 @@ async function AI_FACE(types) {
 
 async function doS() {
     let aaa = await AI_FACE({
-      eye_color:"Blue",
-      emotion: "neutral",
-      face: "beautified",
-      head_pose: "front-facing",
-      gender:  "female",
-      age: "young-adult",
-      ethnicity:"asian",
-      hair_color: "black",
-      hair_length: "short",
-  });
+        eye_color: "Blue",
+        emotion: "neutral",
+        face: "beautified",
+        head_pose: "front-facing",
+        gender: "female",
+        age: "young-adult",
+        ethnicity: "asian",
+        hair_color: "black",
+        hair_length: "short",
+    });
     utils.logged(aaa);
 }
 doS();

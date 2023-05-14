@@ -315,7 +315,6 @@ Hello %USER%, this is the command list for user.
 You can set those information to enable awesome features.
 `;
 
-
 let helpgroup = `
 Hello %USER%, this is the command list for groups.
 
@@ -337,8 +336,8 @@ Hello %USER%, you reached the root user command list.
    ⦿ restart
    ⦿ notify
    ⦿ destroy
-   ⦿ addPing [url]
-   ⦿ remPing [url]
+
+
    ⦿ acceptMessageRequest [threadid]
    ⦿ acceptFriendRequest [uid]
    ⦿ changeBio [text]

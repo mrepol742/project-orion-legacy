@@ -46,12 +46,12 @@ function logged(data) {
 
 function getCurrentTime() {
     let options = {
-        timeZone: "Asia/Manila",
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      },
-    formatter = new Intl.DateTimeFormat([], options);
+            timeZone: "Asia/Manila",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+        },
+        formatter = new Intl.DateTimeFormat([], options);
     return formatter.format(new Date());
 }
 
@@ -93,7 +93,6 @@ function isReadableStream(obj) {
     return obj instanceof stream.Stream && (getType(obj._read) === "Function" || getType(obj._read) === "AsyncFunction") && getType(obj._readableState) === "Object";
 }
 
-
 function get(url, jar, qs, options, ctx) {
     // I'm still confused about this
     if (getType(qs) === "Object") {
@@ -113,7 +112,7 @@ function get(url, jar, qs, options, ctx) {
         gzip: true,
     };
 
-    return request(op).then(function(res) {
+    return request(op).then(function (res) {
         return res[0];
     });
 }
@@ -129,7 +128,7 @@ function post(url, jar, form, options, ctx, customHeader) {
         gzip: true,
     };
 
-    return request(op).then(function(res) {
+    return request(op).then(function (res) {
         return res[0];
     });
 }
@@ -148,7 +147,7 @@ function postFormData(url, jar, form, qs, options, ctx) {
         gzip: true,
     };
 
-    return request(op).then(function(res) {
+    return request(op).then(function (res) {
         return res[0];
     });
 }
@@ -227,7 +226,7 @@ var j = {
     Y: "%2c%22pt%22%3a0%2c%22vis%22%3a1%2c%22bls%22%3a0%2c%22blc%22%3a0%2c%22snd%22%3a1%2c%22ct%22%3a",
     Z: "%2c%22sb%22%3a1%2c%22t%22%3a%5b%5d%2c%22f%22%3anull%2c%22uct%22%3a0%2c%22s%22%3a0%2c%22blo%22%3a0%7d%2c%22bl%22%3a%7b%22ac%22%3a",
 };
-(function() {
+(function () {
     var l = [];
     for (var m in j) {
         i[j[m]] = m;
@@ -239,11 +238,11 @@ var j = {
 
 function presenceEncode(str) {
     return encodeURIComponent(str)
-        .replace(/([_A-Z])|%../g, function(m, n) {
+        .replace(/([_A-Z])|%../g, function (m, n) {
             return n ? "%" + n.charCodeAt(0).toString(16) : m;
         })
         .toLowerCase()
-        .replace(h, function(m) {
+        .replace(h, function (m) {
             return i[m];
         });
 }
@@ -251,7 +250,7 @@ function presenceEncode(str) {
 // eslint-disable-next-line no-unused-vars
 function presenceDecode(str) {
     return decodeURIComponent(
-        str.replace(/[_A-Z]/g, function(m) {
+        str.replace(/[_A-Z]/g, function (m) {
             return j[m];
         })
     );
@@ -303,7 +302,7 @@ function getGUID() {
     /** @type {number} */
     var sectionLength = Date.now();
     /** @type {string} */
-    var id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    var id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
         /** @type {number} */
         var r = Math.floor((sectionLength + Math.random() * 16) % 16);
         /** @type {number} */
@@ -635,7 +634,7 @@ function _formatAttachment(attachment1, attachment2) {
                 playableUrl: blob.story_attachment.media == null ? null : blob.story_attachment.media.playable_url,
 
                 subattachments: blob.story_attachment.subattachments,
-                properties: blob.story_attachment.properties.reduce(function(obj, cur) {
+                properties: blob.story_attachment.properties.reduce(function (obj, cur) {
                     obj[cur.key] = cur.value.text;
                     return obj;
                 }, {}),
@@ -666,7 +665,7 @@ function _formatAttachment(attachment1, attachment2) {
 function formatAttachment(attachments, attachmentIds, attachmentMap, shareMap) {
     attachmentMap = shareMap || attachmentMap;
     return attachments
-        ? attachments.map(function(val, i) {
+        ? attachments.map(function (val, i) {
               if (!attachmentMap || !attachmentIds || !attachmentMap[attachmentIds[i]]) {
                   return _formatAttachment(val);
               }
@@ -716,7 +715,7 @@ function formatMessage(m) {
         senderID: formatID(originalMessage.sender_fbid.toString()),
         participantNames: originalMessage.group_thread_info ? originalMessage.group_thread_info.participant_names : [originalMessage.sender_name.split(" ")[0]],
         participantIDs: originalMessage.group_thread_info
-            ? originalMessage.group_thread_info.participant_ids.map(function(v) {
+            ? originalMessage.group_thread_info.participant_ids.map(function (v) {
                   return formatID(v.toString());
               })
             : [formatID(originalMessage.sender_fbid)],
@@ -806,7 +805,7 @@ function formatDeltaEvent(m) {
     var logMessageData;
     switch (m.class) {
         default:
-            utils.logged(m.class)
+            utils.logged(m.class);
             break;
         case "AdminTextMessage":
             logMessageData = m.untypedData;
@@ -910,17 +909,17 @@ function makeParsable(html) {
 function arrToForm(form) {
     return arrayToObject(
         form,
-        function(v) {
+        function (v) {
             return v.name;
         },
-        function(v) {
+        function (v) {
             return v.val;
         }
     );
 }
 
 function arrayToObject(arr, getKey, getValue) {
-    return arr.reduce(function(acc, val) {
+    return arr.reduce(function (acc, val) {
         acc[getKey(val)] = getValue(val);
         return acc;
     }, {});
@@ -1029,8 +1028,8 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
     if (retryCount == undefined) {
         retryCount = 0;
     }
-    return function(data) {
-        return bluebird.try(function() {
+    return function (data) {
+        return bluebird.try(function () {
             //logged("fca_login " + data.body);
             if (data.statusCode >= 500 && data.statusCode < 600) {
                 if (retryCount >= 5) {
@@ -1047,14 +1046,14 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
                 if (data.request.headers["Content-Type"].split(";")[0] === "multipart/form-data") {
                     return bluebird
                         .delay(retryTime)
-                        .then(function() {
+                        .then(function () {
                             return defaultFuncs.postFormData(url, ctx.jar, data.request.formData, {});
                         })
                         .then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
                 } else {
                     return bluebird
                         .delay(retryTime)
-                        .then(function() {
+                        .then(function () {
                             return defaultFuncs.post(url, ctx.jar, data.request.formData);
                         })
                         .then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
@@ -1113,9 +1112,9 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
 }
 
 function saveCookies(jar) {
-    return function(res) {
+    return function (res) {
         var cookies = res.headers["set-cookie"] || [];
-        cookies.forEach(function(c) {
+        cookies.forEach(function (c) {
             if (c.indexOf(".facebook.com") > -1) {
                 jar.setCookie(c, "https://www.facebook.com");
             }
@@ -1211,10 +1210,7 @@ function decodeClientPayload(payload) {
 }
 
 function getAppState(jar) {
-    return jar
-        .getCookies("https://www.facebook.com")
-        .concat(jar.getCookies("https://facebook.com"))
-        .concat(jar.getCookies("https://www.messenger.com"));
+    return jar.getCookies("https://www.facebook.com").concat(jar.getCookies("https://facebook.com")).concat(jar.getCookies("https://www.messenger.com"));
 }
 
 async function getProjectTotalSize(dir) {
@@ -1235,7 +1231,7 @@ async function getProjectTotalSize(dir) {
     });
 
     return (await Promise.all(paths)).flat(Infinity).reduce((i, size) => i + size, 0);
-};
+}
 
 function isValidDateFormat(date) {
     let dateformat = /^(0?[1-9]|1[0-2])[\/](0?[1-9]|[1-2][0-9]|3[01])[\/]\d{4}$/;
@@ -1359,6 +1355,5 @@ module.exports = {
     getCPULoad,
     isBlockedSentence,
     encrypt,
-    decrypt
+    decrypt,
 };
-
