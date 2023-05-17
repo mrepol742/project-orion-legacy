@@ -1017,9 +1017,11 @@ ERR! markAsDelivered }
                                         utils.logged("new_member_multi " + names[a][0] + " " + names[a][1]);
                                     }
                                     gret += ". How are you all doin?";
-                                } else {
+                                } else if (i > 0) {
                                     gret = "How are you " + names[0][1] + "?";
                                     utils.logged("event_log_subsribe " + event.threadID + " " + names[0][0] + " " + names[0][1]);
+                                } else {
+                                    return;
                                 }
                                 let name = event.logMessageData.addedParticipants[0].fullName;
                                 let id = event.logMessageData.addedParticipants[0].userFbId;
@@ -1040,7 +1042,7 @@ ERR! markAsDelivered }
                         case "log:group_participants_left":
                             api.getThreadInfo(event.threadID, (err, gc) => {
                                 if (err) utils.logged(err);
-                                getGroupProfile(event.threadID, async function (group) {
+                                getGroupProfile(event.threadID, function (group) {
                                     if (group.name != undefined) {
                                         let arr = gc.participantIDs;
                                         group["members"] = arr.length;
@@ -1406,6 +1408,7 @@ async function ai(api, event) {
 
     let findPr = findPrefix(event, api.getCurrentUserID());
 
+
     if (/(^searchimg$|^searchimg\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -1431,11 +1434,29 @@ async function ai(api, event) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using searchincog text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchincog Who is Melvin Jones Repol");
         } else {
             data.shift();
-            getResponseData("https://api.duckduckgo.com/?q=" + data.join(" ") + "&format=json&pretty=1").then((response) => {
+            let query = data.join(" ");
+            getResponseData("https://api.duckduckgo.com/?q=" + query + "&format=json&pretty=1").then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    sendMessage(api, event, response.Abstract);
+                    if (response.Abstract == "") {
+                        sendMessage(api, event, "No results found for `" + query + "`");
+                    } else {
+                        if (response.Image == "") {
+                            sendMessage(api, event, response.Abstract);
+                        } else {
+                            let url = "https://duckduckgo.com" + response.Image;
+                            let dir = __dirname + "/.cache/duckduckgo_" + getTimestamp() + ".png";
+                    downloadFile(url, dir).then((response) => {
+                        let message = {
+                            body: response.Abstract,
+                            attachment: fs.createReadStream(dir),
+                        };
+                        sendMessage(api, event, message);
+                        unLink(dir);
+                    });
+                        }
+                    }
                 }
             });
         }
@@ -6183,7 +6204,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                 if (no_font) {
                     updateFont1 = message;
                 } else {
-                    updateFont1 = updateFont(message, event.senderID);
+                    updateFont1 = await updateFont(message, event.senderID);
                 }
                 api.sendMessage(
                     updateFont1,
@@ -6267,7 +6288,7 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font
         if (no_font) {
             updateFont1 = message;
         } else {
-            updateFont1 = updateFont(message, id);
+            updateFont1 = await updateFont(message, id);
         }
         let num = Math.floor(Math.random() * 10);
         if (num % 2 == 0) {
@@ -6385,9 +6406,11 @@ function isGoingToFast(api, event) {
             reactMessage(api, event, ":heart:");
         });
     }
+    if (!users.bot.includes(event.senderID)) {
     if (isItBotOrNot(api, event)) {
         return true;
     }
+}
     // TODO: prevent from executing if the query is default
     if (!settings.preference.preventSimultaneousExecution || input.split(" ").length < 2) {
         return false;
@@ -7281,13 +7304,15 @@ function voiceR(api, event) {
 }
 
 function saveEvent(api, event) {
-    if (isMyId(event.senderID)) {
+    if (accounts.includes(event.senderID)) {
         return;
     }
     if (event.attachments.length != 0) {
+        if (!users.bot.includes(event.senderID)) {
         if (isItBotOrNot(api, event)) {
             return;
         }
+    }
         utils.logged("event_attachment " + event.threadID + " " + event.attachments[0].type);
         switch (event.attachments[0].type) {
             case "error":

@@ -132,7 +132,7 @@ module.exports = function (defaultFuncs, api, ctx) {
 
                 if (resData.error) {
                     if (resData.error === 1545012) {
-                        utils.logged("fca_send_message + Got error 1545012. This might mean that you're not part of the conversation " + threadID);
+                        utils.logged("fca_send_message Error 1545012. This might mean that you're not part of the conversation " + threadID);
                     }
                     return callback(resData);
                 }
