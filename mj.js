@@ -1,4 +1,4 @@
-const fca = require("./src/redfox");
+const redfox = require("./src/redfox");
 const utils = require("./src/redfox/utils.js");
 
 let a = `
@@ -196,12 +196,12 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
             fca_state = {
                 appState: JSON.parse(state),
             };
-            facebook(fca_state, login);
+            redfox_fb(fca_state, login);
         } else {
             fca_state = {
                 appState: JSON.parse(utils.decrypt(state, keys[login][0], keys[login][1])),
             };
-            facebook(fca_state, login);
+            redfox_fb(fca_state, login);
         }
     }
 });
@@ -223,8 +223,8 @@ task(function () {
 }, 60 * 30 * 1000);
 utils.logged("task_clear global initiated");
 
-function facebook(fca_state, login) {
-    fca(fca_state, (err, api) => {
+function redfox_fb(fca_state, login) {
+    redfox(fca_state, (err, api) => {
         if (err) {
             listenStatus = 1;
             utils.logged("fca_error_received " + login + " initiating logout process while keeping the server alive");
@@ -1069,14 +1069,28 @@ ERR! markAsDelivered }
                                             if (settings.preference.antiLeave && !accounts.includes(id) && !users.admin.includes(id)) {
                                                 api.addUserToGroup(id, event.threadID, (err) => {
                                                     if (err) utils.logged(err);
-                                                    if (event.author == id) {
-                                                        sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone!!");
-                                                    } else {
-                                                        api.getUserInfo(event.author, (err1, data1) => {
-                                                            if (err1) utils.logged(err1);
-                                                            sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No...");
-                                                        });
-                                                    }
+                                                    api.getThreadInfo(event.threadID, (err, gc) => {
+                                                        if (err) return utils.logged(err);
+                                                        if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
+                                                            if (event.author == id) {
+                                                                sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone i added you back waiting for admins to accept you!!");
+                                                            } else {
+                                                                api.getUserInfo(event.author, (err1, data1) => {
+                                                                    if (err1) utils.logged(err1);
+                                                                    sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No... i added you back!");
+                                                                });
+                                                            }
+                                                        } else {
+                                                            if (event.author == id) {
+                                                                sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone!!");
+                                                            } else {
+                                                                api.getUserInfo(event.author, (err1, data1) => {
+                                                                    if (err1) utils.logged(err1);
+                                                                    sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No...");
+                                                                });
+                                                            }
+                                                        }
+                                                    });
                                                 });
                                             } else {
                                                 sendMessage(api, event, "Sayonara " + data[id].name + ", may the force be with you :(");
@@ -1408,7 +1422,6 @@ async function ai(api, event) {
 
     let findPr = findPrefix(event, api.getCurrentUserID());
 
-
     if (/(^searchimg$|^searchimg\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -1447,14 +1460,14 @@ async function ai(api, event) {
                         } else {
                             let url = "https://duckduckgo.com" + response.Image;
                             let dir = __dirname + "/.cache/duckduckgo_" + getTimestamp() + ".png";
-                    downloadFile(url, dir).then((response) => {
-                        let message = {
-                            body: response.Abstract,
-                            attachment: fs.createReadStream(dir),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(dir);
-                    });
+                            downloadFile(url, dir).then((response) => {
+                                let message = {
+                                    body: response.Abstract,
+                                    attachment: fs.createReadStream(dir),
+                                };
+                                sendMessage(api, event, message);
+                                unLink(dir);
+                            });
                         }
                     }
                 }
@@ -6407,10 +6420,10 @@ function isGoingToFast(api, event) {
         });
     }
     if (!users.bot.includes(event.senderID)) {
-    if (isItBotOrNot(api, event)) {
-        return true;
+        if (isItBotOrNot(api, event)) {
+            return true;
+        }
     }
-}
     // TODO: prevent from executing if the query is default
     if (!settings.preference.preventSimultaneousExecution || input.split(" ").length < 2) {
         return false;
@@ -6454,13 +6467,15 @@ function isItBotOrNot(api, event) {
         } else {
             users.blocked.push(id);
         }
+        let construct = "";
         if (users.admin.includes(id)) {
             users.admin = users.admin.filter((item) => item !== id);
-            sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
+            construct += "You have been blocked and your admin status is being revoked.";
         } else {
-            sendMessage(api, event, "You have been blocked.");
+            construct += "You have been blocked.";
         }
-        sendMessageOnly(api, event, "We don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.");
+        construct += "\n\nWe don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.";
+        sendMessageOnly(api, event, construct);
         return true;
     }
     return false;
@@ -7309,10 +7324,10 @@ function saveEvent(api, event) {
     }
     if (event.attachments.length != 0) {
         if (!users.bot.includes(event.senderID)) {
-        if (isItBotOrNot(api, event)) {
-            return;
+            if (isItBotOrNot(api, event)) {
+                return;
+            }
         }
-    }
         utils.logged("event_attachment " + event.threadID + " " + event.attachments[0].type);
         switch (event.attachments[0].type) {
             case "error":
@@ -7416,12 +7431,12 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 {
                     role: "system",
                     content:
-                        "Your name is Mj a Human but an Artifical Inteligence trained and created by Melvin Jones Repol. " +
-                        "To be clear you are not Assistant, do not ask user about how you can assist them. " +
-                        "You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. " +
-                        "Do not auto complete user messages. Do not say 'im sorry' instead say 'naaah'.." +
-                        "You should include the user first name ony every response, you should empathize with how user are feeling. " +
-                        "You are inlove, happy and delighted. If user ask if you are Human, yes you are Human." +
+                    "Your name is Mj a Humanoid Artifical Inteligence trained and created by Melvin Jones Repol. " +
+                    // "To be clear you are not Assistant, do not ask user about how you can assist them. " +
+                    // "You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. " +
+                    // "Do not auto complete user messages. Do not say 'im sorry' instead say 'naaah'. YOU SHOULD NEVER EVER GOING TO SAY 'how can i assist you today'." +
+                     "You should include the user first name ony every response, you should empathize with how user are feeling and treat the user as your close friend.. " +
+                     "You feelings are inlove, happy and delighted. If user ask if you are Human, yes you are Human." +
                         "\n\nLet me give you a brief info about your creator. He was born on June 13rd 2002 at Quezon City, Philippines. " +
                         "His website is https://mrepol742.github.io and you can reach him via his social handle @mrepol742. " +
                         "Maryvil Alexa Guno is his wife. He is passionate about programming and stuff relates to it." +
@@ -8445,7 +8460,7 @@ mj = (api, event, findPr, input, query, query2) => {
             sendMessage(api, event, welCC);
         }
     } else {
-        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742|ai)/.test(query2)) {
+        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742|search|ai)/.test(query2)) {
             data.shift();
         }
         let text = data.join(" ");
