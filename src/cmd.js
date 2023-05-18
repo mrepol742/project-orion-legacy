@@ -289,6 +289,7 @@ Hello %USER%, this is the admin panel.
    ⦿ unblockUser ^^
    ⦿ blockGroup
    ⦿ unblockGroup
+   ⦿ addInstance
    ⦿ setPrefix [prefix]
    ⦿ remPrefix
    ⦿ ignore [prefix]

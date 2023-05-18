@@ -1250,6 +1250,20 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "Invalid Key!");
             }
         }
+    } else if (query == "addinstance") {
+        if (users.admin.includes(event.senderID)) {
+            let appsss = JSON.parse(event.messageReply.body);
+            let response = utils.isValidAppState(appsss);
+            if (response.score) {
+                sendMessage(api, event, "Logging-in...");
+                let state = {
+                    appState: appsss
+                };
+                redfox_fb(state, response.uid);
+            } else {
+                sendMessage(api, event, "You app state is not valid!");
+            }
+        }
     } else if (/(^run$|^run\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -1398,7 +1412,9 @@ async function ai(api, event) {
         }
     }
     if (event.type == "message") {
-        if (query == "totext") {
+        if (query == "addinstance") {
+            sendMessage(api, event, "You need to reply to a message with an app state json array.");
+        } else if (query == "totext") {
             sendMessage(api, event, "You need to reply to a message with an audio.");
         } else if (query == "bgremove" || query == "gphoto" || query == "searchimgreverse") {
             sendMessage(api, event, "You need to reply to a message with a photo.");
@@ -8532,3 +8548,4 @@ mj = (api, event, findPr, input, query, query2) => {
         }
     }
 };
+
