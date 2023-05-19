@@ -1364,7 +1364,7 @@ function isValidAppState(a) {
             let totl =score == a.length;
         return {score: totl, uid: id}
     } else {
-        return false;
+        return {score: false, uid:"000000000"};
     }
 }
 
