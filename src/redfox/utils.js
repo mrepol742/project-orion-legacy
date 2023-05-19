@@ -795,6 +795,10 @@ function getAdminTextMessageType(type) {
             return "log:call";
         case "participant_joined_group_call":
             return "log:call_participant_joined";
+        case "pin_messages_v2":
+            return "log:pin_messages";pin_messages
+        case "unpin_messages_v2":
+            return "log:unpin_messages";
         default:
             return type;
     }

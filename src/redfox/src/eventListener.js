@@ -524,6 +524,8 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                 case "group_thread_created":
                 case "change_thread_admins":
                 case "messenger_call_log":
+                case "pin_messages_v2":
+                case "unpin_messages_v2":
                 case "participant_joined_group_call":
                     var fmtMsg;
                     try {
