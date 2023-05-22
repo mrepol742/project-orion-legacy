@@ -182,9 +182,14 @@ Hello %USER%, here is the page 6 of 9 command list.
        nom, bite, glomp, slap,
        kill, kick, happy, wink,
        poke, dance and cringe
-   ⦿ animeinfo [text]
+   ⦿ animeinfo [title]
    ⦿ animesearch [text]
-   ⦿ animegenre [text]
+   ⦿ animegenre [genre]
+       josei, seinen, mecha, shoujo,
+       action, harem, comedy, adventure,
+       yuri, isekai, drama, romance,
+       fantasy, horror, game, mystery,
+       school, yaoi, sports, police etc.
    ⦿ animetop
    ⦿ animetop --movie
    ⦿ hanime [category]

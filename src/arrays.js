@@ -29,7 +29,14 @@ let idknow = [
     "Could you please elaborate on what you mean? Trying to grasp what you want me to accomplish seems to be a challenge for me.",
     "Could you please explain what you mean by that? It appears that I am finding it difficult to comprehend what you want me to do.",
 ];
-let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣"];
+let problemE = [
+    "I regret the inconvenience, but at this time I am unable to fulfill your request. This issue has been reported to my creator, who are working to fix it.",
+    "Though I regret the inconvenience, I am unable to fulfill your request at the moment. My creator have been informed of the issue and are working to fix it.",
+    "Unfortunately, I am unable to fulfill your request at this time. I regret for the inconvenience. This issue has been brought to the attention of my creator, who are now working to fix it.",
+    "I regret the inconvenience, but I am unable to fulfill your request at this time. My creator have been made aware of this issue and are working to fix it.",
+    "I apologize for the inconvenience, but at this time I am unable to grant your request. My creator are aware of this problem and are attempting to resolve it."
+]
+let funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣", "hahahah funny."];
 let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let happyEE = ["haha", "ahah", "ahha", "funny ", "insane ", "lol", "lmao", "lmfao", "silly ", "laugh ", "hilarious", "absurd", "ridicolous"];
@@ -550,4 +557,5 @@ module.exports = {
     heyMelbin: heyMelbin,
     heySim: heySim,
     domains: domains,
+    problemE: problemE
 };
