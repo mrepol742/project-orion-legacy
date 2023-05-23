@@ -24,7 +24,9 @@ Hello %USER%, here is the page 1 of 9 command list.
    ⦿ cmd [number|all]
    ⦿ cmd [user|group]
    ⦿ cmd [admin|root]
-   ⦿ stats|uptime|sysinfo
+   ⦿ stats
+   ⦿ uptime
+   ⦿ sysinfo
    ⦿ sendReport [text]
    ⦿ search [text]
    ⦿ searchincog [text]
