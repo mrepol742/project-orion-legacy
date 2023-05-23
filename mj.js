@@ -7499,7 +7499,6 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
         });
 
         let text1 = ai.data.choices[0].message.content;
-
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
                 return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
@@ -8576,17 +8575,19 @@ mj = (api, event, findPr, input, query, query2) => {
 
 async function getWebResults(ask) {
     let count = ask.split(" ");
-    if (count.length < 32 && count.length >= 5) {
+    if (count.length < 32 && count.length >= 4) {
         const response = await google.search(ask, googleSearchOptions);
         if (response.results.length != 0) {
             let construct = "Generate a response using this data if necessary. If the user asking for time, music or video ignore this data.";
             if (response.featured_snippet.title != null && response.featured_snippet.description != null) {
-                construct += "\n\nFeatured Snippet: " + response.featured_snippet.title + "\n" + response.featured_snippet.description + "\n" + response.featured_snippet.url;
+                construct += "\nFeatured Snippet: \n- " + response.featured_snippet.title + "\n" + response.featured_snippet.description + "\n" + response.featured_snippet.url;
             }
-            construct += "\n\nTitle: " + response.results[0].title + "\nDescription: " + response.results[0].description;
-            construct += "\n\nTitle: " + response.results[1].title + "\nDescription: " + response.results[1].description;
-            construct += "\n\nTitle: " + response.results[2].title + "\nDescription: " + response.results[2].description;
-            return construct + "\nMy Question: " + ask;
+            construct += "\n- " + response.results[0].title + "\n " + response.results[0].description;
+            construct += "\n- " + response.results[1].title + "\n " + response.results[1].description;
+            construct += "\n- " + response.results[2].title + "\n " + response.results[2].description;
+            construct += "\n\nMy is question: " + ask;
+            console.log(construct);
+            return construct;
         }
     }
     return ask;
