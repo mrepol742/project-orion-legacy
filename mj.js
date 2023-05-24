@@ -1,5 +1,6 @@
 const redfox = require("./src/redfox");
 const utils = require("./src/redfox/utils.js");
+const fs = require("fs");
 
 let a = `
 
@@ -12,7 +13,6 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
                      "                                         `;
 console.log(a);
 
-const fs = require("fs");
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 
@@ -127,7 +127,11 @@ server1.listen(PORT, function () {
     utils.logged("server_status " + PORT + " online");
 });
 
-task(function () {}, Math.floor(1800000 * Math.random() + 1200000));
+deleteCacheData(true);
+
+task(function () {
+    utils.logged("task_git syncronized");
+}, Math.floor(1800000 * Math.random() + 1200000));
 utils.logged("task_git global initiated");
 
 const openaiConfig = new Configuration({
@@ -181,28 +185,30 @@ let rootAccess = "100071743848974";
 
 fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     if (err) return utils.logged(err);
-    let appStates;
-    for (appStates = 0; appStates < files.length; appStates++) {
-        let login = files[appStates].replace(".json", "");
-        //   if (login != rootAccess) {
-        accounts.push(login);
-        //  }
-        let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
-        let fca_state;
-        if (state.includes("ERROR")) {
-            listenStatus = 1;
-            utils.logged("login_stopped " + login + " cookies state invalid.");
-        } else if (state.includes("facebook.com") || state.includes("messenger.com")) {
-            fca_state = {
-                appState: JSON.parse(state),
-            };
-            redfox_fb(fca_state, login);
-        } else {
-            fca_state = {
-                appState: JSON.parse(utils.decrypt(state, keys[login][0], keys[login][1])),
-            };
-            redfox_fb(fca_state, login);
+    if (files.length > 0) {
+        let appStates;
+        for (appStates = 0; appStates < files.length; appStates++) {
+            let login = files[appStates].replace(".json", "");
+            accounts.push(login);
+            let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
+            if (state.includes("facebook.com") || state.includes("messenger.com")) {
+                redfox_fb(
+                    {
+                        appState: JSON.parse(state),
+                    },
+                    login
+                );
+            } else {
+                redfox_fb(
+                    {
+                        appState: JSON.parse(utils.decrypt(state, keys[login][0], keys[login][1])),
+                    },
+                    login
+                );
+            }
         }
+    } else {
+        utils.logged("login_state no account found");
     }
 });
 
@@ -213,6 +219,7 @@ task(function () {
 utils.logged("task_save_state global initiated");
 
 task(function () {
+    deleteCacheData(false);
     console.clear();
     utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
     cmd = {};
@@ -226,10 +233,15 @@ utils.logged("task_clear global initiated");
 function redfox_fb(fca_state, login) {
     redfox(fca_state, (err, api) => {
         if (err) {
-            listenStatus = 1;
-            utils.logged("fca_error_received " + login + " initiating logout process while keeping the server alive");
-            fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", "ERROR", "utf8");
-            utils.logged("cookies_state " + login + " overriden");
+            if (login == rootAccess) {
+                listenStatus = 1;
+            }
+            utils.logged("api_login_error " + login);
+            accounts.pop(login);
+            fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+                if (err) return utils.logged(err);
+                utils.logged("fb_state deleted " + login);
+            });
             return;
         }
 
@@ -247,7 +259,6 @@ function redfox_fb(fca_state, login) {
             utils.logged("login_state " + login + " saved");
             saveState();
             utils.logged("save_state " + login);
-            listen.stopListening();
             utils.logged("fca_status " + login + " offline");
             /*
     server.close();
@@ -269,6 +280,39 @@ function redfox_fb(fca_state, login) {
 
         task(function () {
             let min = Math.floor(600000 + Math.random() + 300000);
+            if (!(userPresence[login] === undefined)) {
+                for (root in userPresence[login]) {
+                    let data = userPresence[login][root];
+                    let threadid = Object.keys(data)[keys];
+                    for (keys in Object.keys(data)) {
+                        let user = data[threadid];
+                        let past = new Date(user[0]).getTime();
+                        let isPast = new Date().getTime() - past < min ? false : true;
+                        if (isPast) {
+                            utils.logged("user_presence " + threadid);
+                            let aa = "";
+                            if (user[1] != undefined) {
+                                aa = user[1];
+                            } else {
+                                aa = "there";
+                            }
+
+                            api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. I'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
+                                if (err) return utils.logged(err);
+                                if (!(userPresence[login] === undefined)) {
+                                    for (root in userPresence[login]) {
+                                        if (!userPresence[login][root][threadid]) {
+                                            userPresence[login].pop(threadid);
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            /*
             for (time in userPresence) {
                 if (userPresence[time] != null) {
                     let past = new Date(userPresence[time][0]).getTime();
@@ -288,6 +332,7 @@ function redfox_fb(fca_state, login) {
                     }
                 }
             }
+            */
         }, 60 * 2 * 1000);
         utils.logged("task_user_presence " + login + " initiated");
 
@@ -324,8 +369,15 @@ ERR! markAsDelivered }
 {"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
 */
             if (err) {
-                listenStatus = 1;
-                utils.logged("inner_listen_error " + login);
+                if (login == rootAccess) {
+                    listenStatus = 1;
+                }
+                utils.logged("api_listen_error " + login);
+                accounts.pop(login);
+                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+                    if (err) return utils.logged(err);
+                    utils.logged("fb_state deleted " + login);
+                });
                 return listen.stopListening();
             }
 
@@ -3886,8 +3938,13 @@ Hello %USER%, here is the current system information as of ` +
         }
     } else if (query == "mute") {
         users.muted.push(event.senderID);
-        if (!(userPresence[event.threadID] === undefined)) {
-            userPresence[event.threadID] = null;
+        if (!(userPresence[api.getCurrentUserID()] === undefined)) {
+            for (root in userPresence[api.getCurrentUserID()]) {
+                if (!userPresence[api.getCurrentUserID()][root][event.threadID]) {
+                    userPresence[api.getCurrentUserID()].pop(event.threadID);
+                    break;
+                }
+            }
         }
         sendMessage(api, event, "You have been muted. Enter `unmute` for you to use my commands again.");
     } else if (query.startsWith("blockgroup")) {
@@ -6219,7 +6276,11 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
         getUserProfile(event.senderID, async function (name) {
-            userPresence[event.threadID] = [new Date(), name.firstName];
+            if (userPresence[api.getCurrentUserID()] === undefined) {
+                userPresence[api.getCurrentUserID()] = [];
+            }
+            userPresence[api.getCurrentUserID()].push({ thread_id: [new Date(), name.firstName] });
+            // userPresence[event.threadID] = [new Date(), name.firstName];
         });
     }
     if (message == "" || (!(message.body === undefined) && message.body == "")) {
@@ -6299,7 +6360,11 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
         getUserProfile(event.senderID, async function (name) {
-            userPresence[event.threadID] = [new Date(), name.firstName];
+            if (userPresence[api.getCurrentUserID()] === undefined) {
+                userPresence[api.getCurrentUserID()] = [];
+            }
+            userPresence[api.getCurrentUserID()].push({ thread_id: [new Date(), name.firstName] });
+            // userPresence[event.threadID] = [new Date(), name.firstName];
         });
     }
     if (message == "" || (!(message.body === undefined) && message.body == "")) {
@@ -6969,9 +7034,19 @@ async function blockUser(api, event, id) {
         sendMessage(api, event, "It's already blocked.");
         return;
     }
+    if (!(userPresence[api.getCurrentUserID()] === undefined)) {
+        for (root in userPresence[api.getCurrentUserID()]) {
+            if (!userPresence[api.getCurrentUserID()][root][event.threadID]) {
+                userPresence[api.getCurrentUserID()].pop(event.threadID);
+                break;
+            }
+        }
+    }
+    /* 
     if (!(userPresence[event.threadID] === undefined)) {
         userPresence[event.threadID] = null;
     }
+    */
     users.blocked.push(id);
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
@@ -8124,6 +8199,7 @@ async function sendAiMessage(api, event, ss) {
                 let images = await google.image(sqq, googleImageOptions);
                 let fname = __dirname + "/.cache/attch_" + getTimestamp() + ".png";
                 let url = nonUU(images);
+                utils.logged("downloading_attachment " + url);
                 await downloadFile(url, fname).then((response) => {
                     message["attachment"] = fs.createReadStream(fname);
                 });
@@ -8142,7 +8218,7 @@ async function sendAiMessage(api, event, ss) {
                         quality: "best",
                         format: "mp4",
                     });
-                    utils.logged("downloading " + search.results[0].title);
+                    utils.logged("downloading_attachment " + search.results[0].title);
                     let filename = __dirname + "/.cache/attach_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
@@ -8166,7 +8242,7 @@ async function sendAiMessage(api, event, ss) {
                         quality: "best",
                         format: "mp4",
                     });
-                    utils.logged("downloading " + search.results[0].title);
+                    utils.logged("downloading_attachment " + search.results[0].title);
                     let filename = __dirname + "/.cache/attach_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
@@ -8188,6 +8264,7 @@ async function sendAiMessage(api, event, ss) {
                     size: "512x512",
                 });
                 let url = response.data.data[0].url;
+                utils.logged("downloading_attachment " + url);
                 if (url.startsWith("https://") || url.startsWith("http://")) {
                     let dir = __dirname + "/.cache/createimg_" + getTimestamp() + ".png";
                     await downloadFile(url, dir).then((response) => {
@@ -8591,4 +8668,25 @@ async function getWebResults(ask) {
         }
     }
     return ask;
+}
+
+function deleteCacheData(mode) {
+    fs.readdir(__dirname + "/.cache/", function (err, files) {
+        if (err) return utils.logged(err);
+        if (files.length > 0) {
+            let fe;
+            for (fe = 0; fe < files.length; fe++) {
+                let file = files[fe];
+                if (file != ".gitkeep") {
+                    if (mode) {
+                        fs.unlinkSync(__dirname + "/.cache/" + file, (err) => {
+                            if (err) utils.logged(err);
+                        });
+                    } else {
+                        unLink(__dirname + "/.cache/" + file);
+                    }
+                }
+            }
+        }
+    }); 
 }
