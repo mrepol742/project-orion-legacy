@@ -82,7 +82,6 @@ let blockedUserC = 0;
 let blockedGroupC = 0;
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
-let keys = JSON.parse(fs.readFileSync(__dirname + "/data/keys.json", "utf8"));
 
 utils.logged("settings_loaded finish");
 
@@ -181,6 +180,7 @@ process.on("SIGINT", function () {
 });
 
 let accounts = [];
+let threadRegistry = {};
 let rootAccess = "100071743848974";
 
 fs.readdir(__dirname + "/data/cookies/", function (err, files) {
@@ -188,23 +188,30 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     if (files.length > 0) {
         let appStates;
         for (appStates = 0; appStates < files.length; appStates++) {
-            let login = files[appStates].replace(".json", "");
-            accounts.push(login);
-            let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
-            if (state.includes("facebook.com") || state.includes("messenger.com")) {
-                redfox_fb(
-                    {
-                        appState: JSON.parse(state),
-                    },
-                    login
-                );
-            } else {
-                redfox_fb(
-                    {
-                        appState: JSON.parse(utils.decrypt(state, keys[login][0], keys[login][1])),
-                    },
-                    login
-                );
+            if (files[appStates].endsWith(".json")) {
+                let login = files[appStates].replace(".json", "");
+                accounts.push(login);
+                let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
+                if (state.includes("facebook.com") || state.includes("messenger.com")) {
+                    redfox_fb(
+                        {
+                            appState: JSON.parse(state),
+                        },
+                        login
+                    );
+                } else {
+                    try {
+                        let key = JSON.parse(fs.readFileSync(__dirname + "/data/cookies/" + login + ".key", "utf8"));
+                        redfox_fb(
+                            {
+                                appState: JSON.parse(utils.decrypt(state, key[0], key[1])),
+                            },
+                            login
+                        );
+                    } catch (err) {
+                        utils.logged("invalid_decryption_key " + login);
+                    }
+                }
             }
         }
     } else {
@@ -283,12 +290,12 @@ function redfox_fb(fca_state, login) {
             if (!(userPresence[login] === undefined)) {
                 for (root in userPresence[login]) {
                     let data = userPresence[login][root];
-                    let threadid = Object.keys(data)[keys];
                     for (keys in Object.keys(data)) {
+                        let threadid = Object.keys(data)[keys];
                         let user = data[threadid];
                         let past = new Date(user[0]).getTime();
                         let isPast = new Date().getTime() - past < min ? false : true;
-                        if (isPast) {
+                        if (true) {
                             utils.logged("user_presence " + threadid);
                             let aa = "";
                             if (user[1] != undefined) {
@@ -300,10 +307,14 @@ function redfox_fb(fca_state, login) {
                             api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. I'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
                                 if (err) return utils.logged(err);
                                 if (!(userPresence[login] === undefined)) {
-                                    for (root in userPresence[login]) {
-                                        if (!userPresence[login][root][threadid]) {
-                                            userPresence[login].pop(threadid);
-                                            break;
+                                    for (root0 in userPresence[login]) {
+                                        let data0 = userPresence[login][root0];
+                                        for (keys0 in Object.keys(data0)) {
+                                            let threadid0 = Object.keys(data0)[keys0];
+                                            if (threadid0 == threadid) {
+                                                delete userPresence[login][root0][threadid0];
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -333,7 +344,8 @@ function redfox_fb(fca_state, login) {
                 }
             }
             */
-        }, 60 * 2 * 1000);
+            // }, 60 * 2 * 1000);
+        }, 5000);
         utils.logged("task_user_presence " + login + " initiated");
 
         api.setOptions({
@@ -383,8 +395,7 @@ ERR! markAsDelivered }
 
             if (isAppState) {
                 fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
-                // temporary solution for replit not calling SIGINT
-                fs.writeFileSync(__dirname + "/data/keys.json", JSON.stringify(keys), "utf8");
+
                 utils.logged("cookie_state " + login + " synchronized");
                 isAppState = false;
             }
@@ -400,6 +411,10 @@ ERR! markAsDelivered }
             }
 
             if (event.type == "message" || event.type == "message_reply") {
+                if (event.isGroup && !(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
+                    return;
+                }
+
                 let mainInput = event.body;
                 for (effects in sendEffects) {
                     if (mainInput.endsWith(sendEffects[effects])) {
@@ -506,6 +521,11 @@ ERR! markAsDelivered }
                         thread[event.threadID].shift();
                         thread[event.threadID].push(event.senderID);
                     }
+                }
+
+                if (event.isGroup && threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
+                    threadRegistry[event.threadID] = api.getCurrentUserID();
+                    utils.logged("group_register " + api.getCurrentUserID());
                 }
 
                 if (!groups.list.find((thread) => event.threadID === thread.id) && event.isGroup) {
@@ -3939,10 +3959,14 @@ Hello %USER%, here is the current system information as of ` +
     } else if (query == "mute") {
         users.muted.push(event.senderID);
         if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-            for (root in userPresence[api.getCurrentUserID()]) {
-                if (!userPresence[api.getCurrentUserID()][root][event.threadID]) {
-                    userPresence[api.getCurrentUserID()].pop(event.threadID);
-                    break;
+            for (root0 in userPresence[api.getCurrentUserID()]) {
+                let data0 = userPresence[api.getCurrentUserID()][root0];
+                for (keys0 in Object.keys(data0)) {
+                    let threadid0 = Object.keys(data0)[keys0];
+                    if (threadid0 == event.threadID) {
+                        delete userPresence[api.getCurrentUserID()][root0][threadid0];
+                        break;
+                    }
                 }
             }
         }
@@ -6279,7 +6303,10 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
             if (userPresence[api.getCurrentUserID()] === undefined) {
                 userPresence[api.getCurrentUserID()] = [];
             }
-            userPresence[api.getCurrentUserID()].push({ thread_id: [new Date(), name.firstName] });
+            let threadidfor = {};
+            threadidfor[thread_id] = [new Date(), name.firstName];
+            userPresence[api.getCurrentUserID()].push(threadidfor);
+            utils.logged(userPresence);
             // userPresence[event.threadID] = [new Date(), name.firstName];
         });
     }
@@ -6363,7 +6390,10 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
             if (userPresence[api.getCurrentUserID()] === undefined) {
                 userPresence[api.getCurrentUserID()] = [];
             }
-            userPresence[api.getCurrentUserID()].push({ thread_id: [new Date(), name.firstName] });
+            let threadidfor = {};
+            threadidfor[thread_id] = [new Date(), name.firstName];
+            userPresence[api.getCurrentUserID()].push(threadidfor);
+            utils.logged(userPresence);
             // userPresence[event.threadID] = [new Date(), name.firstName];
         });
     }
@@ -6670,7 +6700,8 @@ function isEvening() {
 // 10pm to 2am
 function isNight() {
     var curHr = getTimeDate("Asia/Manila").getHours();
-    return curHr >= 22 || curHr <= 2;
+    console.log(curHr);
+    return curHr >= 22 || curHr <= 2 || isNaN(curHr);
 }
 
 function getDayNightTime() {
@@ -7035,10 +7066,14 @@ async function blockUser(api, event, id) {
         return;
     }
     if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-        for (root in userPresence[api.getCurrentUserID()]) {
-            if (!userPresence[api.getCurrentUserID()][root][event.threadID]) {
-                userPresence[api.getCurrentUserID()].pop(event.threadID);
-                break;
+        for (root0 in userPresence[api.getCurrentUserID()]) {
+            let data0 = userPresence[api.getCurrentUserID()][root0];
+            for (keys0 in Object.keys(data0)) {
+                let threadid0 = Object.keys(data0)[keys0];
+                if (threadid0 == event.threadID) {
+                    delete userPresence[api.getCurrentUserID()][root0][threadid0];
+                    break;
+                }
             }
         }
     }
@@ -7707,7 +7742,6 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
-    fs.writeFileSync(__dirname + "/data/keys.json", JSON.stringify(keys), "utf8");
 }
 
 function getIdFromUrl(url) {
@@ -7950,7 +7984,8 @@ async function transcribeAudioFile(filePath) {
 function getAppState(api) {
     const key = crypto.randomBytes(32).toString("hex");
     const iv = crypto.randomBytes(16).toString("hex");
-    keys[api.getCurrentUserID()] = [key, iv];
+    let auth = [key, iv];
+    fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".key", JSON.stringify(auth), "utf8");
     return utils.encrypt(JSON.stringify(api.getAppState()), key, iv);
 }
 
@@ -8688,5 +8723,5 @@ function deleteCacheData(mode) {
                 }
             }
         }
-    }); 
+    });
 }
