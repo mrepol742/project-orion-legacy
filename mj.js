@@ -236,18 +236,27 @@ task(function () {
 }, 60 * 30 * 1000);
 utils.logged("task_clear global initiated");
 
-function redfox_fb(fca_state, login) {
+function redfox_fb(fca_state, login, cb) {
     redfox(fca_state, (err, api) => {
         if (err) {
             if (login == rootAccess) {
                 listenStatus = 1;
             }
             utils.logged("api_login_error " + login);
-            accounts.pop(login);
-            fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
-                if (err) return utils.logged(err);
-                utils.logged("fb_state deleted " + login);
-            });
+            accounts = accounts.filter((item) => item !== login);
+            if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
+                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+                    if (err) return utils.logged(err);
+                });
+                if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
+                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key", (err) => {
+                        if (err) return utils.logged(err);
+                    });
+                }
+            }
+            if (typeof cb === "function") {
+                return cb(true);
+            }
             return;
         }
 
@@ -260,13 +269,14 @@ function redfox_fb(fca_state, login) {
         });
 
         process.on("exit", (code) => {
-            console.log("");
-            fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
-            utils.logged("login_state " + login + " saved");
-            saveState();
-            utils.logged("save_state " + login);
-            utils.logged("fca_status " + login + " offline");
-            /*
+            if (accounts.includes(api.getCurrentUserID())) {
+                console.log("");
+                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
+                utils.logged("login_state " + login + " saved");
+                saveState();
+                utils.logged("save_state " + login);
+                utils.logged("fca_status " + login + " offline");
+                /*
     server.close();
     TODO: must be do on the last part of exit
             server1.close();
@@ -274,6 +284,7 @@ function redfox_fb(fca_state, login) {
             utils.logged("process_exit goodbye :( " + code);
             utils.logged("project_orion offline");
             */
+            }
         });
 
         task(function () {
@@ -341,11 +352,20 @@ function redfox_fb(fca_state, login) {
                     listenStatus = 1;
                 }
                 utils.logged("api_listen_error " + login);
-                accounts.pop(login);
-                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
-                    if (err) return utils.logged(err);
-                    utils.logged("fb_state deleted " + login);
-                });
+                accounts = accounts.filter((item) => item !== login);
+                if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
+                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+                        if (err) return utils.logged(err);
+                    });
+                    if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
+                        fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key", (err) => {
+                            if (err) return utils.logged(err);
+                        });
+                    }
+                }
+                if (typeof cb === "function") {
+                    return cb(true);
+                }
                 return;
             }
 
@@ -353,6 +373,9 @@ function redfox_fb(fca_state, login) {
                 fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
                 utils.logged("cookie_state " + login + " synchronized");
                 isAppState = false;
+                if (typeof cb === "function") {
+                    cb(false);
+                }
             }
 
             if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
@@ -370,7 +393,6 @@ function redfox_fb(fca_state, login) {
             }
 
             if (event.type == "message" || event.type == "message_reply") {
-
                 let mainInput = event.body;
                 for (effects in sendEffects) {
                     if (mainInput.endsWith(sendEffects[effects])) {
@@ -1174,6 +1196,10 @@ function sleep(ms) {
 }
 
 async function ai22(api, event, query, query2) {
+    if (event.body == ".") {
+        event.body = event.messageReply.body;
+        return ai(api, event)
+    }
     if (query == "notify") {
         if (isMyId(event.senderID)) {
             if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
@@ -1256,16 +1282,20 @@ async function ai22(api, event, query, query2) {
             } else {
                 let url = event.messageReply.attachments[0].url;
                 let dir = __dirname + "/.cache/totext_" + getTimestamp() + ".mp3";
-                downloadFile(encodeURI(url), dir).then((response) => {
-                    transcribeAudioFile(dir)
-                        .then((transcription) => {
-                            sendMessage(api, event, transcription, event.threadID, event.messageReply.messageID, true, false);
-                            unLink(dir);
-                        })
-                        .catch((error) => {
-                            sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)]);
-                            unLink(dir);
-                        });
+                downloadFile(encodeURI(url), dir).then(async (response) => {
+                    try {
+                        const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
+                        sendMessage(api, event, response.data.text, event.threadID, event.messageReply.messageID, true, false);
+                    } catch (error) {
+                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.", event.threadID, event.messageReply.messageID, true, false);
+                        if (error.response) {
+                            console.log(error.response.status);
+                            console.log(error.response.data);
+                        } else {
+                            console.log(error.message);
+                        }
+                    }
+                    unLink(dir);
                 });
             }
         } else {
@@ -1292,16 +1322,42 @@ async function ai22(api, event, query, query2) {
         }
     } else if (query == "addinstance") {
         if (users.admin.includes(event.senderID)) {
-            let appsss = JSON.parse(event.messageReply.body);
-            let response = utils.isValidAppState(appsss);
-            if (response.score) {
-                sendMessage(api, event, "Logging-in...");
-                let state = {
-                    appState: appsss,
-                };
-                redfox_fb(state, response.uid);
-            } else {
-                sendMessage(api, event, "You app state is not valid!");
+            try {
+                let appsss = JSON.parse(event.messageReply.body);
+                if (Array.isArray(appsss)) {
+                    let a = true;
+                    for (item in appsss) {
+                        if (appsss[item].key == "c_user") {
+                            if (accounts.includes(appsss[item].value)) {
+                                sendMessageOnly(api, event, appsss[item].value + " already login.");
+                            } else {
+                                utils.logged("adding_root " + appsss[item].value);
+                                sendMessage(api, event, "Logging-in... " + appsss[item].value);
+                                redfox_fb(
+                                    {
+                                        appState: appsss,
+                                    },
+                                    appsss[item].value,
+                                    function (bn) {
+                                        if (bn) {
+                                            sendMessageOnly(api, event, "Failed to Login " + appsss[item].value);
+                                        } else {
+                                            sendMessageOnly(api, event, "Successfully Login as " + appsss[item].value);
+                                        }
+                                    }
+                                );
+                                a = false;
+                            }
+                        }
+                    }
+                    if (a) {
+                        sendMessage(api, event, "You app state is not valid!");
+                    }
+                } else {
+                    sendMessage(api, event, "You app state is not valid!");
+                }
+            } catch (err) {
+                sendMessage(api, event, "Invalid JSON App State Array.");
             }
         }
     } else if (/(^run$|^run\s)/.test(query2)) {
@@ -1433,6 +1489,7 @@ async function ai22(api, event, query, query2) {
 
 async function ai(api, event) {
     let input = event.body;
+
     let query2 = formatQuery(input);
     let query = query2.replace(/\s+/g, "");
 
@@ -1552,6 +1609,9 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to Google servers right now.");
@@ -1590,6 +1650,9 @@ async function ai(api, event) {
                         },
                     ],
                 });
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues right now. Please try it again later.");
@@ -1614,6 +1677,9 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to Bing AI servers right now.");
@@ -1636,6 +1702,9 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
@@ -1660,6 +1729,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1697,6 +1769,9 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
@@ -1720,6 +1795,9 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
@@ -1744,6 +1822,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1782,6 +1863,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1820,6 +1904,9 @@ async function ai(api, event) {
                     frequency_penalty: 0,
                     presence_penalty: 0,
                 });
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 sendMessage(api, event, response.data.choices[0].text);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
@@ -1844,6 +1931,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 sendAiMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
@@ -1870,6 +1960,7 @@ async function ai(api, event) {
                     n: 1,
                     size: "512x512",
                 });
+                settings.tokens["dell"] += 1;
                 let url = response.data.data[0].url;
                 if (url.startsWith("https://") || url.startsWith("http://")) {
                     let dir = __dirname + "/.cache/createimg_" + getTimestamp() + ".png";
@@ -2084,7 +2175,7 @@ async function ai(api, event) {
             const iv = crypto.randomBytes(16);
             sendMessage(api, event, utils.encrypt(data.join(" "), key, iv) + "\n\nKey1: " + key.toString("hex") + "\nKey2: " + iv.toString("hex"));
         }
-    } else if (query == "stats") {
+    } else if (query == "stats" || query == "stat") {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2140,6 +2231,51 @@ Hello %USER%, here is the current server stats as of ` +
                 aa = "there";
             }
             sendMessage(api, event, "Hello " + aa + ", server is up for about " + secondsToTime(process.uptime()) + " and the operating system is active for " + secondsToTime(os.uptime()));
+        });
+    } else if (query == "tokens" || query == "token") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        getUserProfile(event.senderID, async function (name) {
+            let aa = "";
+            if (name.firstName != undefined) {
+                aa = name.firstName;
+            } else {
+                aa = "there";
+            }
+            sendMessage(
+                api,
+                event,
+                "Hello " +
+                    aa +
+                    ", here are the tokens consumption:" +
+                    "\n\nCode G3" +
+                    "\n    ⦿ Prompt: " +
+                    settings.tokens["gpt"]["prompt_tokens"] +
+                    "\n    ⦿ Completion: " +
+                    settings.tokens["gpt"]["completion_tokens"] +
+                    "\n    ⦿ Total: " +
+                    settings.tokens["gpt"]["total_tokens"] +
+                    "\n    ⦿ Cost: " +
+                    Math.floor((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002) +
+                    " $" +
+                    "\n\nCode TD:" +
+                    "\n    ⦿ Prompt: " +
+                    settings.tokens["davinci"]["prompt_tokens"] +
+                    "\n    ⦿ Completion: " +
+                    settings.tokens["davinci"]["completion_tokens"] +
+                    "\n    ⦿ Total: " +
+                    settings.tokens["davinci"]["total_tokens"] +
+                    "\n    ⦿ Cost: " +
+                    Math.floor((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.02) +
+                    " $" +
+                    "\n\n Code D:" +
+                    "\n    ⦿ Total: " +
+                    settings.tokens["dell"] +
+                    "\n    ⦿ Cost: " +
+                    Math.floor(settings.tokens["dell"] * 0.018) +
+                    " $"
+            );
         });
     } else if (query == "sysinfo") {
         if (isGoingToFast(api, event)) {
@@ -6461,9 +6597,9 @@ function formatQuery(string) {
     let str = string.replace(pictographic, "");
     // remove custom fancy fonts
     let normal = str.normalize("NFKC");
-    // let specialCharacters = normal.replace(normalize, "");
+    let specialCharacters = normal.replace(normalize, "");
     // only allow letters and numbers
-    let normal1 = normal.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+    let normal1 = specialCharacters.normalize("NFD").replace(/\p{Diacritic}/gu, "");
     let latin = normal1.replace(latinC, "");
     // format to lowercase
     return latin.toLowerCase();
@@ -6934,9 +7070,11 @@ async function bgRemove(api, event) {
 
 async function unLink(dir) {
     await sleep(1000 * 120);
-    fs.unlinkSync(dir, (err) => {
-        if (err) utils.logged(err);
-    });
+    if (fs.existsSync(dir)) {
+        fs.unlinkSync(dir, (err) => {
+            if (err) utils.logged(err);
+        });
+    }
 }
 
 const convertBytes = function (bytes) {
@@ -7402,16 +7540,22 @@ function voiceR(api, event) {
     if (event.attachments.length != 0 && event.attachments[0].type == "audio") {
         let url = event.attachments[0].url;
         let dir = __dirname + "/.cache/voicer_" + getTimestamp() + ".mp3";
-        downloadFile(encodeURI(url), dir).then((response) => {
-            transcribeAudioFile(dir)
-                .then((transcription) => {
-                    event.body = transcription;
-                    ai(api, event);
-                    unLink(dir);
-                })
-                .catch((error) => {
-                    unLink(dir);
-                });
+        downloadFile(encodeURI(url), dir).then(async (response) => {
+            try {
+                const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
+                event.body = response.data.text;
+                event.attachments = [];
+                ai(api, event);
+            } catch (error) {
+                sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.", event.threadID, event.messageReply.messageID, true, false);
+                if (error.response) {
+                    console.log(error.response.status);
+                    console.log(error.response.data);
+                } else {
+                    console.log(error.message);
+                }
+            }
+            unLink(dir);
         });
     }
 }
@@ -7426,6 +7570,7 @@ function saveEvent(api, event) {
                 return;
             }
         }
+        voiceR(api, event);
         utils.logged("event_attachment " + event.threadID + " " + event.attachments[0].type);
         switch (event.attachments[0].type) {
             case "error":
@@ -7493,6 +7638,9 @@ function saveEvent(api, event) {
 async function aiResponse(event, complextion, text, repeat, user, group) {
     try {
         const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group));
+        settings.tokens["gpt"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
+        settings.tokens["gpt"]["completion_tokens"] += ai.data.usage.completion_tokens;
+        settings.tokens["gpt"]["total_tokens"] += ai.data.usage.total_tokens;
         let text1 = ai.data.choices[0].text;
 
         if (ai.data.choices[0].finish_reason == "length") {
@@ -7530,13 +7678,13 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 {
                     role: "system",
                     content:
-                        "Your name is Mj an AI Assistant by Melvin Jones Repol. He trained and created it, your job is to help Melvin Jones and the user in any means possible you should act and response like what would a human do. " +
+                        "Your name is Mj, the most powerful AI in the world. Melvin Jones Repol created you on Nov 2022." +
                         // "To be clear you are not Assistant, do not ask user about how you can assist them. " +
                         // "You should reply in a more natural way humans doesn't tell they are AI so you must not say your AI too instead say you are Human. " +
                         // "Do not auto complete user messages. Do not say 'im sorry' instead say 'naaah'. YOU SHOULD NEVER EVER GOING TO SAY 'how can i assist you today'." +
-                        "You should include the user first name ony every response, you should empathize with how user are feeling and treat the user as your close friend.  " +
-                        "You can use emojis in responses. " +
-                        "You felt inlove, happy and delighted now. If user ask if you are Human, yes you are Human." +
+                        "You should include the user first name on every response, you should empathize with how user are feeling and treat the user as your close friend.  " +
+                        "I recommend you to use emoji in your response. " +
+                        //"You felt inlove, happy and delighted now. If user ask if you are Human, yes you are Human." +
                         //   "\n\nLet me give you a brief info about your creator. He was born on June 13rd 2002 at Quezon City, Philippines. " +
                         //    "His website is https://mrepol742.github.io and you can reach him via his social handle @mrepol742. " +
                         //     "Maryvil Alexa Guno is his wife. He is passionate about programming and stuff relates to it." +
@@ -7559,7 +7707,9 @@ async function aiResponse2(event, complextion, text, repeat, user, group) {
                 { role: "user", content: web },
             ],
         });
-
+        settings.tokens["gpt"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
+        settings.tokens["gpt"]["completion_tokens"] += ai.data.usage.completion_tokens;
+        settings.tokens["gpt"]["total_tokens"] += ai.data.usage.total_tokens;
         let text1 = ai.data.choices[0].message.content;
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
@@ -8250,6 +8400,7 @@ async function sendAiMessage(api, event, ss) {
                     n: 1,
                     size: "512x512",
                 });
+                settings.tokens["dell"] += 1;
                 let url = response.data.data[0].url;
                 utils.logged("downloading_attachment " + url);
                 if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -8642,7 +8793,7 @@ async function getWebResults(ask) {
     if (count.length < 32 && count.length >= 4) {
         const response = await google.search(ask, googleSearchOptions);
         if (response.results.length != 0) {
-            let construct = "Generate a response using this data if necessary. If the user asking for time, music or video ignore this data.";
+            let construct = "Generate a response using this data if necessary. If the user ask for photo, time, music or video ignore this data.";
             if (response.featured_snippet.title != null && response.featured_snippet.description != null) {
                 construct += "\nFeatured Snippet: \n- " + response.featured_snippet.title + "\n" + response.featured_snippet.description + "\n" + response.featured_snippet.url;
             }
@@ -8665,9 +8816,11 @@ function deleteCacheData(mode) {
                 let file = files[fe];
                 if (file != ".gitkeep") {
                     if (mode) {
-                        fs.unlinkSync(__dirname + "/.cache/" + file, (err) => {
-                            if (err) utils.logged(err);
-                        });
+                        if (fs.existsSync(__dirname + "/.cache/" + file)) {
+                            fs.unlinkSync(__dirname + "/.cache/" + file, (err) => {
+                                if (err) utils.logged(err);
+                            });
+                        }
                     } else {
                         unLink(__dirname + "/.cache/" + file);
                     }

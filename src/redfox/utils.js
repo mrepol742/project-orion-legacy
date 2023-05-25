@@ -1314,64 +1314,6 @@ function decrypt(text, key, iv) {
     return decrypted.toString();
 }
 
-function isValidAppState(a) {
-    if (Array.isArray(a)) {
-        let score = 0;
-        let id;
-         for (let i = 0; i < a.length; i++) {
-                if (Object.keys(a[i]).length != 7) {
-                    console.log("Invalid Key.");
-                    break;
-                }
-                if (Object.keys(a[i])[0] == "key") {
-                    if (a[i].key == "c_user") {
-                       id = a[i].value;
-                    }
-                    if (Object.keys(a[i])[1] == "value") {
-                        if (Object.keys(a[i])[2] == "domain") {
-                            if (a[i].domain != "facebook.com" && a[i].domain != "messenger.com") {
-                                break;
-                            }
-                            if (Object.keys(a[i])[3] == "path") {
-                                if (a[i].path != "/") {
-                                    break;
-                                }
-                                if (Object.keys(a[i])[4] == "hostOnly") {
-                                    if (a[i].hostOnly != false) {
-                                        break;
-                                    }
-                                    if (Object.keys(a[i])[5] == "creation") {
-                                        if (Object.keys(a[i])[6] == "lastAccessed") {
-                                          score += 1;
-                                        } else {
-                                            break;
-                                        }
-                                    } else {
-                                        break;
-                                    }
-                                } else {
-                                    break;
-                                }
-                            } else {
-                                break;
-                            }
-                        } else {
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                } else {
-                    break;
-                }
-            }
-            let totl =score == a.length;
-        return {score: totl, uid: id}
-    } else {
-        return {score: false, uid:"000000000"};
-    }
-}
-
 module.exports = {
     isReadableStream,
     get,
@@ -1417,6 +1359,5 @@ module.exports = {
     getCPULoad,
     isBlockedSentence,
     encrypt,
-    decrypt,
-    isValidAppState
+    decrypt
 };

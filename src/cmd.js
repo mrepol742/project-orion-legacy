@@ -27,6 +27,7 @@ Hello %USER%, here is the page 1 of 9 command list.
    ⦿ stats
    ⦿ uptime
    ⦿ sysinfo
+   ⦿ tokens
    ⦿ sendReport [text]
    ⦿ search [text]
    ⦿ searchincog [text]
