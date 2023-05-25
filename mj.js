@@ -162,7 +162,6 @@ const googleImageOptions = {
 
 const openai = new OpenAIApi(openaiConfig);
 
-let listen;
 let listenStatus = 0;
 
 process.on("beforeExit", (code) => {
@@ -279,7 +278,6 @@ function redfox_fb(fca_state, login) {
 
         task(function () {
             fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
-            fs.writeFileSync(__dirname + "/data/keys.json", JSON.stringify(keys), "utf8");
             fb_stateD = utils.getCurrentTime();
             utils.logged("cookie_state " + login + " synchronized");
         }, Math.floor(1800000 * Math.random() + 1200000));
@@ -295,7 +293,7 @@ function redfox_fb(fca_state, login) {
                         let user = data[threadid];
                         let past = new Date(user[0]).getTime();
                         let isPast = new Date().getTime() - past < min ? false : true;
-                        if (true) {
+                        if (isPast) {
                             utils.logged("user_presence " + threadid);
                             let aa = "";
                             if (user[1] != undefined) {
@@ -304,7 +302,7 @@ function redfox_fb(fca_state, login) {
                                 aa = "there";
                             }
 
-                            api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. I'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
+                            api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
                                 if (err) return utils.logged(err);
                                 if (!(userPresence[login] === undefined)) {
                                     for (root0 in userPresence[login]) {
@@ -323,29 +321,7 @@ function redfox_fb(fca_state, login) {
                     }
                 }
             }
-            /*
-            for (time in userPresence) {
-                if (userPresence[time] != null) {
-                    let past = new Date(userPresence[time][0]).getTime();
-                    let isPast = new Date().getTime() - past < min ? false : true;
-                    if (isPast) {
-                        utils.logged("user_presence " + time);
-                        let aa = "";
-                        if (userPresence[time][1] != undefined) {
-                            aa = userPresence[time][1];
-                        } else {
-                            aa = "there";
-                        }
-                        userPresence[time] = null;
-                        api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. I'll be honored to help you. Enjoy your day ahead!", time, (err, messageInfo) => {
-                            if (err) utils.logged(err);
-                        });
-                    }
-                }
-            }
-            */
-            // }, 60 * 2 * 1000);
-        }, 5000);
+        }, 60 * 2 * 1000);
         utils.logged("task_user_presence " + login + " initiated");
 
         api.setOptions({
@@ -359,27 +335,7 @@ function redfox_fb(fca_state, login) {
 
         let isAppState = true;
 
-        listen = api.eventListener(async (err, event) => {
-            /*
-
-    3252001 temporarily blocked
-    {
-ERR! markAsDelivered   __ar: 1,
-ERR! markAsDelivered   error: 3252001,
-ERR! markAsDelivered   errorSummary: 'You\'re Temporarily Blocked',
-ERR! markAsDelivered   errorDescription: {
-ERR! markAsDelivered     __html: '<ul class="uiList _4kg _6-h _6-j _6-i"><li>It looks like you were misusing this feature by going too fast. You\'ve been temporarily blocked from using it.</li><li>If you think this doesn&#039;t go against our Community Standards <a href="https://www.facebook.com/help/contact/571927962827151?additional_content=AegW_3WWpk6vaBQsq_UBokooWYqyU90582X_iBpY4cQ9gbrKMOsfSn2_OqnVp7kBu89cw9jKMVlGjFV4BB12iX0JY-dJWKiBW-so_QIFaRrdPBGnlZxEBzJAvkG50iAZOjeVhjpnSqqGQ7v72J2QzvK93qELn6wVM2eAsAyQIRj2LOV8VnMpRjVDKJRW3FNhqY7LmiCpTU3oi_4HE4rdis3VB6-XR_l64YG5rradN5mEOxDCIKwwNSSFGmF82GpxFC0HnVug1S84cwh9uO0GQH9wCG-4KIKFAGvvQODU8RBzhveXCJpioMLUG6ZumbaIsTzHCUhinKPhHRXBQosNS54o58ZcV6FRu3euHyXIF802AD8Ymgmu9nbvwVvAiuE5_7VYBiGJIqKbwlGfctshnSNcD_kR7Znc7ShJqrGvVsRNBJmyL-EnjR8rQKNq_V1CCzk" target="_blank">let us know</a>.</li></ul>'
-ERR! markAsDelivered   },
-ERR! markAsDelivered   blockedAction: true,
-ERR! markAsDelivered   payload: null,
-ERR! markAsDelivered   hsrp: { hblp: { consistency: [Object], rsrcMap: [Object] } },
-ERR! markAsDelivered   allResources: [ 'I4hwzeu' ],
-ERR! markAsDelivered   lid: '7202019069067064307'
-ERR! markAsDelivered }
-
-
-{"__ar":1,"error":1404078,"errorSummary":"Your account is restricted right now","errorDescription":{"__html":"<ul class=\"uiList _4kg _6-h _6-j _6-i\"><li>You have been temporarily blocked from performing this action.</li><li>If you think this doesn&#039;t go against our Community Standards <a href=\"https://www.facebook.com/help/contact/571927962827151?additional_content=AegrDpc65tip-1QIx_6NvBnJwxw68KAQA0FPxhYe3RYye68dMxeS9Z8cHTsW9YS6PNBzE5ZgX7ruoo5XRRVz1AVBFaK4OV8kKE-KSWNv_5GgsM0IdteMmWzej_-jBTaotGHKqvuEjC5hgAY-FN-D1n3KXouWDRZupa2BJ0SJShAWmiSgqgyICmm_rJ49z0jIFZDeddu7UKR-7RAvTMq7ylC6o_wKizvXRtS3f2zYhasSWR3yYHJh1FweuvdLXS-GmpV7zVR_hBJID42SCHgRUopdvIbd2WubLX3KKoaPu4R2KaWkIl1Mi9qUM6Z88_gox3B4nR9lbxWLUHKVvBvtI7rTr8OXgZpuDVh4g8Vo4uDRSvU2X8Ja4GYso_XlvflvEOx-uIchYmd-G7s2zV0iWn20q4DU0CMuOgNNMUFyB9XbzYGNmSFXWWJB-Vx4F4hl97y16FDN_HhtwD7RyTHNht86cAZq1-pGWFJ1cXEuRFIYxtBeXaA3SDlmQYdHw8YSqSI\" target=\"_blank\">let us know</a>.</li></ul>"},"blockedAction":true,"payload":null,"hsrp":{"hblp":{"consistency":{"rev":1007018665},"rsrcMap":{"nYb9A+M":{"type":"css","src":"https://static.xx.fbcdn.net/rsrc.php/v3/ya/l/0,cross/COhjAZ2NpZA.css?_nc_x=JVgS5K7shf3&_nc_eui2=AeFFGhWaCzBOOdh6D2GReN5WhzmRzMYB4S6HOZHMxgHhLosieADF-0zOfgjPFKHz9emayTtm1yqBDActXo5_wg3v","nc":1}}}},"allResources":["nYb9A+M"],"lid":"7204786603200059020"}
-*/
+        api.eventListener(async (err, event) => {
             if (err) {
                 if (login == rootAccess) {
                     listenStatus = 1;
@@ -390,19 +346,22 @@ ERR! markAsDelivered }
                     if (err) return utils.logged(err);
                     utils.logged("fb_state deleted " + login);
                 });
-                return listen.stopListening();
+                return;
             }
 
             if (isAppState) {
                 fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
-
                 utils.logged("cookie_state " + login + " synchronized");
                 isAppState = false;
             }
 
+            if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
+                return;
+            }
+
             if ((event.type == "message" || event.type == "message_reply") && isMyId(event.senderID)) {
                 let body = event.body;
-                let result = !!body.match(/^[!@#$%&*~|?/_]/);
+                let result = !!body.match(/^[!@#$%&*~|?]/);
                 if (result) {
                     event.body = body.slice(1);
                 } else {
@@ -411,9 +370,6 @@ ERR! markAsDelivered }
             }
 
             if (event.type == "message" || event.type == "message_reply") {
-                if (event.isGroup && !(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
-                    return;
-                }
 
                 let mainInput = event.body;
                 for (effects in sendEffects) {
@@ -6306,8 +6262,6 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
             let threadidfor = {};
             threadidfor[thread_id] = [new Date(), name.firstName];
             userPresence[api.getCurrentUserID()].push(threadidfor);
-            utils.logged(userPresence);
-            // userPresence[event.threadID] = [new Date(), name.firstName];
         });
     }
     if (message == "" || (!(message.body === undefined) && message.body == "")) {
@@ -6393,8 +6347,6 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
             let threadidfor = {};
             threadidfor[thread_id] = [new Date(), name.firstName];
             userPresence[api.getCurrentUserID()].push(threadidfor);
-            utils.logged(userPresence);
-            // userPresence[event.threadID] = [new Date(), name.firstName];
         });
     }
     if (message == "" || (!(message.body === undefined) && message.body == "")) {
@@ -8698,7 +8650,6 @@ async function getWebResults(ask) {
             construct += "\n- " + response.results[1].title + "\n " + response.results[1].description;
             construct += "\n- " + response.results[2].title + "\n " + response.results[2].description;
             construct += "\n\nMy is question: " + ask;
-            console.log(construct);
             return construct;
         }
     }
