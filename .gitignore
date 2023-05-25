@@ -1,4 +1,4 @@
 /node_modules
-.cache/*
+cache/*
 .log/
-!.cache/.gitkeep
+!cache/.gitkeep
