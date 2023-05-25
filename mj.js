@@ -2248,7 +2248,7 @@ Hello %USER%, here is the current server stats as of ` +
                 event,
                 "Hello " +
                     aa +
-                    ", here are the tokens consumption:" +
+                    ", here are the tokens consumption since May 26th 2023.:" +
                     "\n\nCode G3" +
                     "\n    ⦿ Prompt: " +
                     settings.tokens["gpt"]["prompt_tokens"] +
@@ -2258,7 +2258,7 @@ Hello %USER%, here is the current server stats as of ` +
                     settings.tokens["gpt"]["total_tokens"] +
                     "\n    ⦿ Cost: " +
                     Math.floor((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002) +
-                    " $" +
+                    "$" +
                     "\n\nCode TD:" +
                     "\n    ⦿ Prompt: " +
                     settings.tokens["davinci"]["prompt_tokens"] +
@@ -2267,14 +2267,14 @@ Hello %USER%, here is the current server stats as of ` +
                     "\n    ⦿ Total: " +
                     settings.tokens["davinci"]["total_tokens"] +
                     "\n    ⦿ Cost: " +
-                    Math.floor((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.02) +
-                    " $" +
+                    Math.floor((settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02) +
+                    "$" +
                     "\n\n Code D:" +
                     "\n    ⦿ Total: " +
                     settings.tokens["dell"] +
                     "\n    ⦿ Cost: " +
                     Math.floor(settings.tokens["dell"] * 0.018) +
-                    " $"
+                    "$"
             );
         });
     } else if (query == "sysinfo") {
