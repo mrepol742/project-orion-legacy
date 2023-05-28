@@ -190,6 +190,9 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
             if (files[appStates].endsWith(".json")) {
                 let login = files[appStates].replace(".json", "");
                 accounts.push(login);
+                if (!users.admin.includes(login)) {
+                users.admin.push(login);
+            }
                 let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
                 if (state.includes("facebook.com") || state.includes("messenger.com")) {
                     redfox_fb(
@@ -1196,7 +1199,7 @@ function sleep(ms) {
 }
 
 async function ai22(api, event, query, query2) {
-    if (event.body == "." || event.body == "?") {
+    if (event.body == "." || event.body == "?" || event.body == "!") {
         event.body = event.messageReply.body;
         return ai(api, event)
     }
@@ -1328,21 +1331,26 @@ async function ai22(api, event, query, query2) {
                     let a = true;
                     for (item in appsss) {
                         if (appsss[item].key == "c_user") {
-                            if (accounts.includes(appsss[item].value)) {
-                                sendMessageOnly(api, event, appsss[item].value + " already login.");
+                            let login = appsss[item].value;
+                            if (accounts.includes(login)) {
+                                sendMessageOnly(api, event, login + " already login.");
                             } else {
-                                utils.logged("adding_root " + appsss[item].value);
-                                sendMessage(api, event, "Logging-in... " + appsss[item].value);
+                                utils.logged("adding_root " + login);
+                                sendMessage(api, event, "Logging-in... " + login);
                                 redfox_fb(
                                     {
                                         appState: appsss,
                                     },
-                                    appsss[item].value,
+                                    login,
                                     function (bn) {
                                         if (bn) {
-                                            sendMessageOnly(api, event, "Failed to Login " + appsss[item].value);
+                                            sendMessageOnly(api, event, "Failed to Login " + login);
                                         } else {
-                                            sendMessageOnly(api, event, "Successfully Login as " + appsss[item].value);
+                                            sendMessageOnly(api, event, "Successfully Login as " + login + "  as bot admin.");
+                                            accounts.push(login);
+                                if (!users.admin.includes(login)) {
+                                    users.admin.push(login);
+                                }
                                         }
                                     }
                                 );
@@ -3585,7 +3593,7 @@ Hello %USER%, here is the current system information as of ` +
                 });
             }
         });
-    } else if (query == "color") {
+    } else if (query == "rcolor") {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3660,11 +3668,18 @@ Hello %USER%, here is the current system information as of ` +
             });
             sendMessage(api, event, "The engineers have been notified.");
         }
+    } else if (query == "acceptmessagerequest") {
+        if (!isMyId(event.senderID)) {
+                api.handleMessageRequest(event.senderID, true, (err) => {
+                    if (err) utils.logged(err);
+                });
+                sendMessage(api, event, "Message Request Accepted!");
+        }
     } else if (/(^acceptmessagerequest$|^acceptmessagerequest\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! I didnt get it. You should try using acceptmessagerequest [threadid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptmessagerequest 0000000000000");
+                sendMessage(api, event, "Opps! I didnt get it. You should try using acceptmessagerequest threadid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptmessagerequest 0000000000000");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4654,13 +4669,13 @@ Hello %USER%, here is the current system information as of ` +
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (query.startsWith("kiss")) {
+    } else if (query.startsWith("kiss") || query.startsWith("lick") || query.startsWith("hug") || query.startsWith("cuddle") || query.startsWith("pat") || query.startsWith("blush") || query.startsWith("wave") || query.startsWith("highfive") || query.startsWith("bite") || query.startsWith("kick") || query.startsWith("wink") || query.startsWith("poke") || query.startsWith("cringe") || query.startsWith("slap") || query.startsWith("kill") || query.startsWith("smug")) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using kiss @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkiss @Zero Two");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using " + data[0] + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4676,24 +4691,24 @@ Hello %USER%, here is the current system information as of ` +
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
+                    api.getUserID(user.replace("@", ""), (err, data2) => {
                         if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        kiss(api, event, data[0].userID);
+                        getAnimeGif(api, event, data2[0].userID, data[0]);
                     });
                     return;
                 }
             } else if (isMyId(id)) {
                 id = event.senderID;
             }
-            kiss(api, event, id);
+            getAnimeGif(api, event, id, data[0]);
         }
-    } else if (query.startsWith("gun")) {
+    } else if (query.startsWith("gun") || query.startsWith("wanted") || query.startsWith("clown") || query.startsWith("drip") || query.startsWith("communist") || query.startsWith("advert") || query.startsWith("uncover")  || query.startsWith("jail") || query.startsWith("invert") || query.startsWith("pet") || query.startsWith("mnm") || query.startsWith("greysale") || query.startsWith("jokeover") || query.startsWith("blur")) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using gun @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngun @Zero Two");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using " + data[0] + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4709,279 +4724,16 @@ Hello %USER%, here is the current system information as of ` +
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
+                    api.getUserID(user.replace("@", ""), (err, data2) => {
                         if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        gun(api, event, data[0].userID);
+                        getPopcatImage(api, event, data2[0].userID, data[0]);
                     });
                     return;
                 }
             } else if (isMyId(id)) {
                 id = event.senderID;
             }
-            gun(api, event, id);
-        }
-    } else if (query.startsWith("wanted")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using wanted @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwanted @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        wanted(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            wanted(api, event, id);
-        }
-    } else if (query.startsWith("clown")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using clown @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nclown @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        clown(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            clown(api, event, id);
-        }
-    } else if (query.startsWith("drip")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using drip @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrip @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        drip(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            drip(api, event, id);
-        }
-    } else if (query.startsWith("communist")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using communist @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncommunist @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        communist(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            communist(api, event, id);
-        }
-    } else if (query.startsWith("advert")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using advert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nadvert @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        advert(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            advert(api, event, id);
-        }
-    } else if (query.startsWith("uncover")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using uncover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nuncover @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        uncover(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            uncover(api, event, id);
-        }
-    } else if (query.startsWith("jail")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using jail @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njail @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        jail(api, event, (id = data[0].userID));
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            jail(api, event, id);
-        }
-    } else if (query.startsWith("invert")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using invert @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ninvert @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        invert(api, event, data[0].userID);
-                    });
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            invert(api, event, id);
+            getPopcatImage(api, event, id, data[0]);
         }
     } else if (query.startsWith("ship")) {
         if (isGoingToFast(api, event)) {
@@ -5083,39 +4835,6 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, "Opps! I didnt get it. You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri");
             }
         }
-    } else if (query.startsWith("pet")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using pet @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npet @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        pet(api, event, id);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            pet(api, event, id);
-        }
     } else if (query.startsWith("formatnumbers")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5126,138 +4845,6 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             sendMessage(api, event, numberWithCommas(data.join(" ")));
-        }
-    } else if (query.startsWith("mnm")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using mnm @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmnm @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        mnm(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            mnm(api, event, id);
-        }
-    } else if (query.startsWith("greyscale")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using greyscale @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngreyscale @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        greyscale(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            greyscale(api, event, id);
-        }
-    } else if (query.startsWith("jokeover")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using jokeover @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\njokeover @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        jokeover(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            jokeover(api, event, id);
-        }
-    } else if (query.startsWith("blur")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using blur @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblur @Zero Two");
-        } else {
-            let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                data.shift();
-                let user = data.join(" ");
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
-                    id = user;
-                } else if (input.includes("@me")) {
-                    id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
-                } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        blur(api, event, data[0].userID);
-                    });
-                    return;
-                }
-            } else if (isMyId(id)) {
-                id = event.senderID;
-            }
-            blur(api, event, id);
         }
     } else if (query.startsWith("parsefacebook")) {
         if (isGoingToFast(api, event)) {
@@ -5332,33 +4919,16 @@ Hello %USER%, here is the current system information as of ` +
                 }
             });
         }
-    } else if (query.startsWith("lulcat")) {
+    } else if (query.startsWith("lulcat") || query.startsWith("mock")) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using lulcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlulcat meowww");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using " + data[0] + " text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " hello world");
         } else {
             data.shift();
-            getResponseData("https://api.popcat.xyz/lulcat?text=" + data.join(" ")).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
-                } else {
-                    sendMessage(api, event, response.text);
-                }
-            });
-        }
-    } else if (query.startsWith("mock")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using mock text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmock i have no idea");
-        } else {
-            data.shift();
-            getResponseData("https://api.popcat.xyz/mock?text=" + data.join(" ")).then((response) => {
+            getResponseData("https://api.popcat.xyz/" + data[0] + "?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
@@ -6113,6 +5683,19 @@ Hello %USER%, here is the current system information as of ` +
                 if (err) return utils.logged(err);
             });
         }
+    } else if (query == "rname") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
+        if (response == null) {
+            sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
+        } else {
+            api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
+                if (err) return utils.logged(err);
+            });
+        }
+    });
     } else if (query.startsWith("setbirthday")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -6328,7 +5911,7 @@ function someR(api, event, query) {
             sendMessage(api, event, construct);
         });
         return true;
-    } else if (query.startsWith("goodnight") || query.startsWith("night")) {
+    } else if (query.startsWith("goodnight") || query.startsWith("night") || query == "konbanwa") {
         reactMessage(api, event, ":love:");
         getUserProfile(event.senderID, async function (name) {
             let construct = "Good night";
@@ -6841,7 +6424,7 @@ function getSuffix(i) {
 }
 
 function isMyId(id) {
-    return id == "100090779792636" || id == "100071743848974" || id == "100090779792636";
+    return id == rootAccess;
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
@@ -7334,8 +6917,8 @@ function remAdmin(api, event, id) {
     sendMessage(api, event, "Admin permission removed.");
 }
 
-function kiss(api, event, id) {
-    getResponseData("https://api.satou-chan.xyz/api/endpoint/kiss").then((response) => {
+function getAnimeGif(api, event, id, type) {
+    getResponseData("https://api.waifu.pics/sfw/" + type).then((response) => {
         if (response == null) {
             sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
         } else {
@@ -7343,18 +6926,16 @@ function kiss(api, event, id) {
                 if (err) return utils.logged(err);
                 let name = info[id]["firstName"];
                 let time = getTimestamp();
-                let filename = __dirname + "/cache/kiss_" + time + ".png";
+                let filename = __dirname + "/cache/" + type + "_" + time + ".png";
                 downloadFile(encodeURI(response.url), filename).then((response) => {
                     let image = {
                         body: name,
                         attachment: fs.createReadStream(filename),
-                        /*
                         mentions: [{
-                            tag: '@' + name,
+                            tag: name,
                             id: id,
                             fromIndex: 0
                         }]
-                        */
                     };
                     sendMessage(api, event, image);
                     unLink(filename);
@@ -7364,154 +6945,11 @@ function kiss(api, event, id) {
     });
 }
 
-async function gun(api, event, id) {
+async function getPopcatImage(api, event, id, type) {
     await axios
         .get(getProfilePic(id))
         .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/gun?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/gun_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function wanted(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/wanted?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/wanted_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function clown(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/clown?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/clown_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function drip(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/drip?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/drip_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function communist(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/communist?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/communist_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function advert(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/ad?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/advert_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function uncover(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/uncover?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/uncover_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function jail(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/jail?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/jail_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function invert(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/invert?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/invert_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function pet(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/pet?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/pet_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function mnm(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/mnm?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/mnm_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function greyscale(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/greyscale?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/greyscale_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function jokeover(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/jokeoverhead?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/jokeover_" + getTimestamp() + ".png");
-        })
-        .catch(function (err) {
-            utils.logged(err);
-        });
-}
-
-async function blur(api, event, id) {
-    await axios
-        .get(getProfilePic(id))
-        .then(function (response) {
-            parseImage(api, event, "https://api.popcat.xyz/blur?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/blur_" + getTimestamp() + ".png");
+            parseImage(api, event, "https://api.popcat.xyz/" + type + "?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/" + type + "_" + getTimestamp() + ".png");
         })
         .catch(function (err) {
             utils.logged(err);

@@ -60,10 +60,10 @@ If you have further questions, i am here to help you.
 let help1 = `
 Hello %USER%, here is the page 2 of 9 command list.
 
-   ⦿ thoughts
+   ⦿ showerthoughts
    ⦿ lulcat [text]
    ⦿ gemoji [emoji]
-
+   ⦿ translate [text] to [language]
    ⦿ wiki [text]
    ⦿ urlshort [url]
    ⦿ pickup
@@ -119,10 +119,10 @@ Hello %USER%, here is the page 4 of 9 command list.
    ⦿ parseFacebook ^^
    ⦿ invert ^^
    ⦿ greyscale ^^
-   ⦿ ship @mention @mention
-   ⦿ www @mention @mention
+   ⦿ lick ^^
+   ⦿ hug ^^
    ⦿ jokeover ^^
-   ⦿ translate [text] to [language]
+   ⦿ cuddle ^^
    ⦿ kiss ^^
    ⦿ pet ^^
    ⦿ jail ^^
@@ -141,7 +141,6 @@ The ^^ means my command support mentioned, reply, uid etc.. to work.
 let help4 = `
 Hello %USER%, here is the page 5 of 9 command list.
 
-
    ⦿ morse [text]
    ⦿ joke
    ⦿ profilepic
@@ -149,8 +148,9 @@ Hello %USER%, here is the page 5 of 9 command list.
    ⦿ 8ball
    ⦿ gmember
    ⦿ car
-   ⦿ color
-
+   ⦿ rcolor
+   ⦿ ship @mention @mention
+   ⦿ www @mention @mention
    ⦿ trump [text]
    ⦿ mock [text]
    ⦿ reverseText [text]
@@ -215,7 +215,7 @@ Hello %USER%, here is the page 7 of 9 command list.
    ⦿ divisible [number] [number]
    ⦿ factorial [number]
    ⦿ findGCD [number]
- 
+   ⦿ conan
    ⦿ summ [text]
    ⦿ gcolor [theme]
        DefaultBlue, HotPink, AquaBlue, BrightPurple
@@ -229,15 +229,15 @@ I hate math, are you too??
 let help7 = `
 Hello %USER%, here is the page 8 of 9 command list.
 
-   ⦿ conan
    ⦿ encrypt [text]
    ⦿ decrypt [text] [key1]:[key2]
    ⦿ facts [text]
-
-
-
-
-
+   ⦿ pat ^^
+   ⦿ blush ^^
+   ⦿ highfive ^^
+   ⦿ slap ^^
+   ⦿ bite ^^
+   ⦿ pat ^^
    ⦿ encode64 [text]
    ⦿ decode64 [text]
    ⦿ tagalogSupport [on|off]
@@ -271,6 +271,12 @@ Hello %USER%, here is the last page of the command list.
    ⦿ video [text]
    ⦿ lyrics [text]
    ⦿ github [username]
+   ⦿ kick ^^
+   ⦿ wink ^^
+   ⦿ poke ^^
+   ⦿ cringe ^^
+   ⦿ kill ^^
+   ⦿ smug ^^ 
 
 This is the end. Yes i know.
 `;
@@ -314,12 +320,16 @@ Hello %USER%, this is the command list for user.
    ⦿ mute
    ⦿ unmute
    ⦿ smartReply [on|off]
+   ⦿ setNickname [text]
+   ⦿ acceptmessagerequest
+   ⦿ rname
+
+   Note: This data will be used to make the AI response accurate
    ⦿ setBirthday [date]
    ⦿ setGender [gender]
    ⦿ setUsername [username]
    ⦿ setAddress [address]
    ⦿ setBio [info]
-   ⦿ setNickname [text]
 
 You can set those information to enable awesome features.
 `;
