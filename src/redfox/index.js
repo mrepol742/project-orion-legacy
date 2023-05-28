@@ -524,6 +524,7 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
         })
         .catch(function (e) {
             utils.logged("fca_status " + (e.error || e));
+            return callback(null, api);
         });
 }
 
