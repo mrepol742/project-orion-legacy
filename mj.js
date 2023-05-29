@@ -4715,7 +4715,7 @@ Hello %USER%, here is the current system information as of ` +
             }
             getAnimeGif(api, event, id, data[0]);
         }
-    } else if (/(^gun$|^gun\s|^wanted$|^wanted\s|^clown$|^clown\s|^drip$|^drip\s|^communist$|^communist\s|^advert$|^advert\s|^uncover$|^uncover\s|^jail$|^jail\s|^invert$|^invert\s|^pet$|^pet\s|^mnm$|^mnm\s|^greyscale$|^greyscale\s|^jokeover$|^jokeover\s|^blur$|^blur\s)/.test(query2))
+    } else if (/(^gun$|^gun\s|^wanted$|^wanted\s|^clown$|^clown\s|^drip$|^drip\s|^communist$|^communist\s|^advert$|^advert\s|^uncover$|^uncover\s|^jail$|^jail\s|^invert$|^invert\s|^pet$|^pet\s|^mnm$|^mnm\s|^greyscale$|^greyscale\s|^jokeover$|^jokeover\s|^blur$|^blur\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
