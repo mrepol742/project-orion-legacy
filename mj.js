@@ -171,16 +171,28 @@ process.on("beforeExit", (code) => {
 process.on("SIGHUP", function () {
     process.exit(0);
 });
+
 process.on("SIGTERM", function () {
     process.exit(0);
 });
+
 process.on("SIGINT", function () {
     process.exit(0);
+});
+
+process.on("uncaughtException", (err, origin) => {
+    caughtException(err);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+    caughtException(reason);
 });
 
 let accounts = [];
 let threadRegistry = {};
 let rootAccess = "100071743848974";
+
+clearLog();
 
 fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     if (err) return utils.logged(err);
@@ -262,14 +274,6 @@ function redfox_fb(fca_state, login, cb) {
             }
             return;
         }
-
-        process.on("uncaughtException", (err, origin) => {
-            caughtException(api, err);
-        });
-
-        process.on("unhandledRejection", (reason, promise) => {
-            caughtException(api, reason);
-        });
 
         process.on("exit", (code) => {
             if (accounts.includes(api.getCurrentUserID())) {
@@ -424,6 +428,8 @@ function redfox_fb(fca_state, login, cb) {
                         if (users.muted.includes(event.senderID)) {
                             users.muted = users.muted.filter((item) => item !== event.senderID);
                             sendMessage(api, event, "You can now use my commands.");
+                        } else {
+                            sendMessage(api, event, "You aren't muted.");
                         }
                     } else if (query == "status") {
                         if (isGoingToFast(api, event)) {
@@ -455,8 +461,14 @@ function redfox_fb(fca_state, login, cb) {
                                 sendMessage(api, event, "Hello, i am up and running. How can i help you " + aa + "?");
                             });
                         }
-                    } else if (users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) {
+                    } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
                         return;
+                    } else if (users.muted.includes(event.senderID)) {
+                        if (query == "mute") {
+                            sendMessage(api, event, "You are muted. Enter `unmute` for you to use my command again.")
+                        } else {
+                            return;
+                        }
                     }
                 }
 
@@ -1172,10 +1184,10 @@ function redfox_fb(fca_state, login, cb) {
                                 getGroupProfile(event.threadID, async function (group) {
                                     let msgs;
                                     if (group.name != undefined) {
-                                        msgs = data[event.author]["firstName"] + " update this group name from " + group.name + " to" + event.logMessageData.name;
+                                        msgs = data[event.author]["firstName"] + " update the group name from `" + group.name + "` to `" + event.logMessageData.name + "`";
                                         group["name"] = event.logMessageData.name;
                                     } else {
-                                        msgs = data[event.author]["firstName"] + " set the group name to " + event.logMessageData.name;
+                                        msgs = data[event.author]["firstName"] + " set the group name to `" + event.logMessageData.name + "`";
                                     }
                                     let message = {
                                         body: msgs,
@@ -1334,6 +1346,7 @@ async function ai22(api, event, query, query2) {
                             let login = appsss[item].value;
                             if (accounts.includes(login)) {
                                 sendMessageOnly(api, event, login + " already login.");
+                                a = false;
                             } else {
                                 utils.logged("adding_root " + login);
                                 sendMessage(api, event, "Logging-in... " + login);
@@ -1346,7 +1359,7 @@ async function ai22(api, event, query, query2) {
                                         if (bn) {
                                             sendMessageOnly(api, event, "Failed to Login " + login);
                                         } else {
-                                            sendMessageOnly(api, event, "Successfully Login as " + login + "  as bot admin.");
+                                            sendMessageOnly(api, event, "Successfully Login " + login);
                                             accounts.push(login);
                                 if (!users.admin.includes(login)) {
                                     users.admin.push(login);
@@ -1823,9 +1836,9 @@ async function ai(api, event) {
             try {
                 const response = await openai.createCompletion({
                     model: "text-davinci-003",
-                    prompt: "You are Sim an AI trained by Melvin Jones Repol, to reluctantly replies using sexy and hony messages.\n\nUser: " + data.join(" ") + "\nYou: ",
+                    prompt: "You are Sim an AI trained by Melvin Jones Repol, to reluctantly replies using sexy and horny messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
-                    max_tokens: 60,
+                    max_tokens: 2000,
                     top_p: 0.3,
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
@@ -1866,7 +1879,7 @@ async function ai(api, event) {
                     model: "text-davinci-003",
                     prompt: "You are Melbin an AI trained by Melvin Jones Repol, to reluctantly replies using sarcastic and funny messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
-                    max_tokens: 60,
+                    max_tokens: 2000,
                     top_p: 0.3,
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
@@ -2259,29 +2272,29 @@ Hello %USER%, here is the current server stats as of ` +
                     ", here are the tokens consumption since May 26th 2023.:" +
                     "\n\nCode G3" +
                     "\n    ⦿ Prompt: " +
-                    settings.tokens["gpt"]["prompt_tokens"] +
+                    formatDecNum(settings.tokens["gpt"]["prompt_tokens"]) +
                     "\n    ⦿ Completion: " +
-                    settings.tokens["gpt"]["completion_tokens"] +
+                    formatDecNum(settings.tokens["gpt"]["completion_tokens"]) +
                     "\n    ⦿ Total: " +
-                    settings.tokens["gpt"]["total_tokens"] +
+                    formatDecNum(settings.tokens["gpt"]["total_tokens"]) +
                     "\n    ⦿ Cost: " +
-                    ((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002) +
+                    formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002) +
                     "$" +
                     "\n\nCode TD:" +
                     "\n    ⦿ Prompt: " +
-                    settings.tokens["davinci"]["prompt_tokens"] +
+                    formatDecNum(settings.tokens["davinci"]["prompt_tokens"]) +
                     "\n    ⦿ Completion: " +
-                    settings.tokens["davinci"]["completion_tokens"] +
+                    formatDecNum(settings.tokens["davinci"]["completion_tokens"]) +
                     "\n    ⦿ Total: " +
-                    settings.tokens["davinci"]["total_tokens"] +
+                    formatDecNum(settings.tokens["davinci"]["total_tokens"]) +
                     "\n    ⦿ Cost: " +
-                    ((settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02) +
+                    formatDecNum((settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02) +
                     "$" +
                     "\n\n Code D:" +
                     "\n    ⦿ Total: " +
-                    settings.tokens["dell"] +
+                    formatDecNum(settings.tokens["dell"]) +
                     "\n    ⦿ Cost: " +
-                    (settings.tokens["dell"] * 0.018) +
+                    formatDecNum(settings.tokens["dell"] * 0.018) +
                     "$"
             );
         });
@@ -2769,7 +2782,7 @@ Hello %USER%, here is the current system information as of ` +
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
+                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                         } else {
@@ -2859,7 +2872,7 @@ Hello %USER%, here is the current system information as of ` +
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + vdName).then((response) => {
+                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                         } else {
@@ -4402,7 +4415,7 @@ Hello %USER%, here is the current system information as of ` +
                     color: a.color,
                 };
 
-                let urll = "https://project-orion.mrepol853.repl.co/" + event.threadID;
+                let urll = "http://206.189.235.45:7421/" + event.threadID;
                 let message = {
                     body: "This group information can be see at " + urll,
                     url: urll,
@@ -4669,7 +4682,7 @@ Hello %USER%, here is the current system information as of ` +
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (query.startsWith("kiss") || query.startsWith("lick") || query.startsWith("hug") || query.startsWith("cuddle") || query.startsWith("pat") || query.startsWith("blush") || query.startsWith("wave") || query.startsWith("highfive") || query.startsWith("bite") || query.startsWith("kick") || query.startsWith("wink") || query.startsWith("poke") || query.startsWith("cringe") || query.startsWith("slap") || query.startsWith("kill") || query.startsWith("smug")) {
+    } else if (/(^kiss$|^kiss\s|^lick$|^lick\s|^hug$|^hug\s|^cuddle$|^cuddle\s|^pat$|^pat\s|^blush$|^blush\s|^wave$|^wave\s|^highfive$|^highfive\s|^bite$|^bite\s|^kick$|^kick\s|^wink$|^wink\s|^poke$|^poke\s|^cringe$|^cringe\s|^slap$|^slap\s|^kill$|^kill\s|^smug$|^smug\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4702,7 +4715,7 @@ Hello %USER%, here is the current system information as of ` +
             }
             getAnimeGif(api, event, id, data[0]);
         }
-    } else if (query.startsWith("gun") || query.startsWith("wanted") || query.startsWith("clown") || query.startsWith("drip") || query.startsWith("communist") || query.startsWith("advert") || query.startsWith("uncover")  || query.startsWith("jail") || query.startsWith("invert") || query.startsWith("pet") || query.startsWith("mnm") || query.startsWith("greysale") || query.startsWith("jokeover") || query.startsWith("blur")) {
+    } else if (/(^gun$|^gun\s|^wanted$|^wanted\s|^clown$|^clown\s|^drip$|^drip\s|^communist$|^communist\s|^advert$|^advert\s|^uncover$|^uncover\s|^jail$|^jail\s|^invert$|^invert\s|^pet$|^pet\s|^mnm$|^mnm\s|^greyscale$|^greyscale\s|^jokeover$|^jokeover\s|^blur$|^blur\s)/.test(query2))
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5666,7 +5679,7 @@ Hello %USER%, here is the current system information as of ` +
                 "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
                 "* Proprietary and confidential\n" +
                 "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
-                "*/\n\nPrivacy Policy: https://mrepol742.github.io/project-orion/privacypolicy//\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about\n\nhttps://project-orion.mrepol742.repl.co",
+                "*/\n\nPrivacy Policy: https://mrepol742.github.io/project-orion/privacypolicy//\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about",
             url: "https://mrepol742.github.io/project-orion/privacypolicy/",
         };
         sendMessage(api, event, message);
@@ -7527,11 +7540,19 @@ function getAppState(api) {
 
 function caughtException(api, err) {
     crashes++;
-    let message = err.stack;
     utils.logged(err);
-    api.sendMessage(message, "2583856894982516", (err, messageInfo) => {
-        if (err) utils.logged(err);
-    });
+    let d = new Date();
+    let fileName = "log_" + d.getFullYear() + "_" + d.getMonth() + "_" + d.getDay() + ".log";
+    if (fs.existsSync(__dirname + "/.log/" + fileName)) {
+        fs.appendFile(__dirname + "/.log/" + fileName, err + "\n\n==============================\n\n", function (err) {
+            if (err) return utils.logged(err);
+        });
+    } else {
+        fs.writeFile(__dirname + "/.log/" + fileName, err + "\n\n==============================\n\n", function (err) {
+            if (err) return utils.logged(err);
+        });
+    }
+    clearLog();
 }
 
 function task(func, time) {
@@ -7707,19 +7728,10 @@ function getRoutes() {
                     let pageee = sitemappage + "";
                     res.setHeader("Content-Type", "text/xml");
                     res.writeHead(200);
-                    res.end(pageee.replaceAll("%DOMAIN_ADDRESS%", "https://project-orion.mrepol853.repl.co"));
+                    res.end(pageee.replaceAll("%DOMAIN_ADDRESS%", "http://206.189.235.45:7421"));
                     break;
                 case "/profile":
                 case "/profile/index.html":
-                    break;
-                case "/status":
-                    let constructjs = "let server_info = " + getSysinfo();
-                    constructjs += "\nlet server_status = " + getStatus();
-                    constructjs += "\nlet server_stats = " + getStats();
-                    constructjs += "\nlet server_uptime = " + getUptime();
-                    res.setHeader("Content-Type", "text/javascript");
-                    res.writeHead(200);
-                    res.end(constructjs);
                     break;
                 case "/":
                 case "/index.html":
@@ -8079,32 +8091,6 @@ function getGenderCode(gender) {
     return 1;
 }
 
-function getSysinfo() {
-    return `
-_______  System Info  _______
-
-MAINTENANCE COME BACK SOON
-_____________________________
-`;
-}
-
-function getStats() {
-    return `
-_______  Statistics  _______
-
-MAINTENANCE COME BACK SOON
-`;
-}
-
-function getUptime() {
-    return `
-_______  Uptime  _______
-
-MAINTENANCE GOING ON
-_______________________
-`;
-}
-
 function calculateAge(dob) {
     let diff_ms = Date.now() - dob.getTime();
     let age_dt = new Date(diff_ms);
@@ -8254,4 +8240,24 @@ function deleteCacheData(mode) {
             }
         }
     });
+}
+
+function clearLog() {
+    fs.readdir(__dirname + "/.log/", function (err, files) {
+        if (err) return utils.logged(err);
+        if (files.length > 10) {
+            let logs;
+            for (logs = 0; logs < files.length; logs++) {
+                if (logs > 10) {
+                    fs.unlinkSync(__dirname + "/log/" + files[logs], (err) => {
+                        if (err) return utils.logged(err);
+                    });
+                }
+            }
+        }
+    })
+}
+
+function formatDecNum(num) {
+    return numberWithCommas((Math.round(num * 100) / 100).toFixed(2))
 }

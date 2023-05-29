@@ -522,9 +522,9 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
             utils.logged("fca_status " + api.getCurrentUserID() + " online");
             return callback(null, api);
         })
-        .catch(function (e) {
-            utils.logged("fca_status " + (e.error || e));
-            return callback(null, api);
+        .catch(function (err) {
+            utils.logged("fca_status " + err);
+            return callback(err);
         });
 }
 
