@@ -3,6 +3,7 @@
     "version": "5.0.1",
     "description": "I'm Mj a ChatBot AI trained by billions of billions of parameters. Trained to interact like human in conversational or in speaking manner. I could answer most of questions accurately, for list of commands message \"cmd\". If you have any questions don't hesitate to ask.",
     "main": "mj.js",
+    "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
         "start": "clear && while [ true ]; do node mj.js ; done",
@@ -15,7 +16,7 @@
         "email": "mrepol742@gmail.com",
         "url": "https://mrepol742.github.io"
     },
-    "license": "MIT",
+    "license": "SEE LICENSE IN https://github.com/mrepol742/Mrepol742-the-License",
     "repository": {
         "type": "git",
         "url": "https://github.com/mrepol742/project-orion.git"
