@@ -6,8 +6,8 @@
     "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
-        "start": "clear && while [ true ]; do node mj.js ; done",
-        "test": "clear && node --inspect mj.js",
+        "start": "clear && while [ true ]; do node index.js ; done",
+        "test": "clear && node --inspect index.js",
         "prettier": "prettier ./ --write"
     },
     "keywords": [],
