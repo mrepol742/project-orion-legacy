@@ -1,0 +1,17 @@
+                    Mrepol742 the LICENSE
+                version 1 -- 4th February 2020
+
+This licensed stated what is allowed and not
+to protect the copyright of this Project.
+
+One of the Project aims is to be the lightest which means, you as a contributor are now allowed to
+use any libraries or frameworks that will contribute to the app size even if its size impact is light without any permission from the Leading Software Engineer.
+
+Source Codes of this Project can't be shared in any means possible without written permissions from
+the Owner of this Repository.
+
+File naming, in naming Java files it must be 4 digit max long if it is connected to any XML for an
+instance a Activity or a Service. Java file that doesn't connected to any XML can be name without any
+limitations. In naming XML, proper naming is not allowed; it must follow the order a, b, c, d etc..
+
+Publishing and using of these Source Codes commercially without written permission is prohibited..
