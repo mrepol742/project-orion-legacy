@@ -69,7 +69,7 @@ let threadUnsending = {};
 let userWhoSendDamnReports = {};
 let msgs = {};
 let nwww = {};
-const corsWhitelist = ["https://mrepol742.github.io", "http://0.0.0.0:8000"];
+const corsWhitelist = ["https://mrepol742.github.io", "http://0.0.0.0:8000", "http://localhost"];
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
