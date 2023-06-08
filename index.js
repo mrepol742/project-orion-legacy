@@ -564,12 +564,12 @@ function redfox_fb(fca_state, login, cb) {
                     let input = event.body;
                     let query2 = formatQuery(input);
                     let query = query2.replace(/\s+/g, "");
-                    if (/^(melvin|mj|mrepol742)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
+                    if (/(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
                         if (isGoingToFast1(event, threadMaintenance, 15)) {
                             return;
                         }
                         let message = {
-                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments.",
+                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?utm_source=messenger",
                             attachment: fs.createReadStream(__dirname + "/src/web/maintenance.jpg"),
                         };
                         sendMessage(api, event, message);
@@ -7267,7 +7267,7 @@ function isMyPrefix(findPr, input, query, query2) {
     if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
         return true;
     }
-    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742|search|ai)/.test(query2) || isSecondaryPrefix(query2);
+    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s)/.test(query2)|| isSecondaryPrefix(query2);
 }
 
 function isSecondaryPrefix(query2) {
@@ -8126,7 +8126,7 @@ mj = (api, event, findPr, input, query, query2) => {
             sendMessage(api, event, welCC);
         }
     } else {
-        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /^(melvin|mj|mrepol742|search|ai)/.test(query2)) {
+        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s)/.test(query2)) {
             data.shift();
         }
         let text = data.join(" ");
