@@ -34,7 +34,7 @@ function logged(data) {
         console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", JSON.stringify(data.stack));
     } else {
         let da = JSON.stringify(data);
-        if (da == "") {
+        if (da == "" || da == undefined) {
             return;
         }
         if (da.length == 0) {
