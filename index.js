@@ -7797,7 +7797,7 @@ async function sendAiMessage(api, event, ss) {
                 utils.logged(err);
             }
         } else if (/\[(m|M)usic=/.test(ss)) {
-            let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
+            let sqq = keyword[2];
             message.body = ss.replace(/\[(m|M)usic=(.*?)\]/g, "")
             try {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
@@ -7821,7 +7821,7 @@ async function sendAiMessage(api, event, ss) {
                 utils.logged(err);
             }
         } else if (/\[(v|V)ideo=/.test(ss)) {
-            let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
+            let sqq = keyword[2];
             message.body = ss.replace(/\[(v|V)ideo=(.*?)\]/g, "")
             try {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
@@ -7845,7 +7845,7 @@ async function sendAiMessage(api, event, ss) {
                 utils.logged(err);
             }
         } else if (/\[(c|C)reate=/.test(ss)) {
-            let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
+            let sqq = keyword[2];
             message.body = ss.replace(/\[(c|C)reate=(.*?)\]/g, "")
             try {
                 const response = await openai.createImage({
@@ -7876,6 +7876,10 @@ async function sendAiMessage(api, event, ss) {
             }
             message.body = ss.replace(/\[(t|T)ime=(.*?)\]/g, "")
         }
+
+        let body33 = message.body;
+        let qqqq = body33.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
+        message.body = qqqq.replaceAll(":.", ".");
     }
 
     for (userID in event.mentions) {
@@ -7932,18 +7936,7 @@ async function sendAiMessage(api, event, ss) {
                 break;
         }
     }
-    sendMessage(api, event, formatQuerySDSD(message));
-}
-
-function formatQuerySDSD(messsage) {
-    if (typeof message === "object") {
-        let body = message.body;
-        let qqqq = body.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
-        message.body = qqqq.replaceAll(":.", ".");
-        return message;
-    }
-    let qqqq = message.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
-    return qqqq.replaceAll(":.", ".");
+    sendMessage(api, event, message);
 }
 
 function nonUU(images) {
