@@ -115,7 +115,7 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
 utils.logged("web_resource_loaded finish");
 
-const PORT = 7421;
+const PORT = 80;
 /*
 server.listen((PORT + 1), function () {
     utils.logged("server_info HTTPS at " + (PORT + 1));
