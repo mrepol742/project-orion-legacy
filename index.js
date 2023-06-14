@@ -7165,7 +7165,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             text1 = "This is what i only know.\n" + text1;
         }
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens)
-        return text1.replaceAll(" .", ".");
+        return text1;
     } catch (error) {
         utils.logged("attempt_initiated " + text)
         let retry = await aiResponse(event, "text-davinci-003", text, repeat, user, group);
@@ -7784,7 +7784,7 @@ async function sendAiMessage(api, event, ss) {
         let sqq = keyword[2];
 
         if (/\[(p|P)icture=/.test(ss)) {
-            message.body = ss.replaceAll("[" + sqq + "]", " ");
+            message.body = ss.replace(/\[(p|P)icture=(.*?)\]/g, "")
             try {
                 let images = await google.image(sqq, googleImageOptions);
                 let fname = __dirname + "/cache/attch_" + getTimestamp() + ".png";
@@ -7798,7 +7798,7 @@ async function sendAiMessage(api, event, ss) {
             }
         } else if (/\[(m|M)usic=/.test(ss)) {
             let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
-            message.body = ss.replaceAll("[" + sqq + "]", " ");
+            message.body = ss.replace(/\[(m|M)usic=(.*?)\]/g, "")
             try {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(sqq, { type: "song" });
@@ -7822,7 +7822,7 @@ async function sendAiMessage(api, event, ss) {
             }
         } else if (/\[(v|V)ideo=/.test(ss)) {
             let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
-            message.body = ss.replaceAll("[" + sqq + "]", " ");
+            message.body = ss.replace(/\[(v|V)ideo=(.*?)\]/g, "")
             try {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(sqq, { type: "video" });
@@ -7846,7 +7846,7 @@ async function sendAiMessage(api, event, ss) {
             }
         } else if (/\[(c|C)reate=/.test(ss)) {
             let sqq = ss.match(/(\[|\()(.*?)(\]|\))/)[2];
-            message.body = ss.replaceAll("[" + sqq + "]", " ");
+            message.body = ss.replace(/\[(c|C)reate=(.*?)\]/g, "")
             try {
                 const response = await openai.createImage({
                     prompt: sqq,
@@ -7871,11 +7871,10 @@ async function sendAiMessage(api, event, ss) {
             try {
                 let response = await google.search(sqq, googleSearchOptions);
                 let time = response.time.hours + " " + response.time.date;
-                message.body = ss.replaceAll("[" + sqq + "]", time);
             } catch (err) {
                 utils.logged(err);
-                message.body = ss.replaceAll("[" + sqq + "]", " ");
             }
+            message.body = ss.replace(/\[(t|T)ime=(.*?)\]/g, "")
         }
     }
 
@@ -7933,7 +7932,12 @@ async function sendAiMessage(api, event, ss) {
                 break;
         }
     }
-    sendMessage(api, event, message);
+    sendMessage(api, event, formatQuerySDSD(message));
+}
+
+function formatQuerySDSD(messsage) {
+    let qqqq = message.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
+    return qqqq.replaceAll(":.", ".");
 }
 
 function nonUU(images) {
