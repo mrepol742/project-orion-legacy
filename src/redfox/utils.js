@@ -30,7 +30,7 @@ function logged(data) {
         } else {
             console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", d.join(" "));
         }
-    } else if (!(data.stack === undefined)) {
+    } else if (!(data === undefined) && !(data.stack === undefined)) {
         console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", JSON.stringify(data.stack));
     } else {
         let da = JSON.stringify(data);
