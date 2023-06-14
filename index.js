@@ -7879,7 +7879,7 @@ async function sendAiMessage(api, event, ss) {
 
         let body33 = message.body;
         let qqqq = body33.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
-        message.body = qqqq.replaceAll(":.", ".");
+        message.body = qqqq.replaceAll(":.", ".").replaceAll(": .", ".");
     }
 
     for (userID in event.mentions) {
