@@ -7936,6 +7936,12 @@ async function sendAiMessage(api, event, ss) {
 }
 
 function formatQuerySDSD(messsage) {
+    if (typeof message === "object") {
+        let body = message.body;
+        let qqqq = body.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
+        message.body = qqqq.replaceAll(":.", ".");
+        return message;
+    }
     let qqqq = message.replace(/^\s+|\s+$|\s+(?=\s)/g, "");
     return qqqq.replaceAll(":.", ".");
 }
