@@ -497,9 +497,7 @@ function redfox_fb(fca_state, login, cb) {
                         rs.push(event.messageID);
                         settings.restart = rs;
                         sendMessage(api, event, "Restarting program...");
-                        setTimeout(function () {
-                            process.exit(0);
-                        }, 3000);
+                        process.exit(0);
                     }
                 }
 
@@ -6450,7 +6448,7 @@ async function getImages(api, event, images) {
     let name = [];
     let i;
     for (i = 0; i < parseInt(settings.preference.max_image) && i < images.length; i++) {
-        let url = nonUU(images);
+        let url = nonUU(images, true);
         await sleep(500);
         let fname = __dirname + "/cache/findimg_" + i + "_" + time + ".png";
         await downloadFile(encodeURI(url), fname).then((response) => {
@@ -7939,8 +7937,14 @@ async function sendAiMessage(api, event, ss) {
     sendMessage(api, event, message);
 }
 
-function nonUU(images) {
-    let url = images[Math.floor(Math.random() * images.length)].url;
+function nonUU(images, isMax) {
+    let loc = 0;
+    if (isMax === undefined) {
+        loc = Math.floor(Math.random() * 10) + 1;
+    } else {
+        loc = Math.floor(Math.random() * images.length);
+    }
+    let url = images[loc].url;
     if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com") && (url.startsWith("https://") || url.startsWith("http://"))) {
         return url;
     }
