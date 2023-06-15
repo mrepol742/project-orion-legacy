@@ -441,15 +441,15 @@ function redfox_fb(fca_state, login, cb) {
                         } else if (settings.preference.error == "1404078") {
                             sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
                         } else if (users.muted.includes(event.senderID)) {
-                            sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands");
+                            sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an issue at https://github.com/prj-orion/issues/issues/new");
                         } else if (groups.blocked.includes(event.threadID)) {
                             sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info.");
+                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an issue at https://github.com/prj-orion/issues/issues/new");
                         } else if (settings.preference.isStop) {
                             sendMessage(api, event, "The program is currently offline.");
                         } else if (settings.preference.isDebugEnabled) {
-                            sendMessage(api, event, "The program is currently under maintenance.");
+                            sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues");
                         } else {
                             getUserProfile(event.senderID, async function (name) {
                                 let aa = "";
@@ -1763,7 +1763,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1856,7 +1856,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1897,7 +1897,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1957,7 +1957,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1994,7 +1994,7 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13');
+                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -6287,7 +6287,7 @@ function isItBotOrNot(api, event) {
         } else {
             construct += "You have been blocked.";
         }
-        construct += "\n\nWe don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.";
+        construct += "\n\nWe don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues/issues/new?title=Account%20got%20blocked";
         sendMessageOnly(api, event, construct);
         return true;
     }
@@ -7109,12 +7109,12 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
         }
         if (!(error.response === undefined)) {
             if (error.response.status >= 400) {
-                return 'Segmentation fault (core dumped)............^0B^1)45^9-A^177)(^BS"MJ"-7|4:2/.js). ERRRRRRRRRRRRRRRRRRRRRRRRROR--13';
+                return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new";
             } else {
                 return idknow[Math.floor(Math.random() * idknow.length)];
             }
         }
-        return "It seems like there are problems with the server. Please try it again later.";
+        return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new";
     }
 }
 
