@@ -1,6 +1,6 @@
-import * as redfox from "./src/redfox";
-import * as utils from "./src/redfox/utils.js";
-import * as fs from "fs";
+import redfox from "./src/redfox";
+import utils from "./src/redfox/utils.js";
+import fs from "fs";
 
 let a = `
 
@@ -42,16 +42,16 @@ utils.logged("project_orion online");
 
 import { Innertube, UniversalCache, Utils } from "youtubei.js";
 import FormData from "form-data";
-import * as dns from "dns";
-import * as http from "http";
-import * as https from "https";
-import * as os from "os";
-import * as WeatherJS from "weather-js";
-import * as GoogleTTS from "google-tts-api";
-import * as google from "googlethis";
+import dns from "dns";
+import http from "http";
+import https from "https";
+import os from "os";
+import WeatherJS from "weather-js";
+import GoogleTTS from "google-tts-api";
+import google from "googlethis";
 import axios from "axios";
-import * as path from "path";
-import * as crypto from "crypto";
+import path from "path";
+import crypto from "crypto";
 import { Configuration, OpenAIApi } from "openai";
 import { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } from "./src/arrays.js";
 import { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } from "./src/cmd.js";
@@ -252,7 +252,7 @@ task(function () {
 }, 60 * 30 * 1000);
 utils.logged("task_clear global initiated");
 
-function redfox_fb(fca_state, login, cb: callback = undefined) {
+function redfox_fb(fca_state, login, cb: object = undefined) {
     redfox(fca_state, (err, api) => {
         if (err) {
             if (login == rootAccess) {
@@ -1587,7 +1587,7 @@ async function ai(api, event) {
                         } else {
                             let url = "https://duckduckgo.com" + response.Image;
                             let dir = __dirname + "/cache/duckduckgo_" + getTimestamp() + ".png";
-                            downloadFile(url, dir).then((response) => {
+                            downloadFile(url, dir).then((response1) => {
                                 let message = {
                                     body: response.Abstract,
                                     attachment: fs.createReadStream(dir),
@@ -1625,7 +1625,7 @@ async function ai(api, event) {
                 settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
                 settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
                 settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
-                sendMessage(api, event, completion.data.choices[0].message.content);
+                sendMessage(api, event, completion.data.choices[0].message!.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to Google servers right now.");
             }
@@ -1742,10 +1742,10 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
-                let text = response.data.choices[0].text;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
+                let text = !response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
                         text = "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
@@ -1785,7 +1785,7 @@ async function ai(api, event) {
                 settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
                 settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
                 settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
-                sendMessage(api, event, completion.data.choices[0].message.content);
+                sendMessage(api, event, completion.data.choices[0].message!.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
@@ -1811,7 +1811,7 @@ async function ai(api, event) {
                 settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
                 settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
                 settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
-                sendMessage(api, event, completion.data.choices[0].message.content);
+                sendMessage(api, event, completion.data.choices[0].message!.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
@@ -1835,9 +1835,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1876,9 +1876,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1917,9 +1917,9 @@ async function ai(api, event) {
                     frequency_penalty: 0,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
                 sendMessage(api, event, response.data.choices[0].text);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
@@ -1944,9 +1944,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
                 sendAiMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
@@ -7158,7 +7158,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             }
             text1 = "This is what i only know.\n" + text1;
         }
-        utils.logged("tokens_used prompt: " + ai.data.usage!.prompt_tokens + " completion: " + ai.data.usage!.completion_tokens + " total: " + ai.data!.usage.total_tokens)
+        utils.logged("tokens_used prompt: " + ai.data.usage!.prompt_tokens + " completion: " + ai.data.usage!.completion_tokens + " total: " + ai.data.usage!.total_tokens)
         return text1;
     } catch (error) {
         utils.logged("attempt_initiated " + text)
@@ -7828,7 +7828,7 @@ async function sendAiMessage(api, event, ss) {
                     size: "512x512",
                 });
                 settings.tokens["dell"] += 1;
-                let url = response.data.data[0]!.url;
+                let url = response.data.data[0].url;
                 utils.logged("downloading_attachment " + url);
                 if (url.startsWith("https://") || url.startsWith("http://")) {
                     let dir = __dirname + "/cache/createimg_" + getTimestamp() + ".png";
