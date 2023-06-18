@@ -2,4 +2,4 @@
 cache/*
 !cache/.gitkeep
 
-*.js
+index.js
