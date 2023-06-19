@@ -1,5 +1,5 @@
 /node_modules
-cache/*
+/cache/*
 !cache/.gitkeep
-
-index.js
+/log/*
+!log/.gitkeep

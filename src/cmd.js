@@ -72,7 +72,7 @@ Hello %USER%, here is the page 2 of 9 command list.
    ⦿ portrait
    ⦿ portrait [text]
    ⦿ solve [equation]
-   ⦿ roi [revenue]:[cost]
+   ⦿ roi [revenue] [cost]
    ⦿ pin add
    ⦿ pin remove
    ⦿ sadcat [text]
@@ -214,7 +214,7 @@ Hello %USER%, here is the page 7 of 9 command list.
    ⦿ range [numbers]
    ⦿ divisible [number] [number]
    ⦿ factorial [number]
-   ⦿ findGCD [number]:[number]
+   ⦿ findGCD [number]
    ⦿ conan
    ⦿ summ [text]
    ⦿ gcolor [theme]

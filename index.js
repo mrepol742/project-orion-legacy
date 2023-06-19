@@ -1,6 +1,6 @@
-import redfox from "./src/redfox";
-import utils from "./src/redfox/utils.js";
-import fs from "fs";
+const redfox = require("./src/redfox");
+const utils = require("./src/redfox/utils.js");
+const fs = require("fs");
 
 let a = `
 
@@ -40,21 +40,21 @@ utils.logged("project_orion online");
  * limitations under the License.
  */
 
-import { Innertube, UniversalCache, Utils } from "youtubei.js";
-import FormData from "form-data";
-import dns from "dns";
-import http from "http";
-import https from "https";
-import os from "os";
-import WeatherJS from "weather-js";
-import GoogleTTS from "google-tts-api";
-import google from "googlethis";
-import axios from "axios";
-import path from "path";
-import crypto from "crypto";
-import { Configuration, OpenAIApi } from "openai";
-import { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } from "./src/arrays.js";
-import { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } from "./src/cmd.js";
+const { Innertube, UniversalCache, Utils } = require("youtubei.js");
+const FormData = require("form-data");
+const dns = require("dns");
+const http = require("http");
+const https = require("https");
+const os = require("os");
+const WeatherJS = require("weather-js");
+const GoogleTTS = require("google-tts-api");
+const google = require("googlethis");
+const axios = require("axios");
+const path = require("path");
+const crypto = require("crypto");
+const { Configuration, OpenAIApi } = require("openai");
+const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } = require("./src/arrays.js");
+const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./src/cmd.js");
 
 let threadInfo = {};
 let threadIdMV = {};
@@ -69,7 +69,6 @@ let threadUnsending = {};
 let userWhoSendDamnReports = {};
 let msgs = {};
 let nwww = {};
-let fb_stateD;
 const corsWhitelist = ["https://mrepol742.github.io", "http://0.0.0.0:8000", "http://localhost"];
 
 const pictographic = /\p{Extended_Pictographic}/gu;
@@ -252,7 +251,7 @@ task(function () {
 }, 60 * 30 * 1000);
 utils.logged("task_clear global initiated");
 
-function redfox_fb(fca_state, login, cb: object = undefined) {
+function redfox_fb(fca_state, login, cb) {
     redfox(fca_state, (err, api) => {
         if (err) {
             if (login == rootAccess) {
@@ -261,9 +260,13 @@ function redfox_fb(fca_state, login, cb: object = undefined) {
             utils.logged("api_login_error " + login);
             accounts = accounts.filter((item) => item !== login);
             if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
-                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json");
+                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+                    if (err) return utils.logged(err);
+                });
                 if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
-                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key");
+                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key", (err) => {
+                        if (err) return utils.logged(err);
+                    });
                 }
             }
             if (typeof cb === "function") {
@@ -301,9 +304,9 @@ function redfox_fb(fca_state, login, cb: object = undefined) {
         task(function () {
             let min = Math.floor(600000 + Math.random() + 300000);
             if (!(userPresence[login] === undefined)) {
-                for (let root of userPresence[login]) {
+                for (root in userPresence[login]) {
                     let data = userPresence[login][root];
-                    for (let keys of Object.keys(data)) {
+                    for (keys in Object.keys(data)) {
                         let threadid = Object.keys(data)[keys];
                         let user = data[threadid];
                         let past = new Date(user[0]).getTime();
@@ -320,9 +323,9 @@ function redfox_fb(fca_state, login, cb: object = undefined) {
                             api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
                                 if (err) return utils.logged(err);
                                 if (!(userPresence[login] === undefined)) {
-                                    for (let root0 of userPresence[login]) {
+                                    for (root0 in userPresence[login]) {
                                         let data0 = userPresence[login][root0];
-                                        for (let keys0 of Object.keys(data0)) {
+                                        for (keys0 in Object.keys(data0)) {
                                             let threadid0 = Object.keys(data0)[keys0];
                                             if (threadid0 == threadid) {
                                                 delete userPresence[login][root0][threadid0];
@@ -358,9 +361,13 @@ function redfox_fb(fca_state, login, cb: object = undefined) {
                 utils.logged("api_listen_error " + login);
                 accounts = accounts.filter((item) => item !== login);
                 if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
-                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json");
+                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+                        if (err) return utils.logged(err);
+                    });
                     if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
-                        fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key");
+                        fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key", (err) => {
+                            if (err) return utils.logged(err);
+                        });
                     }
                 }
                 if (typeof cb === "function") {
@@ -394,7 +401,7 @@ function redfox_fb(fca_state, login, cb: object = undefined) {
 
             if (event.type == "message" || event.type == "message_reply") {
                 let mainInput = event.body;
-                for (let effects of sendEffects) {
+                for (effects in sendEffects) {
                     if (mainInput.endsWith(sendEffects[effects])) {
                         event.body = mainInput.replace(sendEffects[effects], "");
                     }
@@ -497,7 +504,7 @@ function redfox_fb(fca_state, login, cb: object = undefined) {
                 if (event.senderID != api.getCurrentUserID() && event.isGroup) {
                     if (thread[event.threadID] === undefined) {
                         // hacky trick to prevent [0] from being nulled
-                        thread[event.threadID] = [0o1];
+                        thread[event.threadID] = [0000001];
                         thread[event.threadID].push(event.senderID);
                     } else if (thread[event.threadID].length < 2) {
                         thread[event.threadID].push(event.senderID);
@@ -983,7 +990,7 @@ function redfox_fb(fca_state, login, cb: object = undefined) {
                                         api.getThreadInfo(event.threadID, async (err, gc) => {
                                             if (err) return utils.logged(err);
                                             let admins = gc.adminIDs;
-                                            for (let admin of admins) {
+                                            for (admin in admins) {
                                                 if (!accounts.includes(admins[admin].id)) {
                                                     await sleep(3000);
                                                     api.setAdminStatus(event.threadID, admins[admin].id, false, (err) => {
@@ -1264,7 +1271,6 @@ async function ai22(api, event, query, query2) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let input = event.body;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name");
@@ -1333,7 +1339,7 @@ async function ai22(api, event, query, query2) {
                 let appsss = JSON.parse(event.messageReply.body);
                 if (Array.isArray(appsss)) {
                     let a = true;
-                    for (let item of appsss) {
+                    for (item in appsss) {
                         if (appsss[item].key == "c_user") {
                             let login = appsss[item].value;
                             if (accounts.includes(login)) {
@@ -1487,7 +1493,7 @@ async function ai22(api, event, query, query2) {
                 const url = event.messageReply.attachments[0].url;
                 let time = getTimestamp();
                 let filename = __dirname + "/cache/gphoto_" + time + ".png";
-                downloadFile(url, filename).then((response) => {
+                downloadFile(url, dir).then((response) => {
                     api.setGroupImage(fs.createReadStream(filename), event.threadID, (err) => {
                         if (err) return utils.logged(err);
                     });
@@ -1587,7 +1593,7 @@ async function ai(api, event) {
                         } else {
                             let url = "https://duckduckgo.com" + response.Image;
                             let dir = __dirname + "/cache/duckduckgo_" + getTimestamp() + ".png";
-                            downloadFile(url, dir).then((response1) => {
+                            downloadFile(url, dir).then((response) => {
                                 let message = {
                                     body: response.Abstract,
                                     attachment: fs.createReadStream(dir),
@@ -1622,10 +1628,10 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
-                sendMessage(api, event, completion.data.choices[0].message!.content);
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
+                sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to Google servers right now.");
             }
@@ -1663,9 +1669,9 @@ async function ai(api, event) {
                         },
                     ],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues right now. Please try it again later.");
@@ -1690,9 +1696,9 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to Bing AI servers right now.");
@@ -1715,9 +1721,9 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
@@ -1742,10 +1748,10 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
-                let text = !response.data.choices[0].text;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
                         text = "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
@@ -1782,10 +1788,10 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
-                sendMessage(api, event, completion.data.choices[0].message!.content);
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
+                sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
@@ -1808,10 +1814,10 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage!.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage!.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage!.total_tokens;
-                sendMessage(api, event, completion.data.choices[0].message!.content);
+                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
+                sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
@@ -1835,9 +1841,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1876,9 +1882,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1917,9 +1923,9 @@ async function ai(api, event) {
                     frequency_penalty: 0,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 sendMessage(api, event, response.data.choices[0].text);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
@@ -1944,9 +1950,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage!.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage!.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage!.total_tokens;
+                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 sendAiMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
@@ -2543,42 +2549,37 @@ Hello %USER%, here is the current system information as of ` +
         if (isGoingToFast(api, event)) {
             return;
         }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfindGCD 5,9");
+        if (input.split(" ").length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using findGCD number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfindGCD 5");
         } else {
-            data.shift();
-            let num = data.join(" ").split(":");
-            if (!/^\d+$/.test(num[0]) && !/^\d+$/.test(num[1])) {
+            if (!/^\d+$/.test(query.substring(7))) {
                 sendMessage(api, event, "Seem's like there's an invalid token somewhere..");
                 return;
             }
-            sendMessage(api, event, "The GCD of " + num + " is " + findGCD(parseInt(num[0]), num[1]));
+            let num = parseInt(input.substring(8));
+            sendMessage(api, event, "The GCD of " + num + " is " + findGCD(num));
         }
     } else if (/(^roi$|^roi\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nroi 23000,6000");
+        if (input.split(" ").length < 3) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using roi revenue cost instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nroi 23000 6000");
         } else {
-            data.shift();
-            let num = data.join(" ").split(":");
-            let cost = parseInt(num[1]);
-            let calcu = (parseInt(num[0]) - cost) / cost;
+            let revenue = input.split(" ")[1];
+            let cost = input.split(" ")[2];
+            let calcu = (revenue - cost) / cost;
             sendMessage(api, event, "The return of investment is " + calcu);
         }
     } else if (/(^solve$|^solve\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let data = input.split(" ");
-        if (data.length < 2) {
+        if (input.split(" ").length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using solve equation instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsolve 5*5/9");
         } else {
-            data.shift();
-            let text = data.join(" ");
+            let text = input;
+            text = text.substring(8);
             if (text.includes("√")) {
                 let res;
                 try {
@@ -2768,7 +2769,7 @@ Hello %USER%, here is the current system information as of ` +
                 if (search.results) {
                     threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
-                        type: "video+audio",
+                        type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
@@ -2776,7 +2777,7 @@ Hello %USER%, here is the current system information as of ` +
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (let chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
@@ -2818,7 +2819,7 @@ Hello %USER%, here is the current system information as of ` +
                 if (search.results) {
                     threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
-                        type: "video+audio",
+                        type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
@@ -2826,7 +2827,7 @@ Hello %USER%, here is the current system information as of ` +
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (let chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     let message = {
@@ -2866,7 +2867,7 @@ Hello %USER%, here is the current system information as of ` +
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (let chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
@@ -2908,7 +2909,7 @@ Hello %USER%, here is the current system information as of ` +
                 if (search.results) {
                     threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
-                        type: "video+audio",
+                        type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
@@ -2916,7 +2917,7 @@ Hello %USER%, here is the current system information as of ` +
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (let chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     let message = {
@@ -3593,7 +3594,7 @@ Hello %USER%, here is the current system information as of ` +
                 let title = response.title;
                 let time = getTimestamp();
                 let filename = __dirname + "/cache/car_" + time + ".png";
-                downloadFile(encodeURI(image), filename).then((response) => {
+                downloadFile(encodeURI(thumbnail), filename).then((response) => {
                     let message = {
                         body: title,
                         attachment: fs.createReadStream(filename),
@@ -4076,9 +4077,9 @@ Hello %USER%, here is the current system information as of ` +
     } else if (query == "mute") {
         users.muted.push(event.senderID);
         if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-            for (let root0 of userPresence[api.getCurrentUserID()]) {
+            for (root0 in userPresence[api.getCurrentUserID()]) {
                 let data0 = userPresence[api.getCurrentUserID()][root0];
-                for (let keys0 of Object.keys(data0)) {
+                for (keys0 in Object.keys(data0)) {
                     let threadid0 = Object.keys(data0)[keys0];
                     if (threadid0 == event.threadID) {
                         delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -4361,7 +4362,7 @@ Hello %USER%, here is the current system information as of ` +
                 if (err) utils.logged(err);
                 let inf = "";
                 let usern = a.userInfo.length;
-                for (let b of a.userInfo) {
+                for (b in a.userInfo) {
                     inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
                     inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
                     inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
@@ -4893,7 +4894,7 @@ Hello %USER%, here is the current system information as of ` +
                 if (vanity == "") {
                     vanity = id;
                 } else {
-                    vanity = "@" + vanity;
+                    vanit = "@" + vanity;
                 }
                 let gender = ret[id].gender;
                 let isFriend = ret[id].isFriend;
@@ -5361,7 +5362,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            let message = {
+            let messaage = {
                 body: "Opps! I didnt get it. You should try using website url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwebsite https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
@@ -5964,7 +5965,7 @@ function parseImage(api, event, url, dir) {
     });
 }
 
-async function sendMessage(api, event, message, thread_id: number = undefined, message_id: number = undefined, bn: boolean = undefined, voice: boolean = undefined, no_font: boolean = undefined) {
+async function sendMessage(api, event, message, thread_id, message_id, bn, voice, no_font) {
     if (bn === undefined) {
         bn = true;
     }
@@ -6012,7 +6013,7 @@ async function sendMessage(api, event, message, thread_id: number = undefined, m
                         (err, messageInfo) => {
                             if (err) {
                                 utils.logged(err);
-                                sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, event.senderID);
+                                sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, id);
                             }
                         },
                         message_id
@@ -6052,7 +6053,7 @@ function getMessageBody(message) {
     return message.body;
 }
 
-async function sendMessageOnly(api, event, message, thread_id: number = undefined, message_id: number = undefined, bn: boolean = undefined, voice: boolean = undefined) {
+async function sendMessageOnly(api, event, message, thread_id, message_id, bn, voice) {
     if (bn === undefined) {
         bn = true;
     }
@@ -6086,7 +6087,7 @@ async function sendMessageOnly(api, event, message, thread_id: number = undefine
     }
 }
 
-async function sendMMMS(api, message, thread_id: number = undefined, message_id: number = undefined, id: number = undefined, voiceE: boolean = undefined, no_font: boolean = undefined) {
+async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font) {
     if (voiceE && typeof message === "string" && message.length < 200 && groups.tts.includes(thread_id)) {
         const url = GoogleTTS.getAudioUrl(message, voiceOptions);
         let time = getTimestamp();
@@ -6447,7 +6448,7 @@ async function getImages(api, event, images) {
     let name = [];
     let i;
     for (i = 0; i < parseInt(settings.preference.max_image) && i < images.length; i++) {
-        let url = nonUU(images, 0);
+        let url = nonUU(images, true);
         await sleep(500);
         let fname = __dirname + "/cache/findimg_" + i + "_" + time + ".png";
         await downloadFile(encodeURI(url), fname).then((response) => {
@@ -6664,7 +6665,9 @@ async function bgRemove(api, event) {
 async function unLink(dir) {
     await sleep(1000 * 120);
     if (fs.existsSync(dir)) {
-        fs.unlinkSync(dir);
+        fs.unlinkSync(dir, (err) => {
+            if (err) utils.logged(err);
+        });
     }
 }
 
@@ -6747,9 +6750,9 @@ async function blockUser(api, event, id) {
         return;
     }
     if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-        for (let root0 of userPresence[api.getCurrentUserID()]) {
+        for (root0 in userPresence[api.getCurrentUserID()]) {
             let data0 = userPresence[api.getCurrentUserID()][root0];
-            for (let keys0 of Object.keys(data0)) {
+            for (keys0 in Object.keys(data0)) {
                 let threadid0 = Object.keys(data0)[keys0];
                 if (threadid0 == event.threadID) {
                     delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -7084,11 +7087,11 @@ function saveEvent(api, event) {
 async function aiResponse(event, complextion, text, repeat, user, group) {
     try {
         const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group));
-        settings.tokens["davinci"]["prompt_tokens"] += ai.data.usage!.prompt_tokens;
-        settings.tokens["davinci"]["completion_tokens"] += ai.data.usage!.completion_tokens;
-        settings.tokens["davinci"]["total_tokens"] += ai.data.usage!.total_tokens;
-        utils.logged("tokens_used prompt: " + ai.data.usage!.prompt_tokens + " completion: " + ai.data.usage!.completion_tokens + " total: " + ai.data.usage!.total_tokens)
-        let text1 = !ai.data.choices[0].text;
+        settings.tokens["davinci"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
+        settings.tokens["davinci"]["completion_tokens"] += ai.data.usage.completion_tokens;
+        settings.tokens["davinci"]["total_tokens"] += ai.data.usage.total_tokens;
+        utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens)
+        let text1 = ai.data.choices[0].text;
 
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
@@ -7148,17 +7151,17 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             frequency_penalty: parseInt(settings.preference.frequency_penalty),
             presence_penalty: parseInt(settings.preference.presence_penalty)
         });
-        settings.tokens["gpt"]["prompt_tokens"] += ai.data.usage!.prompt_tokens;
-        settings.tokens["gpt"]["completion_tokens"] += ai.data.usage!.completion_tokens;
-        settings.tokens["gpt"]["total_tokens"] += ai.data.usage!.total_tokens;
-        let text1 = ai.data.choices[0].message!.content;
+        settings.tokens["gpt"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
+        settings.tokens["gpt"]["completion_tokens"] += ai.data.usage.completion_tokens;
+        settings.tokens["gpt"]["total_tokens"] += ai.data.usage.total_tokens;
+        let text1 = ai.data.choices[0].message.content;
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
                 return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
             }
             text1 = "This is what i only know.\n" + text1;
         }
-        utils.logged("tokens_used prompt: " + ai.data.usage!.prompt_tokens + " completion: " + ai.data.usage!.completion_tokens + " total: " + ai.data.usage!.total_tokens)
+        utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens)
         return text1;
     } catch (error) {
         utils.logged("attempt_initiated " + text)
@@ -7175,7 +7178,7 @@ function generateParamaters(event, complextion, text, user, group) {
         "\n\n";
     if (event.type != "external") {
         if (event.type == "message_reply") {
-            if (accounts.includes(event.messageReply.senderID)) {
+            if (event.messageReply.senderID == api.getCurrentUserID()) {
                 pro += "You: ";
             } else {
                 if (user.firstName != undefined) {
@@ -7221,7 +7224,6 @@ async function sendMessageToAll(api, event) {
 
     if (event.messageReply.attachments.length != 0) {
         let format = getFormat(event.messageReply.attachments[0].type);
-        let i55;
         for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
             await sleep(1000);
             let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
@@ -7232,7 +7234,7 @@ async function sendMessageToAll(api, event) {
             accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
         }
     }
-    for (let gp of groups.active) {
+    for (gp in groups.active) {
         if (!groups.blocked.includes(groups.active[gp])) {
             await sleep(5000);
             let body = {
@@ -7273,10 +7275,10 @@ function isSecondaryPrefix(query2) {
     );
 }
 
-function findPrefix(event, id1) {
-    for (let id of event.mentions) {
-        if (id == id1) {
-            return event.mentions[id];
+function findPrefix(event, id) {
+    for (userID in event.mentions) {
+        if (userID == id) {
+            return event.mentions[userID];
         }
     }
     return false;
@@ -7397,7 +7399,7 @@ function maven(text) {
                 if (/^(http|https):\/\//.test(a)) {
                     return a;
                 } else {
-                    for (let domain of domains) {
+                    for (domain in domains) {
                         if (a.endsWith(domain)) {
                             return a;
                         }
@@ -7472,7 +7474,7 @@ async function downloadFile(fileUrl, outputLocationPath) {
         .then((response) => {
             return new Promise((resolve, reject) => {
                 response.data.pipe(writer);
-                let error = undefined;
+                let error = null;
                 writer.on("error", (err) => {
                     error = err;
                     writer.close();
@@ -7504,6 +7506,27 @@ async function searchimgr(api, event, filename) {
     }
 }
 
+async function transcribeAudioFile(filePath) {
+    const formData = new FormData();
+    formData.append("audio_file", fs.createReadStream(filePath), {
+        contentType: "audio/mpeg",
+    });
+    formData.append("task", "transcribe");
+    formData.append("output", "txt");
+
+    try {
+        const response = await axios.post("http://stt.amosayomide05.cf:9000/asr?task=transcribe&output=txt", formData, {
+            headers: {
+                ...formData.getHeaders(),
+                accept: "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        utils.logged(error);
+    }
+}
+
 function getAppState(api) {
     const key = crypto.randomBytes(32).toString("hex");
     const iv = crypto.randomBytes(16).toString("hex");
@@ -7512,7 +7535,7 @@ function getAppState(api) {
     return utils.encrypt(JSON.stringify(api.getAppState()), key, iv);
 }
 
-function caughtException(err) {
+function caughtException(api, err) {
     crashes++;
     utils.logged(err);
     let d = new Date();
@@ -7565,7 +7588,7 @@ function getRoutes() {
                     let sqq = response.match(/\[(.*?)\]/)[1];
                     try {
                         let images = await google.image(sqq, googleImageOptions);
-                        let url = nonUU(images, 0);
+                        let url = nonUU(images);
                         response = response.replaceAll("[" + sqq + "]", "[url=" + url + "]");
                         response = response.replaceAll("[" + sqq + "]", "");
                     } catch (err) {
@@ -7621,7 +7644,7 @@ function getRoutes() {
                 let data = ress.split("?")[1];
                 let results = [];
                 try {
-                    const images = await google.image(data, { safe: true });
+                    const images = await google.image(data, { safe: true, strictSSL: false });
                     let i;
                     for (i = 0; i < images.length; i++) {
                         results.push(images[i]);
@@ -7762,7 +7785,7 @@ async function sendAiMessage(api, event, ss) {
             try {
                 let images = await google.image(sqq, googleImageOptions);
                 let fname = __dirname + "/cache/attch_" + getTimestamp() + ".png";
-                let url = nonUU(images, 0);
+                let url = nonUU(images);
                 utils.logged("downloading_attachment " + url);
                 await downloadFile(url, fname).then((response) => {
                     message["attachment"] = fs.createReadStream(fname);
@@ -7778,7 +7801,7 @@ async function sendAiMessage(api, event, ss) {
                 const search = await yt.music.search(sqq, { type: "song" });
                 if (search.results) {
                     const stream = await yt.download(search.results[0].id, {
-                        type: "video+audio",
+                        type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
@@ -7786,7 +7809,7 @@ async function sendAiMessage(api, event, ss) {
                     let filename = __dirname + "/cache/attach_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (let chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     message["attachment"] = fs.createReadStream(filename);
@@ -7802,7 +7825,7 @@ async function sendAiMessage(api, event, ss) {
                 const search = await yt.search(sqq, { type: "video" });
                 if (search.results) {
                     const stream = await yt.download(search.results[0].id, {
-                        type: "video+audio",
+                        type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
@@ -7810,7 +7833,7 @@ async function sendAiMessage(api, event, ss) {
                     let filename = __dirname + "/cache/attach_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (let chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     message["attachment"] = fs.createReadStream(filename);
@@ -7856,12 +7879,12 @@ async function sendAiMessage(api, event, ss) {
         message.body = qqqq.replaceAll(":.", ".").replaceAll(": .", ".");
     }
 
-    for (let id of event.mentions) {
-        let namePPP = formatMention(event.mentions[id], ss);
+    for (userID in event.mentions) {
+        let namePPP = formatMention(event.mentions[userID], ss);
         if (ss.includes(namePPP)) {
         message.mentions.push({
             tag: namePPP,
-            id: id,
+            id: userID,
             fromIndex: 0,
         });
     }
@@ -7872,9 +7895,9 @@ async function sendAiMessage(api, event, ss) {
     } else {
         let arraySS = ss.split(/\s+/);
 
-        for (let sss of arraySS) {
+        for (sss in arraySS) {
             if (/^(http|https):\/\//.test(arraySS[sss])) {
-                for (let domain of domains) {
+                for (domain in domains) {
                     if (arraySS[sss].endsWith(domain) && (arraySS[sss].endsWith(".") || arraySS[sss].endsWith("!"))) {
                         message["url"] = arraySS[sss].substring(0, arraySS[sss].length - 1);
                     } else if (arraySS[sss].endsWith(domain)) {
@@ -7915,7 +7938,7 @@ async function sendAiMessage(api, event, ss) {
 
 function nonUU(images, isMax) {
     let loc = 0;
-    if (isMax == 0) {
+    if (isMax === undefined) {
         loc = Math.floor(Math.random() * 10) + 1;
     } else {
         loc = Math.floor(Math.random() * images.length);
@@ -7924,7 +7947,7 @@ function nonUU(images, isMax) {
     if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com") && (url.startsWith("https://") || url.startsWith("http://"))) {
         return url;
     }
-    return nonUU(images, 0);
+    return nonUU(images);
 }
 
 async function simulDD(arr, format) {
@@ -8088,7 +8111,7 @@ function calculateAge(dob) {
     return Math.abs(age_dt.getUTCFullYear() - 1970);
 }
 
-function mj(api, event, findPr, input, query, query2) {
+mj = (api, event, findPr, input, query, query2) => {
     if (isGoingToFast(api, event)) {
         return;
     }
@@ -8222,7 +8245,9 @@ function deleteCacheData(mode) {
                 if (file != ".gitkeep") {
                     if (mode) {
                         if (fs.existsSync(__dirname + "/cache/" + file)) {
-                            fs.unlinkSync(__dirname + "/cache/" + file);
+                            fs.unlinkSync(__dirname + "/cache/" + file, (err) => {
+                                if (err) utils.logged(err);
+                            });
                         }
                     } else {
                         unLink(__dirname + "/cache/" + file);
@@ -8240,7 +8265,9 @@ function clearLog() {
             let logs;
             for (logs = 0; logs < files.length; logs++) {
                 if (logs > 10) {
-                    fs.unlinkSync(__dirname + "/log/" + files[logs]);
+                    fs.unlinkSync(__dirname + "/log/" + files[logs], (err) => {
+                        if (err) return utils.logged(err);
+                    });
                 }
             }
         }
