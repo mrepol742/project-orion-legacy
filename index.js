@@ -2125,8 +2125,7 @@ async function ai(api, event) {
             data.shift();
             let text = data.join(" ").substring(0, 150) + "...";
             const url = GoogleTTS.getAudioUrl(text, voiceOptions);
-            let time = getTimestamp();
-            let filename = __dirname + "/cache/tts_" + time + ".mp3";
+            let filename = __dirname + "/cache/tts_" + getTimestamp() + ".mp3";
             downloadFile(url, filename).then((response) => {
                 let message = {
                     attachment: fs.createReadStream(filename),
@@ -7095,7 +7094,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             functions: [
                 {
                     name: "send_media_file",
-                    description: "Send media file such as music, say/speak, video, picture/photo or generate/create photo.",
+                    description: "Send media file such as music, say/speak/talk, video, picture/photo or generate/create photo.",
                     parameters: {
                         type: "object",
                         properties: {
@@ -7107,7 +7106,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                                 type: "boolean",
                                 description: "Whether the media is playable.",
                             },
-                            type: { type: "string", enum: ["music", "video", "picture", "createpicture", "say"] },
+                            type: { type: "string", enum: ["music", "video", "picture", "createpicture", "say_speak_talk"] },
                         },
                         required: ["name", "type"],
                     },
@@ -7126,6 +7125,21 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         required: ["query"],
                     },
                 },
+                {
+                    name: "get_date_time",
+                    description: "Get the date and time of a given location.",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            location: {
+                                type: "string"
+                            },
+                            time: { type: "string", description: "The time according to the location."},
+                            date: { type: "string", description: "The date according to the location."},
+                        },
+                        required: ["location"],
+                    },
+                },
             ],
             function_call: "auto",
         });
@@ -7136,19 +7150,28 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
 
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
         let message = ai.data.choices[0].message;
-        console.log(JSON.stringify(ai.data));
         if (ai.data.choices[0].finish_reason == "length" && !(message.content).endsWith(".")) {
             return "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new";
         } else if (message.content == null && !(message.function_call === undefined)) {
             let functionName = message.function_call.name;
             const argument = JSON.parse(message.function_call.arguments);
-            console.log(functionName + " " + argument)
             switch (functionName) {
+                case "get_date_time":
+                    mssg.push(message);
+                    let response = await google.search("current time in " + argument.location, googleSearchOptions);
+                    mssg.push({
+                        role: "function",
+                        name: functionName,
+                        content: '{"time": "' + response.time.hours + '", "date": "' + response.time.date + '"}',
+                    });
+                    console.log(JSON.stringify(mssg, null, 4))
+                    return await openai.createChatCompletion({
+                        model: "gpt-3.5-turbo-0613",
+                        messages: mssg,
+                    });
                 case "get_web_result":
                     mssg.push(message);
-                    console.log(argument)
                     let web = await getWebResults(argument.query);
-                    console.log(web)
                     mssg.push({
                         role: "function",
                         name: functionName,
@@ -7862,6 +7885,19 @@ async function sendAiMessage(api, event, ss) {
                         message["attachment"] = await fs.createReadStream(dir);
                     });
                 }
+            } catch (err) {
+                utils.logged(err);
+            }
+        } else if (/\[(s|S)ay_speak_talk=/.test(ss)) {
+            let sqq = keyword[2];
+            message.body = ss.replace(/\[(s|S)ay_speak_talk=(.*?)\]/g, "");
+            try {
+                let text = sqq.substring(0, 150) + "...";
+                const url = await GoogleTTS.getAudioUrl(text, voiceOptions);
+                let filename = __dirname + "/cache/tts_" + getTimestamp() + ".mp3";
+                await downloadFile(url, filename).then(async(response) => {
+                    message["attachment"] = await fs.createReadStream(filename);
+                });
             } catch (err) {
                 utils.logged(err);
             }
