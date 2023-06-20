@@ -69,6 +69,7 @@ def run_conversation():
                 "content": function_response,
             }
         )  # extend conversation with function response
+        print(messages)
         second_response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo-0613",
             messages=messages,

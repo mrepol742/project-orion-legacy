@@ -48,11 +48,8 @@ Hello %USER%, here is the page 1 of 9 command list.
     ⦿ openai [text]
     ⦿ chatgpt [text]
     ⦿ chad [text]
-    ⦿ bing [text]
-    ⦿ bard [text]
     ⦿ nraf [text]
     ⦿ skynet [text]
-    ⦿ david [text]
 
 If you have further questions, i am here to help you.
 `;
