@@ -796,7 +796,8 @@ function getAdminTextMessageType(type) {
         case "participant_joined_group_call":
             return "log:call_participant_joined";
         case "pin_messages_v2":
-            return "log:pin_messages";pin_messages
+            return "log:pin_messages";
+            pin_messages;
         case "unpin_messages_v2":
             return "log:unpin_messages";
         default:
@@ -1359,5 +1360,5 @@ module.exports = {
     getCPULoad,
     isBlockedSentence,
     encrypt,
-    decrypt
+    decrypt,
 };

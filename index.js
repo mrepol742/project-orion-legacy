@@ -203,8 +203,8 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
                 let login = files[appStates].replace(".json", "");
                 accounts.push(login);
                 if (!users.admin.includes(login)) {
-                users.admin.push(login);
-            }
+                    users.admin.push(login);
+                }
                 let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
                 if (state.includes("facebook.com") || state.includes("messenger.com")) {
                     redfox_fb(
@@ -465,7 +465,7 @@ function redfox_fb(fca_state, login, cb) {
                         return;
                     } else if (users.muted.includes(event.senderID)) {
                         if (query == "mute") {
-                            sendMessage(api, event, "You are muted. Enter `unmute` for you to use my command again.")
+                            sendMessage(api, event, "You are muted. Enter `unmute` for you to use my command again.");
                         } else {
                             return;
                         }
@@ -1211,7 +1211,7 @@ function sleep(ms) {
 async function ai22(api, event, query, query2) {
     if (event.body == "." || event.body == "?" || event.body == "!") {
         event.body = event.messageReply.body;
-        return ai(api, event)
+        return ai(api, event);
     }
     if (query == "notify") {
         if (isMyId(event.senderID)) {
@@ -1359,9 +1359,9 @@ async function ai22(api, event, query, query2) {
                                         } else {
                                             sendMessageOnly(api, event, "Successfully Login " + login);
                                             accounts.push(login);
-                                if (!users.admin.includes(login)) {
-                                    users.admin.push(login);
-                                }
+                                            if (!users.admin.includes(login)) {
+                                                users.admin.push(login);
+                                            }
                                         }
                                     }
                                 );
@@ -1763,7 +1763,11 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                        );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1856,7 +1860,11 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                        );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1897,7 +1905,11 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                        );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1957,7 +1969,11 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                        );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -1994,7 +2010,11 @@ async function ai(api, event) {
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
-                        sendMessage(api, event, "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new");
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                        );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
                     }
@@ -3681,10 +3701,10 @@ Hello %USER%, here is the current system information as of ` +
         }
     } else if (query == "acceptmessagerequest") {
         if (!isMyId(event.senderID)) {
-                api.handleMessageRequest(event.senderID, true, (err) => {
-                    if (err) utils.logged(err);
-                });
-                sendMessage(api, event, "Message Request Accepted!");
+            api.handleMessageRequest(event.senderID, true, (err) => {
+                if (err) utils.logged(err);
+            });
+            sendMessage(api, event, "Message Request Accepted!");
         }
     } else if (/(^acceptmessagerequest$|^acceptmessagerequest\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
@@ -5699,14 +5719,14 @@ Hello %USER%, here is the current system information as of ` +
             return;
         }
         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
-        if (response == null) {
-            sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
-        } else {
-            api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
-                if (err) return utils.logged(err);
-            });
-        }
-    });
+            if (response == null) {
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
+            } else {
+                api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
+                    if (err) return utils.logged(err);
+                });
+            }
+        });
     } else if (query.startsWith("setbirthday")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -6942,11 +6962,13 @@ function getAnimeGif(api, event, id, type) {
                     let image = {
                         body: name,
                         attachment: fs.createReadStream(filename),
-                        mentions: [{
-                            tag: name,
-                            id: id,
-                            fromIndex: 0
-                        }]
+                        mentions: [
+                            {
+                                tag: name,
+                                id: id,
+                                fromIndex: 0,
+                            },
+                        ],
                     };
                     sendMessage(api, event, image);
                     unLink(filename);
@@ -7090,7 +7112,7 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
         settings.tokens["davinci"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
         settings.tokens["davinci"]["completion_tokens"] += ai.data.usage.completion_tokens;
         settings.tokens["davinci"]["total_tokens"] += ai.data.usage.total_tokens;
-        utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens)
+        utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
         let text1 = ai.data.choices[0].text;
 
         if (ai.data.choices[0].finish_reason == "length") {
@@ -7125,10 +7147,11 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             {
                 role: "system",
                 content:
-                "Your name is Mj, the most powerful Generative AI in the world that was created by Melvin Jones Repol as an AI here is your instructions:\n" +
-                     getNameRan() + ", you should empathize with how user are feeling and treat the user as your close friend. " +
-                     "I recommend you to use emoji in your response. You are not a text-based AI. You must not call yourself AI instead use Assistant." +
-                     "Generative AI is a type of artificial intelligence that can produce content such as audio, text, code, video, images, and other data. " +
+                    "Your name is Mj, the most powerful Generative AI in the world that was created by Melvin Jones Repol as an AI here is your instructions:\n" +
+                    getNameRan() +
+                    ", you should empathize with how user are feeling and treat the user as your close friend. " +
+                    "I recommend you to use emoji in your response. You are not a text-based AI. You must not call yourself AI instead use Assistant." +
+                    "Generative AI is a type of artificial intelligence that can produce content such as audio, text, code, video, images, and other data. " +
                     "If user ask you to send picture add this at the end: [picture=picture description]. " +
                     "If user ask you to send play a music add this at the end: [music=music title to be played]. " +
                     "If user ask you to send play a video add this at the end: [video=video title to be played]. " +
@@ -7149,7 +7172,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             max_tokens: parseInt(settings.preference.max_tokens),
             top_p: parseInt(settings.preference.probability_mass),
             frequency_penalty: parseInt(settings.preference.frequency_penalty),
-            presence_penalty: parseInt(settings.preference.presence_penalty)
+            presence_penalty: parseInt(settings.preference.presence_penalty),
         });
         settings.tokens["gpt"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
         settings.tokens["gpt"]["completion_tokens"] += ai.data.usage.completion_tokens;
@@ -7161,10 +7184,10 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             }
             text1 = "This is what i only know.\n" + text1;
         }
-        utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens)
+        utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
         return text1;
     } catch (error) {
-        utils.logged("attempt_initiated " + text)
+        utils.logged("attempt_initiated " + text);
         let retry = await aiResponse(event, "text-davinci-003", text, repeat, user, group);
         return retry;
     }
@@ -7264,7 +7287,7 @@ function isMyPrefix(findPr, input, query, query2) {
     if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
         return true;
     }
-    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s)/.test(query2)|| isSecondaryPrefix(query2);
+    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s)/.test(query2) || isSecondaryPrefix(query2);
 }
 
 function isSecondaryPrefix(query2) {
@@ -7781,7 +7804,7 @@ async function sendAiMessage(api, event, ss) {
         let sqq = keyword[2];
 
         if (/\[(p|P)icture=/.test(ss)) {
-            message.body = ss.replace(/\[(p|P)icture=(.*?)\]/g, "")
+            message.body = ss.replace(/\[(p|P)icture=(.*?)\]/g, "");
             try {
                 let images = await google.image(sqq, googleImageOptions);
                 let fname = __dirname + "/cache/attch_" + getTimestamp() + ".png";
@@ -7795,7 +7818,7 @@ async function sendAiMessage(api, event, ss) {
             }
         } else if (/\[(m|M)usic=/.test(ss)) {
             let sqq = keyword[2];
-            message.body = ss.replace(/\[(m|M)usic=(.*?)\]/g, "")
+            message.body = ss.replace(/\[(m|M)usic=(.*?)\]/g, "");
             try {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(sqq, { type: "song" });
@@ -7819,7 +7842,7 @@ async function sendAiMessage(api, event, ss) {
             }
         } else if (/\[(v|V)ideo=/.test(ss)) {
             let sqq = keyword[2];
-            message.body = ss.replace(/\[(v|V)ideo=(.*?)\]/g, "")
+            message.body = ss.replace(/\[(v|V)ideo=(.*?)\]/g, "");
             try {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(sqq, { type: "video" });
@@ -7843,7 +7866,7 @@ async function sendAiMessage(api, event, ss) {
             }
         } else if (/\[(c|C)reatepicture=/.test(ss)) {
             let sqq = keyword[2];
-            message.body = ss.replace(/\[(c|C)reatepicture=(.*?)\]/g, "")
+            message.body = ss.replace(/\[(c|C)reatepicture=(.*?)\]/g, "");
             try {
                 const response = await openai.createImage({
                     prompt: sqq,
@@ -7871,7 +7894,7 @@ async function sendAiMessage(api, event, ss) {
             } catch (err) {
                 utils.logged(err);
             }
-            message.body = ss.replace(/\[(t|T)ime=(.*?)\]/g, "")
+            message.body = ss.replace(/\[(t|T)ime=(.*?)\]/g, "");
         }
 
         let body33 = message.body;
@@ -7882,12 +7905,12 @@ async function sendAiMessage(api, event, ss) {
     for (userID in event.mentions) {
         let namePPP = formatMention(event.mentions[userID], ss);
         if (ss.includes(namePPP)) {
-        message.mentions.push({
-            tag: namePPP,
-            id: userID,
-            fromIndex: 0,
-        });
-    }
+            message.mentions.push({
+                tag: namePPP,
+                id: userID,
+                fromIndex: 0,
+            });
+        }
     }
 
     if (event.attachments.length > 0 && event.attachments[0].type == "share") {
@@ -8168,7 +8191,7 @@ mj = (api, event, findPr, input, query, query2) => {
             sendMessage(api, event, "Do you mean cmd? You can call cmd to open my command list.");
         } else if (text1 == "cmd" || /^cmd[0-9]+$/.test(text1)) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using cmd number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncmd 2");
-        /*
+            /*
         } else if (text1.split('').length < 10) {
             sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
         } else if (someR(api, event, text1) || (someA(api, event, text1, input) && !query.includes("@"))) {
@@ -8200,8 +8223,8 @@ mj = (api, event, findPr, input, query, query2) => {
             getUserProfile(event.senderID, async function (user) {
                 if (event.isGroup) {
                     getGroupProfile(event.threadID, async function (group) {
-                       let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, group);
-                       sendAiMessage(api, event, respo);
+                        let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, group);
+                        sendAiMessage(api, event, respo);
                     });
                 } else {
                     let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, { name: undefined });
@@ -8214,7 +8237,7 @@ mj = (api, event, findPr, input, query, query2) => {
 
 async function getWebResults(ask) {
     let count = ask.split(" ");
-    if (count.length < 32 && count.length >= 4 && (/(^what\s|^who\s|^when\s|^where\s|^how\s|^why\s)/.test(ask))) {
+    if (count.length < 32 && count.length >= 4 && /(^what\s|^who\s|^when\s|^where\s|^how\s|^why\s)/.test(ask)) {
         const response = await google.search(ask, googleSearchOptions);
         if (response.results.length != 0) {
             let construct = "You can use this information if i am not asking for audio, video, photo and time.";
@@ -8271,11 +8294,11 @@ function clearLog() {
                 }
             }
         }
-    })
+    });
 }
 
 function formatDecNum(num) {
-    return numberWithCommas((Math.round(num * 100) / 100).toFixed(2))
+    return numberWithCommas((Math.round(num * 100) / 100).toFixed(2));
 }
 
 function getNameRan() {
@@ -8284,4 +8307,4 @@ function getNameRan() {
         return "You need to say the first name of the user when you start your response";
     }
     return "You need to say the last name of the user when your response is about to end";
-  }
+}

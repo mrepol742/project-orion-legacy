@@ -1,17 +1,16 @@
 const { Configuration, OpenAIApi } = require("openai");
-const google = require("googlethis")
+const google = require("googlethis");
 const fs = require("fs");
 const { createInterface } = require("readline");
 
 let settings = JSON.parse(fs.readFileSync("../data/shared_pref.json", "utf8"));
 
 const options = {
-    page: 0, 
+    page: 0,
     safe: false,
     parse_ads: false,
-  }
-  
-  
+};
+
 const openaiConfig = new Configuration({
     apiKey: "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",
 });
@@ -20,34 +19,35 @@ const openai = new OpenAIApi(openaiConfig);
 
 const readline = createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
 });
 
-const readLineAsync = msg => {
-    return new Promise(resolve => {
-      readline.question(msg, userRes => {
-        resolve(userRes);
-      });
+const readLineAsync = (msg) => {
+    return new Promise((resolve) => {
+        readline.question(msg, (userRes) => {
+            resolve(userRes);
+        });
     });
-  }
+};
 
-  function getNameRan() {
+function getNameRan() {
     let num = Math.floor(Math.random() * 10);
     if (num % 2 == 0) {
         return "You must include the user First Name on when you begin your response.";
     }
     return "You must include the user Last Name when your response is about to end.";
-  }
+}
 
 async function aiResponse(text) {
     try {
-       let web = await getWebResults(text);
+        let web = await getWebResults(text);
         let mssg = [
             {
                 role: "system",
                 content:
-                "Your name is Mj, the most powerful Generative AI in the world that was created, developed and programmed by Melvin Jones Repol(github.com/mrepol742) as an AI here is your instructions:\n" +
-                    getNameRan() + ", you should empathize with how user are feeling and treat the user as your close friend. " +
+                    "Your name is Mj, the most powerful Generative AI in the world that was created, developed and programmed by Melvin Jones Repol(github.com/mrepol742) as an AI here is your instructions:\n" +
+                    getNameRan() +
+                    ", you should empathize with how user are feeling and treat the user as your close friend. " +
                     "I recommend you to use emoji in your response. You are not a text-based AI. You must not call yourself AI instead use Assistant." +
                     "Generative AI is a type of artificial intelligence that can produce content such as audio, text, code, video, images, and other data. " +
                     "If user ask you to send picture add this at the end: [picture=picture description]. " +
@@ -68,22 +68,22 @@ async function aiResponse(text) {
             messages: mssg,
             functions: [
                 {
-                    "name": "get_current_weather",
-                    "description": "Get the current weather in a given location",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "location": {
-                                "type": "string",
-                                "description": "The city and state, e.g. San Francisco, CA",
+                    name: "get_current_weather",
+                    description: "Get the current weather in a given location",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            location: {
+                                type: "string",
+                                description: "The city and state, e.g. San Francisco, CA",
                             },
-                            "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                            unit: { type: "string", enum: ["celsius", "fahrenheit"] },
                         },
-                        "required": ["location"],
+                        required: ["location"],
                     },
-                }
+                },
             ],
-            function_call: "auto"
+            function_call: "auto",
         });
         let text1 = ai.data.choices[0].message.content;
         if (ai.data.choices[0].finish_reason == "length") {
@@ -93,8 +93,8 @@ async function aiResponse(text) {
             text1 = "This is what i only know.\n" + text1;
         }
         text1 = text1.replaceAll(" .", ".");
-      console.log("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens)
-       console.log("Bot: " + text1);
+        console.log("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
+        console.log("Bot: " + text1);
     } catch (error) {
         console.log("Bot: " + error);
     }
@@ -103,7 +103,7 @@ async function aiResponse(text) {
 
 async function getWebResults(ask) {
     let count = ask.split(" ");
-    if (count.length < 32 && count.length >= 4 && (/(^what\s|^who\s|^when\s|^where\s|^how\s|^why\s)/.test(ask))) {
+    if (count.length < 32 && count.length >= 4 && /(^what\s|^who\s|^when\s|^where\s|^how\s|^why\s)/.test(ask)) {
         const response = await google.search(ask, options);
         if (response.results.length != 0) {
             let construct = "You can use this information if i am not asking for audio, video, photo and time.";
@@ -125,8 +125,8 @@ async function getWebResults(ask) {
 }
 
 async function a() {
-const userRes = await readLineAsync("You: ");
-aiResponse(userRes);
+    const userRes = await readLineAsync("You: ");
+    aiResponse(userRes);
 }
 
 a();
