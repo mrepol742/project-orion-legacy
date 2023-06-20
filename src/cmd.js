@@ -113,7 +113,7 @@ Hello %USER%, here is the page 4 of 9 command list.
 
    ⦿ mnm ^^
    ⦿ trump ^^
-   ⦿ parseFacebook ^^
+   ⦿ stalk ^^
    ⦿ invert ^^
    ⦿ greyscale ^^
    ⦿ lick ^^
