@@ -18,11 +18,11 @@ module.exports = async function (api, event) {
     return;
 }
 if (event.type == "message") {
-    return sendMessage(api, event, "You need to reply to a message.");
+    return index.sendMessage(api, event, "You need to reply to a message.");
 }
 if (event.messageReply.body == "") {
-    sendMessage(api, event, "You need to reply count --vowels to a message.");
+    index.sendMessage(api, event, "You need to reply count --vowels to a message.");
 } else {
-    sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
+    index.sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
 }
 };

@@ -1274,6 +1274,7 @@ async function ai22(api, event, query, query2) {
             sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
         }
     } else if (/(^wfind$|^wfind\s)/.test(query2)) {
+        // done
         if (isGoingToFast(api, event)) {
             return;
         }

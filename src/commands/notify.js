@@ -3,15 +3,28 @@
 const index = require("index.js");
 const fs = require("fs");
 
+function getFormat(attach) {
+    if (attach == "photo") {
+        return ".png";
+    } else if (attach == "animated_image") {
+        return ".gif";
+    } else if (attach == "video") {
+        return ".mp4";
+    } else if (attach == "audio") {
+        return ".mp3";
+    }
+    return "";
+}
+
 module.exports = async function (api, event) {
     if (index.isMyId(event.senderID)) {
         if (event.type == "message") {
-            return sendMessage(api, event, "You need to reply to a message.");
+            return index.sendMessage(api, event, "You need to reply to a message.");
         }
     if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
-        sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
+        index.sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
     } else {
-        sendMessage(api, event, "Message are been schedule to send to " + index.groups.list.length + " groups.");
+        index.sendMessage(api, event, "Message are been schedule to send to " + index.groups.list.length + " groups.");
         let message = event.messageReply.body;
         let time = index.getTimestamp();
         let count = 0;
@@ -48,7 +61,7 @@ module.exports = async function (api, event) {
                 });
             }
         }
-        sendMessage(api, event, "Message successfully send to " + count + " groups.");
+        index.sendMessage(api, event, "Message successfully send to " + count + " groups.");
     }
 }
 };

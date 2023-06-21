@@ -13,11 +13,11 @@ module.exports = async function (api, event) {
     return;
 }
 if (event.type == "message") {
-    return sendMessage(api, event, "You need to reply to a message.");
+    return index.sendMessage(api, event, "You need to reply to a message.");
 }
 if (event.messageReply.body == "") {
-    sendMessage(api, event, "You need to reply count to a message.");
+    index.sendMessage(api, event, "You need to reply count to a message.");
 } else {
-    sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
+    index.sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
 }
 };
