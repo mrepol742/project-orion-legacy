@@ -204,14 +204,14 @@ Hello %USER%, here is the page 7 of 9 command list.
    ⦿ decodeBinary [text]
    ⦿ sayjap [text]
    ⦿ mathfacts
-   ⦿ website [urrl]
-   ⦿ mean [numbers]
-   ⦿ median [numbers]
-   ⦿ mode [numbers]
-   ⦿ range [numbers]
-   ⦿ divisible [number] [number]
-   ⦿ factorial [number]
-   ⦿ findGCD [number]
+   ⦿ ss [url]
+
+
+
+
+
+
+
    ⦿ conan
    ⦿ summ [text]
    ⦿ gcolor [theme]
@@ -352,8 +352,6 @@ Hello %USER%, you reached the root user command list.
    ⦿ restart
    ⦿ notify
    ⦿ destroy
-
-
    ⦿ acceptMessageRequest [threadid]
    ⦿ acceptFriendRequest [uid]
    ⦿ changeBio [text]
@@ -389,5 +387,3 @@ module.exports = {
     helpuser: helpuser,
     helpgroup: helpgroup,
 };
-
-// total commands 233
