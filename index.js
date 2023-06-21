@@ -6998,8 +6998,8 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                     },
                 },
                 {
-                    name: "get_web_result",
-                    description: "Get the real-time information, news or results from the internet.",
+                    name: "get_real_time_information",
+                    description: "Get the real-time information or news from the internet.",
                     parameters: {
                         type: "object",
                         properties: {
@@ -7055,7 +7055,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         model: "gpt-3.5-turbo-0613",
                         messages: mssg,
                     });
-                case "get_web_result":
+                case "get_real_time_information":
                     mssg.push(message);
                     let web = await getWebResults(argument.query);
                     mssg.push({
