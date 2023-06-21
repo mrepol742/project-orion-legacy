@@ -13,7 +13,14 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
                      "                                         `;
 console.log(a);
 
+if (!fs.existsSync(__dirname + "/data/users.json")) {
+    fs.writeFileSync(__dirname + "/data/users.json", "{}", "utf8");
+}
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
+
+if (!fs.existsSync(__dirname + "/data/groups.json")) {
+    fs.writeFileSync(__dirname + "/data/groups.json", "{}", "utf8");
+}
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 
 console.log("\tProject Information");
@@ -81,6 +88,9 @@ let crashes = 0;
 let blockedUserC = 0;
 let blockedGroupC = 0;
 
+if (!fs.existsSync(__dirname + "/data/shared_pref.json")) {
+    fs.writeFileSync(__dirname + "/data/shared_pref.json", "{}", "utf8");
+}
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
 
 utils.logged("settings_loaded finish");
@@ -115,15 +125,16 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
 utils.logged("web_resource_loaded finish");
 
-const PORT = 62535;
+const PORT = 80;
+const HOST = "0.0.0.0";
 /*
 server.listen((PORT + 1), function () {
     utils.logged("server_info HTTPS at " + (PORT + 1));
     utils.logged("server_status online");
 });
 */
-server1.listen(PORT, function () {
-    utils.logged("server_status " + PORT + " online");
+server1.listen(PORT, HOST, () => {
+    utils.logged("server_running http://" + HOST + ":" + PORT);
 });
 
 deleteCacheData(true);
@@ -358,6 +369,7 @@ function redfox_fb(fca_state, login, cb) {
                 if (login == rootAccess) {
                     listenStatus = 1;
                 }
+                // TODO: review prevent deleting of account if the api connection lost
                 utils.logged("api_listen_error " + login);
                 accounts = accounts.filter((item) => item !== login);
                 if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
