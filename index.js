@@ -369,7 +369,7 @@ function redfox_fb(fca_state, login, cb) {
                 if (login == rootAccess) {
                     listenStatus = 1;
                 }
-                // TODO: review prevent deleting of account if the api connection lost
+                // TODO: review prevent deleting of account if the api connection 
                 utils.logged("api_listen_error " + login);
                 accounts = accounts.filter((item) => item !== login);
                 if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
@@ -6999,7 +6999,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                 },
                 {
                     name: "get_web_result",
-                    description: "Get the up to date and latest web result if the user is asking about current, latest or up to date info.",
+                    description: "Get the real-time information, news or results from the internet.",
                     parameters: {
                         type: "object",
                         properties: {
