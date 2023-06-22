@@ -125,7 +125,7 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
 utils.logged("web_resource_loaded finish");
 
-const PORT = 80;
+const PORT = 8000;
 const HOST = "0.0.0.0";
 /*
 server.listen((PORT + 1), function () {
@@ -2439,18 +2439,10 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             let aa = data.join(" ");
-            if (aa.startsWith("https://")) {
-                https.get(aa, function (res) {
-                    sendMessage(api, event, "Pong " + res.statusCode);
-                });
-            } else {
-                if (!aa.startsWith("http://")) {
-                    aa = "http://" + aa;
-                }
-                http.get(aa, function (res) {
-                    sendMessage(api, event, "Pong " + res.statusCode);
-                });
-            }
+            var exec = require('child_process').exec;
+            exec("ping -c 5 " + aa, function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
         }
         // TODO: covid and covid
     } else if (query == "covid") {
@@ -3531,6 +3523,20 @@ Hello %USER%, here is the current system information as of ` +
                 if (err) utils.logged(err);
             });
             sendMessage(api, event, "The engineers have been notified.");
+        }
+    } else if (query.startsWith("shell")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using shell code instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nshell uptime");
+            } else {
+                data.shift();
+                let sff = data.join(" ");
+            var exec = require('child_process').exec;
+            exec(sff, function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        }
         }
     } else if (query == "acceptmessagerequest") {
         if (!isMyId(event.senderID)) {
