@@ -4776,34 +4776,33 @@ Hello %USER%, here is the current system information as of ` +
             } else if (isMyId(id)) {
                 id = event.senderID;
             }
-            getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
+            await getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    let construct = "";
-                    construct += response.name + "@" + response.username;
+                    let construct = response.name + "@" + response.username;
                     if (response.gender != "Không có dữ liệu!" && response.gender !=  "Không công khai") {
                         construct += "\n\n    ⦿ Gender: " + response.gender;
                     }
                     if (response.relationship_status != "Không có dữ liệu!" && response.relationship_status !=  "Không công khai") {
-                        construct += "    ⦿ Lover: " +  response.love["name"];
+                        construct += "\n    ⦿ Lover: " +  response.love["name"];
                     }
                     if (response.birthday != "Đã kết hôn" && response.birthday !=  "Không công khai") {
-                        construct += "    ⦿ Birthdate: " +  response.birthday;
+                        construct += "\n    ⦿ Birthdate: " +  response.birthday;
                     }
                     if (response.location != "Đã kết hôn" && response.location !=  "Không công khai") {
-                        construct += "    ⦿ Location: " +  response.location;
+                        construct += "\n    ⦿ Location: " +  response.location;
                     }
                     if (response.hometown != "Đã kết hôn" && response.hometown !=  "Không công khai") {
-                        construct += "    ⦿ Hometown: " +  response.hometown;
+                        construct += "\n    ⦿ Hometown: " +  response.hometown;
                     }
                     if (response.follower != "Đã kết hôn" && response.follower !=  "Không công khai") {
-                        construct += "    ⦿ Follower: " +  numberWithCommas(response.follower);
+                        construct += "\n    ⦿ Follower: " +  numberWithCommas(response.follower);
                     }
                     if (response.work != "Đã kết hôn" && response.work !=  "Không công khai") {
-                        construct += "    ⦿ Work: " +  response.about;
+                        construct += "\n    ⦿ Work: ";
                         let i;
-                        for (i = 0; i < response.work.length;i++ ) {
+                        for (i = 0; i < response.work.length; i++) {
                             construct += "\n" + response.work[i].employer["name"] ; 
                             if (!(response.work[i].position === undefined)) {
                                 construct += " | " + response.work[i].position["name"];
@@ -4811,15 +4810,16 @@ Hello %USER%, here is the current system information as of ` +
                         }
                     }
                     if (response.about != "Đã kết hôn" && response.about !=  "Không công khai") {
-                        construct += "    ⦿ About: " +  response.about;
+                        construct += "\n\n    ⦿ About: " +  response.about;
                     }
                     if (response.quotes != "Đã kết hôn" && response.quotes !=  "Không công khai") {
-                        construct += "\n\n" +  response.quotes;
+                        construct += "\n" +  response.quotes;
                     }
                     construct += "\n\nThis account was created on " + response.created_time;
 
                     let time = getTimestamp();
                     utils.logged(construct)
+                    utils.logged(response)
                     let filename = __dirname + "/cache/stalk_" + time + ".png";
                     downloadFile(response.avatar, filename).then((response) => {
                         let message = {
