@@ -4816,11 +4816,12 @@ Hello %USER%, here is the current system information as of ` +
                     if (response.quotes != "Đã kết hôn" && response.quotes !=  "Không công khai") {
                         construct += "\n\n" +  response.quotes;
                     }
-                    construct += response.created_time;
+                    construct += "\n\nThis account was created on " + response.created_time;
 
                     let time = getTimestamp();
+                    utils.logged(construct)
                     let filename = __dirname + "/cache/stalk_" + time + ".png";
-                    downloadFile(encodeURI(response.avatar), filename).then((response) => {
+                    downloadFile(response.avatar, filename).then((response) => {
                         let message = {
                             body: construct,
                             attachment: fs.createReadStream(filename),
