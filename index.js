@@ -4803,7 +4803,7 @@ Hello %USER%, here is the current system information as of ` +
                     if (response.work != "Đã kết hôn" && response.work !=  "Không công khai") {
                         construct += "    ⦿ Work: " +  response.about;
                         let i;
-                        for ( = 0; i < response.work.length;i++ ) {
+                        for (i = 0; i < response.work.length;i++ ) {
                             construct += "\n" + response.work[i].employer["name"] + " | " + response.work[i].position["name"]; 
                         }
                     }
