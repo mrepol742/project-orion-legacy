@@ -3,7 +3,8 @@
 const index = require("index.js");
 const utils = require("../redfox/utils.js")
 
-module.exports = async function (api, event) {
+module.exports = async function (api) {
+    return function unsend(event) {
     if (index.users.admin.includes(event.senderID)) {
         if (event.type == "message") {
             return index.sendMessage(api, event, "You need to reply to a message.");
@@ -14,4 +15,5 @@ module.exports = async function (api, event) {
             });
         }
     }
+}
 }

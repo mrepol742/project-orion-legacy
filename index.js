@@ -4804,7 +4804,10 @@ Hello %USER%, here is the current system information as of ` +
                         construct += "    ⦿ Work: " +  response.about;
                         let i;
                         for (i = 0; i < response.work.length;i++ ) {
-                            construct += "\n" + response.work[i].employer["name"] + " | " + response.work[i].position["name"]; 
+                            construct += "\n" + response.work[i].employer["name"] ; 
+                            if (!(response.work[i].position === undefined)) {
+                                construct += " | " + response.work[i].position["name"];
+                            }
                         }
                     }
                     if (response.about != "Đã kết hôn" && response.about !=  "Không công khai") {

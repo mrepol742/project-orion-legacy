@@ -373,6 +373,28 @@ function formatQuery(string) {
     return latin.toLowerCase();
 }
 
+function getUserProfile(id, cb) {
+    if (!users.list.find((user) => id === user.id)) {
+        cb({ firstName: undefined });
+    }
+    users.list.find((user) => {
+        if (user.id == id) {
+            cb(user);
+        }
+    });
+}
+
+function getGroupProfile(id, cb) {
+    if (!groups.list.find((thread) => id === thread.id)) {
+        cb({ name: undefined });
+    }
+    groups.list.find((thread) => {
+        if (thread.id == id) {
+            cb(thread);
+        }
+    });
+}
+
 module.exports = {
     // arrays
     users: users,
