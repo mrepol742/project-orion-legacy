@@ -125,7 +125,7 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
 utils.logged("web_resource_loaded finish");
 
-const PORT = 8000;
+const PORT = 80;
 const HOST = "0.0.0.0";
 /*
 server.listen((PORT + 1), function () {
@@ -2429,6 +2429,36 @@ Hello %USER%, here is the current system information as of ` +
                 sendMessage(api, event, addresses[0]);
             });
         }
+    } else if (/(^header$|^header\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using header url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nheader google.com");
+        } else {
+            data.shift();
+            let aa = data.join(" ");
+            var exec = require('child_process').exec;
+            exec("curl -I " + aa, function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        }
+    } else if (/(^nslookup$|^nslookup\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using nslookup url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnslookup google.com");
+        } else {
+            data.shift();
+            let aa = data.join(" ");
+            var exec = require('child_process').exec;
+            exec("nslookup " + aa, function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        }
     } else if (/(^ping$|^ping\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -4272,7 +4302,7 @@ Hello %USER%, here is the current system information as of ` +
                     color: a.color,
                 };
 
-                let urll = "http://206.189.235.45:7421/" + event.threadID;
+                let urll = "http://206.189.235.45/" + event.threadID;
                 let message = {
                     body: "This group information can be see at " + urll,
                     url: urll,
@@ -7650,7 +7680,7 @@ function getRoutes() {
                     let pageee = sitemappage + "";
                     res.setHeader("Content-Type", "text/xml");
                     res.writeHead(200);
-                    res.end(pageee.replaceAll("%DOMAIN_ADDRESS%", "http://206.189.235.45:7421"));
+                    res.end(pageee.replaceAll("%DOMAIN_ADDRESS%", "http://206.189.235.45"));
                     break;
                 case "/profile":
                 case "/profile/index.html":

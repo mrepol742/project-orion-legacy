@@ -205,8 +205,8 @@ Hello %USER%, here is the page 7 of 9 command list.
    ⦿ sayjap [text]
    ⦿ mathfacts
    ⦿ ss [url]
-
-
+   ⦿ nslookup [url]
+   ⦿ header [url]
 
 
 
@@ -346,7 +346,7 @@ You can set those information to enable awesome features.
 
 let helproot = `
 Hello %USER%, you reached the root user command list.
-
+   ⦿ shell [code]
    ⦿ stop
    ⦿ resume
    ⦿ restart
