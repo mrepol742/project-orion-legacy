@@ -4746,13 +4746,13 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             sendMessage(api, event, numberWithCommas(data.join(" ")));
         }
-    } else if (query.startsWith("parsefacebook")) {
+    } else if (query.startsWith("stalk")) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using parseFacebook @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nparseFacebook @Zero Two");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using stalk @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nstalk @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4776,30 +4776,56 @@ Hello %USER%, here is the current system information as of ` +
             } else if (isMyId(id)) {
                 id = event.senderID;
             }
-            api.getUserInfo(id, async (err, ret) => {
-                if (err) return utils.logged(err);
-                let name = ret[id].name;
-                let vanity = ret[id].vanity;
-                if (vanity == "") {
-                    vanity = id;
+            getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
+                if (response == null) {
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.");
                 } else {
-                    vanit = "@" + vanity;
+                    let construct = "";
+                    construct += response.name + "@" + response.username;
+                    if (response.gender != "Không có dữ liệu!" && response.gender !=  "Không công khai") {
+                        construct += "\n\n    ⦿ Gender: " + response.gender;
+                    }
+                    if (response.relationship_status != "Không có dữ liệu!" && response.relationship_status !=  "Không công khai") {
+                        construct += "    ⦿ Lover: " +  response.love["name"];
+                    }
+                    if (response.birthday != "Đã kết hôn" && response.birthday !=  "Không công khai") {
+                        construct += "    ⦿ Birthdate: " +  response.birthday;
+                    }
+                    if (response.location != "Đã kết hôn" && response.location !=  "Không công khai") {
+                        construct += "    ⦿ Location: " +  response.location;
+                    }
+                    if (response.hometown != "Đã kết hôn" && response.hometown !=  "Không công khai") {
+                        construct += "    ⦿ Hometown: " +  response.hometown;
+                    }
+                    if (response.follower != "Đã kết hôn" && response.follower !=  "Không công khai") {
+                        construct += "    ⦿ Follower: " +  numberWithCommas(response.follower);
+                    }
+                    if (response.work != "Đã kết hôn" && response.work !=  "Không công khai") {
+                        construct += "    ⦿ Work: " +  response.about;
+                        let i;
+                        for ( = 0; i < response.work.length;i++ ) {
+                            construct += "\n" + response.work[i].employer["name"] + " | " + response.work[i].position["name"]; 
+                        }
+                    }
+                    if (response.about != "Đã kết hôn" && response.about !=  "Không công khai") {
+                        construct += "    ⦿ About: " +  response.about;
+                    }
+                    if (response.quotes != "Đã kết hôn" && response.quotes !=  "Không công khai") {
+                        construct += "\n\n" +  response.quotes;
+                    }
+                    construct += response.created_time;
+
+                    let time = getTimestamp();
+                    let filename = __dirname + "/cache/stalk_" + time + ".png";
+                    downloadFile(encodeURI(response.avatar), filename).then((response) => {
+                        let message = {
+                            body: construct,
+                            attachment: fs.createReadStream(filename),
+                        };
+                        sendMessage(api, event, message);
+                        unLink(filename);
+                    });
                 }
-                let gender = ret[id].gender;
-                let isFriend = ret[id].isFriend;
-                let type = ret[id].type;
-                let url = encodeURI("https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
-                let filename = __dirname + "/cache/facebook_" + getTimestamp() + ".jpg";
-                let cons = checkFound(name) + " @" + vanity;
-                cons += "\n⦿ Gender: " + (gender == 1 ? "female" : "male");
-                downloadFile(url, filename).then((response) => {
-                    let image = {
-                        body: cons,
-                        attachment: fs.createReadStream(filename),
-                    };
-                    sendMessage(api, event, image);
-                    unLink(filename);
-                });
             });
         }
     } else if (query.startsWith("morse")) {
