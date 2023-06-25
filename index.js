@@ -4784,7 +4784,7 @@ Hello %USER%, here is the current system information as of ` +
                     if (response.gender != "Không có dữ liệu!" && response.gender !=  "Không công khai") {
                         construct += "\n\n    ⦿ Gender: " + response.gender;
                     }
-                    if (response.relationship_status != "Không có dữ liệu!" && response.relationship_status !=  "Không công khai") {
+                    if (response.relationship_status != "Không có dữ liệu!" && response.relationship_status !=  "Không công khai" && !(response.love["name"] === undefined)) {
                         construct += "\n    ⦿ Lover: " +  response.love["name"];
                     }
                     if (response.birthday != "Đã kết hôn" && response.birthday !=  "Không công khai") {
@@ -4803,7 +4803,7 @@ Hello %USER%, here is the current system information as of ` +
                         construct += "\n    ⦿ Work: ";
                         let i;
                         for (i = 0; i < response.work.length; i++) {
-                            construct += "\n" + response.work[i].employer["name"] ; 
+                            construct += "\n        " + response.work[i].employer["name"] ; 
                             if (!(response.work[i].position === undefined)) {
                                 construct += " | " + response.work[i].position["name"];
                             }
