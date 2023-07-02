@@ -14,4 +14,4 @@ let a = [{
 function b(aa) {
     return "Yup"
 }
-console.log(a[0].run(null));
+console.log(a[0].exec(null));
