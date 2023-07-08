@@ -140,7 +140,10 @@ server1.listen(PORT, HOST, () => {
 deleteCacheData(true);
 
 task(function () {
-    utils.logged("task_git syncronized");
+    var exec = require('child_process').exec;
+    exec("git add . && git commit -, \"Initial Commit\"", function (err, stdout, stderr) {
+        utils.logged("task_git syncronized");
+    });
 }, Math.floor(1800000 * Math.random() + 1200000));
 utils.logged("task_git global initiated");
 
@@ -401,7 +404,7 @@ function redfox_fb(fca_state, login, cb) {
                 return;
             }
 
-            if ((event.type == "message" || event.type == "message_reply") && isMyId(event.senderID)) {
+            if ((event.type == "message" || event.type == "message_reply") && accounts.includes(event.senderID)) {
                 let body = event.body;
                 let result = !!body.match(/^[!@#$%&*~|?]/);
                 if (result) {
@@ -569,7 +572,7 @@ function redfox_fb(fca_state, login, cb) {
                 return;
             }
 
-            if (settings.preference.isDebugEnabled && !isMyId(event.senderID)) {
+            if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
                 if (event.type == "message" || event.type == "message_reply") {
                     let input = event.body;
                     let query2 = formatQuery(input);
@@ -609,14 +612,14 @@ function redfox_fb(fca_state, login, cb) {
                     ai(api, event);
                     break;
                 case "message_reaction":
-                    if (!isMyId(event.userID) && !isMyId(event.senderID) && !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) && event.senderID != event.userID && !(event.reaction === undefined)) {
+                    if (!accounts.includes(event.userID) && !accounts.includes(event.senderID) && !emo.includes(event.messageID) && !users.bot.includes(event.senderID) && !users.bot.includes(event.userID) && event.senderID != event.userID && !(event.reaction === undefined)) {
                         reactMessage(api, event, event.reaction);
                         emo.push(event.messageID);
                     }
                     break;
                 case "message_unsend":
                     let d = msgs[event.messageID];
-                    if (d === undefined || isMyId(event.senderID)) {
+                    if (d === undefined || accounts.includes(event.senderID)) {
                         break;
                     }
                     d = msgs[event.messageID][0];
@@ -1587,7 +1590,7 @@ async function ai(api, event) {
     if (event.type == "message_reply") {
         ai22(api, event, query, query2);
         // TODO: undefined sender id no idea why
-        if (isMyId(event.messageReply.senderID)) {
+        if (accounts.includes(event.messageReply.senderID)) {
             someA(api, event, query, input);
         }
     }
@@ -3562,11 +3565,11 @@ Hello %USER%, here is the current system information as of ` +
             } else {
                 data.shift();
                 let sff = data.join(" ");
-            var exec = require('child_process').exec;
-            exec(sff, function (err, stdout, stderr) {
-                sendMessage(api, event, stdout + "\n\n" + stderr);
-            });
-        }
+                var exec = require('child_process').exec;
+                exec(sff, function (err, stdout, stderr) {
+                    sendMessage(api, event, stdout + "\n\n" + stderr);
+                });
+            }
         }
     } else if (query == "acceptmessagerequest") {
         if (!isMyId(event.senderID)) {
