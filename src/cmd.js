@@ -18,7 +18,7 @@
 "use strict";
 
 let help = `
-Hello %USER%, here is the page 1 of 9 command list.
+Hello %USER%, how are you?
 
    ⦿ cmd 
    ⦿ cmd [number|all]
@@ -37,10 +37,8 @@ Hello %USER%, here is the page 1 of 9 command list.
    ⦿ run [lang] [reply]
        Java, Python, C, C++,
        JavaScript, PHP and Dragon
-   
-   And here's the AI commands,
-
     ⦿ mj [text]
+    ⦿ beshy [text]
     ⦿ melbin [text]
     ⦿ sim [text]
     ⦿ misaka [text]
@@ -55,7 +53,7 @@ If you have further questions, i am here to help you.
 `;
 
 let help1 = `
-Hello %USER%, here is the page 2 of 9 command list.
+Hello %USER%, how can i assist you?
 
    ⦿ showerthoughts
    ⦿ lulcat [text]
@@ -82,7 +80,7 @@ Some of my commands works in any means you could imagine.
 `;
 
 let help2 = `
-Hello %USER%, here is the page 3 of 9 command list.
+Hello %USER%, is there any questions you may have?
 
    ⦿ verse today
    ⦿ verse random
@@ -109,7 +107,7 @@ The : divides the query into 2 sections the first one and second one.
 `;
 
 let help3 = `
-Hello %USER%, here is the page 4 of 9 command list.
+Hello %USER%, how can i assist you further?
 
    ⦿ mnm ^^
    ⦿ trump ^^
@@ -136,7 +134,7 @@ The ^^ means my command support mentioned, reply, uid etc.. to work.
 `;
 
 let help4 = `
-Hello %USER%, here is the page 5 of 9 command list.
+If you have any issue please do let me know.
 
    ⦿ morse [text]
    ⦿ joke
@@ -159,11 +157,11 @@ Hello %USER%, here is the page 5 of 9 command list.
    ⦿ fact
    ⦿ thoughts
 
-If you have any issues please let me know.
+Do you have any questions about the command %USER%?
 `;
 
 let help5 = `
-Hello %USER%, here is the page 6 of 9 command list.
+Here:
  
    ⦿ totext
    ⦿ nba [name]
@@ -194,11 +192,11 @@ Hello %USER%, here is the page 6 of 9 command list.
    ⦿ animetop --movie
    ⦿ hanime [category]
 
-You can only add one category to the command else it won't gonna work. Trust Me.
+How can i assist you further %USER%?
 `;
 
 let help6 = `
-Hello %USER%, here is the page 7 of 9 command list.
+7th command list:
 
    ⦿ encodeBinary [text]
    ⦿ decodeBinary [text]
@@ -220,11 +218,11 @@ Hello %USER%, here is the page 7 of 9 command list.
        Red, Yellow, TealBlue, Aqua
        Mango, Berry, Citrus, Candy
 
-I hate math, are you too??
+Do you have anything in mind %USER%?
 `;
 
 let help7 = `
-Hello %USER%, here is the page 8 of 9 command list.
+Here is the 8th cmd list %USER%
 
    ⦿ encrypt [text]
    ⦿ decrypt [text] [key1]:[key2]
@@ -346,6 +344,7 @@ You can set those information to enable awesome features.
 
 let helproot = `
 Hello %USER%, you reached the root user command list.
+
    ⦿ shell [code]
    ⦿ stop
    ⦿ resume

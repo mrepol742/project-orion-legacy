@@ -7245,7 +7245,7 @@ function isMyPrefix(findPr, input, query, query2) {
     if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
         return true;
     }
-    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s)/.test(query2) || isSecondaryPrefix(query2);
+    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s)/.test(query2) || isSecondaryPrefix(query2);
 }
 
 function isSecondaryPrefix(query2) {
@@ -7933,6 +7933,12 @@ async function sendAiMessage(api, event, ss) {
         message.body = " ";
     }
     
+    let eventB = event.body;
+    if (eventB.startsWith("beshy")) {
+        let mB = message.body;
+        message.body = mb.replaceAll(" ", "🤸")
+    }
+    
     sendMessage(api, event, message);
 }
 
@@ -8131,7 +8137,7 @@ function mj(api, event, findPr, input, query, query2) {
             sendMessage(api, event, welCC);
         }
     } else {
-        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s)/.test(query2)) {
+        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s)/.test(query2)) {
             data.shift();
         }
         let text = data.join(" ");
