@@ -7936,7 +7936,7 @@ async function sendAiMessage(api, event, ss) {
     let eventB = event.body;
     if (eventB.startsWith("beshy")) {
         let mB = message.body;
-        message.body = mb.replaceAll(" ", "🤸")
+        message.body = mB.replaceAll(" ", "🤸")
     }
     
     sendMessage(api, event, message);
