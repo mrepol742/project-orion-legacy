@@ -3557,6 +3557,20 @@ Hello %USER%, here is the current system information as of ` +
             });
             sendMessage(api, event, "The engineers have been notified.");
         }
+    } else if (query == "sync") {
+        if (isMyId(event.senderID)) {
+            var exec = require('child_process').exec;
+            exec("git pull", function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        }
+    } else if (query == "push") {
+        if (isMyId(event.senderID)) {
+            var exec = require('child_process').exec;
+            exec("git add . && git commit -m \"Initial Commit\" && git push origin master", function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        }
     } else if (query.startsWith("shell")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");

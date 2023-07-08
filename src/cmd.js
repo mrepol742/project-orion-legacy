@@ -347,6 +347,8 @@ Hello %USER%, you reached the root user command list.
 
    ⦿ shell [code]
    ⦿ stop
+   ⦿ sync
+   ⦿ push
    ⦿ resume
    ⦿ restart
    ⦿ notify
