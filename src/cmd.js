@@ -302,7 +302,7 @@ Hello %USER%, this is the admin panel.
    ⦿ setPrefix [prefix]
    ⦿ remPrefix
    ⦿ ignore [prefix]
-   ⦿ setkey [name]:[key]
+   ⦿ setKey [name]:[key]
 
 You guessed it, Only admins of the AI can used this commands.
 `;
@@ -316,7 +316,7 @@ Hello %USER%, this is the command list for user.
    ⦿ unmute
    ⦿ smartReply [on|off]
    ⦿ setNickname [text]
-   ⦿ acceptmessagerequest
+   ⦿ acceptMessageRequest
    ⦿ rname
 
    Note: This data will be used to make the AI response accurate
@@ -346,6 +346,7 @@ let helproot = `
 Hello %USER%, you reached the root user command list.
 
    ⦿ shell [code]
+   ⦿ sql [query]
    ⦿ stop
    ⦿ sync
    ⦿ push
@@ -353,6 +354,8 @@ Hello %USER%, you reached the root user command list.
    ⦿ restart
    ⦿ notify
    ⦿ destroy
+   ⦿ unblockAll
+   ⦿ unblockAll --bot
    ⦿ acceptMessageRequest [threadid]
    ⦿ acceptFriendRequest [uid]
    ⦿ changeBio [text]
