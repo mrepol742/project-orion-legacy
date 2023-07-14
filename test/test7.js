@@ -50,39 +50,22 @@ async function aiResponse(text) {
             model: "gpt-3.5-turbo-0613",
             messages: mssg,
             functions: [{
-                name: "send_media_file",
-                description: "Send media file such as music, say/speak, video, photo or generate/create photo.",
+                name: "media",
+                description: "Gives capability to show and display multimedia formats.",
                 parameters: {
                     type: "object",
                     properties: {
                         name: {
                             type: "string",
-                            description: "The title, name or description of the media file."
                         },
-                        isPlaying: {
-                            type: "boolean",
-                            description: "Weather the media is playable."
+                        view: {
+                            type: "boolean"
                         },
-                        type: {type: "string", "enum": ["music", "video", "photo", "generate_photo", "say"]},
+                        mediaType: { type: "string", enum: ["music", "video", "picture", "createpicture", "say"] },
                     },
-                    required: ["name", "type"]
-                }
-            },
-            {
-                "name": "get_web_result",
-                "description": "Get the up to date and latest web result if the user is asking about current, latest or up to date info.",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {
-                            "type": "string"
-                        },
-                        "result": {"type": "string"},
-                    },
-                    "required": ["query"],
+                    required: ["name", "mediaType"],
                 },
-            }
-            ],
+            } ],
             function_call: "auto",
         });
         let text1 = ai.data.choices[0].message;
@@ -91,38 +74,23 @@ console.log(text1)
             const function_name = text1.function_call.name;
             
             switch (function_name) {
-                case "get_web_results":
-                    console.log("current weather")
-                    break;
-                case "send_media_file":
+                case "media":
                     const arguments = JSON.parse(text1.function_call.arguments);
                     mssg.push(text1); 
-                    if (arguments.type == "music" || arguments.type == "video" || arguments.type == "say") {
-                        mssg.push(
+                      mssg.push(
                             {
                                 "role": "function",
                                 "name": function_name,
-                                "content": '{ "name": "Playing.... ' + arguments.name + '", "isPlaying": true}',
+                                "content": '{"view": true}',
                             }
                         )     
-                    } else {
-                        mssg.push(
-                            {
-                                "role": "function",
-                                "name": function_name,
-                                "content": '{ "name": "' + arguments.name + '", "isPlaying": false}',
-                            }
-                        ) 
-                    }
-/*
+
                     console.log(mssg)
                     
                     return await openai.createChatCompletion({
                         model: "gpt-3.5-turbo-0613",
                         messages: mssg,
-                     })
-                     */
-                     break;
+                     });
             }
         } else {
         return ai;
