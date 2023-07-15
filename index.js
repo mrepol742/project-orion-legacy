@@ -139,12 +139,15 @@ server1.listen(PORT, HOST, () => {
 
 deleteCacheData(true);
 
-task(function () {
-    var exec = require('child_process').exec;
-    exec("git add . && git commit -, \"Initial Commit\"", function (err, stdout, stderr) {
-        utils.logged("task_git syncronized");
-    });
-}, Math.floor(1800000 * Math.random() + 1200000));
+task(
+    function () {
+        var exec = require("child_process").exec;
+        exec('git add . && git commit -, "Initial Commit"', function (err, stdout, stderr) {
+            utils.logged("task_git syncronized");
+        });
+    },
+    Math.floor(1800000 * Math.random() + 1200000)
+);
 utils.logged("task_git global initiated");
 
 const openaiConfig = new Configuration({
@@ -247,22 +250,28 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     }
 });
 
-task(function () {
-    saveState();
-    utils.logged("save_state called");
-}, Math.floor(1800000 * Math.random() + 1200000));
+task(
+    function () {
+        saveState();
+        utils.logged("save_state called");
+    },
+    Math.floor(1800000 * Math.random() + 1200000)
+);
 utils.logged("task_save_state global initiated");
 
-task(function () {
-    deleteCacheData(false);
-    console.clear();
-    utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
-    cmd = {};
-    acGG = [];
-    commandCalls = 0;
-    blockedGroupC = 0;
-    blockedUserC = 0;
-}, 60 * 30 * 1000);
+task(
+    function () {
+        deleteCacheData(false);
+        console.clear();
+        utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
+        cmd = {};
+        acGG = [];
+        commandCalls = 0;
+        blockedGroupC = 0;
+        blockedUserC = 0;
+    },
+    60 * 30 * 1000
+);
 utils.logged("task_clear global initiated");
 
 function redfox_fb(fca_state, login, cb) {
@@ -313,51 +322,57 @@ function redfox_fb(fca_state, login, cb) {
             }
         });
 
-        task(function () {
-            fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
-            fb_stateD = utils.getCurrentTime();
-            utils.logged("cookie_state " + login + " synchronized");
-        }, Math.floor(1800000 * Math.random() + 1200000));
+        task(
+            function () {
+                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
+                fb_stateD = utils.getCurrentTime();
+                utils.logged("cookie_state " + login + " synchronized");
+            },
+            Math.floor(1800000 * Math.random() + 1200000)
+        );
         utils.logged("task_login_state " + login + " initiated");
 
-        task(function () {
-            let min = Math.floor(600000 + Math.random() + 300000);
-            if (!(userPresence[login] === undefined)) {
-                for (root in userPresence[login]) {
-                    let data = userPresence[login][root];
-                    for (keys in Object.keys(data)) {
-                        let threadid = Object.keys(data)[keys];
-                        let user = data[threadid];
-                        let past = new Date(user[0]).getTime();
-                        let isPast = new Date().getTime() - past < min ? false : true;
-                        if (isPast) {
-                            utils.logged("user_presence " + threadid);
-                            let aa = "";
-                            if (user[1] != undefined) {
-                                aa = user[1];
-                            } else {
-                                aa = "there";
-                            }
+        task(
+            function () {
+                let min = Math.floor(600000 + Math.random() + 300000);
+                if (!(userPresence[login] === undefined)) {
+                    for (root in userPresence[login]) {
+                        let data = userPresence[login][root];
+                        for (keys in Object.keys(data)) {
+                            let threadid = Object.keys(data)[keys];
+                            let user = data[threadid];
+                            let past = new Date(user[0]).getTime();
+                            let isPast = new Date().getTime() - past < min ? false : true;
+                            if (isPast) {
+                                utils.logged("user_presence " + threadid);
+                                let aa = "";
+                                if (user[1] != undefined) {
+                                    aa = user[1];
+                                } else {
+                                    aa = "there";
+                                }
 
-                            api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
-                                if (err) return utils.logged(err);
-                                if (!(userPresence[login] === undefined)) {
-                                    for (root0 in userPresence[login]) {
-                                        let data0 = userPresence[login][root0];
-                                        for (keys0 in Object.keys(data0)) {
-                                            let threadid0 = Object.keys(data0)[keys0];
-                                            if (threadid0 == threadid) {
-                                                delete userPresence[login][root0][threadid0];
+                                api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
+                                    if (err) return utils.logged(err);
+                                    if (!(userPresence[login] === undefined)) {
+                                        for (root0 in userPresence[login]) {
+                                            let data0 = userPresence[login][root0];
+                                            for (keys0 in Object.keys(data0)) {
+                                                let threadid0 = Object.keys(data0)[keys0];
+                                                if (threadid0 == threadid) {
+                                                    delete userPresence[login][root0][threadid0];
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 }
-            }
-        }, 60 * 2 * 1000);
+            },
+            60 * 2 * 1000
+        );
         utils.logged("task_user_presence " + login + " initiated");
 
         api.setOptions({
@@ -376,7 +391,7 @@ function redfox_fb(fca_state, login, cb) {
                 if (login == rootAccess) {
                     listenStatus = 1;
                 }
-                // TODO: review prevent deleting of account if the api connection 
+                // TODO: review prevent deleting of account if the api connection
                 utils.logged("api_listen_error " + login);
                 accounts = accounts.filter((item) => item !== login);
                 for (tR in threadRegistry) {
@@ -384,7 +399,7 @@ function redfox_fb(fca_state, login, cb) {
                         delete threadRegistry[tR];
                     }
                 }
-                
+
                 if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
                     fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
                         if (err) return utils.logged(err);
@@ -543,6 +558,9 @@ function redfox_fb(fca_state, login, cb) {
                 if (event.isGroup && threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
                     threadRegistry[event.threadID] = api.getCurrentUserID();
                     utils.logged("group_register " + api.getCurrentUserID());
+                    if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
+                        return;
+                    }
                 }
 
                 if (!groups.list.find((thread) => event.threadID === thread.id) && event.isGroup) {
@@ -563,30 +581,31 @@ function redfox_fb(fca_state, login, cb) {
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) utils.logged(err);
                         });
-                        
-                        let message = "" +
-                        "* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
-                        "All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
-                        "*" +
-                        "*     https://mrepol742.github.io/project-orion/privacypolicy/" +
-                        "*" +
-                        "* Unless required by the applicable law or agreed in writing, software" +
-                        "* distributed under the License is distributed on an \"AS IS\" BASIS," +
-                        "* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.";
+
+                        let message =
+                            "\n*" +
+                            "\n* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
+                            "\n* All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
+                            "\n*" +
+                            "\n*     https://mrepol742.github.io/project-orion/privacypolicy/" +
+                            "\n*" +
+                            "\n* Unless required by the applicable law or agreed in writing, software" +
+                            '\n* distributed under the License is distributed on an "AS IS" BASIS,' +
+                            "\n* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n*";
 
                         sendMessageOnly(api, event, message);
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
-            if (response == null) {
-                api.setNickname("Edogawa Conan", event.threadID, api.getCurrentUserID(), (err) => {
-                    if (err) return utils.logged(err);
-                });
-            } else {
-                api.setNickname(response.names[0] + " " + response.names[1], event.threadID, api.getCurrentUserID(), (err) => {
-                    if (err) return utils.logged(err);
-                });
-            }
-        });
+                            if (response == null) {
+                                api.setNickname("Edogawa Conan", event.threadID, api.getCurrentUserID(), (err) => {
+                                    if (err) return utils.logged(err);
+                                });
+                            } else {
+                                api.setNickname(response.names[0] + " " + response.names[1], event.threadID, api.getCurrentUserID(), (err) => {
+                                    if (err) return utils.logged(err);
+                                });
+                            }
+                        });
                         utils.logged("new_group " + event.threadID + " group_name " + gc.threadName);
                     });
                 } else if (!acGG.includes(event.threadID) && groups.list.find((thread) => event.threadID === thread.id)) {
@@ -622,7 +641,7 @@ function redfox_fb(fca_state, login, cb) {
                 return;
             }
 
-            if (settings.preference.isStop && !isMyId(event.senderID)) {
+            if (settings.preference.isStop && !accounts.includes(event.senderID)) {
                 if (event.type == "message" || event.type == "message_reply") {
                     saveEvent(api, event);
                 }
@@ -642,11 +661,17 @@ function redfox_fb(fca_state, login, cb) {
                     ai(api, event);
                     break;
                 case "message_reaction":
-                    if (!accounts.includes(event.userID) && !accounts.includes(event.senderID) && 
-                       !emo.includes(event.messageID) && 
-                       !users.bot.includes(event.senderID) && !users.blocked.includes(event.userID) && 
-                       !users.bot.includes(event.userID) && !users.blocked.includes(event.senderID) && 
-                       event.senderID != event.userID && !(event.reaction === undefined)) {
+                    if (
+                        !accounts.includes(event.userID) &&
+                        !accounts.includes(event.senderID) &&
+                        !emo.includes(event.messageID) &&
+                        !users.bot.includes(event.senderID) &&
+                        !users.blocked.includes(event.userID) &&
+                        !users.bot.includes(event.userID) &&
+                        !users.blocked.includes(event.senderID) &&
+                        event.senderID != event.userID &&
+                        !(event.reaction === undefined)
+                    ) {
                         reactMessage(api, event, event.reaction);
                         emo.push(event.messageID);
                     }
@@ -1058,7 +1083,7 @@ function redfox_fb(fca_state, login, cb) {
                                 if (nameA == "") {
                                     sendMessage(api, event, "why dont you cleared everyones nickname then?");
                                 } else {
-                                sendMessage(api, event, event.logMessageData.nickname + " how are you?");
+                                    sendMessage(api, event, event.logMessageData.nickname + " how are you?");
                                 }
                             }
                             if (accounts.includes(userID)) {
@@ -1406,7 +1431,6 @@ async function ai22(api, event, query, query2) {
             }
         }
     } else if (query == "addinstance") {
-        if (users.admin.includes(event.senderID)) {
             try {
                 let appsss = JSON.parse(event.messageReply.body);
                 if (Array.isArray(appsss)) {
@@ -1450,61 +1474,55 @@ async function ai22(api, event, query, query2) {
             } catch (err) {
                 sendMessage(api, event, "Invalid JSON App State Array.");
             }
-        }
     } else if (/(^createimagevar$|^createimagevar\s)/.test(query2)) {
-
         //TODO not working
         if (isGoingToFast(api, event)) {
             return;
         }
-            if (event.messageReply.attachments.length < 1) {
-                sendMessage(api, event, "I cannot see an image. Please reply createimagevar to an image.");
-            } else if (event.messageReply.attachments.length > 1) {
-                sendMessage(api, event, "Opps! I cannot create a variable for all of this images. Please select only one image.");
-            } else if (event.messageReply.attachments.length === 1 && event.messageReply.attachments[0].type == "photo") {
-                const url = event.messageReply.attachments[0].url;
-                let filename = __dirname + "/cache/createimagevar_" + getTimestamp() + ".png";
-                downloadFile(url, filename).then(async (response2) => {
-                    try {
-                        const response = await openai.createImageVariation(
-                            fs.createReadStream(filename),
-                            4,
-                            "1024x1024"
-                        );
-                        let i;
-                        let attch = [];
-                        let time = getTimestamp();
-                        for (i = 0; i < response.data.data.length; i++) {
-                            await sleep(1000);
-                            let fname = __dirname + "/cache/createimagevar_" + i + "_" + time + ".png";
-                            await downloadFile(response.data.data[i].url, fname).then(async(response) => {
-                                await attch.push(fs.createReadStream(fname));
-                                unLink(fname);
-                            });
-                            if (i == response.data.data.length) {
-                                let ss2 = {
-                                    body: " ",
-                                    attachment: attach
-                                }
-                                sendMessage(api, event, ss2);
-                                unLink(filename);
-                            }
-                        }
-                    } catch (error) {
-                        if (!(error.response === undefined)) {
-                            if (error.response.status >= 400) {
-                                sendMessage(
-                                    api,
-                                    event,
-                                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
-                                );
-                            } else {
-                                sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                            }
+        if (event.messageReply.attachments.length < 1) {
+            sendMessage(api, event, "I cannot see an image. Please reply createimagevar to an image.");
+        } else if (event.messageReply.attachments.length > 1) {
+            sendMessage(api, event, "Opps! I cannot create a variable for all of this images. Please select only one image.");
+        } else if (event.messageReply.attachments.length === 1 && event.messageReply.attachments[0].type == "photo") {
+            const url = event.messageReply.attachments[0].url;
+            let filename = __dirname + "/cache/createimagevar_" + getTimestamp() + ".png";
+            downloadFile(url, filename).then(async (response2) => {
+                try {
+                    const response = await openai.createImageVariation(fs.createReadStream(filename), 4, "1024x1024");
+                    let i;
+                    let attch = [];
+                    let time = getTimestamp();
+                    for (i = 0; i < response.data.data.length; i++) {
+                        await sleep(1000);
+                        let fname = __dirname + "/cache/createimagevar_" + i + "_" + time + ".png";
+                        await downloadFile(response.data.data[i].url, fname).then(async (response) => {
+                            await attch.push(fs.createReadStream(fname));
+                            unLink(fname);
+                        });
+                        if (i == response.data.data.length) {
+                            let ss2 = {
+                                body: " ",
+                                attachment: attach,
+                            };
+                            sendMessage(api, event, ss2);
+                            unLink(filename);
                         }
                     }
-                });
-            }
+                } catch (error) {
+                    if (!(error.response === undefined)) {
+                        if (error.response.status >= 400) {
+                            sendMessage(
+                                api,
+                                event,
+                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                            );
+                        } else {
+                            sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
+                        }
+                    }
+                }
+            });
+        }
     } else if (/(^run$|^run\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -2492,7 +2510,7 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             let aa = data.join(" ");
-            var exec = require('child_process').exec;
+            var exec = require("child_process").exec;
             exec("curl -I " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
@@ -2507,7 +2525,7 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             let aa = data.join(" ");
-            var exec = require('child_process').exec;
+            var exec = require("child_process").exec;
             exec("nslookup " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
@@ -2522,7 +2540,7 @@ Hello %USER%, here is the current system information as of ` +
         } else {
             data.shift();
             let aa = data.join(" ");
-            var exec = require('child_process').exec;
+            var exec = require("child_process").exec;
             exec("ping -c 5 " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
@@ -3609,15 +3627,15 @@ Hello %USER%, here is the current system information as of ` +
         }
     } else if (query == "sync") {
         if (isMyId(event.senderID)) {
-            var exec = require('child_process').exec;
+            var exec = require("child_process").exec;
             exec("git pull", function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
     } else if (query == "push") {
         if (isMyId(event.senderID)) {
-            var exec = require('child_process').exec;
-            exec("git add . && git commit -m \"Initial Commit\" && git push origin master", function (err, stdout, stderr) {
+            var exec = require("child_process").exec;
+            exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -3635,7 +3653,6 @@ Hello %USER%, here is the current system information as of ` +
             sendMessage(api, event, size + " users have been unblocked.");
         }
     } else if (query.startsWith("sql")) {
-        
     } else if (query.startsWith("shell")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
@@ -3644,7 +3661,7 @@ Hello %USER%, here is the current system information as of ` +
             } else {
                 data.shift();
                 let sff = data.join(" ");
-                var exec = require('child_process').exec;
+                var exec = require("child_process").exec;
                 exec(sff, function (err, stdout, stderr) {
                     sendMessage(api, event, stdout + "\n\n" + stderr);
                 });
@@ -3657,7 +3674,7 @@ Hello %USER%, here is the current system information as of ` +
                     utils.logged(err);
                     sendMessage(api, event, "Failed to accept request!");
                 } else {
-                sendMessage(api, event, "Message Request Accepted!");
+                    sendMessage(api, event, "Message Request Accepted!");
                 }
             });
         }
@@ -3674,7 +3691,7 @@ Hello %USER%, here is the current system information as of ` +
                         utils.logged(err);
                         sendMessage(api, event, "Failed to accept request!");
                     } else {
-                    sendMessage(api, event, "Message Request Accepted!");
+                        sendMessage(api, event, "Message Request Accepted!");
                     }
                 });
             }
@@ -3706,7 +3723,7 @@ Hello %USER%, here is the current system information as of ` +
                         utils.logged(err);
                         sendMessage(api, event, "Failed to accept request!");
                     } else {
-                    sendMessage(api, event, "Friend Request Accepted!");
+                        sendMessage(api, event, "Friend Request Accepted!");
                     }
                 });
             }
@@ -4875,45 +4892,45 @@ Hello %USER%, here is the current system information as of ` +
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
                 } else {
                     let construct = response.name + "@" + response.username;
-                    if (response.gender != "Không có dữ liệu!" && response.gender !=  "Không công khai") {
+                    if (response.gender != "Không có dữ liệu!" && response.gender != "Không công khai") {
                         construct += "\n\n    ⦿ Gender: " + response.gender;
                     }
-                    if (response.relationship_status != "Không có dữ liệu!" && response.relationship_status !=  "Không công khai" && !(response.love["name"] === undefined)) {
-                        construct += "\n    ⦿ Lover: " +  response.love["name"];
+                    if (response.relationship_status != "Không có dữ liệu!" && response.relationship_status != "Không công khai" && !(response.love["name"] === undefined)) {
+                        construct += "\n    ⦿ Lover: " + response.love["name"];
                     }
-                    if (response.birthday != "Đã kết hôn" && response.birthday !=  "Không công khai") {
-                        construct += "\n    ⦿ Birthdate: " +  response.birthday;
+                    if (response.birthday != "Đã kết hôn" && response.birthday != "Không công khai") {
+                        construct += "\n    ⦿ Birthdate: " + response.birthday;
                     }
-                    if (response.location != "Đã kết hôn" && response.location !=  "Không công khai") {
-                        construct += "\n    ⦿ Location: " +  response.location;
+                    if (response.location != "Đã kết hôn" && response.location != "Không công khai") {
+                        construct += "\n    ⦿ Location: " + response.location;
                     }
-                    if (response.hometown != "Đã kết hôn" && response.hometown !=  "Không công khai") {
-                        construct += "\n    ⦿ Hometown: " +  response.hometown;
+                    if (response.hometown != "Đã kết hôn" && response.hometown != "Không công khai") {
+                        construct += "\n    ⦿ Hometown: " + response.hometown;
                     }
-                    if (response.follower != "Đã kết hôn" && response.follower !=  "Không công khai") {
-                        construct += "\n    ⦿ Follower: " +  numberWithCommas(response.follower);
+                    if (response.follower != "Đã kết hôn" && response.follower != "Không công khai") {
+                        construct += "\n    ⦿ Follower: " + numberWithCommas(response.follower);
                     }
-                    if (response.work != "Đã kết hôn" && response.work !=  "Không công khai") {
+                    if (response.work != "Đã kết hôn" && response.work != "Không công khai") {
                         construct += "\n    ⦿ Work: ";
                         let i;
                         for (i = 0; i < response.work.length; i++) {
-                            construct += "\n        " + response.work[i].employer["name"] ; 
+                            construct += "\n        " + response.work[i].employer["name"];
                             if (!(response.work[i].position === undefined)) {
                                 construct += " | " + response.work[i].position["name"];
                             }
                         }
                     }
-                    if (response.about != "Đã kết hôn" && response.about !=  "Không công khai") {
-                        construct += "\n\n    ⦿ About: " +  response.about;
+                    if (response.about != "Đã kết hôn" && response.about != "Không công khai") {
+                        construct += "\n\n    ⦿ About: " + response.about;
                     }
-                    if (response.quotes != "Đã kết hôn" && response.quotes !=  "Không công khai") {
-                        construct += "\n" +  response.quotes;
+                    if (response.quotes != "Đã kết hôn" && response.quotes != "Không công khai") {
+                        construct += "\n" + response.quotes;
                     }
                     construct += "\n\nThis account was created on " + response.created_time;
 
                     let time = getTimestamp();
-                    utils.logged(construct)
-                    utils.logged(response)
+                    utils.logged(construct);
+                    utils.logged(response);
                     let filename = __dirname + "/cache/stalk_" + time + ".png";
                     downloadFile(response.avatar, filename).then((response) => {
                         let message = {
@@ -5671,29 +5688,18 @@ Hello %USER%, here is the current system information as of ` +
        }
        sendMessage(api, event, message)
        */
-    } else if (query == "about") {
-        let message = {
-            body: "I am an AI trained by Melvin Jones Repol to respond like a human. I am programmed to understand and respond to questions and commands. I am able to learn from my interactions with you and can adapt to different situations. I can provide helpful information and advice when needed. Lastly, i am here to help you in any way i can.\n\nhttps://mrepol742.github.io/project-orion/",
-            url: "https://mrepol742.github.io/project-orion/",
-        };
-        sendMessage(api, event, message);
-    } else if (query == "copyright") {
-        let message = {
-            body: "Melvin Jones Repol Ⓒ 2023. All Rights Reserved. The Project Orion is a Closed Source Project.\nMelvin Jones Repol Ⓒ 2018-2023. All Rights Reserved. The Project Webvium is a Closed Source Project.\n\n⦿ cmd\n⦿ about\n⦿ uptime\n⦿ license\n\nhttps://mrepol742.github.io/project-orion/",
-            url: "https://mrepol742.github.io/project-orion/",
-        };
-        sendMessage(api, event, message);
-    } else if (query == "license") {
-        let message = {
-            body:
-                "/*\n* Copyright Ⓒ MREPOL742 - All Rights Reserved\n" +
-                "* Unauthorized copying of this file, via any medium is strictly prohibited\n" +
-                "* Proprietary and confidential\n" +
-                "* Written by Melvin Jones Repol <mrepol742@gmail.com>, November 2022\n" +
-                "*/\n\nPrivacy Policy: https://mrepol742.github.io/project-orion/privacypolicy//\n\n⦿ cmd\n⦿ copyright\n⦿ uptime\n⦿ about",
-            url: "https://mrepol742.github.io/project-orion/privacypolicy/",
-        };
-        sendMessage(api, event, message);
+    } else if (query == "license" || query == "copyright" || query == "about") {
+        let message =
+                            "\n*" +
+                            "\n* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
+                            "\n* All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
+                            "\n*" +
+                            "\n*     https://mrepol742.github.io/project-orion/privacypolicy/" +
+                            "\n*" +
+                            "\n* Unless required by the applicable law or agreed in writing, software" +
+                            '\n* distributed under the License is distributed on an "AS IS" BASIS,' +
+                            "\n* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n*";
+        sendMessage(api, event, {body: message, url: "https://mrepol742.github.io/project-orion/privacypolicy/"});
     } else if (query.startsWith("setnickname")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -6308,7 +6314,7 @@ function isItBotOrNot(api, event) {
         let msssg = {
             body: construct,
             attachment: fs.createReadStream(__dirname + "/src/web/block.png"),
-        }
+        };
         sendMessageOnly(api, event, msssg);
         return true;
     }
@@ -7167,10 +7173,10 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         type: "object",
                         properties: {
                             joke: {
-                                type: "string"
-                            }
+                                type: "string",
+                            },
                         },
-                    }
+                    },
                 },
                 {
                     name: "fetch_information",
@@ -7181,7 +7187,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                             query: {
                                 type: "string",
                             },
-                            result: { type: "string" , description: "The result from the internet."},
+                            result: { type: "string", description: "The result from the internet." },
                         },
                         required: ["query"],
                     },
@@ -7193,10 +7199,10 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         type: "object",
                         properties: {
                             location: {
-                                type: "string"
+                                type: "string",
                             },
-                            time: { type: "string", description: "The time according to the location."},
-                            date: { type: "string", description: "The date according to the location."},
+                            time: { type: "string", description: "The time according to the location." },
+                            date: { type: "string", description: "The date according to the location." },
                         },
                         required: ["location"],
                     },
@@ -7211,7 +7217,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
 
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
         let message = ai.data.choices[0].message;
-        if (ai.data.choices[0].finish_reason == "length" && !(message.content).endsWith(".")) {
+        if (ai.data.choices[0].finish_reason == "length" && !message.content.endsWith(".")) {
             return "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new";
         } else if (message.content == null && !(message.function_call === undefined)) {
             let functionName = message.function_call.name;
@@ -7219,20 +7225,20 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             switch (functionName) {
                 case "get_joke":
                     await getResponseData("https://api.popcat.xyz/joke").then((response) => {
-            if (response == null) {
-                mssg.push({
-                    role: "user",
-                    content: text,
-                });
-            } else {
-                mssg.push(message);
-                mssg.push({
-                    role: "function",
-                    name: functionName,
-                    content: '{"joke": "' + response.joke + '"}',
-                });
-            }
-        });
+                        if (response == null) {
+                            mssg.push({
+                                role: "user",
+                                content: text,
+                            });
+                        } else {
+                            mssg.push(message);
+                            mssg.push({
+                                role: "function",
+                                name: functionName,
+                                content: '{"joke": "' + response.joke + '"}',
+                            });
+                        }
+                    });
                     return await openai.createChatCompletion({
                         model: "gpt-3.5-turbo-0613",
                         messages: mssg,
@@ -7267,27 +7273,27 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         case "music":
                             construct.push({
                                 role: "user",
-                                content: "generate a 2 sentence response using this ` i got the music for you now playing " + argument.name + "`"
+                                content: "generate a 2 sentence response using this ` i got the music for you now playing " + argument.name + "`",
                             });
                             break;
-                            case "video":
-                                construct.push({
-                                    role: "user",
-                                    content: "generate a 2 sentence response using this ` i got the video your looking for now playing " + argument.name + "`"
-                                });
-                                break;
-                                case "picture":
-                                    construct.push({
-                                        role: "user",
-                                        content: "generate a 2 sentence response using this ` here is your requested photo of " + argument.name + "`"
-                                    });
-                                    break;
-                                    case "createpicture":
-                                        construct.push({
-                                            role: "user",
-                                            content: "generate a 2 sentence response using this ` here is generated/visualized image of " + argument.name + "`"
-                                        });
-                                        break;
+                        case "video":
+                            construct.push({
+                                role: "user",
+                                content: "generate a 2 sentence response using this ` i got the video your looking for now playing " + argument.name + "`",
+                            });
+                            break;
+                        case "picture":
+                            construct.push({
+                                role: "user",
+                                content: "generate a 2 sentence response using this ` here is your requested photo of " + argument.name + "`",
+                            });
+                            break;
+                        case "createpicture":
+                            construct.push({
+                                role: "user",
+                                content: "generate a 2 sentence response using this ` here is generated/visualized image of " + argument.name + "`",
+                            });
+                            break;
                     }
                     if (argument.format == "say") {
                         ai.data.choices[0].message.content += "[Voice=" + argument.name + "]";
@@ -7305,7 +7311,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             return ai;
         }
     } catch (error) {
-        utils.logged(error)
+        utils.logged(error);
         utils.logged("attempt_initiated text-davinci-003 " + text);
         let retry = await aiResponse(event, "text-davinci-003", text, repeat, user, group);
         return retry;
@@ -7721,7 +7727,57 @@ function getRoutes() {
         let ress = req.url;
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + req.headers.origin + " " + url);
-        if (url == "/chat" || url == "/chat/index.html") {
+        if (url == "/addInstance" && req.method == "POST") {
+            try {
+                let appsss = JSON.parse(event.messageReply.body);
+                if (Array.isArray(appsss)) {
+                    let a = true;
+                    for (item in appsss) {
+                        if (appsss[item].key == "c_user") {
+                            let login = appsss[item].value;
+                            if (accounts.includes(login)) {
+                                sendMessageOnly(api, event, login + " already login.");
+                                res.writeHead(200);
+                                res.end(login + " already login.");
+                                a = false;
+                            } else {
+                                utils.logged("adding_root " + login);
+                                redfox_fb(
+                                    {
+                                        appState: appsss,
+                                    },
+                                    login,
+                                    function (bn) {
+                                        if (bn) {
+                                            res.writeHead(200);
+                                            res.end("Failed to Login " + login);
+                                        } else {
+                                            res.writeHead(200);
+                                            res.end("Successfully Login " + login);
+                                            accounts.push(login);
+                                            if (!users.admin.includes(login)) {
+                                                users.admin.push(login);
+                                            }
+                                        }
+                                    }
+                                );
+                                a = false;
+                            }
+                        }
+                    }
+                    if (a) {
+                        res.writeHead(200);
+                        res.end("You app state is not valid!");
+                    }
+                } else {
+                    res.writeHead(200);
+                    res.end("You app state is not valid!");
+                }
+            } catch (err) {
+                res.writeHead(200);
+                res.end("Invalid JSON App State Array.");
+            }
+        } else if (url == "/chat" || url == "/chat/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 let latest = data.split("%jk__lio%")[1];
@@ -7914,12 +7970,11 @@ async function sendAiMessage(api, event, ss) {
     }
 
     let message = {
-        body: ss
+        body: ss,
     };
 
     let keyword = ss.match(/(\[|\()(.*?)(\]|\))/);
     if (!(keyword == null)) {
-
         if (/\[(p|P)icture=/.test(ss)) {
             let sqq = keyword[2].replace(/\[(p|P)icture=(.*?)\]/g, "");
             message.body = ss.replace(/\[(p|P)icture=(.*?)\]/g, "");
@@ -7929,10 +7984,10 @@ async function sendAiMessage(api, event, ss) {
                 let fname = __dirname + "/cache/attch_" + getTimestamp() + ".png";
                 let url = nonUU(images);
                 utils.logged("downloading_attachment " + url);
-                await downloadFile(url, fname).then(async(response) => {
+                await downloadFile(url, fname).then(async (response) => {
                     message["attachment"] = await fs.createReadStream(fname);
                 });
-                console.log(JSON.stringify(message))
+                console.log(JSON.stringify(message));
             } catch (err) {
                 utils.logged(err);
             }
@@ -8001,7 +8056,7 @@ async function sendAiMessage(api, event, ss) {
                 utils.logged("downloading_attachment " + url);
                 if (url.startsWith("https://") || url.startsWith("http://")) {
                     let dir = __dirname + "/cache/createimg_" + getTimestamp() + ".png";
-                    await downloadFile(url, dir).then(async(response) => {
+                    await downloadFile(url, dir).then(async (response) => {
                         message["attachment"] = await fs.createReadStream(dir);
                     });
                 }
@@ -8016,7 +8071,7 @@ async function sendAiMessage(api, event, ss) {
                 let text = sqq.substring(0, 150) + "...";
                 const url = await GoogleTTS.getAudioUrl(text, voiceOptions);
                 let filename = __dirname + "/cache/tts_" + getTimestamp() + ".mp3";
-                await downloadFile(url, filename).then(async(response) => {
+                await downloadFile(url, filename).then(async (response) => {
                     message["attachment"] = await fs.createReadStream(filename);
                 });
             } catch (err) {
@@ -8099,9 +8154,9 @@ async function sendAiMessage(api, event, ss) {
     let eventB = event.body;
     if (eventB.startsWith("beshy") || /\sbeshy(\s|)/.test(eventB)) {
         let mB = message.body;
-        message.body = mB.replaceAll(" ", "🤸")
+        message.body = mB.replaceAll(" ", "🤸");
     }
-    
+
     if (message.body == "") {
         message.body = " ";
     }
@@ -8337,23 +8392,23 @@ function mj(api, event, findPr, input, query, query2) {
 }
 
 async function getWebResults(ask) {
-        const response = await google.search(ask, googleSearchOptions);
-        if (response.results.length != 0) {
-            let construct = "";
-            if (response.featured_snippet.title != null && response.featured_snippet.description != null) {
-                construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description;
-            } else {
-                construct += "\n";
-                for (let i = 0; i < 3; i++) {
-                    if (!(response.results[i].title === undefined)) {
-                        construct += response.results[i].title + response.results[i].description;
-                    }
+    const response = await google.search(ask, googleSearchOptions);
+    if (response.results.length != 0) {
+        let construct = "";
+        if (response.featured_snippet.title != null && response.featured_snippet.description != null) {
+            construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description;
+        } else {
+            construct += "\n";
+            for (let i = 0; i < 3; i++) {
+                if (!(response.results[i].title === undefined)) {
+                    construct += response.results[i].title + response.results[i].description;
                 }
             }
-            return construct;
-        } else {
-    return ask;
         }
+        return construct;
+    } else {
+        return ask;
+    }
 }
 
 function deleteCacheData(mode) {

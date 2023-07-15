@@ -298,7 +298,6 @@ Hello %USER%, this is the admin panel.
    ⦿ unblockUser ^^
    ⦿ blockGroup
    ⦿ unblockGroup
-   ⦿ addInstance
    ⦿ setPrefix [prefix]
    ⦿ remPrefix
    ⦿ ignore [prefix]
@@ -310,6 +309,7 @@ You guessed it, Only admins of the AI can used this commands.
 let helpuser = `
 Hello %USER%, this is the command list for user.
 
+     addInstance
    ⦿ setTimezone [timezone]
    ⦿ uid 
    ⦿ mute
