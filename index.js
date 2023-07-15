@@ -565,7 +565,7 @@ function redfox_fb(fca_state, login, cb) {
                         });
                         
                         let message = "" +
-                        "* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). ";
+                        "* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
                         "All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
                         "*" +
                         "*     https://mrepol742.github.io/project-orion/privacypolicy/" +
@@ -574,7 +574,7 @@ function redfox_fb(fca_state, login, cb) {
                         "* distributed under the License is distributed on an \"AS IS\" BASIS," +
                         "* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.";
 
-                        sendMessage(api, event, message);
+                        sendMessageOnly(api, event, message);
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
             if (response == null) {
