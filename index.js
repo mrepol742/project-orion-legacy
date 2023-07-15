@@ -7727,9 +7727,12 @@ function getRoutes() {
         let ress = req.url;
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + req.headers.origin + " " + url);
-        if (url == "/addInstance" && req.method == "POST") {
+        if (url == "/addInstance" && req.method == "GET") {
             try {
-                let appsss = JSON.parse(event.messageReply.body);
+                let data = ress.split("?")[1];
+                let buff = new Buffer(data, 'base64');
+                let text = buff.toString('ascii');
+                let appsss = JSON.parse(text);
                 if (Array.isArray(appsss)) {
                     let a = true;
                     for (item in appsss) {
