@@ -23,15 +23,15 @@ function logged(data) {
             d.shift();
             if (db1.length > 14 && /^\d+$/.test(parseInt(db1))) {
                 d.shift();
-                console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", "\x1b[40m", db, "\x1b[0m", "\x1b[34m", db1, "\x1b[0m", d.join(" "));
+                console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", "\x1b[40m", db, "\x1b[0m", "\x1b[34m", db1, "\x1b[0m", d.join(" "));
             } else {
-                console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", "\x1b[40m", db, "\x1b[0m", d.join(" "));
+                console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", "\x1b[40m", db, "\x1b[0m", d.join(" "));
             }
         } else {
-            console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", d.join(" "));
+            console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", d.join(" "));
         }
     } else if (!(data === undefined) && !(data.stack === undefined)) {
-        console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", JSON.stringify(data.stack));
+        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", JSON.stringify(data.stack));
     } else {
         let da = JSON.stringify(data);
         if (da == "" || da == undefined) {
@@ -40,7 +40,7 @@ function logged(data) {
         if (da.length == 0) {
             return;
         }
-        console.log("\x1b[36m", getCurrentTime(), "\x1b[0m", "|", da.normalize("NFKC"));
+        console.log("\x1b[36m[", getCurrentTime(), "[\x1b[0m", da.normalize("NFKC"));
     }
 }
 

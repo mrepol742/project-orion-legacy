@@ -24,4 +24,4 @@ jobs:
             - run: |
                   npm ci
                   node --check src/redfox/index.js
-                  node --check src/redfox/utils/index.js
+                  node --check src/redfox/utils.js
