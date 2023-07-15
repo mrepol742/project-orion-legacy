@@ -522,6 +522,7 @@ function redfox_fb(fca_state, login, cb) {
                         rs.push(event.messageID);
                         settings.restart = rs;
                         sendMessage(api, event, "Restarting program...");
+                        await sleep(2000);
                         process.exit(0);
                     }
                 }
