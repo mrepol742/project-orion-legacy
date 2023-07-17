@@ -1,3 +1,5 @@
+/*jshint esversion: 9 */
+
 const redfox = require("./src/redfox");
 const utils = require("./src/redfox/utils.js");
 const fs = require("fs");
@@ -60,6 +62,7 @@ const google = require("googlethis");
 const axios = require("axios");
 const path = require("path");
 const crypto = require("crypto");
+const exec = require("child_process").exec;
 const { Configuration, OpenAIApi } = require("openai");
 const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } = require("./src/arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./src/cmd.js");
@@ -142,7 +145,6 @@ deleteCacheData(true);
 
 task(
     function () {
-        var exec = require("child_process").exec;
         exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
             utils.logged("task_git syncronized");
         });
@@ -293,7 +295,7 @@ function redfox_fb(fca_state, login, cb) {
             }
             utils.logged("api_login_error " + login);
             accounts = accounts.filter((item) => item !== login);
-            for (tR in threadRegistry) {
+            for (var tR in threadRegistry) {
                 if (threadRegistry[tR] == login) {
                     delete threadRegistry[tR];
                 }
@@ -347,9 +349,9 @@ function redfox_fb(fca_state, login, cb) {
             function () {
                 let min = Math.floor(600000 + Math.random() + 300000);
                 if (!(userPresence[login] === undefined)) {
-                    for (root in userPresence[login]) {
+                    for (var root in userPresence[login]) {
                         let data = userPresence[login][root];
-                        for (keys in Object.keys(data)) {
+                        for (var keys in Object.keys(data)) {
                             let threadid = Object.keys(data)[keys];
                             let user = data[threadid];
                             let past = new Date(user[0]).getTime();
@@ -366,9 +368,9 @@ function redfox_fb(fca_state, login, cb) {
                                 api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
                                     if (err) return utils.logged(err);
                                     if (!(userPresence[login] === undefined)) {
-                                        for (root0 in userPresence[login]) {
+                                        for (var root0 in userPresence[login]) {
                                             let data0 = userPresence[login][root0];
-                                            for (keys0 in Object.keys(data0)) {
+                                            for (var keys0 in Object.keys(data0)) {
                                                 let threadid0 = Object.keys(data0)[keys0];
                                                 if (threadid0 == threadid) {
                                                     delete userPresence[login][root0][threadid0];
@@ -458,7 +460,7 @@ function redfox_fb(fca_state, login, cb) {
 
             if (event.type == "message" || event.type == "message_reply") {
                 let mainInput = event.body;
-                for (effects in sendEffects) {
+                for (var effects in sendEffects) {
                     if (mainInput.endsWith(sendEffects[effects])) {
                         event.body = mainInput.replace(sendEffects[effects], "");
                     }
@@ -562,7 +564,7 @@ function redfox_fb(fca_state, login, cb) {
                 if (event.senderID != api.getCurrentUserID() && event.isGroup) {
                     if (thread[event.threadID] === undefined) {
                         // hacky trick to prevent [0] from being nulled
-                        thread[event.threadID] = [0000001];
+                        thread[event.threadID] = [1000000];
                         thread[event.threadID].push(event.senderID);
                     } else if (thread[event.threadID].length < 2) {
                         thread[event.threadID].push(event.senderID);
@@ -1460,8 +1462,8 @@ async function ai22(api, event, query, query2) {
                                     appState: appsss,
                                 },
                                 login,
-                                function (bn) {
-                                    if (bn) {
+                                function (isLogin) {
+                                    if (isLogin) {
                                         sendMessageOnly(api, event, "Failed to Login " + login);
                                     } else {
                                         sendMessageOnly(api, event, "Successfully Login " + login);
@@ -1506,7 +1508,7 @@ async function ai22(api, event, query, query2) {
                     for (i = 0; i < response.data.data.length; i++) {
                         await sleep(1000);
                         let fname = __dirname + "/cache/createimagevar_" + i + "_" + time + ".png";
-                        await downloadFile(response.data.data[i].url, fname).then(async (response) => {
+                        await downloadFile(response.data.data[i].url, fname).then(async (response2) => {
                             await attch.push(fs.createReadStream(fname));
                             unLink(fname);
                         });
@@ -2536,7 +2538,6 @@ Hello %USER%, here is the current system snapshot as of ` +
         } else {
             data.shift();
             let aa = data.join(" ");
-            var exec = require("child_process").exec;
             exec("curl -I " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
@@ -2551,7 +2552,6 @@ Hello %USER%, here is the current system snapshot as of ` +
         } else {
             data.shift();
             let aa = data.join(" ");
-            var exec = require("child_process").exec;
             exec("nslookup " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
@@ -2566,7 +2566,6 @@ Hello %USER%, here is the current system snapshot as of ` +
         } else {
             data.shift();
             let aa = data.join(" ");
-            var exec = require("child_process").exec;
             exec("ping -c 5 " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
@@ -2750,7 +2749,7 @@ Hello %USER%, here is the current system snapshot as of ` +
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (chunk of Utils.streamToIterable(stream)) {
+                    for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
@@ -2800,7 +2799,7 @@ Hello %USER%, here is the current system snapshot as of ` +
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (chunk of Utils.streamToIterable(stream)) {
+                    for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     let message = {
@@ -2840,7 +2839,7 @@ Hello %USER%, here is the current system snapshot as of ` +
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (chunk of Utils.streamToIterable(stream)) {
+                    for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
@@ -2890,7 +2889,7 @@ Hello %USER%, here is the current system snapshot as of ` +
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (chunk of Utils.streamToIterable(stream)) {
+                    for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     let message = {
@@ -3653,14 +3652,12 @@ Hello %USER%, here is the current system snapshot as of ` +
         }
     } else if (query == "sync") {
         if (isMyId(event.senderID)) {
-            var exec = require("child_process").exec;
             exec("git pull", function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
     } else if (query == "push") {
         if (isMyId(event.senderID)) {
-            var exec = require("child_process").exec;
             exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
@@ -3687,7 +3684,6 @@ Hello %USER%, here is the current system snapshot as of ` +
             } else {
                 data.shift();
                 let sff = data.join(" ");
-                var exec = require("child_process").exec;
                 exec(sff, function (err, stdout, stderr) {
                     sendMessage(api, event, stdout + "\n\n" + stderr);
                 });
@@ -4116,9 +4112,9 @@ Hello %USER%, here is the current system snapshot as of ` +
     } else if (query == "mute") {
         users.muted.push(event.senderID);
         if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-            for (root0 in userPresence[api.getCurrentUserID()]) {
+            for (var root0 in userPresence[api.getCurrentUserID()]) {
                 let data0 = userPresence[api.getCurrentUserID()][root0];
-                for (keys0 in Object.keys(data0)) {
+                for (var keys0 in Object.keys(data0)) {
                     let threadid0 = Object.keys(data0)[keys0];
                     if (threadid0 == event.threadID) {
                         delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -4401,7 +4397,7 @@ Hello %USER%, here is the current system snapshot as of ` +
                 if (err) utils.logged(err);
                 let inf = "";
                 let usern = a.userInfo.length;
-                for (b in a.userInfo) {
+                for (var b in a.userInfo) {
                     inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
                     inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
                     inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
@@ -6517,7 +6513,7 @@ async function getImages(api, event, images) {
         let url = nonUU(images, true);
         await sleep(500);
         let fname = __dirname + "/cache/findimg_" + i + "_" + time + ".png";
-        await downloadFile(encodeURI(url), fname).then((response) => {
+        await downloadFile(encodeURI(url), fname).then((response1) => {
             name.push(fname);
         });
     }
@@ -6683,7 +6679,7 @@ async function bgRemove(api, event) {
         await sleep(1000);
         let name = "removebg_" + i66 + "_" + time + ".png";
         let dataUrl = __dirname + "/cache/" + name;
-        downloadFile(encodeURI(url[i66]), dataUrl).then((response) => {
+        downloadFile(encodeURI(url[i66]), dataUrl).then((response1) => {
             const formData = new FormData();
             formData.append("size", "auto");
             formData.append("image_file", fs.createReadStream(dataUrl), name);
