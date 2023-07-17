@@ -349,6 +349,7 @@ Hello %USER%, you reached the root user command list.
    ⦿ sql [query]
    ⦿ stop
    ⦿ sync
+   ⦿ exit
    ⦿ push
    ⦿ resume
    ⦿ restart
