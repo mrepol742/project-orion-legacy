@@ -1442,49 +1442,49 @@ async function ai22(api, event, query, query2) {
             }
         }
     } else if (query == "addinstance") {
-            try {
-                let appsss = JSON.parse(event.messageReply.body);
-                if (Array.isArray(appsss)) {
-                    let a = true;
-                    for (item in appsss) {
-                        if (appsss[item].key == "c_user") {
-                            let login = appsss[item].value;
-                            if (accounts.includes(login)) {
-                                sendMessageOnly(api, event, login + " already login.");
-                                a = false;
-                            } else {
-                                utils.logged("adding_root " + login);
-                                sendMessage(api, event, "Logging-in... " + login);
-                                redfox_fb(
-                                    {
-                                        appState: appsss,
-                                    },
-                                    login,
-                                    function (bn) {
-                                        if (bn) {
-                                            sendMessageOnly(api, event, "Failed to Login " + login);
-                                        } else {
-                                            sendMessageOnly(api, event, "Successfully Login " + login);
-                                            accounts.push(login);
-                                            if (!users.admin.includes(login)) {
-                                                users.admin.push(login);
-                                            }
+        try {
+            let appsss = JSON.parse(event.messageReply.body);
+            if (Array.isArray(appsss)) {
+                let a = true;
+                for (item in appsss) {
+                    if (appsss[item].key == "c_user") {
+                        let login = appsss[item].value;
+                        if (accounts.includes(login)) {
+                            sendMessageOnly(api, event, login + " already login.");
+                            a = false;
+                        } else {
+                            utils.logged("adding_root " + login);
+                            sendMessage(api, event, "Logging-in... " + login);
+                            redfox_fb(
+                                {
+                                    appState: appsss,
+                                },
+                                login,
+                                function (bn) {
+                                    if (bn) {
+                                        sendMessageOnly(api, event, "Failed to Login " + login);
+                                    } else {
+                                        sendMessageOnly(api, event, "Successfully Login " + login);
+                                        accounts.push(login);
+                                        if (!users.admin.includes(login)) {
+                                            users.admin.push(login);
                                         }
                                     }
-                                );
-                                a = false;
-                            }
+                                }
+                            );
+                            a = false;
                         }
                     }
-                    if (a) {
-                        sendMessage(api, event, "You app state is not valid!");
-                    }
-                } else {
+                }
+                if (a) {
                     sendMessage(api, event, "You app state is not valid!");
                 }
-            } catch (err) {
-                sendMessage(api, event, "Invalid JSON App State Array.");
+            } else {
+                sendMessage(api, event, "You app state is not valid!");
             }
+        } catch (err) {
+            sendMessage(api, event, "Invalid JSON App State Array.");
+        }
     } else if (/(^createimagevar$|^createimagevar\s)/.test(query2)) {
         //TODO not working
         if (isGoingToFast(api, event)) {
@@ -2418,7 +2418,7 @@ Hello %USER%, here is the current system snapshot as of ` +
             ` and login for ` +
             secondsToTime(process.uptime()) +
             `
-        
+            
     ⦿ CPU: ` +
             os.cpus()[0].model +
             " x" +
@@ -2432,17 +2432,23 @@ Hello %USER%, here is the current system snapshot as of ` +
             " " +
             os.arch() +
             " v" +
-            os.release() + " " +
-            os.machine() + 
+            os.release() +
+            " " +
+            os.machine() +
             `
     ⦿ OS Version: ` +
-    os.version(); + `
-    ⦿ Node: v` + process.versions.node + " " +
-    os.endianness(); + 
-    `
-    ⦿ Project Orion: ` + package.name + " v" +
-    package.version(); + 
-    ` 
+            os.version() +
+            `
+    ⦿ Node: v` +
+            process.versions.node +
+            " " +
+            os.endianness() +
+            `
+    ⦿ Project Orion: ` +
+            package.name +
+            " v" +
+            package.version() +
+            ` 
     ⦿ Server Uptime: ` +
             secondsToTime(os.uptime()) +
             `
@@ -3703,11 +3709,11 @@ Hello %USER%, here is the current system snapshot as of ` +
         }
     } else if (query == "exit") {
         if (isMyId(event.senderID)) {
-    api.removeUserFromGroup(api.getCurrentUserID(), event.threadID, (err) => {
-        if (err) utils.logged(err);
-        utils.logged("user_remove " + event.threadID + " " + id);
-    });
-}
+            api.removeUserFromGroup(api.getCurrentUserID(), event.threadID, (err) => {
+                if (err) utils.logged(err);
+                utils.logged("user_remove " + event.threadID + " " + id);
+            });
+        }
     } else if (/(^acceptmessagerequest$|^acceptmessagerequest\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
@@ -5723,16 +5729,16 @@ Hello %USER%, here is the current system snapshot as of ` +
        */
     } else if (query == "license" || query == "copyright" || query == "about") {
         let message =
-                            "\n*" +
-                            "\n* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
-                            "\n* All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
-                            "\n*" +
-                            "\n*     https://mrepol742.github.io/project-orion/privacypolicy/" +
-                            "\n*" +
-                            "\n* Unless required by the applicable law or agreed in writing, software" +
-                            '\n* distributed under the License is distributed on an "AS IS" BASIS,' +
-                            "\n* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n*";
-        sendMessage(api, event, {body: message, url: "https://mrepol742.github.io/project-orion/privacypolicy/"});
+            "\n*" +
+            "\n* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
+            "\n* All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
+            "\n*" +
+            "\n*     https://mrepol742.github.io/project-orion/privacypolicy/" +
+            "\n*" +
+            "\n* Unless required by the applicable law or agreed in writing, software" +
+            '\n* distributed under the License is distributed on an "AS IS" BASIS,' +
+            "\n* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n*";
+        sendMessage(api, event, { body: message, url: "https://mrepol742.github.io/project-orion/privacypolicy/" });
     } else if (query.startsWith("setnickname")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -7742,8 +7748,8 @@ function getRoutes() {
         if (url == "/addInstance" && req.method == "GET") {
             try {
                 let data = ress.split("?")[1];
-                let buff = new Buffer(data, 'base64');
-                let text = buff.toString('ascii');
+                let buff = new Buffer(data, "base64");
+                let text = buff.toString("ascii");
                 let appsss = JSON.parse(text);
                 if (Array.isArray(appsss)) {
                     let a = true;
