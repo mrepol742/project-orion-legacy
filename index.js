@@ -2409,11 +2409,11 @@ Hello %USER%, here is the current server snapshot as of ` +
         if (isGoingToFast(api, event)) {
             return;
         }
+        utils.logged("sysinfo");
         let avg_load = os.loadavg();
         let rom = await utils.getProjectTotalSize(__dirname + "/");
         let sysinfo =
-            `
-Hello %USER%, here is the current system snapshot as of ` +
+            `Hello %USER%, here is the current system snapshot as of ` +
             new Date().toLocaleString() +
             ` located in ` +
             getCountryOrigin(os.cpus()[0].model) +
@@ -2441,11 +2441,11 @@ Hello %USER%, here is the current system snapshot as of ` +
     ⦿ OS Version: ` +
             os.version() +
             `
-    ⦿ Node: v` +
-            process.versions.node +
-            " " +
-            os.endianness() +
-            `
+    ⦿ Project Orion: ` +
+            package.name +
+            " v" +
+            package.version +
+            ` 
     ⦿ Server Uptime: ` +
             secondsToTime(os.uptime()) +
             `
