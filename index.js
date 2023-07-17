@@ -2447,7 +2447,7 @@ Hello %USER%, here is the current system snapshot as of ` +
     ⦿ Project Orion: ` +
             package.name +
             " v" +
-            package.version() +
+            package.version +
             ` 
     ⦿ Server Uptime: ` +
             secondsToTime(os.uptime()) +
