@@ -2435,11 +2435,11 @@ Hello %USER%, here is the current server snapshot as of ` +
             os.arch() +
             " v" +
             os.release() +
-            " " +
-            os.machine() +
             `
-    ⦿ OS Version: ` +
-            os.version() +
+    ⦿ Node: v` +
+            process.versions.node +
+            " " +
+            os.endianness() +
             `
     ⦿ Project Orion: ` +
             package.name +
@@ -2478,7 +2478,6 @@ Hello %USER%, here is the current server snapshot as of ` +
     ⦿ Crash: ` +
             crashes +
             ` crash caught`;
-            utils.logged(sysinfo);
         getUserProfile(event.senderID, async function (name) {
             let aa = "";
             if (name.firstName != undefined) {
