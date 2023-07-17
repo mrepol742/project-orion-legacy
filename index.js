@@ -2446,11 +2446,6 @@ Hello %USER%, here is the current system snapshot as of ` +
             " " +
             os.endianness() +
             `
-    ⦿ Project Orion: ` +
-            package.name +
-            " v" +
-            package.version +
-            ` 
     ⦿ Server Uptime: ` +
             secondsToTime(os.uptime()) +
             `
@@ -2483,6 +2478,7 @@ Hello %USER%, here is the current system snapshot as of ` +
     ⦿ Crash: ` +
             crashes +
             ` crash caught`;
+            utils.logged(sysinfo);
         getUserProfile(event.senderID, async function (name) {
             let aa = "";
             if (name.firstName != undefined) {
