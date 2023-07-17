@@ -21,7 +21,7 @@ let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?",
 let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?", "hello", "hi", "hellooooo", "hiiiiii"];
 let heyMelbin = ["Sup!!", "hey you!", "why!", "no?", "How are you!", "How you doing!", "wassup!", "whats new!", "how can i suss you!", "hello!!", "hi!!", "hellooooo...", "hiiiiii...."];
 let heySim = ["Sup uhhhh", "heyyyyyyy", "yes i like that.", "Ho-w ar-e yo-u?", "Ughhh how you doinggg?", "wassup but i like wassdown..", "whats new or whats that uhg", "how can i _**;' you?", "hello", "hi", "hellooooo", "hiiiiii"];
-let unsendMessage = ["deleted the following.", "unsent the following.", "tries to delete this message.", "removed a message that contains:", "remove a message.", "tries conceal this information."];
+let unsendMessage = ["says:", "send this a while ago:", "deleted this:", "unsend this message:", "unsend this a second ago:", "removed this message:"];
 let idknow = [
     "Can you clarify what do you mean by that. It seems i have problems trying to understand what you want me to do.",
     "Please elaborate on what you mean by that. I seem to be struggling to comprehend what you want me to do.",

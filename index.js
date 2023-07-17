@@ -142,7 +142,7 @@ deleteCacheData(true);
 task(
     function () {
         var exec = require("child_process").exec;
-        exec('git add . && git commit -, "Initial Commit"', function (err, stdout, stderr) {
+        exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
             utils.logged("task_git syncronized");
         });
     },
@@ -481,11 +481,11 @@ function redfox_fb(fca_state, login, cb) {
                         } else if (settings.preference.error == "1404078") {
                             sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
                         } else if (users.muted.includes(event.senderID)) {
-                            sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an issue at https://github.com/prj-orion/issues/issues/new");
+                            sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/prj-orion/issues");
                         } else if (groups.blocked.includes(event.threadID)) {
                             sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an issue at https://github.com/prj-orion/issues/issues/new");
+                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues");
                         } else if (settings.preference.isStop) {
                             sendMessage(api, event, "The program is currently offline.");
                         } else if (settings.preference.isDebugEnabled) {
@@ -1514,7 +1514,7 @@ async function ai22(api, event, query, query2) {
                             sendMessage(
                                 api,
                                 event,
-                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                             );
                         } else {
                             sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
@@ -1726,7 +1726,7 @@ async function ai(api, event) {
             let query = data.join(" ");
             getResponseData("https://api.duckduckgo.com/?q=" + query + "&format=json&pretty=1").then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     if (response.Abstract == "") {
                         sendMessage(api, event, "No results found for `" + query + "`");
@@ -1843,7 +1843,7 @@ async function ai(api, event) {
                         sendMessage(
                             api,
                             event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
@@ -1940,7 +1940,7 @@ async function ai(api, event) {
                         sendMessage(
                             api,
                             event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
@@ -1985,7 +1985,7 @@ async function ai(api, event) {
                         sendMessage(
                             api,
                             event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
@@ -2049,7 +2049,7 @@ async function ai(api, event) {
                         sendMessage(
                             api,
                             event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
@@ -2090,7 +2090,7 @@ async function ai(api, event) {
                         sendMessage(
                             api,
                             event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new"
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
                     } else {
                         sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
@@ -2729,7 +2729,7 @@ Hello %USER%, here is the current system information as of ` +
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
                         if (response == null) {
-                            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         } else {
                             let title = response.result.s_title;
                             let image = response.result.s_image;
@@ -2819,7 +2819,7 @@ Hello %USER%, here is the current system information as of ` +
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
                         if (response == null) {
-                            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         } else {
                             let title = response.result.s_title;
                             let image = response.result.s_image;
@@ -2893,7 +2893,7 @@ Hello %USER%, here is the current system information as of ` +
             let text = data.join(" ");
             getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     let title = response.result.s_title;
                     let image = response.result.s_image;
@@ -3082,7 +3082,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://api-baybayin-transliterator.vercel.app/?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     sendMessage(api, event, response.baybay);
                 }
@@ -3099,7 +3099,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://api.popcat.xyz/doublestruck?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     sendMessage(api, event, response.text);
                 }
@@ -3208,7 +3208,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/wyr").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, "Would you rather " + response.ops1 + " or " + response.ops2);
             }
@@ -3219,7 +3219,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://meowfacts.herokuapp.com/").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response.data[0]);
             }
@@ -3230,7 +3230,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("http://numbersapi.com/random/math").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response);
             }
@@ -3241,7 +3241,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("http://numbersapi.com/random/date").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response);
             }
@@ -3252,7 +3252,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("http://numbersapi.com/random/trivia").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response);
             }
@@ -3263,7 +3263,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("http://numbersapi.com/random/year").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response);
             }
@@ -3274,7 +3274,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/8ball").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response.answer);
             }
@@ -3407,7 +3407,7 @@ Hello %USER%, here is the current system information as of ` +
             let name = data.join(" ");
             getResponseData("https://api.popcat.xyz/npm?q=" + name).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, 'Unfortunately npm "' + name + '" was not found.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.');
+                    sendMessage(api, event, 'Unfortunately npm "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
                 } else {
                     let name = response.name;
                     let version = response.version;
@@ -3439,7 +3439,7 @@ Hello %USER%, here is the current system information as of ` +
             let name = data.join(" ");
             getResponseData("https://api.popcat.xyz/steam?q=" + name).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, 'Unfortunately the "' + name + '" was not found on steam.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.');
+                    sendMessage(api, event, 'Unfortunately the "' + name + '" was not found on steam.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
                 } else {
                     let name = response.name;
                     let developers = response.developers;
@@ -3473,7 +3473,7 @@ Hello %USER%, here is the current system information as of ` +
             let name = data.join(" ");
             getResponseData("https://api.popcat.xyz/imdb?q=" + name).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, 'Unfortunately imdb "' + name + '" was not found.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.');
+                    sendMessage(api, event, 'Unfortunately imdb "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
                 } else {
                     let title = response.title;
                     let year = response.year;
@@ -3507,7 +3507,7 @@ Hello %USER%, here is the current system information as of ` +
             let name = data.join(" ");
             getResponseData("https://api.popcat.xyz/itunes?q=" + name).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, 'Unfortunately the "' + name + '" was not found in itunes music.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.');
+                    sendMessage(api, event, 'Unfortunately the "' + name + '" was not found in itunes music.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
                 } else {
                     let name = response.name;
                     let artist = response.artist;
@@ -3535,7 +3535,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/car").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately car run away.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let image = response.image;
                 let title = response.title;
@@ -3556,7 +3556,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately color fades away.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately color fades away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let hex = response.hex;
                 let name = response.name;
@@ -3579,7 +3579,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response.pickupline);
             }
@@ -3672,9 +3672,12 @@ Hello %USER%, here is the current system information as of ` +
             api.handleMessageRequest(event.senderID, true, (err) => {
                 if (err) {
                     utils.logged(err);
-                    sendMessage(api, event, "Failed to accept request!");
+                    sendMessage(api, event, "Failed to accept request! Have you send a message first?");
                 } else {
-                    sendMessage(api, event, "Message Request Accepted!");
+                    api.sendMessage("Hello World", event.senderID, (err, messageInfo) => {
+                        if (err) utils.logged(err);
+                    });
+                    sendMessage(api, event, "Please check your inbox.");
                 }
             });
         }
@@ -3686,12 +3689,15 @@ Hello %USER%, here is the current system information as of ` +
             } else {
                 data.shift();
                 let num = data.join(" ");
-                api.handleMessageRequest(data.join(" "), true, (err) => {
+                api.handleMessageRequest(num, true, (err) => {
                     if (err) {
                         utils.logged(err);
-                        sendMessage(api, event, "Failed to accept request!");
+                        sendMessage(api, event, "Failed to accept request! Have you send a message first?");
                     } else {
-                        sendMessage(api, event, "Message Request Accepted!");
+                        api.sendMessage("Hello World", num, (err, messageInfo) => {
+                            if (err) utils.logged(err);
+                        });
+                        sendMessage(api, event, "Please check your inbox.");
                     }
                 });
             }
@@ -4629,7 +4635,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately the wiki " + data.join(" ") + " was not found.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately the wiki " + data.join(" ") + " was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     let dir = __dirname + "/cache/wiki_" + getTimestamp() + ".png";
                     let url = response.originalimage.source;
@@ -4889,7 +4895,7 @@ Hello %USER%, here is the current system information as of ` +
             }
             await getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     let construct = response.name + "@" + response.username;
                     if (response.gender != "Không có dữ liệu!" && response.gender != "Không công khai") {
@@ -4954,7 +4960,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     sendMessage(api, event, response.morse);
                 }
@@ -4971,7 +4977,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://api.popcat.xyz/" + data[0] + "?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     sendMessage(api, event, response.text);
                 }
@@ -4983,7 +4989,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let url = response.url;
                 let title = response.title;
@@ -5005,7 +5011,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/joke").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately the joke is me.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately the joke is me.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response.joke);
             }
@@ -5025,7 +5031,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/fact").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately the fact is not true.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately the fact is not true.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response.fact);
             }
@@ -5036,7 +5042,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response.result);
             }
@@ -5070,7 +5076,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 parseImage(api, event, response.image, __dirname + "/cache/meme_" + getTimestamp() + ".png");
             }
@@ -5102,7 +5108,7 @@ Hello %USER%, here is the current system information as of ` +
             data.shift();
             getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + getTimestamp() + ".png");
                 }
@@ -5114,7 +5120,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://web-production-3aa9.up.railway.app/anime-movies").then((response) => {
             if (response == null) {
-                sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)] + "\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)] + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let list = "";
                 let i;
@@ -5144,7 +5150,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://web-production-3aa9.up.railway.app/top-airing").then((response) => {
             if (response == null) {
-                sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)] + "\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)] + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let list = "";
                 let i;
@@ -5187,7 +5193,7 @@ Hello %USER%, here is the current system information as of ` +
             let name = data.join(" ");
             getResponseData("https://web-production-3aa9.up.railway.app/genre/" + name).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, 'Invalid genre "' + name + '".\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.');
+                    sendMessage(api, event, 'Invalid genre "' + name + '".\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
                 } else {
                     let list = "";
                     let i;
@@ -5224,7 +5230,7 @@ Hello %USER%, here is the current system information as of ` +
             let name = data.join(" ");
             getResponseData("https://web-production-3aa9.up.railway.app/search?keyw=" + name).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, 'Unfortunately there was no search output found for "' + name + '".\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.');
+                    sendMessage(api, event, 'Unfortunately there was no search output found for "' + name + '".\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
                 } else {
                     let list = "";
                     let i;
@@ -5261,7 +5267,7 @@ Hello %USER%, here is the current system information as of ` +
             let name = data.join(" ").replaceAll(" ", "-");
             getResponseData("https://web-production-3aa9.up.railway.app/anime-details/" + name).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, 'Unfortunately anime "' + name + '" was not found.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.');
+                    sendMessage(api, event, 'Unfortunately anime "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
                 } else {
                     let title = response.animeTitle;
                     let otherT = response.otherNames;
@@ -5304,7 +5310,7 @@ Hello %USER%, here is the current system information as of ` +
             let text = data.join(" ");
             getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "I cannot find any relavant result about " + text) + "\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.";
+                    sendMessage(api, event, "I cannot find any relavant result about " + text) + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.";
                 } else {
                     parseImage(api, event, response.url, __dirname + "/cache/anime_" + getTimestamp() + ".png");
                 }
@@ -5478,7 +5484,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://animechan.vercel.app/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
             }
@@ -5489,7 +5495,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let result;
                 let i;
@@ -5529,7 +5535,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let result;
                 let i;
@@ -5545,7 +5551,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let result;
                 let i;
@@ -5593,7 +5599,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let result;
                 let i;
@@ -5609,7 +5615,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 let result;
                 let i;
@@ -5719,7 +5725,7 @@ Hello %USER%, here is the current system information as of ` +
         }
         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
                     if (err) return utils.logged(err);
@@ -6958,7 +6964,7 @@ function remAdmin(api, event, id) {
 function getAnimeGif(api, event, id, type) {
     getResponseData("https://api.waifu.pics/sfw/" + type).then((response) => {
         if (response == null) {
-            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new.");
+            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
         } else {
             api.getUserInfo(id, (err, info) => {
                 if (err) return utils.logged(err);
@@ -7124,12 +7130,12 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
         }
         if (!(error.response === undefined)) {
             if (error.response.status >= 400) {
-                return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new";
+                return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
             } else {
                 return idknow[Math.floor(Math.random() * idknow.length)];
             }
         }
-        return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new";
+        return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
     }
 }
 
@@ -7218,7 +7224,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
         let message = ai.data.choices[0].message;
         if (ai.data.choices[0].finish_reason == "length" && !message.content.endsWith(".")) {
-            return "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an issue at https://github.com/prj-orion/issues/issues/new";
+            return "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
         } else if (message.content == null && !(message.function_call === undefined)) {
             let functionName = message.function_call.name;
             const argument = JSON.parse(message.function_call.arguments);
