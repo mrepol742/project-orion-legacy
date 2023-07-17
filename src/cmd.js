@@ -18,262 +18,39 @@
 "use strict";
 
 let help = `
-Hello %USER%, how are you?
-
-   ⦿ cmd 
-   ⦿ cmd [number|all]
-   ⦿ cmd [user|group]
-   ⦿ cmd [admin|root]
-   ⦿ stats
-   ⦿ uptime
-   ⦿ sysinfo
-   ⦿ tokens
-   ⦿ sendReport [text]
-   ⦿ search [text]
-   ⦿ searchincog [text]
-   ⦿ searchimg [text]
-   ⦿ searchimg --reverse
-   ⦿ createimg [text]
-   ⦿ run [lang] [reply]
-       Java, Python, C, C++,
-       JavaScript, PHP and Dragon
-    ⦿ mj [text]
-    ⦿ beshy [text]
-    ⦿ melbin [text]
-    ⦿ sim [text]
-    ⦿ misaka [text]
-    ⦿ codex [text]
-    ⦿ openai [text]
-    ⦿ chatgpt [text]
-    ⦿ chad [text]
-    ⦿ nraf [text]
-    ⦿ skynet [text]
-
-If you have further questions, i am here to help you.
+Memory address 0x0000001 Not Found.
 `;
 
 let help1 = `
-Hello %USER%, how can i assist you?
-
-   ⦿ showerthoughts
-   ⦿ lulcat [text]
-   ⦿ gemoji [emoji]
-   ⦿ translate [text] to [language]
-   ⦿ wiki [text]
-   ⦿ urlshort [url]
-   ⦿ pickup
-   ⦿ landscape
-   ⦿ landscape [text]
-   ⦿ portrait
-   ⦿ portrait [text]
-
-
-   ⦿ pin add
-   ⦿ pin remove
-   ⦿ sadcat [text]
-   ⦿ biden [text]
-   ⦿ pika [text]
-   ⦿ god [text]
-   ⦿ qrcode [text]
-
-Some of my commands works in any means you could imagine.
+Memory address 0x0000002 Not Found.
 `;
 
 let help2 = `
-Hello %USER%, is there any questions you may have?
-
-   ⦿ verse today
-   ⦿ verse random
-   ⦿ verse [book] [chapter]: [verse]
-   ⦿ animeqoute
-   ⦿ bgremove
-   ⦿ motivate
-   ⦿ inspiration
-   ⦿ advice
-   ⦿ alert [text]
-   ⦿ meme
-   ⦿ lovetest [name1]: [name2]
-   ⦿ drake [text1]: [text2]
-   ⦿ pooh [text1]: [text2]
-   ⦿ oogway [text]
-   ⦿ caution [text]
-   ⦿ element [name]
-   ⦿ imdb [title]
-   ⦿ steam [name]
-   ⦿ npm [name]
-   ⦿ wfind [text]
-
-The : divides the query into 2 sections the first one and second one.
+Memory address 0x20023232 Not Found.
 `;
 
 let help3 = `
-Hello %USER%, how can i assist you further?
-
-   ⦿ mnm ^^
-   ⦿ trump ^^
-   ⦿ stalk ^^
-   ⦿ invert ^^
-   ⦿ greyscale ^^
-   ⦿ lick ^^
-   ⦿ hug ^^
-   ⦿ jokeover ^^
-   ⦿ cuddle ^^
-   ⦿ kiss ^^
-   ⦿ pet ^^
-   ⦿ jail ^^
-   ⦿ communist ^^
-   ⦿ wanted ^^
-   ⦿ gun ^^
-   ⦿ drip ^^
-   ⦿ clown ^^
-   ⦿ uncover ^^
-   ⦿ advert ^^
-   ⦿ blur ^^
-
-The ^^ means my command support mentioned, reply, uid etc.. to work.
+Memory address 0x0224501 Not Found.
 `;
 
 let help4 = `
-If you have any issue please do let me know.
-
-   ⦿ morse [text]
-   ⦿ joke
-   ⦿ profilepic
-   ⦿ wyr
-   ⦿ 8ball
-   ⦿ gmember
-   ⦿ car
-   ⦿ rcolor
-   ⦿ ship @mention @mention
-   ⦿ www @mention @mention
-   ⦿ trump [text]
-   ⦿ mock [text]
-   ⦿ reverseText [text]
-   ⦿ itunes [title]
-   ⦿ coding
-   ⦿ newyear
-   ⦿ christmas
-   ⦿ barrier
-   ⦿ fact
-   ⦿ thoughts
-
-Do you have any questions about the command %USER%?
+Memory address 0x2424001 Not Found.
 `;
 
 let help5 = `
-Here:
- 
-   ⦿ totext
-   ⦿ nba [name]
-   ⦿ doublestruck [text]
-   ⦿ count
-   ⦿ count --vowels
-   ⦿ count --consonants
-   ⦿ time
-   ⦿ time [timezone]
-   ⦿ anime [category]
-       waifu, neko, shinobu, megumin,
-       bully, cuddle, cry, hug,
-       awoo, kiss, lick, pat,
-       smug, bonk, yeet, blush,
-       smile, wave, highfive, handhold,
-       nom, bite, glomp, slap,
-       kill, kick, happy, wink,
-       poke, dance and cringe
-   ⦿ animeinfo [title]
-   ⦿ animesearch [text]
-   ⦿ animegenre [genre]
-       josei, seinen, mecha, shoujo,
-       action, harem, comedy, adventure,
-       yuri, isekai, drama, romance,
-       fantasy, horror, game, mystery,
-       school, yaoi, sports, police etc.
-   ⦿ animetop
-   ⦿ animetop --movie
-   ⦿ hanime [category]
-
-How can i assist you further %USER%?
+Memory address 0x0424401 Not Found.
 `;
 
 let help6 = `
-7th command list:
-
-   ⦿ encodeBinary [text]
-   ⦿ decodeBinary [text]
-   ⦿ sayjap [text]
-   ⦿ mathfacts
-   ⦿ ss [url]
-   ⦿ nslookup [url]
-   ⦿ header [url]
-
-
-
-
-
-   ⦿ conan
-   ⦿ summ [text]
-   ⦿ gcolor [theme]
-       DefaultBlue, HotPink, AquaBlue, BrightPurple
-       CoralPink, Orange, Green, LavenderPurple
-       Red, Yellow, TealBlue, Aqua
-       Mango, Berry, Citrus, Candy
-
-Do you have anything in mind %USER%?
+Memory address 0x241222 Not Found.
 `;
 
 let help7 = `
-Here is the 8th cmd list %USER%
-
-   ⦿ encrypt [text]
-   ⦿ decrypt [text] [key1]:[key2]
-   ⦿ facts [text]
-   ⦿ pat ^^
-   ⦿ blush ^^
-   ⦿ highfive ^^
-   ⦿ slap ^^
-   ⦿ bite ^^
-   ⦿ pat ^^
-   ⦿ encode64 [text]
-   ⦿ decode64 [text]
-   ⦿ tagalogSupport [on|off]
-   ⦿ textToSpeech [on|off]
-   ⦿ meowfacts
-   ⦿ dns4 [url]
-   ⦿ dns6 [url]
-   ⦿ musiclyric [title]
-   ⦿ videolyric [title]
-   ⦿ formatNumbers [numbers]
-   ⦿ fbi
-
-Wow, do you like me?
+Memory address 0x243454 Not Found.
 `;
 
 let help8 = `
-Hello %USER%, here is the last page of the command list.
-
-   ⦿ datefacts
-   ⦿ triviafacts
-   ⦿ yearfacts
-   ⦿ covid
-   ⦿ covid [country]
-   ⦿ parseImage [url]
-   ⦿ ping [url]
-   ⦿ dictionary [text]
-   ⦿ say [text]
-   ⦿ baybayin [text]
-   ⦿ weather [location]
-   ⦿ music [text]
-   ⦿ video [text]
-   ⦿ lyrics [text]
-   ⦿ github [username]
-   ⦿ kick ^^
-   ⦿ wink ^^
-   ⦿ poke ^^
-   ⦿ cringe ^^
-   ⦿ kill ^^
-   ⦿ smug ^^ 
-
-This is the end. Yes i know.
+Memory address 0x0000009 Not Found.
 `;
 
 let helpadmin = `
