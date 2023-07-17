@@ -22,6 +22,7 @@ if (!fs.existsSync(__dirname + "/data/groups.json")) {
     fs.writeFileSync(__dirname + "/data/groups.json", "{}", "utf8");
 }
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
+let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 
 console.log("\tProject Information");
 console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + users.blocked.length + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
@@ -396,7 +397,7 @@ function redfox_fb(fca_state, login, cb) {
 
         let isAppState = true;
 
-        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled) {
+        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled && isMyId(login)) {
             api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
             settings.restart = [];
             isCalled = false;
@@ -2412,7 +2413,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             `
 Hello %USER%, here is the current system snapshot as of ` +
             new Date().toLocaleString() +
-            `, located in ` +
+            ` located in ` +
             getCountryOrigin(os.cpus()[0].model) +
             ` and login for ` +
             secondsToTime(process.uptime()) +
@@ -2431,8 +2432,17 @@ Hello %USER%, here is the current system snapshot as of ` +
             " " +
             os.arch() +
             " v" +
-            os.release() +
+            os.release() + " " +
+            os.machine() + 
             `
+    ⦿ OS Version: ` +
+    os.version(); + `
+    ⦿ Node: v` + process.versions.node + " " +
+    os.endianness(); + 
+    `
+    ⦿ Project Orion: ` + package.name + " v" +
+    package.version(); + 
+    ` 
     ⦿ Server Uptime: ` +
             secondsToTime(os.uptime()) +
             `
@@ -2443,7 +2453,7 @@ Hello %USER%, here is the current system snapshot as of ` +
             `
     ⦿ ROM: ` +
             convertBytes(rom) +
-            "/48.89GB" +
+            "/48.89 GB" +
             `
     ⦿ RSS: ` +
             convertBytes(process.memoryUsage().rss) +
