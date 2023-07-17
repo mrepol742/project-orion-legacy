@@ -261,6 +261,16 @@ utils.logged("task_save_state global initiated");
 
 task(
     function () {
+        let size = users.blocked.length;
+        users.blocked = [];
+        utils.logged("unblock_user " + size + " users have been unblocked.");
+    },
+    60 * 120 * 1000
+);
+utils.logged("task_unblock global initiated");
+
+task(
+    function () {
         deleteCacheData(false);
         console.clear();
         utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
@@ -385,6 +395,12 @@ function redfox_fb(fca_state, login, cb) {
         });
 
         let isAppState = true;
+
+        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled) {
+            api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
+            settings.restart = [];
+            isCalled = false;
+        }
 
         api.eventListener(async (err, event) => {
             if (err) {
@@ -613,11 +629,11 @@ function redfox_fb(fca_state, login, cb) {
                 }
             } else if (groups.blocked.includes(event.threadID)) {
                 if (event.type == "message" || event.type == "message_reply") {
-                    blockedGroupC += 1;
+                    blockedGroupC++;
                 }
                 return;
             } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) && (event.type == "message" || event.type == "message_reply")) {
-                blockedUserC += 1;
+                blockedUserC++;
                 return;
             }
 
@@ -646,12 +662,6 @@ function redfox_fb(fca_state, login, cb) {
                     saveEvent(api, event);
                 }
                 return;
-            }
-
-            if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled) {
-                api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
-                settings.restart = [];
-                isCalled = false;
             }
 
             switch (event.type) {
@@ -1666,7 +1676,7 @@ async function ai(api, event) {
     // handles replies
     if (event.type == "message_reply") {
         if (event.messageReply.senderID != event.senderID) {
-            if (!isSecondaryPrefix(input) && event.messageReply.senderID != api.getCurrentUserID()) {
+            if (!isSecondaryPrefix(input.replaceAll("'", "").replaceAll("`", "")) && event.messageReply.senderID != api.getCurrentUserID()) {
                 return;
             }
         }
@@ -2296,7 +2306,7 @@ async function ai(api, event) {
         }
         let stat =
             `
-Hello %USER%, here is the current server stats as of ` +
+Hello %USER%, here is the current server snapshot as of ` +
             new Date().toLocaleString() +
             `
 
@@ -2345,7 +2355,7 @@ Hello %USER%, here is the current server stats as of ` +
             } else {
                 aa = "there";
             }
-            sendMessage(api, event, "Hello " + aa + ", server is up for about " + secondsToTime(process.uptime()) + " and the operating system is active for " + secondsToTime(os.uptime()));
+            sendMessage(api, event, "Hello " + aa + ", account is login for about " + secondsToTime(process.uptime()) + ", and the server is online for " + secondsToTime(os.uptime()));
         });
     } else if (query == "tokens" || query == "token") {
         if (isGoingToFast(api, event)) {
@@ -2400,11 +2410,11 @@ Hello %USER%, here is the current server stats as of ` +
         let rom = await utils.getProjectTotalSize(__dirname + "/");
         let sysinfo =
             `
-Hello %USER%, here is the current system information as of ` +
+Hello %USER%, here is the current system snapshot as of ` +
             new Date().toLocaleString() +
-            `, hosted in ` +
+            `, located in ` +
             getCountryOrigin(os.cpus()[0].model) +
-            ` and being running online for ` +
+            ` and login for ` +
             secondsToTime(process.uptime()) +
             `
         
@@ -2423,7 +2433,7 @@ Hello %USER%, here is the current system information as of ` +
             " v" +
             os.release() +
             `
-    ⦿ OS Uptime: ` +
+    ⦿ Server Uptime: ` +
             secondsToTime(os.uptime()) +
             `
     ⦿ RAM: ` +
@@ -2433,7 +2443,7 @@ Hello %USER%, here is the current system information as of ` +
             `
     ⦿ ROM: ` +
             convertBytes(rom) +
-            "/50GB" +
+            "/48.89GB" +
             `
     ⦿ RSS: ` +
             convertBytes(process.memoryUsage().rss) +
@@ -3681,6 +3691,13 @@ Hello %USER%, here is the current system information as of ` +
                 }
             });
         }
+    } else if (query == "exit") {
+        if (isMyId(event.senderID)) {
+    api.removeUserFromGroup(api.getCurrentUserID(), event.threadID, (err) => {
+        if (err) utils.logged(err);
+        utils.logged("user_remove " + event.threadID + " " + id);
+    });
+}
     } else if (/(^acceptmessagerequest$|^acceptmessagerequest\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
@@ -7415,16 +7432,16 @@ function numberWithCommas(x) {
 }
 
 function isMyPrefix(findPr, input, query, query2) {
-    if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
+    if (findPr != false && input.includes(findPr)) {
         return true;
     }
-    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s)/.test(query2) || isSecondaryPrefix(query2);
+    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s)/.test(query2) || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""));
 }
 
 function isSecondaryPrefix(query2) {
     return (
         /(^what$|^when$|^who$|^where$|^how$|^why$|^which$|^what\s|^when\s|^who\s|^where\s|^how\s|^why\s|^which\s)/.test(query2) ||
-        /(^in\s|^having\s|^an\s|^do\s|^does\s|^with\s|^are\s|^was\s|^the\s|^as\sfar\s|^can\syou\s|^a\s|^did\s|^give\s|^example\s|^these\s|^those\s|^on\s|^is\s|^if\s|^for\s|^about\s|^gave\s|^there\s|^describe\s|^list\s|^identify\s|^write\s|^create\s|^okay)/.test(query2) ||
+        /(^hello\s|^hi\s|^in\s|^having\s|^an\s|^do\s|^does\s|^with\s|^are\s|^was\s|^the\s|^as\sfar\s|^can\syou\s|^a\s|^did\s|^give\s|^example\s|^these\s|^those\s|^on\s|^is\s|^if\s|^for\s|^about\s|^gave\s|^there\s|^describe\s|^list\s|^identify\s|^write\s|^create\s|^okay)/.test(query2) ||
         (settings.preference.tagalog && /(^ano$|^bakit$|^saan$|^sino$|^kailan$|^paano$|^ano\s|^bakit\s|^saan\s|^sino\s|^kailan\s|^paano\s)/.test(query2))
     );
 }
@@ -7660,27 +7677,6 @@ async function searchimgr(api, event, filename) {
     }
 }
 
-async function transcribeAudioFile(filePath) {
-    const formData = new FormData();
-    formData.append("audio_file", fs.createReadStream(filePath), {
-        contentType: "audio/mpeg",
-    });
-    formData.append("task", "transcribe");
-    formData.append("output", "txt");
-
-    try {
-        const response = await axios.post("http://stt.amosayomide05.cf:9000/asr?task=transcribe&output=txt", formData, {
-            headers: {
-                ...formData.getHeaders(),
-                accept: "application/json",
-            },
-        });
-        return response.data;
-    } catch (error) {
-        utils.logged(error);
-    }
-}
-
 function getAppState(api) {
     const key = crypto.randomBytes(32).toString("hex");
     const iv = crypto.randomBytes(16).toString("hex");
@@ -7695,11 +7691,11 @@ function caughtException(api, err) {
     let d = new Date();
     let fileName = "log_" + d.getFullYear() + "_" + d.getMonth() + "_" + d.getDay() + ".log";
     if (fs.existsSync(__dirname + "/.log/" + fileName)) {
-        fs.appendFile(__dirname + "/.log/" + fileName, err + "\n\n==============================\n\n", function (err) {
+        fs.appendFile(__dirname + "/.log/" + fileName, JSON.stringify(err) + "\n\n==============================\n\n", function (err) {
             if (err) return utils.logged(err);
         });
     } else {
-        fs.writeFile(__dirname + "/.log/" + fileName, err + "\n\n==============================\n\n", function (err) {
+        fs.writeFile(__dirname + "/.log/" + fileName, JSON.stringify(err) + "\n\n==============================\n\n", function (err) {
             if (err) return utils.logged(err);
         });
     }
@@ -7711,10 +7707,10 @@ function task(func, time) {
 }
 
 function getCountryOrigin(model) {
-    if (model.includes("Celeron") && model.includes("N4000") && model.includes("1.10GHz")) {
-        return "The Philippines";
+    if (model.includes("Pentium") && model.includes("T4500") && model.includes("2.3GHz")) {
+        return "Rizal Philippines";
     }
-    return "USA";
+    return "Kansa USA";
 }
 
 function getStatus() {
