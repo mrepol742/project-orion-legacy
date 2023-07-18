@@ -4676,76 +4676,61 @@ Hello %USER%, here is the current server snapshot as of ` +
                         break;
                 }
             });
+        } else if (data[1] == "admin") {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                sendMessage(api, event, helpadmin.replace("%USER%", aa));
+            });
+        } else if (data[1] == "root") {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                sendMessage(api, event, helproot.replace("%USER%", aa));
+            });
+        } else if (data[1] == "user") {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                sendMessage(api, event, helpuser.replace("%USER%", aa));
+            });
+        } else if (data[1] == "group") {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                sendMessage(api, event, helpgroup.replace("%USER%", aa));
+            });
+        } else if (data[1] == "all") {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                let message = {
+                    body: "Hello " + aa + ", sadly due to the long list of commands i cannot send it all here, though you can navigate them at the https://mrepol742.github.io/project-orion/#cmdall.",
+                    url: "https://mrepol742.github.io/project-orion/#cmdall",
+                };
+                sendMessage(api, event, message);
+            });
         }
-    } else if (query == "cmdadmin") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            sendMessage(api, event, helpadmin.replace("%USER%", aa));
-        });
-    } else if (query == "cmdroot") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            sendMessage(api, event, helproot.replace("%USER%", aa));
-        });
-    } else if (query == "cmduser") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            sendMessage(api, event, helpuser.replace("%USER%", aa));
-        });
-    } else if (query == "cmdgroup") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            sendMessage(api, event, helpgroup.replace("%USER%", aa));
-        });
-    } else if (query == "cmdall") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            let message = {
-                body: "Hello " + aa + ", sadly due to the long list of commands i cannot send it all here, though you can navigate them at the https://mrepol742.github.io/project-orion/#cmdall.",
-                url: "https://mrepol742.github.io/project-orion/#cmdall",
-            };
-            sendMessage(api, event, message);
-        });
     } else if (query.startsWith("wiki")) {
         if (isGoingToFast(api, event)) {
             return;
