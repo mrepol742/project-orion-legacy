@@ -6336,7 +6336,7 @@ function formatQuery(string) {
     let str = string.replace(pictographic, "");
     // remove custom fancy fonts
     //let normal = str.normalize("NFKC");
-    let specialCharacters = normal.replace(normalize, "");
+    let specialCharacters = str.replace(normalize, "");
     // only allow letters and numbers
     let normal1 = specialCharacters.normalize("NFD").replace(/\p{Diacritic}/gu, "");
     let latin = normal1.replace(latinC, "");
