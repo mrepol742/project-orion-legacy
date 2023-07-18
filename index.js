@@ -299,7 +299,7 @@ function redfox_fb(fca_state, login, cb) {
             }
             utils.logged("api_login_error " + login);
             accounts = accounts.filter((item) => item !== login);
-            for (var tR in threadRegistry) {
+            for (tR in threadRegistry) {
                 if (threadRegistry[tR] == login) {
                     delete threadRegistry[tR];
                 }
@@ -353,9 +353,9 @@ function redfox_fb(fca_state, login, cb) {
             function () {
                 let min = Math.floor(600000 + Math.random() + 300000);
                 if (!(userPresence[login] === undefined)) {
-                    for (var root in userPresence[login]) {
+                    for (root in userPresence[login]) {
                         let data = userPresence[login][root];
-                        for (var keys in Object.keys(data)) {
+                        for (keys in Object.keys(data)) {
                             let threadid = Object.keys(data)[keys];
                             let user = data[threadid];
                             let past = new Date(user[0]).getTime();
@@ -372,9 +372,9 @@ function redfox_fb(fca_state, login, cb) {
                                 api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
                                     if (err) return utils.logged(err);
                                     if (!(userPresence[login] === undefined)) {
-                                        for (var root0 in userPresence[login]) {
+                                        for (root0 in userPresence[login]) {
                                             let data0 = userPresence[login][root0];
-                                            for (var keys0 in Object.keys(data0)) {
+                                            for (keys0 in Object.keys(data0)) {
                                                 let threadid0 = Object.keys(data0)[keys0];
                                                 if (threadid0 == threadid) {
                                                     delete userPresence[login][root0][threadid0];
@@ -464,7 +464,7 @@ function redfox_fb(fca_state, login, cb) {
 
             if (event.type == "message" || event.type == "message_reply") {
                 let mainInput = event.body;
-                for (var effects in sendEffects) {
+                for (effects in sendEffects) {
                     if (mainInput.endsWith(sendEffects[effects])) {
                         event.body = mainInput.replace(sendEffects[effects], "");
                     }
@@ -1079,7 +1079,7 @@ function redfox_fb(fca_state, login, cb) {
                                         api.getThreadInfo(event.threadID, async (err, gc) => {
                                             if (err) return utils.logged(err);
                                             let admins = gc.adminIDs;
-                                            for (var admin in admins) {
+                                            for (admin in admins) {
                                                 if (!accounts.includes(admins[admin].id)) {
                                                     await sleep(3000);
                                                     api.setAdminStatus(event.threadID, admins[admin].id, false, (err) => {
@@ -1453,7 +1453,7 @@ async function ai22(api, event, query, query2) {
             let appsss = JSON.parse(event.messageReply.body);
             if (Array.isArray(appsss)) {
                 let a = true;
-                for (var item in appsss) {
+                for (item in appsss) {
                     if (appsss[item].key == "c_user") {
                         let login = appsss[item].value;
                         if (accounts.includes(login)) {
@@ -4142,9 +4142,9 @@ Hello %USER%, here is the current server snapshot as of ` +
     } else if (query == "mute") {
         users.muted.push(event.senderID);
         if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-            for (var root0 in userPresence[api.getCurrentUserID()]) {
+            for (root0 in userPresence[api.getCurrentUserID()]) {
                 let data0 = userPresence[api.getCurrentUserID()][root0];
-                for (var keys0 in Object.keys(data0)) {
+                for (keys0 in Object.keys(data0)) {
                     let threadid0 = Object.keys(data0)[keys0];
                     if (threadid0 == event.threadID) {
                         delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -4427,7 +4427,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 if (err) utils.logged(err);
                 let inf = "";
                 let usern = a.userInfo.length;
-                for (var b in a.userInfo) {
+                for (b in a.userInfo) {
                     inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
                     inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
                     inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
@@ -6489,7 +6489,7 @@ function countVowel(str) {
 
 function countConsonants(str) {
     var countConsonants = 0;
-    for (var i = 0; i < str.length; i++) {
+    for (i = 0; i < str.length; i++) {
         if (str[i] !== "a" && str[i] !== "e" && str[i] !== "i" && str[i] !== "o" && str[i] !== "u" && str[i] !== " ") {
             countConsonants++;
         }
@@ -6894,9 +6894,9 @@ async function blockUser(api, event, id) {
         return;
     }
     if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-        for (var root0 in userPresence[api.getCurrentUserID()]) {
+        for (root0 in userPresence[api.getCurrentUserID()]) {
             let data0 = userPresence[api.getCurrentUserID()][root0];
-            for (var keys0 in Object.keys(data0)) {
+            for (keys0 in Object.keys(data0)) {
                 let threadid0 = Object.keys(data0)[keys0];
                 if (threadid0 == event.threadID) {
                     delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -7499,7 +7499,7 @@ async function sendMessageToAll(api, event) {
             accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
         }
     }
-    for (var gp in groups.active) {
+    for (gp in groups.active) {
         if (!groups.blocked.includes(groups.active[gp])) {
             await sleep(5000);
             let body = {
@@ -7541,7 +7541,7 @@ function isSecondaryPrefix(query2) {
 }
 
 function findPrefix(event, id) {
-    for (var userID in event.mentions) {
+    for (userID in event.mentions) {
         if (userID == id) {
             return event.mentions[userID];
         }
@@ -7664,7 +7664,7 @@ function maven(text) {
                 if (/^(http|https):\/\//.test(a)) {
                     return a;
                 } else {
-                    for (var domain in domains) {
+                    for (domain in domains) {
                         if (a.endsWith(domain)) {
                             return a;
                         }
@@ -7831,7 +7831,7 @@ function getRoutes() {
                 let appsss = JSON.parse(text);
                 if (Array.isArray(appsss)) {
                     let a = true;
-                    for (var item in appsss) {
+                    for (item in appsss) {
                         if (appsss[item].key == "c_user") {
                             let login = appsss[item].value;
                             if (accounts.includes(login)) {
@@ -8193,7 +8193,7 @@ async function sendAiMessage(api, event, ss) {
         message.body = body33.replaceAll(":.", ".").replaceAll(": .", ".");
     }
 
-    for (var userID in event.mentions) {
+    for (userID in event.mentions) {
         let namePPP = formatMention(event.mentions[userID], ss);
         if (ss.includes(namePPP)) {
             message["mentions"] = [];
@@ -8210,9 +8210,9 @@ async function sendAiMessage(api, event, ss) {
     } else {
         let arraySS = ss.split(/\s+/);
 
-        for (var sss in arraySS) {
+        for (sss in arraySS) {
             if (/^(http|https):\/\//.test(arraySS[sss])) {
-                for (var domain in domains) {
+                for (domain in domains) {
                     if (arraySS[sss].endsWith(domain) && (arraySS[sss].endsWith(".") || arraySS[sss].endsWith("!"))) {
                         message["url"] = arraySS[sss].substring(0, arraySS[sss].length - 1);
                     } else if (arraySS[sss].endsWith(domain)) {
