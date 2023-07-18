@@ -20,10 +20,9 @@
 let help = `
 Hello %USER%, how are you?
 
-   ⦿ cmd 
-   ⦿ cmd [number|all]
-   ⦿ cmd [user|group]
-   ⦿ cmd [admin|root]
+   ⦿ func 
+       next, all, user, group,
+       admin and root
    ⦿ stats
    ⦿ uptime
    ⦿ sysinfo
