@@ -6,7 +6,7 @@
     "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
-        "start": "clear && while [ true ]; do node index.js ; done",
+        "start": "clear && node index.js",
         "test": "clear && node --inspect index.js",
         "jshint": "jshint index.js",
         "prettier": "prettier ./ --write"

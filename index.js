@@ -1405,6 +1405,22 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "I cannot found any apperance of your search term on the message.");
             }
         }
+    } else if (/(^translate$|^translate\s|^trans$|^trans\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (event.messageReply.body == "" || data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using translate language reply instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate english [reply]");
+        } else {
+            try {
+                data.shift();
+                let response = await google.search(event.messageReply.body + " in " + data.join(), googleSearchOptions);
+                sendMessage(api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
+            } catch (error) {
+                sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
+            }
+        }
     } else if (query == "totext") {
         if (isGoingToFast(api, event)) {
             return;
@@ -1745,6 +1761,8 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to find a word from a message.");
         } else if (query == "pinadd") {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
+        } else if (/(^translate$|^translate\s|^trans$|^trans\s)/.test(query2)) {
+            sendMessage(api, event, "You need to reply to a message to translate it.");
         } else if (users.admin.includes(event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
             sendMessage(api, event, "You need to reply to my message to unsend it.");
         }
@@ -3100,9 +3118,9 @@ Hello %USER%, here is the current server snapshot as of ` +
             if (err) return utils.logged(err);
 
             let members = info.participantIDs.length;
-            let partner1 = info.participantIDs[Math.random() * members];
-            let partner2 = info.participantIDs[Math.random() * members];
-
+            let partner1 = info.participantIDs[Math.floor(Math.random() * members)];
+            let partner2 = info.participantIDs[Math.floor(Math.random() * members)];
+            
             let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
             let filename = __dirname + "/cache/pair1_" + getTimestamp() + ".jpg";
             downloadFile(url, filename).then((response) => {
@@ -3116,10 +3134,10 @@ Hello %USER%, here is the current server snapshot as of ` +
                         api.getUserInfo(partner2, (err, info1) => {
                             if (err) return utils.logged(err);
 
-                            let percentage = Math.random() * 100 + "%";
+                            let percentage = Math.floor(Math.random() * 100) + "%";
                             let message = {
-                                body: name1 + " is perfectly match to " + info1[partner2]["firstName"] + " " + percentage,
-                                attachment: fs.createReadStream(filename),
+                                body: "hmmm its " + percentage + " that " + name1 + " >3 " + info1[partner2]["firstName"],
+                                attachment: [fs.createReadStream(filename), fs.createReadStream(filename1)],
                                 mentions: [
                                     {
                                         tag: name1,
@@ -3131,7 +3149,6 @@ Hello %USER%, here is the current server snapshot as of ` +
                                     },
                                 ],
                             };
-                            utils.logged(message);
                             sendMessage(api, event, message);
                         });
                     });
@@ -3215,21 +3232,6 @@ Hello %USER%, here is the current server snapshot as of ` +
                     sendMessage(api, event, response.text);
                 }
             });
-        }
-    } else if (/(^translate$|^translate\s|^trans$|^trans\s)/.test(query2)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using translate text to language instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate Hello to Tagalog");
-        } else {
-            try {
-                let response = await google.search(input, googleSearchOptions);
-                sendMessage(api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
-            } catch (error) {
-                sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
-            }
         }
     } else if (/(^weather$|^weather\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -6438,7 +6440,7 @@ function isItBotOrNot(api, event) {
         } else {
             construct += "You have been blocked.";
         }
-        construct += "\n\nWe don't tolerate any kindof inappropriate behavoir if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues/issues/new";
+        construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues";
         let msssg = {
             body: construct,
             attachment: fs.createReadStream(__dirname + "/src/web/block.png"),
