@@ -4566,7 +4566,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2 || !(functionRegistry[event.threadID] === undefined)) {
+        if (data.length < 2 || functionRegistry[event.threadID] === undefined) {
             getUserProfile(event.senderID, async function (name) {
                 let aa = "";
                 if (name.firstName != undefined) {
