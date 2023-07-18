@@ -1,7 +1,10 @@
 /*jshint esversion: 9 */
+/*jshint -W018 */
+/*jshint -W069 */
 
 const redfox = require("./src/redfox");
 const utils = require("./src/redfox/utils.js");
+const removeMarkdown = require("./src/removeMarkdown.js");
 const fs = require("fs");
 
 let a = `
@@ -210,6 +213,7 @@ process.on("unhandledRejection", (reason, promise) => {
 
 let accounts = [];
 let threadRegistry = {};
+let functionRegistry = {};
 let rootAccess = "100071743848974";
 
 clearLog();
@@ -466,7 +470,7 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                let input = event.body.toLowerCase();
+                let input = event.body.toLowerCase().normalize("NFKC");
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, "");
 
@@ -607,6 +611,7 @@ function redfox_fb(fca_state, login, cb) {
                             "\n* All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
                             "\n*" +
                             "\n*     https://mrepol742.github.io/project-orion/privacypolicy/" +
+                            "\n*     https://mrepol742.github.io/project-orion/termsofservice/" +
                             "\n*" +
                             "\n* Unless required by the applicable law or agreed in writing, software" +
                             '\n* distributed under the License is distributed on an "AS IS" BASIS,' +
@@ -642,7 +647,7 @@ function redfox_fb(fca_state, login, cb) {
 
             if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
                 if (event.type == "message" || event.type == "message_reply") {
-                    let input = event.body;
+                    let input = event.body.normalize("NFKC");
                     let query2 = formatQuery(input);
                     let query = query2.replace(/\s+/g, "");
                     if (/(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
@@ -650,7 +655,7 @@ function redfox_fb(fca_state, login, cb) {
                             return;
                         }
                         let message = {
-                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?utm_source=messenger",
+                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" + event.body + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
                             attachment: fs.createReadStream(__dirname + "/src/web/maintenance.jpg"),
                         };
                         sendMessage(api, event, message);
@@ -1074,7 +1079,7 @@ function redfox_fb(fca_state, login, cb) {
                                         api.getThreadInfo(event.threadID, async (err, gc) => {
                                             if (err) return utils.logged(err);
                                             let admins = gc.adminIDs;
-                                            for (admin in admins) {
+                                            for (var admin in admins) {
                                                 if (!accounts.includes(admins[admin].id)) {
                                                     await sleep(3000);
                                                     api.setAdminStatus(event.threadID, admins[admin].id, false, (err) => {
@@ -1448,15 +1453,22 @@ async function ai22(api, event, query, query2) {
             let appsss = JSON.parse(event.messageReply.body);
             if (Array.isArray(appsss)) {
                 let a = true;
-                for (item in appsss) {
+                for (var item in appsss) {
                     if (appsss[item].key == "c_user") {
                         let login = appsss[item].value;
                         if (accounts.includes(login)) {
-                            sendMessageOnly(api, event, login + " already login.");
+                            api.sendMessage(
+                                "The account uid " + login + " is already connected to the main server.",
+                                event.threadID,
+                                (err, messageInfo) => {
+                                    if (err) utils.logged(err);
+                                },
+                                event.messageReply.messageID
+                            );
                             a = false;
                         } else {
                             utils.logged("adding_root " + login);
-                            sendMessage(api, event, "Logging-in... " + login);
+                            sendMessage(api, event, "Login initiated for user id " + login + ".");
                             redfox_fb(
                                 {
                                     appState: appsss,
@@ -1464,13 +1476,36 @@ async function ai22(api, event, query, query2) {
                                 login,
                                 function (isLogin) {
                                     if (isLogin) {
-                                        sendMessageOnly(api, event, "Failed to Login " + login);
+                                        api.sendMessage(
+                                            "Failed to Login " + login,
+                                            event.threadID,
+                                            (err, messageInfo) => {
+                                                if (err) utils.logged(err);
+                                            },
+                                            event.messageReply.messageID
+                                        );
                                     } else {
-                                        sendMessageOnly(api, event, "Successfully Login " + login);
-                                        accounts.push(login);
-                                        if (!users.admin.includes(login)) {
-                                            users.admin.push(login);
-                                        }
+                                        let url = encodeURI("https://graph.facebook.com/" + login + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                                let filename = __dirname + "/cache/login_" + getTimestamp() + ".jpg";
+                                downloadFile(url, filename).then((response) => {
+                                    let message = {
+                                        body: "Account " + login + " is now connected to the main server.",
+                                        attachment: fs.createReadStream(filename),
+                                    };
+                                    api.sendMessage(
+                                        message,
+                                        event.threadID,
+                                        (err, messageInfo) => {
+                                            if (err) utils.logged(err);
+                                        },
+                                        event.messageReply.messageID
+                                    );
+                                    accounts.push(login);
+                                    if (!users.admin.includes(login)) {
+                                        users.admin.push(login);
+                                    }
+                                    unLink(filename);
+                                });
                                     }
                                 }
                             );
@@ -1485,7 +1520,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "You app state is not valid!");
             }
         } catch (err) {
-            sendMessage(api, event, "Invalid JSON App State Array.");
+            sendMessage(api, event, "Invalid App State JSON Format.");
         }
     } else if (/(^createimagevar$|^createimagevar\s)/.test(query2)) {
         //TODO not working
@@ -1663,7 +1698,7 @@ async function ai22(api, event, query, query2) {
 }
 
 async function ai(api, event) {
-    let input = event.body;
+    let input = event.body.normalize("NFKC");
 
     let query2 = formatQuery(input);
     let query = query2.replace(/\s+/g, "");
@@ -2266,7 +2301,7 @@ async function ai(api, event) {
                         sendMessage(api, event, message);
                     });
                 });
-            } catch {
+            } catch (err) {
                 sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)]);
             }
         }
@@ -2794,7 +2829,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (var chunk of Utils.streamToIterable(stream)) {
+                    for await ( chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     let message = {
@@ -2884,7 +2919,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (var chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     let message = {
@@ -3909,7 +3944,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "Opps! I didnt get it. You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa");
             } else {
                 let pre = data.shift();
-                let pre2 = formatQuery(pre.replace(/\s+/g, ""));
+                let pre2 = formatQuery(pre.replace(/\s+/g, "").normalize("NFKC"));
                 if (pre2.startsWith("mj") || pre2.startsWith("melvin") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.preference.prefix)) {
                     sendMessage(api, event, "Unable to do such an action.");
                 } else if (!settings.ignored_prefixes.includes(pre)) {
@@ -4519,19 +4554,71 @@ Hello %USER%, here is the current server snapshot as of ` +
         } else {
             sendMessage(api, event, "Your uid is " + event.senderID);
         }
-    } else if (query == "cmd" || query == "cmd1" || query == "cmd0") {
+    } else if (query.startsWith("cmd") || query.startsWith("func") || query.startsWith("function")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
+        let data = input.split(" ");
+        if (data.length < 2 || !(functionRegistry[event.threadID] === undefined)) {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                sendMessage(api, event, help.replace("%USER%", aa));
+                functionRegistry[event.threadID] = 1;
+            });
+        } else if (data[1] == "next") {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+            switch (functionRegistry[event.threadID]) {
+                default:
+                case 0:
+                    sendMessage(api, event, help.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 1;
+                break;
+                case 1:
+                    sendMessage(api, event, help1.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 2;
+                break;
+                case 2:
+                    sendMessage(api, event, help2.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 3;
+                break;
+                case 3:
+                    sendMessage(api, event, help3.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 4;
+                break;
+                case 4:
+                    sendMessage(api, event, help4.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 5;
+                break;
+                case 5:
+                    sendMessage(api, event, help5.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 6;
+                break;
+                case 6:
+                    sendMessage(api, event, help6.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 7;
+                break;
+                case 7:
+                    sendMessage(api, event, help7.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 8;
+                break;
+                case 8:
+                    sendMessage(api, event, help8.replace("%USER%", aa));
+                    functionRegistry[event.threadID] = 0;
+                break;
             }
-            sendMessage(api, event, help.replace("%USER%", aa));
         });
+        }
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5334,7 +5421,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             let text = data.join(" ");
             getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "I cannot find any relavant result about " + text) + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.";
+                    sendMessage(api, event, "I cannot find any relavant result about " + text + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
                     parseImage(api, event, response.url, __dirname + "/cache/anime_" + getTimestamp() + ".png");
                 }
@@ -6239,7 +6326,7 @@ function formatQuery(string) {
     // remove emojis
     let str = string.replace(pictographic, "");
     // remove custom fancy fonts
-    let normal = str.normalize("NFKC");
+    //let normal = str.normalize("NFKC");
     let specialCharacters = normal.replace(normalize, "");
     // only allow letters and numbers
     let normal1 = specialCharacters.normalize("NFD").replace(/\p{Diacritic}/gu, "");
@@ -6807,9 +6894,9 @@ async function blockUser(api, event, id) {
         return;
     }
     if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-        for (root0 in userPresence[api.getCurrentUserID()]) {
+        for (var root0 in userPresence[api.getCurrentUserID()]) {
             let data0 = userPresence[api.getCurrentUserID()][root0];
-            for (keys0 in Object.keys(data0)) {
+            for (var keys0 in Object.keys(data0)) {
                 let threadid0 = Object.keys(data0)[keys0];
                 if (threadid0 == event.threadID) {
                     delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -7412,7 +7499,7 @@ async function sendMessageToAll(api, event) {
             accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
         }
     }
-    for (gp in groups.active) {
+    for (var gp in groups.active) {
         if (!groups.blocked.includes(groups.active[gp])) {
             await sleep(5000);
             let body = {
@@ -7421,9 +7508,9 @@ async function sendMessageToAll(api, event) {
             if (accm.length > 0) {
                 body["attachment"] = accm;
             }
-            api.sendMessage(body, groups.active[gp], (err, messageInfo) => {
-                if (err) {
-                    utils.logged(err);
+            api.sendMessage(body, groups.active[gp], (err12, messageInfo) => {
+                if (err12) {
+                    utils.logged(err12);
                     groups.active.pop(groups.active[gp]);
                     return;
                 }
@@ -7454,7 +7541,7 @@ function isSecondaryPrefix(query2) {
 }
 
 function findPrefix(event, id) {
-    for (userID in event.mentions) {
+    for (var userID in event.mentions) {
         if (userID == id) {
             return event.mentions[userID];
         }
@@ -7577,7 +7664,7 @@ function maven(text) {
                 if (/^(http|https):\/\//.test(a)) {
                     return a;
                 } else {
-                    for (domain in domains) {
+                    for (var domain in domains) {
                         if (a.endsWith(domain)) {
                             return a;
                         }
@@ -7609,15 +7696,15 @@ function updateFont(message, id) {
     }
     if (typeof message === "string") {
         if (message == " " || message == "" || message == "@everyone") {
-            return message;
+            return removeMarkdown(message);
         }
-        return maven(message);
+        return removeMarkdown(maven(message));
     }
     let body = message.body;
     if (body == " " || body == "" || body === undefined || body == "@everyone") {
-        return message;
+        return removeMarkdown(message);
     }
-    message.body = maven(body);
+    message.body = removeMarkdown(maven(body));
     if (!(message.mentions === undefined)) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
@@ -7744,11 +7831,10 @@ function getRoutes() {
                 let appsss = JSON.parse(text);
                 if (Array.isArray(appsss)) {
                     let a = true;
-                    for (item in appsss) {
+                    for (var item in appsss) {
                         if (appsss[item].key == "c_user") {
                             let login = appsss[item].value;
                             if (accounts.includes(login)) {
-                                sendMessageOnly(api, event, login + " already login.");
                                 res.writeHead(200);
                                 res.end(login + " already login.");
                                 a = false;
@@ -7759,8 +7845,8 @@ function getRoutes() {
                                         appState: appsss,
                                     },
                                     login,
-                                    function (bn) {
-                                        if (bn) {
+                                    function (isLogin) {
+                                        if (isLogin) {
                                             res.writeHead(200);
                                             res.end("Failed to Login " + login);
                                         } else {
@@ -8020,7 +8106,7 @@ async function sendAiMessage(api, event, ss) {
                     let filename = __dirname + "/cache/attach_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (chunk of Utils.streamToIterable(stream)) {
+                    for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     message["attachment"] = await fs.createReadStream(filename);
@@ -8107,7 +8193,7 @@ async function sendAiMessage(api, event, ss) {
         message.body = body33.replaceAll(":.", ".").replaceAll(": .", ".");
     }
 
-    for (userID in event.mentions) {
+    for (var userID in event.mentions) {
         let namePPP = formatMention(event.mentions[userID], ss);
         if (ss.includes(namePPP)) {
             message["mentions"] = [];
@@ -8124,9 +8210,9 @@ async function sendAiMessage(api, event, ss) {
     } else {
         let arraySS = ss.split(/\s+/);
 
-        for (sss in arraySS) {
+        for (var sss in arraySS) {
             if (/^(http|https):\/\//.test(arraySS[sss])) {
-                for (domain in domains) {
+                for (var domain in domains) {
                     if (arraySS[sss].endsWith(domain) && (arraySS[sss].endsWith(".") || arraySS[sss].endsWith("!"))) {
                         message["url"] = arraySS[sss].substring(0, arraySS[sss].length - 1);
                     } else if (arraySS[sss].endsWith(domain)) {
