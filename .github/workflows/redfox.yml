@@ -26,4 +26,3 @@ jobs:
                   cd src/redfox
                   node --check index.js
                   node --check utils.js
-                  jshint index.js

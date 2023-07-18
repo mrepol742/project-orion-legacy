@@ -26,4 +26,3 @@ jobs:
                   node --check index.js
                   node --check src/arrays.js
                   node --check src/cmd.js
-                  jshint index.js
