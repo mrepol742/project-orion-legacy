@@ -3092,7 +3092,54 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
+    } else if (query == "pair") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        api.getThreadInfo(event.threadID, (err, info) => {
+            if (err) return utils.logged(err);
+
+            let members = info.participantIDs.length;
+            let partner1 = info.participantIDs[Math.random() * members];
+            let partner2 = info.participantIDs[Math.random() * members];
+
+            let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+            let filename = __dirname + "/cache/pair1_" + getTimestamp() + ".jpg";
+            downloadFile(url, filename).then((response) => {
+                let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                let filename1 = __dirname + "/cache/pair2_" + getTimestamp() + ".jpg";
+                downloadFile(url1, filename1).then((response1) => {
+                    api.getUserInfo(partner1, (err, info) => {
+                        if (err) return utils.logged(err);
+                        api.getUserInfo(partner2, (err, info1) => {
+                            if (err) return utils.logged(err);
+
+
+                            let percentage = (Math.random() * 100) + "%";
+                    let message = {
+                        body: info[partner1]["firstName"] + " is perfectly match to " + info1[partner2]["firstName"],
+                        attachment: [fs.createReadStream(filename), fs.createReadStream(filename1)],
+                        mentions: [
+                            {
+                                tag: info[partner1]["firstName"],
+                                id: partner1,
+                            },
+                            {
+                                tag: info1[partner2]["firstName"],
+                                id: partner2,
+                            },
+                        ],
+                    };
+                            sendMessage(api, event, message);
+                        });
+                    });
+                });
+            });
+        });
     } else if (query == "everyone" || query == "all") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         api.getThreadInfo(event.threadID, (err, info) => {
             if (err) return utils.logged(err);
 
@@ -4626,50 +4673,6 @@ Hello %USER%, here is the current server snapshot as of ` +
                 }
             });
         }
-        /*
-    } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            let num = query.substring(3);
-            switch (num) {
-                case "2":
-                    sendMessage(api, event, help1.replace("%USER%", aa));
-                    break;
-                case "3":
-                    sendMessage(api, event, help2.replace("%USER%", aa));
-                    break;
-                case "4":
-                    sendMessage(api, event, help3.replace("%USER%", aa));
-                    break;
-                case "5":
-                    sendMessage(api, event, help4.replace("%USER%", aa));
-                    break;
-                case "6":
-                    sendMessage(api, event, help5.replace("%USER%", aa));
-                    break;
-                case "7":
-                    sendMessage(api, event, help6.replace("%USER%", aa));
-                    break;
-                case "8":
-                    sendMessage(api, event, help7.replace("%USER%", aa));
-                    break;
-                case "9":
-                    sendMessage(api, event, help8.replace("%USER%", aa));
-                    break;
-                default:
-                    sendMessage(api, event, "Seem's like that's too far from the command list pages.");
-                    break;
-            }
-        });
-        */
     } else if (query == "cmdadmin") {
         if (isGoingToFast(api, event)) {
             return;
@@ -4739,11 +4742,6 @@ Hello %USER%, here is the current server snapshot as of ` +
             };
             sendMessage(api, event, message);
         });
-    } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        sendMessage(api, event, "Oops! Seems like you already reach the end of the commands list. Developers are still cooking new features for this awesome project.");
     } else if (query.startsWith("wiki")) {
         if (isGoingToFast(api, event)) {
             return;
