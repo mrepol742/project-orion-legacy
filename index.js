@@ -3111,25 +3111,27 @@ Hello %USER%, here is the current server snapshot as of ` +
                 downloadFile(url1, filename1).then((response1) => {
                     api.getUserInfo(partner1, (err, info) => {
                         if (err) return utils.logged(err);
+                        let name1 = info[partner1]["firstName"];
+
                         api.getUserInfo(partner2, (err, info1) => {
                             if (err) return utils.logged(err);
 
-
-                            let percentage = (Math.random() * 100) + "%";
-                    let message = {
-                        body: info[partner1]["firstName"] + " is perfectly match to " + info1[partner2]["firstName"],
-                        attachment: [fs.createReadStream(filename), fs.createReadStream(filename1)],
-                        mentions: [
-                            {
-                                tag: info[partner1]["firstName"],
-                                id: partner1,
-                            },
-                            {
-                                tag: info1[partner2]["firstName"],
-                                id: partner2,
-                            },
-                        ],
-                    };
+                            let percentage = Math.random() * 100 + "%";
+                            let message = {
+                                body: name1 + " is perfectly match to " + info1[partner2]["firstName"] + " " + percentage,
+                                attachment: fs.createReadStream(filename),
+                                mentions: [
+                                    {
+                                        tag: name1,
+                                        id: partner1,
+                                    },
+                                    {
+                                        tag: info1[partner2]["firstName"],
+                                        id: partner2,
+                                    },
+                                ],
+                            };
+                            utils.logged(message);
                             sendMessage(api, event, message);
                         });
                     });
@@ -4606,7 +4608,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, message);
             });
         } else {
-            sendMessage(api, event, "[" + event.senderID + "]" );
+            sendMessage(api, event, "[" + event.senderID + "]");
         }
     } else if (query.startsWith("cmd") || query.startsWith("func") || query.startsWith("function")) {
         if (isGoingToFast(api, event)) {
