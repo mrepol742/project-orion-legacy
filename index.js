@@ -470,7 +470,8 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                let input = event.body.toLowerCase().normalize("NFKC");
+                let eventB = event.body;
+                let input = eventB.toLowerCase().normalize("NFKC");
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, "");
 
@@ -647,7 +648,8 @@ function redfox_fb(fca_state, login, cb) {
 
             if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
                 if (event.type == "message" || event.type == "message_reply") {
-                    let input = event.body.normalize("NFKC");
+                    let eventB = event.body;
+                    let input = eventB.normalize("NFKC");
                     let query2 = formatQuery(input);
                     let query = query2.replace(/\s+/g, "");
                     if (/(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
@@ -655,7 +657,10 @@ function redfox_fb(fca_state, login, cb) {
                             return;
                         }
                         let message = {
-                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" + event.body + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
+                            body:
+                                "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
+                                event.body +
+                                "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
                             attachment: fs.createReadStream(__dirname + "/src/web/maintenance.jpg"),
                         };
                         sendMessage(api, event, message);
@@ -1433,7 +1438,8 @@ async function ai22(api, event, query, query2) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let input = event.body;
+        let eventB = event.body;
+        let input = eventB.normalize("NFKC");
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecrypt fwegerghergerg:gergergergerg");
@@ -1486,26 +1492,26 @@ async function ai22(api, event, query, query2) {
                                         );
                                     } else {
                                         let url = encodeURI("https://graph.facebook.com/" + login + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
-                                let filename = __dirname + "/cache/login_" + getTimestamp() + ".jpg";
-                                downloadFile(url, filename).then((response) => {
-                                    let message = {
-                                        body: "Account " + login + " is now connected to the main server.",
-                                        attachment: fs.createReadStream(filename),
-                                    };
-                                    api.sendMessage(
-                                        message,
-                                        event.threadID,
-                                        (err, messageInfo) => {
-                                            if (err) utils.logged(err);
-                                        },
-                                        event.messageReply.messageID
-                                    );
-                                    accounts.push(login);
-                                    if (!users.admin.includes(login)) {
-                                        users.admin.push(login);
-                                    }
-                                    unLink(filename);
-                                });
+                                        let filename = __dirname + "/cache/login_" + getTimestamp() + ".jpg";
+                                        downloadFile(url, filename).then((response) => {
+                                            let message = {
+                                                body: "Account " + login + " is now connected to the main server.",
+                                                attachment: fs.createReadStream(filename),
+                                            };
+                                            api.sendMessage(
+                                                message,
+                                                event.threadID,
+                                                (err, messageInfo) => {
+                                                    if (err) utils.logged(err);
+                                                },
+                                                event.messageReply.messageID
+                                            );
+                                            accounts.push(login);
+                                            if (!users.admin.includes(login)) {
+                                                users.admin.push(login);
+                                            }
+                                            unLink(filename);
+                                        });
                                     }
                                 }
                             );
@@ -1698,7 +1704,8 @@ async function ai22(api, event, query, query2) {
 }
 
 async function ai(api, event) {
-    let input = event.body.normalize("NFKC");
+    let eventB = event.body;
+    let input = eventB.normalize("NFKC");
 
     let query2 = formatQuery(input);
     let query = query2.replace(/\s+/g, "");
@@ -2829,7 +2836,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await ( chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     let message = {
@@ -4552,7 +4559,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, message);
             });
         } else {
-            sendMessage(api, event, "Your uid is " + event.senderID);
+            sendMessage(api, event, "[" + event.senderID + "]" );
         }
     } else if (query.startsWith("cmd") || query.startsWith("func") || query.startsWith("function")) {
         if (isGoingToFast(api, event)) {
@@ -4578,47 +4585,48 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
-            switch (functionRegistry[event.threadID]) {
-                default:
-                case 0:
-                    sendMessage(api, event, help.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 1;
-                break;
-                case 1:
-                    sendMessage(api, event, help1.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 2;
-                break;
-                case 2:
-                    sendMessage(api, event, help2.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 3;
-                break;
-                case 3:
-                    sendMessage(api, event, help3.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 4;
-                break;
-                case 4:
-                    sendMessage(api, event, help4.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 5;
-                break;
-                case 5:
-                    sendMessage(api, event, help5.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 6;
-                break;
-                case 6:
-                    sendMessage(api, event, help6.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 7;
-                break;
-                case 7:
-                    sendMessage(api, event, help7.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 8;
-                break;
-                case 8:
-                    sendMessage(api, event, help8.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 0;
-                break;
-            }
-        });
+                switch (functionRegistry[event.threadID]) {
+                    default:
+                    case 0:
+                        sendMessage(api, event, help.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 1;
+                        break;
+                    case 1:
+                        sendMessage(api, event, help1.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 2;
+                        break;
+                    case 2:
+                        sendMessage(api, event, help2.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 3;
+                        break;
+                    case 3:
+                        sendMessage(api, event, help3.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 4;
+                        break;
+                    case 4:
+                        sendMessage(api, event, help4.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 5;
+                        break;
+                    case 5:
+                        sendMessage(api, event, help5.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 6;
+                        break;
+                    case 6:
+                        sendMessage(api, event, help6.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 7;
+                        break;
+                    case 7:
+                        sendMessage(api, event, help7.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 8;
+                        break;
+                    case 8:
+                        sendMessage(api, event, help8.replace("%USER%", aa));
+                        functionRegistry[event.threadID] = 0;
+                        break;
+                }
+            });
         }
+        /*
     } else if (query.startsWith("cmd") && /^\d+$/.test(query.substring(3))) {
         if (isGoingToFast(api, event)) {
             return;
@@ -4661,6 +4669,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     break;
             }
         });
+        */
     } else if (query == "cmdadmin") {
         if (isGoingToFast(api, event)) {
             return;
@@ -6347,7 +6356,8 @@ function containsAny(str, substrings) {
 }
 
 function isGoingToFast(api, event) {
-    let input = event.body;
+    let eventB = event.body;
+    let input = eventB.normalize("NFKC");
     commandCalls++;
     utils.logged("event_body " + event.threadID + " " + input);
     if (!users.list.find((user) => event.senderID === user.id)) {
@@ -6399,7 +6409,8 @@ function isGoingToFast(api, event) {
 }
 
 function isItBotOrNot(api, event) {
-    let input = event.body;
+    let eventB = event.body;
+    let input = eventB.normalize("NFKC");
     let eventTypes = ["photo", "animated_image", "sticker", "audio", "video", "file"];
     if (
         (utils.isBlockedSentence(

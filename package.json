@@ -8,6 +8,7 @@
     "scripts": {
         "start": "clear && while [ true ]; do node index.js ; done",
         "test": "clear && node --inspect index.js",
+        "jshint": "jshint index.js",
         "prettier": "prettier ./ --write"
     },
     "keywords": [],
@@ -41,7 +42,8 @@
         "youtubei.js": "^5.1.0"
     },
     "devDependencies": {
-        "prettier": "^2.8.4"
+        "prettier": "^2.8.4",
+        "jshint": "^2.13.6"
     },
     "engines": {
         "node": ">=18.x"

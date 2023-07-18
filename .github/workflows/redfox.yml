@@ -23,5 +23,7 @@ jobs:
                   cache: "npm"
             - run: |
                   npm ci
-                  node --check src/redfox/index.js
-                  node --check src/redfox/utils.js
+                  cd src/redfox
+                  node --check index.js
+                  node --check utils.js
+                  jshint index.js
