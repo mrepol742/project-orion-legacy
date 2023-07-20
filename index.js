@@ -7695,13 +7695,13 @@ function updateFont(message, id) {
     }
     if (typeof message === "string") {
         if (message == " " || message == "" || message == "@everyone") {
-            return removeMarkdown(message);
+            return message;
         }
         return removeMarkdown(maven(message));
     }
     let body = message.body;
     if (body == " " || body == "" || body === undefined || body == "@everyone") {
-        return removeMarkdown(message);
+        return message;
     }
     message.body = removeMarkdown(maven(body));
     if (!(message.mentions === undefined)) {
