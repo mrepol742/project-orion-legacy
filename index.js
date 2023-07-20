@@ -2344,6 +2344,7 @@ async function ai(api, event) {
             let filename = __dirname + "/cache/tts_" + getTimestamp() + ".mp3";
             downloadFile(url, filename).then((response) => {
                 let message = {
+                    body: " ",
                     attachment: fs.createReadStream(filename),
                 };
                 sendMessage(api, event, message);
@@ -8361,7 +8362,7 @@ function tellUser(user, group) {
             let dates = day.split("/");
             construct += calculateAge(new Date(dates[2], dates[0], dates[1])) + " years old. ";
         }
-        if (!(user.userName === undefined) && user.userName != "No data") {
+        if (!(user.userName === undefined) || user.userName != "No data") {
             construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
         }
         if (!(user.location === undefined)) {
@@ -8396,13 +8397,13 @@ function tellUser2(user, group) {
             let dates = day.split("/");
             construct += calculateAge(new Date(dates[2], dates[0], dates[1])) + " years old. ";
         }
-        if (!(user.userName === undefined)) {
+        if (!(user.userName === undefined) || user.userName != "No data") {
             construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
         }
-        if (!(user.location === undefined)) {
+        if (!(user.location === undefined) || user.location != "No data") {
             construct += getPronoun(user.gender) + " is currently living in " + user.location + ". ";
         }
-        if (!(user.bio === undefined)) {
+        if (!(user.bio === undefined) || user.bio != "No data") {
             construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
         }
     }
