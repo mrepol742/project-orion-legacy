@@ -3111,7 +3111,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
-    } else if (query == "pair") {
+    } else if (query == "rpair" || query == "pair") {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3119,7 +3119,12 @@ Hello %USER%, here is the current server snapshot as of ` +
             if (err) return utils.logged(err);
 
             let members = info.participantIDs.length;
-            let partner1 = info.participantIDs[Math.floor(Math.random() * members)];
+            let partner1 = 0;
+            if (query != "pair") {
+                partner1 = info.participantIDs[Math.floor(Math.random() * members)];
+            } else {
+                partner1 = event.senderID;
+            }
             let partner2 = info.participantIDs[Math.floor(Math.random() * members)];
             
             let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
