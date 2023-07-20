@@ -7790,7 +7790,7 @@ function caughtException(api, err) {
     let dd = String(today.getDate()).padStart(2, '0');
     let mm = String(today.getMonth() + 1).padStart(2, '0');
     let yyyy = today.getFullYear();
-    let fileName = mm + '/' + dd + '/' + yyyy + ".log";
+    let fileName = mm + dd + yyyy + ".log";
     if (fs.existsSync(__dirname + "/.log/" + fileName)) {
         fs.appendFile(__dirname + "/.log/" + fileName, getCrashLog(err) + "\n\n==============================\n\n", function (err) {
             if (err) return utils.logged(err);
