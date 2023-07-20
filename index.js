@@ -7786,18 +7786,30 @@ function getAppState(api) {
 function caughtException(api, err) {
     crashes++;
     utils.logged(err);
-    let d = new Date();
-    let fileName = "log_" + d.getFullYear() + "_" + d.getMonth() + "_" + d.getDay() + ".log";
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let yyyy = today.getFullYear();
+    let fileName = mm + '/' + dd + '/' + yyyy + ".log";
     if (fs.existsSync(__dirname + "/.log/" + fileName)) {
-        fs.appendFile(__dirname + "/.log/" + fileName, JSON.stringify(err) + "\n\n==============================\n\n", function (err) {
+        fs.appendFile(__dirname + "/.log/" + fileName, getCrashLog(err) + "\n\n==============================\n\n", function (err) {
             if (err) return utils.logged(err);
         });
     } else {
-        fs.writeFile(__dirname + "/.log/" + fileName, JSON.stringify(err) + "\n\n==============================\n\n", function (err) {
+        fs.writeFile(__dirname + "/.log/" + fileName, getCrashLog(err) + "\n\n==============================\n\n", function (err) {
             if (err) return utils.logged(err);
         });
     }
     clearLog();
+}
+
+function getCrashLog(err) {
+    if (typeof err === "string") {
+        return err;
+    } else if (!(err.stack === undefined)) {
+        return err.stack;
+    }
+    return JSON.stringify(err);
 }
 
 function task(func, time) {
