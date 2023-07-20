@@ -7729,7 +7729,7 @@ function removeTags(str) {
 
 async function downloadFile(fileUrl, outputLocationPath) {
     const writer = fs.createWriteStream(outputLocationPath);
-    return axios({
+    return await axios({
         method: "get",
         url: fileUrl,
         responseType: "stream",
@@ -7750,7 +7750,13 @@ async function downloadFile(fileUrl, outputLocationPath) {
                 });
             });
         })
-        .catch(function (error) {});
+        .catch(function (error) { 
+            utils.logged(error );
+            writer.on("close", () => {
+                writer.close();
+                reject(error);
+            });
+        });
 }
 
 async function searchimgr(api, event, filename) {

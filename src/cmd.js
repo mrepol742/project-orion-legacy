@@ -57,7 +57,7 @@ Hello %USER%, how can i assist you?
    ⦿ showerthoughts
    ⦿ lulcat [text]
    ⦿ gemoji [emoji]
-   ⦿ translate [text] to [language]
+   ⦿ translate [language] [reply]
    ⦿ wiki [text]
    ⦿ urlshort [url]
    ⦿ pickup
@@ -204,9 +204,8 @@ let help6 = `
    ⦿ ss [url]
    ⦿ nslookup [url]
    ⦿ header [url]
-
-
-
+   ⦿ pair
+   ⦿ checkPicture
 
 
    ⦿ conan
