@@ -7730,7 +7730,7 @@ function removeTags(str) {
 
 async function downloadFile(fileUrl, outputLocationPath) {
     const writer = fs.createWriteStream(outputLocationPath);
-    return await axios({
+    return axios({
         method: "get",
         url: fileUrl,
         responseType: "stream",
