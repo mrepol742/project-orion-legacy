@@ -7806,7 +7806,7 @@ function caughtException(api, err) {
 function getCrashLog(err) {
     if (typeof err === "string") {
         return err;
-    } else if (!(err.stack === undefined)) {
+    } else if (!(err === undefined) && !(err.stack === undefined)) {
         return err.stack;
     }
     return JSON.stringify(err);
