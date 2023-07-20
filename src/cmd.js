@@ -205,8 +205,8 @@ let help6 = `
    ⦿ nslookup [url]
    ⦿ header [url]
    ⦿ pair
+   ⦿ rpair
    ⦿ checkPicture
-
 
    ⦿ conan
    ⦿ summ [text]
