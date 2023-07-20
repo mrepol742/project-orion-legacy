@@ -5009,25 +5009,26 @@ Hello %USER%, here is the current server snapshot as of ` +
                     if (!(response.username === undefined)) {
                         construct += "@" + response.username;
                     }
-                    if (!(response.gender === undefined) && response.gender != "Không có dữ liệu!" && response.gender != "Không công khai") {
+                    construct += "\n\n";
+                    if (!(response.gender === undefined)) {
                         construct += "\n\n    ⦿ Gender: " + response.gender;
                     }
-                    if (!(response.love === undefined) && response.relationship_status != "Không có dữ liệu!" && response.relationship_status != "Không công khai" && !(response.love["name"] === undefined)) {
+                    if (!(response.love === undefined)) {
                         construct += "\n    ⦿ Lover: " + response.love["name"];
                     }
-                    if (!(response.birthday === undefined) && response.birthday != "Đã kết hôn" && response.birthday != "Không công khai") {
+                    if (!(response.birthday === undefined)) {
                         construct += "\n    ⦿ Birthdate: " + response.birthday;
                     }
-                    if (!(response.location === undefined) && response.location != "Đã kết hôn" && response.location != "Không công khai") {
+                    if (!(response.location === undefined)) {
                         construct += "\n    ⦿ Location: " + response.location;
                     }
-                    if (!(response.hometown === undefined) && response.hometown != "Đã kết hôn" && response.hometown != "Không công khai") {
+                    if (!(response.hometown === undefined)) {
                         construct += "\n    ⦿ Hometown: " + response.hometown;
                     }
-                    if (!(response.follower === undefined) && response.follower != "Đã kết hôn" && response.follower != "Không công khai") {
+                    if (!(response.follower === undefined)) {
                         construct += "\n    ⦿ Follower: " + numberWithCommas(response.follower);
                     }
-                    if (!(response.work === undefined) && response.work != "Đã kết hôn" && response.work != "Không công khai") {
+                    if (!(response.work === undefined)) {
                         construct += "\n    ⦿ Work: ";
                         let i;
                         for (i = 0; i < response.work.length; i++) {
@@ -5037,23 +5038,34 @@ Hello %USER%, here is the current server snapshot as of ` +
                             }
                         }
                     }
-                    if (!(response.about === undefined) && response.about != "Đã kết hôn" && response.about != "Không công khai") {
+                    if (!(response.about === undefined)) {
                         construct += "\n\n   " + response.about;
                     }
-                    if (!(response.qoutes === undefined) && response.quotes != "Đã kết hôn" && response.quotes != "Không công khai") {
+                    if (!(response.qoutes === undefined)) {
                         construct += "\n" + response.quotes;
                     }
                     if (!(response.created_time === undefined)) {
-                    construct += "\n\nThis account was created on " + response.created_time;
+                    construct += "\n\nThis account was created on " + (response.created_time).replace("||", " at ");
                     }
+                    construct = construct.replaceAll("Không công khai", "Not public").replaceAll("Không có dữ liệu!", "No data");
                     let time = getTimestamp();
                     utils.logged(construct);
                     utils.logged(response);
                     let filename = __dirname + "/cache/stalk_" + time + ".png";
-                    downloadFile(response.avatar, filename).then((response) => {
+                    downloadFile(response.avatar, filename).then((response23) => {
                         let message = {
                             body: construct,
                             attachment: fs.createReadStream(filename),
+                            mentions: [
+                                {
+                                    tag: response.love["name"] ,
+                                    id: response.love["id"],
+                                },
+                                {
+                                    tag: response.name,
+                                    id: response.uid,
+                                }
+                            ]
                         };
                         sendMessage(api, event, message);
                         unLink(filename);
