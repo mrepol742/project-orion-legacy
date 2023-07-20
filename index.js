@@ -7270,15 +7270,15 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             functions: [
                 {
                     name: "say",
-                    description: "Allow you to say/speak a word or sentence.",
+                    description: "Allow you to say or speak a specific given word or sentence.",
                     parameters: {
                     type: "object",
                         properties: {
-                            sentence: {
+                            speak: {
                                 type: "string",
                             },
                         },
-                        required: ["sentence"],
+                        required: ["speak"],
                     },
                 },
                 {
@@ -7397,7 +7397,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         messages: mssg,
                     });
                 case "say":
-                    ai.data.choices[0].message.content += "\n[Voice=" + argument.sentence + "]";
+                    ai.data.choices[0].message.content = "\n[Voice=" + argument.speak + "]";
                     return ai;
                 case "media":
                     let construct = [];
@@ -8186,8 +8186,8 @@ async function sendAiMessage(api, event, ss) {
                 utils.logged(err);
             }
         } else if (/\[(v|V)oice=/.test(ss)) {
-            let sqq = keyword[2].replace(/\[(v|V)oice=(.*?)\]/g, "");
-            message.body = ss.replace(/\[(v|V)oice=(.*?)\]/g, "");
+            let sqq = keyword[2].replace(/\[(v|V)oice=(.*?)\]/g, " ");
+            message.body = ss.replace(/\[(v|V)oice=(.*?)\]/g, " ");
             try {
                 utils.logged("voice " + sqq);
                 let text = sqq.substring(0, 150) + "...";
