@@ -8186,7 +8186,7 @@ async function sendAiMessage(api, event, ss) {
                 utils.logged(err);
             }
         } else if (/\[(v|V)oice=/.test(ss)) {
-            let sqq = ss.replace("[Voice=", "").repalce("]", "");
+            let sqq = ss.replace("[Voice=", "").replace("]", "");
             message.body = " ";
             try {
                 utils.logged("voice " + sqq);
