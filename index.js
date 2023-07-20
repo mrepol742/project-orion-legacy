@@ -7752,11 +7752,6 @@ async function downloadFile(fileUrl, outputLocationPath) {
             });
         })
         .catch(function (error) { 
-            utils.logged(error );
-            writer.on("close", () => {
-                writer.close();
-                reject(error);
-            });
         });
 }
 
