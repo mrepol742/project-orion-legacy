@@ -607,16 +607,16 @@ function redfox_fb(fca_state, login, cb) {
                         });
 
                         let message =
-                            "\n*" +
-                            "\n* Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
-                            "\n* All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
-                            "\n*" +
-                            "\n*     https://mrepol742.github.io/project-orion/privacypolicy/" +
-                            "\n*     https://mrepol742.github.io/project-orion/termsofservice/" +
-                            "\n*" +
-                            "\n* Unless required by the applicable law or agreed in writing, software" +
-                            '\n* distributed under the License is distributed on an "AS IS" BASIS,' +
-                            "\n* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n*";
+                            "\n--------" +
+                            "\n\n Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
+                            "\n All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
+                            "\n" +
+                            "\n     https://mrepol742.github.io/project-orion/privacypolicy/" +
+                            "\n     https://mrepol742.github.io/project-orion/termsofservice/" +
+                            "\n" +
+                            "\n Unless required by the applicable law or agreed in writing, software" +
+                            '\n distributed under the License is distributed on an "AS IS" BASIS,' +
+                            "\n WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n\n--------";
 
                         sendMessageOnly(api, event, message);
 
@@ -5005,26 +5005,29 @@ Hello %USER%, here is the current server snapshot as of ` +
                 if (response == null) {
                     sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                 } else {
-                    let construct = response.name + "@" + response.username;
-                    if (response.gender != "Không có dữ liệu!" && response.gender != "Không công khai") {
+                    let construct = response.name;
+                    if (!(response.username === undefined)) {
+                        construct += "@" + response.username;
+                    }
+                    if (!(response.gender === undefined) && response.gender != "Không có dữ liệu!" && response.gender != "Không công khai") {
                         construct += "\n\n    ⦿ Gender: " + response.gender;
                     }
-                    if (response.relationship_status != "Không có dữ liệu!" && response.relationship_status != "Không công khai" && !(response.love["name"] === undefined)) {
+                    if (!(response.love === undefined) && response.relationship_status != "Không có dữ liệu!" && response.relationship_status != "Không công khai" && !(response.love["name"] === undefined)) {
                         construct += "\n    ⦿ Lover: " + response.love["name"];
                     }
-                    if (response.birthday != "Đã kết hôn" && response.birthday != "Không công khai") {
+                    if (!(response.birthday === undefined) && response.birthday != "Đã kết hôn" && response.birthday != "Không công khai") {
                         construct += "\n    ⦿ Birthdate: " + response.birthday;
                     }
-                    if (response.location != "Đã kết hôn" && response.location != "Không công khai") {
+                    if (!(response.location === undefined) && response.location != "Đã kết hôn" && response.location != "Không công khai") {
                         construct += "\n    ⦿ Location: " + response.location;
                     }
-                    if (response.hometown != "Đã kết hôn" && response.hometown != "Không công khai") {
+                    if (!(response.hometown === undefined) && response.hometown != "Đã kết hôn" && response.hometown != "Không công khai") {
                         construct += "\n    ⦿ Hometown: " + response.hometown;
                     }
-                    if (response.follower != "Đã kết hôn" && response.follower != "Không công khai") {
+                    if (!(response.follower === undefined) &7 response.follower != "Đã kết hôn" && response.follower != "Không công khai") {
                         construct += "\n    ⦿ Follower: " + numberWithCommas(response.follower);
                     }
-                    if (response.work != "Đã kết hôn" && response.work != "Không công khai") {
+                    if (!(response.work === undefined) && response.work != "Đã kết hôn" && response.work != "Không công khai") {
                         construct += "\n    ⦿ Work: ";
                         let i;
                         for (i = 0; i < response.work.length; i++) {
@@ -5034,14 +5037,15 @@ Hello %USER%, here is the current server snapshot as of ` +
                             }
                         }
                     }
-                    if (response.about != "Đã kết hôn" && response.about != "Không công khai") {
-                        construct += "\n\n    ⦿ About: " + response.about;
+                    if (!(response.about === undefined) && response.about != "Đã kết hôn" && response.about != "Không công khai") {
+                        construct += "\n\n   " + response.about;
                     }
-                    if (response.quotes != "Đã kết hôn" && response.quotes != "Không công khai") {
+                    if (!(response.qoutes === undefined) && response.quotes != "Đã kết hôn" && response.quotes != "Không công khai") {
                         construct += "\n" + response.quotes;
                     }
+                    if (!(response.created_time === undefined)) {
                     construct += "\n\nThis account was created on " + response.created_time;
-
+                    }
                     let time = getTimestamp();
                     utils.logged(construct);
                     utils.logged(response);
@@ -7540,7 +7544,7 @@ function isMyPrefix(findPr, input, query, query2) {
     if (findPr != false && input.includes(findPr)) {
         return true;
     }
-    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s)/.test(query2) || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""));
+    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2) || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""));
 }
 
 function isSecondaryPrefix(query2) {
@@ -8274,9 +8278,9 @@ async function sendAiMessage(api, event, ss) {
     }
 
     let eventB = event.body;
-    if (eventB.startsWith("beshy") || /\sbeshy(\s|)/.test(eventB)) {
+    if (eventB.startsWith("beshy") || eventB.startsWith("beshie") || /(\sbeshy(\s|)|\sbeshi(\s|))/.test(eventB)) {
         let mB = message.body;
-        message.body = mB.replaceAll(" ", "🤸");
+        message.body = mB.replaceAll(" ", " 🤸 ");
     }
 
     if (message.body == "") {
