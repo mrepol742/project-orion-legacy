@@ -5024,7 +5024,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     if (!(response.hometown === undefined) && response.hometown != "Đã kết hôn" && response.hometown != "Không công khai") {
                         construct += "\n    ⦿ Hometown: " + response.hometown;
                     }
-                    if (!(response.follower === undefined) &7 response.follower != "Đã kết hôn" && response.follower != "Không công khai") {
+                    if (!(response.follower === undefined) && response.follower != "Đã kết hôn" && response.follower != "Không công khai") {
                         construct += "\n    ⦿ Follower: " + numberWithCommas(response.follower);
                     }
                     if (!(response.work === undefined) && response.work != "Đã kết hôn" && response.work != "Không công khai") {
