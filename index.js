@@ -5007,13 +5007,13 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     let construct = response.name;
                     if (!(response.username === undefined)) {
-                        construct += "@" + response.username;
+                        construct += " @" + response.username;
                     }
-                    construct += "\n\n";
+                    construct += "\n";
                     if (!(response.gender === undefined)) {
                         construct += "\n\n    ⦿ Gender: " + response.gender;
                     }
-                    if (!(response.love === undefined)) {
+                    if (!(response.love["name"] === undefined)) {
                         construct += "\n    ⦿ Lover: " + response.love["name"];
                     }
                     if (!(response.birthday === undefined)) {
@@ -5058,15 +5058,17 @@ Hello %USER%, here is the current server snapshot as of ` +
                             attachment: fs.createReadStream(filename),
                             mentions: [
                                 {
-                                    tag: response.love["name"] ,
-                                    id: response.love["id"],
-                                },
-                                {
                                     tag: response.name,
                                     id: response.uid,
                                 }
                             ]
                         };
+                        if (!(response.love["name"] === undefined)) {
+                        message.mentions.push({
+                            tag: response.love["name"] ,
+                            id: response.love["id"],
+                        })
+                    }
                         sendMessage(api, event, message);
                         unLink(filename);
                     });
