@@ -7269,6 +7269,19 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             messages: mssg,
             functions: [
                 {
+                    name: "say",
+                    description: "Allow you to say/speak a word or sentence.",
+                    parameters: {
+                    type: "object",
+                        properties: {
+                            sentence: {
+                                type: "string",
+                            },
+                        },
+                        required: ["sentence"],
+                    },
+                },
+                {
                     name: "media",
                     description: "Gives capability to show and display multimedia formats.",
                     parameters: {
@@ -7277,7 +7290,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                             name: {
                                 type: "string",
                             },
-                            format: { type: "string", enum: ["music", "video", "picture", "createpicture", "say"] },
+                            format: { type: "string", enum: ["music", "video", "picture", "createpicture"] },
                         },
                         required: ["name", "format"],
                     },
@@ -7383,6 +7396,9 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         model: "gpt-3.5-turbo-0613",
                         messages: mssg,
                     });
+                case "say":
+                    ai.data.choices[0].message.content += "\n[Voice=" + argument.sentence + "]";
+                    return ai;
                 case "media":
                     let construct = [];
                     switch (argument.format) {
@@ -7410,10 +7426,6 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                                 content: "generate a 2 sentence response using this ` here is generated/visualized image of " + argument.name + "`",
                             });
                             break;
-                    }
-                    if (argument.format == "say") {
-                        ai.data.choices[0].message.content += "[Voice=" + argument.name + "]";
-                        return ai;
                     }
                     let ai222 = await openai.createChatCompletion({
                         model: "gpt-3.5-turbo-0613",
