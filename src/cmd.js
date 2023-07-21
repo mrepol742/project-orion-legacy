@@ -33,6 +33,7 @@ Hello %USER%, how are you?
    ⦿ searchimg [text]
    ⦿ searchimg --reverse
    ⦿ createimg [text]
+   ⦿ mal [text]
    ⦿ run [lang] [reply]
        Java, Python, C, C++,
        JavaScript, PHP and Dragon
@@ -179,17 +180,12 @@ Here:
        nom, bite, glomp, slap,
        kill, kick, happy, wink,
        poke, dance and cringe
-   ⦿ animeinfo [title]
-   ⦿ animesearch [text]
-   ⦿ animegenre [genre]
-       josei, seinen, mecha, shoujo,
-       action, harem, comedy, adventure,
-       yuri, isekai, drama, romance,
-       fantasy, horror, game, mystery,
-       school, yaoi, sports, police etc.
-   ⦿ animetop
-   ⦿ animetop --movie
    ⦿ hanime [category]
+   ⦿ malga [text]
+   ⦿ malne [text]
+
+
+
 
 How can i assist you further %USER%?
 `;

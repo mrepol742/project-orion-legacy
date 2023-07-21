@@ -212,8 +212,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 let accounts = [];
-let threadRegistry = {};
-let functionRegistry = {};
+threadRegistrythreadRegistry
 let rootAccess = "100071743848974";
 
 clearLog();
@@ -304,8 +303,8 @@ function redfox_fb(fca_state, login, cb) {
                     delete threadRegistry[tR];
                 }
             }
-            if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
-                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+            if (fs.existsSync(__dirname + "/data/cookies/" + login)) {
+                fs.unlinkSync(__dirname + "/data/cookies/" + login, (err) => {
                     if (err) return utils.logged(err);
                 });
                 if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
@@ -323,7 +322,7 @@ function redfox_fb(fca_state, login, cb) {
         process.on("exit", (code) => {
             if (accounts.includes(api.getCurrentUserID())) {
                 console.log("");
-                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
+                fs.writeFileSync(__dirname + "/data/cookies/" + login, getAppState(api), "utf8");
                 utils.logged("login_state " + login + " saved");
                 saveState();
                 utils.logged("save_state " + login);
@@ -341,7 +340,7 @@ function redfox_fb(fca_state, login, cb) {
 
         task(
             function () {
-                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
+                fs.writeFileSync(__dirname + "/data/cookies/" + login, getAppState(api), "utf8");
                 fb_stateD = utils.getCurrentTime();
                 utils.logged("cookie_state " + login + " synchronized");
             },
@@ -3119,8 +3118,8 @@ Hello %USER%, here is the current server snapshot as of ` +
             if (err) return utils.logged(err);
 
             let members = info.participantIDs.length;
-            let partner1 = 0;
-            if (query != "pair") {
+            var partner1 = 0;
+            if (query == "rpair") {
                 partner1 = info.participantIDs[Math.floor(Math.random() * members)];
             } else {
                 partner1 = event.senderID;
@@ -5245,184 +5244,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 }
             });
         }
-    } else if (query == "animetopmovie") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://web-production-3aa9.up.railway.app/anime-movies").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)] + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                let list = "";
-                let i;
-                let img;
-                let isRep = true;
-                for (i = 0; i < response.length; i++) {
-                    list += "\n" + (i + 1) + ". " + response[i].animeTitle + " " + response[i].releasedDate;
-                    if (isRep) {
-                        img = response[i].animeImg;
-                        isRep = false;
-                    }
-                }
-                let filename = __dirname + "/cache/animetopmovie_" + getTimestamp() + ".png";
-                downloadFile(encodeURI(img), filename).then((response) => {
-                    let message = {
-                        body: "Top Popular Anime Movies\n" + list,
-                        attachment: fs.createReadStream(filename),
-                    };
-                    sendMessage(api, event, message);
-                    unLink(filename);
-                });
-            }
-        });
-    } else if (query == "animetop") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://web-production-3aa9.up.railway.app/top-airing").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)] + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                let list = "";
-                let i;
-                let img;
-                let isRep = true;
-                for (i = 0; i < response.length; i++) {
-                    list += "\n" + (i + 1) + ". " + response[i].animeTitle;
-                    if (isRep) {
-                        img = response[i].animeImg;
-                        isRep = false;
-                    }
-                }
-                let filename = __dirname + "/cache/animetop_" + getTimestamp() + ".png";
-                downloadFile(encodeURI(img), filename).then((response) => {
-                    let message = {
-                        body: "Top Popular Anime Series\n" + list,
-                        attachment: fs.createReadStream(filename),
-                    };
-                    sendMessage(api, event, message);
-                    unLink(filename);
-                });
-            }
-        });
-    } else if (query.startsWith("animegenre")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(
-                api,
-                event,
-                "Opps! I didnt get it. You should try using animegenre genre instead.\n\nCategories:\njosei, seinen, mecha, shoujo,\naction, harem, comedy, adventure,\nyuri, isekai, drama, romance,\nfantasy, horror, game, mystery,\nschool, yaoi, sports, police etc." +
-                    "\n\n" +
-                    example[Math.floor(Math.random() * example.length)] +
-                    "\nanimegenre action"
-            );
-        } else {
-            data.shift();
-            let name = data.join(" ");
-            getResponseData("https://web-production-3aa9.up.railway.app/genre/" + name).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Invalid genre "' + name + '".\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
-                } else {
-                    let list = "";
-                    let i;
-                    let img;
-                    let isRep = true;
-                    for (i = 0; i < response.length; i++) {
-                        list += "\n" + (i + 1) + ". " + response[i].animeTitle + " " + response[i].releasedDate;
-                        if (isRep) {
-                            img = response[i].animeImg;
-                            isRep = false;
-                        }
-                    }
-                    let filename = __dirname + "/cache/animegenre_" + getTimestamp() + ".png";
-                    downloadFile(encodeURI(img), filename).then((response) => {
-                        let message = {
-                            body: list,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
-            });
-        }
-    } else if (query.startsWith("animesearch")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using animesearch text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimesearch Detective Conan");
-        } else {
-            data.shift();
-            let name = data.join(" ");
-            getResponseData("https://web-production-3aa9.up.railway.app/search?keyw=" + name).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately there was no search output found for "' + name + '".\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
-                } else {
-                    let list = "";
-                    let i;
-                    let img;
-                    let isRep = true;
-                    for (i = 0; i < response.length; i++) {
-                        list += "\n" + (i + 1) + ". " + response[i].animeTitle;
-                        if (isRep) {
-                            img = response[i].animeImg;
-                            isRep = false;
-                        }
-                    }
-                    let filename = __dirname + "/cache/animesearch_" + getTimestamp() + ".png";
-                    downloadFile(encodeURI(img), filename).then((response) => {
-                        let message = {
-                            body: "Here are the results:\n" + list,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
-            });
-        }
-    } else if (query.startsWith("animeinfo")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using animeinfo text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nanimeinfo Detective Conan");
-        } else {
-            data.shift();
-            let name = data.join(" ").replaceAll(" ", "-");
-            getResponseData("https://web-production-3aa9.up.railway.app/anime-details/" + name).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately anime "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
-                } else {
-                    let title = response.animeTitle;
-                    let otherT = response.otherNames;
-                    let year = response.releasedDate;
-                    let type = response.type;
-                    let status = response.status;
-                    let animeImg = response.animeImg;
-                    let genres = response.genres;
-                    let synopsis = response.synopsis;
-                    let ep = response.totalEpisodes;
-                    let time = getTimestamp();
-                    let filename = __dirname + "/cache/animeinfo_" + time + ".png";
-                    downloadFile(encodeURI(animeImg), filename).then((response) => {
-                        let message = {
-                            body: "⦿ Title: " + title + " (" + otherT + ") " + year + "\n⦿ Genres: " + genres + "\n⦿ Type: " + type + "\n⦿ Status: " + status + "\n⦿ Episodes: " + ep + "\n\n" + synopsis,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
-            });
-        }
-    } else if (query2.startsWith("anime ")) {
+    } else if (query.startsWith("anime")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -7587,6 +7409,8 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
+    fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
+    fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
 }
 
 function getIdFromUrl(url) {
