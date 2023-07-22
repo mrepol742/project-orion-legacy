@@ -8302,21 +8302,21 @@ function tellUser(user, group) {
 
 function tellUser2(user, group) {
     let construct = "";
-    if (user.firstName != undefined) {
+    if (!(user.name === undefined) && user.name != "No data") {
         construct += "The user name is " + user.name + ". ";
-        if (!(user.birthday === undefined)) {
+        if (!(user.birthday === undefined) && user.birthday != "No data") {
             construct += getPronoun1(user.gender) + " birthday is on " + user.birthday + " so " + getPronoun(user.gender).toLowerCase() + " is ";
             let day = user.birthday;
             let dates = day.split("/");
             construct += calculateAge(new Date(dates[2], dates[0], dates[1])) + " years old. ";
         }
-        if (!(user.userName === undefined) || user.userName != "No data") {
+        if (!(user.userName === undefined) && user.userName != "No data") {
             construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
         }
-        if (!(user.location === undefined) || user.location != "No data") {
+        if (!(user.location === undefined) && user.location != "No data") {
             construct += getPronoun(user.gender) + " is currently living in " + user.location + ". ";
         }
-        if (!(user.bio === undefined) || user.bio != "No data") {
+        if (!(user.bio === undefined) && user.bio != "No data") {
             construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
         }
     }
