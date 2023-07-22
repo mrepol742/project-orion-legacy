@@ -1,3 +1,7 @@
+/*jshint esversion: 9 */
+/*jshint -W097 */
+/*jshint -W117 */
+
 /*
  *
  * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.

@@ -1,10 +1,13 @@
 /*jshint esversion: 9 */
 /*jshint -W018 */
 /*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
 
 const redfox = require("./src/redfox");
 const utils = require("./src/redfox/utils.js");
-const removeMarkdown = require("./src/removeMarkdown.js");
+const removeMarkdown = require("./src/remmd.js");
 const fs = require("fs");
 
 let a = `
@@ -66,6 +69,7 @@ const axios = require("axios");
 const path = require("path");
 const crypto = require("crypto");
 const exec = require("child_process").exec;
+const cheerio = require("cheerio");
 const { Configuration, OpenAIApi } = require("openai");
 const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } = require("./src/arrays.js");
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./src/cmd.js");
@@ -212,7 +216,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 let accounts = [];
-threadRegistrythreadRegistry
+let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/src/cmd.js"));
 let rootAccess = "100071743848974";
 
 clearLog();
@@ -245,7 +249,7 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
                             },
                             login
                         );
-                    } catch (err) {
+                    } catch (error) {
                         utils.logged("invalid_decryption_key " + login);
                     }
                 }
@@ -320,7 +324,6 @@ function redfox_fb(fca_state, login, cb) {
         }
 
         process.on("exit", (code) => {
-            if (accounts.includes(api.getCurrentUserID())) {
                 console.log("");
                 fs.writeFileSync(__dirname + "/data/cookies/" + login, getAppState(api), "utf8");
                 utils.logged("login_state " + login + " saved");
@@ -335,7 +338,6 @@ function redfox_fb(fca_state, login, cb) {
             utils.logged("process_exit goodbye :( " + code);
             utils.logged("project_orion offline");
             */
-            }
         });
 
         task(
@@ -368,7 +370,7 @@ function redfox_fb(fca_state, login, cb) {
                                     aa = "there";
                                 }
 
-                                api.sendMessage("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, (err, messageInfo) => {
+                                api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
                                     if (err) return utils.logged(err);
                                     if (!(userPresence[login] === undefined)) {
                                         for (root0 in userPresence[login]) {
@@ -403,7 +405,7 @@ function redfox_fb(fca_state, login, cb) {
         let isAppState = true;
 
         if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled && isMyId(login)) {
-            api.sendMessage("Successfully restarted", settings.restart[0], settings.restart[1]);
+            api.sendMessage(updateFont("Successfully restarted", settings.restart[0]), settings.restart[0], settings.restart[1]);
             settings.restart = [];
             isCalled = false;
         }
@@ -1479,7 +1481,7 @@ async function ai22(api, event, query, query2) {
                         let login = appsss[item].value;
                         if (accounts.includes(login)) {
                             api.sendMessage(
-                                "The account uid " + login + " is already connected to the main server.",
+                                updateFont("The account uid " + login + " is already connected to the main server.", login),
                                 event.threadID,
                                 (err, messageInfo) => {
                                     if (err) utils.logged(err);
@@ -1498,7 +1500,7 @@ async function ai22(api, event, query, query2) {
                                 function (isLogin) {
                                     if (isLogin) {
                                         api.sendMessage(
-                                            "Failed to Login " + login,
+                                            updateFont("Failed to Login " + login, login),
                                             event.threadID,
                                             (err, messageInfo) => {
                                                 if (err) utils.logged(err);
@@ -1510,7 +1512,7 @@ async function ai22(api, event, query, query2) {
                                         let filename = __dirname + "/cache/login_" + getTimestamp() + ".jpg";
                                         downloadFile(url, filename).then((response) => {
                                             let message = {
-                                                body: "Account " + login + " is now connected to the main server.",
+                                                body: updateFont("Account " + login + " is now connected to the main server.", login),
                                                 attachment: fs.createReadStream(filename),
                                             };
                                             api.sendMessage(
@@ -1618,7 +1620,7 @@ async function ai22(api, event, query, query2) {
                         sendMessage(api, event, "Program died. Execution took too long.");
                     } else {
                         api.sendMessage(
-                            data,
+                            updateFont(data, event.senderID),
                             event.threadID,
                             (err, messageInfo) => {
                                 if (err) utils.logged(err);
@@ -2894,7 +2896,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
-                    for await (var chunk of Utils.streamToIterable(stream)) {
+                    for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
@@ -3789,7 +3791,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     utils.logged(err);
                     sendMessage(api, event, "Failed to accept request! Have you send a message first?");
                 } else {
-                    api.sendMessage("Hello World", event.senderID, (err, messageInfo) => {
+                    api.sendMessage(updateFont("Hello World", event.senderID), event.senderID, (err, messageInfo) => {
                         if (err) utils.logged(err);
                     });
                     sendMessage(api, event, "Please check your inbox.");
@@ -3816,7 +3818,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                         utils.logged(err);
                         sendMessage(api, event, "Failed to accept request! Have you send a message first?");
                     } else {
-                        api.sendMessage("Hello World", num, (err, messageInfo) => {
+                        api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
                             if (err) utils.logged(err);
                         });
                         sendMessage(api, event, "Please check your inbox.");
@@ -3891,6 +3893,58 @@ Hello %USER%, here is the current server snapshot as of ` +
                     sendMessage(api, event, "Temperature is now set to " + num);
                 }
             }
+        }
+    } else if (/(^malga$|^malga\s|^malne$|^malne\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mal text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmal detective conan");
+        } else {
+            data.shift();
+
+        }
+    } else if (/(^mal$|^mal\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mal text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmal detective conan");
+        } else {
+            data.shift();
+            axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.join(" ")).then(response => {
+let mal = cheerio.load(response.data);
+
+const findSearchResults = mal("a");
+for (let i = 0; i < findSearchResults.length; i++) {
+    if (String(mal(findSearchResults[i]).attr("class")).includes("hoverinfo_trigger")) {
+        let malurl = mal(findSearchResults[i]).attr("href");
+        axios.get(malurl).then(response1 => {
+            let mal1 = cheerio.load(response1.data);
+            
+            let construct = "Title: " + formatMalRes(mal1(".title-name"), false);
+            construct += formatMalRes(mal1(".spaceit_pad"), false).replace(/\s+/g, ' ')
+            .replaceAll("__new_tab_here__", "\n")
+
+            .replace(/\%delete_span\%(.*?)\%\^delete_span\%/g, "")
+            .replace(/\%delete_span\%/g, "");
+        
+            construct += "\n\n" + formatMalRes(mal1("[itemprop=description]"), true).replace(/\s+/g, ' ')
+            .replaceAll("__new_tab_here__", "\n");
+
+            let message = {
+                body: construct,
+                url: malurl
+            };
+            sendMessage(api, event, message);
+
+        });
+        break;
+    }
+}
+});
         }
     } else if (/(^setfrequencypenalty$|^setfrequencypenalty\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
@@ -5071,7 +5125,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                         message.mentions.push({
                             tag: response.love["name"] ,
                             id: response.love["id"],
-                        })
+                        });
                     }
                         sendMessage(api, event, message);
                         unLink(filename);
@@ -6132,8 +6186,12 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
 }
 
 function sendMessageError(api, message, thread_id, message_id, id) {
+    let messageA = {
+        body: updateFont(message, id),
+        url: "https://github.com/prj-orion/issues"
+    };
     api.sendMessage(
-        updateFont(message, id),
+        messageA,
         thread_id,
         (err, messageInfo) => {
             if (err) utils.logged(err);
@@ -7337,6 +7395,7 @@ function getNewComplextion(complextion) {
     return complextion.replace("003", "002");
 }
 
+// TODO check
 async function sendMessageToAll(api, event) {
     let message = event.messageReply.body;
     let time = getTimestamp();
@@ -8429,4 +8488,29 @@ function getNameRan() {
         return "You must include the user first name on response";
     }
     return "You must include the user last name on response";
+}
+
+function formatMalRes(str, bn) {
+    if (str === null || str === "") {
+        return false;
+    } else {
+        str = str.toString();
+    }
+    str = str
+    .replaceAll("<small>", "%delete_span%").replaceAll("</small>", "%^delete_span%")
+    .replaceAll("<span itemprop=\"genre\" style=\"display: none\">", "%delete_span%")
+    .replaceAll("</span><a href=\"/anime/genre/", "%^delete_span%<a href=\"/anime/genre/")
+    .replaceAll("<span", "__new_tab_here__<span");
+
+    if (bn) {
+        str = str.replaceAll("<br", "__new_tab_here__<br");
+    }
+    return str.replace(/(<([^>]+)>)/gi, "");
+}
+
+function animeMM(str) {
+    if (str == "manga") {
+        return "hoverinfo_trigger fw-b";
+    }
+    return "hoverinfo_trigger fw-b fl-l";
 }

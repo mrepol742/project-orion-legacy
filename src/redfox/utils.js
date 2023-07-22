@@ -1315,6 +1315,12 @@ function decrypt(text, key, iv) {
     return decrypted.toString();
 }
 
+function isNumeric(str) {
+    if (typeof str != "string") return false
+    return !isNaN(str) &&
+           !isNaN(parseFloat(str))
+  }
+
 module.exports = {
     isReadableStream,
     get,
@@ -1359,6 +1365,7 @@ module.exports = {
     getProjectTotalSize,
     getCPULoad,
     isBlockedSentence,
+    isNumeric,
     encrypt,
     decrypt,
 };

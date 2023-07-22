@@ -7,7 +7,8 @@
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
         "start": "clear && while [ true ]; do node index.js ; done",
-        "test": "clear && node --inspect index.js",
+        "test": "clear && jshint index.js",
+        "check": "clear && node --check index.js",
         "jshint": "jshint index.js",
         "prettier": "prettier ./ --write"
     },

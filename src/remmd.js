@@ -37,7 +37,7 @@ module.exports = function(md, options) {
       }
       output = output
       // Remove HTML tags
-        .replace(/<[^>]*>/g, '')
+        .replace(/<[^>]*>/g, '');
   
       var htmlReplaceRegex = new RegExp('<[^>]*>', 'g');
       if (options.htmlTagsToSkip.length > 0) {

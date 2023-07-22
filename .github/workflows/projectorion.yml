@@ -24,5 +24,11 @@ jobs:
             - run: |
                   npm ci
                   node --check index.js
-                  node --check src/arrays.js
-                  node --check src/cmd.js
+                  jshint index.js
+                  cd src
+                  node --check arrays.js
+                  node --check cmd.js
+                  node --check remmd.js
+                  jshint arrays.js
+                  jshint cmd.js
+                  jshint remmd.js

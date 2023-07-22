@@ -2,36 +2,35 @@ const cheerio = require("cheerio")
 const axios = require("axios");
 const fs = require("fs");
 
-//axios.get("https://myanimelist.net/search/all?cat=all&q=detective%20conan").then(response => {
-let mal = cheerio.load(fs.readFileSync(__dirname + "/mal.html", 'UTF-8'));
-mal.html();
+axios.get("https://myanimelist.net/search/all?cat=all&q=detective%20conan").then(response => {
+let mal = cheerio.load(response.data);
 
 const findSearchResults = mal("a");
 for (let i = 0; i < findSearchResults.length; i++) {
     if (String(mal(findSearchResults[i]).attr("class")).includes("hoverinfo_trigger")) {
         console.log("mal_found " + mal(findSearchResults[i]).attr("href"))
-        //axios.get(mal(findSearchResults[i]).attr("href")).then(response1 => {
-            let mal1 = cheerio.load(fs.readFileSync(__dirname + "/res.html", 'UTF-8'));
+        axios.get(mal(findSearchResults[i]).attr("href")).then(response1 => {
+            let mal1 = cheerio.load(response1.data);
             
-            let construct = "Title: " + removeTags(mal1(".title-name"), false);
-            construct += removeTags(mal1(".spaceit_pad"), false).replace(/\s+/g, ' ')
+            let construct = "Title: " + formatMalRes(mal1(".title-name"), false);
+            construct += formatMalRes(mal1(".spaceit_pad"), false).replace(/\s+/g, ' ')
             .replaceAll("__new_tab_here__", "\n")
 
             .replace(/\%delete_span\%(.*?)\%\^delete_span\%/g, "")
             .replace(/\%delete_span\%/g, "")
         
-            construct += "\n\n" + removeTags(mal1("[itemprop=description]"), true).replace(/\s+/g, ' ')
+            construct += "\n\n" + formatMalRes(mal1("[itemprop=description]"), true).replace(/\s+/g, ' ')
             .replaceAll("__new_tab_here__", "\n");
 
             console.log(construct);
 
-        //});
+        });
         break;
     }
 }
-//});
+});
 
-function removeTags(str, bn) {
+function formatMalRes(str, bn) {
     if (str === null || str === "") {
         return false;
     } else {
