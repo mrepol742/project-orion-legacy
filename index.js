@@ -216,7 +216,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 let accounts = [];
-let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/src/cmd.js"));
+let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.js"));
 let rootAccess = "100071743848974";
 
 clearLog();
