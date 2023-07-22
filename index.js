@@ -217,6 +217,7 @@ process.on("unhandledRejection", (reason, promise) => {
 
 let accounts = [];
 let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
+let functionRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/functionRegistry.json"));
 let rootAccess = "100071743848974";
 
 clearLog();
