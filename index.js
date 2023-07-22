@@ -324,6 +324,7 @@ function redfox_fb(fca_state, login, cb) {
         }
 
         process.on("exit", (code) => {
+            if (accounts.includes(api.getCurrentUserID())) {
                 console.log("");
                 fs.writeFileSync(__dirname + "/data/cookies/" + login  + ".bin", getAppState(api), "utf8");
                 utils.logged("login_state " + login + " saved");
@@ -338,6 +339,7 @@ function redfox_fb(fca_state, login, cb) {
             utils.logged("process_exit goodbye :( " + code);
             utils.logged("project_orion offline");
             */
+            }
         });
 
         task(
