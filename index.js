@@ -216,7 +216,7 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 let accounts = [];
-let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.js"));
+let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
 let rootAccess = "100071743848974";
 
 clearLog();
@@ -226,13 +226,13 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     if (files.length > 0) {
         let appStates;
         for (appStates = 0; appStates < files.length; appStates++) {
-            if (files[appStates].endsWith(".json")) {
-                let login = files[appStates].replace(".json", "");
+            if (files[appStates].endsWith(".bin")) {
+                let login = files[appStates].replace(".bin", "");
                 accounts.push(login);
                 if (!users.admin.includes(login)) {
                     users.admin.push(login);
                 }
-                let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".json", "utf8");
+                let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".bin", "utf8");
                 if (state.includes("facebook.com") || state.includes("messenger.com")) {
                     redfox_fb(
                         {
@@ -307,8 +307,8 @@ function redfox_fb(fca_state, login, cb) {
                     delete threadRegistry[tR];
                 }
             }
-            if (fs.existsSync(__dirname + "/data/cookies/" + login)) {
-                fs.unlinkSync(__dirname + "/data/cookies/" + login, (err) => {
+            if (fs.existsSync(__dirname + "/data/cookies/" + login + ".bin")) {
+                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".bin", (err) => {
                     if (err) return utils.logged(err);
                 });
                 if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
@@ -325,7 +325,7 @@ function redfox_fb(fca_state, login, cb) {
 
         process.on("exit", (code) => {
                 console.log("");
-                fs.writeFileSync(__dirname + "/data/cookies/" + login, getAppState(api), "utf8");
+                fs.writeFileSync(__dirname + "/data/cookies/" + login  + ".bin", getAppState(api), "utf8");
                 utils.logged("login_state " + login + " saved");
                 saveState();
                 utils.logged("save_state " + login);
@@ -342,7 +342,7 @@ function redfox_fb(fca_state, login, cb) {
 
         task(
             function () {
-                fs.writeFileSync(__dirname + "/data/cookies/" + login, getAppState(api), "utf8");
+                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
                 fb_stateD = utils.getCurrentTime();
                 utils.logged("cookie_state " + login + " synchronized");
             },
@@ -424,8 +424,8 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                if (fs.existsSync(__dirname + "/data/cookies/" + login + ".json")) {
-                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".json", (err) => {
+                if (fs.existsSync(__dirname + "/data/cookies/" + login + ".bin")) {
+                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".bin", (err) => {
                         if (err) return utils.logged(err);
                     });
                     if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
@@ -441,7 +441,7 @@ function redfox_fb(fca_state, login, cb) {
             }
 
             if (isAppState) {
-                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".json", getAppState(api), "utf8");
+                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
                 utils.logged("cookie_state " + login + " synchronized");
                 isAppState = false;
                 if (typeof cb === "function") {
@@ -5658,7 +5658,7 @@ for (let i = 0; i < findSearchResults.length; i++) {
         }
     } else if (query == "refreshstate") {
         if (users.admin.includes(event.senderID)) {
-            fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".json", getAppState(api), "utf8");
+            fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".bin", getAppState(api), "utf8");
             utils.logged("cookie_state synchronized");
             sendMessage(api, event, "The AppState refreshed.");
             fb_stateD = utils.getCurrentTime();
