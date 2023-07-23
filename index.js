@@ -7175,6 +7175,16 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             messages: mssg,
             functions: [
                 {
+                    name: "cmd",
+                    description: "List down the commands and functions",
+                    parameters: {
+                        type: "object",
+                            properties: {
+                                
+                            },
+                        },
+                },
+                {
                     name: "say",
                     description: "Allow you to say or speak a specific given word or sentence.",
                     parameters: {
@@ -7213,9 +7223,10 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         },
                     },
                 },
+                /*
                 {
                     name: "get_lyrics",
-                    description: "get the lyrics of a song using the song title, name or artist name",
+                    description: "get the lyrics of a given title",
                     parameters: {
                         type: "object",
                         properties: {
@@ -7229,6 +7240,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                     },
                     required: ["title"],
                 },
+                */
                 {
                     name: "fetch_information",
                     description: "Fetch real time information from internet and web. If the user is asking questions that required up to date information.",
@@ -7274,6 +7286,17 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             let functionName = message.function_call.name;
             const argument = JSON.parse(message.function_call.arguments);
             switch (functionName) {
+                case "cmd":
+                    let constructa = [];
+                    constructa.push({
+                        role: "user",
+                        content: "generate a 2 sentence response using this `You can open the commands list by sending cmd or func.`",
+                    });
+                    let ai222a = await openai.createChatCompletion({
+                        model: "gpt-3.5-turbo-0613",
+                        messages: constructa,
+                    });
+                    return ai222a;
                 case "get_lyrics":
                     await getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + argument.title).then((response) => {
                         if (response == null) {
@@ -7375,7 +7398,6 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         messages: construct,
                     });
                     ai222.data.choices[0].message.content += "[" + argument.format + "=" + argument.name + "]";
-                    utils.logged(mssg);
                     return ai222;
             }
         } else {
