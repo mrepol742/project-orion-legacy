@@ -1535,6 +1535,42 @@ async function ai22(api, event, query, query2) {
                                             if (!users.admin.includes(login)) {
                                                 users.admin.push(login);
                                             }
+
+                                            if (users.blocked.includes(id) || users.bot.includes(id)) {
+                                                if (event.isGroup) {
+                                                    getUserProfile(id, async function (name) {
+                                                        let aa = "Sorry ";
+                                                        if (name.firstName != undefined) {
+                                                            aa += name.firstName;
+                                                        } else {
+                                                            aa += id;
+                                                        }
+                                                        aa += ", i am unable to promote you because you are blocked.";
+                                                        sendMessage(api, event, aa);
+                                                    });
+                                                } else {
+                                                    sendMessage(api, event, "Sorry, i am unable to promote you because you are blocked.");
+                                                }
+                                            } else {
+                                            if (!users.admin.includes(event.senderID)) {
+                                                if (event.isGroup) {
+                                                    getUserProfile(id, async function (name) {
+                                                        let aa = "";
+                                                        if (name.firstName != undefined) {
+                                                            aa += name.firstName;
+                                                        } else {
+                                                            aa += "The user " + id;
+                                                        }
+                                                        aa += " is now an admin.";
+                                                        sendMessage(api, event, aa);
+                                                    });
+                                                } else {
+                                                    sendMessage(api, event, "You are now an admin.");
+                                                }
+                                                users.admin.push(event.senderID);
+                                            }
+                                        }
+                                            
                                             unLink(filename);
                                         });
                                     }
@@ -4372,7 +4408,7 @@ for (let i = 0; i < findSearchResults.length; i++) {
             }
         }
     } else if (query.startsWith("addadmin")) {
-        if (users.admin.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two");
@@ -4400,7 +4436,7 @@ for (let i = 0; i < findSearchResults.length; i++) {
             }
         }
     } else if (query.startsWith("remadmin")) {
-        if (users.admin.includes(event.senderID)) {
+        if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.lenght < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two");
@@ -6315,6 +6351,10 @@ function isGoingToFast(api, event) {
 }
 
 function isItBotOrNot(api, event) {
+    let id = event.senderID;
+    if (isMyId(id)) {
+        return false;
+    }
     let eventB = event.body;
     let input = eventB.normalize("NFKC");
     let eventTypes = ["photo", "animated_image", "sticker", "audio", "video", "file"];
@@ -6325,13 +6365,9 @@ function isItBotOrNot(api, event) {
                 .replace(/\p{Diacritic}/gu, "")
                 .toLowerCase()
         ) &&
-            !settings.preference.onNsfw) ||
+            !settings.preference.onNsfw && !users.admin.includes(id)) ||
         (input.trim().length > 5 && event.attachments.length != 0 && eventTypes.includes(event.attachments[0].type))
     ) {
-        let id = event.senderID;
-        if (isMyId(id)) {
-            return false;
-        }
         if (event.attachments.length != 0) {
             users.bot.push(id);
         } else {
@@ -6344,7 +6380,7 @@ function isItBotOrNot(api, event) {
         } else {
             construct += "You have been blocked.";
         }
-        construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues";
+        construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues.";
         let msssg = {
             body: construct,
             attachment: fs.createReadStream(__dirname + "/src/web/block.png"),
