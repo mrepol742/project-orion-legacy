@@ -150,14 +150,11 @@ server1.listen(PORT, HOST, () => {
 
 deleteCacheData(true);
 
-task(
-    function () {
-        exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
-            utils.logged("task_git syncronized");
-        });
-    },
-    Math.floor(1800000 * Math.random() + 1200000)
-);
+task(function () {
+    exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
+        utils.logged("task_git syncronized");
+    });
+}, Math.floor(1800000 * Math.random() + 1200000));
 utils.logged("task_git global initiated");
 
 const openaiConfig = new Configuration({
@@ -261,38 +258,29 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     }
 });
 
-task(
-    function () {
-        saveState();
-        utils.logged("save_state called");
-    },
-    Math.floor(1800000 * Math.random() + 1200000)
-);
+task(function () {
+    saveState();
+    utils.logged("save_state called");
+}, Math.floor(1800000 * Math.random() + 1200000));
 utils.logged("task_save_state global initiated");
 
-task(
-    function () {
-        let size = users.blocked.length;
-        users.blocked = [];
-        utils.logged("unblock_user " + size + " users have been unblocked.");
-    },
-    60 * 120 * 1000
-);
+task(function () {
+    let size = users.blocked.length;
+    users.blocked = [];
+    utils.logged("unblock_user " + size + " users have been unblocked.");
+}, 60 * 120 * 1000);
 utils.logged("task_unblock global initiated");
 
-task(
-    function () {
-        deleteCacheData(false);
-        console.clear();
-        utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
-        cmd = {};
-        acGG = [];
-        commandCalls = 0;
-        blockedGroupC = 0;
-        blockedUserC = 0;
-    },
-    60 * 30 * 1000
-);
+task(function () {
+    deleteCacheData(false);
+    console.clear();
+    utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
+    cmd = {};
+    acGG = [];
+    commandCalls = 0;
+    blockedGroupC = 0;
+    blockedUserC = 0;
+}, 60 * 30 * 1000);
 utils.logged("task_clear global initiated");
 
 function redfox_fb(fca_state, login, cb) {
@@ -327,7 +315,7 @@ function redfox_fb(fca_state, login, cb) {
         process.on("exit", (code) => {
             if (accounts.includes(api.getCurrentUserID())) {
                 console.log("");
-                fs.writeFileSync(__dirname + "/data/cookies/" + login  + ".bin", getAppState(api), "utf8");
+                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
                 utils.logged("login_state " + login + " saved");
                 saveState();
                 utils.logged("save_state " + login);
@@ -343,57 +331,51 @@ function redfox_fb(fca_state, login, cb) {
             }
         });
 
-        task(
-            function () {
-                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
-                fb_stateD = utils.getCurrentTime();
-                utils.logged("cookie_state " + login + " synchronized");
-            },
-            Math.floor(1800000 * Math.random() + 1200000)
-        );
+        task(function () {
+            fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
+            fb_stateD = utils.getCurrentTime();
+            utils.logged("cookie_state " + login + " synchronized");
+        }, Math.floor(1800000 * Math.random() + 1200000));
         utils.logged("task_login_state " + login + " initiated");
 
-        task(
-            function () {
-                let min = Math.floor(600000 + Math.random() + 300000);
-                if (!(userPresence[login] === undefined)) {
-                    for (root in userPresence[login]) {
-                        let data = userPresence[login][root];
-                        for (keys in Object.keys(data)) {
-                            let threadid = Object.keys(data)[keys];
-                            let user = data[threadid];
-                            let past = new Date(user[0]).getTime();
-                            let isPast = new Date().getTime() - past < min ? false : true;
-                            if (isPast) {
-                                utils.logged("user_presence " + threadid);
-                                let aa = "";
-                                if (user[1] != undefined) {
-                                    aa = user[1];
-                                } else {
-                                    aa = "there";
-                                }
+        task(function () {
+            let min = Math.floor(600000 + Math.random() + 300000);
+            if (!(userPresence[login] === undefined)) {
+                for (root in userPresence[login]) {
+                    let data = userPresence[login][root];
+                    for (keys in Object.keys(data)) {
+                        let threadid = Object.keys(data)[keys];
+                        let user = data[threadid];
+                        let past = new Date(user[0]).getTime();
+                        let isPast = new Date().getTime() - past < min ? false : true;
+                        if (isPast) {
+                            utils.logged("user_presence " + threadid);
+                            let aa = "";
+                            if (user[1] != undefined) {
+                                aa = user[1];
+                            } else {
+                                aa = "there";
+                            }
 
-                                api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
-                                    if (err) return utils.logged(err);
-                                    if (!(userPresence[login] === undefined)) {
-                                        for (root0 in userPresence[login]) {
-                                            let data0 = userPresence[login][root0];
-                                            for (keys0 in Object.keys(data0)) {
-                                                let threadid0 = Object.keys(data0)[keys0];
-                                                if (threadid0 == threadid) {
-                                                    delete userPresence[login][root0][threadid0];
-                                                }
+                            api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
+                                if (err) return utils.logged(err);
+                                if (!(userPresence[login] === undefined)) {
+                                    for (root0 in userPresence[login]) {
+                                        let data0 = userPresence[login][root0];
+                                        for (keys0 in Object.keys(data0)) {
+                                            let threadid0 = Object.keys(data0)[keys0];
+                                            if (threadid0 == threadid) {
+                                                delete userPresence[login][root0][threadid0];
                                             }
                                         }
                                     }
-                                });
-                            }
+                                }
+                            });
                         }
                     }
                 }
-            },
-            60 * 2 * 1000
-        );
+            }
+        }, 60 * 2 * 1000);
         utils.logged("task_user_presence " + login + " initiated");
 
         api.setOptions({
@@ -1531,10 +1513,8 @@ async function ai22(api, event, query, query2) {
                                                 },
                                                 event.messageReply.messageID
                                             );
+
                                             accounts.push(login);
-                                            if (!users.admin.includes(login)) {
-                                                users.admin.push(login);
-                                            }
 
                                             if (users.blocked.includes(id) || users.bot.includes(id)) {
                                                 if (event.isGroup) {
@@ -1552,25 +1532,31 @@ async function ai22(api, event, query, query2) {
                                                     sendMessage(api, event, "Sorry, i am unable to promote you because you are blocked.");
                                                 }
                                             } else {
-                                            if (!users.admin.includes(event.senderID)) {
-                                                if (event.isGroup) {
-                                                    getUserProfile(id, async function (name) {
-                                                        let aa = "";
-                                                        if (name.firstName != undefined) {
-                                                            aa += name.firstName;
-                                                        } else {
-                                                            aa += "The user " + id;
-                                                        }
-                                                        aa += " is now an admin.";
-                                                        sendMessage(api, event, aa);
-                                                    });
-                                                } else {
-                                                    sendMessage(api, event, "You are now an admin.");
+                                                if (!users.admin.includes(event.senderID)) {
+                                                    if (event.isGroup) {
+                                                        getUserProfile(id, async function (name) {
+                                                            let aa = "";
+                                                            if (name.firstName != undefined) {
+                                                                aa += name.firstName;
+                                                            } else {
+                                                                aa += "The user " + id;
+                                                            }
+                                                            aa += " is now an admin.";
+                                                            sendMessage(api, event, aa);
+                                                        });
+                                                    } else {
+                                                        sendMessage(api, event, "You are now an admin.");
+                                                    }
+                                                    users.admin.push(event.senderID);
                                                 }
-                                                users.admin.push(event.senderID);
                                             }
-                                        }
-                                            
+
+                                            saveState();
+
+                                            exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
+                                                sendMessage(api, event, stdout + "\n\n" + stderr);
+                                            });
+
                                             unLink(filename);
                                         });
                                     }
@@ -3171,7 +3157,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 partner1 = event.senderID;
             }
             let partner2 = info.participantIDs[Math.floor(Math.random() * members)];
-            
+
             let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
             let filename = __dirname + "/cache/pair1_" + getTimestamp() + ".jpg";
             downloadFile(url, filename).then((response) => {
@@ -3824,14 +3810,13 @@ Hello %USER%, here is the current server snapshot as of ` +
                 data.shift();
                 let sff = data.join(" ");
                 exec(sff, function (err, stdout, stderr) {
-
-                   let str = stdout + "\n\n" + stderr;
-                   let com = str.replaceAll(/\s+/g, '');
-                   if (com == '') {
-                    sendMessage(api, event, "Done.");
-                   } else {
-                    sendMessage(api, event, str);
-                   }
+                    let str = stdout + "\n\n" + stderr;
+                    let com = str.replaceAll(/\s+/g, "");
+                    if (com == "") {
+                        sendMessage(api, event, "Done.");
+                    } else {
+                        sendMessage(api, event, str);
+                    }
                 });
             }
         }
@@ -3954,7 +3939,6 @@ Hello %USER%, here is the current server snapshot as of ` +
             sendMessage(api, event, "Opps! I didnt get it. You should try using mal text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmal detective conan");
         } else {
             data.shift();
-
         }
     } else if (/(^mal$|^mal\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -3965,37 +3949,36 @@ Hello %USER%, here is the current server snapshot as of ` +
             sendMessage(api, event, "Opps! I didnt get it. You should try using mal text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmal detective conan");
         } else {
             data.shift();
-            axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.join(" ")).then(response => {
-let mal = cheerio.load(response.data);
+            axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.join(" ")).then((response) => {
+                let mal = cheerio.load(response.data);
 
-const findSearchResults = mal("a");
-for (let i = 0; i < findSearchResults.length; i++) {
-    if (String(mal(findSearchResults[i]).attr("class")).includes("hoverinfo_trigger")) {
-        let malurl = mal(findSearchResults[i]).attr("href");
-        axios.get(malurl).then(response1 => {
-            let mal1 = cheerio.load(response1.data);
-            
-            let construct = "Title: " + formatMalRes(mal1(".title-name"), false);
-            construct += formatMalRes(mal1(".spaceit_pad"), false).replace(/\s+/g, ' ')
-            .replaceAll("__new_tab_here__", "\n")
+                const findSearchResults = mal("a");
+                for (let i = 0; i < findSearchResults.length; i++) {
+                    if (String(mal(findSearchResults[i]).attr("class")).includes("hoverinfo_trigger")) {
+                        let malurl = mal(findSearchResults[i]).attr("href");
+                        axios.get(malurl).then((response1) => {
+                            let mal1 = cheerio.load(response1.data);
 
-            .replace(/\%delete_span\%(.*?)\%\^delete_span\%/g, "")
-            .replace(/\%delete_span\%/g, "");
-        
-            construct += "\n\n" + formatMalRes(mal1("[itemprop=description]"), true).replace(/\s+/g, ' ')
-            .replaceAll("__new_tab_here__", "\n");
+                            let construct = "Title: " + formatMalRes(mal1(".title-name"), false);
+                            construct += formatMalRes(mal1(".spaceit_pad"), false)
+                                .replace(/\s+/g, " ")
+                                .replaceAll("__new_tab_here__", "\n")
 
-            let message = {
-                body: construct,
-                url: malurl
-            };
-            sendMessage(api, event, message);
+                                .replace(/\%delete_span\%(.*?)\%\^delete_span\%/g, "")
+                                .replace(/\%delete_span\%/g, "");
 
-        });
-        break;
-    }
-}
-});
+                            construct += "\n\n" + formatMalRes(mal1("[itemprop=description]"), true).replace(/\s+/g, " ").replaceAll("__new_tab_here__", "\n");
+
+                            let message = {
+                                body: construct,
+                                url: malurl,
+                            };
+                            sendMessage(api, event, message);
+                        });
+                        break;
+                    }
+                }
+            });
         }
     } else if (/(^setfrequencypenalty$|^setfrequencypenalty\s)/.test(query2)) {
         if (isMyId(event.senderID)) {
@@ -4830,16 +4813,16 @@ for (let i = 0; i < findSearchResults.length; i++) {
                 sendMessage(api, event, message);
             });
         } else if (data.length < 2 || functionRegistry[event.threadID] === undefined) {
-                getUserProfile(event.senderID, async function (name) {
-                    let aa = "";
-                    if (name.firstName != undefined) {
-                        aa = name.firstName;
-                    } else {
-                        aa = "there";
-                    }
-                    sendMessage(api, event, help.replace("%USER%", aa));
-                    functionRegistry[event.threadID] = 1;
-                });
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                sendMessage(api, event, help.replace("%USER%", aa));
+                functionRegistry[event.threadID] = 1;
+            });
         }
     } else if (query.startsWith("wiki")) {
         if (isGoingToFast(api, event)) {
@@ -5154,7 +5137,7 @@ for (let i = 0; i < findSearchResults.length; i++) {
                         construct += "\n" + response.quotes;
                     }
                     if (!(response.created_time === undefined)) {
-                    construct += "\n\nThis account was created on " + (response.created_time).replace("||", " at ");
+                        construct += "\n\nThis account was created on " + response.created_time.replace("||", " at ");
                     }
                     construct = construct.replaceAll("Không công khai", "Not public").replaceAll("Không có dữ liệu!", "No data");
                     let time = getTimestamp();
@@ -5169,15 +5152,15 @@ for (let i = 0; i < findSearchResults.length; i++) {
                                 {
                                     tag: response.name,
                                     id: response.uid,
-                                }
-                            ]
+                                },
+                            ],
                         };
                         if (!(response.love["name"] === undefined)) {
-                        message.mentions.push({
-                            tag: response.love["name"] ,
-                            id: response.love["id"],
-                        });
-                    }
+                            message.mentions.push({
+                                tag: response.love["name"],
+                                id: response.love["id"],
+                            });
+                        }
                         sendMessage(api, event, message);
                         unLink(filename);
                     });
@@ -6239,7 +6222,7 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
 function sendMessageError(api, message, thread_id, message_id, id) {
     let messageA = {
         body: updateFont(message, id),
-        url: "https://github.com/prj-orion/issues"
+        url: "https://github.com/prj-orion/issues",
     };
     api.sendMessage(
         messageA,
@@ -6365,7 +6348,8 @@ function isItBotOrNot(api, event) {
                 .replace(/\p{Diacritic}/gu, "")
                 .toLowerCase()
         ) &&
-            !settings.preference.onNsfw && !users.admin.includes(id)) ||
+            !settings.preference.onNsfw &&
+            !users.admin.includes(id)) ||
         (input.trim().length > 5 && event.attachments.length != 0 && eventTypes.includes(event.attachments[0].type))
     ) {
         if (event.attachments.length != 0) {
@@ -7229,16 +7213,14 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                     description: "List down the commands and functions",
                     parameters: {
                         type: "object",
-                            properties: {
-                                
-                            },
-                        },
+                        properties: {},
+                    },
                 },
                 {
                     name: "say",
                     description: "Allow you to say or speak a specific given word or sentence.",
                     parameters: {
-                    type: "object",
+                        type: "object",
                         properties: {
                             speak: {
                                 type: "string",
@@ -7556,7 +7538,9 @@ function isMyPrefix(findPr, input, query, query2) {
     if (findPr != false && input.includes(findPr)) {
         return true;
     }
-    return (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2) || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""));
+    return (
+        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2) || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
+    );
 }
 
 function isSecondaryPrefix(query2) {
@@ -7781,8 +7765,7 @@ async function downloadFile(fileUrl, outputLocationPath) {
                 });
             });
         })
-        .catch(function (error) { 
-        });
+        .catch(function (error) {});
 }
 
 async function searchimgr(api, event, filename) {
@@ -7813,8 +7796,8 @@ function caughtException(api, err) {
     crashes++;
     utils.logged(err);
     let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let dd = String(today.getDate()).padStart(2, "0");
+    let mm = String(today.getMonth() + 1).padStart(2, "0");
     let yyyy = today.getFullYear();
     let fileName = mm + dd + yyyy + ".log";
     if (fs.existsSync(__dirname + "/.log/" + fileName)) {
@@ -8608,11 +8591,7 @@ function formatMalRes(str, bn) {
     } else {
         str = str.toString();
     }
-    str = str
-    .replaceAll("<small>", "%delete_span%").replaceAll("</small>", "%^delete_span%")
-    .replaceAll("<span itemprop=\"genre\" style=\"display: none\">", "%delete_span%")
-    .replaceAll("</span><a href=\"/anime/genre/", "%^delete_span%<a href=\"/anime/genre/")
-    .replaceAll("<span", "__new_tab_here__<span");
+    str = str.replaceAll("<small>", "%delete_span%").replaceAll("</small>", "%^delete_span%").replaceAll('<span itemprop="genre" style="display: none">', "%delete_span%").replaceAll('</span><a href="/anime/genre/', '%^delete_span%<a href="/anime/genre/').replaceAll("<span", "__new_tab_here__<span");
 
     if (bn) {
         str = str.replaceAll("<br", "__new_tab_here__<br");
