@@ -7214,6 +7214,22 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                     },
                 },
                 {
+                    name: "get_lyrics",
+                    description: "get the lyrics of a song using the song title, name or artist name",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            title: {
+                                type: "string",
+                            },
+                            lyrics: {
+                                type: "string",
+                            }
+                        },
+                    },
+                    required: ["title"],
+                },
+                {
                     name: "fetch_information",
                     description: "Fetch real time information from internet and web. If the user is asking questions that required up to date information.",
                     parameters: {
@@ -7258,6 +7274,27 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             let functionName = message.function_call.name;
             const argument = JSON.parse(message.function_call.arguments);
             switch (functionName) {
+                case "get_lyrics":
+                    await getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + argument.title).then((response) => {
+                        if (response == null) {
+                            mssg.push({
+                                role: "user",
+                                content: text,
+                            });
+                        } else {
+                            mssg.push(message);
+                            let lyrics = response.result.s_lyrics;
+                            mssg.push({
+                                role: "function",
+                                name: functionName,
+                                content: '{"lyrics": "' + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n") + '"}',
+                            });
+                        }
+                    });
+                    return await openai.createChatCompletion({
+                        model: "gpt-3.5-turbo-0613",
+                        messages: mssg,
+                    });
                 case "get_joke":
                     await getResponseData("https://api.popcat.xyz/joke").then((response) => {
                         if (response == null) {
