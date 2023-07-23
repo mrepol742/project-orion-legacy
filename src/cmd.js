@@ -289,8 +289,6 @@ Hello %USER%, this is the admin panel.
    ⦿ saveState
    ⦿ fontIgnore ^^
    ⦿ isBot ^^
-   ⦿ addAdmin ^^
-   ⦿ remAdmin ^^
    ⦿ kickUser ^^
    ⦿ blockUser ^^
    ⦿ unblockUser ^^
@@ -307,7 +305,7 @@ You guessed it, Only admins of the AI can used this commands.
 let helpuser = `
 Hello %USER%, this is the command list for user.
 
-     addInstance
+   ⦿ addInstance
    ⦿ setTimezone [timezone]
    ⦿ uid 
    ⦿ mute
@@ -353,6 +351,8 @@ Hello %USER%, you reached the root user command list.
    ⦿ restart
    ⦿ notify
    ⦿ destroy
+   ⦿ addAdmin ^^
+   ⦿ remAdmin ^^
    ⦿ unblockAll
    ⦿ unblockAll --bot
    ⦿ acceptMessageRequest [threadid]
