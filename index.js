@@ -1244,6 +1244,11 @@ function redfox_fb(fca_state, login, cb) {
                                 if (accounts.includes(id)) {
                                     groups.active.pop(event.threadID);
                                     utils.logged("event_log_unsubsribe " + event.threadID + " ROOT " + api.getCurrentUserID());
+                                    for (tR in threadRegistry) {
+                                        if (threadRegistry[tR] == api.getCurrentUserID()) {
+                                            delete threadRegistry[tR];
+                                        }
+                                    }
                                     return;
                                 }
                                 api.getUserInfo(id, (err, data) => {
@@ -3783,7 +3788,14 @@ Hello %USER%, here is the current server snapshot as of ` +
                 data.shift();
                 let sff = data.join(" ");
                 exec(sff, function (err, stdout, stderr) {
-                    sendMessage(api, event, stdout + "\n\n" + stderr);
+
+                   let str = stdout + "\n\n" + stderr;
+                   let com = str.replaceAll(/\s+/g, '');
+                   if (com == '') {
+                    sendMessage(api, event, "Done.");
+                   } else {
+                    sendMessage(api, event, str);
+                   }
                 });
             }
         }
@@ -6886,7 +6898,9 @@ async function unblockUser(api, event, id) {
         return;
     }
 
-    users.bot = users.bot.filter((item) => item !== id);
+    if (isMyId(event.senderID)) {
+        users.bot = users.bot.filter((item) => item !== id);
+    }
     users.blocked = users.blocked.filter((item) => item !== id);
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
