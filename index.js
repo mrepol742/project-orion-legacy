@@ -117,7 +117,7 @@ utils.logged("server_cert loaded");
 const server = https.createServer(options2, getRoutes());
 */
 
-//const server1 = http.createServer(getRoutes());
+const server1 = http.createServer(getRoutes());
 
 let homepage = fs.readFileSync(__dirname + "/src/web/index.html");
 let errorpage = fs.readFileSync(__dirname + "/src/web/404.html");
