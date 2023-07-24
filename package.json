@@ -43,8 +43,8 @@
         "youtubei.js": "^5.1.0"
     },
     "devDependencies": {
-        "prettier": "^2.8.4",
-        "jshint": "^2.13.6"
+        "jshint": "^2.13.6",
+        "prettier": "^2.8.4"
     },
     "engines": {
         "node": ">=18.x"

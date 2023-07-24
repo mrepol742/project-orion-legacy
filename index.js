@@ -117,7 +117,7 @@ utils.logged("server_cert loaded");
 const server = https.createServer(options2, getRoutes());
 */
 
-const server1 = http.createServer(getRoutes());
+//const server1 = http.createServer(getRoutes());
 
 let homepage = fs.readFileSync(__dirname + "/src/web/index.html");
 let errorpage = fs.readFileSync(__dirname + "/src/web/404.html");
@@ -136,7 +136,7 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
 utils.logged("web_resource_loaded finish");
 
-const PORT = 80;
+const PORT = process.env.PORT || 80;
 const HOST = "0.0.0.0";
 /*
 server.listen((PORT + 1), function () {
@@ -144,6 +144,7 @@ server.listen((PORT + 1), function () {
     utils.logged("server_status online");
 });
 */
+
 server1.listen(PORT, HOST, () => {
     utils.logged("server_running http://" + HOST + ":" + PORT);
 });
@@ -3939,6 +3940,27 @@ Hello %USER%, here is the current server snapshot as of ` +
             sendMessage(api, event, "Opps! I didnt get it. You should try using mal text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmal detective conan");
         } else {
             data.shift();
+            let toBeSearch = "manga";
+axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.shift()).then(response => {
+let mal = cheerio.load(response.data);
+const findSearchResults = mal("a");
+let results = "\tSearch Results:";
+let count = 0;
+for (let i = 0; i < findSearchResults.length; i++) {
+    if (String(mal(findSearchResults[i]).attr("class")) == animeMM(toBeSearch)) {
+        let res = mal(findSearchResults[i]);
+        let url = String(res).split("/");
+        if (count == 15) {
+            break;
+        }
+        if (isNumeric(url[4]) && url[3] == toBeSearch) {
+            count++;
+            results += "\n" + count + ". " + res.text();
+        }
+    }
+}
+sendMessage(api, event, results)
+});
         }
     } else if (/(^mal$|^mal\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
