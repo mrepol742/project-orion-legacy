@@ -343,6 +343,7 @@ let helproot = `
 Hello %USER%, you reached the root user command list.
 
    ⦿ shell [code]
+   ⦿ git [code]
    ⦿ sql [query]
    ⦿ stop
    ⦿ sync

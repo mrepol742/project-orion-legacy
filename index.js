@@ -3847,6 +3847,24 @@ Hello %USER%, here is the current server snapshot as of ` +
             sendMessage(api, event, size + " users have been unblocked.");
         }
     } else if (query.startsWith("sql")) {
+    } else if (query.startsWith("git")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using git code instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngit add .");
+            } else {
+                let sff = input;
+                exec(sff, function (err, stdout, stderr) {
+                    let str = stdout + "\n\n" + stderr;
+                    let com = str.replaceAll(/\s+/g, "");
+                    if (com == "") {
+                        sendMessage(api, event, "Done.");
+                    } else {
+                        sendMessage(api, event, str);
+                    }
+                });
+            }
+        }
     } else if (query.startsWith("shell")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
