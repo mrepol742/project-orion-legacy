@@ -231,9 +231,6 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
             if (files[appStates].endsWith(".bin")) {
                 let login = files[appStates].replace(".bin", "");
                 accounts.push(login);
-                if (!users.admin.includes(login)) {
-                    users.admin.push(login);
-                }
                 let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".bin", "utf8");
                 if (state.includes("facebook.com") || state.includes("messenger.com")) {
                     redfox_fb(
