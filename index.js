@@ -2232,7 +2232,7 @@ async function ai(api, event) {
             data.shift();
             try {
                 let dir = __dirname + "/cache/poli_" + getTimestamp() + ".png";
-                    downloadFile(url, "https://image.pollinations.ai/prompt/" + data.joi(" ") + "-" + Math.floor(Math.random() * 1000)).then((response) => {
+                    downloadFile("https://image.pollinations.ai/prompt/" + data.joi(" ") + "-" + Math.floor(Math.random() * 1000), dir).then((response) => {
                         let message = {
                             attachment: fs.createReadStream(dir),
                         };
