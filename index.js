@@ -151,11 +151,14 @@ server1.listen(PORT, HOST, () => {
 
 deleteCacheData(true);
 
-task(function () {
-    exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
-        utils.logged("task_git syncronized");
-    });
-}, Math.floor(1800000 * Math.random() + 1200000));
+task(
+    function () {
+        exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
+            utils.logged("task_git syncronized");
+        });
+    },
+    Math.floor(1800000 * Math.random() + 1200000)
+);
 utils.logged("task_git global initiated");
 
 const openaiConfig = new Configuration({
@@ -259,29 +262,38 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     }
 });
 
-task(function () {
-    saveState();
-    utils.logged("save_state called");
-}, Math.floor(1800000 * Math.random() + 1200000));
+task(
+    function () {
+        saveState();
+        utils.logged("save_state called");
+    },
+    Math.floor(1800000 * Math.random() + 1200000)
+);
 utils.logged("task_save_state global initiated");
 
-task(function () {
-    let size = users.blocked.length;
-    users.blocked = [];
-    utils.logged("unblock_user " + size + " users have been unblocked.");
-}, 60 * 120 * 1000);
+task(
+    function () {
+        let size = users.blocked.length;
+        users.blocked = [];
+        utils.logged("unblock_user " + size + " users have been unblocked.");
+    },
+    60 * 120 * 1000
+);
 utils.logged("task_unblock global initiated");
 
-task(function () {
-    deleteCacheData(false);
-    console.clear();
-    utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
-    cmd = {};
-    acGG = [];
-    commandCalls = 0;
-    blockedGroupC = 0;
-    blockedUserC = 0;
-}, 60 * 30 * 1000);
+task(
+    function () {
+        deleteCacheData(false);
+        console.clear();
+        utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
+        cmd = {};
+        acGG = [];
+        commandCalls = 0;
+        blockedGroupC = 0;
+        blockedUserC = 0;
+    },
+    60 * 30 * 1000
+);
 utils.logged("task_clear global initiated");
 
 function redfox_fb(fca_state, login, cb) {
@@ -332,51 +344,57 @@ function redfox_fb(fca_state, login, cb) {
             }
         });
 
-        task(function () {
-            fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
-            fb_stateD = utils.getCurrentTime();
-            utils.logged("cookie_state " + login + " synchronized");
-        }, Math.floor(1800000 * Math.random() + 1200000));
+        task(
+            function () {
+                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
+                fb_stateD = utils.getCurrentTime();
+                utils.logged("cookie_state " + login + " synchronized");
+            },
+            Math.floor(1800000 * Math.random() + 1200000)
+        );
         utils.logged("task_login_state " + login + " initiated");
 
-        task(function () {
-            let min = Math.floor(600000 + Math.random() + 300000);
-            if (!(userPresence[login] === undefined)) {
-                for (root in userPresence[login]) {
-                    let data = userPresence[login][root];
-                    for (keys in Object.keys(data)) {
-                        let threadid = Object.keys(data)[keys];
-                        let user = data[threadid];
-                        let past = new Date(user[0]).getTime();
-                        let isPast = new Date().getTime() - past < min ? false : true;
-                        if (isPast) {
-                            utils.logged("user_presence " + threadid);
-                            let aa = "";
-                            if (user[1] != undefined) {
-                                aa = user[1];
-                            } else {
-                                aa = "there";
-                            }
+        task(
+            function () {
+                let min = Math.floor(600000 + Math.random() + 300000);
+                if (!(userPresence[login] === undefined)) {
+                    for (root in userPresence[login]) {
+                        let data = userPresence[login][root];
+                        for (keys in Object.keys(data)) {
+                            let threadid = Object.keys(data)[keys];
+                            let user = data[threadid];
+                            let past = new Date(user[0]).getTime();
+                            let isPast = new Date().getTime() - past < min ? false : true;
+                            if (isPast) {
+                                utils.logged("user_presence " + threadid);
+                                let aa = "";
+                                if (user[1] != undefined) {
+                                    aa = user[1];
+                                } else {
+                                    aa = "there";
+                                }
 
-                            api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
-                                if (err) return utils.logged(err);
-                                if (!(userPresence[login] === undefined)) {
-                                    for (root0 in userPresence[login]) {
-                                        let data0 = userPresence[login][root0];
-                                        for (keys0 in Object.keys(data0)) {
-                                            let threadid0 = Object.keys(data0)[keys0];
-                                            if (threadid0 == threadid) {
-                                                delete userPresence[login][root0][threadid0];
+                                api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
+                                    if (err) return utils.logged(err);
+                                    if (!(userPresence[login] === undefined)) {
+                                        for (root0 in userPresence[login]) {
+                                            let data0 = userPresence[login][root0];
+                                            for (keys0 in Object.keys(data0)) {
+                                                let threadid0 = Object.keys(data0)[keys0];
+                                                if (threadid0 == threadid) {
+                                                    delete userPresence[login][root0][threadid0];
+                                                }
                                             }
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 }
-            }
-        }, 60 * 2 * 1000);
+            },
+            60 * 2 * 1000
+        );
         utils.logged("task_user_presence " + login + " initiated");
 
         api.setOptions({
@@ -3940,27 +3958,27 @@ Hello %USER%, here is the current server snapshot as of ` +
             sendMessage(api, event, "Opps! I didnt get it. You should try using mal text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmal detective conan");
         } else {
             data.shift();
-            let toBeSearch = "manga";
-axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.shift()).then(response => {
-let mal = cheerio.load(response.data);
-const findSearchResults = mal("a");
-let results = "\tSearch Results:";
-let count = 0;
-for (let i = 0; i < findSearchResults.length; i++) {
-    if (String(mal(findSearchResults[i]).attr("class")) == animeMM(toBeSearch)) {
-        let res = mal(findSearchResults[i]);
-        let url = String(res).split("/");
-        if (count == 15) {
-            break;
-        }
-        if (isNumeric(url[4]) && url[3] == toBeSearch) {
-            count++;
-            results += "\n" + count + ". " + res.text();
-        }
-    }
-}
-sendMessage(api, event, results)
-});
+            let toBeSearch = isMangaOrAnime(query2);
+            axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.join(" ")).then((response) => {
+                let mal = cheerio.load(response.data);
+                const findSearchResults = mal("a");
+                let results = "\tSearch Results:";
+                let count = 0;
+                for (let i = 0; i < findSearchResults.length; i++) {
+                    if (String(mal(findSearchResults[i]).attr("class")) == animeMM(toBeSearch)) {
+                        let res = mal(findSearchResults[i]);
+                        let url = String(res).split("/");
+                        if (count == 15) {
+                            break;
+                        }
+                        if (isNumeric(url[4]) && url[3] == toBeSearch) {
+                            count++;
+                            results += "\n" + count + ". " + res.text();
+                        }
+                    }
+                }
+                sendMessage(api, event, results);
+            });
         }
     } else if (/(^mal$|^mal\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -8626,4 +8644,11 @@ function animeMM(str) {
         return "hoverinfo_trigger fw-b";
     }
     return "hoverinfo_trigger fw-b fl-l";
+}
+
+function isMangaOrAnime(str) {
+    if (/(^malne$|^malne\s)/.test(str)) {
+        return "anime";
+    }
+    return "manga";
 }
