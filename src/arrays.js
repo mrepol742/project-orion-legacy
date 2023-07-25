@@ -542,6 +542,7 @@ let domains = [
     ".zm",
     ".zw",
 ];
+
 module.exports = {
     sup: sup,
     hey: hey,

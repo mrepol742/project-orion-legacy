@@ -360,6 +360,7 @@ Hello %USER%, you reached the root user command list.
    ⦿ acceptMessageRequest [threadid]
    ⦿ acceptFriendRequest [uid]
    ⦿ changeBio [text]
+   ⦿ angry [on|off]
    ⦿ setMaxImage [integer]
    ⦿ setTextComplextion [complextion]
    ⦿ setMaxTokens [integer]
