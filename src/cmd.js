@@ -36,22 +36,23 @@ Hello %USER%, how are you?
    ⦿ searchincog [text]
    ⦿ searchimg [text]
    ⦿ searchimg --reverse
-   ⦿ createimg [text]
+   ⦿ dell [prompt]
+   ⦿ poli [prompt]
    ⦿ mal [text]
    ⦿ run [lang] [reply]
        Java, Python, C, C++,
        JavaScript, PHP and Dragon
-    ⦿ mj [text]
-    ⦿ beshy [text]
-    ⦿ melbin [text]
-    ⦿ sim [text]
-    ⦿ misaka [text]
-    ⦿ codex [text]
-    ⦿ openai [text]
-    ⦿ chatgpt [text]
-    ⦿ chad [text]
-    ⦿ nraf [text]
-    ⦿ skynet [text]
+    ⦿ mj [prompt]
+    ⦿ beshy [prompt]
+    ⦿ melbin [prompt]
+    ⦿ sim [prompt]
+    ⦿ misaka [prompt]
+    ⦿ codex [prompt]
+    ⦿ openai [prompt]
+    ⦿ chatgpt [prompt]
+    ⦿ chad [prompt]
+    ⦿ nraf [prompt]
+    ⦿ skynet [prompt]
 
 If you have further questions, i am here to help you.
 `;

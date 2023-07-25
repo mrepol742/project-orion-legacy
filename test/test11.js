@@ -5,8 +5,10 @@ const axios = require("axios");
 const fs = require("fs");
 
 let toBeSearch = "manga";
-//axios.get("https://myanimelist.net/search/all?cat=all&q=detective%20conan").then(response => {
-let mal = cheerio.load(fs.readFileSync(__dirname + "/mal.html", 'UTF-8'));
+try {
+axios.get("https://myanimelist.netdad/search/all?cat=all&q=detective%20conan").then(response => {
+    try {
+let mal = cheerio.load(response.data);
 mal.html();
 
 const findSearchResults = mal("a");
@@ -19,7 +21,13 @@ console.log(toBeSearch + " == " + res.text())
         }
     }
 }
-//});
+} catch (err) {
+    console.log("err")
+}
+});
+} catch (err) {
+    console.log("ea")
+}
 
 function animeMM(str) {
     if (str == "manga") {
