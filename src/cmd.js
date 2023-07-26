@@ -38,21 +38,20 @@ Hello %USER%, how are you?
    ⦿ searchimg --reverse
    ⦿ dell [prompt]
    ⦿ poli [prompt]
-   ⦿ mal [text]
    ⦿ run [lang] [reply]
        Java, Python, C, C++,
        JavaScript, PHP and Dragon
-    ⦿ mj [prompt]
-    ⦿ beshy [prompt]
-    ⦿ melbin [prompt]
-    ⦿ sim [prompt]
-    ⦿ misaka [prompt]
-    ⦿ codex [prompt]
-    ⦿ openai [prompt]
-    ⦿ chatgpt [prompt]
-    ⦿ chad [prompt]
-    ⦿ nraf [prompt]
-    ⦿ skynet [prompt]
+   ⦿ mj [prompt]
+   ⦿ beshy [prompt]
+   ⦿ melbin [prompt]
+   ⦿ sim [prompt]
+   ⦿ misaka [prompt]
+   ⦿ codex [prompt]
+   ⦿ openai [prompt]
+   ⦿ chatgpt [prompt]
+   ⦿ chad [prompt]
+   ⦿ nraf [prompt]
+   ⦿ skynet [prompt]
 
 If you have further questions, i am here to help you.
 `;
@@ -71,8 +70,8 @@ Hello %USER%, how can i assist you?
    ⦿ landscape [text]
    ⦿ portrait
    ⦿ portrait [text]
-
-
+   ⦿ mal [text]
+   ⦿ mdl [text]
    ⦿ pin add
    ⦿ pin remove
    ⦿ sadcat [text]
@@ -186,8 +185,8 @@ Here:
        kill, kick, happy, wink,
        poke, dance and cringe
    ⦿ hanime [category]
-   ⦿ malga [text]
-   ⦿ malne [text]
+
+
 
 
 
