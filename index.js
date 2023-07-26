@@ -136,7 +136,7 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
 utils.logged("web_resource_loaded finish");
 
-const PORT = process.env.PORT || 80;
+const PORT = 80;
 const HOST = "0.0.0.0";
 /*
 server.listen((PORT + 1), function () {
@@ -145,7 +145,7 @@ server.listen((PORT + 1), function () {
 });
 */
 
-server1.listen(PORT, HOST, () => {
+server1.listen(PORT, () => {
     utils.logged("server_running http://" + HOST + ":" + PORT);
 });
 

@@ -10,7 +10,7 @@ for (let i = 0; i < findSearchResults.length; i++) {
     if (String(mal(findSearchResults[i]).attr("class")).includes("hoverinfo_trigger")) {
         console.log("mal_found " + mal(findSearchResults[i]).attr("href"))
         axios.get(mal(findSearchResults[i]).attr("href")).then(response1 => {
-            let mal1 = cheerio.load(response1.data);
+            let mal1 = cheerio.load(response1.data, { decodeEntities: false});
             
             let construct = "Title: " + formatMalRes(mal1(".title-name"), false);
             construct += formatMalRes(mal1(".spaceit_pad"), false).replace(/\s+/g, ' ')
