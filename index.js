@@ -7897,15 +7897,13 @@ function updateFont(message, id) {
         if (message == " " || message == "" || message == "@everyone") {
             return message;
         }
-        return removeMarkdown(maven(message));
-        //return maven(message);
+        return maven(message);
     }
     let body = message.body;
     if (body == " " || body == "" || body === undefined || body == "@everyone") {
         return message;
     }
-    message.body = removeMarkdown(maven(body));
-    //message.body = maven(body);
+    message.body = maven(body);
     if (!(message.mentions === undefined)) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
@@ -8689,7 +8687,7 @@ function mj(api, event, findPr, input, query, query2) {
                     } else {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
-                    sendAiMessage(api, event, respo.data.choices[0].message.content);
+                    sendAiMessage(api, event, removeMarkdown(respo.data.choices[0].message.content));
                 });
             } else {
                 let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, { name: undefined });
@@ -8698,7 +8696,7 @@ function mj(api, event, findPr, input, query, query2) {
                 } else {
                     user["balance"] += respo.data.usage.total_tokens;
                 }
-                sendAiMessage(api, event, respo.data.choices[0].message.content);
+                sendAiMessage(api, event, removeMarkdown(respo.data.choices[0].message.content));
             }
         });
     }
