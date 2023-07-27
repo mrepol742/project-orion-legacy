@@ -23,10 +23,8 @@ jshint index.js
 cd src
 node --check arrays.js
 node --check cmd.js
-node --check remmd.js
 jshint arrays.js
 jshint cmd.js
-jshint remmd.js
 cd ..
 
 git add .
