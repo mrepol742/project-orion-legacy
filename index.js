@@ -7,7 +7,6 @@
 
 const redfox = require("./src/redfox");
 const utils = require("./src/redfox/utils.js");
-const removeMarkdown = require("./src/remmd.js");
 const fs = require("fs");
 
 let a = `
@@ -1130,6 +1129,7 @@ function redfox_fb(fca_state, login, cb) {
                             } else {
                                 sendMessage(api, event, "Anyone can now add ya friends without pesting the adminds...");
                             }
+                            utils.logged("approval_mode " + isJoinable1);
                             break;
                         case "log:pin_messages":
                             console.log("called");
@@ -6091,11 +6091,8 @@ function someA(api, event, query, input) {
     if (query == "sup" || query == "wassup") {
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
-    } else if (query == "hi" || query == "hello" || query == "hey" || query == "hwfar" || query == "yo" || query == "bro" || query == "hola" || query == "hii" || query == "helloo" || query == "hiii" || query == "hellooo") {
+    } else if (query == "hey" || query == "hwfar" || query == "yo" || query == "bro" || query == "hola" || query == "hii" || query == "helloo" || query == "hiii" || query == "hellooo") {
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
-        return true;
-    } else if (query == "okay") {
-        sendMessage(api, event, "Yup");
         return true;
     } else if (query == "idk") {
         sendMessage(api, event, "I dont know too...");
@@ -7900,15 +7897,15 @@ function updateFont(message, id) {
         if (message == " " || message == "" || message == "@everyone") {
             return message;
         }
-        // return removeMarkdown(maven(message));
-        return maven(message);
+        return removeMarkdown(maven(message));
+        //return maven(message);
     }
     let body = message.body;
     if (body == " " || body == "" || body === undefined || body == "@everyone") {
         return message;
     }
-    // message.body = removeMarkdown(maven(body));
-    message.body = maven(body);
+    message.body = removeMarkdown(maven(body));
+    //message.body = maven(body);
     if (!(message.mentions === undefined)) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
@@ -8687,12 +8684,20 @@ function mj(api, event, findPr, input, query, query2) {
             if (event.isGroup) {
                 getGroupProfile(event.threadID, async function (group) {
                     let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, group);
-                    user["balance"] += respo.data.usage.total_tokens;
+                    if (user.balance === undefined) {
+                        user["balance"] = respo.data.usage.total_tokens;
+                    } else {
+                        user["balance"] += respo.data.usage.total_tokens;
+                    }
                     sendAiMessage(api, event, respo.data.choices[0].message.content);
                 });
             } else {
                 let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, { name: undefined });
-                user["balance"] += respo.data.usage.total_tokens;
+                if (user.balance === undefined) {
+                    user["balance"] = respo.data.usage.total_tokens;
+                } else {
+                    user["balance"] += respo.data.usage.total_tokens;
+                }
                 sendAiMessage(api, event, respo.data.choices[0].message.content);
             }
         });
@@ -8810,4 +8815,26 @@ function getFbDLQuality(req) {
         return req.data.links["Download Low Quality"];
     }
     return req.data.links["Download High Quality"];
+}
+
+function removeMarkdown(st) {
+    st = st.replace(/\[(.*?)\]/g, "");
+let url = st.match(/\((.*?)\)/);
+st = st.replace(/\((.*?)\)/g, url[1]);
+
+// find the bold/italic text
+let boldi = st.match(/\*\*\*(.*?)\*\*\*/);
+st = st.replace(/\*\*\*(.*?)\*\*\*/g, boldi[1]);
+
+// find the bold text
+let bold = st.match(/\*\*(.*?)\*\*/);
+st = st.replace(/\*\*(.*?)\*\*/g, bold[1]);
+
+// find the italic
+let italic = st.match(/\*(.*?)\*/);
+st = st.replace(/\*(.*?)\*/g, italic[1]);
+
+// replace code block
+st = st.replace("```", "");
+return st;
 }
