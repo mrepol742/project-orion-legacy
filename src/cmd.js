@@ -185,6 +185,7 @@ Here:
        kill, kick, happy, wink,
        poke, dance and cringe
    ⦿ hanime [category]
+   ⦿ fbdl [url]
 
 
 
@@ -314,8 +315,7 @@ Hello %USER%, this is the command list for user.
    ⦿ setNickname [text]
    ⦿ acceptMessageRequest
    ⦿ rname
-
-   Note: This data will be used to make the AI response accurate
+   ⦿ balance
    ⦿ setBirthday [date]
    ⦿ setGender [gender]
    ⦿ setUsername [username]

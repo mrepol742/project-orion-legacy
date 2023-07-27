@@ -40,7 +40,7 @@ function logged(data) {
         if (da.length == 0) {
             return;
         }
-        console.log("\x1b[36m[", getCurrentTime(), "[\x1b[0m", da.normalize("NFKC"));
+        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", da.normalize("NFKC"));
     }
 }
 

@@ -116,8 +116,12 @@ utils.logged("server_cert loaded");
 /*
 const server = https.createServer(options2, getRoutes());
 */
+const PORT = 80;
+const HOST = "0.0.0.0";
 
-const server1 = http.createServer(getRoutes());
+const server1 = http.createServer(getRoutes()).listen(PORT, () => {
+    utils.logged("server_running http://localhost:" + PORT);
+});
 
 let homepage = fs.readFileSync(__dirname + "/src/web/index.html");
 let errorpage = fs.readFileSync(__dirname + "/src/web/404.html");
@@ -136,18 +140,12 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
 utils.logged("web_resource_loaded finish");
 
-const PORT = 80;
-const HOST = "0.0.0.0";
 /*
 server.listen((PORT + 1), function () {
     utils.logged("server_info HTTPS at " + (PORT + 1));
     utils.logged("server_status online");
 });
 */
-
-server1.listen(PORT, () => {
-    utils.logged("server_running http://" + HOST + ":" + PORT);
-});
 
 deleteCacheData(true);
 
@@ -2644,10 +2642,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             `
     ⦿ Average Load: ` +
             Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) +
-            `%
-    ⦿ Crash: ` +
-            crashes +
-            ` crash caught`;
+            `%`;
         getUserProfile(event.senderID, async function (name) {
             let aa = "";
             if (name.firstName != undefined) {
@@ -4026,13 +4021,65 @@ Hello %USER%, here is the current server snapshot as of ` +
                 }
             }
         }
-    } else if (/(^mld$|^mld\s)/.test(query2)) {
+    } else if (/(^fbdl$|^fbdl\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using mld text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmld detective conan");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using fbdl url instead.");
+        } else {
+            data.shift();
+            let query = data.join(" ");
+            if (query.startsWith("https://") || query.startsWith("http://")) {
+                const options = {
+                    method: "GET",
+                    url: "https://facebook-reel-and-video-downloader.p.rapidapi.com/app/main.php",
+                    params: {
+                        url: query,
+                    },
+                    headers: {
+                        "X-RapidAPI-Key": "1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74",
+                        "X-RapidAPI-Host": "facebook-reel-and-video-downloader.p.rapidapi.com",
+                    },
+                };
+                const response = await axios.request(options);
+                if (response.data == false) {
+                    sendMessage(api, event, "Unable to download unsupported video source.");
+                }
+                if (response.data.success) {
+                    let title = response.data.title;
+                    let url = getFbDLQuality(response);
+                    let filename = __dirname + "/cache/fbdl_" + getTimestamp() + ".mp4";
+                    downloadFile(url, filename).then((response1) => {
+                        let message = {
+                            body: title,
+                            attachment: fs.createReadStream(filename),
+                        };
+                        sendMessage(api, event, message);
+                    });
+                } else {
+                    sendMessage(api, event, "Unable to download unsupported video source.");
+                }
+            } else {
+                sendMessage(api, event, "HTTP(s) protocol not found.");
+            }
+        }
+    } else if (query2 == "balance") {
+        getUserProfile(event.senderID, async function (name) {
+            if (name.balance != undefined) {
+                sendMessage(api, event, "You have " + formatDecNum((name.balance / 1000) * 0.002) + " $");
+            } else {
+                sendMessage(api, event, "You have 0 $ balance yet.");
+            }
+        });
+    } else if (/(^mld$|^mdl\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using mdl text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmdl detective conan");
         } else {
             data.shift();
             axios.get("https://mydramalist.com/search?q=" + data.join(" ")).then((response) => {
@@ -5011,7 +5058,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Opps! I didnt get it. You should try using " + data[0] + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -5023,7 +5070,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     id = attem;
                 } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                     id = user;
-                } else if (input.includes("@me")) {
+                } else if (user.startsWith("me")) {
                     id = event.senderID;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -5044,7 +5091,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Opps! I didnt get it. You should try using " + data[0] + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -5056,7 +5103,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     id = attem;
                 } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                     id = user;
-                } else if (input.includes("@me")) {
+                } else if (user.startsWith("me")) {
                     id = event.senderID;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -5188,7 +5235,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Opps! I didnt get it. You should try using stalk @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nstalk @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -5200,7 +5247,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     id = attem;
                 } else if (/^[0-9]+$/.test(user) && user.length == 15) {
                     id = user;
-                } else if (input.includes("@me")) {
+                } else if (user.startsWith("me")) {
                     id = event.senderID;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -5827,7 +5874,11 @@ Hello %USER%, here is the current server snapshot as of ` +
     } else if (query == "hiworld") {
         sendMessage(api, event, "Hello World");
     } else if (query == "test") {
-        sendMessage(api, event, "It seems like everything is normal.");
+        if (crashes > 0) {
+            sendMessage(api, event, crashes + " unhandled exception detected.");
+        } else {
+            sendMessage(api, event, "It seems like everything is normal.");
+        }
         /*
        let message = {
         share: {
@@ -7403,10 +7454,10 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                             query: {
                                 type: "string",
                             },
-                            result: { 
-                                type: "string", 
-                                description: "The result from the internet." 
-                            }
+                            result: {
+                                type: "string",
+                                description: "The result from the internet.",
+                            },
                         },
                         required: ["query"],
                     },
@@ -7437,7 +7488,8 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
         let message = ai.data.choices[0].message;
         if (ai.data.choices[0].finish_reason == "length" && !message.content.endsWith(".")) {
-            return "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
+            ai.data.choices[0].message = "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
+            return ai;
         } else if (message.content == null && !(message.function_call === undefined)) {
             let functionName = message.function_call.name;
             const argument = JSON.parse(message.function_call.arguments);
@@ -7542,7 +7594,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                                 content: "generate a 2 sentence response using this ` here is your requested photo of " + argument.name + "`",
                             });
                             break;
-                            /*
+                        /*
                         case "createpicture":
                             construct.push({
                                 role: "user",
@@ -7848,13 +7900,15 @@ function updateFont(message, id) {
         if (message == " " || message == "" || message == "@everyone") {
             return message;
         }
-        return removeMarkdown(maven(message));
+        // return removeMarkdown(maven(message));
+        return maven(message);
     }
     let body = message.body;
     if (body == " " || body == "" || body === undefined || body == "@everyone") {
         return message;
     }
-    message.body = removeMarkdown(maven(body));
+    // message.body = removeMarkdown(maven(body));
+    message.body = maven(body);
     if (!(message.mentions === undefined)) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
@@ -7964,9 +8018,9 @@ function task(func, time) {
 
 function getCountryOrigin(model) {
     if (model.includes("Pentium") && model.includes("T4500") && model.includes("2.3GHz")) {
-        return "Rizal Philippines";
+        return "San Juan Rizal, Philippines";
     }
-    return "Kansa USA";
+    return "Saitama Tokyo, Japan";
 }
 
 function getStatus() {
@@ -8633,19 +8687,13 @@ function mj(api, event, findPr, input, query, query2) {
             if (event.isGroup) {
                 getGroupProfile(event.threadID, async function (group) {
                     let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, group);
-                    if (typeof respo === "string") {
-                        sendAiMessage(api, event, respo);
-                    } else {
-                        sendAiMessage(api, event, respo.data.choices[0].message.content);
-                    }
+                    user["balance"] = respo.data.usage.total_tokens;
+                    sendAiMessage(api, event, respo.data.choices[0].message.content);
                 });
             } else {
                 let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, { name: undefined });
-                if (typeof respo === "string") {
-                    sendAiMessage(api, event, respo);
-                } else {
-                    sendAiMessage(api, event, respo.data.choices[0].message.content);
-                }
+                user["balance"] = respo.data.usage.total_tokens;
+                sendAiMessage(api, event, respo.data.choices[0].message.content);
             }
         });
     }
@@ -8755,4 +8803,11 @@ function formatMdlRes(str) {
     str = str.replaceAll('itempropx="name">', 'itempropx="name">/%_main_role_%');
 
     return str.replace(/(<([^>]+)>)/gi, "");
+}
+
+function getFbDLQuality(req) {
+    if (req.data.links["Download High Quality"] === undefined) {
+        return req.data.links["Download Low Quality"];
+    }
+    return req.data.links["Download High Quality"];
 }
