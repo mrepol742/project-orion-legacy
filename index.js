@@ -8687,7 +8687,7 @@ function mj(api, event, findPr, input, query, query2) {
                     } else {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
-                    sendAiMessage(api, event, removeMarkdown(respo.data.choices[0].message.content));
+                    sendAiMessage(api, event, respo.data.choices[0].message.content);
                 });
             } else {
                 let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, { name: undefined });
@@ -8696,7 +8696,7 @@ function mj(api, event, findPr, input, query, query2) {
                 } else {
                     user["balance"] += respo.data.usage.total_tokens;
                 }
-                sendAiMessage(api, event, removeMarkdown(respo.data.choices[0].message.content));
+                sendAiMessage(api, event, respo.data.choices[0].message.content);
             }
         });
     }
