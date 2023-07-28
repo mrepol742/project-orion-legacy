@@ -2949,7 +2949,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(data.join(" "), { type: "video" });
-                if (search.results) {
+                if (search.results && !(search.results[0].title === undefined)) {
                     threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
@@ -2963,8 +2963,16 @@ Hello %USER%, here is the current server snapshot as of ` +
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
+                    let construct = search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes";
+                    if (!(search.results[0].author === undefined)) {
+                        construct += "\nAuthor: " + search.results[0].author.name;
+                    }
+                    construct += "\nUploaded: " + search.results[0].published.text + "\nViews: " + search.results[0].view_count.text;
+                    if (!(search.results[0].snippets === undefined)) {
+                        construct += "\n\n" + search.results[0].snippets[0].text.text
+                    }
                     let message = {
-                        body: search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes\nAuthor: " + search.results[0].author.name + "\nUploaded: " + search.results[0].published.text + "\nViews: " + search.results[0].view_count.text + "\n\n" + search.results[0].snippets[0].text.text,
+                        body: construct,
                         attachment: fs.createReadStream(filename),
                     };
                     sendMessage(api, event, message);
@@ -3039,7 +3047,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
-                if (search.results) {
+                if (search.results && !(search.results[0].title === undefined)) {
                     threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
@@ -3053,8 +3061,15 @@ Hello %USER%, here is the current server snapshot as of ` +
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
+                    let construct = search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes";
+                    if (!(search.results[0].album === undefined)) {
+                        construct += "\nAlbum: " + search.results[0].album.name;
+                    }
+                    if (!(search.results[0].artist === undefined)) {
+                        construct += "\nArtist: " + search.results[0].artist.name ;
+                    }
                     let message = {
-                        body: search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes\nAlbum: " + search.results[0].album.name + "\nArtist: " + search.results[0].artist.name ,
+                        body: construct,
                         attachment: fs.createReadStream(filename),
                     };
                     sendMessage(api, event, message);
