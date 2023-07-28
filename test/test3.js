@@ -1,4 +1,4 @@
-let st  = "*test* ***hello*** ```hi``` [test](https://test.com)";
+let st  = "*test* \n***hello*** ```hi``` [test](https://test.com)";
 
 // find the url/image
 st = st.replace(/\[(.*?)\]/g, "");

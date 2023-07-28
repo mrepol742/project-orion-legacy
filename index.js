@@ -4065,10 +4065,11 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "HTTP(s) protocol not found.");
             }
         }
-    } else if (query2 == "balance") {
+    } else if (query2 == "balance" || query2 == "bal") {
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
-                sendMessage(api, event, "You have " + formatDecNum((name.balance / 1000) * 0.002) + " $");
+                let sendID = event.senderID;
+                sendMessage(api, event, "You currently have " + formatDecNum((name.balance / 1000) * 0.002) + " $ in your bank ends with " + sendID.substr(-4));
             } else {
                 sendMessage(api, event, "You have 0 $ balance yet.");
             }
@@ -7865,7 +7866,7 @@ function maven(text) {
                     return a;
                 }
                 for (domain in domains) {
-                    if (a.endsWith(domains[domain])) {
+                    if (a.endsWith(domains[domain]) || (a.includes(domains[domain] + "/") && /(http|https):\/\//.test(a))) {
                         return a;
                     }
                 }
@@ -8461,7 +8462,8 @@ async function sendAiMessage(api, event, ss) {
     }
 
     let eventB = event.body;
-    if (eventB.startsWith("beshy") || eventB.startsWith("beshie") || /(\sbeshy(\s|)|\sbeshi(\s|))/.test(eventB)) {
+    let query2 = formatQuery(eventB.toLowerCase().normalize("NFKC"));
+    if (query2.startsWith("beshy") || query2.startsWith("beshie") || /(\sbeshy(\s|)|\sbeshi(\s|))/.test(query2)) {
         let mB = message.body;
         message.body = mB.replaceAll(" ", " 🤸 ");
     }
@@ -8469,6 +8471,8 @@ async function sendAiMessage(api, event, ss) {
     if (message.body == "") {
         message.body = " ";
     }
+
+    message.body = utils.removeMarkdown(message.body);
 
     sendMessage(api, event, message);
 }
@@ -8687,7 +8691,7 @@ function mj(api, event, findPr, input, query, query2) {
                     } else {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
-                    sendAiMessage(api, event, removeMarkdown(respo.data.choices[0].message.content));
+                    sendAiMessage(api, event, respo.data.choices[0].message.content);
                 });
             } else {
                 let respo = await aiResponse2(api, event, settings.preference.text_complextion, text, true, user, { name: undefined });
@@ -8696,7 +8700,7 @@ function mj(api, event, findPr, input, query, query2) {
                 } else {
                     user["balance"] += respo.data.usage.total_tokens;
                 }
-                sendAiMessage(api, event, removeMarkdown(respo.data.choices[0].message.content));
+                sendAiMessage(api, event, respo.data.choices[0].message.content);
             }
         });
     }
@@ -8707,12 +8711,14 @@ async function getWebResults(ask) {
     if (response.results.length != 0) {
         let construct = "";
         if (response.featured_snippet.title != null && response.featured_snippet.description != null) {
-            construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description;
+            construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description + "\n" + response.featured_snippet.url;
         } else {
             construct += "\n";
-            for (let i = 0; i < 5; i++) {
+            for (let i = 1; i < 6; i++) {
                 if (!(response.results[i].title === undefined)) {
-                    construct += response.results[i].title + response.results[i].description;
+                    construct += i + ". " + response.results[i].title + 
+                    "\n" + response.results[i].description +
+                    "\n" + response.results[i].url + "\n";
                 }
             }
         }
@@ -8813,35 +8819,4 @@ function getFbDLQuality(req) {
         return req.data.links["Download Low Quality"];
     }
     return req.data.links["Download High Quality"];
-}
-
-function removeMarkdown(st) {
-    // find the url/image
-    st = st.replace(/\[(.*?)\]/g, "");
-    let url = st.match(/\((.*?)\)/);
-    if (url != null) {
-        st = st.replace(/\((.*?)\)/g, url[1]);
-    }
-
-    // find the bold/italic text
-    let boldi = st.match(/\*\*\*(.*?)\*\*\*/);
-    if (boldi != null) {
-        st = st.replace(/\*\*\*(.*?)\*\*\*/g, boldi[1]);
-    }
-
-    // find the bold text
-    let bold = st.match(/\*\*(.*?)\*\*/);
-    if (bold != null) {
-        st = st.replace(/\*\*(.*?)\*\*/g, bold[1]);
-    }
-
-    // find the italic
-    let italic = st.match(/\*(.*?)\*/);
-    if (italic != null) {
-        st = st.replace(/\*(.*?)\*/g, italic[1]);
-    }
-
-    // replace code block
-    st = st.replaceAll("```", "");
-    return st;
 }
