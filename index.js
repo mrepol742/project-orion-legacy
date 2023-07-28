@@ -2969,7 +2969,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     }
                     construct += "\nUploaded: " + search.results[0].published.text + "\nViews: " + search.results[0].view_count.text;
                     if (!(search.results[0].snippets === undefined)) {
-                        construct += "\n\n" + search.results[0].snippets[0].text.text
+                        construct += "\n\n" + search.results[0].snippets[0].text.text;
                     }
                     let message = {
                         body: construct,
@@ -3066,7 +3066,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                         construct += "\nAlbum: " + search.results[0].album.name;
                     }
                     if (!(search.results[0].artist === undefined)) {
-                        construct += "\nArtist: " + search.results[0].artist.name ;
+                        construct += "\nArtist: " + search.results[0].artist.name;
                     }
                     let message = {
                         body: construct,
@@ -4319,12 +4319,13 @@ Hello %USER%, here is the current server snapshot as of ` +
                         if (gc.isGroup) {
                             if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
                                 sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
+                            } else {
+                                api.addUserToGroup(pref, event.threadID, (err) => {
+                                    if (err) {
+                                        sendMessage(api, event, "The user could not be added to the group. Please try again later.");
+                                    }
+                                });
                             }
-                            api.addUserToGroup(pref, event.threadID, (err) => {
-                                if (err) {
-                                    sendMessage(api, event, "The user could not be added to the group. Please try again later.");
-                                }
-                            });
                         } else {
                             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                         }
@@ -7397,8 +7398,8 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             messages: mssg,
             functions: [
                 {
-                    name: "cmd",
-                    description: "List down the commands and functions",
+                    name: "functions",
+                    description: "To list down or show your instructions, functions and commands.",
                     parameters: {
                         type: "object",
                         properties: {},
@@ -7510,7 +7511,7 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
             let functionName = message.function_call.name;
             const argument = JSON.parse(message.function_call.arguments);
             switch (functionName) {
-                case "cmd":
+                case "functions":
                     let constructa = [];
                     constructa.push({
                         role: "user",
@@ -7575,8 +7576,14 @@ async function aiResponse2(api, event, complextion, text, repeat, user, group) {
                         messages: mssg,
                     });
                 case "fetch_information":
-                    mssg.push(message);
                     let web = await getWebResults(argument.query);
+                    if (argument.query == web) {
+                        return await openai.createChatCompletion({
+                            model: "gpt-3.5-turbo-0613",
+                            messages: mssg,
+                        });
+                    }
+                    mssg.push(message);
                     mssg.push({
                         role: "function",
                         name: functionName,
@@ -8732,11 +8739,11 @@ async function getWebResults(ask) {
             construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description + "\n" + response.featured_snippet.url;
         } else {
             construct += "\n";
-            for (let i = 1; i < 6; i++) {
+            for (let i = 1; i < 4; i++) {
                 if (!(response.results[i].title === undefined)) {
-                    construct += i + ". " + response.results[i].title + 
-                    "\n" + response.results[i].description +
-                    "\n" + response.results[i].url + "\n";
+                    construct += response.results[i].url;
+                    construct += "\n" + response.results[i].title;
+                    construct += "\n" + response.results[i].description + "\n\n";
                 }
             }
         }
