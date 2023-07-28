@@ -1420,7 +1420,7 @@ async function ai22(api, event, query, query2) {
         } else {
             try {
                 data.shift();
-                let response = await google.search(event.messageReply.body + " in " + data.join(), googleSearchOptions);
+                let response = await google.search(event.messageReply.body + " in " + data.join(" "), googleSearchOptions);
                 sendMessage(api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
             } catch (error) {
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
