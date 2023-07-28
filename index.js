@@ -1423,6 +1423,7 @@ async function ai22(api, event, query, query2) {
                 let response = await google.search(event.messageReply.body + " in " + data.join(" "), googleSearchOptions);
                 sendMessage(api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
             } catch (error) {
+                utils.logged(error);
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
@@ -2963,7 +2964,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                         file.write(chunk);
                     }
                     let message = {
-                        body: search.results[0].title,
+                        body: search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes\nAuthor: " + search.results[0].author.name + "\nUploaded: " + search.results[0].published.text + "\nViews: " + search.results[0].view_count.text + "\n\n" + search.results[0].snippets[0].text.text,
                         attachment: fs.createReadStream(filename),
                     };
                     sendMessage(api, event, message);
@@ -3053,7 +3054,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                         file.write(chunk);
                     }
                     let message = {
-                        body: search.results[0].title,
+                        body: search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes\nAlbum: " + search.results[0].album.name + "\nArtist: " + search.results[0].artist.name ,
                         attachment: fs.createReadStream(filename),
                     };
                     sendMessage(api, event, message);
