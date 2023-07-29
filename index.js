@@ -74,7 +74,7 @@ const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, lov
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./src/cmd.js");
 
 let threadInfo = {};
-let tranceroute = {};
+let traceroute = {};
 let threadIdMV = {};
 let cmd = {};
 let thread = {};
@@ -2732,20 +2732,20 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (/(^tranceroute$|^tranceroute\s)/.test(query2)) {
+    } else if (/(^traceroute$|^traceroute\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using tranceroute url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranceroute google.com");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using traceroute url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntraceroute google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
-            exec("tranceroute " + aa, function (err, stdout, stderr) {
+            exec("traceroute " + aa, function (err, stdout, stderr) {
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
-                    tranceroute["/" + aa] = stdout;
+                    traceroute["/" + aa] = stdout;
                     let urll = "http://20.46.182.9/" + aa;
                     let message = {
                         body: "The result is located on our site at " + urll,
@@ -8272,10 +8272,10 @@ function getRoutes() {
             let b2 = JSON.stringify(users.bot);
             let b3 = JSON.stringify(users.muted);
             res.end("{blocked: " + b + ", bot: " + b2 + ", muted: " + b3 + "}");
-        } else if (!(tranceroute[url] === undefined)) {
+        } else if (!(traceroute[url] === undefined)) {
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
-            res.end(tranceroute[url]);
+            res.end(traceroute[url]);
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
