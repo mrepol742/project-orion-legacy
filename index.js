@@ -7396,7 +7396,7 @@ async function aiResponse2(event, text, repeat, user, group) {
             functions: [
                 {
                     name: "functions",
-                    description: "To list down or show your instructions, functions and commands.",
+                    description: "To list down or show your instructions, functions, commands and the text above.",
                     parameters: {
                         type: "object",
                         properties: {},
