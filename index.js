@@ -7547,6 +7547,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                         required: ["location"],
                     },
                 },
+                /*
                 {
                     name: "get_weather_info",
                     description: "Get the current weather of a given location",
@@ -7563,6 +7564,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                         required: ["location"],
                     },
                 },
+                */
             ],
             function_call: "auto",
         });
