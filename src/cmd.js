@@ -186,10 +186,10 @@ Here:
        poke, dance and cringe
    ⦿ hanime [category]
    ⦿ fbdl [url]
-
-
-
-
+   ⦿ ugly
+   ⦿ coward
+   
+   
 
 
 How can i assist you further %USER%?

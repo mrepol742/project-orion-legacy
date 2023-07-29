@@ -3231,10 +3231,23 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
+    } else if (query == "coward") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let pre = Math.floor(Math.random() * 100) + "%";
+        sendMessage(api, event, "You are " + pre + " coward.");
+    } else if (query == "ugly") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let pre = Math.floor(Math.random() * 100) + "%";
+        sendMessage(api, event, "You are " + pre + " ugly.");
     } else if (query == "rpair" || query == "pair") {
         if (isGoingToFast(api, event)) {
             return;
         }
+        if (event.isGroup) {
         api.getThreadInfo(event.threadID, (err, info) => {
             if (err) return utils.logged(err);
 
@@ -3260,9 +3273,37 @@ Hello %USER%, here is the current server snapshot as of ` +
                         api.getUserInfo(partner2, (err, info1) => {
                             if (err) return utils.logged(err);
 
-                            let percentage = Math.floor(Math.random() * 100) + "%";
+                            let love = Math.floor(Math.random() * 100) + "%";
+                            let charm = Math.floor(Math.random() * 100) + "%";
+                            let clingy = Math.floor(Math.random() * 100) + "%";
+                            let ls = Math.floor(Math.random() * 100) + "%";
+                            let attention = Math.floor(Math.random() * 100) + "%";
+                            let affection = Math.floor(Math.random() * 100) + "%";
+                            let confidence = Math.floor(Math.random() * 100) + "%";
+                            let toxic = Math.floor(Math.random() * 100) + "%";
+                            let feelings = Math.floor(Math.random() * 100) + "%";
+                            let crush = Math.floor(Math.random() * 100) + "%";
+                            let pm = Math.floor(Math.random() * 100) + "%";
+                            let pma = Math.floor(Math.random() * 100) + "%";
+                            let pma1 = Math.floor(Math.random() * 100) + "%";
+
+                            let construct = name1 + " 💘 " + info1[partner2]["firstName"];
+                            construct += "\n\nLove at first sight: " + ls;
+                            construct += "\nFeelings: " + feelings;
+                            construct += "\nCrush: " + crush;
+                            construct += "\nLove: " + love;
+                            construct += "\nCharm: " + charm;
+                            construct += "\nClingy: " + clingy;
+                            construct += "\nAttention: " + attention;
+                            construct += "\nAffection: " + affection;
+                            construct += "\nConfidence: " + confidence;
+                            construct += "\nToxic: " + toxic;
+                            construct += "\nProbability of getting marriage: " + pm;
+                            construct += "\nProbability of getting divorced: " + pma;
+                            construct += "\nProbability of having affair: " + pma1;
+
                             let message = {
-                                body: "hmmm its " + percentage + " that " + name1 + " >3 " + info1[partner2]["firstName"],
+                                body: construct,
                                 attachment: [fs.createReadStream(filename), fs.createReadStream(filename1)],
                                 mentions: [
                                     {
@@ -3281,10 +3322,14 @@ Hello %USER%, here is the current server snapshot as of ` +
                 });
             });
         });
+    } else {
+        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+    }
     } else if (query == "everyone" || query == "all") {
         if (isGoingToFast(api, event)) {
             return;
         }
+        if (event.isGroup) {
         api.getThreadInfo(event.threadID, (err, info) => {
             if (err) return utils.logged(err);
 
@@ -3302,7 +3347,9 @@ Hello %USER%, here is the current server snapshot as of ` +
             }
             sendMessage(api, event, message, event.threadID, event.messageID, true, false);
         });
-
+    } else {
+        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+    }
         /*
         let tid = event.threadID;
         let message = {
