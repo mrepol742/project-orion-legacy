@@ -1,10 +1,9 @@
-let st  = "*test* \n***hello*** ```hi``` [test](https://test.com)";
+let st  = "*test* ***hello***\n***hello*** ```hi``` [test](https://test.com)";
 
 // find the url/image
-st = st.replace(/\[(.*?)\]/g, "");
-let url = st.match(/\((.*?)\)/);
+let url = st.match(/\[(.*?)\]\((.*?)\)/);
 if (url != null) {
-st = st.replace(/\((.*?)\)/g, url[1]);
+    st = st.replace(/\[(.*?)\]\((.*?)\)/g, url[2]);
 }
 
 // find the bold/italic text
