@@ -189,7 +189,7 @@ Here:
    ⦿ ugly
    ⦿ coward
    
-   
+
 
 
 How can i assist you further %USER%?
@@ -203,12 +203,12 @@ let help6 = `
    ⦿ sayjap [text]
    ⦿ mathfacts
    ⦿ ss [url]
+   ⦿ tranceroute [url]
    ⦿ nslookup [url]
    ⦿ header [url]
    ⦿ pair
    ⦿ rpair
    ⦿ checkPicture
-
    ⦿ conan
    ⦿ summ [text]
    ⦿ gcolor [theme]
