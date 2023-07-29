@@ -3312,6 +3312,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                             let pm = Math.floor(Math.random() * 100) + "%";
                             let pma = Math.floor(Math.random() * 100) + "%";
                             let pma1 = Math.floor(Math.random() * 100) + "%";
+                            let horny = Math.floor(Math.random() * 100) + "%";
 
                             let construct = name1 + " 💘 " + info1[partner2]["firstName"];
                             construct += "\n\nLove at first sight: " + ls;
@@ -3324,6 +3325,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                             construct += "\nAffection: " + affection;
                             construct += "\nConfidence: " + confidence;
                             construct += "\nToxic: " + toxic;
+                            construct += "\nHorny: " + horny;
                             construct += "\nProbability of getting marriage: " + pm;
                             construct += "\nProbability of getting divorced: " + pma;
                             construct += "\nProbability of having affair: " + pma1;
