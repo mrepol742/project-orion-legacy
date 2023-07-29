@@ -203,7 +203,7 @@ let help6 = `
    ⦿ sayjap [text]
    ⦿ mathfacts
    ⦿ ss [url]
-   ⦿ tranceroute [url]
+   ⦿ traceroute [url]
    ⦿ nslookup [url]
    ⦿ header [url]
    ⦿ pair
