@@ -7648,7 +7648,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                 case "get_weather_info":
                     mssg.push(message);
                     let response23 = await google.search("current time in " + argument.location, googleSearchOptions);
-                    await WeatherJS.find(
+                    return await WeatherJS.find(
                         {
                             search: argument.location,
                             degreeType: "C",
@@ -7710,12 +7710,12 @@ async function aiResponse2(event, text, repeat, user, group) {
                                 name: functionName,
                                 content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
                             });
-                        }
-                    );
-                    return await openai.createChatCompletion({
+                            return await openai.createChatCompletion({
                         model: "gpt-3.5-turbo-0613",
                         messages: mssg,
                     });
+                        }
+                    );
                 case "fetch_information":
                     let web = await getWebResults(argument.query);
                     if (argument.query == web) {
