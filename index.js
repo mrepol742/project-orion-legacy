@@ -74,6 +74,7 @@ const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, lov
 const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./src/cmd.js");
 
 let threadInfo = {};
+let tranceroute = {};
 let threadIdMV = {};
 let cmd = {};
 let thread = {};
@@ -453,7 +454,7 @@ function redfox_fb(fca_state, login, cb) {
 
             if ((event.type == "message" || event.type == "message_reply") && accounts.includes(event.senderID)) {
                 let body = event.body;
-                let result = !!body.match(/^[!@#$%&*~|?]/);
+                let result = !!body.match(/^[!@#$%&*~\-_|?]/);
                 if (result) {
                     event.body = body.slice(1);
                 } else {
@@ -2729,6 +2730,31 @@ Hello %USER%, here is the current server snapshot as of ` +
             let aa = data.join(" ");
             exec("ping -c 5 " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        }
+    } else if (/(^tranceroute$|^tranceroute\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using tranceroute url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranceroute google.com");
+        } else {
+            data.shift();
+            let aa = data.join(" ");
+            exec("tranceroute " + aa, function (err, stdout, stderr) {
+                let com = stderr.replace(/\s+/g, "");
+                if (com == "") {
+                    tranceroute["/" + aa] = stdout;
+                    let urll = "http://20.46.182.9/" + aa;
+                    let message = {
+                        body: "The result is located on our site at " + urll,
+                        url: urll,
+                    };
+                    sendMessage(api, event, message);
+                } else {
+                    sendMessage(api, event, stderr);
+                }
             });
         }
         // TODO: covid and covid
@@ -5123,8 +5149,9 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let data = input.split(" ");
+        let prrr = data[0].replace(/[^\w\s]/gi, '');
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using " + data[0] + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " @Zero Two");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using " + prrr + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5142,22 +5169,23 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data2) => {
                         if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getAnimeGif(api, event, data2[0].userID, data[0]);
+                        getAnimeGif(api, event, data2[0].userID, prrr);
                     });
                     return;
                 }
             } else if (isMyId(id)) {
                 id = event.senderID;
             }
-            getAnimeGif(api, event, id, data[0]);
+            getAnimeGif(api, event, id, prrr);
         }
     } else if (/(^gun$|^gun\s|^wanted$|^wanted\s|^clown$|^clown\s|^drip$|^drip\s|^communist$|^communist\s|^advert$|^advert\s|^uncover$|^uncover\s|^jail$|^jail\s|^invert$|^invert\s|^pet$|^pet\s|^mnm$|^mnm\s|^greyscale$|^greyscale\s|^jokeover$|^jokeover\s|^blur$|^blur\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
+        let prrr = data[0].replace(/[^\w\s]/gi, '');
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using " + data[0] + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " @Zero Two");
+            sendMessage(api, event, "Opps! I didnt get it. You should try using " + prrr + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5175,14 +5203,14 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     api.getUserID(user.replace("@", ""), (err, data2) => {
                         if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getPopcatImage(api, event, data2[0].userID, data[0]);
+                        getPopcatImage(api, event, data2[0].userID, prrr);
                     });
                     return;
                 }
             } else if (isMyId(id)) {
                 id = event.senderID;
             }
-            getPopcatImage(api, event, id, data[0]);
+            getPopcatImage(api, event, id, prrr);
         }
     } else if (query.startsWith("ship")) {
         if (isGoingToFast(api, event)) {
@@ -8244,6 +8272,10 @@ function getRoutes() {
             let b2 = JSON.stringify(users.bot);
             let b3 = JSON.stringify(users.muted);
             res.end("{blocked: " + b + ", bot: " + b2 + ", muted: " + b3 + "}");
+        } else if (!(tranceroute[url] === undefined)) {
+            res.setHeader("Content-Type", "text/html");
+            res.writeHead(200);
+            res.end(tranceroute[url]);
         } else if (!(threadInfo[url] === undefined)) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
