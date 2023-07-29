@@ -3269,115 +3269,129 @@ Hello %USER%, here is the current server snapshot as of ` +
         }
         let pre = Math.floor(Math.random() * 100) + "%";
         sendMessage(api, event, "You are " + pre + " ugly.");
-    } else if (query == "rpair" || query == "pair") {
+    } else if (query == "rpair" || query == "pair" || query.startsWith("lovetest")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (event.isGroup) {
-        api.getThreadInfo(event.threadID, (err, info) => {
-            if (err) return utils.logged(err);
-
-            let members = info.participantIDs.length;
-            var partner1 = 0;
-            if (query == "rpair") {
-                partner1 = info.participantIDs[Math.floor(Math.random() * members)];
-            } else {
-                partner1 = event.senderID;
+        if (query.startsWith("lovetest")) {
+            let data = input.split(" ");
+            if (data.length < 3) {
+                return sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @name:@name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest @Edogawa Conan: @Ran Mouri");
             }
-            let partner2 = info.participantIDs[Math.floor(Math.random() * members)];
+        }
+        if (event.isGroup) {
+            api.getThreadInfo(event.threadID, (err, info) => {
+                if (err) return utils.logged(err);
 
-            let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
-            let filename = __dirname + "/cache/pair1_" + getTimestamp() + ".jpg";
-            downloadFile(url, filename).then((response) => {
-                let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
-                let filename1 = __dirname + "/cache/pair2_" + getTimestamp() + ".jpg";
-                downloadFile(url1, filename1).then((response1) => {
-                    api.getUserInfo(partner1, (err, info) => {
-                        if (err) return utils.logged(err);
-                        let name1 = info[partner1]["firstName"];
+                let members = info.participantIDs.length;
+                var partner1 = 0;
+                var partner2 = 0;
+                if (query == "rpair") {
+                    partner1 = info.participantIDs[Math.floor(Math.random() * members)];
+                    partner2 = info.participantIDs[Math.floor(Math.random() * members)];
+                } else if (query == "pair") {
+                    partner1 = event.senderID;
+                    partner2 = info.participantIDs[Math.floor(Math.random() * members)];
+                } else {
+                    partner1 = Object.keys(event.mentions)[0];
+                    partner2 = Object.keys(event.mentions)[1];
+                    if (partner1 === undefined || partner2 === undefined) {
+                        return sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest @name:@name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest @Edogawa Conan: @Ran Mouri");
+                    }
+                }
 
-                        api.getUserInfo(partner2, (err, info1) => {
+                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                let filename = __dirname + "/cache/pair1_" + getTimestamp() + ".jpg";
+                downloadFile(url, filename).then((response) => {
+                    let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                    let filename1 = __dirname + "/cache/pair2_" + getTimestamp() + ".jpg";
+                    downloadFile(url1, filename1).then((response1) => {
+                        api.getUserInfo(partner1, (err, info) => {
                             if (err) return utils.logged(err);
+                            let name1 = info[partner1]["firstName"];
 
-                            let love = Math.floor(Math.random() * 100) + "%";
-                            let charm = Math.floor(Math.random() * 100) + "%";
-                            let clingy = Math.floor(Math.random() * 100) + "%";
-                            let ls = Math.floor(Math.random() * 100) + "%";
-                            let attention = Math.floor(Math.random() * 100) + "%";
-                            let affection = Math.floor(Math.random() * 100) + "%";
-                            let confidence = Math.floor(Math.random() * 100) + "%";
-                            let toxic = Math.floor(Math.random() * 100) + "%";
-                            let feelings = Math.floor(Math.random() * 100) + "%";
-                            let crush = Math.floor(Math.random() * 100) + "%";
-                            let pm = Math.floor(Math.random() * 100) + "%";
-                            let pma = Math.floor(Math.random() * 100) + "%";
-                            let pma1 = Math.floor(Math.random() * 100) + "%";
-                            let horny = Math.floor(Math.random() * 100) + "%";
+                            api.getUserInfo(partner2, (err, info1) => {
+                                if (err) return utils.logged(err);
 
-                            let construct = name1 + " 💘 " + info1[partner2]["firstName"];
-                            construct += "\n\nLove at first sight: " + ls;
-                            construct += "\nFeelings: " + feelings;
-                            construct += "\nCrush: " + crush;
-                            construct += "\nLove: " + love;
-                            construct += "\nCharm: " + charm;
-                            construct += "\nClingy: " + clingy;
-                            construct += "\nAttention: " + attention;
-                            construct += "\nAffection: " + affection;
-                            construct += "\nConfidence: " + confidence;
-                            construct += "\nToxic: " + toxic;
-                            construct += "\nHorny: " + horny;
-                            construct += "\nProbability of getting marriage: " + pm;
-                            construct += "\nProbability of getting divorced: " + pma;
-                            construct += "\nProbability of having affair: " + pma1;
+                                let love = Math.floor(Math.random() * 100) + "%";
+                                let charm = Math.floor(Math.random() * 100) + "%";
+                                let clingy = Math.floor(Math.random() * 100) + "%";
+                                let ls = Math.floor(Math.random() * 100) + "%";
+                                let attention = Math.floor(Math.random() * 100) + "%";
+                                let affection = Math.floor(Math.random() * 100) + "%";
+                                let confidence = Math.floor(Math.random() * 100) + "%";
+                                let toxic = Math.floor(Math.random() * 100) + "%";
+                                let feelings = Math.floor(Math.random() * 100) + "%";
+                                let crush = Math.floor(Math.random() * 100) + "%";
+                                let pm = Math.floor(Math.random() * 100) + "%";
+                                let pma = Math.floor(Math.random() * 100) + "%";
+                                let pma1 = Math.floor(Math.random() * 100) + "%";
+                                let horny = Math.floor(Math.random() * 100) + "%";
 
-                            let message = {
-                                body: construct,
-                                attachment: [fs.createReadStream(filename), fs.createReadStream(filename1)],
-                                mentions: [
-                                    {
-                                        tag: name1,
-                                        id: partner1,
-                                    },
-                                    {
-                                        tag: info1[partner2]["firstName"],
-                                        id: partner2,
-                                    },
-                                ],
-                            };
-                            sendMessage(api, event, message);
+                                let construct = name1 + " 💘 " + info1[partner2]["firstName"];
+                                construct += "\n\nLove at first sight: " + ls;
+                                construct += "\nFeelings: " + feelings;
+                                construct += "\nCrush: " + crush;
+                                construct += "\nLove: " + love;
+                                construct += "\nCharm: " + charm;
+                                construct += "\nClingy: " + clingy;
+                                construct += "\nAttention: " + attention;
+                                construct += "\nAffection: " + affection;
+                                construct += "\nConfidence: " + confidence;
+                                construct += "\nToxic: " + toxic;
+                                construct += "\nHorny: " + horny;
+                                construct += "\nProbability of getting marriage: " + pm;
+                                construct += "\nProbability of getting divorced: " + pma;
+                                construct += "\nProbability of having affair: " + pma1;
+
+                                let message = {
+                                    body: construct,
+                                    attachment: [fs.createReadStream(filename), fs.createReadStream(filename1)],
+                                    mentions: [
+                                        {
+                                            tag: name1,
+                                            id: partner1,
+                                        },
+                                        {
+                                            tag: info1[partner2]["firstName"],
+                                            id: partner2,
+                                        },
+                                    ],
+                                };
+                                sendMessage(api, event, message);
+                            });
                         });
                     });
                 });
             });
-        });
-    } else {
-        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-    }
+        } else {
+            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
     } else if (query == "everyone" || query == "all") {
         if (isGoingToFast(api, event)) {
             return;
         }
         if (event.isGroup) {
-        api.getThreadInfo(event.threadID, (err, info) => {
-            if (err) return utils.logged(err);
+            api.getThreadInfo(event.threadID, (err, info) => {
+                if (err) return utils.logged(err);
 
-            const a = "\u200E";
-            let message = {
-                body: a + "everyone",
-                mentions: [],
-            };
-            let i;
-            for (i = 0; i < info.participantIDs.length; i++) {
-                message.mentions.push({
-                    tag: "everyone",
-                    id: info.participantIDs[i],
-                });
-            }
-            sendMessage(api, event, message, event.threadID, event.messageID, true, false);
-        });
-    } else {
-        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-    }
+                const a = "\u200E";
+                let message = {
+                    body: a + "everyone",
+                    mentions: [],
+                };
+                let i;
+                for (i = 0; i < info.participantIDs.length; i++) {
+                    message.mentions.push({
+                        tag: "everyone",
+                        id: info.participantIDs[i],
+                    });
+                }
+                sendMessage(api, event, message, event.threadID, event.messageID, true, false);
+            });
+        } else {
+            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+        }
         /*
         let tid = event.threadID;
         let message = {
@@ -5110,48 +5124,12 @@ Hello %USER%, here is the current server snapshot as of ` +
                 }
             });
         }
-    } else if (query.startsWith("lovetest")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 3) {
-            sendMessage(api, event, "Opps! I didnt get it. You should try using lovetest name:name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest Edogawa Conan: Ran Mouri");
-        } else {
-            data.shift();
-            let text = data.join(" ").split(":");
-            const options = {
-                method: "GET",
-                url: "https://love-calculator.p.rapidapi.com/getPercentage",
-                params: {
-                    sname: text[0],
-                    fname: text[1],
-                },
-                headers: {
-                    "X-RapidAPI-Host": "love-calculator.p.rapidapi.com",
-                    "X-RapidAPI-Key": "1c1a083544msh882a676149c55d6p14fcd3jsn777de1792e74",
-                },
-            };
-            axios
-                .request(options)
-                .then(function ({ data }) {
-                    var name1 = data.fname;
-                    var name2 = data.sname;
-                    var percent = data.percentage + "%";
-                    var result = data.result;
-                    sendMessage(api, event, name1 + " ❤️ " + name2 + "\n\n⦿ Percentage: " + percent + "\n" + result);
-                })
-                .catch(function (error) {
-                    utils.logged(error);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
-                });
-        }
     } else if (/(^kiss$|^kiss\s|^lick$|^lick\s|^hug$|^hug\s|^cuddle$|^cuddle\s|^pat$|^pat\s|^blush$|^blush\s|^wave$|^wave\s|^highfive$|^highfive\s|^bite$|^bite\s|^kick$|^kick\s|^wink$|^wink\s|^poke$|^poke\s|^cringe$|^cringe\s|^slap$|^slap\s|^kill$|^kill\s|^smug$|^smug\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
-        let prrr = data[0].replace(/[^\w\s]/gi, '');
+        let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Opps! I didnt get it. You should try using " + prrr + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + prrr + " @Zero Two");
         } else {
@@ -5185,7 +5163,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let data = input.split(" ");
-        let prrr = data[0].replace(/[^\w\s]/gi, '');
+        let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Opps! I didnt get it. You should try using " + prrr + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + prrr + " @Zero Two");
         } else {
@@ -6186,7 +6164,7 @@ function someA(api, event, query, input) {
     if (query == "sup" || query == "wassup") {
         sendMessage(api, event, sup[Math.floor(Math.random() * sup.length)]);
         return true;
-    } else if (query == "hey" || query == "hwfar" || query == "yo" || query == "bro" || query == "hola" || query == "hii" || query == "helloo" || query == "hiii" || query == "hellooo") {
+    } else if (query == "hello" || query == "hi" || query == "hey" || query == "hwfar" || query == "yo" || query == "bro" || query == "hola" || query == "hii" || query == "helloo" || query == "hiii" || query == "hellooo") {
         sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
         return true;
     } else if (query == "idk") {
@@ -7569,6 +7547,22 @@ async function aiResponse2(event, text, repeat, user, group) {
                         required: ["location"],
                     },
                 },
+                {
+                    name: "get_weather_info",
+                    description: "Get the current weather of a given location",
+                    parameters: {
+                        type: "object",
+                        properties: {
+                            location: {
+                                type: "string",
+                            },
+                            weather: { type: "string", description: "The weather status according to the location." },
+                            time: { type: "string", description: "The time according to the location." },
+                            date: { type: "string", description: "The date according to the location." },
+                        },
+                        required: ["location"],
+                    },
+                },
             ],
             function_call: "auto",
         });
@@ -7641,11 +7635,83 @@ async function aiResponse2(event, text, repeat, user, group) {
                 case "get_date_time":
                     mssg.push(message);
                     let response = await google.search("current time in " + argument.location, googleSearchOptions);
+
                     mssg.push({
                         role: "function",
                         name: functionName,
                         content: '{"time": "' + response.time.hours + '", "date": "' + response.time.date + '"}',
                     });
+                    return await openai.createChatCompletion({
+                        model: "gpt-3.5-turbo-0613",
+                        messages: mssg,
+                    });
+                case "get_weather_info":
+                    mssg.push(message);
+                    let response23 = await google.search("current time in " + argument.location, googleSearchOptions);
+                    await WeatherJS.find(
+                        {
+                            search: argument.location,
+                            degreeType: "C",
+                        },
+                        (err, r) => {
+                            if (err) {
+                                mssg.push({
+                                    role: "function",
+                                    name: functionName,
+                                    content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + argument.location + ' Not found."}',
+                                });
+                                return utils.logged(err);
+                            }
+                            let d = r[0];
+                            let m =
+                                d.location.name +
+                                " " +
+                                d.location.lat +
+                                " " +
+                                d.location.long +
+                                "\n\n" +
+                                "Temperature: " +
+                                d.current.temperature +
+                                "°C / " +
+                                ((d.current.temperature * 9) / 5 + 32) +
+                                "°F\n" +
+                                "Sky: " +
+                                d.current.skytext +
+                                "\n" +
+                                "Feelslike: " +
+                                d.current.feelslike +
+                                "\n" +
+                                "Humidity: " +
+                                d.current.humidity +
+                                "\n" +
+                                "Wind Speed: " +
+                                d.current.winddisplay +
+                                "\n" +
+                                "\nForecast\n" +
+                                "Mon: " +
+                                d.forecast[0].skytextday +
+                                "\n" +
+                                "Tue: " +
+                                d.forecast[1].skytextday +
+                                "\n" +
+                                "Wed: " +
+                                d.forecast[2].skytextday +
+                                "\n" +
+                                "Thu: " +
+                                d.forecast[3].skytextday +
+                                "\n" +
+                                "Fri: " +
+                                d.forecast[4].skytextday;
+                            if (d.location.alert != "") {
+                                m += "\nAlert: " + d.location.alert;
+                            }
+                            mssg.push({
+                                role: "function",
+                                name: functionName,
+                                content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
+                            });
+                        }
+                    );
                     return await openai.createChatCompletion({
                         model: "gpt-3.5-turbo-0613",
                         messages: mssg,

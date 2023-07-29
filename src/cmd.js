@@ -96,7 +96,7 @@ Hello %USER%, is there any questions you may have?
    ⦿ advice
    ⦿ alert [text]
    ⦿ meme
-   ⦿ lovetest [name1]: [name2]
+   ⦿ lovetest [@name1]: [@name2]
    ⦿ drake [text1]: [text2]
    ⦿ pooh [text1]: [text2]
    ⦿ oogway [text]
