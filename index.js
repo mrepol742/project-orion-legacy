@@ -7653,7 +7653,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                             search: argument.location,
                             degreeType: "C",
                         },
-                        (err, r) => {
+                        async (err, r) => {
                             if (err) {
                                 mssg.push({
                                     role: "function",
