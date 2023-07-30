@@ -526,6 +526,7 @@ function redfox_fb(fca_state, login, cb) {
                             });
                         }
                     } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
+                        blockedUserC += 1;
                         return;
                     } else if (users.muted.includes(event.senderID)) {
                         if (query == "mute") {
