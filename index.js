@@ -619,7 +619,7 @@ function redfox_fb(fca_state, login, cb) {
                                     "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
                                     event.body +
                                     "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
-                                attachment: fs.createReadStream(__dirname + "/src/web/maintenance.jpg"),
+                                attachment: fs.createReadStream(__dirname + "/src/web/maintenance.gif"),
                             };
                             sendMessage(api, event, message);
                         }
@@ -1227,20 +1227,12 @@ function redfox_fb(fca_state, login, cb) {
                                 } else {
                                     return;
                                 }
-                                let name = event.logMessageData.addedParticipants[0].fullName;
-                                let id = event.logMessageData.addedParticipants[0].userFbId;
-                                let arr = gc.participantIDs;
-                                let url = encodeURI("https://graph.facebook.com/" + names[0][0] + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
-                                let filename = __dirname + "/cache/facebook_" + getTimestamp() + ".jpg";
-                                downloadFile(url, filename).then((response) => {
                                     let message = {
                                         body: gret,
-                                        attachment: fs.createReadStream(filename),
+                                        attachment: fs.createReadStream(__dirname + "/src/web/welcome.gif"),
                                         mentions: mentioned,
                                     };
                                     sendMessage(api, event, message);
-                                    unLink(filename);
-                                });
                             });
                             break;
                         case "log:group_participants_left":
@@ -2975,13 +2967,17 @@ Hello %USER%, here is the current server snapshot as of ` +
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(data.join(" "), { type: "video" });
                 if (search.results) {
-                    threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
+                    threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
+                    sendMessage(api, event, {
+                        body: search.results[0].title + " is now in download progress...",
+                        attachment: fs.createReadStream(__dirname + "/src/web/download.gif"),
+                    });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
@@ -3025,13 +3021,17 @@ Hello %USER%, here is the current server snapshot as of ` +
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(data.join(" "), { type: "video" });
                 if (search.results && !(search.results[0].title === undefined)) {
-                    threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
+                    threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
+                    sendMessage(api, event, {
+                        body: search.results[0].title + " is now in download progress...",
+                        attachment: fs.createReadStream(__dirname + "/src/web/download.gif"),
+                    });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
@@ -3073,12 +3073,12 @@ Hello %USER%, here is the current server snapshot as of ` +
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
                 if (search.results) {
-                    threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
+                    threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
@@ -3123,12 +3123,12 @@ Hello %USER%, here is the current server snapshot as of ` +
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
                 if (search.results && !(search.results[0].title === undefined)) {
-                    threadIdMV[event.threadID] = false;
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
+                    threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     let filename = __dirname + "/cache/music_" + getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
@@ -4266,6 +4266,10 @@ Hello %USER%, here is the current server snapshot as of ` +
                     sendMessage(api, event, "Unable to download unsupported video source.");
                 }
                 if (response.data.success) {
+                    sendMessage(api, event, {
+                        body: response.data.title + " is now in download progress...",
+                        attachment: fs.createReadStream(__dirname + "/src/web/download.gif"),
+                    });
                     let title = response.data.title;
                     let url = getFbDLQuality(response);
                     let filename = __dirname + "/cache/fbdl_" + getTimestamp() + ".mp4";
@@ -5096,6 +5100,9 @@ Hello %USER%, here is the current server snapshot as of ` +
         if (isGoingToFast(api, event)) {
             return;
         }
+        let cdd = {
+            attachment: fs.createReadStream(__dirname + "/src/web/cmd.gif"),
+        }
         let data = input.split(" ");
         if (functionRegistry[event.threadID] === undefined) {
             getUserProfile(event.senderID, async function (name) {
@@ -5105,7 +5112,8 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
-                sendMessage(api, event, help.replace("%USER%", aa));
+                cdd["body"] = help.replace("%USER%", aa);
+                sendMessage(api, event, cdd);
                 functionRegistry[event.threadID] = 1;
             });
         } else if (data[1] == "next") {
@@ -5116,42 +5124,52 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
+                
                 switch (functionRegistry[event.threadID]) {
                     default:
                     case 0:
-                        sendMessage(api, event, help.replace("%USER%", aa));
+                        cdd["body"] = help.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 1;
                         break;
                     case 1:
-                        sendMessage(api, event, help1.replace("%USER%", aa));
+                        cdd["body"] = help1.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 2;
                         break;
                     case 2:
-                        sendMessage(api, event, help2.replace("%USER%", aa));
+                        cdd["body"] = help2.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 3;
                         break;
                     case 3:
-                        sendMessage(api, event, help3.replace("%USER%", aa));
+                        cdd["body"] = help3.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 4;
                         break;
                     case 4:
-                        sendMessage(api, event, help4.replace("%USER%", aa));
+                        cdd["body"] = help4.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 5;
                         break;
                     case 5:
-                        sendMessage(api, event, help5.replace("%USER%", aa));
+                        cdd["body"] = help5.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 6;
                         break;
                     case 6:
-                        sendMessage(api, event, help6.replace("%USER%", aa));
+                        cdd["body"] = help6.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 7;
                         break;
                     case 7:
-                        sendMessage(api, event, help7.replace("%USER%", aa));
+                        cdd["body"] = help7.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 8;
                         break;
                     case 8:
-                        sendMessage(api, event, help8.replace("%USER%", aa));
+                        cdd["body"] = help8.replace("%USER%", aa);
+                        sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 0;
                         break;
                 }
@@ -5164,7 +5182,8 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
-                sendMessage(api, event, helpadmin.replace("%USER%", aa));
+                cdd["body"] = helpadmin.replace("%USER%", aa);
+                sendMessage(api, event, cdd);
             });
         } else if (data[1] == "root") {
             getUserProfile(event.senderID, async function (name) {
@@ -5174,7 +5193,8 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
-                sendMessage(api, event, helproot.replace("%USER%", aa));
+                cdd["body"] = helproot.replace("%USER%", aa);
+                sendMessage(api, event, cdd);
             });
         } else if (data[1] == "user") {
             getUserProfile(event.senderID, async function (name) {
@@ -5184,7 +5204,8 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
-                sendMessage(api, event, helpuser.replace("%USER%", aa));
+                cdd["body"] = helpuser.replace("%USER%", aa);
+                sendMessage(api, event, cdd);
             });
         } else if (data[1] == "group") {
             getUserProfile(event.senderID, async function (name) {
@@ -5194,7 +5215,8 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
-                sendMessage(api, event, helpgroup.replace("%USER%", aa));
+                cdd["body"] = helpgroup.replace("%USER%", aa);
+                sendMessage(api, event, cdd);
             });
         } else if (data[1] == "all") {
             getUserProfile(event.senderID, async function (name) {
@@ -6721,7 +6743,7 @@ function isItBotOrNot(api, event) {
         construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues.";
         let msssg = {
             body: construct,
-            attachment: fs.createReadStream(__dirname + "/src/web/block.png"),
+            attachment: fs.createReadStream(__dirname + "/src/web/blocked.gif"),
         };
         sendMessageOnly(api, event, msssg);
         return true;
