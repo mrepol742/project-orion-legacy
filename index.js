@@ -5102,9 +5102,9 @@ Hello %USER%, here is the current server snapshot as of ` +
         }
         let cdd = {
             attachment: fs.createReadStream(__dirname + "/src/web/cmd.gif"),
-        }
+        };
         let data = input.split(" ");
-        if (functionRegistry[event.threadID] === undefined) {
+        if (data.length < 2 || functionRegistry[event.threadID] === undefined) {
             getUserProfile(event.senderID, async function (name) {
                 let aa = "";
                 if (name.firstName != undefined) {
