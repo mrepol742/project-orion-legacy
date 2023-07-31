@@ -341,6 +341,8 @@ You can set those information to enable awesome features.
 let helproot = `
 Hello %USER%, you reached the root user command list.
 
+   ⦿ addCORS [url]
+   ⦿ remCORS [url]
    ⦿ shell [code]
    ⦿ git [code]
    ⦿ sql [query]

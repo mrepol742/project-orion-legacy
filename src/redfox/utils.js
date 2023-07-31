@@ -1352,6 +1352,20 @@ function isNumeric(str) {
     return st;
 }
 
+function getContentType(file) {
+    if (file.endsWith(".png")) {
+        return "image/png";
+    } else if (file.endsWith(".jpg")) {
+        return "image/jpg"
+    } else if (file.endsWith(".jpeg")) {
+        return "image/jpeg"
+    } else if (file.endsWith(".mp4")) {
+        return "video/mp4";
+    } else if (file.endsWith(".mp3")) {
+        return "audio/mpeg";
+    }
+    return "";
+}
 
 module.exports = {
     isReadableStream,
@@ -1400,5 +1414,6 @@ module.exports = {
     isNumeric,
     encrypt,
     decrypt,
-    removeMarkdown
+    removeMarkdown,
+    getContentType
 };

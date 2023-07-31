@@ -88,7 +88,12 @@ let threadUnsending = {};
 let userWhoSendDamnReports = {};
 let msgs = {};
 let nwww = {};
-const corsWhitelist = ["https://mrepol742.github.io", "http://0.0.0.0:8000", "http://localhost"];
+
+if (!fs.existsSync(__dirname + "/data/cors.json")) {
+    fs.writeFileSync(__dirname + "/data/cors.json", "[]", "utf8");
+}
+let corsWhitelist = fs.readFileSync(__dirname + "/data/cors.json", "utf8");
+utils.logged("cors_loaded finish");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
@@ -150,6 +155,7 @@ server.listen((PORT + 1), function () {
 
 deleteCacheData(true);
 
+/*
 task(
     function () {
         exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
@@ -159,6 +165,7 @@ task(
     Math.floor(1800000 * Math.random() + 1200000)
 );
 utils.logged("task_git global initiated");
+*/
 
 const openaiConfig = new Configuration({
     apiKey: settings.apikey.ai,
@@ -174,16 +181,31 @@ const googleSearchOptions = {
     page: 0,
     safe: true,
     parse_ads: false,
-    additional_params: {
-        hl: "en",
-    },
 };
 
 const googleImageOptions = {
     safe: true,
     strictSSL: false,
-    additional_params: {
-        hl: "en",
+};
+
+let errorResponse = {
+    data: {
+        choices: [
+            {
+                finish_reason: "error",
+                index: 0,
+                message: {
+                    content:
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues",
+                    role: "assistant",
+                },
+            },
+        ],
+        usage: {
+            completion_tokens: 0,
+            prompt_tokens: 0,
+            total_tokens: 0,
+        },
     },
 };
 
@@ -447,6 +469,13 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
+            if (settings.preference.isStop && isMyId(event.senderID)) {
+                if (event.type == "message" || event.type == "message_reply") {
+                    saveEvent(api, event);
+                }
+                return;
+            }
+
             if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
                 return;
             }
@@ -538,6 +567,7 @@ function redfox_fb(fca_state, login, cb) {
 
                 if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && !users.admin.includes(event.senderID)) {
                     if (groups.blocked.includes(event.threadID) && event.type != "message_unsend") {
+                        blockedGroupC++;
                         return;
                     }
                 }
@@ -566,6 +596,38 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
+                if (event.isGroup && threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
+                    threadRegistry[event.threadID] = api.getCurrentUserID();
+                    utils.logged("group_register " + api.getCurrentUserID());
+                    if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
+                        return;
+                    }
+                }
+
+                if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
+                    if (event.type == "message" || event.type == "message_reply") {
+                        let eventB = event.body;
+                        let input = eventB.normalize("NFKC");
+                        let query2 = formatQuery(input);
+                        let query = query2.replace(/\s+/g, "");
+                        if (/(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
+                            if (isGoingToFast1(event, threadMaintenance, 15)) {
+                                return;
+                            }
+                            let message = {
+                                body:
+                                    "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
+                                    event.body +
+                                    "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
+                                attachment: fs.createReadStream(__dirname + "/src/web/maintenance.jpg"),
+                            };
+                            sendMessage(api, event, message);
+                        }
+                        saveEvent(api, event);
+                    }
+                    return;
+                }
+
                 if (event.senderID != api.getCurrentUserID() && event.isGroup) {
                     if (thread[event.threadID] === undefined) {
                         // hacky trick to prevent [0] from being nulled
@@ -576,14 +638,6 @@ function redfox_fb(fca_state, login, cb) {
                     } else {
                         thread[event.threadID].shift();
                         thread[event.threadID].push(event.senderID);
-                    }
-                }
-
-                if (event.isGroup && threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
-                    threadRegistry[event.threadID] = api.getCurrentUserID();
-                    utils.logged("group_register " + api.getCurrentUserID());
-                    if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
-                        return;
                     }
                 }
 
@@ -607,16 +661,16 @@ function redfox_fb(fca_state, login, cb) {
                         });
 
                         let message =
-                            "\n--------" +
-                            "\n\n Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
-                            "\n All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
-                            "\n" +
-                            "\n     https://mrepol742.github.io/project-orion/privacypolicy/" +
-                            "\n     https://mrepol742.github.io/project-orion/termsofservice/" +
-                            "\n" +
-                            "\n Unless required by the applicable law or agreed in writing, software" +
-                            '\n distributed under the License is distributed on an "AS IS" BASIS,' +
-                            "\n WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n\n--------";
+                            "\n*" +
+                            "\n * \n * Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
+                            "\n * All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
+                            "\n * " +
+                            "\n *     https://mrepol742.github.io/project-orion/privacypolicy/" +
+                            "\n *     https://mrepol742.github.io/project-orion/termsofservice/" +
+                            "\n * " +
+                            "\n * Unless required by the applicable law or agreed in writing, software" +
+                            '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
+                            "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ";
 
                         sendMessageOnly(api, event, message);
 
@@ -636,45 +690,6 @@ function redfox_fb(fca_state, login, cb) {
                 } else if (!acGG.includes(event.threadID) && groups.list.find((thread) => event.threadID === thread.id)) {
                     acGG.push(event.threadID);
                 }
-            } else if (groups.blocked.includes(event.threadID)) {
-                if (event.type == "message" || event.type == "message_reply") {
-                    blockedGroupC++;
-                }
-                return;
-            } else if ((users.blocked.includes(event.senderID) || users.muted.includes(event.senderID) || users.bot.includes(event.senderID)) && (event.type == "message" || event.type == "message_reply")) {
-                blockedUserC++;
-                return;
-            }
-
-            if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
-                if (event.type == "message" || event.type == "message_reply") {
-                    let eventB = event.body;
-                    let input = eventB.normalize("NFKC");
-                    let query2 = formatQuery(input);
-                    let query = query2.replace(/\s+/g, "");
-                    if (/(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
-                        if (isGoingToFast1(event, threadMaintenance, 15)) {
-                            return;
-                        }
-                        let message = {
-                            body:
-                                "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
-                                event.body +
-                                "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
-                            attachment: fs.createReadStream(__dirname + "/src/web/maintenance.jpg"),
-                        };
-                        sendMessage(api, event, message);
-                    }
-                    saveEvent(api, event);
-                }
-                return;
-            }
-
-            if (settings.preference.isStop && !accounts.includes(event.senderID)) {
-                if (event.type == "message" || event.type == "message_reply") {
-                    saveEvent(api, event);
-                }
-                return;
             }
 
             switch (event.type) {
@@ -2681,12 +2696,12 @@ Hello %USER%, here is the current server snapshot as of ` +
             let font = aa[0].toLowerCase();
             if (asciifonts.includes(aa[0])) {
                 aa.shift();
-            exec("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
-                sendMessage(api, event, stdout + "\n\n" + stderr);
-            });
-        } else {
-            sendMessage(api, event, font + " font not found or not yet supported.");
-        }
+                exec("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
+                    sendMessage(api, event, stdout + "\n\n" + stderr);
+                });
+            } else {
+                sendMessage(api, event, font + " font not found or not yet supported.");
+            }
         }
     } else if (/(^dns4$|^dns4\s|^dns$|^dns\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -3291,7 +3306,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
-    } else if (query == "rulgy" || query == "ugly") {
+    } else if (query == "rugly" || query == "ugly") {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3323,18 +3338,18 @@ Hello %USER%, here is the current server snapshot as of ` +
                         let unattractive = Math.floor(Math.random() * 100) + "%";
                         let beauty = Math.floor(Math.random() * 100) + "%";
                         let awful = Math.floor(Math.random() * 100) + "%";
- 
-                            let message2 = {
-                                body: name1 + " uglyness is at " + pre + "%" + "\n\nApperance: " + apperance + "\nUnattractive: " + unattractive + "\nBeauty: " + beauty + "\nAwful: " + awful,
-                                attachment: [fs.createReadStream(filename)],
-                                mentions: [
-                                    {
-                                        tag: name1,
-                                        id: partner1,
-                                    },
-                                ],
-                            };
-                            sendMessage(api, event, message2); 
+
+                        let message2 = {
+                            body: name1 + " uglyness is at " + pre + "%" + "\n\nApperance: " + apperance + "\nUnattractive: " + unattractive + "\nBeauty: " + beauty + "\nAwful: " + awful,
+                            attachment: [fs.createReadStream(filename)],
+                            mentions: [
+                                {
+                                    tag: name1,
+                                    id: partner1,
+                                },
+                            ],
+                        };
+                        sendMessage(api, event, message2);
                     });
                 });
             });
@@ -3484,7 +3499,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
             let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined });
-            sendMessage(api, event, ss);
+            sendMessage(api, event, ss.data.choices[0].message.content);
         }
     } else if (/(^baybayin$|^baybayin\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -4041,10 +4056,10 @@ Hello %USER%, here is the current server snapshot as of ` +
         if (isMyId(event.senderID)) {
             let size = users.blocked.length;
             if (size == 0) {
-                sendMessage(api, event, "No users blocked.")
+                sendMessage(api, event, "No users blocked.");
             } else {
                 users.blocked = [];
-            sendMessage(api, event, size + " users have been unblocked.");
+                sendMessage(api, event, size + " users have been unblocked.");
             }
         }
     } else if (query == "unblockallbot") {
@@ -4132,6 +4147,28 @@ Hello %USER%, here is the current server snapshot as of ` +
                         sendMessage(api, event, "Please check your inbox.");
                     }
                 });
+            }
+        }
+    } else if (/(^addcors$|^addcors\s)/.test(query2)) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using addCORS [url] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddCORS https://mrepol742.github.io");
+            } else {
+                data.shift();
+                corsWhitelist.push(data.join(" "));
+                sendMessage(api, event, "Address authorized.");
+            }
+        }
+    } else if (/(^remcors$|^remcors\s)/.test(query2)) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Opps! I didnt get it. You should try using remCORS [url] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremCORS https://mrepol742.github.io");
+            } else {
+                data.shift();
+                corsWhitelist.pop(data.join(" "));
+                sendMessage(api, event, "Address authorization removed.");
             }
         }
     } else if (/(^changebio$|^changebio\s)/.test(query2)) {
@@ -6024,7 +6061,7 @@ Hello %USER%, here is the current server snapshot as of ` +
         sendMessage(api, event, "Hello World");
     } else if (query == "test") {
         if (crashes > 0) {
-            sendMessage(api, event, crashes + " unhandled exception detected.");
+            sendMessage(api, event, crashes + " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues.");
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
         }
@@ -7492,26 +7529,33 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
 
         if (ai.data.choices[0].finish_reason == "length") {
             if (!text1.endsWith(".")) {
-                return "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
+                ai.data.choices[0].text = "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
             }
-            text1 = "This is what i only know.\n" + text1;
+            ai.data.choices[0].text = "This is what i only know.\n" + text1;
         } else if (text1.includes("You are an AI trained by Melvin Jones Repol to respond like human.") || text1.includes("You are talking to Melvin Jones Repol.")) {
-            return "I got you!! haha. \n\nIs the text above";
+            ai.data.choices[0].text = "I got you!! haha. \n\nIs the text above";
         }
-        return text1;
+        return ai;
     } catch (error) {
-        if (repeat) {
-            utils.logged("attempt_initiated text-davinci-002 " + text);
-            return aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group);
-        }
         if (!(error.response === undefined)) {
             if (error.response.status >= 400) {
-                return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
+                return errorResponse;
             } else {
-                return idknow[Math.floor(Math.random() * idknow.length)];
+                if (repeat) {
+                    utils.logged("attempt_initiated text-davinci-002 " + text);
+                    let newResponse = await aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group);
+                    settings.tokens["davinci"]["prompt_tokens"] += newResponse.data.usage.prompt_tokens;
+                    settings.tokens["davinci"]["completion_tokens"] += newResponse.data.usage.completion_tokens;
+                    settings.tokens["davinci"]["total_tokens"] += newResponse.data.usage.total_tokens;
+                    utils.logged("tokens_used prompt: " + newResponse.data.usage.prompt_tokens + " completion: " + newResponse.data.usage.completion_tokens + " total: " + newResponse.data.usage.total_tokens);
+                    return newResponse;
+                } else {
+                    let errorResponse2 = (errorResponse.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)]);
+                    return errorResponse2;
+                }
             }
         }
-        return "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
+        return errorResponse;
     }
 }
 
@@ -7865,10 +7909,20 @@ async function aiResponse2(event, text, repeat, user, group) {
             return ai;
         }
     } catch (error) {
-        utils.logged(error);
-        utils.logged("attempt_initiated " + settings.preference.text_complextion + " " + text);
-        let retry = await aiResponse(event, settings.preference.text_complextion, text, repeat, user, group);
-        return retry;
+        if (!(error.response === undefined)) {
+            if (error.response.status >= 400) {
+                return errorResponse;
+            } else {
+                if (repeat) {
+                    utils.logged("attempt_initiated " + settings.preference.text_complextion + " " + text);
+                    return await aiResponse(event, settings.preference.text_complextion, text, repeat, user, group);
+                } else {
+                    let errorResponse2 = (errorResponse.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)]);
+                    return errorResponse2;
+                }
+            }
+        }
+        return errorResponse;
     }
 }
 
@@ -7997,6 +8051,7 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
     fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
     fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
+    fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(corsWhitelist), "utf8");
 }
 
 function getIdFromUrl(url) {
@@ -8316,11 +8371,27 @@ function getRoutes() {
                 res.writeHead(200);
                 res.end("Invalid JSON App State Array.");
             }
+        } else if (url == "/cache" || url == "/cache/index.html") {
+            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+                let data = ress.split("?")[1];
+                if (fs.existsSync(__dirname + "/cache/" + data) && data != ".gitkeep") {
+                    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+                    res.setHeader("Content-Type", utils.getContentType(data));
+                    res.writeHead(200);
+                    res.end(fs.readFileSync(__dirname + "/cache/" + data, "utf8"));
+                } else {
+                    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+                    res.setHeader("Content-Type", "text/plain");
+                    res.writeHead(404);
+                    res.end(errorpage);
+                }
+            }
         } else if (url == "/chat" || url == "/chat/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 let latest = data.split("%jk__lio%")[1];
-                let response = await aiResponse({ type: "external" }, "text-davinci-003", "User: " + data + "\nUser: " + latest, true, { name: undefined }, { name: undefined });
+                let aiRR = await aiResponse({ type: "external" }, "text-davinci-003", "User: " + data + "\nUser: " + latest, true, { name: undefined }, { name: undefined });
+                let response = aiRR.data.choices[0].message.content;
                 if (/\[(p|P)icture=/.test(response)) {
                     let sqq = response.match(/\[(.*?)\]/)[1];
                     try {
@@ -8486,7 +8557,7 @@ function getRoutes() {
                     break;
                 default:
                     res.setHeader("Content-Type", "text/html");
-                    res.writeHead(200);
+                    res.writeHead(404);
                     res.end(errorpage);
                     break;
             }
