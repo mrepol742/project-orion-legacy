@@ -2656,12 +2656,12 @@ Hello %USER%, here is the current server snapshot as of ` +
             }
             sendMessage(api, event, sysinfo.replace("%USER%", aa));
         });
-    } else if (/(^rascii$|^rscii\s)/.test(query2)) {
+    } else if (/(^rascii$|^rascii\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using ascii text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nascii hello world");
         } else {
             data.shift();
