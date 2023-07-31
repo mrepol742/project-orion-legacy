@@ -2656,6 +2656,20 @@ Hello %USER%, here is the current server snapshot as of ` +
             }
             sendMessage(api, event, sysinfo.replace("%USER%", aa));
         });
+    } else if (/(^rascii$|^rscii\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using ascii text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nascii hello world");
+        } else {
+            data.shift();
+            let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
+            exec("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        }
     } else if (/(^ascii$|^ascii\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -2666,7 +2680,7 @@ Hello %USER%, here is the current server snapshot as of ` +
         } else {
             data.shift();
             let aa = data.join(" ").split(" ");
-            let font = aa[0];
+            let font = aa[0].toLowerCase();
             if (asciifonts.includes(aa[0])) {
                 aa.shift();
             exec("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {

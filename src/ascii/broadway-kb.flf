@@ -1,4 +1,4 @@
-flf2a$ 3 3 10 -1 11 0 0 0
+flf2a$ 3 3 10 -1 16 0 0 0
 Author :myflix 
 Date   : 2006/4/6 7:38:43
 Version: 1.0
@@ -10,9 +10,14 @@ Have a look at: http://www.jave.de
 
 Permission is hereby given to modify this font, as long as the
 modifier's name is placed on a comment line.
-$ #
-$ #
-$ ##
+
+---
+
+Font modified June 17, 2007 by patorjk 
+This was to widen the space character.
+$  $#
+$  $#
+$  $##
  __ #
 |_/ #
 (_) ##
