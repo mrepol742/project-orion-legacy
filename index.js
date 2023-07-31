@@ -3318,6 +3318,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                         if (err) return utils.logged(err);
                         let name1 = info[partner1]["firstName"];
 
+                        let pre = Math.floor(Math.random() * 100) + "%";
                         let apperance = Math.floor(Math.random() * 100) + "%";
                         let unattractive = Math.floor(Math.random() * 100) + "%";
                         let beauty = Math.floor(Math.random() * 100) + "%";
@@ -8977,22 +8978,6 @@ function deleteCacheData(mode) {
                     } else {
                         unLink(__dirname + "/cache/" + file);
                     }
-                }
-            }
-        }
-    });
-}
-
-function clearLog() {
-    fs.readdir(__dirname + "/.log/", function (err, files) {
-        if (err) return utils.logged(err);
-        if (files.length > 10) {
-            let logs;
-            for (logs = 0; logs < files.length; logs++) {
-                if (logs > 10) {
-                    fs.unlinkSync(__dirname + "/log/" + files[logs], (err) => {
-                        if (err) return utils.logged(err);
-                    });
                 }
             }
         }
