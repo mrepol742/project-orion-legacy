@@ -533,6 +533,7 @@ function redfox_fb(fca_state, login, cb) {
                         } else {
                             sendMessage(api, event, "You aren't muted.");
                         }
+                    }
                 }
 
                 if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && !users.admin.includes(event.senderID)) {
