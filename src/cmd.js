@@ -190,7 +190,7 @@ let help5 = `
 │   ⦿ rugly
 │   ⦿ ascii
 │   ⦿ rascii
-│
+│   ⦿ top
 │
 └─  How can i assist you further %USER%?
 `;
@@ -394,3 +394,5 @@ module.exports = {
     helpuser: helpuser,
     helpgroup: helpgroup,
 };
+
+// 266 commands

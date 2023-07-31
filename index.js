@@ -143,6 +143,11 @@ let bannerlogo = fs.readFileSync(__dirname + "/src/web/logo.png");
 let robots = fs.readFileSync(__dirname + "/src/web/robots.txt");
 let sitemappage = fs.readFileSync(__dirname + "/src/web/sitemap.xml");
 let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
+let cmdgif = fs.createReadStream(__dirname + "/src/web/cmd.gif");
+let downloadgif = fs.createReadStream(__dirname + "/src/web/download.gif");
+let maintenancegif = fs.createReadStream(__dirname + "/src/web/maintenance.gif");
+let blockedgif = fs.createReadStream(__dirname + "/src/web/blocked.gif");
+let welcomegif = fs.createReadStream(__dirname + "/src/web/welcome.gif");
 
 utils.logged("web_resource_loaded finish");
 
@@ -517,13 +522,25 @@ function redfox_fb(fca_state, login, cb) {
                         } else if (users.muted.includes(event.senderID)) {
                             sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/prj-orion/issues");
                         } else if (groups.blocked.includes(event.threadID)) {
-                            sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
+                            let blockE = {
+                                body: "This group is blocked. Contact the bot admins for more info.",
+                                attachment: blockedgif,
+                            };
+                            sendMessage(api, event, blockE);
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues");
+                            let blockE = {
+                                body: "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues",
+                                attachment: blockedgif,
+                            };
+                            sendMessage(api, event, blockE);
                         } else if (settings.preference.isStop) {
                             sendMessage(api, event, "The program is currently offline.");
                         } else if (settings.preference.isDebugEnabled) {
-                            sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues");
+                            let debugE = {
+                                body: "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues",
+                                attachment: maintenancegif,
+                            };
+                            sendMessage(api, event, debugE);
                         } else {
                             getUserProfile(event.senderID, async function (name) {
                                 let aa = "";
@@ -619,7 +636,7 @@ function redfox_fb(fca_state, login, cb) {
                                     "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
                                     event.body +
                                     "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
-                                attachment: fs.createReadStream(__dirname + "/src/web/maintenance.gif"),
+                                attachment: maintenancegif,
                             };
                             sendMessage(api, event, message);
                         }
@@ -1227,12 +1244,12 @@ function redfox_fb(fca_state, login, cb) {
                                 } else {
                                     return;
                                 }
-                                    let message = {
-                                        body: gret,
-                                        attachment: fs.createReadStream(__dirname + "/src/web/welcome.gif"),
-                                        mentions: mentioned,
-                                    };
-                                    sendMessage(api, event, message);
+                                let message = {
+                                    body: gret,
+                                    attachment: welcomegif,
+                                    mentions: mentioned,
+                                };
+                                sendMessage(api, event, message);
                             });
                             break;
                         case "log:group_participants_left":
@@ -2976,7 +2993,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
                         body: search.results[0].title + " is now in download progress...",
-                        attachment: fs.createReadStream(__dirname + "/src/web/download.gif"),
+                        attachment: downloadgif,
                     });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -3030,7 +3047,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
                         body: search.results[0].title + " is now in download progress...",
-                        attachment: fs.createReadStream(__dirname + "/src/web/download.gif"),
+                        attachment: downloadgif,
                     });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -4268,7 +4285,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 if (response.data.success) {
                     sendMessage(api, event, {
                         body: response.data.title + " is now in download progress...",
-                        attachment: fs.createReadStream(__dirname + "/src/web/download.gif"),
+                        attachment: downloadgif,
                     });
                     let title = response.data.title;
                     let url = getFbDLQuality(response);
@@ -4287,6 +4304,25 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "HTTP(s) protocol not found.");
             }
         }
+    } else if (query2 == "top") {
+        let lead = [];
+        for (let i = 0; i < users.list.length; i++) {
+            if (!(users.list[i].balance === undefined)) {
+                lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
+            }
+        }
+        lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+
+        let construct = "⋆｡° PRJ-ORION Leaderboards\n│";
+        for (let i1 = 1; i1 < 31; i1++) {
+            if (i1 == 30) {
+                construct += "\n└─";
+            } else {
+                construct += "\n│";
+            }
+            construct += i1 + ". " + formatDecNum((lead[i1 - 1].balance / 1000) * 0.002) + " $ " + lead[i1 - 1].name;
+        }
+        sendMessage(api, event, construct);
     } else if (query2 == "balance" || query2 == "bal") {
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
@@ -5124,7 +5160,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 } else {
                     aa = "there";
                 }
-                
+
                 switch (functionRegistry[event.threadID]) {
                     default:
                     case 0:
@@ -6695,7 +6731,7 @@ function isGoingToFast(api, event) {
     if (!users.admin.includes(event.senderID)) {
         if (!(cmd[event.senderID] === undefined)) {
             if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
-                let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 10;
+                let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 15;
                 if (seconds > 2) {
                     utils.logged("block_user " + event.senderID + " " + seconds);
                     return true;
@@ -6703,7 +6739,7 @@ function isGoingToFast(api, event) {
                 return false;
             }
         }
-        cmd[event.senderID] = Math.floor(Date.now() / 1000) + 10;
+        cmd[event.senderID] = Math.floor(Date.now() / 1000) + 15;
         return false;
     }
     return false;
@@ -6743,7 +6779,7 @@ function isItBotOrNot(api, event) {
         construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues.";
         let msssg = {
             body: construct,
-            attachment: fs.createReadStream(__dirname + "/src/web/blocked.gif"),
+            attachment: blockedgif,
         };
         sendMessageOnly(api, event, msssg);
         return true;
