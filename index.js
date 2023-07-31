@@ -2666,13 +2666,14 @@ Hello %USER%, here is the current server snapshot as of ` +
         } else {
             data.shift();
             let aa = data.join(" ").split(" ");
+            let font = aa[0];
             if (asciifonts.includes(aa[0])) {
                 aa.shift();
-            exec("cd src/ascii && figlet " + aa[0].split(".")[0] + " " + aa.join(" "), function (err, stdout, stderr) {
+            exec("cd src/ascii && figlet " + font + " " + aa.join(" "), function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         } else {
-            sendMessage(api, event, aa[0] + " font not found or not yet supported.");
+            sendMessage(api, event, font + " font not found or not yet supported.");
         }
         }
     } else if (/(^dns4$|^dns4\s|^dns$|^dns\s)/.test(query2)) {
