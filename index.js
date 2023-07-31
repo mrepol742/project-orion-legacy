@@ -8051,7 +8051,7 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings), "utf8");
     fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
     fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
-    fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(corsWhitelist), "utf8");
+    fs.writeFileSync(__dirname + "/data/corsWhitelist.json", JSON.stringify(corsWhitelist), "utf8");
 }
 
 function getIdFromUrl(url) {
