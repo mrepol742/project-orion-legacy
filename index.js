@@ -5097,7 +5097,18 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let data = input.split(" ");
-        if (data[1] == "next") {
+        if (functionRegistry[event.threadID] === undefined) {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                sendMessage(api, event, help.replace("%USER%", aa));
+                functionRegistry[event.threadID] = 1;
+            });
+        } else if (data[1] == "next") {
             getUserProfile(event.senderID, async function (name) {
                 let aa = "";
                 if (name.firstName != undefined) {
@@ -5198,17 +5209,6 @@ Hello %USER%, here is the current server snapshot as of ` +
                     url: "https://mrepol742.github.io/project-orion/#cmdall",
                 };
                 sendMessage(api, event, message);
-            });
-        } else if (data.length < 2 || functionRegistry[event.threadID] === undefined) {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                sendMessage(api, event, help.replace("%USER%", aa));
-                functionRegistry[event.threadID] = 1;
             });
         }
     } else if (query.startsWith("wiki")) {
