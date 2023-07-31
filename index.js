@@ -220,8 +220,6 @@ let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistr
 let functionRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/functionRegistry.json"));
 let rootAccess = "100071743848974";
 
-clearLog();
-
 fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     if (err) return utils.logged(err);
     if (files.length > 0) {
@@ -273,7 +271,7 @@ task(
         users.blocked = [];
         utils.logged("unblock_user " + size + " users have been unblocked.");
     },
-    60 * 120 * 1000
+    60 * 240 * 1000
 );
 utils.logged("task_unblock global initiated");
 
@@ -478,25 +476,7 @@ function redfox_fb(fca_state, login, cb) {
 
                 // TODO: event.messageReply.senderID is undefined sometimes no idea why
                 if (event.type == "message" || (event.type == "message_reply" && (event.senderID != api.getCurrentUserID() || event.messageReply.senderID != api.getCurrentUserID()))) {
-                    if (query == "unblockgroup") {
-                        if (users.admin.includes(event.senderID)) {
-                            if (event.isGroup) {
-                                unblockGroup(api, event, event.threadID);
-                            } else {
-                                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                            }
-                        }
-                    } else if (query == "unmute") {
-                        if (isGoingToFast(api, event)) {
-                            return;
-                        }
-                        if (users.muted.includes(event.senderID)) {
-                            users.muted = users.muted.filter((item) => item !== event.senderID);
-                            sendMessage(api, event, "You can now use my commands.");
-                        } else {
-                            sendMessage(api, event, "You aren't muted.");
-                        }
-                    } else if (query == "status") {
+                    if (query == "status") {
                         if (isGoingToFast(api, event)) {
                             return;
                         }
@@ -535,7 +515,24 @@ function redfox_fb(fca_state, login, cb) {
                         } else {
                             return;
                         }
-                    }
+                    } else if (query == "unblockgroup") {
+                        if (users.admin.includes(event.senderID)) {
+                            if (event.isGroup) {
+                                unblockGroup(api, event, event.threadID);
+                            } else {
+                                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                            }
+                        }
+                    } else if (query == "unmute") {
+                        if (isGoingToFast(api, event)) {
+                            return;
+                        }
+                        if (users.muted.includes(event.senderID)) {
+                            users.muted = users.muted.filter((item) => item !== event.senderID);
+                            sendMessage(api, event, "You can now use my commands.");
+                        } else {
+                            sendMessage(api, event, "You aren't muted.");
+                        }
                 }
 
                 if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && !users.admin.includes(event.senderID)) {
@@ -2628,7 +2625,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             `
     ⦿ ROM: ` +
             convertBytes(rom) +
-            "/48.89 GB" +
+            "/28.89 GB" +
             `
     ⦿ RSS: ` +
             convertBytes(process.memoryUsage().rss) +
@@ -4041,8 +4038,12 @@ Hello %USER%, here is the current server snapshot as of ` +
     } else if (query == "unblockall") {
         if (isMyId(event.senderID)) {
             let size = users.blocked.length;
-            users.blocked = [];
+            if (size == 0) {
+                sendMessage(api, event, "No users blocked.")
+            } else {
+                users.blocked = [];
             sendMessage(api, event, size + " users have been unblocked.");
+            }
         }
     } else if (query == "unblockallbot") {
         if (isMyId(event.senderID)) {
@@ -8232,30 +8233,6 @@ function getAppState(api) {
 function caughtException(api, err) {
     crashes++;
     utils.logged(err);
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, "0");
-    let mm = String(today.getMonth() + 1).padStart(2, "0");
-    let yyyy = today.getFullYear();
-    let fileName = mm + dd + yyyy + ".log";
-    if (fs.existsSync(__dirname + "/.log/" + fileName)) {
-        fs.appendFile(__dirname + "/.log/" + fileName, getCrashLog(err) + "\n\n==============================\n\n", function (err) {
-            if (err) return utils.logged(err);
-        });
-    } else {
-        fs.writeFile(__dirname + "/.log/" + fileName, getCrashLog(err) + "\n\n==============================\n\n", function (err) {
-            if (err) return utils.logged(err);
-        });
-    }
-    clearLog();
-}
-
-function getCrashLog(err) {
-    if (typeof err === "string") {
-        return err;
-    } else if (!(err === undefined) && !(err.stack === undefined)) {
-        return err.stack;
-    }
-    return JSON.stringify(err);
 }
 
 function task(func, time) {
