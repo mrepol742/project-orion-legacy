@@ -2666,9 +2666,8 @@ Hello %USER%, here is the current server snapshot as of ` +
         } else {
             data.shift();
             let aa = data.join(" ").split(" ");
-            let font = aa[1];
-            if (asciifonts.includes(aa[1])) {
-                aa.shift();
+            let font = aa[0];
+            if (asciifonts.includes(aa[0])) {
                 aa.shift();
             exec("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
