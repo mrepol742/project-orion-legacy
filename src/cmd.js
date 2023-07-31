@@ -187,9 +187,9 @@ Here:
    ⦿ hanime [category]
    ⦿ fbdl [url]
    ⦿ ugly
-   ⦿ coward
-   
+   ⦿ rugly
 
+   
 
 
 How can i assist you further %USER%?

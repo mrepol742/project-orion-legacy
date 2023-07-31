@@ -8,6 +8,7 @@
 const redfox = require("./src/redfox");
 const utils = require("./src/redfox/utils.js");
 const fs = require("fs");
+const asciifonts = require("./src/fonts.json");
 
 let a = `
 
@@ -2655,6 +2656,24 @@ Hello %USER%, here is the current server snapshot as of ` +
             }
             sendMessage(api, event, sysinfo.replace("%USER%", aa));
         });
+    } else if (/(^ascii$|^ascii\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Opps! I didnt get it. You should try using ascii font text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nascii 3-D hello world");
+        } else {
+            data.shift();
+            let aa = data.join(" ").split(" ");
+            if (asciifonts.includes(aa[0])) {
+            exec("cd src/ascii && figlet " + aa[0] + " " + aa[1], function (err, stdout, stderr) {
+                sendMessage(api, event, stdout + "\n\n" + stderr);
+            });
+        } else {
+            sendMessage(api, event, aa[0] + " font not found or not yet supported.");
+        }
+        }
     } else if (/(^dns4$|^dns4\s|^dns$|^dns\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3258,18 +3277,55 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
-    } else if (query == "coward") {
+    } else if (query == "rulgy" || query == "ugly") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let pre = Math.floor(Math.random() * 100) + "%";
-        sendMessage(api, event, "You are " + pre + " coward.");
-    } else if (query == "ugly") {
-        if (isGoingToFast(api, event)) {
-            return;
+        if (event.isGroup) {
+            api.getThreadInfo(event.threadID, (err, info) => {
+                if (err) return utils.logged(err);
+
+                let members = info.participantIDs.length;
+                var partner1 = 0;
+                if (query == "rulgy") {
+                    partner1 = info.participantIDs[Math.floor(Math.random() * members)];
+                } else {
+                    partner1 = event.senderID;
+                }
+
+                if (isMyId(partner1)) {
+                    partner1 = event.senderID;
+                }
+
+                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                let filename = __dirname + "/cache/ugly_" + getTimestamp() + ".jpg";
+                downloadFile(url, filename).then((response) => {
+                    api.getUserInfo(partner1, (err, info) => {
+                        if (err) return utils.logged(err);
+                        let name1 = info[partner1]["firstName"];
+
+                        let apperance = Math.floor(Math.random() * 100) + "%";
+                        let unattractive = Math.floor(Math.random() * 100) + "%";
+                        let beauty = Math.floor(Math.random() * 100) + "%";
+                        let awful = Math.floor(Math.random() * 100) + "%";
+ 
+                            let message2 = {
+                                body: name1 + " uglyness is at " + pre + "%" + "\n\nApperance: " + apperance + "\nUnattractive: " + unattractive + "\nBeauty: " + beauty + "\nAwful: " + awful,
+                                attachment: [fs.createReadStream(filename)],
+                                mentions: [
+                                    {
+                                        tag: name1,
+                                        id: partner1,
+                                    },
+                                ],
+                            };
+                            sendMessage(api, event, message2); 
+                    });
+                });
+            });
+        } else {
+            sendMessage(api, event, "Why don't you love yourself?");
         }
-        let pre = Math.floor(Math.random() * 100) + "%";
-        sendMessage(api, event, "You are " + pre + " ugly.");
     } else if (query == "rpair" || query == "pair" || query.startsWith("lovetest")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3366,7 +3422,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 });
             });
         } else {
-            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+            sendMessage(api, event, "Why don't you love yourself?");
         }
     } else if (query == "everyone" || query == "all") {
         if (isGoingToFast(api, event)) {
@@ -3391,7 +3447,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 sendMessage(api, event, message, event.threadID, event.messageID, true, false);
             });
         } else {
-            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+            sendMessage(api, event, "I cannot do that since it's only you and me here i know you knew it.");
         }
         /*
         let tid = event.threadID;
@@ -7055,8 +7111,8 @@ function secondsToTime(e) {
 }
 
 function removeUser(api, event, id) {
-    if (isMyId(id)) {
-        return;
+    if (isMyId(id) || accounts.includes(id)) {
+        id = event.senderID;
     }
     api.removeUserFromGroup(id, event.threadID, (err) => {
         if (err) utils.logged(err);
@@ -7258,9 +7314,15 @@ function getAnimeGif(api, event, id, type) {
         if (response == null) {
             sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
         } else {
+            if (isMyId(id)) {
+                id = event.senderID;
+            }
             api.getUserInfo(id, (err, info) => {
                 if (err) return utils.logged(err);
                 let name = info[id]["firstName"];
+                if (id == event.senderID) {
+                    name += " why don't you " + type + " yourself then.";
+                }
                 let time = getTimestamp();
                 let filename = __dirname + "/cache/" + type + "_" + time + ".png";
                 downloadFile(encodeURI(response.url), filename).then((response) => {
@@ -7284,6 +7346,9 @@ function getAnimeGif(api, event, id, type) {
 }
 
 async function getPopcatImage(api, event, id, type) {
+    if (isMyId(id)) {
+        id = event.senderID;
+    }
     await axios
         .get(getProfilePic(id))
         .then(function (response) {
@@ -7714,9 +7779,9 @@ async function aiResponse2(event, text, repeat, user, group) {
                                 content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
                             });
                             return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-0613",
-                        messages: mssg,
-                    });
+                                model: "gpt-3.5-turbo-0613",
+                                messages: mssg,
+                            });
                         }
                     );
                 case "fetch_information":
