@@ -2667,7 +2667,8 @@ Hello %USER%, here is the current server snapshot as of ` +
             data.shift();
             let aa = data.join(" ").split(" ");
             if (asciifonts.includes(aa[0])) {
-            exec("cd src/ascii && figlet " + aa[0] + " " + aa[1], function (err, stdout, stderr) {
+                aa.shift();
+            exec("cd src/ascii && figlet " + aa[0].split(".")[0] + " " + aa.join(" "), function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         } else {
@@ -4042,8 +4043,8 @@ Hello %USER%, here is the current server snapshot as of ` +
             if (data.length < 2) {
                 sendMessage(api, event, "Opps! I didnt get it. You should try using git code instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngit add .");
             } else {
-                let sff = input;
-                exec(sff, function (err, stdout, stderr) {
+                data.shift();
+                exec("git " + data.join(" "), function (err, stdout, stderr) {
                     let str = stdout + "\n\n" + stderr;
                     let com = str.replaceAll(/\s+/g, "");
                     if (com == "") {
