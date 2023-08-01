@@ -509,10 +509,8 @@ function redfox_fb(fca_state, login, cb) {
                         if (isGoingToFast(api, event)) {
                             return;
                         }
-                        if (settings.preference.error == "3252001") {
+                        if (blockedCall.includes(api.getCurrentUserID())) {
                             // bug this can be initiate if api.markAllAsRead is the reason or attachments
-                            sendMessage(api, event, "This account is temporarily blocked right now. Please try it again in few hours.");
-                        } else if (settings.preference.error == "1404078") {
                             sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
                         } else if (users.muted.includes(event.senderID)) {
                             sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/prj-orion/issues");
