@@ -6511,9 +6511,9 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
         utils.logged(err);
         if (err.error == 3252001 || err.error == 1404078) {
             if (err.error == 3252001) {
-                settings.preference.error == 3252001;
+                settings.preference.error = 3252001;
             } else {
-                settings.preference.error == 1404078;
+                settings.preference.error = 1404078;
             }
             blockedCall.push(api.getCurrentUserID());
             util.logged("api_temporarily_block " + api.getCurrentUserID());
