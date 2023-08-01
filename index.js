@@ -104,6 +104,7 @@ let commandCalls = 0;
 let crashes = 0;
 let blockedUserC = 0;
 let blockedGroupC = 0;
+let priorityCC = 0;
 
 if (!fs.existsSync(__dirname + "/data/shared_pref.json")) {
     fs.writeFileSync(__dirname + "/data/shared_pref.json", "{}", "utf8");
@@ -523,14 +524,12 @@ function redfox_fb(fca_state, login, cb) {
                             sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/prj-orion/issues");
                         } else if (groups.blocked.includes(event.threadID)) {
                             let blockE = {
-                                body: "This group is blocked. Contact the bot admins for more info.",
-                                attachment: blockedgif,
+                                body: "This group is blocked. Contact the bot admins for more info."
                             };
                             sendMessage(api, event, blockE);
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
                             let blockE = {
                                 body: "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues",
-                                attachment: blockedgif,
                             };
                             sendMessage(api, event, blockE);
                         } else if (settings.preference.isStop) {
@@ -538,7 +537,6 @@ function redfox_fb(fca_state, login, cb) {
                         } else if (settings.preference.isDebugEnabled) {
                             let debugE = {
                                 body: "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues",
-                                attachment: maintenancegif,
                             };
                             sendMessage(api, event, debugE);
                         } else {
@@ -628,7 +626,7 @@ function redfox_fb(fca_state, login, cb) {
                         let query2 = formatQuery(input);
                         let query = query2.replace(/\s+/g, "");
                         if (/(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
-                            if (isGoingToFast1(event, threadMaintenance, 15)) {
+                            if (isGoingToFast1(event, threadMaintenance, 30)) {
                                 return;
                             }
                             let message = {
@@ -1246,7 +1244,6 @@ function redfox_fb(fca_state, login, cb) {
                                 }
                                 let message = {
                                     body: gret,
-                                    attachment: welcomegif,
                                     mentions: mentioned,
                                 };
                                 sendMessage(api, event, message);
@@ -2992,8 +2989,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
-                        body: search.results[0].title + " is now in download progress...",
-                        attachment: downloadgif,
+                        body: search.results[0].title + " is now in download progress..."
                     });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -3046,8 +3042,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                     threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
-                        body: search.results[0].title + " is now in download progress...",
-                        attachment: downloadgif,
+                        body: search.results[0].title + " is now in download progress..."
                     });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -4284,8 +4279,7 @@ Hello %USER%, here is the current server snapshot as of ` +
                 }
                 if (response.data.success) {
                     sendMessage(api, event, {
-                        body: response.data.title + " is now in download progress...",
-                        attachment: downloadgif,
+                        body: response.data.title + " is now in download progress..."
                     });
                     let title = response.data.title;
                     let url = getFbDLQuality(response);
@@ -5136,7 +5130,6 @@ Hello %USER%, here is the current server snapshot as of ` +
             return;
         }
         let cdd = {
-            attachment: fs.createReadStream(__dirname + "/src/web/cmd.gif"),
         };
         let data = input.split(" ");
         if (data.length < 2 || functionRegistry[event.threadID] === undefined) {
