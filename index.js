@@ -7519,7 +7519,7 @@ async function aiResponse2(event, text, repeat, user, group) {
             { role: "user", content: text },
         ];
         let ai = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo-0613",
+            model: "gpt-3.5-turbo-16k-0613",
             messages: mssg,
             functions: [
                 {
