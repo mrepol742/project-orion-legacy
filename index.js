@@ -4316,11 +4316,10 @@ Hello %USER%, here is the current server snapshot as of ` +
         let construct = "⋆｡° PRJ-ORION Leaderboards\n│";
         for (let i1 = 1; i1 < 31; i1++) {
             if (i1 == 30) {
-                construct += "\n└─";
+                construct += "\n└─  github.com/prj-orion";
             } else {
-                construct += "\n│";
+                construct += "\n│   " + i1 + ". " + formatDecNum((lead[i1 - 1].balance / 1000) * 0.002) + " $ " + lead[i1 - 1].name;
             }
-            construct += i1 + ". " + formatDecNum((lead[i1 - 1].balance / 1000) * 0.002) + " $ " + lead[i1 - 1].name;
         }
         sendMessage(api, event, construct);
     } else if (query2 == "balance" || query2 == "bal") {
