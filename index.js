@@ -1894,7 +1894,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
+      //  return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
         if (!settings.preference.angry) {
             mj(api, event, findPr, input, query, query2);
         } else {
@@ -3407,7 +3407,7 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Opps! I didnt get it. You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
         } else {
-            let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined });
+            let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined }, api.getCurrentUserID());
             sendMessage(api, event, ss.data.choices[0].message.content);
         }
     } else if (/(^baybayin$|^baybayin\s)/.test(query2)) {
@@ -7465,9 +7465,9 @@ function saveEvent(api, event) {
     }
 }
 
-async function aiResponse(event, complextion, text, repeat, user, group) {
+async function aiResponse(event, complextion, text, repeat, user, group, uid) {
     try {
-        const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group));
+        const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group, uid));
         
         settings.tokens["davinci"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
         settings.tokens["davinci"]["completion_tokens"] += ai.data.usage.completion_tokens;
@@ -7489,7 +7489,7 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
         utils.logged(error);
         if (repeat) {
             utils.logged("attempt_initiated_2 text-davinci-002 " + text);
-            let newResponse = await aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group);
+            let newResponse = await aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group, api.getCurrentUserID());
             settings.tokens["davinci"]["prompt_tokens"] += newResponse.data.usage.prompt_tokens;
             settings.tokens["davinci"]["completion_tokens"] += newResponse.data.usage.completion_tokens;
             settings.tokens["davinci"]["total_tokens"] += newResponse.data.usage.total_tokens;
@@ -7502,7 +7502,7 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
     }
 }
 
-async function aiResponse2(event, text, repeat, user, group) {
+async function aiResponse2(event, text, repeat, user, group, uid) {
     try {
         let mssg = [
             {
@@ -7661,7 +7661,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                         content: "generate a 2 sentence response using this `You can open the commands list by sending cmd or func.`",
                     });
                     let ai222a = await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-0613",
+                        model: "gpt-3.5-turbo-16k-0613",
                         messages: constructa,
                     });
                     return ai222a;
@@ -7683,7 +7683,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                         }
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-0613",
+                        model: "gpt-3.5-turbo-16k-0613",
                         messages: mssg,
                     });
                 case "get_joke":
@@ -7703,7 +7703,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                         }
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-0613",
+                        model: "gpt-3.5-turbo-16k-0613",
                         messages: mssg,
                     });
                 case "get_date_time":
@@ -7716,7 +7716,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                         content: '{"time": "' + response.time.hours + '", "date": "' + response.time.date + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-0613",
+                        model: "gpt-3.5-turbo-16k-0613",
                         messages: mssg,
                     });
                 case "get_weather_info":
@@ -7785,7 +7785,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                                 content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
                             });
                             return await openai.createChatCompletion({
-                                model: "gpt-3.5-turbo-0613",
+                                model: "gpt-3.5-turbo-16k-0613",
                                 messages: mssg,
                             });
                         }
@@ -7794,7 +7794,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                     let web = await getWebResults(argument.query);
                     if (argument.query == web) {
                         return await openai.createChatCompletion({
-                            model: "gpt-3.5-turbo-0613",
+                            model: "gpt-3.5-turbo-16k-0613",
                             messages: mssg,
                         });
                     }
@@ -7805,7 +7805,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                         content: '{"result": "' + web + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-0613",
+                        model: "gpt-3.5-turbo-16k-0613",
                         messages: mssg,
                     });
                 case "say":
@@ -7842,7 +7842,7 @@ async function aiResponse2(event, text, repeat, user, group) {
                             */
                     }
                     let ai222 = await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-0613",
+                        model: "gpt-3.5-turbo-16k-0613",
                         messages: construct,
                     });
                     ai222.data.choices[0].message.content += "[" + argument.format + "=" + argument.name + "]";
@@ -7853,11 +7853,11 @@ async function aiResponse2(event, text, repeat, user, group) {
     } catch (error) {
         utils.logged(error);
         utils.logged("attempt_initiated_1 " + settings.preference.text_complextion + " " + text);
-        return await aiResponse(event, settings.preference.text_complextion, text, repeat, user, group);
+        return await aiResponse(event, settings.preference.text_complextion, text, repeat, user, group, uid);
     }
 }
 
-function generateParamaters(event, complextion, text, user, group) {
+function generateParamaters(event, complextion, text, user, group, uid) {
     let pro =
         "You are Mj an AI trained by Melvin Jones Repol to respond like a person behind a seat." +
         "Melvin Jones Repol is a 20 y/o Filipino Software Engineer. Melvin Jones social handle is mrepol742. Melvin Jones website is https://mrepol742.github.io. Melvin Jones is happily married to Maryvil Alexa Guno." +
@@ -7865,7 +7865,7 @@ function generateParamaters(event, complextion, text, user, group) {
         "\n\n";
     if (event.type != "external") {
         if (event.type == "message_reply") {
-            if (event.messageReply.senderID == api.getCurrentUserID()) {
+            if (event.messageReply.senderID == uid) {
                 pro += "You: ";
             } else {
                 if (user.firstName != undefined) {
@@ -8321,7 +8321,7 @@ function getRoutes() {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 let latest = data.split("%jk__lio%")[1];
-                let aiRR = await aiResponse({ type: "external" }, "text-davinci-003", "User: " + data + "\nUser: " + latest, true, { name: undefined }, { name: undefined });
+                let aiRR = await aiResponse({ type: "external" }, "text-davinci-003", "User: " + data + "\nUser: " + latest, true, { name: undefined }, { name: undefined }, 0);
                 let response = aiRR.data.choices[0].message.content;
                 if (/\[(p|P)icture=/.test(response)) {
                     let sqq = response.match(/\[(.*?)\]/)[1];
@@ -8917,7 +8917,7 @@ function mj(api, event, findPr, input, query, query2) {
         getUserProfile(event.senderID, async function (user) {
             if (event.isGroup) {
                 getGroupProfile(event.threadID, async function (group) {
-                    let respo = await aiResponse2(event, text, true, user, group);
+                    let respo = await aiResponse2(event, text, true, user, group, api.getCurrentUserID());
                     if (user.balance === undefined) {
                         user["balance"] = respo.data.usage.total_tokens;
                     } else {
@@ -8930,7 +8930,7 @@ function mj(api, event, findPr, input, query, query2) {
                     }
                 });
             } else {
-                let respo = await aiResponse2(event, text, true, user, { name: undefined });
+                let respo = await aiResponse2(event, text, true, user, { name: undefined }, api.getCurrentUserID());
                 if (user.balance === undefined) {
                     user["balance"] = respo.data.usage.total_tokens;
                 } else {
