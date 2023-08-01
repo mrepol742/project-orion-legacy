@@ -28,7 +28,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                     return callback();
                 })
                 .catch(function (err) {
-                    utils.logged("fca_typing_indicator " + err);
                     if (utils.getType(err) == "Object" && err.error === "Not logged in") {
                         ctx.loggedIn = false;
                     }
@@ -56,7 +55,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                         return callback();
                     })
                     .catch(function (err) {
-                        utils.logged("fca_typing_indicator " + err);
                         if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
                             ctx.loggedIn = false;
                         }

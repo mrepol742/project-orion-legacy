@@ -69,7 +69,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, formatData(resData.payload));
             })
             .catch(function (err) {
-                utils.logged("fca_friend_list " + err);
                 return callback(err);
             });
 

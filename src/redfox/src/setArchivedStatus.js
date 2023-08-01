@@ -41,7 +41,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_archive_status " + err);
                 return callback(err);
             });
 

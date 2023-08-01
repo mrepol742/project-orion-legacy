@@ -163,7 +163,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, formatThreadGraphQLResponse(resData[0]));
             })
             .catch(function (err) {
-                utils.logged("fca_thread_info " + err);
                 return callback(err);
             });
 

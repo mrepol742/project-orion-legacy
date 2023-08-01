@@ -62,7 +62,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback(null, formatData(resData.payload.profiles));
             })
             .catch(function (err) {
-                utils.logged("fca_user_info " + err);
                 return callback(err);
             });
 

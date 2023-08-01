@@ -227,7 +227,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, formatThreadList(resData[0].o0.data.viewer.message_threads.nodes));
             })
             .catch((err) => {
-                utils.logged("fca_thread_list " + err);
                 return callback(err);
             });
 

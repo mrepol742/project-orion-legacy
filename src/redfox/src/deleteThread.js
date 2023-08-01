@@ -42,7 +42,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_delete_thread " + err);
                 return callback(err);
             });
 

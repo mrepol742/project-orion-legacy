@@ -57,7 +57,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback();
             })
             .catch(function (err) {
-                utils.logged("fca_logout " + err);
                 return callback(err);
             });
 

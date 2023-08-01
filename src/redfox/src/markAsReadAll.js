@@ -36,7 +36,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_mark_read_all " + err);
                 return callback(err);
             });
 

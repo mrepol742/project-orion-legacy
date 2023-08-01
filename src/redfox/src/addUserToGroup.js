@@ -86,7 +86,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_add_user_group " + err);
                 return callback(err);
             });
 

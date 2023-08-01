@@ -40,7 +40,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_thread_emoji " + err);
                 return callback(err);
             });
 

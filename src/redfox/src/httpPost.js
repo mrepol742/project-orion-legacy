@@ -33,7 +33,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                     callback(null, resData.body.toString());
                 })
                 .catch(function (err) {
-                    utils.logged("fca_http_post " + err);
                     return callback(err);
                 });
         } else {
@@ -43,7 +42,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                     callback(null, resData.body.toString());
                 })
                 .catch(function (err) {
-                    utils.logged("fca_http_post " + err);
                     return callback(err);
                 });
         }

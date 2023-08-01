@@ -55,7 +55,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_create_poll " + err);
                 return callback(err);
             });
 

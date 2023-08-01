@@ -34,7 +34,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_blocked_status " + err);
                 return callback(err);
             });
         return returnPromise;

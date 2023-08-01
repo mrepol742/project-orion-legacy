@@ -56,7 +56,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, data.map(formatData));
             })
             .catch(function (err) {
-                utils.logged("fca_user_id " + err);
                 return callback(err);
             });
 

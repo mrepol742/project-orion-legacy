@@ -35,7 +35,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback(null, photoUrl);
             })
             .catch((err) => {
-                utils.logged("fca_resolve_photo_url " + err);
                 return callback(err);
             });
 

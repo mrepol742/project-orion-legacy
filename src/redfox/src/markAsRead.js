@@ -37,7 +37,6 @@ module.exports = function (defaultFuncs, api, ctx) {
 
             if (resData.error) {
                 let err = resData.error;
-                utils.logged("fca_mark_read " + err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
                     ctx.loggedIn = false;
                 }

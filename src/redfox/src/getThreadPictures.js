@@ -58,7 +58,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, resData);
             })
             .catch(function (err) {
-                utils.logged("fca_thread_pictures " + err);
                 callback(err);
             });
         return returnPromise;

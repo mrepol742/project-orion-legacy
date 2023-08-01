@@ -72,7 +72,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_group_title " + err);
                 return callback(err);
             });
 

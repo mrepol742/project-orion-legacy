@@ -247,6 +247,7 @@ let accounts = [];
 let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
 let functionRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/functionRegistry.json"));
 let rootAccess = "100071743848974";
+let blockedCall = [];
 
 fs.readdir(__dirname + "/data/cookies/", function (err, files) {
     if (err) return utils.logged(err);
@@ -473,6 +474,10 @@ function redfox_fb(fca_state, login, cb) {
                 if (typeof cb === "function") {
                     cb(false);
                 }
+            }
+
+            if (blockedCall.includes(api.getCurrentUserID())) {
+                return;
             }
 
             if (settings.preference.isStop && isMyId(event.senderID)) {
@@ -6504,7 +6509,15 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font
 function sendMessageErr(api, thread_id, message_id, id, err) {
     if (err) {
         utils.logged(err);
-        if (err.error == 1545049) {
+        if (err.error == 3252001 || err.error == 1404078) {
+            if (err.error == 3252001) {
+                settings.preference.error == 3252001;
+            } else {
+                settings.preference.error == 1404078;
+            }
+            blockedCall.push(api.getCurrentUserID());
+            util.logged("api_temporarily_block " + api.getCurrentUserID());
+        } else if (err.error == 1545049) {
             sendMessageError(api, "Message is too long to be sent.", thread_id, message_id, id);
         } else if (err.error == 1545051) {
             sendMessageError(api, "Failure to send the response due to an invalid image.", thread_id, message_id, id);

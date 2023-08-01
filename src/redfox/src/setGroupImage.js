@@ -32,7 +32,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, resData);
             })
             .catch(function (err) {
-                utils.logged("fca_group_image_upload " + err);
                 return callback(err);
             });
     }
@@ -109,7 +108,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                     return callback();
                 })
                 .catch(function (err) {
-                    utils.logged("fca_group_image " + err);
                     return callback(err);
                 });
         });

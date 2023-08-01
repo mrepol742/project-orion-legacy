@@ -54,7 +54,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, resData);
             })
             .catch(function (err) {
-                utils.logged("fca_upload_attachments " + err);
                 return callback(err);
             });
     }
@@ -81,7 +80,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, resData.payload.share_data.share_params);
             })
             .catch(function (err) {
-                utils.logged("fca_get_url " + err);
                 return callback(err);
             });
     }
@@ -150,7 +148,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback(null, messageInfo);
             })
             .catch(function (err) {
-                utils.logged("fca_send_message " + err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
                     ctx.loggedIn = false;
                 }

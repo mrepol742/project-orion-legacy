@@ -716,7 +716,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 }
             })
             .catch((err) => {
-                utils.logged("fca_get_seq_id " + err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in") {
                     ctx.loggedIn = false;
                 }

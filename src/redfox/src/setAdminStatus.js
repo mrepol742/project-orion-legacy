@@ -68,7 +68,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback();
             })
             .catch(function (err) {
-                utils.logged("fca_admin_status " + err);
                 return callback(err);
             });
 

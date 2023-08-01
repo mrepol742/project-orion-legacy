@@ -397,7 +397,6 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
                                                     }
                                                 })
                                                 .catch((ex) => {
-                                                    utils.logged("fca_login " + ex);
                                                     if (callback === prCallback) {
                                                         prReject(ex);
                                                     } else {
@@ -523,7 +522,6 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
             return callback(null, api);
         })
         .catch(function (err) {
-            utils.logged("fca_status " + err);
             return callback(err);
         });
 }

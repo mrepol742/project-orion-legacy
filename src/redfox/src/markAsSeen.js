@@ -41,7 +41,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 return callback();
             })
             .catch(function (err) {
-                utils.logged("fca_mark_seen " + err);
                 if (utils.getType(err) == "Object" && err.error === "Not logged in.") {
                     ctx.loggedIn = false;
                 }

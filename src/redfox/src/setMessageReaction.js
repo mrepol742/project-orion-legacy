@@ -102,7 +102,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null);
             })
             .catch(function (err) {
-                utils.logged("fca_message_reaction " + err);
                 return callback(err);
             });
 

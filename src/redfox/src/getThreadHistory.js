@@ -544,7 +544,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 callback(null, formatMessagesGraphQLResponse(resData[0]));
             })
             .catch(function (err) {
-                utils.logged("fca_thread_history " + err);
                 return callback(err);
             });
 
