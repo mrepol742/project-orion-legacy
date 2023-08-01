@@ -4318,7 +4318,7 @@ Hello %USER%, here is the current server snapshot as of ` +
             if (i1 == 30) {
                 construct += "\n└─  github.com/prj-orion";
             } else {
-                construct += "\n│   " + i1 + ". " + formatDecNum((lead[i1 - 1].balance / 1000) * 0.002) + " $ " + lead[i1 - 1].name;
+                construct += "\n│   ⦿ " + formatDecNum((lead[i1 - 1].balance / 1000) * 0.006) + " $ " + lead[i1 - 1].name;
             }
         }
         sendMessage(api, event, construct);
@@ -4326,7 +4326,7 @@ Hello %USER%, here is the current server snapshot as of ` +
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
                 let sendID = event.senderID;
-                sendMessage(api, event, "You currently have " + formatDecNum((name.balance / 1000) * 0.002) + " $ in your bank ends with " + sendID.substr(-4));
+                sendMessage(api, event, "You currently have " + formatDecNum((name.balance / 1000) * 0.006) + " $ in your bank ends with " + sendID.substr(-4));
             } else {
                 sendMessage(api, event, "You have 0 $ balance yet.");
             }
