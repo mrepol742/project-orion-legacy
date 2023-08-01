@@ -476,17 +476,6 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (blockedCall.includes(api.getCurrentUserID())) {
-                return;
-            }
-
-            if (settings.preference.isStop && isMyId(event.senderID)) {
-                if (event.type == "message" || event.type == "message_reply") {
-                    saveEvent(api, event);
-                }
-                return;
-            }
-
             if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
                 return;
             }
@@ -614,6 +603,17 @@ function redfox_fb(fca_state, login, cb) {
                         await sleep(2000);
                         process.exit(0);
                     }
+                }
+
+                if (blockedCall.includes(api.getCurrentUserID())) {
+                    return;
+                }
+    
+                if (settings.preference.isStop && isMyId(event.senderID)) {
+                    if (event.type == "message" || event.type == "message_reply") {
+                        saveEvent(api, event);
+                    }
+                    return;
                 }
 
                 if (event.isGroup && threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
@@ -6516,7 +6516,6 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
                 settings.preference.error = 1404078;
             }
             blockedCall.push(api.getCurrentUserID());
-            util.logged("api_temporarily_block " + api.getCurrentUserID());
         } else if (err.error == 1545049) {
             sendMessageError(api, "Message is too long to be sent.", thread_id, message_id, id);
         } else if (err.error == 1545051) {
