@@ -2498,59 +2498,31 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let stat =
-            `
-Hello %USER%, here is the current server snapshot as of ` +
-            new Date().toLocaleString() +
-            `
-
-    ⦿ Users: ` +
-            numberWithCommas(Object.keys(cmd).length) +
-            `/` +
-            numberWithCommas(users.list.length) +
-            `
-    ⦿ Groups: ` +
-            acGG.length +
-            `/` +
-            numberWithCommas(groups.list.length) +
-            `
-    ⦿ Block Users: ` +
-            blockedUserC +
-            "/" +
-            (users.blocked.length + users.bot.length) +
-            `
-    ⦿ Block Groups: ` +
-            blockedGroupC +
-            "/" +
-            groups.blocked.length +
-            `
-    ⦿ Instances: ` +
-            accounts.length +
-            `
-    ⦿ Command Call: ` +
-            commandCalls;
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            sendMessage(api, event, stat.replace("%USER%", aa));
-        });
+        let stat = 
+`⋆｡° PRJ-ORION Stats
+│
+│   ⦿ Users: ` + numberWithCommas(Object.keys(cmd).length) + `/` + numberWithCommas(users.list.length) + `
+│   ⦿ Groups: ` + acGG.length + `/` + numberWithCommas(groups.list.length) + `
+│   ⦿ Block Users: ` + blockedUserC + "/" + (users.blocked.length + users.bot.length) + `
+│   ⦿ Block Groups: ` + blockedGroupC + "/" + groups.blocked.length + `
+│   ⦿ Instances: ` + accounts.length + `
+│   ⦿ Command Call: ` + commandCalls + `
+│
+└─  github.com/prj-orion `;
+        sendMessage(api, event, stat);
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            sendMessage(api, event, "Hello " + aa + ", account is login for about " + secondsToTime(process.uptime()) + ", and the server is online for " + secondsToTime(os.uptime()));
-        });
+            let uptime = 
+`⋆｡° PRJ-ORION Server Uptime
+│
+│   ⦿ Login: ` + secondsToTime(process.uptime()) + `
+│   ⦿ Server: ` + secondsToTime(os.uptime()) + `
+│   ⦿ Server Location: ` + getCountryOrigin(os.cpus()[0].model) + `
+│
+└─  github.com/prj-orion `;
+            sendMessage(api, event, uptime);
     } else if (query == "tokens" || query == "token") {
         if (isGoingToFast(api, event)) {
             return;
@@ -2562,39 +2534,16 @@ Hello %USER%, here is the current server snapshot as of ` +
             } else {
                 aa = "there";
             }
-            sendMessage(
-                api,
-                event,
-                "Hello " +
-                    aa +
-                    ", here are the tokens consumption since May 26th 2023.:" +
-                    "\n\nCode G3" +
-                    "\n    ⦿ Prompt: " +
-                    formatDecNum(settings.tokens["gpt"]["prompt_tokens"]) +
-                    "\n    ⦿ Completion: " +
-                    formatDecNum(settings.tokens["gpt"]["completion_tokens"]) +
-                    "\n    ⦿ Total: " +
-                    formatDecNum(settings.tokens["gpt"]["total_tokens"]) +
-                    "\n    ⦿ Cost: " +
-                    formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002) +
-                    "$" +
-                    "\n\nCode TD:" +
-                    "\n    ⦿ Prompt: " +
-                    formatDecNum(settings.tokens["davinci"]["prompt_tokens"]) +
-                    "\n    ⦿ Completion: " +
-                    formatDecNum(settings.tokens["davinci"]["completion_tokens"]) +
-                    "\n    ⦿ Total: " +
-                    formatDecNum(settings.tokens["davinci"]["total_tokens"]) +
-                    "\n    ⦿ Cost: " +
-                    formatDecNum((settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02) +
-                    "$" +
-                    "\n\n Code D:" +
-                    "\n    ⦿ Total: " +
-                    formatDecNum(settings.tokens["dell"]) +
-                    "\n    ⦿ Cost: " +
-                    formatDecNum(settings.tokens["dell"] * 0.018) +
-                    "$"
-            );
+            let token =
+`⋆｡° PRJ-ORION Token Consumption
+│
+│   ⦿ Prompt: ` + formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]) + `
+│   ⦿ Completion: ` + formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]) + `
+│   ⦿ Total: ` + formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]) + `
+│   ⦿ Cost: ` + formatDecNum(((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002) + ((settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02)) + `
+│
+└─  github.com/prj-orion `;
+            sendMessage(api, event, token);
         });
     } else if (query == "sysinfo") {
         if (isGoingToFast(api, event)) {
@@ -2603,78 +2552,24 @@ Hello %USER%, here is the current server snapshot as of ` +
         utils.logged("sysinfo");
         let avg_load = os.loadavg();
         let rom = await utils.getProjectTotalSize(__dirname + "/");
-        let sysinfo =
-            `Hello %USER%, here is the current system snapshot as of ` +
-            new Date().toLocaleString() +
-            ` located in ` +
-            getCountryOrigin(os.cpus()[0].model) +
-            ` and login for ` +
-            secondsToTime(process.uptime()) +
-            `
-            
-    ⦿ CPU: ` +
-            os.cpus()[0].model +
-            " x" +
-            os.cpus().length +
-            `
-    ⦿ CPU Usage: ` +
-            utils.getCPULoad() +
-            `%
-    ⦿ OS: ` +
-            os.type() +
-            " " +
-            os.arch() +
-            " v" +
-            os.release() +
-            `
-    ⦿ Node: v` +
-            process.versions.node +
-            " " +
-            os.endianness() +
-            `
-    ⦿ Project Orion: ` +
-            package.name +
-            " v" +
-            package.version +
-            ` 
-    ⦿ Server Uptime: ` +
-            secondsToTime(os.uptime()) +
-            `
-    ⦿ RAM: ` +
-            convertBytes(os.freemem()) +
-            `/` +
-            convertBytes(os.totalmem()) +
-            `
-    ⦿ ROM: ` +
-            convertBytes(rom) +
-            "/28.89 GB" +
-            `
-    ⦿ RSS: ` +
-            convertBytes(process.memoryUsage().rss) +
-            `
-    ⦿ Heap: ` +
-            convertBytes(process.memoryUsage().heapUsed) +
-            `/` +
-            convertBytes(process.memoryUsage().heapTotal) +
-            `
-    ⦿ External: ` +
-            convertBytes(process.memoryUsage().external) +
-            `
-    ⦿ Array Buffers: ` +
-            convertBytes(process.memoryUsage().arrayBuffers) +
-            `
-    ⦿ Average Load: ` +
-            Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) +
-            `%`;
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            sendMessage(api, event, sysinfo.replace("%USER%", aa));
-        });
+        let sysinfo = 
+`⋆｡° PRJ-ORION System Information
+│
+│   ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
+│   ⦿ CPU Usage: ` + utils.getCPULoad() + `%
+│   ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
+│   ⦿ Node: v` + process.versions.node + " " + os.endianness() + `
+│   ⦿ Project Orion: ` + package.name + " v" + package.version + ` 
+│   ⦿ RAM: ` + convertBytes(os.freemem()) + `/` + convertBytes(os.totalmem()) + `
+│   ⦿ ROM: ` + convertBytes(rom) + "/28.89 GB" + `
+│   ⦿ RSS: ` + convertBytes(process.memoryUsage().rss) + `
+│   ⦿ Heap: ` + convertBytes(process.memoryUsage().heapUsed) + `/` + convertBytes(process.memoryUsage().heapTotal) + `
+│   ⦿ External: ` + convertBytes(process.memoryUsage().external) + `
+│   ⦿ Array Buffers: ` + convertBytes(process.memoryUsage().arrayBuffers) + `
+│   ⦿ Average Load: ` + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + `%
+│
+└─  github.com/prj-orion `;
+        sendMessage(api, event, sysinfo);
     } else if (/(^rascii$|^rascii\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -2828,10 +2723,8 @@ Hello %USER%, here is the current server snapshot as of ` +
         axios
             .request(options)
             .then(function (data) {
-                let message = {
-                    body: "⦿ Deaths " + numberWithCommas(data.data.data["deaths"]) + "\n⦿ Confirmed: " + numberWithCommas(data.data.data["confirmed"]) + "\n⦿ Location: " + data.data.data["location"],
-                };
-                sendMessage(api, event, message);
+                let covid = "⦿ Deaths " + numberWithCommas(data.data.data["deaths"]) + "\n⦿ Confirmed: " + numberWithCommas(data.data.data["confirmed"]) + "\n⦿ Location: " + data.data.data["location"];
+                sendMessage(api, event, covid);
             })
             .catch(function (error) {
                 utils.logged(error);
