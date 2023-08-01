@@ -1891,6 +1891,10 @@ async function ai(api, event) {
             });
         }
     } else if (isMyPrefix(findPr, input, query, query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
         if (!settings.preference.angry) {
             mj(api, event, findPr, input, query, query2);
         } else {
@@ -7464,10 +7468,12 @@ function saveEvent(api, event) {
 async function aiResponse(event, complextion, text, repeat, user, group) {
     try {
         const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group));
+        
         settings.tokens["davinci"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
         settings.tokens["davinci"]["completion_tokens"] += ai.data.usage.completion_tokens;
         settings.tokens["davinci"]["total_tokens"] += ai.data.usage.total_tokens;
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
+        
         let text1 = ai.data.choices[0].text;
 
         if (ai.data.choices[0].finish_reason == "length") {
@@ -7480,25 +7486,19 @@ async function aiResponse(event, complextion, text, repeat, user, group) {
         }
         return ai;
     } catch (error) {
-        if (!(error.response === undefined)) {
-            if (error.response.status >= 400) {
-                return errorResponse;
-            } else {
-                if (repeat) {
-                    utils.logged("attempt_initiated text-davinci-002 " + text);
-                    let newResponse = await aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group);
-                    settings.tokens["davinci"]["prompt_tokens"] += newResponse.data.usage.prompt_tokens;
-                    settings.tokens["davinci"]["completion_tokens"] += newResponse.data.usage.completion_tokens;
-                    settings.tokens["davinci"]["total_tokens"] += newResponse.data.usage.total_tokens;
-                    utils.logged("tokens_used prompt: " + newResponse.data.usage.prompt_tokens + " completion: " + newResponse.data.usage.completion_tokens + " total: " + newResponse.data.usage.total_tokens);
-                    return newResponse;
-                } else {
-                    let errorResponse2 = (errorResponse.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)]);
-                    return errorResponse2;
-                }
-            }
+        utils.logged(error);
+        if (repeat) {
+            utils.logged("attempt_initiated_2 text-davinci-002 " + text);
+            let newResponse = await aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group);
+            settings.tokens["davinci"]["prompt_tokens"] += newResponse.data.usage.prompt_tokens;
+            settings.tokens["davinci"]["completion_tokens"] += newResponse.data.usage.completion_tokens;
+            settings.tokens["davinci"]["total_tokens"] += newResponse.data.usage.total_tokens;
+            utils.logged("tokens_used prompt: " + newResponse.data.usage.prompt_tokens + " completion: " + newResponse.data.usage.completion_tokens + " total: " + newResponse.data.usage.total_tokens);
+            return newResponse;
         }
-        return errorResponse;
+        let rrrrp = errorResponse;
+        let errorResponse2 = rrrrp.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)];
+        return errorResponse2;
     }
 }
 
@@ -7848,24 +7848,12 @@ async function aiResponse2(event, text, repeat, user, group) {
                     ai222.data.choices[0].message.content += "[" + argument.format + "=" + argument.name + "]";
                     return ai222;
             }
-        } else {
-            return ai;
         }
+        return ai;
     } catch (error) {
-        if (!(error.response === undefined)) {
-            if (error.response.status >= 400) {
-                return errorResponse;
-            } else {
-                if (repeat) {
-                    utils.logged("attempt_initiated " + settings.preference.text_complextion + " " + text);
-                    return await aiResponse(event, settings.preference.text_complextion, text, repeat, user, group);
-                } else {
-                    let errorResponse2 = (errorResponse.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)]);
-                    return errorResponse2;
-                }
-            }
-        }
-        return errorResponse;
+        utils.logged(error);
+        utils.logged("attempt_initiated_1 " + settings.preference.text_complextion + " " + text);
+        return await aiResponse(event, settings.preference.text_complextion, text, repeat, user, group);
     }
 }
 
@@ -8900,9 +8888,6 @@ function calculateAge(dob) {
 }
 
 function mj(api, event, findPr, input, query, query2) {
-    if (isGoingToFast(api, event)) {
-        return;
-    }
     let data = input.split(" ");
     if (data.length < 2 || (findPr != false && input == findPr)) {
         let welCC = hey[Math.floor(Math.random() * hey.length)];
@@ -8938,7 +8923,11 @@ function mj(api, event, findPr, input, query, query2) {
                     } else {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
-                    sendAiMessage(api, event, respo.data.choices[0].message.content);
+                    if (respo.data.choices[0].message === undefined) {
+                        sendAiMessage(api, event, respo.data.choices[0].text);
+                    } else {
+                        sendAiMessage(api, event, respo.data.choices[0].message.content);
+                    }
                 });
             } else {
                 let respo = await aiResponse2(event, text, true, user, { name: undefined });
@@ -8947,7 +8936,11 @@ function mj(api, event, findPr, input, query, query2) {
                 } else {
                     user["balance"] += respo.data.usage.total_tokens;
                 }
-                sendAiMessage(api, event, respo.data.choices[0].message.content);
+                if (respo.data.choices[0].message === undefined) {
+                    sendAiMessage(api, event, respo.data.choices[0].text);
+                } else {
+                    sendAiMessage(api, event, respo.data.choices[0].message.content);
+                }
             }
         });
     }
