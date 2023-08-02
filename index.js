@@ -144,11 +144,11 @@ let bannerlogo = fs.readFileSync(__dirname + "/src/web/logo.png");
 let robots = fs.readFileSync(__dirname + "/src/web/robots.txt");
 let sitemappage = fs.readFileSync(__dirname + "/src/web/sitemap.xml");
 let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
-let cmdgif = fs.createReadStream(__dirname + "/src/web/cmd.gif");
-let downloadgif = fs.createReadStream(__dirname + "/src/web/download.gif");
-let maintenancegif = fs.createReadStream(__dirname + "/src/web/maintenance.gif");
-let blockedgif = fs.createReadStream(__dirname + "/src/web/blocked.gif");
-let welcomegif = fs.createReadStream(__dirname + "/src/web/welcome.gif");
+
+let downloadgif = fs.createReadStream(__dirname + "/src/web/download.mp4");
+let maintenancegif = fs.createReadStream(__dirname + "/src/web/maintenance.mp4");
+let blockedgif = fs.createReadStream(__dirname + "/src/web/blocked.mp4");
+let connectedgif = fs.createReadStream(__dirname + "/src/web/connected.mp4");
 
 utils.logged("web_resource_loaded finish");
 
@@ -516,12 +516,14 @@ function redfox_fb(fca_state, login, cb) {
                             sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/prj-orion/issues");
                         } else if (groups.blocked.includes(event.threadID)) {
                             let blockE = {
-                                body: "This group is blocked. Contact the bot admins for more info."
+                                body: "This group is blocked. Contact the bot admins for more info.",
+                                attachment: blockedgif,
                             };
                             sendMessage(api, event, blockE);
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
                             let blockE = {
                                 body: "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues",
+                                attachment: blockedgif,
                             };
                             sendMessage(api, event, blockE);
                         } else if (settings.preference.isStop) {
@@ -529,6 +531,7 @@ function redfox_fb(fca_state, login, cb) {
                         } else if (settings.preference.isDebugEnabled) {
                             let debugE = {
                                 body: "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues",
+                                attachment: maintenancegif,
                             };
                             sendMessage(api, event, debugE);
                         } else {
@@ -606,7 +609,7 @@ function redfox_fb(fca_state, login, cb) {
                 if (blockedCall.includes(api.getCurrentUserID())) {
                     return;
                 }
-    
+
                 if (settings.preference.isStop && isMyId(event.senderID)) {
                     if (event.type == "message" || event.type == "message_reply") {
                         saveEvent(api, event);
@@ -690,7 +693,12 @@ function redfox_fb(fca_state, login, cb) {
                             '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
                             "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ";
 
-                        sendMessageOnly(api, event, message);
+                        let mmm = {
+                            body: message,
+                            attachment: connectedgif,
+                        };
+
+                        sendMessageOnly(api, event, mmm);
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
@@ -1538,67 +1546,62 @@ async function ai22(api, event, query, query2) {
                                             event.messageReply.messageID
                                         );
                                     } else {
-                                        let url = encodeURI("https://graph.facebook.com/" + login + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
-                                        let filename = __dirname + "/cache/login_" + getTimestamp() + ".jpg";
-                                        downloadFile(url, filename).then((response) => {
-                                            let message = {
-                                                body: updateFont("Account " + login + " is now connected to the main server.", login),
-                                                attachment: fs.createReadStream(filename),
-                                            };
-                                            api.sendMessage(
-                                                message,
-                                                event.threadID,
-                                                (err, messageInfo) => {
-                                                    if (err) utils.logged(err);
-                                                },
-                                                event.messageReply.messageID
-                                            );
+                                        let message = {
+                                            body: updateFont("Account " + login + " is now connected to the main server.", login),
+                                            attachment: connectedgif,
+                                        };
+                                        api.sendMessage(
+                                            message,
+                                            event.threadID,
+                                            (err, messageInfo) => {
+                                                if (err) utils.logged(err);
+                                            },
+                                            event.messageReply.messageID
+                                        );
 
-                                            accounts.push(login);
+                                        accounts.push(login);
 
-                                            if (users.blocked.includes(id) || users.bot.includes(id)) {
+                                        if (users.blocked.includes(id) || users.bot.includes(id)) {
+                                            if (event.isGroup) {
+                                                getUserProfile(id, async function (name) {
+                                                    let aa = "Sorry ";
+                                                    if (name.firstName != undefined) {
+                                                        aa += name.firstName;
+                                                    } else {
+                                                        aa += id;
+                                                    }
+                                                    aa += ", i am unable to promote you because you are blocked.";
+                                                    sendMessage(api, event, aa);
+                                                });
+                                            } else {
+                                                sendMessage(api, event, "Sorry, i am unable to promote you because you are blocked.");
+                                            }
+                                        } else {
+                                            if (!users.admin.includes(event.senderID)) {
                                                 if (event.isGroup) {
                                                     getUserProfile(id, async function (name) {
-                                                        let aa = "Sorry ";
+                                                        let aa = "";
                                                         if (name.firstName != undefined) {
                                                             aa += name.firstName;
                                                         } else {
-                                                            aa += id;
+                                                            aa += "The user " + id;
                                                         }
-                                                        aa += ", i am unable to promote you because you are blocked.";
+                                                        aa += " is now an admin.";
                                                         sendMessage(api, event, aa);
                                                     });
                                                 } else {
-                                                    sendMessage(api, event, "Sorry, i am unable to promote you because you are blocked.");
+                                                    sendMessage(api, event, "You are now an admin.");
                                                 }
-                                            } else {
-                                                if (!users.admin.includes(event.senderID)) {
-                                                    if (event.isGroup) {
-                                                        getUserProfile(id, async function (name) {
-                                                            let aa = "";
-                                                            if (name.firstName != undefined) {
-                                                                aa += name.firstName;
-                                                            } else {
-                                                                aa += "The user " + id;
-                                                            }
-                                                            aa += " is now an admin.";
-                                                            sendMessage(api, event, aa);
-                                                        });
-                                                    } else {
-                                                        sendMessage(api, event, "You are now an admin.");
-                                                    }
-                                                    users.admin.push(event.senderID);
-                                                }
+                                                users.admin.push(event.senderID);
                                             }
+                                        }
 
-                                            saveState();
-
+                                        saveState();
+                                        /*
                                             exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
                                                 sendMessage(api, event, stdout + "\n\n" + stderr);
                                             });
-
-                                            unLink(filename);
-                                        });
+                                            */
                                     }
                                 }
                             );
@@ -1897,7 +1900,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-      //  return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
+        //  return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
         if (!settings.preference.angry) {
             mj(api, event, findPr, input, query, query2);
         } else {
@@ -2505,15 +2508,35 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let stat = 
-`⋆｡° Analytics
+        let stat =
+            `⋆｡° Analytics
 │
-│   ⦿ Users: ` + numberWithCommas(Object.keys(cmd).length) + `/` + numberWithCommas(users.list.length) + `
-│   ⦿ Groups: ` + acGG.length + `/` + numberWithCommas(groups.list.length) + `
-│   ⦿ Block Users: ` + blockedUserC + "/" + (users.blocked.length + users.bot.length) + `
-│   ⦿ Block Groups: ` + blockedGroupC + "/" + groups.blocked.length + `
-│   ⦿ Instances: ` + accounts.length + `
-│   ⦿ Command Call: ` + commandCalls + `
+│   ⦿ Users: ` +
+            numberWithCommas(Object.keys(cmd).length) +
+            `/` +
+            numberWithCommas(users.list.length) +
+            `
+│   ⦿ Groups: ` +
+            acGG.length +
+            `/` +
+            numberWithCommas(groups.list.length) +
+            `
+│   ⦿ Block Users: ` +
+            blockedUserC +
+            "/" +
+            (users.blocked.length + users.bot.length) +
+            `
+│   ⦿ Block Groups: ` +
+            blockedGroupC +
+            "/" +
+            groups.blocked.length +
+            `
+│   ⦿ Instances: ` +
+            accounts.length +
+            `
+│   ⦿ Command Call: ` +
+            commandCalls +
+            `
 │
 └─  github.com/prj-orion `;
         sendMessage(api, event, stat);
@@ -2521,15 +2544,21 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-            let uptime = 
-`⋆｡° Uptime
+        let uptime =
+            `⋆｡° Uptime
 │
-│   ⦿ Login: ` + secondsToTime(process.uptime()) + `
-│   ⦿ Server: ` + secondsToTime(os.uptime()) + `
-│   ⦿ Server Location: ` + getCountryOrigin(os.cpus()[0].model) + `
+│   ⦿ Login: ` +
+            secondsToTime(process.uptime()) +
+            `
+│   ⦿ Server: ` +
+            secondsToTime(os.uptime()) +
+            `
+│   ⦿ Server Location: ` +
+            getCountryOrigin(os.cpus()[0].model) +
+            `
 │
 └─  github.com/prj-orion `;
-            sendMessage(api, event, uptime);
+        sendMessage(api, event, uptime);
     } else if (query == "tokens" || query == "token") {
         if (isGoingToFast(api, event)) {
             return;
@@ -2542,12 +2571,20 @@ async function ai(api, event) {
                 aa = "there";
             }
             let token =
-`⋆｡° Token Consumption
+                `⋆｡° Token Consumption
 │
-│   ⦿ Prompt: ` + formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]) + `
-│   ⦿ Completion: ` + formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]) + `
-│   ⦿ Total: ` + formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]) + `
-│   ⦿ Cost: ` + formatDecNum(((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002) + ((settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02)) + `
+│   ⦿ Prompt: ` +
+                formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]) +
+                `
+│   ⦿ Completion: ` +
+                formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]) +
+                `
+│   ⦿ Total: ` +
+                formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]) +
+                `
+│   ⦿ Cost: ` +
+                formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02) +
+                `
 │
 └─  github.com/prj-orion `;
             sendMessage(api, event, token);
@@ -2559,21 +2596,60 @@ async function ai(api, event) {
         utils.logged("sysinfo");
         let avg_load = os.loadavg();
         let rom = await utils.getProjectTotalSize(__dirname + "/");
-        let sysinfo = 
-`⋆｡° System Information
+        let sysinfo =
+            `⋆｡° System Information
 │
-│   ⦿ CPU: ` + os.cpus()[0].model + " x" + os.cpus().length + `
-│   ⦿ CPU Usage: ` + utils.getCPULoad() + `%
-│   ⦿ OS: ` + os.type() + " " + os.arch() + " v" + os.release() + `
-│   ⦿ Node: v` + process.versions.node + " " + os.endianness() + `
-│   ⦿ Project Orion: ` + package.name + " v" + package.version + ` 
-│   ⦿ RAM: ` + convertBytes(os.freemem()) + `/` + convertBytes(os.totalmem()) + `
-│   ⦿ ROM: ` + convertBytes(rom) + "/28.89 GB" + `
-│   ⦿ RSS: ` + convertBytes(process.memoryUsage().rss) + `
-│   ⦿ Heap: ` + convertBytes(process.memoryUsage().heapUsed) + `/` + convertBytes(process.memoryUsage().heapTotal) + `
-│   ⦿ External: ` + convertBytes(process.memoryUsage().external) + `
-│   ⦿ Array Buffers: ` + convertBytes(process.memoryUsage().arrayBuffers) + `
-│   ⦿ Average Load: ` + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + `%
+│   ⦿ CPU: ` +
+            os.cpus()[0].model +
+            " x" +
+            os.cpus().length +
+            `
+│   ⦿ CPU Usage: ` +
+            utils.getCPULoad() +
+            `%
+│   ⦿ OS: ` +
+            os.type() +
+            " " +
+            os.arch() +
+            " v" +
+            os.release() +
+            `
+│   ⦿ Node: v` +
+            process.versions.node +
+            " " +
+            os.endianness() +
+            `
+│   ⦿ Project Orion: ` +
+            package.name +
+            " v" +
+            package.version +
+            ` 
+│   ⦿ RAM: ` +
+            convertBytes(os.freemem()) +
+            `/` +
+            convertBytes(os.totalmem()) +
+            `
+│   ⦿ ROM: ` +
+            convertBytes(rom) +
+            "/28.89 GB" +
+            `
+│   ⦿ RSS: ` +
+            convertBytes(process.memoryUsage().rss) +
+            `
+│   ⦿ Heap: ` +
+            convertBytes(process.memoryUsage().heapUsed) +
+            `/` +
+            convertBytes(process.memoryUsage().heapTotal) +
+            `
+│   ⦿ External: ` +
+            convertBytes(process.memoryUsage().external) +
+            `
+│   ⦿ Array Buffers: ` +
+            convertBytes(process.memoryUsage().arrayBuffers) +
+            `
+│   ⦿ Average Load: ` +
+            Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) +
+            `%
 │
 └─  github.com/prj-orion `;
         sendMessage(api, event, sysinfo);
@@ -2889,7 +2965,7 @@ async function ai(api, event) {
                     threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
-                        body: search.results[0].title + " is now in download progress..."
+                        body: search.results[0].title + " is now in download progress...",
                     });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -2942,7 +3018,7 @@ async function ai(api, event) {
                     threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
-                        body: search.results[0].title + " is now in download progress..."
+                        body: search.results[0].title + " is now in download progress...",
                     });
                     let filename = __dirname + "/cache/video_" + getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -4179,7 +4255,7 @@ async function ai(api, event) {
                 }
                 if (response.data.success) {
                     sendMessage(api, event, {
-                        body: response.data.title + " is now in download progress..."
+                        body: response.data.title + " is now in download progress...",
                     });
                     let title = response.data.title;
                     let url = getFbDLQuality(response);
@@ -4454,14 +4530,14 @@ async function ai(api, event) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return utils.logged(err);
                         if (gc.isGroup) {
-                             api.addUserToGroup(pref, event.threadID, (err) => {
-                                    if (err) {
-                                        sendMessage(api, event, "The user could not be added to the group. Please try again later.");
-                                    }
-                                    if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
-                                        sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
-                                    } 
-                                });
+                            api.addUserToGroup(pref, event.threadID, (err) => {
+                                if (err) {
+                                    sendMessage(api, event, "The user could not be added to the group. Please try again later.");
+                                }
+                                if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
+                                    sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
+                                }
+                            });
                         } else {
                             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                         }
@@ -5030,8 +5106,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let cdd = {
-        };
+        let cdd = {};
         let data = input.split(" ");
         if (data.length < 2 || functionRegistry[event.threadID] === undefined) {
             getUserProfile(event.senderID, async function (name) {
@@ -7479,12 +7554,12 @@ function saveEvent(api, event) {
 async function aiResponse(event, complextion, text, repeat, user, group, uid) {
     try {
         const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group, uid));
-        
+
         settings.tokens["davinci"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
         settings.tokens["davinci"]["completion_tokens"] += ai.data.usage.completion_tokens;
         settings.tokens["davinci"]["total_tokens"] += ai.data.usage.total_tokens;
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
-        
+
         let text1 = ai.data.choices[0].text;
 
         if (ai.data.choices[0].finish_reason == "length") {
@@ -7508,7 +7583,7 @@ async function aiResponse(event, complextion, text, repeat, user, group, uid) {
             return newResponse;
         }
         let rrrrp = errorResponse;
-        let errorResponse2 = rrrrp.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)];
+        let errorResponse2 = (rrrrp.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)]);
         return errorResponse2;
     }
 }
@@ -8931,6 +9006,7 @@ function mj(api, event, findPr, input, query, query2) {
                     let respo = await aiResponse2(event, text, true, user, group, api.getCurrentUserID());
                     if (user.balance === undefined) {
                         user["balance"] = respo.data.usage.total_tokens;
+                        sendMessage(api, event, "You have just earned your first money, continue using Mj to earn more and get mor benifits. \n\nTo check your balace sennd `balance`.");
                     } else {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
@@ -8944,6 +9020,7 @@ function mj(api, event, findPr, input, query, query2) {
                 let respo = await aiResponse2(event, text, true, user, { name: undefined }, api.getCurrentUserID());
                 if (user.balance === undefined) {
                     user["balance"] = respo.data.usage.total_tokens;
+                    sendMessage(api, event, "You have just earned your first money, continue using Mj to earn more and get mor benifits. \n\nTo check your balace sennd `balance`.");
                 } else {
                     user["balance"] += respo.data.usage.total_tokens;
                 }
