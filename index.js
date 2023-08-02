@@ -482,7 +482,7 @@ function redfox_fb(fca_state, login, cb) {
 
             if ((event.type == "message" || event.type == "message_reply") && accounts.includes(event.senderID)) {
                 let body = event.body;
-                let result = !!body.match(/^[!@#$%&*~\-_|?]/);
+                let result = !!body.match(/^[!@#$%&*~\-=_|?+/<>:;]/);
                 if (result) {
                     event.body = body.slice(1);
                 } else {
@@ -3304,7 +3304,7 @@ async function ai(api, event) {
 
                 let members = info.participantIDs.length;
                 var partner1 = 0;
-                if (query == "rulgy") {
+                if (query == "rugly") {
                     partner1 = info.participantIDs[Math.floor(Math.random() * members)];
                 } else {
                     partner1 = event.senderID;
@@ -3326,10 +3326,12 @@ async function ai(api, event) {
                         let unattractive = Math.floor(Math.random() * 100) + "%";
                         let beauty = Math.floor(Math.random() * 100) + "%";
                         let awful = Math.floor(Math.random() * 100) + "%";
+                        let love = Math.floor(Math.random() * 100) + "%";
+                        let ugly = Math.floor(Math.random() * 100) + "%";
 
                         let message2 = {
-                            body: name1 + " uglyness is at " + pre + "%" + "\n\nApperance: " + apperance + "\nUnattractive: " + unattractive + "\nBeauty: " + beauty + "\nAwful: " + awful,
-                            attachment: [fs.createReadStream(filename)],
+                            body: name1 + " uglyness is " + pre + "\n\nApperance: " + apperance + "\nUnattractive: " + unattractive + "\nBeauty: " + beauty + "\nAwful: " + awful + "\nProbability of having lovelife: " + love + "\nProbability of dying ugly: " + ugly,
+                            attachment: [fs.createReadStream(filename)], 
                             mentions: [
                                 {
                                     tag: name1,
@@ -4283,7 +4285,7 @@ async function ai(api, event) {
         }
         lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
 
-        let construct = "⋆｡° PRJ-ORION Top Users\n│";
+        let construct = "⋆｡° Top Users\n│";
         for (let i1 = 1; i1 < 31; i1++) {
             if (!accounts.includes(lead[i1 - 1].id)) {
                 if (i1 == 30) {
