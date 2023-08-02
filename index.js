@@ -92,7 +92,7 @@ let nwww = {};
 if (!fs.existsSync(__dirname + "/data/cors.json")) {
     fs.writeFileSync(__dirname + "/data/cors.json", "[]", "utf8");
 }
-let corsWhitelist = fs.readFileSync(__dirname + "/data/cors.json", "utf8");
+let corsWhitelist = JSON.parse(fs.readFileSync(__dirname + "/data/cors.json", "utf8"));
 utils.logged("cors_loaded finish");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
@@ -8068,7 +8068,7 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings, null, 4), "utf8");
     fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
     fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
-    fs.writeFileSync(__dirname + "/data/corsWhitelist.json", JSON.stringify(corsWhitelist, null, 4), "utf8");
+    fs.writeFileSync(__dirname + "/data/cors.json", JSON.stringify(corsWhitelist, null, 4), "utf8");
 }
 
 function getIdFromUrl(url) {
