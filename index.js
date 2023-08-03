@@ -2242,6 +2242,7 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, message);
             } catch (error) {
+                utils.logged(error);
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
                         sendMessage(
