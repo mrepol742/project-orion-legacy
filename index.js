@@ -2056,7 +2056,7 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, heySim[Math.floor(Math.random() * heySim.length)]);
         } else {
-            sendMessage(api, event, Eball[Math.floor(Math.random() * Eball.lenght)]);
+            sendMessage(api, event, Eball[Math.floor(Math.random() * Eball.length)]);
         }
     } else if (/(^sim$|^sim\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -5462,7 +5462,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event, joke[Math.floor(Math.random() * joke.lenght)]);
+        sendMessage(api, event, joke[Math.floor(Math.random() * joke.length)]);
     } else if (query == "barrier") {
         if (isGoingToFast(api, event)) {
             return;
@@ -7603,7 +7603,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                     mssg.push({
                         role: "function",
                         name: functionName,
-                        content: '{"joke": "' + joke[Math.floor(Math.random() * joke.lenght)] + '"}',
+                        content: '{"joke": "' + joke[Math.floor(Math.random() * joke.length)] + '"}',
                     });
                     return await openai.createChatCompletion({
                         model: "gpt-3.5-turbo-16k-0613",
