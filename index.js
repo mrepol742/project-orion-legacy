@@ -145,11 +145,6 @@ let robots = fs.readFileSync(__dirname + "/src/web/robots.txt");
 let sitemappage = fs.readFileSync(__dirname + "/src/web/sitemap.xml");
 let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 
-let downloadgif = fs.createReadStream(__dirname + "/src/web/download.mp4");
-let maintenancegif = fs.createReadStream(__dirname + "/src/web/maintenance.mp4");
-let blockedgif = fs.createReadStream(__dirname + "/src/web/blocked.mp4");
-let connectedgif = fs.createReadStream(__dirname + "/src/web/connected.mp4");
-
 utils.logged("web_resource_loaded finish");
 
 let dyk = JSON.parse(fs.readFileSync(__dirname + "/src/dyk.json"));
@@ -523,25 +518,13 @@ function redfox_fb(fca_state, login, cb) {
                         } else if (users.muted.includes(event.senderID)) {
                             sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/prj-orion/issues");
                         } else if (groups.blocked.includes(event.threadID)) {
-                            let blockE = {
-                                body: "This group is blocked. Contact the bot admins for more info.",
-                                attachment: blockedgif,
-                            };
-                            sendMessage(api, event, blockE);
+                            sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                            let blockE = {
-                                body: "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues",
-                                attachment: blockedgif,
-                            };
-                            sendMessage(api, event, blockE);
+                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues");
                         } else if (settings.preference.isStop) {
                             sendMessage(api, event, "The program is currently offline.");
                         } else if (settings.preference.isDebugEnabled) {
-                            let debugE = {
-                                body: "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues",
-                                attachment: maintenancegif,
-                            };
-                            sendMessage(api, event, debugE);
+                            sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues");
                         } else {
                             getUserProfile(event.senderID, async function (name) {
                                 let aa = "";
@@ -643,13 +626,9 @@ function redfox_fb(fca_state, login, cb) {
                             if (isGoingToFast1(event, threadMaintenance, 30)) {
                                 return;
                             }
-                            let message = {
-                                body:
-                                    "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
+                            let message = "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
                                     event.body +
-                                    "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
-                                attachment: maintenancegif,
-                            };
+                                    "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance";
                             sendMessage(api, event, message);
                         }
                         saveEvent(api, event);
@@ -700,13 +679,7 @@ function redfox_fb(fca_state, login, cb) {
                             "\n * Unless required by the applicable law or agreed in writing, software" +
                             '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
                             "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ";
-
-                        let mmm = {
-                            body: message,
-                            attachment: connectedgif,
-                        };
-
-                        sendMessageOnly(api, event, mmm);
+                        sendMessageOnly(api, event, message);
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
@@ -1554,12 +1527,8 @@ async function ai22(api, event, query, query2) {
                                             event.messageReply.messageID
                                         );
                                     } else {
-                                        let message = {
-                                            body: updateFont("Account " + login + " is now connected to the main server.", login),
-                                            attachment: connectedgif,
-                                        };
                                         api.sendMessage(
-                                            message,
+                                            updateFont("Account " + login + " is now connected to the main server.", login),
                                             event.threadID,
                                             (err, messageInfo) => {
                                                 if (err) utils.logged(err);
@@ -2255,21 +2224,23 @@ async function ai(api, event) {
             try {
                 const response = await openai.createImage({
                     prompt: data.join(" "),
-                    n: 1,
+                    n: 4,
                     size: "1024x1024",
                 });
-                settings.tokens["dell"] += 1;
-                let url = response.data.data[0].url;
-                if (url.startsWith("https://") || url.startsWith("http://")) {
+                settings.tokens["dell"] += response.data.data.length;
+                let message = {
+                    attachment: [],
+                };
+                sendMessage(api, event, "download is now progress...");
+                for (let i = 0; i < response.data.data.length; i++) {
+                    await sleep(1000);
                     let dir = __dirname + "/cache/createimg_" + getTimestamp() + ".png";
-                    downloadFile(url, dir).then((response) => {
-                        let message = {
-                            attachment: fs.createReadStream(dir),
-                        };
-                        sendMessage(api, event, message);
+                    await downloadFile(response.data.data[i].url, dir).then((response) => {
+                        message.attachment.push(fs.createReadStream(dir));
                         unLink(dir);
                     });
                 }
+                sendMessage(api, event, message);
             } catch (error) {
                 if (!(error.response === undefined)) {
                     if (error.response.status >= 400) {
@@ -6611,11 +6582,7 @@ function isItBotOrNot(api, event) {
             construct += "You have been blocked.";
         }
         construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues.";
-        let msssg = {
-            body: construct,
-            attachment: blockedgif,
-        };
-        sendMessageOnly(api, event, msssg);
+        sendMessageOnly(api, event, construct);
         return true;
     }
     return false;
