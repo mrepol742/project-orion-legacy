@@ -52,6 +52,7 @@ let help = `
 │   ⦿ chad \`prompt\`
 │   ⦿ nraf \`prompt\`
 │   ⦿ skynet \`prompt\`
+│   ⦿ 8ball \`prompt\`
 │
 └─  If you have further questions, i am here to help you.
 `;
@@ -61,7 +62,7 @@ let help1 = `
 │
 │   ⦿ showerthoughts
 │   ⦿ lulcat \`text\`
-│   ⦿ gemoji \`emoji\`
+
 │   ⦿ translate \`language\` \`reply\`
 │   ⦿ wiki \`text\`
 │   ⦿ urlshort \`url\`
@@ -75,7 +76,7 @@ let help1 = `
 │   ⦿ pin add
 │   ⦿ pin remove
 │   ⦿ sadcat \`text\`
-│   ⦿ biden \`text\`
+ 
 │   ⦿ pika \`text\`
 │   ⦿ god \`text\`
 │   ⦿ qrcode \`text\`
@@ -114,7 +115,7 @@ let help3 = `
 ⋆｡° Hello %USER%, how can i assist you further?
 │
 │   ⦿ mnm ^^
-│   ⦿ trump ^^
+
 │   ⦿ stalk ^^
 │   ⦿ invert ^^
 │   ⦿ greyscale ^^
@@ -144,8 +145,8 @@ let help4 = `
 │   ⦿ joke
 │   ⦿ profilepic
 │   ⦿ wyr
-│   ⦿ 8ball
-│   ⦿ gmember
+
+
 │   ⦿ car
 │   ⦿ rcolor
 │   ⦿ ship @mention @mention
@@ -158,7 +159,7 @@ let help4 = `
 │   ⦿ newyear
 │   ⦿ christmas
 │   ⦿ barrier
-│   ⦿ fact
+│   ⦿ dyk
 │   ⦿ thoughts
 │
 └─  Do you have any questions about the command %USER%?
@@ -334,6 +335,8 @@ let helpgroup = `
 │   ⦿ gphoto
 │   ⦿ addUser \`uid\`
 │   ⦿ everyone
+│   ⦿ gemoji \`emoji\`
+│   ⦿ gmember
 │ 
 └─  You can set those information to enable awesome features.
 `;

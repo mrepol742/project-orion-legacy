@@ -152,6 +152,14 @@ let connectedgif = fs.createReadStream(__dirname + "/src/web/connected.mp4");
 
 utils.logged("web_resource_loaded finish");
 
+let dyk = JSON.parse(fs.readFileSync(__dirname + "/src/dyk.json"));
+let wyr = JSON.parse(fs.readFileSync(__dirname + "/src/wyr.json"));
+let Eball = JSON.parse(fs.readFileSync(__dirname + "/src/8ball.json"));
+let joke = JSON.parse(fs.readFileSync(__dirname + "/src/joke.json"));
+let cat = JSON.parse(fs.readFileSync(__dirname + "/src/cat.json"));
+
+utils.logged("api_resource_loaded finish");
+
 /*
 server.listen((PORT + 1), function () {
     utils.logged("server_info HTTPS at " + (PORT + 1));
@@ -2071,6 +2079,16 @@ async function ai(api, event) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
         }
+    } else if (/(^8ball$|^8ball\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, heySim[Math.floor(Math.random() * heySim.length)]);
+        } else {
+            sendMessage(api, event, Eball[Math.floor(Math.random() * Eball.lenght)]);
+        }
     } else if (/(^sim$|^sim\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -2508,151 +2526,57 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let stat =
-            `⋆｡° Analytics
-│
-│   ⦿ Users: ` +
-            numberWithCommas(Object.keys(cmd).length) +
-            `/` +
-            numberWithCommas(users.list.length) +
-            `
-│   ⦿ Groups: ` +
-            acGG.length +
-            `/` +
-            numberWithCommas(groups.list.length) +
-            `
-│   ⦿ Block Users: ` +
-            blockedUserC +
-            "/" +
-            (users.blocked.length + users.bot.length) +
-            `
-│   ⦿ Block Groups: ` +
-            blockedGroupC +
-            "/" +
-            groups.blocked.length +
-            `
-│   ⦿ Instances: ` +
-            accounts.length +
-            `
-│   ⦿ Command Call: ` +
-            commandCalls +
-            `
-│
-└─  github.com/prj-orion `;
-        sendMessage(api, event, stat);
+        let stat = [
+            "Users: " + numberWithCommas(Object.keys(cmd).length) + "/" + numberWithCommas(users.list.length),
+            "Groups: " + acGG.length + "/" + numberWithCommas(groups.list.length),
+            "Block Users: " + blockedUserC + "/" + (users.blocked.length + users.bot.length),
+            "Block Groups: " + blockedGroupC + "/" + groups.blocked.length,
+            "Instances: " + accounts.length,
+            "Command Call: " + commandCalls
+        ];
+        sendMessage(api, event, utils.formatOutput("Statistics", stats, "github.com/prj-orion"));
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let uptime =
-            `⋆｡° Uptime
-│
-│   ⦿ Login: ` +
-            secondsToTime(process.uptime()) +
-            `
-│   ⦿ Server: ` +
-            secondsToTime(os.uptime()) +
-            `
-│   ⦿ Server Location: ` +
-            getCountryOrigin(os.cpus()[0].model) +
-            `
-│
-└─  github.com/prj-orion `;
-        sendMessage(api, event, uptime);
+        let uptime = [
+            "Login: " + secondsToTime(process.uptime()),
+            "Server: " + secondsToTime(os.uptime()),
+            "Server Location: " + getCountryOrigin(os.cpus()[0].model)
+        ];
+        sendMessage(api, event, utils.formatOutput("Uptime", uptime, "github.com/prj-orion"));
     } else if (query == "tokens" || query == "token") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getUserProfile(event.senderID, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa = name.firstName;
-            } else {
-                aa = "there";
-            }
-            let token =
-                `⋆｡° Token Consumption
-│
-│   ⦿ Prompt: ` +
-                formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]) +
-                `
-│   ⦿ Completion: ` +
-                formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]) +
-                `
-│   ⦿ Total: ` +
-                formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]) +
-                `
-│   ⦿ Cost: ` +
-                formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02) +
-                `
-│
-└─  github.com/prj-orion `;
-            sendMessage(api, event, token);
-        });
+        let token = [
+            "Prompt: " + formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]),
+            "Completion: " + formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]),
+            "Total: " + formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]),
+            "Cost: " + formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02)
+        ];
+        sendMessage(api, event, utils.formatOutput("Token Usage", token, "github.com/prj-orion"));
     } else if (query == "sysinfo") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        utils.logged("sysinfo");
         let avg_load = os.loadavg();
         let rom = await utils.getProjectTotalSize(__dirname + "/");
-        let sysinfo =
-            `⋆｡° System Information
-│
-│   ⦿ CPU: ` +
-            os.cpus()[0].model +
-            " x" +
-            os.cpus().length +
-            `
-│   ⦿ CPU Usage: ` +
-            utils.getCPULoad() +
-            `%
-│   ⦿ OS: ` +
-            os.type() +
-            " " +
-            os.arch() +
-            " v" +
-            os.release() +
-            `
-│   ⦿ Node: v` +
-            process.versions.node +
-            " " +
-            os.endianness() +
-            `
-│   ⦿ Project Orion: ` +
-            package.name +
-            " v" +
-            package.version +
-            ` 
-│   ⦿ RAM: ` +
-            convertBytes(os.freemem()) +
-            `/` +
-            convertBytes(os.totalmem()) +
-            `
-│   ⦿ ROM: ` +
-            convertBytes(rom) +
-            "/28.89 GB" +
-            `
-│   ⦿ RSS: ` +
-            convertBytes(process.memoryUsage().rss) +
-            `
-│   ⦿ Heap: ` +
-            convertBytes(process.memoryUsage().heapUsed) +
-            `/` +
-            convertBytes(process.memoryUsage().heapTotal) +
-            `
-│   ⦿ External: ` +
-            convertBytes(process.memoryUsage().external) +
-            `
-│   ⦿ Array Buffers: ` +
-            convertBytes(process.memoryUsage().arrayBuffers) +
-            `
-│   ⦿ Average Load: ` +
-            Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) +
-            `%
-│
-└─  github.com/prj-orion `;
-        sendMessage(api, event, sysinfo);
+        let sysinfo = [
+            "CPU: " + os.cpus()[0].model + " x" + os.cpus().length,
+            "CPU Usage: " + utils.getCPULoad() + "%",
+            "OS: " + os.type() + " " + os.arch() + " v" + os.release(),
+            "Node: v" + process.versions.node + " " + os.endianness(),
+            "Project Orion: " + package.name + " v" + package.version,
+            "RAM: " + convertBytes(os.freemem()) + "/" + convertBytes(os.totalmem()),
+            "ROM: " + convertBytes(rom) + "/28.89 GB",
+            "RSS: " + convertBytes(process.memoryUsage().rss),
+            "Heap: " + convertBytes(process.memoryUsage().heapUsed) + "/" + convertBytes(process.memoryUsage().heapTotal),
+            "External: " + convertBytes(process.memoryUsage().external),
+            "Array Buffers: " +  convertBytes(process.memoryUsage().arrayBuffers),
+            "Average Load: " + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + "%"
+        ];
+        sendMessage(api, event, utils.formatOutput("System Info", sysinfo, "github.com/prj-orion"));
     } else if (/(^rascii$|^rascii\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -2779,7 +2703,7 @@ async function ai(api, event) {
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
                     traceroute["/" + aa] = stdout;
-                    let urll = "http://20.46.182.9/" + aa;
+                    let urll = "http:/50.253.118.57/" + aa;
                     let message = {
                         body: "The result is located on our site at " + urll,
                         url: urll,
@@ -2880,25 +2804,16 @@ async function ai(api, event) {
             axios
                 .request(options)
                 .then(function (data) {
-                    let message =
-                        data.data.data[0].first_name +
-                        " " +
-                        data.data.data[0].last_name +
-                        "\n\n" +
-                        "⦿ Height: " +
-                        data.data.data[0].height_feet +
-                        " Feet\n" +
-                        "⦿ Position: " +
-                        data.data.data[0].position +
-                        "\n" +
-                        "⦿ Team: " +
-                        data.data.data[0].team.full_name +
-                        "\n" +
-                        "⦿ Division: " +
-                        data.data.data[0].team.division +
-                        "\n";
-
-                    sendMessage(api, event, message);
+                    let message = [];
+                    if (data.data.data[0].height_feet != null && data.data.data[0].height_feet != "") {
+                        message.push("Height: " + data.data.data[0].height_feet + "feet");
+                    }
+                    if (data.data.data[0].position != null && data.data.data[0].position != "") {
+                        message.push("Position: " + data.data.data[0].position);
+                    }
+                    message.push("Team: " + data.data.data[0].team.full_name);
+                    message.push("Division: " + data.data.data[0].team.division);
+                    sendMessage(api, event, utils.formatOutput(data.data.data[0].first_name + " " + data.data.data[0].last_name, message, "github.com/prj-orion"));
                 })
                 .catch(function (error) {
                     utils.logged(error);
@@ -3331,7 +3246,7 @@ async function ai(api, event) {
 
                         let message2 = {
                             body: name1 + " uglyness is " + pre + "\n\nApperance: " + apperance + "\nUnattractive: " + unattractive + "\nBeauty: " + beauty + "\nAwful: " + awful + "\nProbability of having lovelife: " + love + "\nProbability of dying ugly: " + ugly,
-                            attachment: [fs.createReadStream(filename)], 
+                            attachment: [fs.createReadStream(filename)],
                             mentions: [
                                 {
                                     tag: name1,
@@ -3517,13 +3432,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Opps! Houston, we have a problem! You should try using doublestruck text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndoublestruck Hello World");
         } else {
             data.shift();
-            getResponseData("https://api.popcat.xyz/doublestruck?text=" + data.join(" ")).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-                } else {
-                    sendMessage(api, event, response.text);
-                }
-            });
+            sendMessage(api, event, toDoublestruck(data.join(" ")));
         }
     } else if (/(^weather$|^weather\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -3607,28 +3516,17 @@ async function ai(api, event) {
             let url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
             parseImage(api, event, url, __dirname + "/cache/facts_" + getTimestamp() + ".png");
         }
-    } else if (query == "wyr" || query == "wouldyourather") {
+    } else if (query == "wyr") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://api.popcat.xyz/wyr").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                sendMessage(api, event, "Would you rather " + response.ops1 + " or " + response.ops2);
-            }
-        });
+        let getWyr = wyr[Math.floor(Math.random() * wyr.length)];
+        sendMessage(api, event, "Would you rather " + getWyr.ops1 + " or " + getWyr.ops2);
     } else if (query == "meowfacts") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://meowfacts.herokuapp.com/").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                sendMessage(api, event, response.data[0]);
-            }
-        });
+        sendMessage(api, event, cat[Math.floor(Math.random() * cat.length)]);
     } else if (query == "mathfacts") {
         if (isGoingToFast(api, event)) {
             return;
@@ -3671,17 +3569,6 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             } else {
                 sendMessage(api, event, response);
-            }
-        });
-    } else if (query == "8ball") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://api.popcat.xyz/8ball").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                sendMessage(api, event, response.answer);
             }
         });
     } else if (/(^profilepicture$|^profilepicture\s|^profilepic$|^profilepic\s)/.test(query2)) {
@@ -4285,17 +4172,13 @@ async function ai(api, event) {
         }
         lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
 
-        let construct = "⋆｡° Top Users\n│";
+        let construct = [];
         for (let i1 = 1; i1 < 31; i1++) {
             if (!accounts.includes(lead[i1 - 1].id)) {
-                if (i1 == 30) {
-                    construct += "\n└─  github.com/prj-orion";
-                } else {
-                    construct += "\n│   ⦿ " + formatDecNum((lead[i1 - 1].balance / 1000) * 0.006) + "$ " + lead[i1 - 1].name;
-                }
+                construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.006) + "$ " + lead[i1 - 1].name);
             }
         }
-        sendMessage(api, event, construct);
+        sendMessage(api, event, utils.formatOutput("Top Uses (Balance)", construct, "github.com/prj-orion"));
     } else if (query2 == "balance" || query2 == "bal") {
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
@@ -5028,7 +4911,7 @@ async function ai(api, event) {
                     color: a.color,
                 };
 
-                let urll = "http://20.46.182.9/" + event.threadID;
+                let urll = "http:/50.253.118.57/" + event.threadID;
                 let message = {
                     body: "This group information can be see at " + urll,
                     url: urll,
@@ -5608,13 +5491,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://api.popcat.xyz/joke").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately the joke is me.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                sendMessage(api, event, response.joke);
-            }
-        });
+        sendMessage(api, event, joke[Math.floor(Math.random() * joke.lenght)]);
     } else if (query == "barrier") {
         if (isGoingToFast(api, event)) {
             return;
@@ -5624,17 +5501,11 @@ async function ai(api, event) {
             attachment: fs.createReadStream(__dirname + "/src/web/barrier.jpg"),
         };
         sendMessage(api, event, message);
-    } else if (query == "fact") {
+    } else if (query == "dyk") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://api.popcat.xyz/fact").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately the fact is not true.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                sendMessage(api, event, response.fact);
-            }
-        });
+        sendMessage(api, event,"Did you know?\n\n" + dyk[Math.floor(Math.random() * dyk.length)]);
     } else if (query == "thoughts") {
         if (isGoingToFast(api, event)) {
             return;
@@ -5700,19 +5571,28 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using hanime category instead.\n\nCategories: \nwaifu, neko, trap, blowjob" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
-        } else {
-            data.shift();
-            getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+        getUserProfile(event.senderID, async function (user) {
+            if (user.balance === undefined) {
+                sendMessage(api, event, "You have 0 $ balance yet.");
+            } else if (1000 > user.balance) {
+                sendMessage(api, event, "You don't have enough balance!");
+            } else {
+                let data = input.split(" ");
+                if (data.length < 2) {
+                    sendMessage(api, event, "Opps! Houston, we have a problem! You should try using hanime category instead.\n\nCategories: \nwaifu, neko, trap, blowjob" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
                 } else {
-                    parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + getTimestamp() + ".png");
+                    data.shift();
+                    getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
+                        if (response == null) {
+                            sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                        } else {
+                            parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + getTimestamp() + ".png");
+                            user.balance -= 1000;
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     } else if (query.startsWith("anime")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5737,18 +5617,6 @@ async function ai(api, event) {
                     parseImage(api, event, response.url, __dirname + "/cache/anime_" + getTimestamp() + ".png");
                 }
             });
-        }
-    } else if (query.startsWith("trump")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using trump text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntrump bug is not an error");
-        } else {
-            data.shift();
-            let text = data.join(" ").substring(0, 57) + "...";
-            parseImage(api, event, "https://un5vyw.deta.dev/tweet?text=" + text, __dirname + "/cache/trump_" + getTimestamp() + ".png");
         }
     } else if (query.startsWith("parseimage")) {
         if (isGoingToFast(api, event)) {
@@ -5803,17 +5671,6 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/caution_" + getTimestamp() + ".png");
         }
-    } else if (query.startsWith("biden")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using biden text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbiden i am leaving twitter");
-        } else {
-            data.shift();
-            parseImage(api, event, "https://api.popcat.xyz/biden?text=" + data.join(" "), __dirname + "/cache/biden_" + getTimestamp() + ".png");
-        }
     } else if (query.startsWith("ss")) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5856,7 +5713,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/sadcat_" + getTimestamp() + ".png");
         }
-    } else if (query2.startsWith("pooh ")) {
+    } else if (query2.startsWith("pooh")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -7775,20 +7632,11 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         messages: mssg,
                     });
                 case "get_joke":
-                    await getResponseData("https://api.popcat.xyz/joke").then((response) => {
-                        if (response == null) {
-                            mssg.push({
-                                role: "user",
-                                content: text,
-                            });
-                        } else {
-                            mssg.push(message);
-                            mssg.push({
-                                role: "function",
-                                name: functionName,
-                                content: '{"joke": "' + response.joke + '"}',
-                            });
-                        }
+                    mssg.push(message);
+                    mssg.push({
+                        role: "function",
+                        name: functionName,
+                        content: '{"joke": "' + joke[Math.floor(Math.random() * joke.lenght)] + '"}',
                     });
                     return await openai.createChatCompletion({
                         model: "gpt-3.5-turbo-16k-0613",
@@ -8111,7 +7959,7 @@ function isValidDate(date) {
     return new Date(date) !== "Invalid Date" && !isNaN(new Date(date));
 }
 
-let normalMap = {
+let mathSansMap = {
     a: "𝖺",
     b: "𝖻",
     c: "𝖼",
@@ -8176,13 +8024,103 @@ let normalMap = {
     0: "𝟢",
 };
 
-function maven(text) {
+let doubleStruckMap = {
+    a: "𝕒",
+    b: "𝕓",
+    c: "𝕔",
+    d: "𝕕",
+    e: "𝕖",
+    f: "𝕗",
+    g: "𝕘",
+    h: "𝕙",
+    i: "𝕚",
+    j: "𝕛",
+    k: "𝕜",
+    l: "𝕝",
+    m: "𝕞",
+    n: "𝕟",
+    o: "𝕠",
+    p: "𝕡",
+    q: "𝕢",
+    r: "𝕣",
+    s: "𝕤",
+    t: "𝕥",
+    u: "𝕦",
+    v: "𝕧",
+    w: "𝕨",
+    x: "𝕩",
+    y: "𝕪",
+    z: "𝕫",
+    A: "𝔸",
+    B: "𝔹",
+    C: "ℂ",
+    D: "𝔻",
+    E: "𝔼",
+    F: "𝔽",
+    G: "𝔾",
+    H: "ℍ",
+    I: "𝕀",
+    J: "𝕁",
+    K: "𝕂",
+    L: "𝕃",
+    M: "𝕄",
+    N: "ℕ",
+    O: "𝕆",
+    P: "ℙ",
+    Q: "ℚ",
+    R: "ℝ",
+    S: "𝕊",
+    T: "𝕋",
+    U: "𝕌",
+    V: "𝕍",
+    W: "𝕎",
+    X: "𝕏",
+    Y: "𝕐",
+    Z: "ℤ",
+    1: "𝟙",
+    2: "𝟚",
+    3: "𝟛",
+    4: "𝟜",
+    5: "𝟝",
+    6: "𝟞",
+    7: "𝟟",
+    8: "𝟠",
+    9: "𝟡",
+    0: "𝟘",
+};
+
+function toDoublestruck(text) {
+    if (typeof text === "string") {
+        return text
+            .split(" ")
+            .map(function (a) {
+                if (/^(http|https):\/\//.test(a)) {
+                    return a;
+                }
+                for (domain in domains) {
+                    if (a.endsWith(domains[domain]) || (a.includes(domains[domain] + "/") && /(http|https):\/\//.test(a))) {
+                        return a;
+                    }
+                }
+                return a
+                    .split("")
+                    .map(function (b) {
+                        return doubleStruckMap[b] ? doubleStruckMap[b] : b;
+                    })
+                    .join("");
+            })
+            .join(" ");
+    }
+    return text;
+}
+
+function toMathSans(text) {
     if (typeof text === "string") {
         /*
     return text
         .split("")
         .map(function (a) {
-            return normalMap[a] ? normalMap[a] : a;
+            return mathSansMap[a] ? mathSansMap[a] : a;
         })
         .join("");
         */
@@ -8200,7 +8138,7 @@ function maven(text) {
                 return a
                     .split("")
                     .map(function (b) {
-                        return normalMap[b] ? normalMap[b] : b;
+                        return mathSansMap[b] ? mathSansMap[b] : b;
                     })
                     .join("");
             })
@@ -8225,19 +8163,19 @@ function updateFont(message, id) {
         if (message == " " || message == "" || message == "@everyone") {
             return message;
         }
-        return maven(message);
+        return toMathSans(message);
     }
     let body = message.body;
     if (body == " " || body == "" || body === undefined || body == "@everyone") {
         return message;
     }
-    message.body = maven(body);
+    message.body = toMathSans(body);
     if (!(message.mentions === undefined)) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
             let i;
             for (i = 0; i < mentionS; i++) {
-                message.mentions[i].tag = maven(message.mentions[i].tag);
+                message.mentions[i].tag = toMathSans(message.mentions[i].tag);
             }
         }
     }

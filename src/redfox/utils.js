@@ -1367,6 +1367,15 @@ function getContentType(file) {
     return "";
 }
 
+function formatOutput(title, body, footer) {
+    let construct = "⋆｡° " + title + "\n│\n";
+    for (let i = 0; i < body.length; i++) {
+        construct += '│   ⦿ ' + body[i] + "\n";
+    }
+    construct += '└─  ' + footer;
+    return construct;
+}
+
 module.exports = {
     isReadableStream,
     get,
@@ -1415,5 +1424,6 @@ module.exports = {
     encrypt,
     decrypt,
     removeMarkdown,
-    getContentType
+    getContentType,
+    formatOutput
 };
