@@ -121,7 +121,7 @@ async function generateWelcomeGif(pictureFile, name, group, member) {
     return await canvasGif(__dirname + "/welcome/welcome" + Math.floor(Math.random() * 10) + ".gif", callBack, options)
         .then((buffer) => {
             let timesta = utils.getTimestamp();
-            await fs.writeFileSync(returnD() + "/welcome_" + timesta + ".gif" , buffer);
+            fs.writeFileSync(returnD() + "/welcome_" + timesta + ".gif" , buffer);
             return returnD() + "/welcome_" + timesta + ".gif";
         })
         .catch((error) => {
