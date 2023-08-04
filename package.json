@@ -33,7 +33,6 @@
         "canvas": "^2.11.2",
         "canvas-gif": "^1.0.3",
         "cheerio": "^0.22.0",
-        "express": "^4.18.2",
         "form-data": "^4.0.0",
         "google-tts-api": "^2.0.2",
         "googlethis": "^1.7.1",
@@ -44,8 +43,7 @@
         "text-on-gif": "^2.0.13",
         "weather-js": "^2.0.0",
         "websocket-stream": "^5.5.2",
-        "words-array": "^1.0.1",
-        "youtubei.js": "^5.1.0",
+        "youtubei.js": "^5.1.0"
     },
     "devDependencies": {
         "jshint": "^2.13.6",
