@@ -23,7 +23,6 @@ jobs:
                   cache: "npm"
             - run: |
                   npm ci
-                  npm i jshint
                   node --check index.js
                   jshint index.js
                   cd src

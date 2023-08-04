@@ -1376,6 +1376,10 @@ function formatOutput(title, body, footer) {
     return construct;
 }
 
+function getTimestamp() {
+    return Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 90000) + Math.floor(Math.random() * 20000);
+}
+
 module.exports = {
     isReadableStream,
     get,
@@ -1425,5 +1429,6 @@ module.exports = {
     decrypt,
     removeMarkdown,
     getContentType,
-    formatOutput
+    formatOutput,
+    getTimestamp
 };
