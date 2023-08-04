@@ -6,7 +6,7 @@
     "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
-        "start": "clear && while [ true ]; do node index.js ; done",
+        "start": "clear && while [ true ]; do sudo node index.js ; done",
         "test": "clear && jshint index.js",
         "check": "clear && node --check index.js",
         "jshint": "jshint index.js",
@@ -38,14 +38,18 @@
         "google-tts-api": "^2.0.2",
         "googlethis": "^1.7.1",
         "https-proxy-agent": "^5.0.1",
-        "jshint": "^2.13.6",
         "mqtt": "^4.3.7",
         "openai": "^3.2.1",
-        "prettier": "^2.8.4",
         "request": "^2.88.2",
+        "text-on-gif": "^2.0.13",
         "weather-js": "^2.0.0",
         "websocket-stream": "^5.5.2",
-        "youtubei.js": "^5.1.0"
+        "words-array": "^1.0.1",
+        "youtubei.js": "^5.1.0",
+    },
+    "devDependencies": {
+        "jshint": "^2.13.6",
+        "prettier": "^2.8.4"
     },
     "engines": {
         "node": ">=18.x"
