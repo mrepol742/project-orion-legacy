@@ -1237,7 +1237,7 @@ function redfox_fb(fca_state, login, cb) {
                                     return;
                                 }
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
-                                downloadFile(getProfilePic(names[0][0]), dirp).then((response) => {
+                                downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
                                     let img = await welcomeGif.generateWelcomeGif(dirp, names[0][1], gname,  gc.participantIDs.length + getSuffix(gc.participantIDs.length) + " member");
                                     let message = {
                                         body: gret,
