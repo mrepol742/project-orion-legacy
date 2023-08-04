@@ -1181,7 +1181,7 @@ function redfox_fb(fca_state, login, cb) {
                             sendMessage(api, event, event.thread_quick_reaction_emoji);
                             break;
                         case "log:group_participants_add":
-                            api.getThreadInfo(event.threadID, (err, gc) => {
+                            api.getThreadInfo(event.threadID, async (err, gc) => {
                                 if (err) return utils.logged(err);
                                 getGroupProfile(event.threadID, async function (group) {
                                     if (group.name != undefined) {
@@ -1237,8 +1237,8 @@ function redfox_fb(fca_state, login, cb) {
                                     return;
                                 }
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
-                                downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
-                                    let img = await welcomeGif.generateWelcomeGif(dirp, names[0][1], gname,  gc.participantIDs.length + getSuffix(gc.participantIDs.length) + " member");
+                                await downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
+                                    let img = await welcomejs.generateWelcomeGif(dirp, names[0][1], gname,  gc.participantIDs.length + getSuffix(gc.participantIDs.length) + " member");
                                     let message = {
                                         body: gret,
                                         attachment: fs.createReadStream(img),
