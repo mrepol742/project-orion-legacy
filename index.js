@@ -1241,17 +1241,18 @@ function redfox_fb(fca_state, login, cb) {
                                 } else {
                                     return;
                                 }
+                                
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
                                 downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
-                                    let img = await welcomejs.generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member");
+                                  //  let img = await welcomejs.generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member");
                                     let message = {
                                         body: gret,
-                                        attachment: fs.createReadStream(img),
+                                        attachment: fs.createReadStream(dirp),
                                         mentions: mentioned,
                                     };
                                     sendMessage(api, event, message);
                                     unLink(dir);
-                                    unLink(img);
+                                   // unLink(img);
                                 });
                                 
                             });
