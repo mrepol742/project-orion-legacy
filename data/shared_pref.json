@@ -27,11 +27,13 @@
         "angry": false
     },
     "apikey": {
-        "ai": "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",
-        "manhict": "CcIDaVqu",
+        "ai": "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",
         "facebook": "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662"
     },
-    "restart": [],
+    "restart": [
+        "5819745318103902",
+        "mid.$gABStBwxea16QAHtZvGJzzYTiL9_G"
+    ],
     "ignored_prefixes": [
         "ignore"
     ],
@@ -51,14 +53,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 54906580,
-            "completion_tokens": 20231341,
-            "total_tokens": 75137921
+            "prompt_tokens": 54951593,
+            "completion_tokens": 20244550,
+            "total_tokens": 75196143
         },
         "davinci": {
-            "prompt_tokens": 777152,
-            "completion_tokens": 166619,
-            "total_tokens": 1048113
+            "prompt_tokens": 783351,
+            "completion_tokens": 169708,
+            "total_tokens": 1057401
         },
         "dell": 747
     }

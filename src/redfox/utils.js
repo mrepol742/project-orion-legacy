@@ -1372,7 +1372,7 @@ function formatOutput(title, body, footer) {
     for (let i = 0; i < body.length; i++) {
         construct += '│   ⦿ ' + body[i] + "\n";
     }
-    construct += '└─  ' + footer;
+    construct += '│\n└─  ' + footer;
     return construct;
 }
 

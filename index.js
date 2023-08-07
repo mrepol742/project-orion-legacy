@@ -102,8 +102,6 @@ const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 let isCalled = true;
 let commandCalls = 0;
 let crashes = 0;
-let blockedUserC = 0;
-let blockedGroupC = 0;
 let priorityCC = 0;
 
 if (!fs.existsSync(__dirname + "/data/shared_pref.json")) {
@@ -313,12 +311,10 @@ task(
     function () {
         deleteCacheData(false);
         console.clear();
-        utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls + " Blocked Group: " + blockedGroupC + " Blocked User: " + blockedGroupC);
+        utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls);
         cmd = {};
         acGG = [];
         commandCalls = 0;
-        blockedGroupC = 0;
-        blockedUserC = 0;
     },
     60 * 30 * 1000
 );
@@ -485,7 +481,7 @@ function redfox_fb(fca_state, login, cb) {
                 return;
             }
 
-            if ((event.type == "message" || event.type == "message_reply") && event.senderID == api.getCurrentUserID()) {
+            if ((event.type == "message" || event.type == "message_reply") && (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
                 let body = event.body;
                 let result = !!body.match(/^[!@#$%&*~\-=_|?+/<>:;]/);
                 if (result) {
@@ -542,15 +538,6 @@ function redfox_fb(fca_state, login, cb) {
                                 sendMessage(api, event, "Hello, i am up and running. How can i help you " + aa + "?");
                             });
                         }
-                    } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                        blockedUserC += 1;
-                        return;
-                    } else if (users.muted.includes(event.senderID)) {
-                        if (query == "mute") {
-                            sendMessage(api, event, "You are muted. Enter `unmute` for you to use my command again.");
-                        } else {
-                            return;
-                        }
                     } else if (query == "unblockgroup") {
                         if (users.admin.includes(event.senderID)) {
                             if (event.isGroup) {
@@ -569,14 +556,32 @@ function redfox_fb(fca_state, login, cb) {
                         } else {
                             sendMessage(api, event, "You aren't muted.");
                         }
+                    } else if (query == "mute") {
+                            if (users.muted.includes(event.senderID)) {
+                                sendMessage(api, event, "You are already muted.");
+                            } else {
+                                users.muted.push(event.senderID);
+                                if (!(userPresence[api.getCurrentUserID()] === undefined)) {
+                                    for (root0 in userPresence[api.getCurrentUserID()]) {
+                                        let data0 = userPresence[api.getCurrentUserID()][root0];
+                                        for (keys0 in Object.keys(data0)) {
+                                            let threadid0 = Object.keys(data0)[keys0];
+                                            if (threadid0 == event.threadID) {
+                                                delete userPresence[api.getCurrentUserID()][root0][threadid0];
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                sendMessage(api, event, "You are muted. Enter `unmute` for you to use my command again.");
+                            }
                     }
                 }
 
-                if ((event.type == "message" || event.type == "message_reply" || event.type == "message_unsend") && !users.admin.includes(event.senderID)) {
-                    if (groups.blocked.includes(event.threadID) && event.type != "message_unsend") {
-                        blockedGroupC++;
-                        return;
-                    }
+                if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID)) {
+                    return;
+                } else if (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID)) {
+                    return;
                 }
 
                 if (isMyId(event.senderID)) {
@@ -1244,15 +1249,15 @@ function redfox_fb(fca_state, login, cb) {
                                 
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
                                 downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
-                                  //  let img = await welcomejs.generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member");
+                                    let img = await welcomejs.generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member");
                                     let message = {
                                         body: gret,
-                                        attachment: fs.createReadStream(dirp),
+                                        attachment: fs.createReadStream(img),
                                         mentions: mentioned,
                                     };
                                     sendMessage(api, event, message);
                                     unLink(dir);
-                                   // unLink(img);
+                                    unLink(img);
                                 });
                                 
                             });
@@ -1803,6 +1808,7 @@ async function ai(api, event) {
     }
     reaction(api, event, query, input);
     // handles replies
+    /*
     if (event.type == "message_reply") {
         if (event.messageReply.senderID != event.senderID) {
             if (!isSecondaryPrefix(input.replaceAll("'", "").replaceAll("`", "")) && event.messageReply.senderID != api.getCurrentUserID()) {
@@ -1810,6 +1816,7 @@ async function ai(api, event) {
             }
         }
     }
+    */
     if (event.type == "message") {
         if (query == "addinstance") {
             sendMessage(api, event, "You need to reply to a message with an app state json array.");
@@ -1854,6 +1861,19 @@ async function ai(api, event) {
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
+        }
+    } else if (/(^search$|^search\s)/.test(query2)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using search text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearch Who is Melvin Jones Repol");
+        } else {
+            data.shift();
+            let query = data.join(" ");
+            let web = await getWebResults(query);
+            sendMessage(api, event, web);
         }
     } else if (/(^searchincog$|^searchincog\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
@@ -2320,6 +2340,18 @@ async function ai(api, event) {
             threadIdMV = {};
             cmd = {};
         }
+    } else if (query == "left") {
+        if (isMyId(event.senderID)) {
+        api.removeUserFromGroup(api.getCurrentUserID(), event.threadID, (err) => {
+            if (err) utils.logged(err);
+        });
+        }
+    } else if (query == "logout") {
+        if (isMyId(event.senderID)) {
+        api.logout((err) => {
+            if (err) utils.logged(err);
+        });
+        }
     } else if (query == "debugon") {
         if (isMyId(event.senderID)) {
             if (settings.preference.isDebugEnabled) {
@@ -2338,6 +2370,26 @@ async function ai(api, event) {
                 sendMessage(api, event, "It's already disabled.");
             }
         }
+    } else if (query == "userlist") {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let construct = "";
+        for (let i = 0; i < accounts.length; i++) {
+            getUserProfile(accounts[i], async function (name) {
+                if (name.name != undefined) {
+                    construct += "Name: " + name.name + "\nID: " + accounts[i];
+                } else {
+                    construct += "ID: " + accounts[i];
+                }
+                if (blockedCall.includes(accounts[i])) {
+                    construct += "\nStatus: Temporarily Blocked\n\n";
+                } else {
+                    construct += "\nStatus: Online\n\n";
+                }
+            });
+        }
+        sendMessage(api, event, construct);
     } else if (query == "setautomarkreadon") {
         if (isMyId(event.senderID)) {
             if (settings.preference.autoMarkRead) {
@@ -2518,8 +2570,8 @@ async function ai(api, event) {
         let stat = [
             "Users: " + numberWithCommas(Object.keys(cmd).length) + "/" + numberWithCommas(users.list.length),
             "Groups: " + acGG.length + "/" + numberWithCommas(groups.list.length),
-            "Block Users: " + blockedUserC + "/" + (users.blocked.length + users.bot.length),
-            "Block Groups: " + blockedGroupC + "/" + groups.blocked.length,
+            "Block Users: " + (users.blocked.length + users.bot.length),
+            "Block Groups: " + groups.blocked.length,
             "Instances: " + accounts.length,
             "Command Call: " + commandCalls
         ];
@@ -2542,7 +2594,7 @@ async function ai(api, event) {
             "Prompt: " + formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]),
             "Completion: " + formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]),
             "Total: " + formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]),
-            "Cost: " + formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.002 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02)
+            "Cost: " + formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.007 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.020)
         ];
         sendMessage(api, event, utils.formatOutput("Token Usage", token, "github.com/prj-orion"));
     } else if (query == "sysinfo") {
@@ -2572,7 +2624,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using ascii text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nascii hello world");
+            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using rascii text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nascii hello world");
         } else {
             data.shift();
             let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
@@ -4164,7 +4216,7 @@ async function ai(api, event) {
         let construct = [];
         for (let i1 = 1; i1 < 31; i1++) {
             if (!accounts.includes(lead[i1 - 1].id)) {
-                construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.006) + "$ " + lead[i1 - 1].name);
+                construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
             }
         }
         sendMessage(api, event, utils.formatOutput("Top Uses (Balance)", construct, "github.com/prj-orion"));
@@ -4561,21 +4613,6 @@ async function ai(api, event) {
                 blockUser(api, event, id);
             }
         }
-    } else if (query == "mute") {
-        users.muted.push(event.senderID);
-        if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-            for (root0 in userPresence[api.getCurrentUserID()]) {
-                let data0 = userPresence[api.getCurrentUserID()][root0];
-                for (keys0 in Object.keys(data0)) {
-                    let threadid0 = Object.keys(data0)[keys0];
-                    if (threadid0 == event.threadID) {
-                        delete userPresence[api.getCurrentUserID()][root0][threadid0];
-                        break;
-                    }
-                }
-            }
-        }
-        sendMessage(api, event, "You have been muted. Enter `unmute` for you to use my commands again.");
     } else if (query.startsWith("blockgroup")) {
         if (users.admin.includes(event.senderID)) {
             if (event.isGroup) {
@@ -6666,7 +6703,7 @@ function countConsonants(str) {
 }
 
 function getProfilePic(id) {
-    return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
+    return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook;
 }
 
 function isMe(query) {
@@ -7871,8 +7908,8 @@ function isMyPrefix(findPr, input, query, query2) {
     }
     return (
         (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) ||
-        /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^gpt$|^gpt\s|^ask$|^ask\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2) ||
-        isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
+        /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^ai$|^ai\s|^gpt$|^gpt\s|^ask$|^ask\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
+       // || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
     );
 }
 
@@ -8324,6 +8361,9 @@ function getRoutes() {
                     res.writeHead(404);
                     res.end(errorpage);
                 }
+            } else {
+                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                res.end();
             }
         } else if (url == "/chat" || url == "/chat/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
@@ -8347,9 +8387,8 @@ function getRoutes() {
                 res.writeHead(200);
                 res.end(response);
             } else {
-                res.setHeader("Content-Type", "text/html");
-                res.writeHead(200);
-                res.end(errorpage);
+                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                res.end();
             }
         } else if (url == "/search" || url == "/search/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
@@ -8382,9 +8421,8 @@ function getRoutes() {
                     } catch (err) {}
                 } catch (err) {}
             } else {
-                res.setHeader("Content-Type", "text/html");
-                res.writeHead(200);
-                res.end(errorpage);
+                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                res.end();
             }
         } else if (url == "/searchimg" || url == "/searchimg/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
@@ -8402,9 +8440,8 @@ function getRoutes() {
                     res.end(JSON.stringify(results));
                 } catch (err) {}
             } else {
-                res.setHeader("Content-Type", "text/html");
-                res.writeHead(200);
-                res.end(errorpage);
+                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                res.end();
             }
         } else if (url == "/query/get_block_user") {
             res.setHeader("Content-Type", "application/json");

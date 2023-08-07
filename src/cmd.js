@@ -145,7 +145,7 @@ let help4 = `
 │   ⦿ joke
 │   ⦿ profilepic
 │   ⦿ wyr
-
+│   ⦿ userlist
 
 │   ⦿ car
 │   ⦿ rcolor
@@ -344,6 +344,8 @@ let helpgroup = `
 let helproot = `
 ⋆｡° Hello %USER%, you reached the root user command list.
 │
+│   ⦿ left
+│   ⦿ logout
 │   ⦿ addCORS \`url\`
 │   ⦿ remCORS \`url\`
 │   ⦿ shell \`code\`
@@ -398,4 +400,4 @@ module.exports = {
     helpgroup: helpgroup,
 };
 
-// 266 commands
+// 268 commands

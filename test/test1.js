@@ -1,5 +1,5 @@
 const axios = require("axios");
-const utils = require("./assets/mj-fca/utils.js");
+const utils = require("../src/redfox/utils.js");
 
 const type = {
     eye_color: ["brown", "Grey", "Blue", "Green"],
@@ -43,6 +43,7 @@ async function AI_FACE(types) {
                 authorization: "API-Key Cph30qkLrdJDkjW-THCeyA",
             },
         });
+        console.log(data["images"])
         return data["images"][getRandomInt(1, 30)]["thumb_url"];
     } catch (err) {
         utils.logged(err);
