@@ -734,12 +734,12 @@ function redfox_fb(fca_state, login, cb) {
                     break;
                 case "message_unsend":
                     let d = msgs[event.messageID];
-                    if (d === undefined || accounts.includes(event.senderID)) {
+                    if (d === undefined) {
                         break;
                     }
                     d = msgs[event.messageID][0];
 
-                    if (!settings.preference.onUnsend || users.bot.includes(event.senderID) || users.admin.includes(event.senderID) || groups.blocked.includes(event.threadID)) {
+                    if (!settings.preference.onUnsend || users.admin.includes(event.senderID)) {
                         break;
                     }
 
@@ -1363,10 +1363,6 @@ function sleep(ms) {
 }
 
 async function ai22(api, event, query, query2) {
-    if (event.body == "." || event.body == "?" || event.body == "!") {
-        event.body = event.messageReply.body;
-        return ai(api, event);
-    }
     if (query == "notify") {
         // done
         if (isMyId(event.senderID)) {
@@ -1799,11 +1795,19 @@ async function ai(api, event) {
     let query2 = formatQuery(input);
     let query = query2.replace(/\s+/g, "");
 
-    if (event.type == "message_reply") {
+    if (event.body != "." && event.body != "?" && event.body != "!" && event.type == "message_reply") {
         ai22(api, event, query, query2);
         // TODO: undefined sender id no idea why
         if (accounts.includes(event.messageReply.senderID)) {
             someA(api, event, query, input);
+        }
+    } else {
+        if (event.type == "message_reply") {
+            event.body = event.messageReply.body;
+            eventB = event.body;
+            input = eventB.normalize("NFKC");
+            query2 = formatQuery(input);
+            query2.replace(/\s+/g, "");
         }
     }
     reaction(api, event, query, input);
@@ -1817,6 +1821,9 @@ async function ai(api, event) {
         }
     }
     */
+    if (event.type == "message_reply" && event.messageReply.senderID != event.senderID && event.messageReply.senderID != api.getCurrentUserID()) {
+        return;
+    }
     if (event.type == "message") {
         if (query == "addinstance") {
             sendMessage(api, event, "You need to reply to a message with an app state json array.");
@@ -4219,7 +4226,7 @@ async function ai(api, event) {
                 construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
             }
         }
-        sendMessage(api, event, utils.formatOutput("Top Uses (Balance)", construct, "github.com/prj-orion"));
+        sendMessage(api, event, utils.formatOutput("Top Users Leaderboards", construct, "github.com/prj-orion"));
     } else if (query2 == "balance" || query2 == "bal") {
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
@@ -8965,7 +8972,6 @@ function mj(api, event, findPr, input, query, query2) {
                     let respo = await aiResponse2(event, text, true, user, group, api.getCurrentUserID());
                     if (user.balance === undefined) {
                         user["balance"] = respo.data.usage.total_tokens;
-                        sendMessage(api, event, "You have just earned your first money, continue using Mj to earn more and get mor benifits. \n\nTo check your balace sennd `balance`.");
                     } else {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
