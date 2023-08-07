@@ -1322,7 +1322,17 @@ function redfox_fb(fca_state, login, cb) {
                                                     });
                                                 });
                                             } else {
-                                                sendMessage(api, event, "Sayonara " + data[id].name + ", may the force be with you :(");
+                                                let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
+                                downloadFile(getProfilePic(id), dirp).then(async (response) => {
+                                    let img = await welcomejs.generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(");
+                                    let message = {
+                                        body: "Sayonara " + data[id].name + ", may the force be with you :(",
+                                        attachment: fs.createReadStream(img)
+                                    };
+                                    sendMessage(api, event, message);
+                                    unLink(dir);
+                                    unLink(img);
+                                });
                                                 utils.logged("event_log_unsubsribe " + event.threadID + " " + data[id].name);
                                             }
                                         }
