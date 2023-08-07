@@ -2928,7 +2928,7 @@ async function ai(api, event) {
                     threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
-                        body: search.results[0].title + " is now in download progress...",
+                        body: search.results[0].title.substring(0, 25) + "..." + " is now in upload progress please wait.",
                     });
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -2981,7 +2981,7 @@ async function ai(api, event) {
                     threadIdMV[event.threadID] = false;
                     utils.logged("downloading " + search.results[0].title);
                     sendMessage(api, event, {
-                        body: search.results[0].title + " is now in download progress...",
+                        body: search.results[0].title.substring(0, 25) + "..." + " is now in upload progress please wait.",
                     });
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
