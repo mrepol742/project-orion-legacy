@@ -2938,8 +2938,9 @@ async function ai(api, event) {
                     threadIdMV[event.threadID] = false;
                     let title = search.results[0].title;
                     utils.logged("downloading " + title);
+                    let mssg = title.substring(0, 25) + "..." + " is now in upload progress please wait.";
                     sendMessage(api, event, {
-                        body: title.substring(0, 25) + "..." + " is now in upload progress please wait.",
+                        body: mssg,
                     });
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -2992,8 +2993,9 @@ async function ai(api, event) {
                     threadIdMV[event.threadID] = false;
                     let title = search.results[0].title;
                     utils.logged("downloading " + title);
+                    let mssg = title.substring(0, 25) + "..." + " is now in upload progress please wait.";
                     sendMessage(api, event, {
-                        body: title.substring(0, 25) + "..." + " is now in upload progress please wait.",
+                        body: mssg,
                     });
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -5193,7 +5195,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (/(^kiss$|^kiss\s|^lick$|^lick\s|^hug$|^hug\s|^cuddle$|^cuddle\s|^pat$|^pat\s|^blush$|^blush\s|^wave$|^wave\s|^highfive$|^highfive\s|^bite$|^bite\s|^kick$|^kick\s|^wink$|^wink\s|^poke$|^poke\s|^cringe$|^cringe\s|^slap$|^slap\s|^kill$|^kill\s|^smug$|^smug\s)/.test(query2)) {
+    } else if (/(^kiss$|^kiss\s|^lick$|^lick\s|^hug$|^hug\s|^cuddle$|^cuddle\s|^headpat$|^headpat\s|^blush$|^blush\s|^wave$|^wave\s|^highfive$|^highfive\s|^bite$|^bite\s|^kick$|^kick\s|^wink$|^wink\s|^poke$|^poke\s|^cringe$|^cringe\s|^slap$|^slap\s|^kill$|^kill\s|^smug$|^smug\s)/.test(query2)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5224,6 +5226,9 @@ async function ai(api, event) {
                 }
             } else if (isMyId(id)) {
                 id = event.senderID;
+            }
+            if (prrr == "headpat") {
+                prrr = "pat";
             }
             getAnimeGif(api, event, id, prrr);
         }

@@ -41,7 +41,9 @@ let help = `
 │   ⦿ run \`lang\` \`reply\`
 │       Java, Python, C, C++,
 │       JavaScript, PHP and Dragon
-│   ⦿ mj \`prompt\`
+│   ⦿ ai \`prompt\`
+│   ⦿ gpt \`prompt\`
+│   ⦿ ask \`prompt\`
 │   ⦿ beshy \`prompt\`
 │   ⦿ melbin \`prompt\`
 │   ⦿ sim \`prompt\`
@@ -52,6 +54,7 @@ let help = `
 │   ⦿ chad \`prompt\`
 │   ⦿ nraf \`prompt\`
 │   ⦿ skynet \`prompt\`
+│   ⦿ mj \`prompt\`
 │   ⦿ 8ball \`prompt\`
 │
 └─  If you have further questions, i am here to help you.
@@ -179,7 +182,7 @@ let help5 = `
 │   ⦿ anime \`category\`
 │       waifu, neko, shinobu, megumin,
 │       bully, cuddle, cry, hug,
-│       awoo, kiss, lick, pat,
+│       awoo, kiss, lick, headpat,
 │       smug, bonk, yeet, blush,
 │       smile, wave, highfive, handhold,
 │       nom, bite, glomp, slap,
