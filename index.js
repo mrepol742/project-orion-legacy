@@ -2936,9 +2936,10 @@ async function ai(api, event) {
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    utils.logged("downloading " + search.results[0].title);
+                    let title = search.results[0].title;
+                    utils.logged("downloading " + title);
                     sendMessage(api, event, {
-                        body: search.results[0].title.substring(0, 25) + "..." + " is now in upload progress please wait.",
+                        body: title.substring(0, 25) + "..." + " is now in upload progress please wait.",
                     });
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -2946,7 +2947,7 @@ async function ai(api, event) {
                     for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
+                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + data.join(" ")).then((response) => {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         } else {
@@ -2989,9 +2990,10 @@ async function ai(api, event) {
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    utils.logged("downloading " + search.results[0].title);
+                    let title = search.results[0].title;
+                    utils.logged("downloading " + title);
                     sendMessage(api, event, {
-                        body: search.results[0].title.substring(0, 25) + "..." + " is now in upload progress please wait.",
+                        body: title.substring(0, 25) + "..." + " is now in upload progress please wait.",
                     });
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
@@ -3047,7 +3049,7 @@ async function ai(api, event) {
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + search.results[0].title).then((response) => {
+                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + data.join(" ")).then((response) => {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         } else {
