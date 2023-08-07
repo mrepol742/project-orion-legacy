@@ -114,7 +114,7 @@ async function generateWelcomeGif(pictureFile, name, group, member) {
         repeat: 0,
         algorithm: "neuquant",
         optimiser: true,
-        fps: 0,
+        fps: 60,
         quality: 70,
     };
 
