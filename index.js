@@ -9016,12 +9016,13 @@ async function getWebResults(ask) {
     if (response.results.length != 0) {
         let construct = "";
         if (response.featured_snippet.title != null && response.featured_snippet.description != null) {
-            construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description + "\n" + response.featured_snippet.url;
+            construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description;
+            //construct += "\n" + response.featured_snippet.url;
         } else {
             construct += "\n";
             for (let i = 1; i < 4; i++) {
                 if (!(response.results[i].title === undefined)) {
-                    construct += response.results[i].url;
+                  //  construct += response.results[i].url;
                     construct += "\n" + response.results[i].title;
                     construct += "\n" + response.results[i].description + "\n\n";
                 }
