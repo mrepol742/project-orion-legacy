@@ -8469,12 +8469,17 @@ function getRoutes() {
                 res.end();
             }
         } else if (url == "/query/get_block_user") {
+            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
             res.setHeader("Content-Type", "application/json");
             res.writeHead(200);
             let b = JSON.stringify(users.blocked);
             let b2 = JSON.stringify(users.bot);
             let b3 = JSON.stringify(users.muted);
             res.end("{blocked: " + b + ", bot: " + b2 + ", muted: " + b3 + "}");
+            } else {
+                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                res.end();
+            }
         } else if (!(traceroute[url] === undefined)) {
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
@@ -8491,7 +8496,13 @@ function getRoutes() {
         } else {
             switch (url) {
                 case "./exit()":
-                    process.exit(0);
+                    let data = ress.split("?")[1];
+                    if (data == "supernatural742") {
+                        process.exit(0);
+                    } else {
+                        res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                        res.end();
+                    }
                     break;
                 case "/favicon.ico":
                     res.setHeader("Content-Type", "image/x-icon");
