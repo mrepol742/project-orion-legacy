@@ -30,17 +30,16 @@ function logged(data) {
         } else {
             console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", d.join(" "));
         }
-    } else if (!(data === undefined) && !(data.stack === undefined)) {
-        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", JSON.stringify(data.stack));
+    } else if (!(data === undefined) && !(data.code === undefined)) {
+        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", "\x1b[40m error_code\x1b[0m", data.code);
     } else {
-        let da = JSON.stringify(data);
-        if (da == "" || da == undefined) {
+        if (data.length == 0 || data == "" || data == undefined) {
             return;
         }
-        if (da.length == 0) {
-            return;
+        if (typeof data !== 'string') {
+            data = JSON.stringify(data);
         }
-        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", da.normalize("NFKC"));
+        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", data);
     }
 }
 
@@ -1430,5 +1429,5 @@ module.exports = {
     removeMarkdown,
     getContentType,
     formatOutput,
-    getTimestamp
+    getTimestamp,
 };

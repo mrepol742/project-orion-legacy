@@ -5,11 +5,17 @@
 /*jshint -W088 */
 /*jshint -W038 */
 
-const redfox = require("./src/redfox");
+/*
+   PRIMARY MODULES
+*/
 const utils = require("./src/redfox/utils.js");
+const redfox = require("./src/redfox");
 const welcomejs = require("./src/welcome.js");
+const cp = require("child_process");
 const fs = require("fs");
 
+
+let startF = Date.now();
 let a = `
 
                                    ""#    mmmmmm    mm   mmmm 
@@ -31,13 +37,14 @@ if (!fs.existsSync(__dirname + "/data/groups.json")) {
 }
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
+let startFE = Date.now() - startF;
 
 console.log("\tProject Information");
 console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + users.blocked.length + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
 
 console.log("Groups" + "\n  Total: " + Object.keys(groups.list).length + "\n  Blocked: " + groups.blocked.length);
 
-utils.logged("project_orion online");
+utils.logged("project_orion online " + startFE + "ms");
 
 /*
  *
@@ -68,7 +75,6 @@ const google = require("googlethis");
 const axios = require("axios");
 const path = require("path");
 const crypto = require("crypto");
-const exec = require("child_process").exec;
 const cheerio = require("cheerio");
 const { Configuration, OpenAIApi } = require("openai");
 const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } = require("./src/arrays.js");
@@ -89,11 +95,13 @@ let userWhoSendDamnReports = {};
 let msgs = {};
 let nwww = {};
 
+let loadFile0 = Date.now();
 if (!fs.existsSync(__dirname + "/data/cors.json")) {
     fs.writeFileSync(__dirname + "/data/cors.json", "[]", "utf8");
 }
 let corsWhitelist = JSON.parse(fs.readFileSync(__dirname + "/data/cors.json", "utf8"));
-utils.logged("cors_loaded finish");
+let loadFile0a = Date.now() - loadFile0;
+utils.logged("cors_loaded done " + loadFile0a + "ms");
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
@@ -101,16 +109,16 @@ const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 
 let isCalled = true;
 let commandCalls = 0;
-let crashes = 0;
 let priorityCC = 0;
 
+let loadFile = Date.now();
 if (!fs.existsSync(__dirname + "/data/shared_pref.json")) {
     fs.writeFileSync(__dirname + "/data/shared_pref.json", "{}", "utf8");
 }
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
 let suspectedAPI = JSON.parse(fs.readFileSync(__dirname + "/data/apikey.json"));
-
-utils.logged("settings_loaded finish");
+let loadFileF = Date.now() - loadFile;
+utils.logged("settings_loaded done " + loadFileF + "ms");
 
 /*
 const options2 = {
@@ -129,6 +137,7 @@ const server1 = http.createServer(getRoutes()).listen(PORT, () => {
     utils.logged("server_running http://localhost:" + PORT);
 });
 
+let loadFile1 = Date.now();
 let homepage = fs.readFileSync(__dirname + "/src/web/index.html");
 let errorpage = fs.readFileSync(__dirname + "/src/web/404.html");
 let profilepage = fs.readFileSync(__dirname + "/src/web/profile.html");
@@ -143,17 +152,18 @@ let bannerlogo = fs.readFileSync(__dirname + "/src/web/logo.png");
 let robots = fs.readFileSync(__dirname + "/src/web/robots.txt");
 let sitemappage = fs.readFileSync(__dirname + "/src/web/sitemap.xml");
 let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
+let loadFileF1 = Date.now() - loadFile1;
+utils.logged("web_resource_loaded done " + loadFileF1 + "ms");
 
-utils.logged("web_resource_loaded finish");
-
+let loadFile2 = Date.now();
 let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/src/ascii.json"));
 let dyk = JSON.parse(fs.readFileSync(__dirname + "/src/dyk.json"));
 let wyr = JSON.parse(fs.readFileSync(__dirname + "/src/wyr.json"));
 let Eball = JSON.parse(fs.readFileSync(__dirname + "/src/8ball.json"));
 let joke = JSON.parse(fs.readFileSync(__dirname + "/src/joke.json"));
 let cat = JSON.parse(fs.readFileSync(__dirname + "/src/cat.json"));
-
-utils.logged("api_resource_loaded finish");
+let loadFileF2 = Date.now() - loadFile2;
+utils.logged("api_resource_loaded done " + loadFileF2 + "ms");
 
 /*
 server.listen((PORT + 1), function () {
@@ -221,10 +231,7 @@ let errorResponse = {
 const openai = new OpenAIApi(openaiConfig);
 
 let listenStatus = 0;
-
-process.on("beforeExit", (code) => {
-    utils.logged("process_before_exit " + code);
-});
+let crashes = 0;
 
 process.on("SIGHUP", function () {
     process.exit(0);
@@ -244,6 +251,10 @@ process.on("uncaughtException", (err, origin) => {
 
 process.on("unhandledRejection", (reason, promise) => {
     caughtException(reason);
+});
+
+process.on("beforeExit", (code) => {
+    utils.logged("process_before_exit " + code);
 });
 
 let accounts = [];
@@ -557,24 +568,24 @@ function redfox_fb(fca_state, login, cb) {
                             sendMessage(api, event, "You aren't muted.");
                         }
                     } else if (query == "mute") {
-                            if (users.muted.includes(event.senderID)) {
-                                sendMessage(api, event, "You are already muted.");
-                            } else {
-                                users.muted.push(event.senderID);
-                                if (!(userPresence[api.getCurrentUserID()] === undefined)) {
-                                    for (root0 in userPresence[api.getCurrentUserID()]) {
-                                        let data0 = userPresence[api.getCurrentUserID()][root0];
-                                        for (keys0 in Object.keys(data0)) {
-                                            let threadid0 = Object.keys(data0)[keys0];
-                                            if (threadid0 == event.threadID) {
-                                                delete userPresence[api.getCurrentUserID()][root0][threadid0];
-                                                break;
-                                            }
+                        if (users.muted.includes(event.senderID)) {
+                            sendMessage(api, event, "You are already muted.");
+                        } else {
+                            users.muted.push(event.senderID);
+                            if (!(userPresence[api.getCurrentUserID()] === undefined)) {
+                                for (root0 in userPresence[api.getCurrentUserID()]) {
+                                    let data0 = userPresence[api.getCurrentUserID()][root0];
+                                    for (keys0 in Object.keys(data0)) {
+                                        let threadid0 = Object.keys(data0)[keys0];
+                                        if (threadid0 == event.threadID) {
+                                            delete userPresence[api.getCurrentUserID()][root0][threadid0];
+                                            break;
                                         }
                                     }
                                 }
-                                sendMessage(api, event, "You are muted. Enter `unmute` for you to use my command again.");
                             }
+                            sendMessage(api, event, "You are muted. Enter `unmute` for you to use my command again.");
+                        }
                     }
                 }
 
@@ -637,9 +648,10 @@ function redfox_fb(fca_state, login, cb) {
                             if (isGoingToFast1(event, threadMaintenance, 30)) {
                                 return;
                             }
-                            let message = "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
-                                    event.body +
-                                    "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance";
+                            let message =
+                                "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
+                                event.body +
+                                "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance";
                             sendMessage(api, event, message);
                         }
                         saveEvent(api, event);
@@ -1246,7 +1258,7 @@ function redfox_fb(fca_state, login, cb) {
                                 } else {
                                     return;
                                 }
-                                
+
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
                                 downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
                                     let img = await welcomejs.generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member");
@@ -1259,7 +1271,6 @@ function redfox_fb(fca_state, login, cb) {
                                     unLink(dir);
                                     unLink(img);
                                 });
-                                
                             });
                             break;
                         case "log:group_participants_left":
@@ -1323,16 +1334,16 @@ function redfox_fb(fca_state, login, cb) {
                                                 });
                                             } else {
                                                 let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
-                                downloadFile(getProfilePic(id), dirp).then(async (response) => {
-                                    let img = await welcomejs.generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(");
-                                    let message = {
-                                        body: "Sayonara " + data[id].name + ", may the force be with you :(",
-                                        attachment: fs.createReadStream(img)
-                                    };
-                                    sendMessage(api, event, message);
-                                    unLink(dir);
-                                    unLink(img);
-                                });
+                                                downloadFile(getProfilePic(id), dirp).then(async (response) => {
+                                                    let img = await welcomejs.generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(");
+                                                    let message = {
+                                                        body: "Sayonara " + data[id].name + ", may the force be with you :(",
+                                                        attachment: fs.createReadStream(img),
+                                                    };
+                                                    sendMessage(api, event, message);
+                                                    unLink(dir);
+                                                    unLink(img);
+                                                });
                                                 utils.logged("event_log_unsubsribe " + event.threadID + " " + data[id].name);
                                             }
                                         }
@@ -1889,7 +1900,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let query = data.join(" ");
-            let web = await getWebResults(query);
+            let web = await getWebResults(query, 7, true);
             sendMessage(api, event, web);
         }
     } else if (/(^searchincog$|^searchincog\s)/.test(query2)) {
@@ -2285,7 +2296,7 @@ async function ai(api, event) {
                 let message = {
                     attachment: [],
                 };
-                sendMessage(api, event, "download is now progress...");
+                sendMessage(api, event, "upload is now progress please wait...");
                 for (let i = 0; i < response.data.data.length; i++) {
                     await sleep(1000);
                     let dir = __dirname + "/cache/createimg_" + utils.getTimestamp() + ".png";
@@ -2359,15 +2370,15 @@ async function ai(api, event) {
         }
     } else if (query == "left") {
         if (isMyId(event.senderID)) {
-        api.removeUserFromGroup(api.getCurrentUserID(), event.threadID, (err) => {
-            if (err) utils.logged(err);
-        });
+            api.removeUserFromGroup(api.getCurrentUserID(), event.threadID, (err) => {
+                if (err) utils.logged(err);
+            });
         }
     } else if (query == "logout") {
         if (isMyId(event.senderID)) {
-        api.logout((err) => {
-            if (err) utils.logged(err);
-        });
+            api.logout((err) => {
+                if (err) utils.logged(err);
+            });
         }
     } else if (query == "debugon") {
         if (isMyId(event.senderID)) {
@@ -2590,18 +2601,14 @@ async function ai(api, event) {
             "Block Users: " + (users.blocked.length + users.bot.length),
             "Block Groups: " + groups.blocked.length,
             "Instances: " + accounts.length,
-            "Command Call: " + commandCalls
+            "Command Call: " + commandCalls,
         ];
         sendMessage(api, event, utils.formatOutput("Statistics", stat, "github.com/prj-orion"));
     } else if (query == "uptime") {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let uptime = [
-            "Login: " + secondsToTime(process.uptime()),
-            "Server: " + secondsToTime(os.uptime()),
-            "Server Location: " + getCountryOrigin(os.cpus()[0].model)
-        ];
+        let uptime = ["Login: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
         sendMessage(api, event, utils.formatOutput("Uptime", uptime, "github.com/prj-orion"));
     } else if (query == "tokens" || query == "token") {
         if (isGoingToFast(api, event)) {
@@ -2611,7 +2618,7 @@ async function ai(api, event) {
             "Prompt: " + formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]),
             "Completion: " + formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]),
             "Total: " + formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]),
-            "Cost: " + formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.007 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.020)
+            "Cost: " + formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.007 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02),
         ];
         sendMessage(api, event, utils.formatOutput("Token Usage", token, "github.com/prj-orion"));
     } else if (query == "sysinfo") {
@@ -2631,8 +2638,8 @@ async function ai(api, event) {
             "RSS: " + convertBytes(process.memoryUsage().rss),
             "Heap: " + convertBytes(process.memoryUsage().heapUsed) + "/" + convertBytes(process.memoryUsage().heapTotal),
             "External: " + convertBytes(process.memoryUsage().external),
-            "Array Buffers: " +  convertBytes(process.memoryUsage().arrayBuffers),
-            "Average Load: " + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + "%"
+            "Array Buffers: " + convertBytes(process.memoryUsage().arrayBuffers),
+            "Average Load: " + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + "%",
         ];
         sendMessage(api, event, utils.formatOutput("System Info", sysinfo, "github.com/prj-orion"));
     } else if (/(^rascii$|^rascii\s)/.test(query2)) {
@@ -2645,7 +2652,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
-            exec("cd src/ascii && figlet -f " + font + " " + data.join(" "), function (err, stdout, stderr) {
+            cp.execSync("cd src/ascii && figlet -f " + font + " " + data.join(" "), function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2662,7 +2669,7 @@ async function ai(api, event) {
             let font = aa[0].toLowerCase();
             if (asciifonts.includes(aa[0])) {
                 aa.shift();
-                exec("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
+                cp.execSync("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
                     sendMessage(api, event, stdout + "\n\n" + stderr);
                 });
             } else {
@@ -2715,7 +2722,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            exec("curl -I " + aa, function (err, stdout, stderr) {
+            cp.execSync("curl -I " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2729,7 +2736,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            exec("nslookup " + aa, function (err, stdout, stderr) {
+            cp.execSync("nslookup " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2743,7 +2750,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            exec("ping -c 5 " + aa, function (err, stdout, stderr) {
+            cp.execSync("ping -c 5 " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2757,7 +2764,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            exec("traceroute " + aa, function (err, stdout, stderr) {
+            cp.execSync("traceroute " + aa, function (err, stdout, stderr) {
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
                     traceroute["/" + aa] = stdout;
@@ -2927,9 +2934,11 @@ async function ai(api, event) {
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
+                let qsearch = data.join(" ");
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
-                const search = await yt.search(data.join(" "), { type: "video" });
+                const search = await yt.search(qsearch, { type: "video" });
                 if (search.results) {
+                    utils.logged("download_video_lyrics_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
@@ -2937,18 +2946,15 @@ async function ai(api, event) {
                     });
                     threadIdMV[event.threadID] = false;
                     let title = search.results[0].title;
-                    utils.logged("downloading " + title);
-                    let mssg = title.substring(0, 25) + "..." + " is now in upload progress please wait.";
-                    sendMessage(api, event, {
-                        body: mssg,
-                    });
+                    utils.logged("downloading_video_lyrics " + title);
+                    sendMessage(api, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
                     for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + data.join(" ")).then((response) => {
+                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + qsearch).then((response) => {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         } else {
@@ -2985,6 +2991,7 @@ async function ai(api, event) {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(data.join(" "), { type: "video" });
                 if (search.results && !(search.results[0].title === undefined)) {
+                    utils.logged("download_video_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
@@ -2992,11 +2999,8 @@ async function ai(api, event) {
                     });
                     threadIdMV[event.threadID] = false;
                     let title = search.results[0].title;
-                    utils.logged("downloading " + title);
-                    let mssg = title.substring(0, 25) + "..." + " is now in upload progress please wait.";
-                    sendMessage(api, event, {
-                        body: mssg,
-                    });
+                    utils.logged("downloading_video " + title);
+                    sendMessage(api, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
@@ -3035,23 +3039,25 @@ async function ai(api, event) {
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
+                let qsearch = data.join(" ");
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
-                const search = await yt.music.search(data.join(" "), { type: "song" });
+                const search = await yt.music.search(qsearch, { type: "song" });
                 if (search.results) {
+                    utils.logged("download_music_lyrics_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    utils.logged("downloading " + search.results[0].title);
+                    utils.logged("downloading_music_lyrics " + search.results[0].title);
                     let filename = __dirname + "/cache/music_" + utils.getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + data.join(" ")).then((response) => {
+                    getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + qsearch).then((response) => {
                         if (response == null) {
                             sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         } else {
@@ -3088,13 +3094,14 @@ async function ai(api, event) {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
                 if (search.results && !(search.results[0].title === undefined)) {
+                    utils.logged("download_music_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    utils.logged("downloading " + search.results[0].title);
+                    utils.logged("downloading_music " + search.results[0].title);
                     let filename = __dirname + "/cache/music_" + utils.getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
@@ -3981,7 +3988,7 @@ async function ai(api, event) {
         }
     } else if (query == "sync") {
         if (isMyId(event.senderID)) {
-            exec("git pull", function (err, stdout, stderr) {
+            cp.execSync("git pull", function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -4016,7 +4023,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! Houston, we have a problem! You should try using git code instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngit add .");
             } else {
                 data.shift();
-                exec("git " + data.join(" "), function (err, stdout, stderr) {
+                cp.execSync("git " + data.join(" "), function (err, stdout, stderr) {
                     let str = stdout + "\n\n" + stderr;
                     let com = str.replaceAll(/\s+/g, "");
                     if (com == "") {
@@ -5555,7 +5562,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        sendMessage(api, event,"Did you know?\n\n" + dyk[Math.floor(Math.random() * dyk.length)]);
+        sendMessage(api, event, "Did you know?\n\n" + dyk[Math.floor(Math.random() * dyk.length)]);
     } else if (query == "thoughts") {
         if (isGoingToFast(api, event)) {
             return;
@@ -7506,7 +7513,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
             { role: "user", content: text },
         ];
         let ai = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo-16k-0613",
+            model: settings.preference.primary_text_complextion,
             messages: mssg,
             functions: [
                 {
@@ -7648,7 +7655,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: "generate a 2 sentence response using this `You can open the commands list by sending cmd or func.`",
                     });
                     let ai222a = await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-16k-0613",
+                        model: settings.preference.primary_text_complextion,
                         messages: constructa,
                     });
                     return ai222a;
@@ -7670,7 +7677,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         }
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-16k-0613",
+                        model: settings.preference.primary_text_complextion,
                         messages: mssg,
                     });
                 case "get_joke":
@@ -7681,7 +7688,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: '{"joke": "' + joke[Math.floor(Math.random() * joke.length)] + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-16k-0613",
+                        model: settings.preference.primary_text_complextion,
                         messages: mssg,
                     });
                 case "get_date_time":
@@ -7694,7 +7701,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: '{"time": "' + response.time.hours + '", "date": "' + response.time.date + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-16k-0613",
+                        model: settings.preference.primary_text_complextion,
                         messages: mssg,
                     });
                 case "get_weather_info":
@@ -7763,16 +7770,16 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                                 content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
                             });
                             return await openai.createChatCompletion({
-                                model: "gpt-3.5-turbo-16k-0613",
+                                model: settings.preference.primary_text_complextion,
                                 messages: mssg,
                             });
                         }
                     );
                 case "fetch_information":
-                    let web = await getWebResults(argument.query);
+                    let web = await getWebResults(argument.query, 3, false);
                     if (argument.query == web) {
                         return await openai.createChatCompletion({
-                            model: "gpt-3.5-turbo-16k-0613",
+                            model: settings.preference.primary_text_complextion,
                             messages: mssg,
                         });
                     }
@@ -7783,7 +7790,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: '{"result": "' + web + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-16k-0613",
+                        model: settings.preference.primary_text_complextion,
                         messages: mssg,
                     });
                 case "say":
@@ -7820,7 +7827,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                             */
                     }
                     let ai222 = await openai.createChatCompletion({
-                        model: "gpt-3.5-turbo-16k-0613",
+                        model: settings.preference.primary_text_complextion,
                         messages: construct,
                     });
                     ai222.data.choices[0].message.content += "[" + argument.format + "=" + argument.name + "]";
@@ -7931,9 +7938,8 @@ function isMyPrefix(findPr, input, query, query2) {
         return true;
     }
     return (
-        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) ||
-        /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^ai$|^ai\s|^gpt$|^gpt\s|^ask$|^ask\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
-       // || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
+        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^ai$|^ai\s|^gpt$|^gpt\s|^ask$|^ask\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
+        // || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
     );
 }
 
@@ -8285,11 +8291,6 @@ function getAppState(api) {
     let auth = [key, iv];
     fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".key", JSON.stringify(auth), "utf8");
     return utils.encrypt(JSON.stringify(api.getAppState()), key, iv);
-}
-
-function caughtException(api, err) {
-    crashes++;
-    utils.logged(err);
 }
 
 function task(func, time) {
@@ -9016,18 +9017,22 @@ function mj(api, event, findPr, input, query, query2) {
     }
 }
 
-async function getWebResults(ask) {
+async function getWebResults(ask, count, containUrl) {
     const response = await google.search(ask, googleSearchOptions);
     if (response.results.length != 0) {
         let construct = "";
         if (response.featured_snippet.title != null && response.featured_snippet.description != null) {
             construct += "\n" + response.featured_snippet.title + "\n" + response.featured_snippet.description;
-            //construct += "\n" + response.featured_snippet.url;
+            if (containUrl) {
+                construct += "\n" + response.featured_snippet.url;
+            }
         } else {
             construct += "\n";
-            for (let i = 1; i < 4; i++) {
+            for (let i = 1; i < count; i++) {
                 if (!(response.results[i].title === undefined)) {
-                  //  construct += response.results[i].url;
+                    if (containUrl) {
+                        construct += response.results[i].url;
+                    }
                     construct += "\n" + response.results[i].title;
                     construct += "\n" + response.results[i].description + "\n\n";
                 }
@@ -9114,4 +9119,9 @@ function getFbDLQuality(req) {
         return req.data.links["Download Low Quality"];
     }
     return req.data.links["Download High Quality"];
+}
+
+async function caughtException(err) {
+    crashes++;
+    utils.logged(err);
 }
