@@ -142,7 +142,6 @@ let homepage = fs.readFileSync(__dirname + "/src/web/index.html");
 let errorpage = fs.readFileSync(__dirname + "/src/web/404.html");
 let profilepage = fs.readFileSync(__dirname + "/src/web/profile.html");
 let threadpage = fs.readFileSync(__dirname + "/src/web/thread_ui.html");
-let privacypolicy = fs.readFileSync(__dirname + "/src/web/privacypolicy.html");
 let googlev = fs.readFileSync(__dirname + "/src/web/google022983bf0cf659ae.html");
 let herop = fs.readFileSync(__dirname + "/src/web/hero.png");
 let faviconpng = fs.readFileSync(__dirname + "/src/web/favicon.png");
@@ -334,6 +333,9 @@ utils.logged("task_clear global initiated");
 function redfox_fb(fca_state, login, cb) {
     redfox(fca_state, (err, api) => {
         if (err) {
+            if (err.error !== undefined && err.error == "Not logged in") {
+                utils.logged("api_not_signin " + login);
+            }
             if (login == rootAccess) {
                 listenStatus = 1;
             }
@@ -3947,7 +3949,7 @@ async function ai(api, event) {
         });
     } else if (query == "fbi") {
         let message = {
-            attachment: fs.createReadStream(__dirname + "/src/web/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
+            attachment: fs.createReadStream(__dirname + "/src/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
         sendMessage(api, event, message);
     } else if (/(^gemoji$|^gemoji\s)/.test(query2)) {
@@ -8508,12 +8510,6 @@ function getRoutes() {
                     res.setHeader("Content-Type", "image/x-icon");
                     res.writeHead(200);
                     res.end(faviconico);
-                    break;
-                case "/privacypolicy":
-                case "/privacypolicy/index.html":
-                    res.setHeader("Content-Type", "text/html");
-                    res.writeHead(200);
-                    res.end(privacypolicy);
                     break;
                 case "/favicon.png":
                     res.setHeader("Content-Type", "image/png");
