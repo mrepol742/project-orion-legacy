@@ -591,12 +591,14 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID)) {
-                    return;
-                } else if (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID)) {
+                if (users.blocked.includes(event.senderID) || 
+                    users.bot.includes(event.senderID) || 
+                    users.muted.includes(event.senderID) || 
+                    (!users.admin.includes(event.senderID) && 
+                    groups.blocked.includes(event.threadID))) {
                     return;
                 }
-
+                
                 if (isMyId(event.senderID)) {
                     if (query == "stop") {
                         sendMessage(api, event, "Program stopped its state.");
@@ -698,8 +700,13 @@ function redfox_fb(fca_state, login, cb) {
                             "\n * \n * Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
                             "\n * All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
                             "\n * " +
+                            "\n * " +
                             "\n *     https://mrepol742.github.io/project-orion/privacypolicy/" +
                             "\n *     https://mrepol742.github.io/project-orion/termsofservice/" +
+                            "\n * " +
+                            "\n * " +
+                            "\n * Your data will be process, transfer and store securely with accordance" +
+                            "\n * of Project Privacy Policy & Terms and Data Privacy in Tokyo Prefecture & Taytay Phil." +
                             "\n * " +
                             "\n * Unless required by the applicable law or agreed in writing, software" +
                             '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
@@ -9010,7 +9017,6 @@ function mj(api, event, findPr, input, query, query2) {
                 let respo = await aiResponse2(event, text, true, user, { name: undefined }, api.getCurrentUserID());
                 if (user.balance === undefined) {
                     user["balance"] = respo.data.usage.total_tokens;
-                    sendMessage(api, event, "You have just earned your first money, continue using Mj to earn more and get mor benifits. \n\nTo check your balace sennd `balance`.");
                 } else {
                     user["balance"] += respo.data.usage.total_tokens;
                 }

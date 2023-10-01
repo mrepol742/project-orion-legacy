@@ -1,7 +1,7 @@
 const axios = require("axios");
 const FormData = require("form-data");
 
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 
 const client = axios.create({
     headers: {

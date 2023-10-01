@@ -12,7 +12,7 @@ const options = {
 };
 
 const openaiConfig = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
 });
 
 const openai = new OpenAIApi(openaiConfig);

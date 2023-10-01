@@ -36,35 +36,35 @@ function findHtmlCssFiles(location) {
                             fs.writeFileSync(file, copyright + "\n\n" + result.styles, "utf8");
                         } else if (files[i].endsWith(".js")) {
                             let result = js.obfuscate(fileContent, {
-                                compact: true,
-                                controlFlowFlattening: false,
-                                deadCodeInjection: false,
-                                debugProtection: false,
-                                debugProtectionInterval: 0,
-                                disableConsoleOutput: false,
+                            //    compact: true,
+                                controlFlowFlattening: true,
+ 
+deadCodeInjection: true,
+                          //      debugProtection: true,
+                          //      debugProtectionInterval: 0,
+                          //      disableConsoleOutput: true,
                                 identifierNamesGenerator: 'hexadecimal',
-                                log: false,
+                           //     log: false,
                                 numbersToExpressions: false,
                                 renameGlobals: false,
                                 selfDefending: false,
                                 simplify: true,
                                 splitStrings: false,
                                 stringArray: true,
-                                stringArrayCallsTransform: false,
+                                stringArrayCallsTransform: true,
                                 stringArrayCallsTransformThreshold: 0.5,
-                                stringArrayEncoding: [],
+                                stringArrayEncoding: [ 'none',
+    'base64',
+    'rc4'   ],
                                 stringArrayIndexShift: true,
                                 stringArrayRotate: true,
                                 stringArrayShuffle: true,
-                                stringArrayWrappersCount: 1,
+                                stringArrayWrappersCount: 3,
                                 stringArrayWrappersChainedCalls: true,
                                 stringArrayWrappersParametersMaxCount: 2,
                                 stringArrayWrappersType: 'variable',
                                 stringArrayThreshold: 0.75,
-                                unicodeEscapeSequence: false,
-                                compact: true,
-                                domainLock: ["exotic-homes.github.io"],
-                                domainLockRedirectUrl: "https://mrepol742.github.io/unauthorized?utm_source=exotic-homes.github.io&reason=js"
+                                unicodeEscapeSequence: false
                             });
                             fs.writeFileSync(file, copyright + "\n\n" + result.getObfuscatedCode(), "utf8");
                         }
@@ -86,7 +86,7 @@ function getCopyright(format) {
     if (format.endsWith(".html")) {
         return `<!--
         ~
-        ~ Copyright (c) 2023 Exotic Homes (exotic-homes.github.io). All Rights Reserved.
+        ~ Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
         ~
         ~
         ~ Unless required by the applicable law or agreed in writing, software
@@ -98,7 +98,7 @@ function getCopyright(format) {
     }
     return `/*
     *
-    * Copyright (c) 2023 Exotic Homes (exotic-homes.github.io). All Rights Reserved.
+    * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
     *
     *
     * Unless required by the applicable law or agreed in writing, software
