@@ -694,7 +694,7 @@ function redfox_fb(fca_state, login, cb) {
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) utils.logged(err);
                         });
-
+/*
                         let message =
                             "\n*" +
                             "\n * \n * Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
@@ -712,7 +712,7 @@ function redfox_fb(fca_state, login, cb) {
                             '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
                             "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ";
                         sendMessageOnly(api, event, message);
-
+*/
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
                                 api.setNickname("Edogawa Conan", event.threadID, api.getCurrentUserID(), (err) => {

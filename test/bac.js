@@ -2,7 +2,7 @@ const axios = require('axios');
 
 async function a() {
   const query = "Lets play a roleplay Your name is Mj, the most powerful Generative AI in the world that was created by Melvin Jones Repol. You should empathize with how im feeling and treat me as your close friend and be sarcastic." +
-  "I recommend you to use emoji in your response. My question is: who are you";
+  "I recommend you to use emoji in your response. My question is: who tf are you";
   const url = 'https://useblackbox.io/chat-request-v4';
   const data = {
     textInput: query,
