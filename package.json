@@ -36,7 +36,7 @@
         "cheerio": "^0.22.0",
         "form-data": "^4.0.0",
         "google-tts-api": "^2.0.2",
-        "googlethis": "^1.7.1",
+        "googlethis": "^1.8.0",
         "https-proxy-agent": "^5.0.1",
         "mqtt": "^4.3.7",
         "openai": "^3.2.1",

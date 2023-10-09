@@ -694,25 +694,29 @@ function redfox_fb(fca_state, login, cb) {
                         api.muteThread(event.threadID, -1, (err) => {
                             if (err) utils.logged(err);
                         });
-/*
+
                         let message =
                             "\n*" +
-                            "\n * \n * Copyright (c) 2022-2023 Melvin Jones Repol (mrepol742.github.io). " +
-                            "\n * All Rights Reserved (Project Orion https://github.com/prj-orion/)." +
+                            "\n * \n * © 2023 Melvin Jones Repol (mrepol742) " +
                             "\n * " +
                             "\n * " +
                             "\n *     https://mrepol742.github.io/project-orion/privacypolicy/" +
                             "\n *     https://mrepol742.github.io/project-orion/termsofservice/" +
                             "\n * " +
                             "\n * " +
-                            "\n * Your data will be process, transfer and store securely with accordance" +
-                            "\n * of Project Privacy Policy & Terms and Data Privacy in Tokyo Prefecture & Taytay Phil." +
+                            "\n * Your data will be transfer, process and store securely with accordance" +
+                            "\n * in our Privacy Policy, Terms and Data Privacy." +
                             "\n * " +
                             "\n * Unless required by the applicable law or agreed in writing, software" +
                             '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
                             "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ";
-                        sendMessageOnly(api, event, message);
-*/
+                            
+                            let meF = {
+                                body: message,
+                                url: "https://mrepol742.github.io/project-orion/privacypolicy/"
+                            }
+                        sendMessageOnly(api, event, meF);
+
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
                                 api.setNickname("Edogawa Conan", event.threadID, api.getCurrentUserID(), (err) => {
