@@ -310,7 +310,6 @@ let helpadmin = `
 let helpuser = `
 ⋆｡° Hello %USER%, this is the command list for user.
 │
-│   ⦿ addInstance
 │   ⦿ setTimezone \`timezone\`
 │   ⦿ uid 
 │   ⦿ mute
@@ -347,6 +346,7 @@ let helpgroup = `
 let helproot = `
 ⋆｡° Hello %USER%, you reached the root user command list.
 │
+│   ⦿ addInstance
 │   ⦿ left
 │   ⦿ logout
 │   ⦿ addCORS \`url\`

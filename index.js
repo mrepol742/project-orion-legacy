@@ -652,11 +652,10 @@ function redfox_fb(fca_state, login, cb) {
                             if (isGoingToFast1(event, threadMaintenance, 30)) {
                                 return;
                             }
-                            let message =
-                                "Hold on a moment this system is currently under maintenance...I will be right back in few moments. \n\nYou can continue using this service via web at https://mrepol742.github.io/project-orion/chat?msg=" +
-                                event.body +
-                                "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance";
-                            sendMessage(api, event, message);
+                            sendMessage(api, event, {
+                                body: "Hold on a moment this system is currently under maintenance...I will be right back in few moment. \n\nhttps://mrepol742.github.io/project-orion/chat",
+                                url: "https://mrepol742.github.io/project-orion/chat?msg=" + encodeURIComponent(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
+                            });
                         }
                         saveEvent(api, event);
                     }
@@ -695,8 +694,8 @@ function redfox_fb(fca_state, login, cb) {
                             if (err) utils.logged(err);
                         });
 
-                        let message =
-                            "\n*" +
+                        sendMessageOnly(api, event, {
+                            body: "\n*" +
                             "\n * \n * © 2023 Melvin Jones Repol (mrepol742) " +
                             "\n * " +
                             "\n * " +
@@ -709,13 +708,9 @@ function redfox_fb(fca_state, login, cb) {
                             "\n * " +
                             "\n * Unless required by the applicable law or agreed in writing, software" +
                             '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
-                            "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ";
-                            
-                            let meF = {
-                                body: message,
-                                url: "https://mrepol742.github.io/project-orion/privacypolicy/"
-                            }
-                        sendMessageOnly(api, event, meF);
+                            "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ",
+                            url: "https://mrepol742.github.io/project-orion/privacypolicy/"
+                        });
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
@@ -779,11 +774,10 @@ function redfox_fb(fca_state, login, cb) {
                                 d.message = d.attachment;
                             }
                             if (!groups.list.find((thread) => event.threadID === thread.id)) {
-                                let message = {
+                                sendMessageOnly(api, event, {
                                     body: "You deleted this link.\n\n" + d.message,
                                     url: d.attachment,
-                                };
-                                sendMessageOnly(api, event, message);
+                                });
                             } else {
                                 let message = {
                                     body: data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n\n" + d.message,
@@ -1544,6 +1538,9 @@ async function ai22(api, event, query, query2) {
         }
     } else if (query == "addinstance") {
         try {
+            if (event.senderID != rootAccess) {
+                return;
+            }
             let appsss = JSON.parse(event.messageReply.body);
             if (Array.isArray(appsss)) {
                 let a = true;
@@ -1648,7 +1645,7 @@ async function ai22(api, event, query, query2) {
             sendMessage(api, event, "Invalid App State JSON Format.");
         }
     } else if (/(^createimagevar$|^createimagevar\s)/.test(query2)) {
-        //TODO not working
+        //TODO: not working
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -7192,7 +7189,14 @@ function blockGroup(api, event, id) {
         return;
     }
     groups.blocked.push(id);
-    sendMessage(api, event, "The group " + id + " is blocked.");
+    api.setMessageReaction(
+        ":heart:",
+        event.messageID,
+        (err) => {
+            if (err) utils.logged(err);
+        },
+        true
+    );
 }
 
 function unblockGroup(api, event, id) {
@@ -7234,20 +7238,14 @@ async function unblockUser(api, event, id) {
         users.bot = users.bot.filter((item) => item !== id);
     }
     users.blocked = users.blocked.filter((item) => item !== id);
-    if (event.isGroup) {
-        getUserProfile(id, async function (name) {
-            let aa = "";
-            if (name.firstName != undefined) {
-                aa += name.firstName;
-            } else {
-                aa += "The user " + id;
-            }
-            aa += " is now unblocked.";
-            sendMessage(api, event, aa);
-        });
-    } else {
-        sendMessage(api, event, "You have been unblocked.");
-    }
+    api.setMessageReaction(
+        ":heart:",
+        event.messageID,
+        (err) => {
+            if (err) utils.logged(err);
+        },
+        true
+    );
 }
 
 function fontIgnore(api, event, id) {
