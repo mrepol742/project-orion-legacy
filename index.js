@@ -11,7 +11,7 @@
 const utils = require("./src/redfox/utils.js");
 const redfox = require("./src/redfox");
 const welcomejs = require("./src/welcome.js");
-const cp = require("child_process");
+const { exec } = require("child_process");
 const fs = require("fs");
 
 
@@ -2662,7 +2662,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
-            cp.execSync("cd src/ascii && figlet -f " + font + " " + data.join(" "), function (err, stdout, stderr) {
+            exec("cd src/ascii && figlet -f " + font + " " + data.join(" "), function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2679,7 +2679,7 @@ async function ai(api, event) {
             let font = aa[0].toLowerCase();
             if (asciifonts.includes(aa[0])) {
                 aa.shift();
-                cp.execSync("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
+                exec("cd src/ascii && figlet -f " + font + " " + aa.join(" "), function (err, stdout, stderr) {
                     sendMessage(api, event, stdout + "\n\n" + stderr);
                 });
             } else {
@@ -2732,7 +2732,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            cp.execSync("curl -I " + aa, function (err, stdout, stderr) {
+            exec("curl -I " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2746,7 +2746,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            cp.execSync("nslookup " + aa, function (err, stdout, stderr) {
+            exec("nslookup " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2760,7 +2760,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            cp.execSync("ping -c 5 " + aa, function (err, stdout, stderr) {
+            exec("ping -c 5 " + aa, function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2774,7 +2774,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let aa = data.join(" ");
-            cp.execSync("traceroute " + aa, function (err, stdout, stderr) {
+            exec("traceroute " + aa, function (err, stdout, stderr) {
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
                     traceroute["/" + aa] = stdout;
@@ -3998,7 +3998,7 @@ async function ai(api, event) {
         }
     } else if (query == "sync") {
         if (isMyId(event.senderID)) {
-            cp.execSync("git pull", function (err, stdout, stderr) {
+            exec("git pull", function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -4033,7 +4033,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Opps! Houston, we have a problem! You should try using git code instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngit add .");
             } else {
                 data.shift();
-                cp.execSync("git " + data.join(" "), function (err, stdout, stderr) {
+                exec("git " + data.join(" "), function (err, stdout, stderr) {
                     let str = stdout + "\n\n" + stderr;
                     let com = str.replaceAll(/\s+/g, "");
                     if (com == "") {
@@ -7949,7 +7949,7 @@ function isMyPrefix(findPr, input, query, query2) {
         return true;
     }
     return (
-        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^ai$|^ai\s|^gpt$|^gpt\s|^ask$|^ask\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
+        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
         // || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
     );
 }
