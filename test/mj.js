@@ -4,7 +4,7 @@ const fs = require("fs");
 const { createInterface } = require("readline");
 
 const openaiConfig = new Configuration({
-    apiKey: "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",
+    apiKey: "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",
 });
 
 

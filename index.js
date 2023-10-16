@@ -14,7 +14,6 @@ const welcomejs = require("./src/welcome.js");
 const { exec } = require("child_process");
 const fs = require("fs");
 
-
 let startF = Date.now();
 let a = `
 
@@ -220,9 +219,9 @@ let errorResponse = {
             },
         ],
         usage: {
-            completion_tokens: 0,
-            prompt_tokens: 0,
-            total_tokens: 0,
+            completion_tokens: 1,
+            prompt_tokens: 1,
+            total_tokens: 1,
         },
     },
 };
@@ -590,15 +589,13 @@ function redfox_fb(fca_state, login, cb) {
                         }
                     }
                 }
+            }
 
-                if (users.blocked.includes(event.senderID) || 
-                    users.bot.includes(event.senderID) || 
-                    users.muted.includes(event.senderID) || 
-                    (!users.admin.includes(event.senderID) && 
-                    groups.blocked.includes(event.threadID))) {
-                    return;
-                }
-                
+            if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID)) || blockedCall.includes(api.getCurrentUserID())) {
+                return;
+            }
+
+            if (event.type == "message" || event.type == "message_reply") {
                 if (isMyId(event.senderID)) {
                     if (query == "stop") {
                         sendMessage(api, event, "Program stopped its state.");
@@ -623,10 +620,6 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                if (blockedCall.includes(api.getCurrentUserID())) {
-                    return;
-                }
-
                 if (settings.preference.isStop && isMyId(event.senderID)) {
                     if (event.type == "message" || event.type == "message_reply") {
                         saveEvent(api, event);
@@ -634,7 +627,7 @@ function redfox_fb(fca_state, login, cb) {
                     return;
                 }
 
-                if (event.isGroup && threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
+                if (threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
                     threadRegistry[event.threadID] = api.getCurrentUserID();
                     utils.logged("group_register " + api.getCurrentUserID());
                     if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
@@ -654,7 +647,7 @@ function redfox_fb(fca_state, login, cb) {
                             }
                             sendMessage(api, event, {
                                 body: "Hold on a moment this system is currently under maintenance...I will be right back in few moment. \n\nhttps://mrepol742.github.io/project-orion/chat",
-                                url: "https://mrepol742.github.io/project-orion/chat?msg=" + encodeURIComponent(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
+                                url: "https://mrepol742.github.io/project-orion/chat?msg=" + btoa(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
                             });
                         }
                         saveEvent(api, event);
@@ -695,21 +688,24 @@ function redfox_fb(fca_state, login, cb) {
                         });
 
                         sendMessageOnly(api, event, {
-                            body: "\n*" +
-                            "\n * \n * © 2023 Melvin Jones Repol (mrepol742) " +
-                            "\n * " +
-                            "\n * " +
-                            "\n *     https://mrepol742.github.io/project-orion/privacypolicy/" +
-                            "\n *     https://mrepol742.github.io/project-orion/termsofservice/" +
-                            "\n * " +
-                            "\n * " +
-                            "\n * Your data will be transfer, process and store securely with accordance" +
-                            "\n * in our Privacy Policy, Terms and Data Privacy." +
-                            "\n * " +
-                            "\n * Unless required by the applicable law or agreed in writing, software" +
-                            '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
-                            "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n* \n* ",
-                            url: "https://mrepol742.github.io/project-orion/privacypolicy/"
+                            body:
+                                "\n*" +
+                                "\n * " +
+                                "\n * 2023 Melvin Jones Repol (mrepol742) " +
+                                "\n * " +
+                                "\n * " +
+                                "\n *     https://mrepol742.github.io/project-orion/" +
+                                "\n * " +
+                                "\n * " +
+                                "\n * Your data will be transfer, process and store securely with accordance" +
+                                "\n * in our Privacy Policy, Terms and Data Privacy." +
+                                "\n * " +
+                                "\n * Unless required by the applicable law or agreed in writing, software" +
+                                '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
+                                "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied." +
+                                "\n * " +
+                                "\n* ",
+                            url: "https://mrepol742.github.io/project-orion/privacypolicy/",
                         });
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
@@ -1458,7 +1454,7 @@ async function ai22(api, event, query, query2) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using wfind text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwfind my name");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wfind text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": wfind my name");
         } else {
             data.shift();
             let se = data.join(" ");
@@ -1476,7 +1472,7 @@ async function ai22(api, event, query, query2) {
         }
         let data = input.split(" ");
         if (event.messageReply.body == "" || data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using translate language reply instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntranslate english [reply]");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: translate language reply" + "\n" + example[Math.floor(Math.random() * example.length)] + ": translate english [reply]");
         } else {
             try {
                 data.shift();
@@ -1524,7 +1520,7 @@ async function ai22(api, event, query, query2) {
         let input = eventB.normalize("NFKC");
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecrypt fwegerghergerg:gergergergerg");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + ": decrypt fwegerghergerg:gergergergerg");
         } else {
             data.shift();
             let a = data.join(" ").split(":");
@@ -1700,34 +1696,13 @@ async function ai22(api, event, query, query2) {
         let input = event.body;
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using run language instead.\nCategories:\nJava, Python, C, C++,\nJavaScript, PHP and Dragon" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nrun python");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: run language \nCategories:\nJava, Python, C, C++,\nJavaScript and PHP" + "\n\n" + example[Math.floor(Math.random() * example.length)] + ": run python");
         } else {
             data.shift();
             let lang = data.join(" ").toLowerCase();
             let body = event.messageReply.body;
             body = body.normalize("NFKC");
             switch (lang) {
-                case "dragon":
-                    const form_data = new FormData();
-                    form_data.append("Code", body);
-                    let res = await axios.post("http://146.56.52.226/runner.php", form_data, {
-                        headers: form_data.getHeaders(),
-                    });
-
-                    let data = res.data + "";
-                    if (data == "") {
-                        sendMessage(api, event, "Program died. Execution took too long.");
-                    } else {
-                        api.sendMessage(
-                            updateFont(data, event.senderID),
-                            event.threadID,
-                            (err, messageInfo) => {
-                                if (err) utils.logged(err);
-                            },
-                            event.messageReply.messageID
-                        );
-                    }
-                    break;
                 case "php":
                 case "java":
                 case "js":
@@ -1754,10 +1729,6 @@ async function ai22(api, event, query, query2) {
                         }
                         sendMessage(api, event, removeTags(data1), event.threadID, event.messageReply.messageID, true, false);
                     }
-                    break;
-                case "sh":
-                case "bash":
-                    sendMessage(api, event, "Permission Unauthorized.");
                     break;
                 default:
                     sendMessage(api, event, lang + " is not yet supported.");
@@ -1890,7 +1861,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using searchimg text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchimg melvin jones repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: searchimg text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": searchimg melvin jones repol");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -1906,7 +1877,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using search text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearch Who is Melvin Jones Repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": search Who is Melvin Jones Repol");
         } else {
             data.shift();
             let query = data.join(" ");
@@ -1919,13 +1890,17 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using searchincog text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsearchincog Who is Melvin Jones Repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: searchincog text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": searchincog Who is Melvin Jones Repol");
         } else {
             data.shift();
             let query = data.join(" ");
             getResponseData("https://api.duckduckgo.com/?q=" + query + "&format=json&pretty=1").then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                 } else {
                     if (response.Abstract == "") {
                         sendMessage(api, event, "No results found for `" + query + "`");
@@ -2014,7 +1989,10 @@ async function ai(api, event) {
                 const completion = await openai.createChatCompletion({
                     model: "gpt-3.5-turbo",
                     messages: [
-                        { role: "system", content: "You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2021-09\nCurrent date: " + new Date().toLocaleString() },
+                        {
+                            role: "system",
+                            content: "You are ChatGPT, a large language model trained by OpenAI.\nKnowledge cutoff: 2021-09\nCurrent date: " + new Date().toLocaleString(),
+                        },
                         { role: "user", content: data.join(" ") },
                     ],
                 });
@@ -2256,7 +2234,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using codex text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncodex hello world in python");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: codex text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": codex hello world in python");
         } else {
             data.shift();
             try {
@@ -2293,7 +2271,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using dell prompt instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndell a cat");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dell prompt" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dell a cat");
         } else {
             data.shift();
             try {
@@ -2337,7 +2315,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using poli prompt instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npoli a cat");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: poli prompt" + "\n" + example[Math.floor(Math.random() * example.length)] + ": poli a cat");
         } else {
             data.shift();
             try {
@@ -2542,7 +2520,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using sayjap text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsayjap I am melvin jones repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sayjap text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": sayjap I am melvin jones repol");
         } else {
             try {
                 data.shift();
@@ -2573,7 +2551,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using say text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsay I am melvin jones repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: say text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": say I am melvin jones repol");
         } else {
             data.shift();
             let text = data.join(" ").substring(0, 150) + "...";
@@ -2594,7 +2572,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using encrypt text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencrypt Hello World");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encrypt text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": encrypt Hello World");
         } else {
             data.shift();
             const key = crypto.randomBytes(32);
@@ -2658,7 +2636,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using rascii text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nascii hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: rascii text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ascii hello world");
         } else {
             data.shift();
             let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
@@ -2672,7 +2650,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using ascii font text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nascii 3-D hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ascii font text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ascii 3-D hello world");
         } else {
             data.shift();
             let aa = data.join(" ").split(" ");
@@ -2692,7 +2670,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using dns4 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns4 google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns4 url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dns4 google.com");
         } else {
             data.shift();
             dns.resolve4(data.join(" "), (err, addresses) => {
@@ -2710,7 +2688,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using dns6 url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndns6 google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns6 url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dns6 google.com");
         } else {
             data.shift();
             dns.resolve6(data.join(" "), (err, addresses) => {
@@ -2728,7 +2706,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using header url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nheader google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: header url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": header google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2742,7 +2720,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using nslookup url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnslookup google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nslookup url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": nslookup google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2756,7 +2734,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using ping url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nping google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ping url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ping google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2770,7 +2748,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using traceroute url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntraceroute google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: traceroute url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": traceroute google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2818,7 +2796,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using covid country instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncovid Philippines");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: covid country" + "\n" + example[Math.floor(Math.random() * example.length)] + ": covid Philippines");
         } else {
             data.shift();
             let country = data.join(" ");
@@ -2857,7 +2835,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using nba name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnba Stephen Curry");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nba name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": nba Stephen Curry");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -2902,7 +2880,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
-                body: "Opps! Houston, we have a problem! You should try using linkshort url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlink https://mrepol742.github.io",
+                body: "Houston! Unknown or missing option.\n\n Usage: linkshort url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": link https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
             sendMessage(api, event, message);
@@ -2940,7 +2918,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using videolyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideolyric In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: videolyric text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": videolyric In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -2966,7 +2944,11 @@ async function ai(api, event) {
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + qsearch).then((response) => {
                         if (response == null) {
-                            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                            sendMessage(
+                                api,
+                                event,
+                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                            );
                         } else {
                             let title = response.result.s_title;
                             let image = response.result.s_image;
@@ -2994,7 +2976,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using video text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nvideo In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": video In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -3045,7 +3027,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using musiclyric text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusiclyric In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: musiclyric text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": musiclyric In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -3069,7 +3051,11 @@ async function ai(api, event) {
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + qsearch).then((response) => {
                         if (response == null) {
-                            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                            sendMessage(
+                                api,
+                                event,
+                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                            );
                         } else {
                             let title = response.result.s_title;
                             let image = response.result.s_image;
@@ -3097,7 +3083,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using music text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmusic In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": music In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -3145,13 +3131,17 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using lyrics text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlyrics In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lyrics text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": lyrics In The End by Linkin Park");
         } else {
             data.shift();
             let text = data.join(" ");
             getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + text).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                 } else {
                     let title = response.result.s_title;
                     let image = response.result.s_image;
@@ -3176,7 +3166,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using encodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencodeBinary fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encodeBinary text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": encodeBinary fundamentals in engineering");
         } else {
             data.shift();
             let Input = data.join(" ");
@@ -3193,7 +3183,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using decodeBinary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecodeBinary 01100001 01100010 01100011");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decodeBinary text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": decodeBinary 01100001 01100010 01100011");
         } else {
             data.shift();
             let binary = data.join(" ");
@@ -3211,7 +3201,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using encode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nencode64 fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encode64 text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": encode64 fundamentals in engineering");
         } else {
             data.shift();
             let buff = Buffer.from(data.join(" "));
@@ -3224,7 +3214,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using decode64 text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndecode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decode64 text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": decode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n");
         } else {
             data.shift();
             let buff = Buffer.from(data.join(" "), "base64");
@@ -3237,7 +3227,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using reversetext text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nreversetext fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: reversetext text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": reversetext fundamentals in engineering");
         } else {
             data.shift();
             let splitString = data.join(" ").split("");
@@ -3270,7 +3260,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using dictionary text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndictionary computer");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dictionary text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dictionary computer");
         } else {
             try {
                 let response = await google.search(input, googleSearchOptions);
@@ -3347,7 +3337,7 @@ async function ai(api, event) {
         if (query.startsWith("lovetest")) {
             let data = input.split(" ");
             if (data.length < 3) {
-                return sendMessage(api, event, "Opps! Houston, we have a problem! You should try using lovetest @name:@name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest @Edogawa Conan: @Ran Mouri");
+                return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": lovetest @Edogawa Conan: @Ran Mouri");
             }
         }
         if (event.isGroup) {
@@ -3367,7 +3357,7 @@ async function ai(api, event) {
                     partner1 = Object.keys(event.mentions)[0];
                     partner2 = Object.keys(event.mentions)[1];
                     if (partner1 === undefined || partner2 === undefined) {
-                        return sendMessage(api, event, "Opps! Houston, we have a problem! You should try using lovetest @name:@name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlovetest @Edogawa Conan: @Ran Mouri");
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": lovetest @Edogawa Conan: @Ran Mouri");
                     }
                 }
 
@@ -3480,7 +3470,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using summ text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsumm this sentence meant to be summarized.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: summ text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": summ this sentence meant to be summarized.");
         } else {
             let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined }, api.getCurrentUserID());
             sendMessage(api, event, ss.data.choices[0].message.content);
@@ -3491,12 +3481,16 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using baybayin text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nbaybayin ako ay filipino");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: baybayin text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": baybayin ako ay filipino");
         } else {
             data.shift();
             getResponseData("https://api-baybayin-transliterator.vercel.app/?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                 } else {
                     sendMessage(api, event, response.baybay);
                 }
@@ -3508,7 +3502,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using doublestruck text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndoublestruck Hello World");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: doublestruck text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": doublestruck Hello World");
         } else {
             data.shift();
             sendMessage(api, event, toDoublestruck(data.join(" ")));
@@ -3519,7 +3513,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using weather location instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nweather caloocan city");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: weather location" + "\n" + example[Math.floor(Math.random() * example.length)] + ": weather caloocan city");
         } else {
             data.shift();
             WeatherJS.find(
@@ -3589,7 +3583,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using facts text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfacts computer");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: facts text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": facts computer");
         } else {
             data.shift();
             let url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
@@ -3612,7 +3606,11 @@ async function ai(api, event) {
         }
         getResponseData("http://numbersapi.com/random/math").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 sendMessage(api, event, response);
             }
@@ -3623,7 +3621,11 @@ async function ai(api, event) {
         }
         getResponseData("http://numbersapi.com/random/date").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 sendMessage(api, event, response);
             }
@@ -3634,7 +3636,11 @@ async function ai(api, event) {
         }
         getResponseData("http://numbersapi.com/random/trivia").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 sendMessage(api, event, response);
             }
@@ -3645,7 +3651,11 @@ async function ai(api, event) {
         }
         getResponseData("http://numbersapi.com/random/year").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 sendMessage(api, event, response);
             }
@@ -3667,7 +3677,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using github username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngithub mrepol742");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: github username" + "\n" + example[Math.floor(Math.random() * example.length)] + ": github mrepol742");
         } else {
             data.shift();
             let userN = data.join(" ");
@@ -3735,7 +3745,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using element name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nelement hydrogen");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: element name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": element hydrogen");
         } else {
             data.shift();
             let symbol = data.join(" ");
@@ -3772,7 +3782,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using npm name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nnpm mrepol742");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: npm name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": npm mrepol742");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3804,7 +3814,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using steam name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsteam minecraft");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: steam name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": steam minecraft");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3838,7 +3848,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using imdb name instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nimdb iron man");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: imdb name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": imdb iron man");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3872,7 +3882,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using itunes title instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nitunes in the end");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: itunes title" + "\n" + example[Math.floor(Math.random() * example.length)] + ": itunes in the end");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3966,7 +3976,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using gemoji emoji instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngemoji 😂");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gemoji emoji" + "\n" + example[Math.floor(Math.random() * example.length)] + ": gemoji 😂");
         } else {
             data.shift();
             if (!pictographic.test(data.join(" "))) {
@@ -3986,7 +3996,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using sendReport text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsendReport There is a problem in ______ that cause ______.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sendReport text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": sendReport There is a problem in ______ that cause ______.");
         } else {
             data.shift();
             let report = "send_message_report " + event.senderID + " " + data.join(" ");
@@ -4030,7 +4040,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using git code instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngit add .");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: git code" + "\n" + example[Math.floor(Math.random() * example.length)] + ": git add .");
             } else {
                 data.shift();
                 exec("git " + data.join(" "), function (err, stdout, stderr) {
@@ -4048,7 +4058,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using shell code instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nshell uptime");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n" + example[Math.floor(Math.random() * example.length)] + ": shell uptime");
             } else {
                 data.shift();
                 let sff = data.join(" ");
@@ -4088,7 +4098,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using acceptmessagerequest threadid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptmessagerequest 0000000000000");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: acceptmessagerequest threadid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": acceptmessagerequest 0000000000000");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4109,7 +4119,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using addCORS [url] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddCORS https://mrepol742.github.io");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addCORS [url]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addCORS https://mrepol742.github.io");
             } else {
                 data.shift();
                 corsWhitelist.push(data.join(" "));
@@ -4120,7 +4130,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using remCORS [url] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremCORS https://mrepol742.github.io");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remCORS [url]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": remCORS https://mrepol742.github.io");
             } else {
                 data.shift();
                 corsWhitelist.pop(data.join(" "));
@@ -4131,7 +4141,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using changebio [text] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nchangebio Hello There");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changebio [text]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": changebio Hello There");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4145,7 +4155,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using acceptfriendrequest [uid] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nacceptfriendrequest 0000000000000");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: acceptfriendrequest [uid]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": acceptfriendrequest 0000000000000");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4163,7 +4173,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setMaxTokens [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetMaxTokens 1000.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setMaxTokens [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setMaxTokens 1000.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4181,7 +4191,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setTemperature [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetTemperature 0.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setTemperature [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setTemperature 0.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4201,7 +4211,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using fbdl url instead.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fbdl url instead.");
         } else {
             data.shift();
             let query = data.join(" ");
@@ -4273,7 +4283,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using mdl text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmdl detective conan");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mdl text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": mdl detective conan");
         } else {
             data.shift();
             axios.get("https://mydramalist.com/search?q=" + data.join(" ")).then((response) => {
@@ -4307,7 +4317,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using mal text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmal detective conan");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mal text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": mal detective conan");
         } else {
             data.shift();
             axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.join(" ")).then((response) => {
@@ -4345,7 +4355,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setFrequencyPenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetFrequencyPenalty 1.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setFrequencyPenalty [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setFrequencyPenalty 1.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4363,7 +4373,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setPresencePenalty [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPresencePenalty 1.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setPresencePenalty [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setPresencePenalty 1.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4411,7 +4421,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setProbabilityMass [integer] instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetProbabilityMass 0.1.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setProbabilityMass [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setProbabilityMass 0.1.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4429,7 +4439,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setPrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetPrefix $");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setPrefix prefix" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setPrefix $");
             } else {
                 data.shift();
                 let pref = data.join(" ");
@@ -4453,7 +4463,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using ignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nignorePrefix alexa");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ignorePrefix prefix" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ignorePrefix alexa");
             } else {
                 let pre = data.shift();
                 let pre2 = formatQuery(pre.replace(/\s+/g, "").normalize("NFKC"));
@@ -4471,7 +4481,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using unignorePrefix prefix instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunignorePrefix alexa");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unignorePrefix prefix" + "\n" + example[Math.floor(Math.random() * example.length)] + ": unignorePrefix alexa");
             } else {
                 let pre = data.shift();
                 if (settings.ignored_prefixes.includes(pre)) {
@@ -4485,7 +4495,7 @@ async function ai(api, event) {
     } else if (query.startsWith("adduser")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addUser 100024563636366");
         } else {
             data.shift();
             let pref = data.join(" ");
@@ -4507,10 +4517,10 @@ async function ai(api, event) {
                         }
                     });
                 } else {
-                    sendMessage(api, event, "Opps! Houston, we have a problem! You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addUser 100024563636366");
                 }
             } else {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using addUser uid instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddUser 100024563636366");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addUser 100024563636366");
             }
         }
     } else if (query.startsWith("gcolor")) {
@@ -4519,7 +4529,7 @@ async function ai(api, event) {
             sendMessage(
                 api,
                 event,
-                "Opps! Houston, we have a problem! You should try using gcolor theme instead.\n\nTheme:\nDefaultBlue, HotPink, AquaBlue, BrightPurple\nCoralPink, Orange, Green, LavenderPurple\nRed, Yellow, TealBlue, Aqua\nMango, Berry, Citrus, Candy" +
+                "Houston! Unknown or missing option.\n\n Usage: gcolor theme instead.\n\nTheme:\nDefaultBlue, HotPink, AquaBlue, BrightPurple\nCoralPink, Orange, Green, LavenderPurple\nRed, Yellow, TealBlue, Aqua\nMango, Berry, Citrus, Candy" +
                     "\n\n" +
                     example[Math.floor(Math.random() * example.length)] +
                     "\ngcolor DefaultBlue"
@@ -4536,7 +4546,7 @@ async function ai(api, event) {
                     }
                 });
             } else {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using gcolor theme instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngcolor DefaultBlue");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gcolor theme" + "\n" + example[Math.floor(Math.random() * example.length)] + ": gcolor DefaultBlue");
             }
         }
     } else if (query.startsWith("kickuser")) {
@@ -4551,7 +4561,7 @@ async function ai(api, event) {
                     }
                     let data = input.split(" ");
                     if (data.length < 2) {
-                        sendMessage(api, event, "Opps! Houston, we have a problem! You should try using kickUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nkickUser @Zero Two");
+                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: kickUser @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": kickUser @Zero Two");
                     } else {
                         let id = Object.keys(event.mentions)[0];
                         if (id === undefined) {
@@ -4585,7 +4595,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using isBot @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nisBot @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: isBot @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": isBot @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4625,7 +4635,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using blockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nblockUser @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockUser @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": blockUser @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4671,7 +4681,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using unblockUser @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nunblockUser @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockUser @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": unblockUser @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4701,7 +4711,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2 && !data[1].includes(":")) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setKey name:key instead.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setKey name:key instead.");
             } else {
                 let inp = data[1].split(":");
                 settings.apikey[inp[0]] = inp[1];
@@ -4712,7 +4722,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using fontignore @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nfontignore @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontignore @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": fontignore @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4740,7 +4750,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using addAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\naddAdmin @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addAdmin @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addAdmin @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4768,7 +4778,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.lenght < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using remAdmin @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nremAdmin @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remAdmin @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": remAdmin @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4992,7 +5002,7 @@ async function ai(api, event) {
         if (event.isGroup) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using gname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngname Darling in the Franxx >3");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gname text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": gname Darling in the Franxx >3");
             } else {
                 data.shift();
                 api.setTitle(data.join(" "), event.threadID, (err, obj) => {
@@ -5192,7 +5202,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using wiki text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwiki Google");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wiki text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": wiki Google");
         } else {
             data.shift();
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
@@ -5219,7 +5229,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using " + prrr + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + prrr + " @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": " + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5256,7 +5266,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using " + prrr + " @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + prrr + " @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": " + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5289,13 +5299,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ship @Edogawa Conan @Ran Mouri");
         } else {
             if (input.split("@").length - 1 >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Opps! Houston, we have a problem! You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ship @Edogawa Conan @Ran Mouri");
                     return;
                 }
                 if (isMyId(id1)) {
@@ -5330,7 +5340,7 @@ async function ai(api, event) {
                         utils.logged(err);
                     });
             } else {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using ship @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nship @Edogawa Conan @Ran Mouri");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ship @Edogawa Conan @Ran Mouri");
             }
         }
     } else if (query.startsWith("www")) {
@@ -5339,13 +5349,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": www @Edogawa Conan @Ran Mouri");
         } else {
             if (input.split("@").length - 1 >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Opps! Houston, we have a problem! You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": www @Edogawa Conan @Ran Mouri");
                     return;
                 }
                 if (isMyId(id1)) {
@@ -5380,7 +5390,7 @@ async function ai(api, event) {
                         utils.logged(err);
                     });
             } else {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using www @mention @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwww @Edogawa Conan @Ran Mouri");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": www @Edogawa Conan @Ran Mouri");
             }
         }
     } else if (query.startsWith("formatnumbers")) {
@@ -5389,7 +5399,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using formatnumbers number instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nformatnumbers 326346436");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: formatnumbers number" + "\n" + example[Math.floor(Math.random() * example.length)] + ": formatnumbers 326346436");
         } else {
             data.shift();
             sendMessage(api, event, numberWithCommas(data.join(" ")));
@@ -5400,7 +5410,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using stalk @mention instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nstalk @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": stalk @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5426,7 +5436,11 @@ async function ai(api, event) {
             }
             await getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                 } else {
                     let construct = response.name;
                     if (!(response.username === undefined)) {
@@ -5504,12 +5518,16 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using morse text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nmorse .... . .-.. .-.. ---");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: morse text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": morse .... . .-.. .-.. ---");
         } else {
             data.shift();
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                 } else {
                     sendMessage(api, event, response.morse);
                 }
@@ -5521,12 +5539,16 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using " + data[0] + " text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\n" + data[0] + " hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + data[0] + " text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": " + data[0] + " hello world");
         } else {
             data.shift();
             getResponseData("https://api.popcat.xyz/" + data[0] + "?text=" + data.join(" ")).then((response) => {
                 if (response == null) {
-                    sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                 } else {
                     sendMessage(api, event, response.text);
                 }
@@ -5590,7 +5612,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using drake text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ndrake error: bug");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: drake text1: text2" + "\n" + example[Math.floor(Math.random() * example.length)] + ": drake error: bug");
         } else {
             data.shift();
             let text = data.join(" ").split(":");
@@ -5602,7 +5624,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using pika text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npika hayssss");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pika text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": pika hayssss");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + data.join(" "), __dirname + "/cache/pika_" + utils.getTimestamp() + ".png");
@@ -5613,7 +5635,11 @@ async function ai(api, event) {
         }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 parseImage(api, event, response.image, __dirname + "/cache/meme_" + utils.getTimestamp() + ".png");
             }
@@ -5629,7 +5655,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using oogway text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\noogway bug is not an error");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: oogway text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": oogway bug is not an error");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + data.join(" "), __dirname + "/cache/oogway_" + utils.getTimestamp() + ".png");
@@ -5646,7 +5672,7 @@ async function ai(api, event) {
             } else {
                 let data = input.split(" ");
                 if (data.length < 2) {
-                    sendMessage(api, event, "Opps! Houston, we have a problem! You should try using hanime category instead.\n\nCategories: \nwaifu, neko, trap, blowjob" + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nhanime waifu");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: hanime category \nCategories: \nwaifu, neko, trap, blowjob" + "\n" + example[Math.floor(Math.random() * example.length)] + ": hanime waifu");
                 } else {
                     data.shift();
                     getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
@@ -5669,7 +5695,7 @@ async function ai(api, event) {
             sendMessage(
                 api,
                 event,
-                "Opps! Houston, we have a problem! You should try using anime category instead.\n\nCategories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" +
+                "Houston! Unknown or missing option.\n\n Usage: anime category \nCategories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" +
                     "\n\n" +
                     example[Math.floor(Math.random() * example.length)] +
                     "\nanime waifu"
@@ -5691,7 +5717,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using parseImage url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nparseImage https://mrepol742.github.io/favicon.ico");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: parseImage url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": parseImage https://mrepol742.github.io/favicon.ico");
         } else {
             data.shift();
             let url = data.join(" ");
@@ -5708,7 +5734,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
-                body: "Opps! Houston, we have a problem! You should try using qrcode text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nqrcode https://mrepol742.github.io",
+                body: "Houston! Unknown or missing option.\n\n Usage: qrcode text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": qrcode https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
             sendMessage(api, event, message);
@@ -5722,7 +5748,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using alert text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nalert hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: alert text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": alert hello world");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + data.join(" "), __dirname + "/cache/alert_" + utils.getTimestamp() + ".png");
@@ -5733,7 +5759,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using caution text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ncaution bug is not an error");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: caution text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": caution bug is not an error");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/caution_" + utils.getTimestamp() + ".png");
@@ -5745,7 +5771,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         if (data.length < 2) {
             let messaage = {
-                body: "Opps! Houston, we have a problem! You should try using website url instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nwebsite https://mrepol742.github.io",
+                body: "Houston! Unknown or missing option.\n\n Usage: website url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": website https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
             sendMessage(api, event, message);
@@ -5764,7 +5790,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using god text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ngod explicit content");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: god text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": god explicit content");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + data.join(" "), __dirname + "/cache/god_" + utils.getTimestamp() + ".png");
@@ -5775,7 +5801,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using sadcat text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsadcat meoww");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sadcat text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": sadcat meoww");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/sadcat_" + utils.getTimestamp() + ".png");
@@ -5786,7 +5812,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using pooh text1: text2 instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\npooh color: colour");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pooh text1: text2" + "\n" + example[Math.floor(Math.random() * example.length)] + ": pooh color: colour");
         } else {
             data.shift();
             let text = data.join(" ").split(":");
@@ -5808,7 +5834,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using landscape text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nlandscape night");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: landscape text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": landscape night");
         } else {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
@@ -5819,7 +5845,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using portrait text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nportrait rgb");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: portrait text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": portrait rgb");
         } else {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
@@ -5830,7 +5856,11 @@ async function ai(api, event) {
         }
         getResponseData("https://animechan.vercel.app/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
             }
@@ -5841,7 +5871,11 @@ async function ai(api, event) {
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 let result;
                 let i;
@@ -5857,14 +5891,14 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time timezone" + "\n" + example[Math.floor(Math.random() * example.length)] + ": time Asia/Manila");
         } else {
             data.shift();
             let body = data.join(" ");
             if (isValidTimeZone(body)) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime(body));
             } else {
-                sendMessage(api, event, "Opps! Houston, we have a problem! You should try using time timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\ntime Asia/Manila");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time timezone" + "\n" + example[Math.floor(Math.random() * example.length)] + ": time Asia/Manila");
             }
         }
     } else if (query == "time") {
@@ -5881,7 +5915,11 @@ async function ai(api, event) {
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 let result;
                 let i;
@@ -5897,7 +5935,11 @@ async function ai(api, event) {
         }
         getResponseData("https://zenquotes.io/api/random").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 let result;
                 let i;
@@ -5945,7 +5987,11 @@ async function ai(api, event) {
         }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 let result;
                 let i;
@@ -5961,7 +6007,11 @@ async function ai(api, event) {
         }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 let result;
                 let i;
@@ -5977,13 +6027,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n" + example[Math.floor(Math.random() * example.length)] + ": verse Job 4:9");
         } else {
             data.shift();
             let body = data.join(" ");
             getResponseData("http://labs.bible.org/api/?passage=" + body + "&type=json").then((r) => {
                 if (r == null) {
-                    sendMessage(api, event, "Opps! Houston, we have a problem! You should try using verse book chapter:verse instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nverse Job 4:9");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n" + example[Math.floor(Math.random() * example.length)] + ": verse Job 4:9");
                 } else {
                     let result = "";
                     let total = r.length;
@@ -6062,7 +6112,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setnickname text instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetnickname Darling");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setnickname text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setnickname Darling");
         } else {
             data.shift();
             api.setNickname(data.join(" "), event.threadID, event.senderID, (err) => {
@@ -6075,7 +6125,11 @@ async function ai(api, event) {
         }
         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
             if (response == null) {
-                sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             } else {
                 api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
                     if (err) return utils.logged(err);
@@ -6088,7 +6142,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setbirthday date instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetbirthday 06/13/2002");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setbirthday date" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setbirthday 06/13/2002");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6109,7 +6163,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using settimezone timezone instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsettimezone Asia/Manila");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: settimezone timezone" + "\n" + example[Math.floor(Math.random() * example.length)] + ": settimezone Asia/Manila");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6130,7 +6184,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setaddress address instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetaddress Caloocan City, Philippines");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setaddress address" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setaddress Caloocan City, Philippines");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6151,7 +6205,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setbio info instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetBio I liked playing games and watching movies.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setbio info" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setBio I liked playing games and watching movies.");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6168,7 +6222,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setUsername username instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetUsername mrepol742");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setUsername username" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setUsername mrepol742");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6188,7 +6242,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem! You should try using setGender gender instead." + "\n\n" + example[Math.floor(Math.random() * example.length)] + "\nsetgender male");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setGender gender" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setgender male");
         } else {
             data.shift();
             let body = data.join(" ").toLowerCase();
@@ -7324,7 +7378,11 @@ function remAdmin(api, event, id) {
 function getAnimeGif(api, event, id, type) {
     getResponseData("https://api.waifu.pics/sfw/" + type).then((response) => {
         if (response == null) {
-            sendMessage(api, event, "Unfortunately, There is a problem processing your request.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            sendMessage(
+                api,
+                event,
+                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+            );
         } else {
             if (isMyId(id)) {
                 id = event.senderID;
@@ -7417,7 +7475,17 @@ function saveEvent(api, event) {
                 for (i = 0; i < event.attachments.length; i++) {
                     photo.push(event.attachments[i].url);
                 }
-                msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "photo", message: event.body == "" ? " " : event.body, attachment: photo, mention: event.mentions }];
+                msgs[event.messageID] = [
+                    {
+                        time: new Date().getTime(),
+                        sender: event.senderID,
+                        thread: event.threadID,
+                        type: "photo",
+                        message: event.body == "" ? " " : event.body,
+                        attachment: photo,
+                        mention: event.mentions,
+                    },
+                ];
                 break;
             case "animated_image":
                 let animated_images = [];
@@ -7425,22 +7493,80 @@ function saveEvent(api, event) {
                 for (i1 = 0; i1 < event.attachments.length; i1++) {
                     animated_images.push(event.attachments[i1].url);
                 }
-                msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "animated_images", message: event.body == "" ? " " : event.body, attachment: animated_images, mention: event.mentions }];
+                msgs[event.messageID] = [
+                    {
+                        time: new Date().getTime(),
+                        sender: event.senderID,
+                        thread: event.threadID,
+                        type: "animated_images",
+                        message: event.body == "" ? " " : event.body,
+                        attachment: animated_images,
+                        mention: event.mentions,
+                    },
+                ];
                 break;
             case "sticker":
-                msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "sticker", attachment: event.attachments[0].ID }];
+                msgs[event.messageID] = [
+                    {
+                        time: new Date().getTime(),
+                        sender: event.senderID,
+                        thread: event.threadID,
+                        type: "sticker",
+                        attachment: event.attachments[0].ID,
+                    },
+                ];
                 break;
             case "video":
-                msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "video", message: event.body == "" ? " " : event.body, attachment: event.attachments[0].url, mention: event.mentions }];
+                msgs[event.messageID] = [
+                    {
+                        time: new Date().getTime(),
+                        sender: event.senderID,
+                        thread: event.threadID,
+                        type: "video",
+                        message: event.body == "" ? " " : event.body,
+                        attachment: event.attachments[0].url,
+                        mention: event.mentions,
+                    },
+                ];
                 break;
             case "audio":
-                msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "audio", message: event.body == "" ? " " : event.body, attachment: event.attachments[0].url, mention: event.mentions }];
+                msgs[event.messageID] = [
+                    {
+                        time: new Date().getTime(),
+                        sender: event.senderID,
+                        thread: event.threadID,
+                        type: "audio",
+                        message: event.body == "" ? " " : event.body,
+                        attachment: event.attachments[0].url,
+                        mention: event.mentions,
+                    },
+                ];
                 break;
             case "file":
-                msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "file", message: event.body == "" ? " " : event.body, attachment_name: event.attachments[0].filename, attachment_url: event.attachments[0].url, mention: event.mentions }];
+                msgs[event.messageID] = [
+                    {
+                        time: new Date().getTime(),
+                        sender: event.senderID,
+                        thread: event.threadID,
+                        type: "file",
+                        message: event.body == "" ? " " : event.body,
+                        attachment_name: event.attachments[0].filename,
+                        attachment_url: event.attachments[0].url,
+                        mention: event.mentions,
+                    },
+                ];
                 break;
             case "location":
-                msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "location", attachment_address: event.attachments[0].address, attachment_url: event.attachments[0].url }];
+                msgs[event.messageID] = [
+                    {
+                        time: new Date().getTime(),
+                        sender: event.senderID,
+                        thread: event.threadID,
+                        type: "location",
+                        attachment_address: event.attachments[0].address,
+                        attachment_url: event.attachments[0].url,
+                    },
+                ];
                 break;
             case "share":
                 try {
@@ -7458,15 +7584,43 @@ function saveEvent(api, event) {
                 } catch (err) {
                     let finalU = event.attachments[0].url;
                     if (/(http(s?)):\/\//i.test(finalU) && finalU.includes("facebook.com/reel/")) {
-                        msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "message", message: event.body == "" ? " " : event.body, mention: event.mentions }];
+                        msgs[event.messageID] = [
+                            {
+                                time: new Date().getTime(),
+                                sender: event.senderID,
+                                thread: event.threadID,
+                                type: "message",
+                                message: event.body == "" ? " " : event.body,
+                                mention: event.mentions,
+                            },
+                        ];
                     } else {
-                        msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "share", message: event.body == "" ? " " : event.body, attachment: event.attachments[0].url, mention: event.mentions }];
+                        msgs[event.messageID] = [
+                            {
+                                time: new Date().getTime(),
+                                sender: event.senderID,
+                                thread: event.threadID,
+                                type: "share",
+                                message: event.body == "" ? " " : event.body,
+                                attachment: event.attachments[0].url,
+                                mention: event.mentions,
+                            },
+                        ];
                     }
                 }
                 break;
         }
     } else {
-        msgs[event.messageID] = [{ time: new Date().getTime(), sender: event.senderID, thread: event.threadID, type: "message", message: event.body == "" ? " " : event.body, mention: event.mentions }];
+        msgs[event.messageID] = [
+            {
+                time: new Date().getTime(),
+                sender: event.senderID,
+                thread: event.threadID,
+                type: "message",
+                message: event.body == "" ? " " : event.body,
+                mention: event.mentions,
+            },
+        ];
     }
 }
 
@@ -7501,8 +7655,6 @@ async function aiResponse(event, complextion, text, repeat, user, group, uid) {
             utils.logged("tokens_used prompt: " + newResponse.data.usage.prompt_tokens + " completion: " + newResponse.data.usage.completion_tokens + " total: " + newResponse.data.usage.total_tokens);
             return newResponse;
         }
-        let rrrrp = errorResponse;
-        let errorResponse2 = (rrrrp.data.choices[0].message.content = idknow[Math.floor(Math.random() * idknow.length)]);
         return errorResponse2;
     }
 }
@@ -8481,12 +8633,12 @@ function getRoutes() {
             }
         } else if (url == "/query/get_block_user") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
-            res.setHeader("Content-Type", "application/json");
-            res.writeHead(200);
-            let b = JSON.stringify(users.blocked);
-            let b2 = JSON.stringify(users.bot);
-            let b3 = JSON.stringify(users.muted);
-            res.end("{blocked: " + b + ", bot: " + b2 + ", muted: " + b3 + "}");
+                res.setHeader("Content-Type", "application/json");
+                res.writeHead(200);
+                let b = JSON.stringify(users.blocked);
+                let b2 = JSON.stringify(users.bot);
+                let b3 = JSON.stringify(users.muted);
+                res.end("{blocked: " + b + ", bot: " + b2 + ", muted: " + b3 + "}");
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
                 res.end();
