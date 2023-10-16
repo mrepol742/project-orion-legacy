@@ -591,15 +591,16 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (!(event.senderID === undefined)) {
-                if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID))) {
-                    return;
-                }
-            } else if (blockedCall.includes(api.getCurrentUserID())) {
+            if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID)) || blockedCall.includes(api.getCurrentUserID())) {
                 return;
             }
 
             if (event.type == "message" || event.type == "message_reply") {
+                let eventB = event.body;
+                let input = eventB.toLowerCase().normalize("NFKC");
+                let query2 = formatQuery(input);
+                let query = query2.replace(/\s+/g, "");
+
                 if (isMyId(event.senderID)) {
                     if (query == "stop") {
                         sendMessage(api, event, "Program stopped its state.");
@@ -645,7 +646,7 @@ function redfox_fb(fca_state, login, cb) {
                         let input = eventB.normalize("NFKC");
                         let query2 = formatQuery(input);
                         let query = query2.replace(/\s+/g, "");
-                        if (/(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
+                        if (/(^melvin$|^melvin\s|^mj$|^mj\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
                             if (isGoingToFast1(event, threadMaintenance, 30)) {
                                 return;
                             }
@@ -1458,7 +1459,7 @@ async function ai22(api, event, query, query2) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wfind text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": wfind my name");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wfind text" + "\n " + example[Math.floor(Math.random() * example.length)] + " wfind my name");
         } else {
             data.shift();
             let se = data.join(" ");
@@ -1476,7 +1477,7 @@ async function ai22(api, event, query, query2) {
         }
         let data = input.split(" ");
         if (event.messageReply.body == "" || data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: translate language reply" + "\n" + example[Math.floor(Math.random() * example.length)] + ": translate english [reply]");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: translate language reply" + "\n " + example[Math.floor(Math.random() * example.length)] + " translate english [reply]");
         } else {
             try {
                 data.shift();
@@ -1524,7 +1525,7 @@ async function ai22(api, event, query, query2) {
         let input = eventB.normalize("NFKC");
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + ": decrypt fwegerghergerg:gergergergerg");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + " decrypt fwegerghergerg:gergergergerg");
         } else {
             data.shift();
             let a = data.join(" ").split(":");
@@ -1538,7 +1539,7 @@ async function ai22(api, event, query, query2) {
         }
     } else if (query == "addinstance") {
         try {
-            if (event.senderID != rootAccess) {
+            if (!users.admin.includes(event.senderID)) {
                 return;
             }
             let appsss = JSON.parse(event.messageReply.body);
@@ -1700,7 +1701,7 @@ async function ai22(api, event, query, query2) {
         let input = event.body;
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: run language \nCategories:\nJava, Python, C, C++,\nJavaScript and PHP" + "\n\n" + example[Math.floor(Math.random() * example.length)] + ": run python");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: run language \n Categories:\nJava, Python, C, C++,\nJavaScript and PHP" + "\n\n" + example[Math.floor(Math.random() * example.length)] + " run python");
         } else {
             data.shift();
             let lang = data.join(" ").toLowerCase();
@@ -1865,7 +1866,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: searchimg text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": searchimg melvin jones repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: searchimg text" + "\n " + example[Math.floor(Math.random() * example.length)] + " searchimg melvin jones repol");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -1881,7 +1882,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": search Who is Melvin Jones Repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " search Who is Melvin Jones Repol");
         } else {
             data.shift();
             let query = data.join(" ");
@@ -1894,7 +1895,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: searchincog text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": searchincog Who is Melvin Jones Repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: searchincog text" + "\n " + example[Math.floor(Math.random() * example.length)] + " searchincog Who is Melvin Jones Repol");
         } else {
             data.shift();
             let query = data.join(" ");
@@ -2238,7 +2239,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: codex text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": codex hello world in python");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: codex text" + "\n " + example[Math.floor(Math.random() * example.length)] + " codex hello world in python");
         } else {
             data.shift();
             try {
@@ -2275,7 +2276,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dell prompt" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dell a cat");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dell prompt" + "\n " + example[Math.floor(Math.random() * example.length)] + " dell a cat");
         } else {
             data.shift();
             try {
@@ -2319,7 +2320,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: poli prompt" + "\n" + example[Math.floor(Math.random() * example.length)] + ": poli a cat");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: poli prompt" + "\n " + example[Math.floor(Math.random() * example.length)] + " poli a cat");
         } else {
             data.shift();
             try {
@@ -2524,7 +2525,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sayjap text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": sayjap I am melvin jones repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sayjap text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sayjap I am melvin jones repol");
         } else {
             try {
                 data.shift();
@@ -2555,7 +2556,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: say text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": say I am melvin jones repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: say text" + "\n " + example[Math.floor(Math.random() * example.length)] + " say I am melvin jones repol");
         } else {
             data.shift();
             let text = data.join(" ").substring(0, 150) + "...";
@@ -2576,7 +2577,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encrypt text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": encrypt Hello World");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encrypt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " encrypt Hello World");
         } else {
             data.shift();
             const key = crypto.randomBytes(32);
@@ -2640,7 +2641,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: rascii text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ascii hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: rascii text" + "\n " + example[Math.floor(Math.random() * example.length)] + " ascii hello world");
         } else {
             data.shift();
             let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
@@ -2654,7 +2655,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ascii font text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ascii 3-D hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ascii font text" + "\n " + example[Math.floor(Math.random() * example.length)] + " ascii 3-D hello world");
         } else {
             data.shift();
             let aa = data.join(" ").split(" ");
@@ -2674,7 +2675,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns4 url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dns4 google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns4 url" + "\n " + example[Math.floor(Math.random() * example.length)] + " dns4 google.com");
         } else {
             data.shift();
             dns.resolve4(data.join(" "), (err, addresses) => {
@@ -2692,7 +2693,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns6 url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dns6 google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns6 url" + "\n " + example[Math.floor(Math.random() * example.length)] + " dns6 google.com");
         } else {
             data.shift();
             dns.resolve6(data.join(" "), (err, addresses) => {
@@ -2710,7 +2711,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: header url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": header google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: header url" + "\n " + example[Math.floor(Math.random() * example.length)] + " header google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2724,7 +2725,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nslookup url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": nslookup google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nslookup url" + "\n " + example[Math.floor(Math.random() * example.length)] + " nslookup google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2738,7 +2739,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ping url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ping google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ping url" + "\n " + example[Math.floor(Math.random() * example.length)] + " ping google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2752,7 +2753,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: traceroute url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": traceroute google.com");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: traceroute url" + "\n " + example[Math.floor(Math.random() * example.length)] + " traceroute google.com");
         } else {
             data.shift();
             let aa = data.join(" ");
@@ -2800,7 +2801,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: covid country" + "\n" + example[Math.floor(Math.random() * example.length)] + ": covid Philippines");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: covid country" + "\n " + example[Math.floor(Math.random() * example.length)] + " covid Philippines");
         } else {
             data.shift();
             let country = data.join(" ");
@@ -2839,7 +2840,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nba name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": nba Stephen Curry");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nba name" + "\n " + example[Math.floor(Math.random() * example.length)] + " nba Stephen Curry");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -2884,7 +2885,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
-                body: "Houston! Unknown or missing option.\n\n Usage: linkshort url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": link https://mrepol742.github.io",
+                body: "Houston! Unknown or missing option.\n\n Usage: linkshort url" + "\n " + example[Math.floor(Math.random() * example.length)] + " link https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
             sendMessage(api, event, message);
@@ -2922,7 +2923,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: videolyric text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": videolyric In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: videolyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " videolyric In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -2980,7 +2981,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": video In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -3031,7 +3032,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: musiclyric text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": musiclyric In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: musiclyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " musiclyric In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -3087,7 +3088,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": music In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music In The End by Linkin Park");
         } else {
             if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
                 data.shift();
@@ -3135,7 +3136,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lyrics text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": lyrics In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lyrics text" + "\n " + example[Math.floor(Math.random() * example.length)] + " lyrics In The End by Linkin Park");
         } else {
             data.shift();
             let text = data.join(" ");
@@ -3170,7 +3171,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encodeBinary text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": encodeBinary fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encodeBinary text" + "\n " + example[Math.floor(Math.random() * example.length)] + " encodeBinary fundamentals in engineering");
         } else {
             data.shift();
             let Input = data.join(" ");
@@ -3187,7 +3188,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decodeBinary text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": decodeBinary 01100001 01100010 01100011");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decodeBinary text" + "\n " + example[Math.floor(Math.random() * example.length)] + " decodeBinary 01100001 01100010 01100011");
         } else {
             data.shift();
             let binary = data.join(" ");
@@ -3205,7 +3206,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encode64 text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": encode64 fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: encode64 text" + "\n " + example[Math.floor(Math.random() * example.length)] + " encode64 fundamentals in engineering");
         } else {
             data.shift();
             let buff = Buffer.from(data.join(" "));
@@ -3218,7 +3219,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decode64 text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": decode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decode64 text" + "\n " + example[Math.floor(Math.random() * example.length)] + " decode64 ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n");
         } else {
             data.shift();
             let buff = Buffer.from(data.join(" "), "base64");
@@ -3231,7 +3232,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: reversetext text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": reversetext fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: reversetext text" + "\n " + example[Math.floor(Math.random() * example.length)] + " reversetext fundamentals in engineering");
         } else {
             data.shift();
             let splitString = data.join(" ").split("");
@@ -3264,7 +3265,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dictionary text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": dictionary computer");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dictionary text" + "\n " + example[Math.floor(Math.random() * example.length)] + " dictionary computer");
         } else {
             try {
                 let response = await google.search(input, googleSearchOptions);
@@ -3341,7 +3342,7 @@ async function ai(api, event) {
         if (query.startsWith("lovetest")) {
             let data = input.split(" ");
             if (data.length < 3) {
-                return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": lovetest @Edogawa Conan: @Ran Mouri");
+                return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n " + example[Math.floor(Math.random() * example.length)] + " lovetest @Edogawa Conan: @Ran Mouri");
             }
         }
         if (event.isGroup) {
@@ -3361,7 +3362,7 @@ async function ai(api, event) {
                     partner1 = Object.keys(event.mentions)[0];
                     partner2 = Object.keys(event.mentions)[1];
                     if (partner1 === undefined || partner2 === undefined) {
-                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": lovetest @Edogawa Conan: @Ran Mouri");
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n " + example[Math.floor(Math.random() * example.length)] + " lovetest @Edogawa Conan: @Ran Mouri");
                     }
                 }
 
@@ -3474,7 +3475,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: summ text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": summ this sentence meant to be summarized.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: summ text" + "\n " + example[Math.floor(Math.random() * example.length)] + " summ this sentence meant to be summarized.");
         } else {
             let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined }, api.getCurrentUserID());
             sendMessage(api, event, ss.data.choices[0].message.content);
@@ -3485,7 +3486,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: baybayin text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": baybayin ako ay filipino");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: baybayin text" + "\n " + example[Math.floor(Math.random() * example.length)] + " baybayin ako ay filipino");
         } else {
             data.shift();
             getResponseData("https://api-baybayin-transliterator.vercel.app/?text=" + data.join(" ")).then((response) => {
@@ -3506,7 +3507,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: doublestruck text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": doublestruck Hello World");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: doublestruck text" + "\n " + example[Math.floor(Math.random() * example.length)] + " doublestruck Hello World");
         } else {
             data.shift();
             sendMessage(api, event, toDoublestruck(data.join(" ")));
@@ -3517,7 +3518,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: weather location" + "\n" + example[Math.floor(Math.random() * example.length)] + ": weather caloocan city");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: weather location" + "\n " + example[Math.floor(Math.random() * example.length)] + " weather caloocan city");
         } else {
             data.shift();
             WeatherJS.find(
@@ -3587,7 +3588,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: facts text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": facts computer");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: facts text" + "\n " + example[Math.floor(Math.random() * example.length)] + " facts computer");
         } else {
             data.shift();
             let url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
@@ -3681,7 +3682,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: github username" + "\n" + example[Math.floor(Math.random() * example.length)] + ": github mrepol742");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: github username" + "\n " + example[Math.floor(Math.random() * example.length)] + " github mrepol742");
         } else {
             data.shift();
             let userN = data.join(" ");
@@ -3749,7 +3750,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: element name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": element hydrogen");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: element name" + "\n " + example[Math.floor(Math.random() * example.length)] + " element hydrogen");
         } else {
             data.shift();
             let symbol = data.join(" ");
@@ -3786,7 +3787,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: npm name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": npm mrepol742");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: npm name" + "\n " + example[Math.floor(Math.random() * example.length)] + " npm mrepol742");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3818,7 +3819,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: steam name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": steam minecraft");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: steam name" + "\n " + example[Math.floor(Math.random() * example.length)] + " steam minecraft");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3852,7 +3853,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: imdb name" + "\n" + example[Math.floor(Math.random() * example.length)] + ": imdb iron man");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: imdb name" + "\n " + example[Math.floor(Math.random() * example.length)] + " imdb iron man");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3886,7 +3887,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: itunes title" + "\n" + example[Math.floor(Math.random() * example.length)] + ": itunes in the end");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: itunes title" + "\n " + example[Math.floor(Math.random() * example.length)] + " itunes in the end");
         } else {
             data.shift();
             let name = data.join(" ");
@@ -3980,7 +3981,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gemoji emoji" + "\n" + example[Math.floor(Math.random() * example.length)] + ": gemoji 😂");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gemoji emoji" + "\n " + example[Math.floor(Math.random() * example.length)] + " gemoji 😂");
         } else {
             data.shift();
             if (!pictographic.test(data.join(" "))) {
@@ -4000,7 +4001,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sendReport text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": sendReport There is a problem in ______ that cause ______.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sendReport text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sendReport There is a problem in ______ that cause ______.");
         } else {
             data.shift();
             let report = "send_message_report " + event.senderID + " " + data.join(" ");
@@ -4044,7 +4045,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: git code" + "\n" + example[Math.floor(Math.random() * example.length)] + ": git add .");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: git code" + "\n " + example[Math.floor(Math.random() * example.length)] + " git add .");
             } else {
                 data.shift();
                 exec("git " + data.join(" "), function (err, stdout, stderr) {
@@ -4062,7 +4063,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n" + example[Math.floor(Math.random() * example.length)] + ": shell uptime");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n " + example[Math.floor(Math.random() * example.length)] + " shell uptime");
             } else {
                 data.shift();
                 let sff = data.join(" ");
@@ -4102,7 +4103,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: acceptmessagerequest threadid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": acceptmessagerequest 0000000000000");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: acceptmessagerequest threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " acceptmessagerequest 0000000000000");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4123,7 +4124,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addCORS [url]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addCORS https://mrepol742.github.io");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addCORS [url]" + "\n " + example[Math.floor(Math.random() * example.length)] + " addCORS https://mrepol742.github.io");
             } else {
                 data.shift();
                 corsWhitelist.push(data.join(" "));
@@ -4134,7 +4135,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remCORS [url]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": remCORS https://mrepol742.github.io");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remCORS [url]" + "\n " + example[Math.floor(Math.random() * example.length)] + " remCORS https://mrepol742.github.io");
             } else {
                 data.shift();
                 corsWhitelist.pop(data.join(" "));
@@ -4145,7 +4146,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changebio [text]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": changebio Hello There");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changebio [text]" + "\n " + example[Math.floor(Math.random() * example.length)] + " changebio Hello There");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4159,7 +4160,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: acceptfriendrequest [uid]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": acceptfriendrequest 0000000000000");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: acceptfriendrequest [uid]" + "\n " + example[Math.floor(Math.random() * example.length)] + " acceptfriendrequest 0000000000000");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4177,7 +4178,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setMaxTokens [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setMaxTokens 1000.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setMaxTokens [integer]" + "\n " + example[Math.floor(Math.random() * example.length)] + " setMaxTokens 1000.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4195,7 +4196,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setTemperature [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setTemperature 0.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setTemperature [integer]" + "\n " + example[Math.floor(Math.random() * example.length)] + " setTemperature 0.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4287,7 +4288,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mdl text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": mdl detective conan");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mdl text" + "\n " + example[Math.floor(Math.random() * example.length)] + " mdl detective conan");
         } else {
             data.shift();
             axios.get("https://mydramalist.com/search?q=" + data.join(" ")).then((response) => {
@@ -4321,7 +4322,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mal text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": mal detective conan");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mal text" + "\n " + example[Math.floor(Math.random() * example.length)] + " mal detective conan");
         } else {
             data.shift();
             axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.join(" ")).then((response) => {
@@ -4359,7 +4360,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setFrequencyPenalty [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setFrequencyPenalty 1.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setFrequencyPenalty [integer]" + "\n " + example[Math.floor(Math.random() * example.length)] + " setFrequencyPenalty 1.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4377,7 +4378,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setPresencePenalty [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setPresencePenalty 1.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setPresencePenalty [integer]" + "\n " + example[Math.floor(Math.random() * example.length)] + " setPresencePenalty 1.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4425,7 +4426,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setProbabilityMass [integer]" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setProbabilityMass 0.1.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setProbabilityMass [integer]" + "\n " + example[Math.floor(Math.random() * example.length)] + " setProbabilityMass 0.1.");
             } else {
                 data.shift();
                 let num = data.join(" ");
@@ -4443,7 +4444,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setPrefix prefix" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setPrefix $");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setPrefix prefix" + "\n " + example[Math.floor(Math.random() * example.length)] + " setPrefix $");
             } else {
                 data.shift();
                 let pref = data.join(" ");
@@ -4467,7 +4468,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ignorePrefix prefix" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ignorePrefix alexa");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ignorePrefix prefix" + "\n " + example[Math.floor(Math.random() * example.length)] + " ignorePrefix alexa");
             } else {
                 let pre = data.shift();
                 let pre2 = formatQuery(pre.replace(/\s+/g, "").normalize("NFKC"));
@@ -4485,7 +4486,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unignorePrefix prefix" + "\n" + example[Math.floor(Math.random() * example.length)] + ": unignorePrefix alexa");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unignorePrefix prefix" + "\n " + example[Math.floor(Math.random() * example.length)] + " unignorePrefix alexa");
             } else {
                 let pre = data.shift();
                 if (settings.ignored_prefixes.includes(pre)) {
@@ -4499,7 +4500,7 @@ async function ai(api, event) {
     } else if (query.startsWith("adduser")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addUser 100024563636366");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
         } else {
             data.shift();
             let pref = data.join(" ");
@@ -4521,10 +4522,10 @@ async function ai(api, event) {
                         }
                     });
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addUser 100024563636366");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
                 }
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addUser 100024563636366");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
             }
         }
     } else if (query.startsWith("gcolor")) {
@@ -4550,7 +4551,7 @@ async function ai(api, event) {
                     }
                 });
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gcolor theme" + "\n" + example[Math.floor(Math.random() * example.length)] + ": gcolor DefaultBlue");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gcolor theme" + "\n " + example[Math.floor(Math.random() * example.length)] + " gcolor DefaultBlue");
             }
         }
     } else if (query.startsWith("kickuser")) {
@@ -4565,7 +4566,7 @@ async function ai(api, event) {
                     }
                     let data = input.split(" ");
                     if (data.length < 2) {
-                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: kickUser @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": kickUser @Zero Two");
+                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: kickUser @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " kickUser @Zero Two");
                     } else {
                         let id = Object.keys(event.mentions)[0];
                         if (id === undefined) {
@@ -4599,7 +4600,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: isBot @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": isBot @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: isBot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " isBot @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4639,7 +4640,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockUser @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": blockUser @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockUser @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockUser @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4685,7 +4686,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockUser @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": unblockUser @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockUser @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblockUser @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4726,7 +4727,7 @@ async function ai(api, event) {
         if (users.admin.includes(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontignore @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": fontignore @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontignore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4754,7 +4755,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addAdmin @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": addAdmin @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addAdmin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -4782,7 +4783,7 @@ async function ai(api, event) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.lenght < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remAdmin @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": remAdmin @Zero Two");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remAdmin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
             } else {
                 let id = Object.keys(event.mentions)[0];
                 if (id === undefined) {
@@ -5006,7 +5007,7 @@ async function ai(api, event) {
         if (event.isGroup) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gname text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": gname Darling in the Franxx >3");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gname text" + "\n " + example[Math.floor(Math.random() * example.length)] + " gname Darling in the Franxx >3");
             } else {
                 data.shift();
                 api.setTitle(data.join(" "), event.threadID, (err, obj) => {
@@ -5206,7 +5207,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wiki text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": wiki Google");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wiki text" + "\n " + example[Math.floor(Math.random() * example.length)] + " wiki Google");
         } else {
             data.shift();
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
@@ -5233,7 +5234,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": " + prrr + " @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5270,7 +5271,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": " + prrr + " @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5303,13 +5304,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ship @Edogawa Conan @Ran Mouri");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
         } else {
             if (input.split("@").length - 1 >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ship @Edogawa Conan @Ran Mouri");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
                     return;
                 }
                 if (isMyId(id1)) {
@@ -5344,7 +5345,7 @@ async function ai(api, event) {
                         utils.logged(err);
                     });
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": ship @Edogawa Conan @Ran Mouri");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
             }
         }
     } else if (query.startsWith("www")) {
@@ -5353,13 +5354,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": www @Edogawa Conan @Ran Mouri");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
         } else {
             if (input.split("@").length - 1 >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (id1 === undefined || id2 === undefined) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": www @Edogawa Conan @Ran Mouri");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
                     return;
                 }
                 if (isMyId(id1)) {
@@ -5394,7 +5395,7 @@ async function ai(api, event) {
                         utils.logged(err);
                     });
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": www @Edogawa Conan @Ran Mouri");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
             }
         }
     } else if (query.startsWith("formatnumbers")) {
@@ -5403,7 +5404,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: formatnumbers number" + "\n" + example[Math.floor(Math.random() * example.length)] + ": formatnumbers 326346436");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: formatnumbers number" + "\n " + example[Math.floor(Math.random() * example.length)] + " formatnumbers 326346436");
         } else {
             data.shift();
             sendMessage(api, event, numberWithCommas(data.join(" ")));
@@ -5414,7 +5415,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n" + example[Math.floor(Math.random() * example.length)] + ": stalk @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " stalk @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -5522,7 +5523,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: morse text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": morse .... . .-.. .-.. ---");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: morse text" + "\n " + example[Math.floor(Math.random() * example.length)] + " morse .... . .-.. .-.. ---");
         } else {
             data.shift();
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + data.join(" ")).then((response) => {
@@ -5543,7 +5544,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + data[0] + " text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": " + data[0] + " hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + data[0] + " text" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + data[0] + " hello world");
         } else {
             data.shift();
             getResponseData("https://api.popcat.xyz/" + data[0] + "?text=" + data.join(" ")).then((response) => {
@@ -5616,7 +5617,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: drake text1: text2" + "\n" + example[Math.floor(Math.random() * example.length)] + ": drake error: bug");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: drake text1: text2" + "\n " + example[Math.floor(Math.random() * example.length)] + " drake error: bug");
         } else {
             data.shift();
             let text = data.join(" ").split(":");
@@ -5628,7 +5629,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pika text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": pika hayssss");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pika text" + "\n " + example[Math.floor(Math.random() * example.length)] + " pika hayssss");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + data.join(" "), __dirname + "/cache/pika_" + utils.getTimestamp() + ".png");
@@ -5659,7 +5660,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: oogway text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": oogway bug is not an error");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: oogway text" + "\n " + example[Math.floor(Math.random() * example.length)] + " oogway bug is not an error");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + data.join(" "), __dirname + "/cache/oogway_" + utils.getTimestamp() + ".png");
@@ -5676,7 +5677,7 @@ async function ai(api, event) {
             } else {
                 let data = input.split(" ");
                 if (data.length < 2) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: hanime category \nCategories: \nwaifu, neko, trap, blowjob" + "\n" + example[Math.floor(Math.random() * example.length)] + ": hanime waifu");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: hanime category \n Categories: \n   waifu, neko, trap, blowjob" + "\n " + example[Math.floor(Math.random() * example.length)] + " hanime waifu");
                 } else {
                     data.shift();
                     getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
@@ -5699,7 +5700,7 @@ async function ai(api, event) {
             sendMessage(
                 api,
                 event,
-                "Houston! Unknown or missing option.\n\n Usage: anime category \nCategories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" +
+                "Houston! Unknown or missing option.\n\n Usage: anime category \n Categories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" +
                     "\n\n" +
                     example[Math.floor(Math.random() * example.length)] +
                     "\nanime waifu"
@@ -5721,7 +5722,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: parseImage url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": parseImage https://mrepol742.github.io/favicon.ico");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: parseImage url" + "\n " + example[Math.floor(Math.random() * example.length)] + " parseImage https://mrepol742.github.io/favicon.ico");
         } else {
             data.shift();
             let url = data.join(" ");
@@ -5738,7 +5739,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
-                body: "Houston! Unknown or missing option.\n\n Usage: qrcode text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": qrcode https://mrepol742.github.io",
+                body: "Houston! Unknown or missing option.\n\n Usage: qrcode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " qrcode https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
             sendMessage(api, event, message);
@@ -5752,7 +5753,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: alert text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": alert hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: alert text" + "\n " + example[Math.floor(Math.random() * example.length)] + " alert hello world");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + data.join(" "), __dirname + "/cache/alert_" + utils.getTimestamp() + ".png");
@@ -5763,7 +5764,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: caution text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": caution bug is not an error");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: caution text" + "\n " + example[Math.floor(Math.random() * example.length)] + " caution bug is not an error");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/caution_" + utils.getTimestamp() + ".png");
@@ -5775,7 +5776,7 @@ async function ai(api, event) {
         let data = input.split(" ");
         if (data.length < 2) {
             let messaage = {
-                body: "Houston! Unknown or missing option.\n\n Usage: website url" + "\n" + example[Math.floor(Math.random() * example.length)] + ": website https://mrepol742.github.io",
+                body: "Houston! Unknown or missing option.\n\n Usage: website url" + "\n " + example[Math.floor(Math.random() * example.length)] + " website https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
             sendMessage(api, event, message);
@@ -5794,7 +5795,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: god text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": god explicit content");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: god text" + "\n " + example[Math.floor(Math.random() * example.length)] + " god explicit content");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + data.join(" "), __dirname + "/cache/god_" + utils.getTimestamp() + ".png");
@@ -5805,7 +5806,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sadcat text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": sadcat meoww");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sadcat text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sadcat meoww");
         } else {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/sadcat_" + utils.getTimestamp() + ".png");
@@ -5816,7 +5817,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pooh text1: text2" + "\n" + example[Math.floor(Math.random() * example.length)] + ": pooh color: colour");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pooh text1: text2" + "\n " + example[Math.floor(Math.random() * example.length)] + " pooh color: colour");
         } else {
             data.shift();
             let text = data.join(" ").split(":");
@@ -5838,7 +5839,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: landscape text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": landscape night");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: landscape text" + "\n " + example[Math.floor(Math.random() * example.length)] + " landscape night");
         } else {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
@@ -5849,7 +5850,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: portrait text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": portrait rgb");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: portrait text" + "\n " + example[Math.floor(Math.random() * example.length)] + " portrait rgb");
         } else {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
@@ -5895,14 +5896,14 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time timezone" + "\n" + example[Math.floor(Math.random() * example.length)] + ": time Asia/Manila");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time timezone" + "\n " + example[Math.floor(Math.random() * example.length)] + " time Asia/Manila");
         } else {
             data.shift();
             let body = data.join(" ");
             if (isValidTimeZone(body)) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime(body));
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time timezone" + "\n" + example[Math.floor(Math.random() * example.length)] + ": time Asia/Manila");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time timezone" + "\n " + example[Math.floor(Math.random() * example.length)] + " time Asia/Manila");
             }
         }
     } else if (query == "time") {
@@ -6031,13 +6032,13 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n" + example[Math.floor(Math.random() * example.length)] + ": verse Job 4:9");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n " + example[Math.floor(Math.random() * example.length)] + " verse Job 4:9");
         } else {
             data.shift();
             let body = data.join(" ");
             getResponseData("http://labs.bible.org/api/?passage=" + body + "&type=json").then((r) => {
                 if (r == null) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n" + example[Math.floor(Math.random() * example.length)] + ": verse Job 4:9");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n " + example[Math.floor(Math.random() * example.length)] + " verse Job 4:9");
                 } else {
                     let result = "";
                     let total = r.length;
@@ -6116,7 +6117,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setnickname text" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setnickname Darling");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setnickname text" + "\n " + example[Math.floor(Math.random() * example.length)] + " setnickname Darling");
         } else {
             data.shift();
             api.setNickname(data.join(" "), event.threadID, event.senderID, (err) => {
@@ -6146,7 +6147,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setbirthday date" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setbirthday 06/13/2002");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setbirthday date" + "\n " + example[Math.floor(Math.random() * example.length)] + " setbirthday 06/13/2002");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6167,7 +6168,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: settimezone timezone" + "\n" + example[Math.floor(Math.random() * example.length)] + ": settimezone Asia/Manila");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: settimezone timezone" + "\n " + example[Math.floor(Math.random() * example.length)] + " settimezone Asia/Manila");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6188,7 +6189,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setaddress address" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setaddress Caloocan City, Philippines");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setaddress address" + "\n " + example[Math.floor(Math.random() * example.length)] + " setaddress Caloocan City, Philippines");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6209,7 +6210,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setbio info" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setBio I liked playing games and watching movies.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setbio info" + "\n " + example[Math.floor(Math.random() * example.length)] + " setBio I liked playing games and watching movies.");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6226,7 +6227,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setUsername username" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setUsername mrepol742");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setUsername username" + "\n " + example[Math.floor(Math.random() * example.length)] + " setUsername mrepol742");
         } else {
             data.shift();
             let body = data.join(" ");
@@ -6246,7 +6247,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setGender gender" + "\n" + example[Math.floor(Math.random() * example.length)] + ": setgender male");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setGender gender" + "\n " + example[Math.floor(Math.random() * example.length)] + " setgender male");
         } else {
             data.shift();
             let body = data.join(" ").toLowerCase();
