@@ -591,7 +591,11 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID)) || blockedCall.includes(api.getCurrentUserID())) {
+            if (!(event.senderID === undefined)) {
+                if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID))) {
+                    return;
+                }
+            } else if (blockedCall.includes(api.getCurrentUserID())) {
                 return;
             }
 
