@@ -22,7 +22,7 @@
 "use strict";
 
 let footer = ["If you have further questions, i am here to help you.", 
-              "Some of my commands works in any means you could imagine.".
+              "Some of my commands works in any means you could imagine.",
               "The : divides the query into 2 sections the first one and second one.",
               "Follow Mj to get the latest update and information.",
               "You can get your 'appstate' easily using the Webvium Dev Cookie Manager",
