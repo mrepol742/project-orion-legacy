@@ -2630,7 +2630,7 @@ async function ai(api, event) {
             "CPU Usage: " + utils.getCPULoad() + "%",
             "OS: " + os.type() + " " + os.arch() + " v" + os.release(),
             "Node: v" + process.versions.node + " " + os.endianness(),
-            "Project Orion: " + package.name + " v" + package.version,
+            "Orion: " + package.name + " v" + package.version,
             "RAM: " + convertBytes(os.freemem()) + "/" + convertBytes(os.totalmem()),
             "ROM: " + convertBytes(rom) + "/28.89 GB",
             "RSS: " + convertBytes(process.memoryUsage().rss),
