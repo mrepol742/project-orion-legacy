@@ -17,14 +17,14 @@
         "probability_mass": "1",
         "prefix": "ip",
         "timezone": "Asia/Singapore",
-        "isDebugEnabled": false,
+        "isDebugEnabled": true,
         "isEnabled": false,
         "autoMarkRead": false,
         "online": true,
         "selfListen": true,
         "sendTypingIndicator": false,
         "autoMarkDelivery": false,
-        "error": 0,
+        "error": 3252001,
         "angry": false
     },
     "apikey": {

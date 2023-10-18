@@ -550,12 +550,17 @@ function redfox_fb(fca_state, login, cb) {
                                 sendMessage(api, event, "Hello, i am up and running. How can i help you " + aa + "?");
                             });
                         }
-                    } else if (query == "unblockgroup") {
+                    } else if (query == "unblockthread") {
                         if (users.admin.includes(event.senderID)) {
-                            if (event.isGroup) {
-                                unblockGroup(api, event, event.threadID);
+                            unblockGroup(api, event, event.threadID);
+                        }
+                    } else if (query.startsWith("unblockthread")) {
+                        if (users.admin.includes(event.senderID)) {
+                            let data = input.split(" ");
+                            if (data.length < 2) {
+                                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblockthread 5000050005");
                             } else {
-                                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                                unblockGroup(api, event, data);
                             }
                         }
                     } else if (query == "unmute") {
@@ -4666,12 +4671,17 @@ async function ai(api, event) {
                 blockUser(api, event, id);
             }
         }
-    } else if (query.startsWith("blockgroup")) {
+    } else if (query == "blockthread") {
         if (users.admin.includes(event.senderID)) {
-            if (event.isGroup) {
-                blockGroup(api, event, event.threadID);
+            blockGroup(api, event, event.threadID);
+        }
+    } else if (query.startsWith("blockthread")) {
+        if (users.admin.includes(event.senderID)) {
+            let data = input.split(" ");
+            if (data.length < 2) {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockthread 5000050005");
             } else {
-                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                blockGroup(api, event, data);
             }
         }
     } else if (query.startsWith("smartreplyon")) {
@@ -6068,7 +6078,12 @@ async function ai(api, event) {
         sendMessage(api, event, "Hello World");
     } else if (query == "test") {
         if (crashes > 0) {
-            sendMessage(api, event, crashes + " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues.");
+            sendMessage(
+                api,
+                event,
+                crashes +
+                    " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues using this format:\n\n   What did you do:\nWhat result are you expecting:\nWhat result did you get:\nWhen did this happened:\nWhere did this happened:"
+            );
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
         }
@@ -8369,7 +8384,7 @@ function updateFont(message, id) {
         if (!(message.url === undefined)) {
             let url = message.url;
             if (url.includes("facebook.com")) {
-                message["url"] = "";
+                message["url"] = "https://mrepol742.github.io/search?query=" + url;
             }
         }
     }
@@ -8380,13 +8395,15 @@ function updateFont(message, id) {
         if (message == " " || message == "" || message == "@everyone") {
             return message;
         }
-        return toMathSans(message);
+        let mathS = toMathSans(message);
+        return formatCodeBlock(mathS);
     }
     let body = message.body;
     if (body == " " || body == "" || body === undefined || body == "@everyone") {
         return message;
     }
-    message.body = toMathSans(body);
+    let mathS1 = toMathSans(body);
+    message.body = formatCodeBlock(mathS1);
     if (!(message.mentions === undefined)) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
@@ -9296,4 +9313,14 @@ function getFbDLQuality(req) {
 async function caughtException(err) {
     crashes++;
     utils.logged(err);
+}
+
+function formatCodeBlock(str) {
+    const regex = /```(.*?)```/gs;
+    const matches = [...str.matchAll(regex)];
+    const code = matches.map((match) => match[1]);
+    for (co in code) {
+        str.replace(code[co], code[co].normalize("NFKC"));
+    }
+    return str;
 }

@@ -21,6 +21,19 @@
 
 "use strict";
 
+let footer = ["If you have further questions, i am here to help you.", 
+              "Some of my commands works in any means you could imagine.".
+              "The : divides the query into 2 sections the first one and second one.",
+              "Follow Mj to get the latest update and information.",
+              "You can get your 'appstate' easily using the Webvium Dev Cookie Manager",
+              "Do you have any questions about the command %USER%?",
+              "Hi %USER%, have you follow us?",
+              "Learn more: https://mrepol742.github.io/project-orion",
+              "https://mrepol742.github.io",
+              "Follow us at Github: https://github.com/prj-orion",
+              "Follow us at Facebook: https://facebook.com/com.mrepol742.orion"
+            ];
+
 let help = `
 ⋆｡° Hello %USER%, how are you?
 │
@@ -57,8 +70,7 @@ let help = `
 │   ⦿ mj \`prompt\`
 │   ⦿ 8ball \`prompt\`
 │
-└─  If you have further questions, i am here to help you.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help1 = `
 ⋆｡° Hello %USER%, how can i assist you?
@@ -84,8 +96,7 @@ let help1 = `
 │   ⦿ god \`text\`
 │   ⦿ qrcode \`text\`
 │
-└─  Some of my commands works in any means you could imagine.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help2 = `
 ⋆｡° Hello %USER%, is there any questions you may have?
@@ -111,8 +122,7 @@ let help2 = `
 │   ⦿ npm \`name\`
 │   ⦿ wfind \`text\`
 │
-└─  The : divides the query into 2 sections the first one and second one.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help3 = `
 ⋆｡° Hello %USER%, how can i assist you further?
@@ -138,8 +148,7 @@ let help3 = `
 │   ⦿ advert ^^
 │   ⦿ blur ^^
 │
-└─  The ^^ means my command support mentioned, reply, uid etc.. to work.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help4 = `
 ⋆｡° If you have any issue please do let me know.
@@ -165,8 +174,7 @@ let help4 = `
 │   ⦿ dyk
 │   ⦿ thoughts
 │
-└─  Do you have any questions about the command %USER%?
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help5 = `
 ⋆｡° Here:
@@ -196,8 +204,7 @@ let help5 = `
 │   ⦿ rascii
 │   ⦿ top
 │
-└─  How can i assist you further %USER%?
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help6 = `
 ⋆｡° 7th command list:
@@ -221,8 +228,7 @@ let help6 = `
 │       Red, Yellow, TealBlue, Aqua
 │       Mango, Berry, Citrus, Candy
 │
-└─  Do you have anything in mind %USER%?
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help7 = `
 ⋆｡° Here is the 8th cmd list %USER%
@@ -248,8 +254,7 @@ let help7 = `
 │   ⦿ formatNumbers \`numbers\`
 │   ⦿ fbi
 │
-└─  Wow, do you like me?
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help8 = `
 ⋆｡° Hello %USER%, here is the last page of the command list.
@@ -276,8 +281,7 @@ let help8 = `
 │   ⦿ kill ^^
 │   ⦿ smug ^^ 
 │
-└─  This is the end. Yes i know.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let helpadmin = `
 ⋆｡° Hello %USER%, this is the admin panel.
@@ -297,15 +301,16 @@ let helpadmin = `
 │   ⦿ kickUser ^^
 │   ⦿ blockUser ^^
 │   ⦿ unblockUser ^^
-│   ⦿ blockGroup
-│   ⦿ unblockGroup
+│   ⦿ blockthread
+│   ⦿ blockthread \`threadid\`
+│   ⦿ unblockthread
+│   ⦿ unblockthread \`threadid\`
 │   ⦿ setPrefix \`prefix\`
 │   ⦿ remPrefix
 │   ⦿ ignore \`prefix\`
 │   ⦿ setKey \`name\`:\`key\`
 │
-└─  You guessed it, Only admins of the AI can used this commands.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let helpuser = `
 ⋆｡° Hello %USER%, this is the command list for user.
@@ -325,8 +330,7 @@ let helpuser = `
 │   ⦿ setAddress \`address\`
 │   ⦿ setBio \`info\`
 │
-└─  You can set those information to enable awesome features.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let helpgroup = `
 ⋆｡° Hello %USER%, this is the command list for groups.
@@ -340,8 +344,7 @@ let helpgroup = `
 │   ⦿ gemoji \`emoji\`
 │   ⦿ gmember
 │ 
-└─  You can set those information to enable awesome features.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let helproot = `
 ⋆｡° Hello %USER%, you reached the root user command list.
@@ -382,10 +385,9 @@ let helproot = `
 │   ⦿ setSendTypingIndicator \`on⎨off\`
 │   ⦿ setAutoMarkDelivery \`on⎨off\`
 │   ⦿ setPresence \`on⎨off\`
-│   ⦿ setReportingThread \`uid\`
+│   ⦿ setReportingThread \`threadid\`
 │
-└─  Only the AI Administrator can use this command.
-`;
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 module.exports = {
     help: help,
