@@ -4683,7 +4683,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockthread 5000050005");
             } else {
                 data.shift();
-                blockGroup(api, event, data.joi(" "));
+                blockGroup(api, event, data.join(" "));
             }
         }
     } else if (query.startsWith("smartreplyon")) {
@@ -4811,7 +4811,7 @@ async function ai(api, event) {
                     } else {
                         api.getUserID(user.replace("@", ""), (err, data) => {
                             if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                            getUserProfile(event.senderID, async function (user) {
+                            getUserProfile(data[0].userID, async function (user) {
                                 if (user.balance === undefined) {
                                     user["balance"] == 1500;
                                 } else {
@@ -4822,9 +4822,15 @@ async function ai(api, event) {
                         });
                         return;
                     }
-                } else if (isMyId(id)) {
-                    return;
                 }
+                getUserProfile(id, async function (user) {
+                    if (user.balance === undefined) {
+                        user["balance"] == 1500;
+                    } else {
+                        user["balance"] += 1500;
+                    }
+                    sendMessage(api, event, "Added 1500 tokens to the account holder.");
+                });
             }
         }
     } else if (query.startsWith("remadmin")) {
