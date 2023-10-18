@@ -9,7 +9,7 @@
         "onUnsend": true,
         "onNsfw": true,
         "preventSimultaneousExecution": true,
-        "onDelay": false,
+        "onDelay": true,
         "frequency_penalty": "0",
         "temperature": "0.5",
         "max_tokens": "2048",
@@ -17,7 +17,7 @@
         "probability_mass": "1",
         "prefix": "ip",
         "timezone": "Asia/Singapore",
-        "isDebugEnabled": true,
+        "isDebugEnabled": false,
         "isEnabled": false,
         "autoMarkRead": false,
         "online": true,
@@ -28,7 +28,7 @@
         "angry": false
     },
     "apikey": {
-        "ai": "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",
+        "ai": "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",
         "facebook": "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662"
     },
     "restart": [],
