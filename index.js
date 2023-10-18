@@ -129,7 +129,7 @@ utils.logged("server_cert loaded");
 /*
 const server = https.createServer(options2, getRoutes());
 */
-const PORT = 80;
+const PORT = 8080;
 const HOST = "0.0.0.0";
 
 const server1 = http.createServer(getRoutes()).listen(PORT, () => {
@@ -2766,7 +2766,7 @@ async function ai(api, event) {
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
                     traceroute["/" + aa] = stdout;
-                    let urll = "http:/50.253.118.57/" + aa;
+                    let urll = "http:/50.253.118.57:8080/" + aa;
                     let message = {
                         body: "The result is located on our site at " + urll,
                         url: urll,
@@ -5000,7 +5000,7 @@ async function ai(api, event) {
                     color: a.color,
                 };
 
-                let urll = "http:/50.253.118.57/" + event.threadID;
+                let urll = "http:/50.253.118.57:8080/" + event.threadID;
                 let message = {
                     body: "This group information can be see at " + urll,
                     url: urll,
