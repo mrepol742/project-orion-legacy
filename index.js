@@ -560,7 +560,8 @@ function redfox_fb(fca_state, login, cb) {
                             if (data.length < 2) {
                                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblockthread 5000050005");
                             } else {
-                                unblockGroup(api, event, data);
+                                data.shift();
+                                unblockGroup(api, event, data.join(" "));
                             }
                         }
                     } else if (query == "unmute") {
@@ -4681,7 +4682,8 @@ async function ai(api, event) {
             if (data.length < 2) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockthread 5000050005");
             } else {
-                blockGroup(api, event, data);
+                data.shift();
+                blockGroup(api, event, data.joi(" "));
             }
         }
     } else if (query.startsWith("smartreplyon")) {
@@ -4787,6 +4789,42 @@ async function ai(api, event) {
                     }
                 }
                 addAdmin(api, event, id);
+            }
+        }
+    } else if (query.startsWith("addtoken")) {
+        if (isMyId(event.senderID)) {
+            let data = input.split(" ");
+            if (data.lenght < 2) {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addtoken @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
+            } else {
+                let id = Object.keys(event.mentions)[0];
+                if (id === undefined) {
+                    data.shift();
+                    let user = data.join(" ");
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        id = user;
+                    } else if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        api.getUserID(user.replace("@", ""), (err, data) => {
+                            if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
+                            getUserProfile(event.senderID, async function (user) {
+                                if (user.balance === undefined) {
+                                    user["balance"] == 1500;
+                                } else {
+                                    user["balance"] += 1500;
+                                }
+                                sendMessage(api, event, "Added 1500 tokens to the account holder.");
+                            });
+                        });
+                        return;
+                    }
+                } else if (isMyId(id)) {
+                    return;
+                }
             }
         }
     } else if (query.startsWith("remadmin")) {
@@ -6082,7 +6120,7 @@ async function ai(api, event) {
                 api,
                 event,
                 crashes +
-                    " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues using this format:\n\n   What did you do:\nWhat result are you expecting:\nWhat result did you get:\nWhen did this happened:\nWhere did this happened:"
+                    " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues using this format:\n\n   What did you do:\n   What result are you expecting:\n   What result did you get:\n   When did this happened:\n   Where did this happened:"
             );
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
