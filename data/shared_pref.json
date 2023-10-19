@@ -15,7 +15,7 @@
         "max_tokens": "2048",
         "presence_penalty": "0",
         "probability_mass": "1",
-        "prefix": "ip",
+        "prefix": "null",
         "timezone": "Asia/Singapore",
         "isDebugEnabled": false,
         "isEnabled": false,
@@ -49,14 +49,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 54960190,
-            "completion_tokens": 20246777,
-            "total_tokens": 75206967
+            "prompt_tokens": 55114989,
+            "completion_tokens": 20298675,
+            "total_tokens": 75413664
         },
         "davinci": {
-            "prompt_tokens": 783798,
-            "completion_tokens": 169782,
-            "total_tokens": 1057922
+            "prompt_tokens": 875206,
+            "completion_tokens": 198225,
+            "total_tokens": 1177773
         },
         "dell": 747
     }
