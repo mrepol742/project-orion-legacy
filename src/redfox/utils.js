@@ -30,16 +30,10 @@ function logged(data) {
         } else {
             console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", d.join(" "));
         }
-    } else if (!(data === undefined) && !(data.code === undefined)) {
+    } else if (!(data.code === undefined)) {
         console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", "\x1b[40m error_code\x1b[0m", data.code);
     } else {
-        if (data.length == 0 || data == "" || data == undefined) {
-            return;
-        }
-        if (typeof data !== 'string') {
-            data = JSON.stringify(data);
-        }
-        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", data);
+        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", data.stack);
     }
 }
 
