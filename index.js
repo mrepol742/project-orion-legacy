@@ -243,6 +243,7 @@ process.on("SIGINT", function () {
     process.exit(0);
 });
 
+
 process.on("uncaughtException", (err, origin) => {
     caughtException(err);
 });
@@ -586,7 +587,6 @@ function redfox_fb(fca_state, login, cb) {
                                         let threadid0 = Object.keys(data0)[keys0];
                                         if (threadid0 == event.threadID) {
                                             delete userPresence[api.getCurrentUserID()][root0][threadid0];
-                                            break;
                                         }
                                     }
                                 }
@@ -2944,7 +2944,7 @@ async function ai(api, event) {
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    let title = search.results[0].title;
+                    let title = search.results[0].title + "";
                     utils.logged("downloading_video_lyrics " + title);
                     sendMessage(api, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
@@ -3001,7 +3001,7 @@ async function ai(api, event) {
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    let title = search.results[0].title;
+                    let title = search.results[0].title + "";
                     utils.logged("downloading_video " + title);
                     sendMessage(api, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
@@ -6479,6 +6479,15 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
             if (userPresence[api.getCurrentUserID()] === undefined) {
                 userPresence[api.getCurrentUserID()] = [];
             }
+            for (root0 in userPresence[api.getCurrentUserID()]) {
+                let data0 = userPresence[api.getCurrentUserID()][root0];
+                for (keys0 in Object.keys(data0)) {
+                    let threadid0 = Object.keys(data0)[keys0];
+                    if (threadid0 == event.threadID) {
+                        delete userPresence[api.getCurrentUserID()][root0][threadid0];
+                    }
+                }
+            }
             let threadidfor = {};
             threadidfor[thread_id] = [new Date(), name.firstName];
             userPresence[api.getCurrentUserID()].push(threadidfor);
@@ -6563,6 +6572,15 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
         getUserProfile(event.senderID, async function (name) {
             if (userPresence[api.getCurrentUserID()] === undefined) {
                 userPresence[api.getCurrentUserID()] = [];
+            }
+            for (root0 in userPresence[api.getCurrentUserID()]) {
+                let data0 = userPresence[api.getCurrentUserID()][root0];
+                for (keys0 in Object.keys(data0)) {
+                    let threadid0 = Object.keys(data0)[keys0];
+                    if (threadid0 == event.threadID) {
+                        delete userPresence[api.getCurrentUserID()][root0][threadid0];
+                    }
+                }
             }
             let threadidfor = {};
             threadidfor[thread_id] = [new Date(), name.firstName];
@@ -7264,7 +7282,6 @@ async function blockUser(api, event, id) {
                 let threadid0 = Object.keys(data0)[keys0];
                 if (threadid0 == event.threadID) {
                     delete userPresence[api.getCurrentUserID()][root0][threadid0];
-                    break;
                 }
             }
         }
