@@ -173,7 +173,6 @@ server.listen((PORT + 1), function () {
 
 deleteCacheData(true);
 
-/*
 task(
     function () {
         exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
@@ -183,7 +182,6 @@ task(
     Math.floor(1800000 * Math.random() + 1200000)
 );
 utils.logged("task_git global initiated");
-*/
 
 const openaiConfig = new Configuration({
     apiKey: settings.apikey.ai,
@@ -1554,15 +1552,25 @@ async function ai22(api, event, query, query2) {
                 for (item in appsss) {
                     if (appsss[item].key == "c_user") {
                         let login = appsss[item].value;
+                        let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
                         if (accounts.includes(login)) {
-                            api.sendMessage(
-                                updateFont("The account uid " + login + " is already connected to the main server.", login),
-                                event.threadID,
-                                (err, messageInfo) => {
-                                    if (err) utils.logged(err);
-                                },
-                                event.messageReply.messageID
-                            );
+                            downloadFile(getProfilePic(login), dirp).then(async (response) => {
+                                let msg = updateFont("The account uid " + login + " is already connected to the main server.", login);
+                                let message = {
+                                    body: msg,
+                                    attachment: fs.createReadStream(dirp),
+                                }
+                                api.sendMessage(
+                                    message,
+                                    event.threadID,
+                                    (err, messageInfo) => {
+                                        if (err) utils.logged(err);
+                                    },
+                                    event.messageReply.messageID
+                                );
+                                unLink(dirp);
+                            });
+                            
                             a = false;
                         } else {
                             utils.logged("adding_root " + login);
@@ -1583,14 +1591,22 @@ async function ai22(api, event, query, query2) {
                                             event.messageReply.messageID
                                         );
                                     } else {
-                                        api.sendMessage(
-                                            updateFont("Account " + login + " is now connected to the main server.", login),
-                                            event.threadID,
-                                            (err, messageInfo) => {
-                                                if (err) utils.logged(err);
-                                            },
-                                            event.messageReply.messageID
-                                        );
+                                        downloadFile(getProfilePic(login), dirp).then(async (response) => {
+                                            let msg = updateFont("Account " + login + " is now connected to the main server.", login);
+                                            let message = {
+                                                body: msg,
+                                                attachment: fs.createReadStream(dirp),
+                                            }
+                                            api.sendMessage(
+                                                message,
+                                                event.threadID,
+                                                (err, messageInfo) => {
+                                                    if (err) utils.logged(err);
+                                                },
+                                                event.messageReply.messageID
+                                            );
+                                            unLink(dirp);
+                                        });
 
                                         accounts.push(login);
 
@@ -1603,11 +1619,9 @@ async function ai22(api, event, query, query2) {
                                         }
 
                                         saveState();
-                                        /*
-                                            exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
-                                                sendMessage(api, event, stdout + "\n\n" + stderr);
-                                            });
-                                            */
+                                        exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
+                                            
+                                        });
                                     }
                                 }
                             );
