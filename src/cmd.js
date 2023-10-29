@@ -53,8 +53,7 @@ let help = `
 │   ⦿ poli \`prompt\`
 │   ⦿ run \`lang\` \`reply\`
 │       Java, Python, C, C++,
-│       JavaScript, PHP and Dragon
-│   ⦿ ai \`prompt\`
+│       JavaScript & PHP
 │   ⦿ gpt \`prompt\`
 │   ⦿ ask \`prompt\`
 │   ⦿ beshy \`prompt\`

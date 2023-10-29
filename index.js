@@ -11,6 +11,7 @@
 const utils = require("./src/redfox/utils.js");
 const redfox = require("./src/redfox");
 const welcomejs = require("./src/welcome.js");
+const cleanjs = require("./src/clean.js");
 const { exec } = require("child_process");
 const fs = require("fs");
 
@@ -130,7 +131,7 @@ utils.logged("server_cert loaded");
 const server = https.createServer(options2, getRoutes());
 */
 const PORT = 8080;
-const HOST = "0.0.0.0";
+const HOST = "127.0.0.1";
 
 const server1 = http.createServer(getRoutes()).listen(PORT, () => {
     utils.logged("server_running http://localhost:" + PORT);
@@ -500,6 +501,11 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
+            if (threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
+                threadRegistry[event.threadID] = api.getCurrentUserID();
+                utils.logged("group_register " + api.getCurrentUserID());
+            }
+
             if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
                 return;
             }
@@ -644,14 +650,6 @@ function redfox_fb(fca_state, login, cb) {
 
                 if (settings.preference.isStop) {
                     return;
-                }
-
-                if (threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
-                    threadRegistry[event.threadID] = api.getCurrentUserID();
-                    utils.logged("group_register " + api.getCurrentUserID());
-                    if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
-                        return;
-                    }
                 }
 
                 if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
@@ -2748,7 +2746,7 @@ async function ai(api, event) {
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
                     traceroute["/" + aa] = stdout;
-                    let urll = "http:/50.253.118.57:8080/" + aa;
+                    let urll = "http://50.253.118.57:8080/" + aa;
                     let message = {
                         body: "The result is located on our site at " + urll,
                         url: urll,
@@ -4740,6 +4738,22 @@ async function ai(api, event) {
                 fontIgnore(api, event, id);
             }
         }
+    } else if (query.startsWith("cleandata")) {
+        if (isMyId(event.senderID)) {
+            synchronized(groups) {
+                let a = await cleanjs.do(groups);
+                if (a != null) {
+                    groups = a;
+                }
+            }
+            synchronized(users) {
+                let a1 = await cleanjs.do(users);
+                if (a1 != null) {
+                    users = a1;
+                }
+            }
+            sendMessage(api, event, "Cleaning done.");
+        }
     } else if (query.startsWith("addadmin")) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
@@ -4961,7 +4975,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
-    } else if (query.startsWith("_ginfo")) {
+    } else if (query.startsWith("ginfo")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5021,7 +5035,7 @@ async function ai(api, event) {
                     color: a.color,
                 };
 
-                let urll = "http:/50.253.118.57:8080/" + event.threadID;
+                let urll = "http://50.253.118.57:8080/" + event.threadID;
                 let message = {
                     body: "This group information can be see at " + urll,
                     url: urll,
@@ -5097,19 +5111,7 @@ async function ai(api, event) {
         }
         let cdd = {};
         let data = input.split(" ");
-        if (data.length < 2 || functionRegistry[event.threadID] === undefined) {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                cdd["body"] = help.replace("%USER%", aa);
-                sendMessage(api, event, cdd);
-                functionRegistry[event.threadID] = 1;
-            });
-        } else if (data[1] == "next") {
+        if (data[1] == "next") {
             getUserProfile(event.senderID, async function (name) {
                 let aa = "";
                 if (name.firstName != undefined) {
@@ -5121,47 +5123,47 @@ async function ai(api, event) {
                 switch (functionRegistry[event.threadID]) {
                     default:
                     case 0:
-                        cdd["body"] = help.replace("%USER%", aa);
+                        cdd["body"] = help.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 1;
                         break;
                     case 1:
-                        cdd["body"] = help1.replace("%USER%", aa);
+                        cdd["body"] = help1.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 2;
                         break;
                     case 2:
-                        cdd["body"] = help2.replace("%USER%", aa);
+                        cdd["body"] = help2.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 3;
                         break;
                     case 3:
-                        cdd["body"] = help3.replace("%USER%", aa);
+                        cdd["body"] = help3.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 4;
                         break;
                     case 4:
-                        cdd["body"] = help4.replace("%USER%", aa);
+                        cdd["body"] = help4.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 5;
                         break;
                     case 5:
-                        cdd["body"] = help5.replace("%USER%", aa);
+                        cdd["body"] = help5.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 6;
                         break;
                     case 6:
-                        cdd["body"] = help6.replace("%USER%", aa);
+                        cdd["body"] = help6.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 7;
                         break;
                     case 7:
-                        cdd["body"] = help7.replace("%USER%", aa);
+                        cdd["body"] = help7.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 8;
                         break;
                     case 8:
-                        cdd["body"] = help8.replace("%USER%", aa);
+                        cdd["body"] = help8.replaceAll("%USER%", aa);
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 0;
                         break;
@@ -5175,7 +5177,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helpadmin.replace("%USER%", aa);
+                cdd["body"] = helpadmin.replaceAll("%USER%", aa);
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "root") {
@@ -5186,7 +5188,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helproot.replace("%USER%", aa);
+                cdd["body"] = helproot.replaceAll("%USER%", aa);
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "user") {
@@ -5197,7 +5199,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helpuser.replace("%USER%", aa);
+                cdd["body"] = helpuser.replaceAll("%USER%", aa);
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "group") {
@@ -5208,7 +5210,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helpgroup.replace("%USER%", aa);
+                cdd["body"] = helpgroup.replaceAll("%USER%", aa);
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "all") {
@@ -5224,6 +5226,18 @@ async function ai(api, event) {
                     url: "https://mrepol742.github.io/project-orion/#cmdall",
                 };
                 sendMessage(api, event, message);
+            });
+        } else {
+            getUserProfile(event.senderID, async function (name) {
+                let aa = "";
+                if (name.firstName != undefined) {
+                    aa = name.firstName;
+                } else {
+                    aa = "there";
+                }
+                cdd["body"] = help.replaceAll("%USER%", aa);
+                sendMessage(api, event, cdd);
+                functionRegistry[event.threadID] = 1;
             });
         }
     } else if (query.startsWith("wiki")) {
@@ -8149,7 +8163,7 @@ function isMyPrefix(findPr, input, query, query2) {
         return true;
     }
     return (
-        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^mj$|^mj\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
+        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^mj$|^mj\s|^beshy$|^beshy\s)/.test(query2)
         // || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
     );
 }
@@ -8986,7 +9000,7 @@ async function sendAiMessage(api, event, ss) {
 
     let eventB = event.body;
     let query2 = formatQuery(eventB.toLowerCase().normalize("NFKC"));
-    if (query2.startsWith("beshy") || query2.startsWith("beshie") || /(\sbeshy(\s|)|\sbeshi(\s|))/.test(query2)) {
+    if (query2.startsWith("beshy") || /(\sbeshy(\s|)|\sbeshi(\s|))/.test(query2)) {
         let mB = message.body;
         message.body = mB.replaceAll(" ", " 🤸 ");
     }
@@ -9347,7 +9361,7 @@ function formatCodeBlock(str) {
     const matches = [...str.matchAll(regex)];
     const code = matches.map((match) => match[1]);
     for (co in code) {
-        str.replace(code[co], code[co].normalize("NFKC"));
+        str.replace(code[co], "```" + code[co].normalize("NFKC") + "```");
     }
     return str;
 }
