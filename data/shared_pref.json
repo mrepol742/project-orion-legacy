@@ -2,7 +2,7 @@
     "preference": {
         "antiLeave": true,
         "tagalog": false,
-        "isStop": false,
+        "isStop": true,
         "max_image": "12",
         "text_complextion": "text-davinci-003",
         "primary_text_complextion": "gpt-3.5-turbo-16k-0613",
@@ -15,7 +15,7 @@
         "max_tokens": "2048",
         "presence_penalty": "0",
         "probability_mass": "1",
-        "prefix": "null>23",
+        "prefix": "td",
         "timezone": "Asia/Singapore",
         "isDebugEnabled": false,
         "isEnabled": false,
@@ -45,19 +45,20 @@
         "5890186884420182": "Your group rules\n1. Do not use/turn on/fake bot(s) in this group\n2. Do not buy/sell in groups\n3. No pedophilia/18+, gambling\n4. Here only support issues related to the original source code, DO NOT MENTION CUSTOM COMMAND\n5. do not discuss simsimi command\n6. Do not discuss issues unrelated to the topic of the group\n7. Do not add bot to the box\n8. Do not insult other people/country/religion,...\n9. Error report must be included with photos or videos (all that show when error occurs, in messages, cmd and console (shell) tab)\n10. No mention of v3 or similar (Banned from chat box)\n11. No jokes when serious",
         "100094533648479": "𝖯𝗂𝗇𝗇𝖾𝖽 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝗋𝖾𝗆𝗈𝗏𝖾𝖽.",
         "6869296409747180": "⋆｡° 𝖧𝖾𝗅𝗅𝗈 𝖳𝗂𝗍𝖺, 𝗂𝗌 𝗍𝗁𝖾𝗋𝖾 𝖺𝗇𝗒 𝗊𝗎𝖾𝗌𝗍𝗂𝗈𝗇𝗌 𝗒𝗈𝗎 𝗆𝖺𝗒 𝗁𝖺𝗏𝖾?\n│\n│   ⦿ 𝗏𝖾𝗋𝗌𝖾 𝗍𝗈𝖽𝖺𝗒\n│   ⦿ 𝗏𝖾𝗋𝗌𝖾 𝗋𝖺𝗇𝖽𝗈𝗆\n│   ⦿ 𝗏𝖾𝗋𝗌𝖾 `𝖻𝗈𝗈𝗄` `𝖼𝗁𝖺𝗉𝗍𝖾𝗋`: `𝗏𝖾𝗋𝗌𝖾`\n│   ⦿ 𝖺𝗇𝗂𝗆𝖾𝗊𝗈𝗎𝗍𝖾\n│   ⦿ 𝖻𝗀𝗋𝖾𝗆𝗈𝗏𝖾\n│   ⦿ 𝗆𝗈𝗍𝗂𝗏𝖺𝗍𝖾\n│   ⦿ 𝗂𝗇𝗌𝗉𝗂𝗋𝖺𝗍𝗂𝗈𝗇\n│   ⦿ 𝖺𝖽𝗏𝗂𝖼𝖾\n│   ⦿ 𝖺𝗅𝖾𝗋𝗍 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗆𝖾𝗆𝖾\n│   ⦿ 𝗅𝗈𝗏𝖾𝗍𝖾𝗌𝗍 `@𝗇𝖺𝗆𝖾𝟣`: `@𝗇𝖺𝗆𝖾𝟤`\n│   ⦿ 𝖽𝗋𝖺𝗄𝖾 `𝗍𝖾𝗑𝗍𝟣`: `𝗍𝖾𝗑𝗍𝟤`\n│   ⦿ 𝗉𝗈𝗈𝗁 `𝗍𝖾𝗑𝗍𝟣`: `𝗍𝖾𝗑𝗍𝟤`\n│   ⦿ 𝗈𝗈𝗀𝗐𝖺𝗒 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝖼𝖺𝗎𝗍𝗂𝗈𝗇 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝖾𝗅𝖾𝗆𝖾𝗇𝗍 `𝗇𝖺𝗆𝖾`\n│   ⦿ 𝗂𝗆𝖽𝖻 `𝗍𝗂𝗍𝗅𝖾`\n│   ⦿ 𝗌𝗍𝖾𝖺𝗆 `𝗇𝖺𝗆𝖾`\n│   ⦿ 𝗇𝗉𝗆 `𝗇𝖺𝗆𝖾`\n│   ⦿ 𝗐𝖿𝗂𝗇𝖽 `𝗍𝖾𝗑𝗍`\n│\n└─  𝖳𝗁𝖾 : 𝖽𝗂𝗏𝗂𝖽𝖾𝗌 𝗍𝗁𝖾 𝗊𝗎𝖾𝗋𝗒 𝗂𝗇𝗍𝗈 𝟤 𝗌𝖾𝖼𝗍𝗂𝗈𝗇𝗌 𝗍𝗁𝖾 𝖿𝗂𝗋𝗌𝗍 𝗈𝗇𝖾 𝖺𝗇𝖽 𝗌𝖾𝖼𝗈𝗇𝖽 𝗈𝗇𝖾.",
-        "6901076733270074": "⋆｡° 𝖧𝖾𝗅𝗅𝗈 𝖬𝖺𝗑, 𝗁𝗈𝗐 𝖼𝖺𝗇 𝗂 𝖺𝗌𝗌𝗂𝗌𝗍 𝗒𝗈𝗎?\n│\n│   ⦿ 𝗌𝗁𝗈𝗐𝖾𝗋𝗍𝗁𝗈𝗎𝗀𝗁𝗍𝗌\n│   ⦿ 𝗅𝗎𝗅𝖼𝖺𝗍 `𝗍𝖾𝗑𝗍`\n\n│   ⦿ 𝗍𝗋𝖺𝗇𝗌𝗅𝖺𝗍𝖾 `𝗅𝖺𝗇𝗀𝗎𝖺𝗀𝖾` `𝗋𝖾𝗉𝗅𝗒`\n│   ⦿ 𝗐𝗂𝗄𝗂 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗎𝗋𝗅𝗌𝗁𝗈𝗋𝗍 `𝗎𝗋𝗅`\n│   ⦿ 𝗉𝗂𝖼𝗄𝗎𝗉\n│   ⦿ 𝗅𝖺𝗇𝖽𝗌𝖼𝖺𝗉𝖾\n│   ⦿ 𝗅𝖺𝗇𝖽𝗌𝖼𝖺𝗉𝖾 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗉𝗈𝗋𝗍𝗋𝖺𝗂𝗍\n│   ⦿ 𝗉𝗈𝗋𝗍𝗋𝖺𝗂𝗍 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗆𝖺𝗅 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗆𝖽𝗅 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗉𝗂𝗇 𝖺𝖽𝖽\n│   ⦿ 𝗉𝗂𝗇 𝗋𝖾𝗆𝗈𝗏𝖾\n│   ⦿ 𝗌𝖺𝖽𝖼𝖺𝗍 `𝗍𝖾𝗑𝗍`\n \n│   ⦿ 𝗉𝗂𝗄𝖺 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗀𝗈𝖽 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗊𝗋𝖼𝗈𝖽𝖾 `𝗍𝖾𝗑𝗍`\n│\n└─  𝖲𝗈𝗆𝖾 𝗈𝖿 𝗆𝗒 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌 𝗐𝗈𝗋𝗄𝗌 𝗂𝗇 𝖺𝗇𝗒 𝗆𝖾𝖺𝗇𝗌 𝗒𝗈𝗎 𝖼𝗈𝗎𝗅𝖽 𝗂𝗆𝖺𝗀𝗂𝗇𝖾."
+        "6901076733270074": "⋆｡° 𝖧𝖾𝗅𝗅𝗈 𝖬𝖺𝗑, 𝗁𝗈𝗐 𝖼𝖺𝗇 𝗂 𝖺𝗌𝗌𝗂𝗌𝗍 𝗒𝗈𝗎?\n│\n│   ⦿ 𝗌𝗁𝗈𝗐𝖾𝗋𝗍𝗁𝗈𝗎𝗀𝗁𝗍𝗌\n│   ⦿ 𝗅𝗎𝗅𝖼𝖺𝗍 `𝗍𝖾𝗑𝗍`\n\n│   ⦿ 𝗍𝗋𝖺𝗇𝗌𝗅𝖺𝗍𝖾 `𝗅𝖺𝗇𝗀𝗎𝖺𝗀𝖾` `𝗋𝖾𝗉𝗅𝗒`\n│   ⦿ 𝗐𝗂𝗄𝗂 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗎𝗋𝗅𝗌𝗁𝗈𝗋𝗍 `𝗎𝗋𝗅`\n│   ⦿ 𝗉𝗂𝖼𝗄𝗎𝗉\n│   ⦿ 𝗅𝖺𝗇𝖽𝗌𝖼𝖺𝗉𝖾\n│   ⦿ 𝗅𝖺𝗇𝖽𝗌𝖼𝖺𝗉𝖾 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗉𝗈𝗋𝗍𝗋𝖺𝗂𝗍\n│   ⦿ 𝗉𝗈𝗋𝗍𝗋𝖺𝗂𝗍 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗆𝖺𝗅 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗆𝖽𝗅 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗉𝗂𝗇 𝖺𝖽𝖽\n│   ⦿ 𝗉𝗂𝗇 𝗋𝖾𝗆𝗈𝗏𝖾\n│   ⦿ 𝗌𝖺𝖽𝖼𝖺𝗍 `𝗍𝖾𝗑𝗍`\n \n│   ⦿ 𝗉𝗂𝗄𝖺 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗀𝗈𝖽 `𝗍𝖾𝗑𝗍`\n│   ⦿ 𝗊𝗋𝖼𝗈𝖽𝖾 `𝗍𝖾𝗑𝗍`\n│\n└─  𝖲𝗈𝗆𝖾 𝗈𝖿 𝗆𝗒 𝖼𝗈𝗆𝗆𝖺𝗇𝖽𝗌 𝗐𝗈𝗋𝗄𝗌 𝗂𝗇 𝖺𝗇𝗒 𝗆𝖾𝖺𝗇𝗌 𝗒𝗈𝗎 𝖼𝗈𝗎𝗅𝖽 𝗂𝗆𝖺𝗀𝗂𝗇𝖾.",
+        "5737251886344292": "https://mrepol742.github.io/webviumdev?ref=messenger.com"
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 55412566,
-            "completion_tokens": 20393173,
-            "total_tokens": 75805739
+            "prompt_tokens": 56338780,
+            "completion_tokens": 20674131,
+            "total_tokens": 77012911
         },
         "davinci": {
-            "prompt_tokens": 930264,
-            "completion_tokens": 216533,
-            "total_tokens": 1251139
+            "prompt_tokens": 1000029,
+            "completion_tokens": 252568,
+            "total_tokens": 1356939
         },
-        "dell": 751
+        "dell": 775
     }
 }
