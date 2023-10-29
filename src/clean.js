@@ -1,6 +1,4 @@
-const fs = require("fs");
-
-async function do(groups) {
+async function array(groups) {
     try {
 
     let ids = [];
@@ -22,5 +20,5 @@ async function do(groups) {
 
 
 module.exports = {
-    do
+    array
 }

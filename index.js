@@ -4754,11 +4754,11 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("cleandata")) {
         if (isMyId(event.senderID)) {
-            let a = await cleanjs.do(groups);
+            let a = await cleanjs.array(groups);
             if (a != null) {
                 groups = a;
             }
-            let a1 = await cleanjs.do(users);
+            let a1 = await cleanjs.array(users);
             if (a1 != null) {
                 users = a1;
             }
