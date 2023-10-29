@@ -2353,8 +2353,14 @@ async function ai(api, event) {
         }
     } else if (query == "left") {
         if (isMyId(event.senderID)) {
-            api.removeUserFromGroup(api.getCurrentUserID(), event.threadID, (err) => {
-                if (err) utils.logged(err);
+            let login = api.getCurrentUserID();
+            api.removeUserFromGroup(login, event.threadID, (err) => {
+                if (err) return utils.logged(err);
+                for (tR in threadRegistry) {
+                    if (threadRegistry[tR] == login) {
+                        delete threadRegistry[tR];
+                    }
+                }
             });
         }
     } else if (query == "logout") {
