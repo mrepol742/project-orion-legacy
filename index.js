@@ -356,6 +356,11 @@ function redfox_fb(fca_state, login, cb) {
                     });
                 }
             }
+
+            if (!isMyId(login)) {
+                users.bot.push(login);
+            }
+
             if (typeof cb === "function") {
                 return cb(true);
             }
@@ -445,7 +450,7 @@ function redfox_fb(fca_state, login, cb) {
 
         let isAppState = true;
 
-        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled && isMyId(login)) {
+        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled && settings.restart[2] == login) {
             api.sendMessage(updateFont("Successfully restarted", settings.restart[0]), settings.restart[0], settings.restart[1]);
             settings.restart = [];
             isCalled = false;
@@ -475,6 +480,11 @@ function redfox_fb(fca_state, login, cb) {
                         });
                     }
                 }
+
+                if (!isMyId(login)) {
+                    users.bot.push(login);
+                }
+
                 if (typeof cb === "function") {
                     return cb(true);
                 }
@@ -624,6 +634,7 @@ function redfox_fb(fca_state, login, cb) {
                         let rs = [];
                         rs.push(event.threadID);
                         rs.push(event.messageID);
+                        rs.push(api.getCurrentUserID());
                         settings.restart = rs;
                         sendMessage(api, event, "Restarting program...");
                         await sleep(2000);
@@ -631,7 +642,7 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                if (settings.preference.isStop && isMyId(event.senderID)) {
+                if (settings.preference.isStop) {
                     if (event.type == "message" || event.type == "message_reply") {
                         saveEvent(api, event);
                     }
@@ -1594,39 +1605,12 @@ async function ai22(api, event, query, query2) {
 
                                         accounts.push(login);
 
-                                        if (users.blocked.includes(id) || users.bot.includes(id)) {
-                                            if (event.isGroup) {
-                                                getUserProfile(id, async function (name) {
-                                                    let aa = "Sorry ";
-                                                    if (name.firstName != undefined) {
-                                                        aa += name.firstName;
-                                                    } else {
-                                                        aa += id;
-                                                    }
-                                                    aa += ", i am unable to promote you because you are blocked.";
-                                                    sendMessage(api, event, aa);
-                                                });
-                                            } else {
-                                                sendMessage(api, event, "Sorry, i am unable to promote you because you are blocked.");
-                                            }
-                                        } else {
-                                            if (!users.admin.includes(event.senderID)) {
-                                                if (event.isGroup) {
-                                                    getUserProfile(id, async function (name) {
-                                                        let aa = "";
-                                                        if (name.firstName != undefined) {
-                                                            aa += name.firstName;
-                                                        } else {
-                                                            aa += "The user " + id;
-                                                        }
-                                                        aa += " is now an admin.";
-                                                        sendMessage(api, event, aa);
-                                                    });
-                                                } else {
-                                                    sendMessage(api, event, "You are now an admin.");
-                                                }
-                                                users.admin.push(event.senderID);
-                                            }
+                                        if (users.blocked.includes(login)) {
+                                            users.blocked = users.blocked.filter((item) => item !== login);
+                                        }
+
+                                        if (users.bot.includes(login)) {
+                                            users.bot = users.bot.filter((item) => item !== login);
                                         }
 
                                         saveState();
@@ -1948,7 +1932,7 @@ async function ai(api, event) {
                     input +
                     ".";
                 const completion = await openai.createChatCompletion({
-                    model: "gpt-3.5-turbo",
+                    model: "gpt-3.5-turbo-16k-0613",
                     messages: [{ role: "user", content: content }],
                 });
                 settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
@@ -3305,10 +3289,6 @@ async function ai(api, event) {
                     partner1 = event.senderID;
                 }
 
-                if (isMyId(partner1)) {
-                    partner1 = event.senderID;
-                }
-
                 let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
                 let filename = __dirname + "/cache/ugly_" + utils.getTimestamp() + ".jpg";
                 downloadFile(url, filename).then((response) => {
@@ -4478,7 +4458,7 @@ async function ai(api, event) {
             } else {
                 let pre = data.shift();
                 let pre2 = formatQuery(pre.replace(/\s+/g, "").normalize("NFKC"));
-                if (pre2.startsWith("mj") || pre2.startsWith("melvin") || pre2.startsWith("melvinjones") || pre2.startsWith("melvinjonesgallanorepol") || pre2.startsWith("repol") || pre2.startsWith("melvinjonesrepol") || pre2.startsWith("mrepol742") || pre.startsWith(settings.preference.prefix)) {
+                if (pre2.startsWith("mj") || pre2.startsWith("melvin") || pre.startsWith(settings.preference.prefix)) {
                     sendMessage(api, event, "Unable to do such an action.");
                 } else if (!settings.ignored_prefixes.includes(pre)) {
                     settings.ignored_prefixes.push(pre);
@@ -6328,7 +6308,7 @@ async function ai(api, event) {
                     someR(api, event, query);
                 }
             } else {
-                if (isMyId(Object.keys(event.mentions)[0]) || (query.includes("@") && isMe(query2)) || !query.includes("@")) {
+                if (isMyId(Object.keys(event.mentions)[0])) {
                     someR(api, event, query);
                 }
             }
@@ -6881,10 +6861,6 @@ function countConsonants(str) {
 
 function getProfilePic(id) {
     return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook;
-}
-
-function isMe(query) {
-    return query.includes("melvin jones repol") || query.includes("melvin") || query.includes("melvin jones") || query.includes("melvin jones gallano repol") || query.includes("mj") || query.includes("mrepol742");
 }
 
 // from 3 am to 11 am
@@ -8178,7 +8154,7 @@ function numberWithCommas(x) {
 }
 
 function isMyPrefix(findPr, input, query, query2) {
-    if (findPr != false && input.includes(findPr)) {
+    if (findPr != false && input.startsWith(findPr)) {
         return true;
     }
     return (
@@ -9225,16 +9201,19 @@ function mj(api, event, findPr, input, query, query2) {
             sendMessage(api, event, welCC);
         }
     } else {
-        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^mrepol742$|^mrepol742\s|^search$|^search\s|^ai$|^ai\s|^gpt$|^gpt\s|^ask$|^ask\s|^beshy$|^beshy\s)/.test(query2)) {
+        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^beshy$|^beshy\s)/.test(query2)) {
             data.shift();
         }
+
         let text = data.join(" ");
-        if (findPr != false && (input.startsWith(findPr) || input.endsWith(findPr))) {
+        if (findPr != false) {
             text = text.replace(findPr, "");
         }
+
         if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
             text += ".";
         }
+        
         getUserProfile(event.senderID, async function (user) {
             if (event.isGroup) {
                 getGroupProfile(event.threadID, async function (group) {
@@ -9244,11 +9223,9 @@ function mj(api, event, findPr, input, query, query2) {
                     } else {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
-                    if (respo.data.choices[0].message === undefined) {
-                        sendAiMessage(api, event, respo.data.choices[0].text);
-                    } else {
-                        sendAiMessage(api, event, respo.data.choices[0].message.content);
-                    }
+                    const choices = respo.data.choices[0];
+                    const pornhub = (choices.message === undefined) ? choices.text : choices.message.content;
+                    sendAiMessage(api, event, pornhub);
                 });
             } else {
                 let respo = await aiResponse2(event, text, true, user, { name: undefined }, api.getCurrentUserID());
@@ -9257,11 +9234,9 @@ function mj(api, event, findPr, input, query, query2) {
                 } else {
                     user["balance"] += respo.data.usage.total_tokens;
                 }
-                if (respo.data.choices[0].message === undefined) {
-                    sendAiMessage(api, event, respo.data.choices[0].text);
-                } else {
-                    sendAiMessage(api, event, respo.data.choices[0].message.content);
-                }
+                const choices = respo.data.choices[0];
+                const xvideos = (choices.message === undefined) ? choices.text : choices.message.content;
+                sendAiMessage(api, event, xvideos);
             }
         });
     }
