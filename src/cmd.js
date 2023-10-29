@@ -362,6 +362,7 @@ let helproot = `
 │   ⦿ push
 │   ⦿ resume
 │   ⦿ restart
+│   ⦿ cleanData
 │   ⦿ notify
 │   ⦿ destroy
 │   ⦿ addAdmin ^^

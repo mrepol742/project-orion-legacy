@@ -4754,13 +4754,18 @@ async function ai(api, event) {
         }
     } else if (query.startsWith("cleandata")) {
         if (isMyId(event.senderID)) {
+            if (!settings.preference.isDebugEnabled) {
+                return sendMessage(api, event, "Debug mode is disabled!");
+            }
             let a = await cleanjs.array(groups);
             if (a != null) {
-                groups = a;
+                let t = JSON.stringify(a).replaceAll(",null", "");
+                groups = JSON.parse(t);
             }
             let a1 = await cleanjs.array(users);
             if (a1 != null) {
-                users = a1;
+                let t1 = JSON.stringify(a1).replaceAll(",null", "");
+                users = JSON.parse(t1);
             }
             sendMessage(api, event, "Cleaning done.");
         }
