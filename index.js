@@ -1280,7 +1280,7 @@ function redfox_fb(fca_state, login, cb) {
                                         mentions: mentioned,
                                     };
                                     sendMessage(api, event, message);
-                                    unLink(dir);
+                                    unLink(dirp);
                                     unLink(img);
                                 });
                             });
@@ -1353,7 +1353,7 @@ function redfox_fb(fca_state, login, cb) {
                                                         attachment: fs.createReadStream(img),
                                                     };
                                                     sendMessage(api, event, message);
-                                                    unLink(dir);
+                                                    unLink(dirp);
                                                     unLink(img);
                                                 });
                                                 utils.logged("event_log_unsubsribe " + event.threadID + " " + data[id].name);
@@ -5829,7 +5829,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            let messaage = {
+            let message = {
                 body: "Houston! Unknown or missing option.\n\n Usage: website url" + "\n " + example[Math.floor(Math.random() * example.length)] + " website https://mrepol742.github.io",
                 url: "https://mrepol742.github.io",
             };
