@@ -643,9 +643,6 @@ function redfox_fb(fca_state, login, cb) {
                 }
 
                 if (settings.preference.isStop) {
-                    if (event.type == "message" || event.type == "message_reply") {
-                        saveEvent(api, event);
-                    }
                     return;
                 }
 
@@ -658,22 +655,16 @@ function redfox_fb(fca_state, login, cb) {
                 }
 
                 if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
-                    if (event.type == "message" || event.type == "message_reply") {
-                        let eventB = event.body;
-                        let input = eventB.normalize("NFKC");
-                        let query2 = formatQuery(input);
-                        let query = query2.replace(/\s+/g, "");
-                        if (/(^melvin$|^melvin\s|^mj$|^mj\s)/.test(query2) && (event.type == "message" || event.type == "message_reply")) {
+                        if (event.type == "message" || event.type == "message_reply") {
                             if (isGoingToFast1(event, threadMaintenance, 30)) {
                                 return;
                             }
+
                             sendMessage(api, event, {
                                 body: "Hold on a moment this system is currently under maintenance...I will be right back in few moment. \n\nhttps://mrepol742.github.io/project-orion/chat",
                                 url: "https://mrepol742.github.io/project-orion/chat?msg=" + btoa(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
                             });
                         }
-                        saveEvent(api, event);
-                    }
                     return;
                 }
 
@@ -1231,7 +1222,7 @@ function redfox_fb(fca_state, login, cb) {
                             api.getThreadInfo(event.threadID, async (err, gc) => {
                                 if (err) return utils.logged(err);
                                 getGroupProfile(event.threadID, async function (group) {
-                                    if (group.name != undefined) {
+                                    if (group.name != null) {
                                         let arr = gc.participantIDs;
                                         group["name"] = gc.threadName;
                                         group["members"] = arr.length;
@@ -1302,7 +1293,7 @@ function redfox_fb(fca_state, login, cb) {
                             api.getThreadInfo(event.threadID, (err, gc) => {
                                 if (err) utils.logged(err);
                                 getGroupProfile(event.threadID, function (group) {
-                                    if (group.name != undefined) {
+                                    if (group.name != null) {
                                         let arr = gc.participantIDs;
                                         group["name"] = gc.threadName;
                                         group["members"] = arr.length;
@@ -1381,7 +1372,7 @@ function redfox_fb(fca_state, login, cb) {
                                 if (err) return utils.logged(err);
                                 getGroupProfile(event.threadID, async function (group) {
                                     let msgs;
-                                    if (group.name != undefined) {
+                                    if (group.name != null) {
                                         msgs = data[event.author]["firstName"] + " update the group name from `" + group.name + "` to `" + event.logMessageData.name + "`";
                                         group["name"] = event.logMessageData.name;
                                     } else {
@@ -4970,7 +4961,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
-    } else if (query.startsWith("ginfo")) {
+    } else if (query.startsWith("_ginfo")) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5047,7 +5038,14 @@ async function ai(api, event) {
         if (event.isGroup) {
             let data = input.split(" ");
             if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gname text" + "\n " + example[Math.floor(Math.random() * example.length)] + " gname Darling in the Franxx >3");
+                if (event.isGroup) {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (err) return utils.logged(err);
+                        sendMessage(api, event, gc.threadName);
+                    });
+                } else {
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: gname text" + "\n " + example[Math.floor(Math.random() * example.length)] + " gname Darling in the Franxx >3");
+                }
             } else {
                 data.shift();
                 api.setTitle(data.join(" "), event.threadID, (err, obj) => {
@@ -5057,26 +5055,13 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
-    } else if (query == "gname") {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-
-        if (event.isGroup) {
-            api.getThreadInfo(event.threadID, (err, gc) => {
-                if (err) return utils.logged(err);
-                sendMessage(api, event, gc.threadName);
-            });
-        } else {
-            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-        }
     } else if (query == "groupid" || query == "guid" || query == "uid") {
         if (isGoingToFast(api, event)) {
             return;
         }
         if (event.type == "message" && groups.list.find((thread) => event.threadID === thread.id) && (query == "guid" || query == "groupid")) {
             getGroupProfile(event.threadID, async function (group) {
-                if (group.name != undefined) {
+                if (group.name != null) {
                     sendMessage(api, event, "The " + group.name + " guid is " + group.id);
                 } else {
                     sendMessage(api, event, "This group id is " + event.threadID);
@@ -8164,7 +8149,7 @@ function isMyPrefix(findPr, input, query, query2) {
         return true;
     }
     return (
-        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
+        (settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^mj$|^mj\s|^beshy$|^beshy\s|^beshie$|^beshie\s)/.test(query2)
         // || isSecondaryPrefix(query2.replaceAll("'", "").replaceAll("`", ""))
     );
 }
@@ -9108,7 +9093,7 @@ function tellUser(user, group) {
             construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
         }
     }
-    if (group.name != undefined) {
+    if (group.name != null) {
         construct += "You are in " + group.name + " group";
         if (!(group.members === undefined)) {
             construct += ", it's member is " + group.members + ". ";
@@ -9143,7 +9128,7 @@ function tellUser2(user, group) {
             construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
         }
     }
-    if (group.name != undefined) {
+    if (group.name != null) {
         construct += "You both in " + group.name + " group";
         if (!(group.members === undefined)) {
             construct += ", it's member is " + group.members + ". ";
@@ -9207,7 +9192,7 @@ function mj(api, event, findPr, input, query, query2) {
             sendMessage(api, event, welCC);
         }
     } else {
-        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^melvin$|^melvin\s|^mj$|^mj\s|^beshy$|^beshy\s)/.test(query2)) {
+        if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^mj$|^mj\s|^beshy$|^beshy\s)/.test(query2)) {
             data.shift();
         }
 
