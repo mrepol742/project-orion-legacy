@@ -8541,9 +8541,9 @@ function task(func, time) {
 
 function getCountryOrigin(model) {
     if (model.includes("Pentium") && model.includes("T4500") && model.includes("2.3GHz")) {
-        return "San Juan Rizal, Philippines";
+        return "Philippines";
     }
-    return "Saitama Tokyo, Japan";
+    return "Singapore";
 }
 
 function getStatus() {
