@@ -24,7 +24,7 @@
         "selfListen": true,
         "sendTypingIndicator": false,
         "autoMarkDelivery": false,
-        "error": 1404078,
+        "error": 3252001,
         "angry": false
     },
     "apikey": {
@@ -51,14 +51,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 59111777,
-            "completion_tokens": 21331093,
-            "total_tokens": 80442870
+            "prompt_tokens": 59116495,
+            "completion_tokens": 21333163,
+            "total_tokens": 80449658
         },
         "davinci": {
-            "prompt_tokens": 1186957,
-            "completion_tokens": 360319,
-            "total_tokens": 1651618
+            "prompt_tokens": 1187171,
+            "completion_tokens": 360342,
+            "total_tokens": 1651855
         },
         "dell": 815
     }
