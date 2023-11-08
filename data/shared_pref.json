@@ -1,6 +1,6 @@
 {
     "preference": {
-        "antiLeave": true,
+        "antiLeave": false,
         "tagalog": false,
         "isStop": false,
         "max_image": "12",
@@ -51,14 +51,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 59753471,
-            "completion_tokens": 21480015,
-            "total_tokens": 81233486
+            "prompt_tokens": 59757304,
+            "completion_tokens": 21480725,
+            "total_tokens": 81238029
         },
         "davinci": {
-            "prompt_tokens": 1244320,
-            "completion_tokens": 9882,
-            "total_tokens": 1739789
+            "prompt_tokens": 1244350,
+            "completion_tokens": 9898,
+            "total_tokens": 1739835
         },
         "dell": 815
     }
