@@ -9,7 +9,7 @@
         "onUnsend": true,
         "onNsfw": false,
         "preventSimultaneousExecution": true,
-        "onDelay": true,
+        "onDelay": false,
         "frequency_penalty": "0",
         "temperature": "0.5",
         "max_tokens": "2048",
@@ -51,14 +51,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 59996876,
-            "completion_tokens": 21546742,
-            "total_tokens": 81543618
+            "prompt_tokens": 60016791,
+            "completion_tokens": 21553250,
+            "total_tokens": 81570041
         },
         "davinci": {
-            "prompt_tokens": 1270065,
-            "completion_tokens": 11364,
-            "total_tokens": 1783055
+            "prompt_tokens": 1270860,
+            "completion_tokens": 11732,
+            "total_tokens": 1784218
         },
         "dell": 831
     }
