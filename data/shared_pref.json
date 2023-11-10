@@ -56,9 +56,9 @@
             "total_tokens": 82485388
         },
         "davinci": {
-            "prompt_tokens": 1293626,
-            "completion_tokens": 9546,
-            "total_tokens": 1824362
+            "prompt_tokens": 1293754,
+            "completion_tokens": 10218,
+            "total_tokens": 1825162
         },
         "dell": 843
     }
