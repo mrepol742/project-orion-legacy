@@ -7,7 +7,7 @@
         "text_complextion": "text-davinci-003",
         "primary_text_complextion": "gpt-3.5-turbo-16k-0613",
         "onUnsend": true,
-        "onNsfw": false,
+        "onNsfw": true,
         "preventSimultaneousExecution": true,
         "onDelay": false,
         "frequency_penalty": "0",
@@ -51,14 +51,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 61074142,
-            "completion_tokens": 21821852,
-            "total_tokens": 82895994
+            "prompt_tokens": 61159001,
+            "completion_tokens": 21845074,
+            "total_tokens": 83004075
         },
         "davinci": {
-            "prompt_tokens": 1300884,
-            "completion_tokens": 28793,
-            "total_tokens": 1850867
+            "prompt_tokens": 1302558,
+            "completion_tokens": 28947,
+            "total_tokens": 1852695
         },
         "dell": 843
     }
