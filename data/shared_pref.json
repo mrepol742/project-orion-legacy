@@ -51,9 +51,9 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 61012846,
-            "completion_tokens": 21809803,
-            "total_tokens": 82822649
+            "prompt_tokens": 61028946,
+            "completion_tokens": 21812246,
+            "total_tokens": 82841192
         },
         "davinci": {
             "prompt_tokens": 1300884,
