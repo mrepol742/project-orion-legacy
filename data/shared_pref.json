@@ -7,7 +7,7 @@
         "text_complextion": "text-davinci-003",
         "primary_text_complextion": "gpt-3.5-turbo-16k-0613",
         "onUnsend": true,
-        "onNsfw": true,
+        "onNsfw": false,
         "preventSimultaneousExecution": true,
         "onDelay": false,
         "frequency_penalty": "0",
@@ -51,9 +51,9 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 61182106,
-            "completion_tokens": 21850285,
-            "total_tokens": 83032391
+            "prompt_tokens": 61226396,
+            "completion_tokens": 21859924,
+            "total_tokens": 83086320
         },
         "davinci": {
             "prompt_tokens": 1302558,
