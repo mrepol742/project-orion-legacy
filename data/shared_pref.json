@@ -15,7 +15,7 @@
         "max_tokens": "2048",
         "presence_penalty": "0",
         "probability_mass": "1",
-        "prefix": "td",
+        "prefix": "deku",
         "timezone": "Asia/Singapore",
         "isDebugEnabled": false,
         "isEnabled": false,
@@ -51,14 +51,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 61801012,
-            "completion_tokens": 22022709,
-            "total_tokens": 83823721
+            "prompt_tokens": 61924886,
+            "completion_tokens": 22066441,
+            "total_tokens": 83991327
         },
         "davinci": {
-            "prompt_tokens": 1312296,
-            "completion_tokens": 37563,
-            "total_tokens": 1871049
+            "prompt_tokens": 1313032,
+            "completion_tokens": 41018,
+            "total_tokens": 1875240
         },
         "dell": 843
     }
