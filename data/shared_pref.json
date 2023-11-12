@@ -51,14 +51,14 @@
     },
     "tokens": {
         "gpt": {
-            "prompt_tokens": 61550077,
-            "completion_tokens": 21948668,
-            "total_tokens": 83498745
+            "prompt_tokens": 61642783,
+            "completion_tokens": 21974798,
+            "total_tokens": 83617581
         },
         "davinci": {
-            "prompt_tokens": 1308321,
-            "completion_tokens": 32186,
-            "total_tokens": 1861697
+            "prompt_tokens": 1310113,
+            "completion_tokens": 34041,
+            "total_tokens": 1865344
         },
         "dell": 843
     }
