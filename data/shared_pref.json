@@ -1,6 +1,6 @@
 {
     "preference": {
-        "antiLeave": true,
+        "antiLeave": false,
         "tagalog": false,
         "isStop": false,
         "max_image": "12",
@@ -17,7 +17,7 @@
         "probability_mass": "1",
         "prefix": "deku",
         "timezone": "Asia/Singapore",
-        "isDebugEnabled": false,
+        "isDebugEnabled": true,
         "isEnabled": false,
         "autoMarkRead": false,
         "online": true,
