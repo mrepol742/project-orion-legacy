@@ -17,7 +17,7 @@
         "probability_mass": "1",
         "prefix": "deku",
         "timezone": "Asia/Singapore",
-        "isDebugEnabled": true,
+        "isDebugEnabled": false,
         "isEnabled": false,
         "autoMarkRead": false,
         "online": true,
