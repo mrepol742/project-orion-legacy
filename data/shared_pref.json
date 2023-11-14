@@ -2,7 +2,7 @@
     "preference": {
         "antiLeave": false,
         "tagalog": false,
-        "isStop": true,
+        "isStop": false,
         "max_image": "12",
         "text_complextion": "text-davinci-003",
         "primary_text_complextion": "gpt-3.5-turbo-16k-0613",
