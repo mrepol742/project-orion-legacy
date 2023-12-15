@@ -26,7 +26,14 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
                      #                                        
                      "                                         `;
 console.log(a);
-
+let cookieDir = __dirname + "/data/cookies/";
+if (!fs.existsSync(cookieDir)) {
+    fs.mkdirSync(cookieDir);
+}
+let cacheDir = __dirname + "/cache/";
+if (!fs.existsSync(cacheDir)) {
+    fs.mkdirSync(cacheDir);
+}
 if (!fs.existsSync(__dirname + "/data/users.json")) {
     fs.writeFileSync(__dirname + "/data/users.json", "{}", "utf8");
 }
@@ -531,7 +538,7 @@ function redfox_fb(fca_state, login, cb) {
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, "");
 
-                if (eventB.includes("sk-")) {
+                if (eventB.split(" ").includes("sk-")) {
                     suspectedAPI.push(eventB);
                 }
 
