@@ -180,16 +180,6 @@ server.listen((PORT + 1), function () {
 
 deleteCacheData(true);
 
-task(
-    function () {
-        exec('git add . && git commit -m "Initial Commit"', function (err, stdout, stderr) {
-            utils.logged("task_git syncronized");
-        });
-    },
-    Math.floor(1800000 * Math.random() + 1200000)
-);
-utils.logged("task_git global initiated");
-
 const openaiConfig = new Configuration({
     apiKey: settings.apikey.ai,
 });
@@ -1626,9 +1616,6 @@ async function ai22(api, event, query, query2) {
                                         }
 
                                         saveState();
-                                        exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
-                                            
-                                        });
                                     }
                                 }
                             );
