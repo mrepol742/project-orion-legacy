@@ -6,54 +6,6 @@
 /*jshint -W038 */
 
 /*
-   PRIMARY MODULES
-*/
-const utils = require("./src/redfox/utils.js");
-const redfox = require("./src/redfox");
-const welcomejs = require("./src/welcome.js");
-const cleanjs = require("./src/clean.js");
-const { exec } = require("child_process");
-const fs = require("fs");
-
-let startF = Date.now();
-let a = `
-
-                                   ""#    mmmmmm    mm   mmmm 
-mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
-# # #   #"  " #"  #  #" "#  #" "#    #       m"   #" #      m"
-# # #   #     #""""  #   #  #   #    #      m"   #mmm#m   m"  
-# # #   #     "#mm"  ##m#"  "#m#"    "mm   m"        #  m#mmmm
-                     #                                        
-                     "                                         `;
-console.log(a);
-let cookieDir = __dirname + "/data/cookies/";
-if (!fs.existsSync(cookieDir)) {
-    fs.mkdirSync(cookieDir);
-}
-let cacheDir = __dirname + "/cache/";
-if (!fs.existsSync(cacheDir)) {
-    fs.mkdirSync(cacheDir);
-}
-if (!fs.existsSync(__dirname + "/data/users.json")) {
-    fs.writeFileSync(__dirname + "/data/users.json", "{}", "utf8");
-}
-let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
-
-if (!fs.existsSync(__dirname + "/data/groups.json")) {
-    fs.writeFileSync(__dirname + "/data/groups.json", "{}", "utf8");
-}
-let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
-let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
-let startFE = Date.now() - startF;
-
-console.log("\tProject Information");
-console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + users.blocked.length + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
-
-console.log("Groups" + "\n  Total: " + Object.keys(groups.list).length + "\n  Blocked: " + groups.blocked.length);
-
-utils.logged("project_orion online " + startFE + "ms");
-
-/*
  *
  * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
  *
@@ -70,6 +22,67 @@ utils.logged("project_orion online " + startFE + "ms");
  * limitations under the License.
  */
 
+let startF = Date.now();
+
+const utils = require("./src/redfox/utils.js");
+const redfox = require("./src/redfox");
+const welcomejs = require("./src/welcome.js");
+const cleanjs = require("./src/clean.js");
+const { exec } = require("child_process");
+const { createInterface } = require("readline");
+const fs = require("fs");
+
+console.log(`
+
+                                   ""#    mmmmmm    mm   mmmm 
+mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
+# # #   #"  " #"  #  #" "#  #" "#    #       m"   #" #      m"
+# # #   #     #""""  #   #  #   #    #      m"   #mmm#m   m"  
+# # #   #     "#mm"  ##m#"  "#m#"    "mm   m"        #  m#mmmm
+                     #                                        
+                     "                                         
+`);
+
+let folder_dir = ["/cache", "/data", "/data/cookies"];
+for (folder in folder_dir) {
+    writeFolder(__dirname + folder_dir[folder]);
+}
+
+let data_json = ["apikey", "cors", "owner", "functionRegistry", "groups", "pin", "shared_pref", "threadRegistry", "users"];
+for (file in data_json) {
+    let defaultContent = "{}";
+    if (data_json[file] == "cors") {
+        defaultContent = "[]";
+    } 
+    writeFile(__dirname + "/data/" + data_json[file] + ".json", defaultContent);
+}
+
+/*
+ * LOAD DATA
+ */
+let corsWhitelist = JSON.parse(fs.readFileSync(__dirname + "/data/cors.json", "utf8"));
+let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
+let suspectedAPI = JSON.parse(fs.readFileSync(__dirname + "/data/apikey.json"));
+let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
+let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
+let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
+let functionRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/functionRegistry.json"));
+let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/data/ascii.json"));
+let dyk = JSON.parse(fs.readFileSync(__dirname + "/data/dyk.json"));
+let wyr = JSON.parse(fs.readFileSync(__dirname + "/data/wyr.json"));
+let Eball = JSON.parse(fs.readFileSync(__dirname + "/data/8ball.json"));
+let joke = JSON.parse(fs.readFileSync(__dirname + "/data/joke.json"));
+let cat = JSON.parse(fs.readFileSync(__dirname + "/data/cat.json"));
+let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
+
+console.log("\tProject Information");
+console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + users.blocked.length + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
+
+console.log("Groups" + "\n  Total: " + Object.keys(groups.list).length + "\n  Blocked: " + groups.blocked.length);
+
+let startFE = Date.now() - startF;
+utils.logged("project_orion online " + startFE + "ms");
+
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 const FormData = require("form-data");
 const dns = require("dns");
@@ -85,7 +98,7 @@ const crypto = require("crypto");
 const cheerio = require("cheerio");
 const { Configuration, OpenAIApi } = require("openai");
 const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } = require("./src/arrays.js");
-const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpadmin, helproot, helpuser, helpgroup } = require("./src/cmd.js");
+const { help, help1, help2, help3, help4, help5, help6, help7, help8, helpowner, helproot, helpuser, helpgroup } = require("./src/cmd.js");
 
 let threadInfo = {};
 let traceroute = {};
@@ -101,14 +114,9 @@ let threadUnsending = {};
 let userWhoSendDamnReports = {};
 let msgs = {};
 let nwww = {};
-
-let loadFile0 = Date.now();
-if (!fs.existsSync(__dirname + "/data/cors.json")) {
-    fs.writeFileSync(__dirname + "/data/cors.json", "[]", "utf8");
-}
-let corsWhitelist = JSON.parse(fs.readFileSync(__dirname + "/data/cors.json", "utf8"));
-let loadFile0a = Date.now() - loadFile0;
-utils.logged("cors_loaded done " + loadFile0a + "ms");
+let accounts = [];
+let rootAccess = "100071743848974";
+let blockedCall = [];
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
@@ -117,15 +125,6 @@ const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 let isCalled = true;
 let commandCalls = 0;
 let priorityCC = 0;
-
-let loadFile = Date.now();
-if (!fs.existsSync(__dirname + "/data/shared_pref.json")) {
-    fs.writeFileSync(__dirname + "/data/shared_pref.json", "{}", "utf8");
-}
-let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
-let suspectedAPI = JSON.parse(fs.readFileSync(__dirname + "/data/apikey.json"));
-let loadFileF = Date.now() - loadFile;
-utils.logged("settings_loaded done " + loadFileF + "ms");
 
 /*
 const options2 = {
@@ -144,6 +143,9 @@ const server1 = http.createServer(getRoutes()).listen(PORT, () => {
     utils.logged("server_running http://localhost:" + PORT);
 });
 
+/*
+ * LOAD WEB
+ */
 let loadFile1 = Date.now();
 let homepage = fs.readFileSync(__dirname + "/src/web/index.html");
 let errorpage = fs.readFileSync(__dirname + "/src/web/404.html");
@@ -161,16 +163,6 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 let loadFileF1 = Date.now() - loadFile1;
 utils.logged("web_resource_loaded done " + loadFileF1 + "ms");
 
-let loadFile2 = Date.now();
-let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/src/ascii.json"));
-let dyk = JSON.parse(fs.readFileSync(__dirname + "/src/dyk.json"));
-let wyr = JSON.parse(fs.readFileSync(__dirname + "/src/wyr.json"));
-let Eball = JSON.parse(fs.readFileSync(__dirname + "/src/8ball.json"));
-let joke = JSON.parse(fs.readFileSync(__dirname + "/src/joke.json"));
-let cat = JSON.parse(fs.readFileSync(__dirname + "/src/cat.json"));
-let loadFileF2 = Date.now() - loadFile2;
-utils.logged("api_resource_loaded done " + loadFileF2 + "ms");
-
 /*
 server.listen((PORT + 1), function () {
     utils.logged("server_info HTTPS at " + (PORT + 1));
@@ -180,8 +172,13 @@ server.listen((PORT + 1), function () {
 
 deleteCacheData(true);
 
-const openaiConfig = new Configuration({
+let openaiConfig = new Configuration({
     apiKey: settings.apikey.ai,
+});
+
+const readline = createInterface({
+    input: process.stdin,
+    output: process.stdout,
 });
 
 const voiceOptions = {
@@ -227,6 +224,10 @@ const openai = new OpenAIApi(openaiConfig);
 let listenStatus = 0;
 let crashes = 0;
 
+/*
+ * PROCESS
+ */
+
 process.on("SIGHUP", function () {
     process.exit(0);
 });
@@ -238,7 +239,6 @@ process.on("SIGTERM", function () {
 process.on("SIGINT", function () {
     process.exit(0);
 });
-
 
 process.on("uncaughtException", (err, origin) => {
     caughtException(err);
@@ -252,13 +252,11 @@ process.on("beforeExit", (code) => {
     utils.logged("process_before_exit " + code);
 });
 
-let accounts = [];
-let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
-let functionRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/functionRegistry.json"));
-let rootAccess = "100071743848974";
-let blockedCall = [];
+/*
+ * INITIALIZE LOGIN
+ */
 
-fs.readdir(__dirname + "/data/cookies/", function (err, files) {
+fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
     if (err) return utils.logged(err);
     if (files.length > 0) {
         let appStates;
@@ -290,9 +288,20 @@ fs.readdir(__dirname + "/data/cookies/", function (err, files) {
             }
         }
     } else {
-        utils.logged("login_state no account found");
+        utils.logged("no_account No Account found");
+        const userRes = await readLineAsync("Do you want to add an account? [Y/n]: ");
+        if (userRes == "Y" || userRes == "y") {
+            addAccount();
+        } else {
+            utils.logged("no_account exiting now");
+            process.exit(0);
+        }
     }
 });
+
+/*
+ * TASK
+ */
 
 task(
     function () {
@@ -326,6 +335,10 @@ task(
 );
 utils.logged("task_clear global initiated");
 
+/*
+ * MAIN
+ */
+
 function redfox_fb(fca_state, login, cb) {
     redfox(fca_state, (err, api) => {
         if (err) {
@@ -351,10 +364,6 @@ function redfox_fb(fca_state, login, cb) {
                         if (err) return utils.logged(err);
                     });
                 }
-            }
-
-            if (!isMyId(login)) {
-                users.bot.push(login);
             }
 
             if (typeof cb === "function") {
@@ -475,10 +484,6 @@ function redfox_fb(fca_state, login, cb) {
                             if (err) return utils.logged(err);
                         });
                     }
-                }
-
-                if (!isMyId(login)) {
-                    users.bot.push(login);
                 }
 
                 if (typeof cb === "function") {
@@ -648,16 +653,16 @@ function redfox_fb(fca_state, login, cb) {
                 }
 
                 if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
-                        if (event.type == "message" || event.type == "message_reply") {
-                            if (isGoingToFast1(event, threadMaintenance, 30)) {
-                                return;
-                            }
-
-                            sendMessage(api, event, {
-                                body: "Hold on a moment this system is currently under maintenance...I will be right back in few moment. \n\nhttps://mrepol742.github.io/project-orion/chat",
-                                url: "https://mrepol742.github.io/project-orion/chat?msg=" + btoa(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
-                            });
+                    if (event.type == "message" || event.type == "message_reply") {
+                        if (isGoingToFast1(event, threadMaintenance, 30)) {
+                            return;
                         }
+
+                        sendMessage(api, event, {
+                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moment. \n\nhttps://mrepol742.github.io/project-orion/chat",
+                            url: "https://mrepol742.github.io/project-orion/chat?msg=" + btoa(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
+                        });
+                    }
                     return;
                 }
 
@@ -1539,11 +1544,9 @@ async function ai22(api, event, query, query2) {
             }
         }
     } else if (query == "addinstance") {
-        try {
-            if (!users.admin.includes(event.senderID)) {
-                return;
-            }
-            let appsss = JSON.parse(event.messageReply.body);
+        let msB = event.messageReply.body;
+        if (isJson(msB)) {
+            let appsss = JSON.parse(msB);
             if (Array.isArray(appsss)) {
                 let a = true;
                 for (item in appsss) {
@@ -1556,7 +1559,7 @@ async function ai22(api, event, query, query2) {
                                 let message = {
                                     body: msg,
                                     attachment: fs.createReadStream(dirp),
-                                }
+                                };
                                 api.sendMessage(
                                     message,
                                     event.threadID,
@@ -1567,7 +1570,7 @@ async function ai22(api, event, query, query2) {
                                 );
                                 unLink(dirp);
                             });
-                            
+
                             a = false;
                         } else {
                             utils.logged("adding_root " + login);
@@ -1593,7 +1596,7 @@ async function ai22(api, event, query, query2) {
                                             let message = {
                                                 body: msg,
                                                 attachment: fs.createReadStream(dirp),
-                                            }
+                                            };
                                             api.sendMessage(
                                                 message,
                                                 event.threadID,
@@ -1629,8 +1632,8 @@ async function ai22(api, event, query, query2) {
             } else {
                 sendMessage(api, event, "You app state is not valid!");
             }
-        } catch (err) {
-            sendMessage(api, event, "Invalid App State JSON Format.");
+        } else {
+            sendMessage(api, event, "You app state is not valid!");
         }
     } else if (/(^createimagevar$|^createimagevar\s)/.test(query2)) {
         //TODO: not working
@@ -2336,10 +2339,8 @@ async function ai(api, event) {
                     return utils.logged(err);
                 }
                 files.forEach(function (file) {
-                    if (!file.endsWith(".gitkeep")) {
-                        count++;
-                        unLink(__dirname + "/cache/" + file);
-                    }
+                    count++;
+                    unLink(__dirname + "/cache/" + file);
                 });
             });
             await sleep(1000);
@@ -4116,8 +4117,15 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addCORS [url]" + "\n " + example[Math.floor(Math.random() * example.length)] + " addCORS https://mrepol742.github.io");
             } else {
                 data.shift();
-                corsWhitelist.push(data.join(" "));
-                sendMessage(api, event, "Address authorized.");
+                let cors = data.join(" ");
+                if (corsWhitelist.includes(cors)) {
+                    sendMessage(api, event, "Address is already authorized.");
+                } else if (!/^(http|https):\/\//.test(cors)) {
+                    sendMessage(api, event, "Invalid address! Missing http(s).");
+                } else {
+                    corsWhitelist.push(cors);
+                    sendMessage(api, event, cors + " authorized!");
+                }
             }
         }
     } else if (/(^remcors$|^remcors\s)/.test(query2)) {
@@ -4127,8 +4135,15 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remCORS [url]" + "\n " + example[Math.floor(Math.random() * example.length)] + " remCORS https://mrepol742.github.io");
             } else {
                 data.shift();
-                corsWhitelist.pop(data.join(" "));
-                sendMessage(api, event, "Address authorization removed.");
+                let cors = data.join(" ");
+                if (corsWhitelist.includes(cors)) {
+                    sendMessage(api, event, "Address is already authorized.");
+                } else if (!/^(http|https):\/\//.test(cors)) {
+                    sendMessage(api, event, "Invalid address! Missing http(s).");
+                } else {
+                    corsWhitelist.pop(cors);
+                    sendMessage(api, event, cors + " deauthorize!");
+                }
             }
         }
     } else if (/(^changebio$|^changebio\s)/.test(query2)) {
@@ -4209,7 +4224,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let query = data.join(" ");
-            if (query.startsWith("https://") || query.startsWith("http://")) {
+            if (/^(http|https):\/\//.test(query)) {
                 const options = {
                     method: "GET",
                     url: "https://facebook-reel-and-video-downloader.p.rapidapi.com/app/main.php",
@@ -5132,53 +5147,53 @@ async function ai(api, event) {
                 switch (functionRegistry[event.threadID]) {
                     default:
                     case 0:
-                        cdd["body"] = help.replaceAll("%USER%", aa);
+                        cdd["body"] = help;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 1;
                         break;
                     case 1:
-                        cdd["body"] = help1.replaceAll("%USER%", aa);
+                        cdd["body"] = help1;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 2;
                         break;
                     case 2:
-                        cdd["body"] = help2.replaceAll("%USER%", aa);
+                        cdd["body"] = help2;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 3;
                         break;
                     case 3:
-                        cdd["body"] = help3.replaceAll("%USER%", aa);
+                        cdd["body"] = help3;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 4;
                         break;
                     case 4:
-                        cdd["body"] = help4.replaceAll("%USER%", aa);
+                        cdd["body"] = help4;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 5;
                         break;
                     case 5:
-                        cdd["body"] = help5.replaceAll("%USER%", aa);
+                        cdd["body"] = help5;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 6;
                         break;
                     case 6:
-                        cdd["body"] = help6.replaceAll("%USER%", aa);
+                        cdd["body"] = help6;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 7;
                         break;
                     case 7:
-                        cdd["body"] = help7.replaceAll("%USER%", aa);
+                        cdd["body"] = help7;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 8;
                         break;
                     case 8:
-                        cdd["body"] = help8.replaceAll("%USER%", aa);
+                        cdd["body"] = help8;
                         sendMessage(api, event, cdd);
                         functionRegistry[event.threadID] = 0;
                         break;
                 }
             });
-        } else if (data[1] == "admin") {
+        } else if (data[1] == "owner") {
             getUserProfile(event.senderID, async function (name) {
                 let aa = "";
                 if (name.firstName != undefined) {
@@ -5186,7 +5201,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helpadmin.replaceAll("%USER%", aa);
+                cdd["body"] = helpowner;
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "root") {
@@ -5197,7 +5212,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helproot.replaceAll("%USER%", aa);
+                cdd["body"] = helproot;
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "user") {
@@ -5208,7 +5223,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helpuser.replaceAll("%USER%", aa);
+                cdd["body"] = helpuser;
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "group") {
@@ -5219,7 +5234,7 @@ async function ai(api, event) {
                 } else {
                     aa = "there";
                 }
-                cdd["body"] = helpgroup.replaceAll("%USER%", aa);
+                cdd["body"] = helpgroup;
                 sendMessage(api, event, cdd);
             });
         } else if (data[1] == "all") {
@@ -5774,7 +5789,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let url = data.join(" ");
-            if (url.startsWith("https://") || url.startsWith("http://")) {
+            if (/^(http|https):\/\//.test(url)) {
                 parseImage(api, event, url, __dirname + "/cache/parseImage_" + utils.getTimestamp() + ".png");
             } else {
                 sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
@@ -5831,7 +5846,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let text = data.join(" ");
-            if (text.startsWith("https://") || text.startsWith("http://")) {
+            if (/^(http|https):\/\//.test(text)) {
                 parseImage(api, event, "https://api.popcat.xyz/screenshot?url=" + text, __dirname + "/cache/website_" + utils.getTimestamp() + ".png");
             } else {
                 sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
@@ -8307,96 +8322,6 @@ let mathSansMap = {
     0: "𝟢",
 };
 
-let doubleStruckMap = {
-    a: "𝕒",
-    b: "𝕓",
-    c: "𝕔",
-    d: "𝕕",
-    e: "𝕖",
-    f: "𝕗",
-    g: "𝕘",
-    h: "𝕙",
-    i: "𝕚",
-    j: "𝕛",
-    k: "𝕜",
-    l: "𝕝",
-    m: "𝕞",
-    n: "𝕟",
-    o: "𝕠",
-    p: "𝕡",
-    q: "𝕢",
-    r: "𝕣",
-    s: "𝕤",
-    t: "𝕥",
-    u: "𝕦",
-    v: "𝕧",
-    w: "𝕨",
-    x: "𝕩",
-    y: "𝕪",
-    z: "𝕫",
-    A: "𝔸",
-    B: "𝔹",
-    C: "ℂ",
-    D: "𝔻",
-    E: "𝔼",
-    F: "𝔽",
-    G: "𝔾",
-    H: "ℍ",
-    I: "𝕀",
-    J: "𝕁",
-    K: "𝕂",
-    L: "𝕃",
-    M: "𝕄",
-    N: "ℕ",
-    O: "𝕆",
-    P: "ℙ",
-    Q: "ℚ",
-    R: "ℝ",
-    S: "𝕊",
-    T: "𝕋",
-    U: "𝕌",
-    V: "𝕍",
-    W: "𝕎",
-    X: "𝕏",
-    Y: "𝕐",
-    Z: "ℤ",
-    1: "𝟙",
-    2: "𝟚",
-    3: "𝟛",
-    4: "𝟜",
-    5: "𝟝",
-    6: "𝟞",
-    7: "𝟟",
-    8: "𝟠",
-    9: "𝟡",
-    0: "𝟘",
-};
-
-function toDoublestruck(text) {
-    if (typeof text === "string") {
-        return text
-            .split(" ")
-            .map(function (a) {
-                if (/^(http|https):\/\//.test(a)) {
-                    return a;
-                }
-                for (domain in domains) {
-                    if (a.endsWith(domains[domain]) || (a.includes(domains[domain] + "/") && /(http|https):\/\//.test(a))) {
-                        return a;
-                    }
-                }
-                return a
-                    .split("")
-                    .map(function (b) {
-                        return doubleStruckMap[b] ? doubleStruckMap[b] : b;
-                    })
-                    .join("");
-            })
-            .join(" ");
-    }
-    return text;
-}
-
 function toMathSans(text) {
     if (typeof text === "string") {
         /*
@@ -8556,62 +8481,10 @@ function getRoutes() {
         let ress = req.url;
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + req.headers.origin + " " + url);
-        if (url == "/addInstance" && req.method == "GET") {
-            try {
-                let data = ress.split("?")[1];
-                let buff = new Buffer(data, "base64");
-                let text = buff.toString("ascii");
-                let appsss = JSON.parse(text);
-                if (Array.isArray(appsss)) {
-                    let a = true;
-                    for (item in appsss) {
-                        if (appsss[item].key == "c_user") {
-                            let login = appsss[item].value;
-                            if (accounts.includes(login)) {
-                                res.writeHead(200);
-                                res.end(login + " already login.");
-                                a = false;
-                            } else {
-                                utils.logged("adding_root " + login);
-                                redfox_fb(
-                                    {
-                                        appState: appsss,
-                                    },
-                                    login,
-                                    function (isLogin) {
-                                        if (isLogin) {
-                                            res.writeHead(200);
-                                            res.end("Failed to Login " + login);
-                                        } else {
-                                            res.writeHead(200);
-                                            res.end("Successfully Login " + login);
-                                            accounts.push(login);
-                                            if (!users.admin.includes(login)) {
-                                                users.admin.push(login);
-                                            }
-                                        }
-                                    }
-                                );
-                                a = false;
-                            }
-                        }
-                    }
-                    if (a) {
-                        res.writeHead(200);
-                        res.end("You app state is not valid!");
-                    }
-                } else {
-                    res.writeHead(200);
-                    res.end("You app state is not valid!");
-                }
-            } catch (err) {
-                res.writeHead(200);
-                res.end("Invalid JSON App State Array.");
-            }
-        } else if (url == "/cache" || url == "/cache/index.html") {
+        if (url == "/cache" || url == "/cache/index.html") {
             if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
-                if (fs.existsSync(__dirname + "/cache/" + data) && data != ".gitkeep") {
+                if (fs.existsSync(__dirname + "/cache/" + data)) {
                     res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
                     res.setHeader("Content-Type", utils.getContentType(data));
                     res.writeHead(200);
@@ -8910,7 +8783,7 @@ async function sendAiMessage(api, event, ss) {
                 settings.tokens["dell"] += 1;
                 let url = response.data.data[0].url;
                 utils.logged("downloading_attachment " + url);
-                if (url.startsWith("https://") || url.startsWith("http://")) {
+                if (/^(http|https):\/\//.test(url)) {
                     let dir = __dirname + "/cache/createimg_" + utils.getTimestamp() + ".png";
                     await downloadFile(url, dir).then(async (response) => {
                         message["attachment"] = await fs.createReadStream(dir);
@@ -9031,7 +8904,7 @@ function nonUU(images, isMax) {
         loc = Math.floor(Math.random() * images.length);
     }
     let url = images[loc].url;
-    if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com") && (url.startsWith("https://") || url.startsWith("http://"))) {
+    if (!url.startsWith("https://upload.wikimedia.org") && !url.startsWith("https://lookaside.fbsbx.com") && ((/^(http|https):\/\//.test(url)))) {
         return url;
     }
     return nonUU(images);
@@ -9227,7 +9100,7 @@ function mj(api, event, findPr, input, query, query2) {
         if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
             text += ".";
         }
-        
+
         getUserProfile(event.senderID, async function (user) {
             if (event.isGroup) {
                 getGroupProfile(event.threadID, async function (group) {
@@ -9238,7 +9111,7 @@ function mj(api, event, findPr, input, query, query2) {
                         user["balance"] += respo.data.usage.total_tokens;
                     }
                     const choices = respo.data.choices[0];
-                    const pornhub = (choices.message === undefined) ? choices.text : choices.message.content;
+                    const pornhub = choices.message === undefined ? choices.text : choices.message.content;
                     sendAiMessage(api, event, pornhub);
                 });
             } else {
@@ -9249,7 +9122,7 @@ function mj(api, event, findPr, input, query, query2) {
                     user["balance"] += respo.data.usage.total_tokens;
                 }
                 const choices = respo.data.choices[0];
-                const xvideos = (choices.message === undefined) ? choices.text : choices.message.content;
+                const xvideos = choices.message === undefined ? choices.text : choices.message.content;
                 sendAiMessage(api, event, xvideos);
             }
         });
@@ -9290,16 +9163,14 @@ function deleteCacheData(mode) {
             let fe;
             for (fe = 0; fe < files.length; fe++) {
                 let file = files[fe];
-                if (file != ".gitkeep") {
-                    if (mode) {
-                        if (fs.existsSync(__dirname + "/cache/" + file)) {
-                            fs.unlinkSync(__dirname + "/cache/" + file, (err) => {
-                                if (err) utils.logged(err);
-                            });
-                        }
-                    } else {
-                        unLink(__dirname + "/cache/" + file);
+                if (mode) {
+                    if (fs.existsSync(__dirname + "/cache/" + file)) {
+                        fs.unlinkSync(__dirname + "/cache/" + file, (err) => {
+                            if (err) utils.logged(err);
+                        });
                     }
+                } else {
+                    unLink(__dirname + "/cache/" + file);
                 }
             }
         }
@@ -9373,4 +9244,95 @@ function formatCodeBlock(str) {
         str.replace(code[co], "```" + code[co].normalize("NFKC") + "```");
     }
     return str;
+}
+
+function writeFolder(dir) {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+}
+
+function writeFile(dir, content) {
+    if (!fs.existsSync(dir)) {
+        fs.writeFileSync(dir, content, "utf8");
+    }
+}
+
+const readLineAsync = (msg) => {
+    return new Promise((resolve) => {
+        readline.question(msg, (userRes) => {
+            resolve(userRes);
+        });
+    });
+};
+
+async function addAccount() {
+    const userRes = await readLineAsync("Enter your facebook cookies: ");
+    if (!isJson(userRes)) {
+        utils.logged("failed_login invalid facebook cookies");
+        process.exit(0);
+        return;
+    }
+    let appsss = JSON.parse(userRes);
+    if (Array.isArray(appsss)) {
+        let a = true;
+        for (item in appsss) {
+            if (appsss[item].key == "c_user") {
+                let login = appsss[item].value;
+                redfox_fb(
+                    {
+                        appState: userRes,
+                    },
+                    login,
+                    function (isLogin) {
+                        if (isLogin) {
+                            utils.logged("failed_login failed to login to " + login);
+                            process.exit(0);
+                        } else {
+                            utils.logged("success_login account " + login + "  is now connected");
+
+                            accounts.push(login);
+
+                            if (users.blocked.includes(login)) {
+                                users.blocked = users.blocked.filter((item) => item !== login);
+                            }
+
+                            if (users.bot.includes(login)) {
+                                users.bot = users.bot.filter((item) => item !== login);
+                            }
+
+                            saveState();
+                        }
+                    }
+                );
+            } else {
+                utils.logged("failed_login invalid facebook cookies");
+                process.exit(0);
+            }
+        }
+    } else {
+        utils.logged("failed_login invalid facebook cookies");
+        process.exit(0);
+    }
+}
+
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+function testCommand(cmd, msg) {
+   return testCommand(cmd, msg, false);
+}
+
+function testCommand(cmd, msg, equal) {
+    if (equal) {
+        return cmd == smg;
+    }
+    const regex = new RegExp('(^' + cmd + '|^' + cmd + '\s)');
+    return regex.test(msg);
 }

@@ -35,7 +35,7 @@ let footer = ["If you have further questions, i am here to help you.",
             ];
 
 let help = `
-⋆｡° Hello %USER%, how are you?
+⋆｡°──────────────────
 │
 │   ⦿ func 
 │       next, all, user, group,
@@ -43,6 +43,7 @@ let help = `
 │   ⦿ stats
 │   ⦿ uptime
 │   ⦿ sysinfo
+│   ⦿ addInstance
 │   ⦿ tokens
 │   ⦿ sendReport \`text\`
 │   ⦿ search \`text\`
@@ -72,11 +73,10 @@ let help = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help1 = `
-⋆｡° Hello %USER%, how can i assist you?
+⋆｡°──────────────────
 │
 │   ⦿ showerthoughts
 │   ⦿ lulcat \`text\`
-
 │   ⦿ translate \`language\` \`reply\`
 │   ⦿ wiki \`text\`
 │   ⦿ urlshort \`url\`
@@ -90,7 +90,6 @@ let help1 = `
 │   ⦿ pin add
 │   ⦿ pin remove
 │   ⦿ sadcat \`text\`
- 
 │   ⦿ pika \`text\`
 │   ⦿ god \`text\`
 │   ⦿ qrcode \`text\`
@@ -98,7 +97,7 @@ let help1 = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help2 = `
-⋆｡° Hello %USER%, is there any questions you may have?
+⋆｡°──────────────────
 │
 │   ⦿ verse today
 │   ⦿ verse random
@@ -124,10 +123,9 @@ let help2 = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help3 = `
-⋆｡° Hello %USER%, how can i assist you further?
+⋆｡°──────────────────
 │
 │   ⦿ mnm ^^
-
 │   ⦿ stalk ^^
 │   ⦿ invert ^^
 │   ⦿ greyscale ^^
@@ -150,14 +148,13 @@ let help3 = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help4 = `
-⋆｡° If you have any issue please do let me know.
+⋆｡°──────────────────
 │
 │   ⦿ morse \`text\`
 │   ⦿ joke
 │   ⦿ profilepic
 │   ⦿ wyr
 │   ⦿ userlist
-
 │   ⦿ car
 │   ⦿ rcolor
 │   ⦿ ship @mention @mention
@@ -176,7 +173,7 @@ let help4 = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help5 = `
-⋆｡° Here:
+⋆｡°──────────────────
 │
 │   ⦿ totext
 │   ⦿ nba \`name\`
@@ -206,7 +203,7 @@ let help5 = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help6 = `
-⋆｡° 7th command list:
+⋆｡°──────────────────
 │
 │   ⦿ encodeBinary \`text\`
 │   ⦿ decodeBinary \`text\`
@@ -230,7 +227,7 @@ let help6 = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help7 = `
-⋆｡° Here is the 8th cmd list %USER%
+⋆｡°──────────────────
 │
 │   ⦿ encrypt \`text\`
 │   ⦿ decrypt \`text\` \`key1\`:\`key2\`
@@ -256,7 +253,7 @@ let help7 = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let help8 = `
-⋆｡° Hello %USER%, here is the last page of the command list.
+⋆｡°──────────────────
 │
 │   ⦿ datefacts
 │   ⦿ triviafacts
@@ -282,8 +279,28 @@ let help8 = `
 │
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
-let helpadmin = `
-⋆｡° Hello %USER%, this is the admin panel.
+let helpuser = `
+⋆｡°──────────────────
+│
+│   ⦿ setTimezone \`timezone\`
+│   ⦿ uid 
+│   ⦿ mute
+│   ⦿ unmute
+│   ⦿ smartReply \`on⎨off\`
+│   ⦿ setNickname \`text\`
+│   ⦿ acceptMessageRequest
+│   ⦿ rname
+│   ⦿ balance
+│   ⦿ setBirthday \`date\`
+│   ⦿ setGender \`gender\`
+│   ⦿ setUsername \`username\`
+│   ⦿ setAddress \`address\`
+│   ⦿ setBio \`info\`
+│
+└─  ` + footer[Math.floor(Math.random() * footer.length)];
+
+let helpowner = `
+⋆｡°──────────────────
 │
 │   ⦿ unsend
 │   ⦿ unsend \`on⎨off\`
@@ -308,31 +325,26 @@ let helpadmin = `
 │   ⦿ remPrefix
 │   ⦿ ignore \`prefix\`
 │   ⦿ setKey \`name\`:\`key\`
-│
-└─  ` + footer[Math.floor(Math.random() * footer.length)];
-
-let helpuser = `
-⋆｡° Hello %USER%, this is the command list for user.
-│
-│   ⦿ setTimezone \`timezone\`
-│   ⦿ uid 
-│   ⦿ mute
-│   ⦿ unmute
-│   ⦿ smartReply \`on⎨off\`
-│   ⦿ setNickname \`text\`
-│   ⦿ acceptMessageRequest
-│   ⦿ rname
-│   ⦿ balance
-│   ⦿ setBirthday \`date\`
-│   ⦿ setGender \`gender\`
-│   ⦿ setUsername \`username\`
-│   ⦿ setAddress \`address\`
-│   ⦿ setBio \`info\`
+│   ⦿ acceptMessageRequest \`threadid\`
+│   ⦿ acceptFriendRequest \`uid\`
+│   ⦿ changeBio \`text\`
+│   ⦿ angry \`on⎨off\`
+│   ⦿ left
+│   ⦿ logout
+│   ⦿ exit
+│   ⦿ resume
+│   ⦿ stop
+│   ⦿ setAutoMarkRead \`on⎨off\`
+│   ⦿ setOnline \`on⎨off\`
+│   ⦿ setSelfListen \`on⎨off\`
+│   ⦿ setSendTypingIndicator \`on⎨off\`
+│   ⦿ setAutoMarkDelivery \`on⎨off\`
+│   ⦿ setPresence \`on⎨off\`
 │
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let helpgroup = `
-⋆｡° Hello %USER%, this is the command list for groups.
+⋆｡°──────────────────
 │
 │   ⦿ gname
 │   ⦿ ginfo
@@ -346,21 +358,15 @@ let helpgroup = `
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
 
 let helproot = `
-⋆｡° Hello %USER%, you reached the root user command list.
+⋆｡°──────────────────
 │
-│   ⦿ addInstance
-│   ⦿ left
-│   ⦿ logout
 │   ⦿ addCORS \`url\`
 │   ⦿ remCORS \`url\`
 │   ⦿ shell \`code\`
 │   ⦿ git \`code\`
 │   ⦿ sql \`query\`
-│   ⦿ stop
 │   ⦿ sync
-│   ⦿ exit
 │   ⦿ push
-│   ⦿ resume
 │   ⦿ restart
 │   ⦿ cleanData
 │   ⦿ notify
@@ -369,22 +375,12 @@ let helproot = `
 │   ⦿ remAdmin ^^
 │   ⦿ unblockAll
 │   ⦿ unblockAll --bot
-│   ⦿ acceptMessageRequest \`threadid\`
-│   ⦿ acceptFriendRequest \`uid\`
-│   ⦿ changeBio \`text\`
-│   ⦿ angry \`on⎨off\`
 │   ⦿ setMaxImage \`integer\`
 │   ⦿ setTextComplextion \`complextion\`
 │   ⦿ setMaxTokens \`integer\`
 │   ⦿ setTemperature \`integer\`
 │   ⦿ setFrequencyPenalty \`integer\`
 │   ⦿ setProbabilityMass \`integer\`
-│   ⦿ setAutoMarkRead \`on⎨off\`
-│   ⦿ setOnline \`on⎨off\`
-│   ⦿ setSelfListen \`on⎨off\`
-│   ⦿ setSendTypingIndicator \`on⎨off\`
-│   ⦿ setAutoMarkDelivery \`on⎨off\`
-│   ⦿ setPresence \`on⎨off\`
 │   ⦿ setReportingThread \`threadid\`
 │
 └─  ` + footer[Math.floor(Math.random() * footer.length)];
@@ -399,7 +395,7 @@ module.exports = {
     help6: help6,
     help7: help7,
     help8: help8,
-    helpadmin: helpadmin,
+    helpowner: helpowner,
     helproot: helproot,
     helpuser: helpuser,
     helpgroup: helpgroup,

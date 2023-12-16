@@ -6,6 +6,7 @@
     "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
+        "setup": "npm install && apt install traceroute cowsay figlet neofetch",
         "start": "clear && while [ true ]; do node --trace-deprecation index.js ; done",
         "test": "clear && jshint index.js",
         "check": "clear && node --check index.js",

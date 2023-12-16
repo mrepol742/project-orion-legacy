@@ -1,6 +1,6 @@
-/node_modules
-/cache
-/data/cookies
-build
+/node_modules/*
+/cache/*
+/data/cookies/*
+/build/*
 /data/functionRegistry.json
 /data/threadRegistry.json
