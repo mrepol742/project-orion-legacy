@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 function gen() {
-    let arr = fs.readFileSync("../index.js") + "";
+    let arr = fs.readFileSync("index.js") + "";
 
     let commands = arr.match(/testCommand\((.*?)\)/g);
 
@@ -17,13 +17,14 @@ function gen() {
         let query = commands[cmd].replace("testCommand(", "").replace(")", "");
         query = query.replaceAll('"', "").replaceAll("--", " --").split(", ");
 
+        query[2] = "    " + query[2];
 
-        let permission = query[3];
+        let permission = query[4];
         if (["root", "owner"].includes(permission)) {
             if (help[permission] !== undefined) {
-                help[permission].push(query[1]);
+                help[permission].push(query[2]);
             } else {
-            help[permission] = [query[1]];
+            help[permission] = [query[2]];
             }
         } else {
             count++;
@@ -33,9 +34,9 @@ function gen() {
 
             } else {
                 if (help["help" + helpCount] !== undefined) {
-                    help["help" + helpCount].push(query[1]);
+                    help["help" + helpCount].push(query[2]);
                 } else {
-                help["help" + helpCount] = [query[1]];
+                help["help" + helpCount] = [query[2]];
                 }
             }
         }
@@ -44,6 +45,15 @@ function gen() {
     return JSON.stringify(help, null, 4);
 }
 
+function formatGen(gen) {
+    let strs = "usage: command <option>\noperations:\n";
+    for (a in gen) {
+        strs += gen[a] + "\n";
+    }
+    return strs;
+}
+
 module.exports = {
     gen: gen,
+    formatGen: formatGen
 };

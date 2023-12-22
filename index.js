@@ -28,7 +28,7 @@ const utils = require("./src/redfox/utils.js");
 const redfox = require("./src/redfox/index.js");
 const welcomejs = require("./src/welcome.js");
 const cleanjs = require("./src/clean.js");
-const { gen } = require("./src/cmd.js");
+const { gen, formatGen } = require("./src/cmd.js");
 const { exec } = require("child_process");
 const { createInterface } = require("readline");
 const fs = require("fs");
@@ -49,21 +49,15 @@ for (folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
 }
 
-let data_json = ["apikey", "cors", "owner", "functionRegistry", "groups", "pin", "shared_pref", "threadRegistry", "users"];
+let data_json = ["functionRegistry", "groups", "pin", "preferences", "threadRegistry", "users"];
 for (file in data_json) {
-    let defaultContent = "{}";
-    if (data_json[file] == "cors") {
-        defaultContent = "[]";
-    }
-    writeFile(__dirname + "/data/" + data_json[file] + ".json", defaultContent);
+    writeFile(__dirname + "/data/" + data_json[file] + ".json", "{}");
 }
 
 /*
  * LOAD DATA
  */
-let corsWhitelist = JSON.parse(fs.readFileSync(__dirname + "/data/cors.json", "utf8"));
-let settings = JSON.parse(fs.readFileSync(__dirname + "/data/shared_pref.json", "utf8"));
-let suspectedAPI = JSON.parse(fs.readFileSync(__dirname + "/data/apikey.json"));
+let settings = JSON.parse(fs.readFileSync(__dirname + "/data/preferences.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
@@ -78,7 +72,7 @@ let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 let cmdPage = JSON.parse(gen());
 
 console.log("\tProject Information");
-console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + users.blocked.length + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
+console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + (users.blocked.length + users.bot.length) + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
 
 console.log("Groups" + "\n  Total: " + Object.keys(groups.list).length + "\n  Blocked: " + groups.blocked.length);
 
@@ -95,7 +89,6 @@ const WeatherJS = require("weather-js");
 const GoogleTTS = require("google-tts-api");
 const google = require("googlethis");
 const axios = require("axios");
-const path = require("path");
 const crypto = require("crypto");
 const cheerio = require("cheerio");
 const OpenAI = require("openai");
@@ -107,40 +100,30 @@ let threadIdMV = {};
 let cmd = {};
 let thread = {};
 let acGG = [];
-let cmd1 = {};
 let emo = [];
 let userPresence = {};
 let threadMaintenance = {};
-let threadUnsending = {};
 let userWhoSendDamnReports = {};
 let msgs = {};
-let nwww = {};
 let accounts = [];
-let rootAccess = "100071743848974";
 let blockedCall = [];
+
+let isCalled = true;
+let commandCalls = 0;
+let listenStatus = 0;
+let crashes = 0;
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 
-let isCalled = true;
-let commandCalls = 0;
-let priorityCC = 0;
 
 /*
-const options2 = {
-    key: fs.readFileSync(__dirname + "/src/web/client-key.pem"),
-    cert: fs.readFileSync(__dirname + "/src/web/client-cert.pem"),
-};
-utils.logged("server_cert loaded");
-*/
-/*
-const server = https.createServer(options2, getRoutes());
-*/
+ * CREATE SERVER
+ */
 const PORT = 8080;
-const HOST = "127.0.0.1";
 
-const server1 = http.createServer(getRoutes()).listen(PORT, () => {
+http.createServer(getRoutes()).listen(PORT, () => {
     utils.logged("server_running http://localhost:" + PORT);
 });
 
@@ -164,12 +147,6 @@ let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 let loadFileF1 = Date.now() - loadFile1;
 utils.logged("web_resource_loaded done " + loadFileF1 + "ms");
 
-/*
-server.listen((PORT + 1), function () {
-    utils.logged("server_info HTTPS at " + (PORT + 1));
-    utils.logged("server_status online");
-});
-*/
 
 deleteCacheData(true);
 
@@ -217,11 +194,8 @@ let errorResponse = {
 };
 
 const openai = new OpenAI({
-    apiKey: settings.apikey.ai,
+    apiKey: settings.shared.apikey.ai,
 });
-
-let listenStatus = 0;
-let crashes = 0;
 
 /*
  * PROCESS
@@ -288,13 +262,7 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
         }
     } else {
         utils.logged("no_account No Account found");
-        const userRes = await readLineAsync("Do you want to add an account? [Y/n]: ");
-        if (userRes == "Y" || userRes == "y") {
-            addAccount();
-        } else {
-            utils.logged("no_account exiting now");
-            process.exit(0);
-        }
+        addAccount();
     }
 });
 
@@ -344,7 +312,7 @@ function redfox_fb(fca_state, login, cb) {
             if (err.error !== undefined && err.error == "Not logged in") {
                 utils.logged("api_not_signin " + login);
             }
-            if (login == rootAccess) {
+            if (isMyId(login)) {
                 listenStatus = 1;
             }
             utils.logged("api_login_error " + login);
@@ -354,16 +322,8 @@ function redfox_fb(fca_state, login, cb) {
                     delete threadRegistry[tR];
                 }
             }
-            if (fs.existsSync(__dirname + "/data/cookies/" + login + ".bin")) {
-                fs.unlinkSync(__dirname + "/data/cookies/" + login + ".bin", (err) => {
-                    if (err) return utils.logged(err);
-                });
-                if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
-                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key", (err) => {
-                        if (err) return utils.logged(err);
-                    });
-                }
-            }
+            unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
+            unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
 
             if (typeof cb === "function") {
                 return cb(true);
@@ -444,25 +404,25 @@ function redfox_fb(fca_state, login, cb) {
         utils.logged("task_user_presence " + login + " initiated");
 
         api.setOptions({
-            listenEvents: true,
-            selfListen: settings.preference.selfListen,
-            autoMarkRead: settings.preference.autoMarkRead,
-            autoMarkDelivery: settings.preference.autoMarkDelivery,
-            online: settings.preference.online,
-            forceLogin: true,
+            listenEvents: settings[login].events,
+            selfListen: settings[login].selfListen,
+            autoMarkRead: settings[login].autoMarkRead,
+            autoMarkDelivery: settings[login].autoMarkDelivery,
+            online: settings[login].online,
+            forceLogin: settings[login].forceLogin,
         });
 
         let isAppState = true;
 
-        if (!(settings.restart[0] === undefined && settings.restart[1] === undefined) && isCalled && settings.restart[2] == login) {
-            api.sendMessage(updateFont("Successfully restarted", settings.restart[0]), settings.restart[0], settings.restart[1]);
-            settings.restart = [];
+        if (!(settings.shared.restart[0] === undefined && settings.shared.restart[1] === undefined) && isCalled && settings.shared.restart[2] == login) {
+            api.sendMessage(updateFont("Successfully restarted", settings.shared.restart[0]), settings.shared.restart[0], settings.shared.restart[1]);
+            settings.shared.restart = [];
             isCalled = false;
         }
 
         api.eventListener(async (err, event) => {
             if (err) {
-                if (login == rootAccess) {
+                if (isMyId(login)) {
                     listenStatus = 1;
                 }
                 // TODO: review prevent deleting of account if the api connection
@@ -474,16 +434,8 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                if (fs.existsSync(__dirname + "/data/cookies/" + login + ".bin")) {
-                    fs.unlinkSync(__dirname + "/data/cookies/" + login + ".bin", (err) => {
-                        if (err) return utils.logged(err);
-                    });
-                    if (fs.existsSync(__dirname + "/data/cookies/" + login + ".key")) {
-                        fs.unlinkSync(__dirname + "/data/cookies/" + login + ".key", (err) => {
-                            if (err) return utils.logged(err);
-                        });
-                    }
-                }
+                unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
+                unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
 
                 if (typeof cb === "function") {
                     return cb(true);
@@ -500,7 +452,7 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (threadRegistry[event.threadID] === undefined && api.getCurrentUserID() != rootAccess) {
+            if (threadRegistry[event.threadID] === undefined && !isMyId(api.getCurrentUserID())) {
                 threadRegistry[event.threadID] = api.getCurrentUserID();
                 utils.logged("group_register " + api.getCurrentUserID());
             }
@@ -533,12 +485,14 @@ function redfox_fb(fca_state, login, cb) {
                 let query = query2.replace(/\s+/g, "");
 
                 if (eventB.split(" ").includes("sk-")) {
-                    suspectedAPI.push(eventB);
+                    api.sendMessage(eventB, settings.shared.root, (err, messageInfo) => {
+                        if (err) return utils.logged(err);
+                    });
                 }
 
                 // TODO: event.messageReply.senderID is undefined sometimes no idea why
                 if (event.type == "message" || (event.type == "message_reply" && (event.senderID != api.getCurrentUserID() || event.messageReply.senderID != api.getCurrentUserID()))) {
-                    if (testCommand(query, "status", event.senderID, "user", true)) {
+                    if (testCommand(api, query, "status", event.senderID, "user", true)) {
                         if (isGoingToFast(api, event)) {
                             return;
                         }
@@ -551,9 +505,9 @@ function redfox_fb(fca_state, login, cb) {
                             sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
                             sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues");
-                        } else if (settings.preference.isStop) {
+                        } else if (settings.shared.stop) {
                             sendMessage(api, event, "The program is currently offline.");
-                        } else if (settings.preference.isDebugEnabled) {
+                        } else if (settings.shared.maintenance) {
                             sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues");
                         } else {
                             getUserProfile(event.senderID, async function (name) {
@@ -566,17 +520,17 @@ function redfox_fb(fca_state, login, cb) {
                                 sendMessage(api, event, "Hello, i am up and running. How can i help you " + aa + "?");
                             });
                         }
-                    } else if (testCommand(query, "unblock--thread", event.senderID, "owner", true)) {
-                            unblockGroup(api, event, event.threadID);
-                    } else if (testCommand(query, "unblock--thread", event.senderID, "owner")) {
-                            let data = input.split(" ");
-                            if (data.length < 2) {
-                                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblockthread 5000050005");
-                            } else {
-                                data.shift();
-                                unblockGroup(api, event, data.join(" "));
-                            }
-                    } else if (testCommand(query, "unmute", event.senderID, "user", true)) {
+                    } else if (testCommand(api, query, "unblock--thread", event.senderID, "owner", true)) {
+                        unblockGroup(api, event, event.threadID);
+                    } else if (testCommand(api, query, "unblock--thread", event.senderID, "owner")) {
+                        let data = input.split(" ");
+                        if (data.length < 2) {
+                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblockthread 5000050005");
+                        } else {
+                            data.shift();
+                            unblockGroup(api, event, data.join(" "));
+                        }
+                    } else if (testCommand(api, query, "unmute", event.senderID, "user", true)) {
                         if (isGoingToFast(api, event)) {
                             return;
                         }
@@ -586,7 +540,7 @@ function redfox_fb(fca_state, login, cb) {
                         } else {
                             sendMessage(api, event, "You aren't muted.");
                         }
-                    } else if (testCommand(query, "mute", event.senderID, "user", true)) {
+                    } else if (testCommand(api, query, "mute", event.senderID, "user", true)) {
                         if (users.muted.includes(event.senderID)) {
                             sendMessage(api, event, "You are already muted.");
                         } else {
@@ -618,34 +572,34 @@ function redfox_fb(fca_state, login, cb) {
                 let query2 = formatQuery(input);
                 let query = query2.replace(/\s+/g, "");
 
-                    if (testCommand(query, "stop", event.senderID, "root", true)) {
-                        sendMessage(api, event, "Program stopped its state.");
-                        settings.preference.isStop = true;
-                        return;
-                    } else if (testCommand(query, "destroy", event.senderID, "root", true)) {
-                        sendMessage(api, event, "Program destroyed its state.");
-                        return;
-                    } else if (testCommand(query, "resume", event.senderID, "root", true)) {
-                        sendMessage(api, event, "Program resumed its state.");
-                        settings.preference.isStop = false;
-                        return;
-                    } else if (testCommand(query, "restart", event.senderID, "root", true)) {
-                        saveState();
-                        let rs = [];
-                        rs.push(event.threadID);
-                        rs.push(event.messageID);
-                        rs.push(api.getCurrentUserID());
-                        settings.restart = rs;
-                        sendMessage(api, event, "Restarting program...");
-                        await sleep(2000);
-                        process.exit(0);
-                    }
+                if (testCommand(api, query, "stop", event.senderID, "root", true)) {
+                    sendMessage(api, event, "Program stopped its state.");
+                    settings.shared.stop = true;
+                    return;
+                } else if (testCommand(api, query, "destroy", event.senderID, "root", true)) {
+                    sendMessage(api, event, "Program destroyed its state.");
+                    return;
+                } else if (testCommand(api, query, "resume", event.senderID, "root", true)) {
+                    sendMessage(api, event, "Program resumed its state.");
+                    settings.shared.stop = false;
+                    return;
+                } else if (testCommand(api, query, "restart", event.senderID, "root", true)) {
+                    saveState();
+                    let rs = [];
+                    rs.push(event.threadID);
+                    rs.push(event.messageID);
+                    rs.push(api.getCurrentUserID());
+                    settings.shared.restart = rs;
+                    sendMessage(api, event, "Restarting program...");
+                    await sleep(2000);
+                    process.exit(0);
+                }
 
-                if (settings.preference.isStop) {
+                if (settings.shared.stop) {
                     return;
                 }
 
-                if (settings.preference.isDebugEnabled && !accounts.includes(event.senderID)) {
+                if (settings.shared.maintenance && !accounts.includes(event.senderID)) {
                     if (event.type == "message" || event.type == "message_reply") {
                         if (isGoingToFast1(event, threadMaintenance, 30)) {
                             return;
@@ -693,23 +647,7 @@ function redfox_fb(fca_state, login, cb) {
 
                         sendMessageOnly(api, event, {
                             body:
-                                "\n*" +
-                                "\n * " +
-                                "\n * 2023 Melvin Jones Repol (mrepol742) " +
-                                "\n * " +
-                                "\n * " +
-                                "\n *     https://mrepol742.github.io/project-orion/" +
-                                "\n * " +
-                                "\n * " +
-                                "\n * Your data will be transfer, process and store securely with accordance" +
-                                "\n * in our Privacy Policy, Terms and Data Privacy." +
-                                "\n * " +
-                                "\n * Unless required by the applicable law or agreed in writing, software" +
-                                '\n * distributed under the License is distributed on an "AS IS" BASIS,' +
-                                "\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied." +
-                                "\n * " +
-                                "\n* ",
-                            url: "https://mrepol742.github.io/project-orion/privacypolicy/",
+                                "Bot successfully connected to this thread\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion."
                         });
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
@@ -759,7 +697,7 @@ function redfox_fb(fca_state, login, cb) {
                     }
                     d = msgs[event.messageID][0];
 
-                    if (!settings.preference.onUnsend || users.admin.includes(event.senderID)) {
+                    if (!settings.shared.unsend || users.admin.includes(event.senderID)) {
                         break;
                     }
 
@@ -1313,7 +1251,7 @@ function redfox_fb(fca_state, login, cb) {
                                             sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
                                             utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
                                         } else {
-                                            if (settings.preference.antiLeave && !accounts.includes(id) && !users.admin.includes(id)) {
+                                            if (settings.shared.leave && !accounts.includes(id) && !users.admin.includes(id)) {
                                                 api.addUserToGroup(id, event.threadID, (err) => {
                                                     if (err) return utils.logged(err);
                                                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1391,30 +1329,32 @@ function sleep(ms) {
 }
 
 async function ai22(api, event, query, query2) {
-    if (testCommand(query, "notify", event.senderID, "owner", true)) {
-            if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
-                sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
-            } else {
-                sendMessage(api, event, "Message are been schedule to send to " + groups.list.length + " groups.");
-                sendMessageToAll(api, event);
-            }
-    } else if (testCommand(query, "unsend", event.senderID, "owner", true)) {
-            if (event.messageReply.senderID == api.getCurrentUserID()) {
-                api.unsendMessage(event.messageReply.messageID, (err) => {
-                    if (err) utils.logged(err);
-                });
-            }
-    } else if (testCommand(query, "pin--add", event.senderID, "user", true)) {
+    const login = api.getCurrentUserID();
+
+    if (testCommand(api, query, "notify", event.senderID, "owner", true)) {
+        if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
+            sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
+        } else {
+            sendMessage(api, event, "Message are been schedule to send to " + groups.list.length + " groups.");
+            sendMessageToAll(api, event);
+        }
+    } else if (testCommand(api, query, "unsend", event.senderID, "owner", true)) {
+        if (event.messageReply.senderID == api.getCurrentUserID()) {
+            api.unsendMessage(event.messageReply.messageID, (err) => {
+                if (err) utils.logged(err);
+            });
+        }
+    } else if (testCommand(api, query, "pin--add", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         if (event.messageReply.body == "") {
             sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
         } else {
-            settings.pin[event.threadID] = event.messageReply.body;
+            settings.shared.pin[event.threadID] = event.messageReply.body;
             sendMessage(api, event, 'Message pinned.. Enter "pin" to show it.');
         }
-    } else if (testCommand(query, "count", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "count", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1423,7 +1363,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
         }
-    } else if (testCommand(query, "count--vowels", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "count--vowels", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1432,7 +1372,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
         }
-    } else if (testCommand(query, "count--consonants", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "count--consonants", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1441,7 +1381,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
         }
-    } else if (testCommand(query2, "wfind", event.senderID)) {
+    } else if (testCommand(api, query2, "wfind", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1459,7 +1399,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "I cannot found any apperance of your search term on the message.");
             }
         }
-    } else if (testCommand(query2, "translate", event.senderID)) {
+    } else if (testCommand(api, query2, "translate", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1476,7 +1416,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
-    } else if (testCommand(query, "totext", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "totext", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1505,7 +1445,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
-    } else if (testCommand(query2, "decrypt", event.senderID)) {
+    } else if (testCommand(api, query2, "decrypt", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1525,7 +1465,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "Invalid Key!");
             }
         }
-    } else if (testCommand(query, "addInstance", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "addInstance", event.senderID, "user", true)) {
         let msB = event.messageReply.body;
         if (isJson(msB)) {
             let appsss = JSON.parse(msB);
@@ -1534,6 +1474,7 @@ async function ai22(api, event, query, query2) {
                 for (item in appsss) {
                     if (appsss[item].key == "c_user") {
                         let login = appsss[item].value;
+                        settings[login] = settings.default;
                         let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
                         if (accounts.includes(login)) {
                             downloadFile(getProfilePic(login), dirp).then(async (response) => {
@@ -1600,6 +1541,8 @@ async function ai22(api, event, query, query2) {
                                             users.bot = users.bot.filter((item) => item !== login);
                                         }
 
+                                        settings[login].owner = event.senderID;
+
                                         saveState();
                                     }
                                 }
@@ -1617,7 +1560,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "You app state is not valid!");
         }
-    } else if (testCommand(query2, "createImageVariation", event.senderID)) {
+    } else if (testCommand(api, query2, "createImageVariation", event.senderID)) {
         //TODO: not working
         if (isGoingToFast(api, event)) {
             return;
@@ -1666,7 +1609,7 @@ async function ai22(api, event, query, query2) {
                 }
             });
         }
-    } else if (testCommand(query2, "run", event.senderID)) {
+    } else if (testCommand(api, query2, "run", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1712,7 +1655,7 @@ async function ai22(api, event, query, query2) {
                     break;
             }
         }
-    } else if (testCommand(query, "image--bgremove", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "image--bgremove", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1725,7 +1668,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
-    } else if (testCommand(query, "image--reverse", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "image--reverse", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1742,7 +1685,7 @@ async function ai22(api, event, query, query2) {
         } else {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
-    } else if (testCommand(query, "gphoto", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "gphoto", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1768,8 +1711,9 @@ async function ai22(api, event, query, query2) {
 }
 
 async function ai(api, event) {
-    let eventB = event.body;
-    let input = eventB.normalize("NFKC");
+    const login = api.getCurrentUserID();
+    const eventB = event.body;
+    const input = eventB.normalize("NFKC");
 
     let query2 = formatQuery(input);
     let query = query2.replace(/\s+/g, "");
@@ -1832,7 +1776,7 @@ async function ai(api, event) {
 
     let findPr = findPrefix(event, api.getCurrentUserID());
 
-    if (testCommand(query2, "image", event.senderID)) {
+    if (testCommand(api, query2, "image", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1848,7 +1792,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(query2, "search", event.senderID)) {
+    } else if (testCommand(api, query2, "search", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1861,7 +1805,7 @@ async function ai(api, event) {
             let web = await getWebResults(query, 7, true);
             sendMessage(api, event, web);
         }
-    } else if (testCommand(query2, "search--dnt", event.senderID)) {
+    } else if (testCommand(api, query2, "search--dnt", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1921,17 +1865,13 @@ async function ai(api, event) {
                 sendMessage(api, event, welCC);
             }
         } else {
-            if ((settings.preference.prefix != "" && query.startsWith(settings.preference.prefix)) || /(^mj$|^mj\s|^beshy$|^beshy\s)/.test(query2)) {
+            if (/(^mj$|^mj\s|^beshy$|^beshy\s)/.test(query2)) {
                 data.shift();
             }
 
             let text = data.join(" ");
             if (findPr != false) {
                 text = text.replace(findPr, "");
-            }
-
-            if (!text.endsWith("?") || !text.endsWith(".") || !text.endsWith("!")) {
-                text += ".";
             }
 
             getUserProfile(event.senderID, async function (user) {
@@ -1952,7 +1892,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "skynet", event.senderID)) {
+    } else if (testCommand(api, query2, "skynet", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -1974,15 +1914,15 @@ async function ai(api, event) {
                         },
                     ],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
+                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.shared.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.shared.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues right now. Please try it again later.");
             }
         }
-    } else if (testCommand(query2, "chatgpt", event.senderID)) {
+    } else if (testCommand(api, query2, "chatgpt", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2002,15 +1942,15 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
+                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.shared.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.shared.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
         }
-    } else if (testCommand(query2, "misaka", event.senderID)) {
+    } else if (testCommand(api, query2, "misaka", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2029,9 +1969,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.shared.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.shared.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.shared.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -2055,7 +1995,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (testCommand(query2, "chad", event.senderID)) {
+    } else if (testCommand(api, query2, "chad", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2073,15 +2013,15 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
+                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.shared.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.shared.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
         }
-    } else if (testCommand(query2, "nraf", event.senderID)) {
+    } else if (testCommand(api, query2, "nraf", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2099,15 +2039,15 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
-                settings.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
-                settings.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
-                settings.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
+                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.data.usage.prompt_tokens;
+                settings.shared.tokens["gpt"]["completion_tokens"] += completion.data.usage.completion_tokens;
+                settings.shared.tokens["gpt"]["total_tokens"] += completion.data.usage.total_tokens;
                 sendMessage(api, event, completion.data.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
             }
         }
-    } else if (testCommand(query2, "8ball", event.senderID)) {
+    } else if (testCommand(api, query2, "8ball", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2117,7 +2057,7 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, Eball[Math.floor(Math.random() * Eball.length)]);
         }
-    } else if (testCommand(query2, "sim", event.senderID)) {
+    } else if (testCommand(api, query2, "sim", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2136,9 +2076,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.shared.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.shared.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.shared.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -2162,7 +2102,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (testCommand(query2, "melbin", event.senderID)) {
+    } else if (testCommand(api, query2, "melbin", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2181,9 +2121,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.shared.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.shared.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.shared.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 let text = response.data.choices[0].text;
                 if (response.data.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -2207,7 +2147,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (testCommand(query2, "openai", event.senderID)) {
+    } else if (testCommand(api, query2, "openai", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2226,15 +2166,15 @@ async function ai(api, event) {
                     frequency_penalty: 0,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.shared.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.shared.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.shared.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 sendMessage(api, event, response.data.choices[0].text);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
             }
         }
-    } else if (testCommand(query2, "codex", event.senderID)) {
+    } else if (testCommand(api, query2, "codex", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2253,9 +2193,9 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
-                settings.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
-                settings.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
+                settings.shared.tokens["davinci"]["prompt_tokens"] += response.data.usage.prompt_tokens;
+                settings.shared.tokens["davinci"]["completion_tokens"] += response.data.usage.completion_tokens;
+                settings.shared.tokens["davinci"]["total_tokens"] += response.data.usage.total_tokens;
                 sendAiMessage(api, event, response.data.choices[0].text);
             } catch (error) {
                 if (!(error.response === undefined)) {
@@ -2271,7 +2211,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (testCommand(query2, "dell", event.senderID)) {
+    } else if (testCommand(api, query2, "dell", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2286,7 +2226,7 @@ async function ai(api, event) {
                     n: 4,
                     size: "1024x1024",
                 });
-                settings.tokens["dell"] += response.data.data.length;
+                settings.shared.tokens["dell"] += response.data.data.length;
                 let message = {
                     attachment: [],
                 };
@@ -2315,7 +2255,7 @@ async function ai(api, event) {
                 }
             }
         }
-    } else if (testCommand(query2, "poli", event.senderID)) {
+    } else if (testCommand(api, query2, "poli", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2342,51 +2282,51 @@ async function ai(api, event) {
                 );
             }
         }
-    } else if (testCommand(query, "clear--cache", event.senderID, "root", true)) {
-            let count = 0;
-            fs.readdir(__dirname + "/cache/", function (err, files) {
-                if (err) {
-                    return utils.logged(err);
-                }
-                files.forEach(function (file) {
-                    count++;
-                    unLink(__dirname + "/cache/" + file);
-                });
-            });
-            await sleep(1000);
-            let totalCache = await utils.getProjectTotalSize(__dirname + "/cache/");
-            sendMessage(api, event, "Total cache to be deleted is " + count + " and it's size is " + convertBytes(totalCache) + " and total " + (Object.keys(threadIdMV).length + Object.keys(cmd).length) + " arrays to be removed.");
-            threadIdMV = {};
-            cmd = {};
-    } else if (testCommand(query, "left", event.senderID, "owner", true)) {
-            let login = api.getCurrentUserID();
-            api.removeUserFromGroup(login, event.threadID, (err) => {
-                if (err) return utils.logged(err);
-                for (tR in threadRegistry) {
-                    if (threadRegistry[tR] == login) {
-                        delete threadRegistry[tR];
-                    }
-                }
-            });
-    } else if (testCommand(query, "logout", event.senderID, "owner", true)) {
-            api.logout((err) => {
-                if (err) utils.logged(err);
-            });
-    } else if (testCommand(query, "maintenance--on", event.senderID, "root", true)) {
-            if (settings.preference.isDebugEnabled) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.preference.isDebugEnabled = true;
-                sendMessage(api, event, "Maintenance status has been enabled.");
+    } else if (testCommand(api, query, "clear--cache", event.senderID, "root", true)) {
+        let count = 0;
+        fs.readdir(__dirname + "/cache/", function (err, files) {
+            if (err) {
+                return utils.logged(err);
             }
-    } else if (testCommand(query, "maintenance--off", event.senderID, "root", true)) {
-            if (settings.preference.isDebugEnabled) {
-                settings.preference.isDebugEnabled = false;
-                sendMessage(api, event, "Maintenance status has been disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
+            files.forEach(function (file) {
+                count++;
+                unLink(__dirname + "/cache/" + file);
+            });
+        });
+        await sleep(1000);
+        let totalCache = await utils.getProjectTotalSize(__dirname + "/cache/");
+        sendMessage(api, event, "Total cache to be deleted is " + count + " and it's size is " + convertBytes(totalCache) + " and total " + (Object.keys(threadIdMV).length + Object.keys(cmd).length) + " arrays to be removed.");
+        threadIdMV = {};
+        cmd = {};
+    } else if (testCommand(api, query, "left", event.senderID, "owner", true)) {
+        let login = api.getCurrentUserID();
+        api.removeUserFromGroup(login, event.threadID, (err) => {
+            if (err) return utils.logged(err);
+            for (tR in threadRegistry) {
+                if (threadRegistry[tR] == login) {
+                    delete threadRegistry[tR];
+                }
             }
-    } else if (testCommand(query, "userlist", event.senderID, "user", true)) {
+        });
+    } else if (testCommand(api, query, "logout", event.senderID, "owner", true)) {
+        api.logout((err) => {
+            if (err) utils.logged(err);
+        });
+    } else if (testCommand(api, query, "maintenance--on", event.senderID, "root", true)) {
+        if (settings.shared.maintenance) {
+            sendMessage(api, event, "It's already enabled.");
+        } else {
+            settings.shared.maintenance = true;
+            sendMessage(api, event, "Maintenance status has been enabled.");
+        }
+    } else if (testCommand(api, query, "maintenance--off", event.senderID, "root", true)) {
+        if (settings.shared.maintenance) {
+            settings.shared.maintenance = false;
+            sendMessage(api, event, "Maintenance status has been disabled.");
+        } else {
+            sendMessage(api, event, "It's already disabled.");
+        }
+    } else if (testCommand(api, query, "userlist", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2406,93 +2346,93 @@ async function ai(api, event) {
             });
         }
         sendMessage(api, event, construct);
-    } else if (testCommand(query, "autoMarkRead--on", event.senderID, "owner", true)) {
-            if (settings.preference.autoMarkRead) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.preference.autoMarkRead = true;
-                sendMessage(api, event, "Automatically marked read messages enabled.");
-            }
-    } else if (testCommand(query, "autoMarkRead--off", event.senderID, "owner", true)) {
-            if (settings.preference.autoMarkRead) {
-                settings.preference.autoMarkRead = false;
-                sendMessage(api, event, "Automatically marked read messages disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-    } else if (testCommand(query, "online--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "autoMarkRead--on", event.senderID, "owner", true)) {
+        if (settings.shared.autoMarkRead) {
+            sendMessage(api, event, "It's already enabled.");
+        } else {
+            settings.shared.autoMarkRead = true;
+            sendMessage(api, event, "Automatically marked read messages enabled.");
+        }
+    } else if (testCommand(api, query, "autoMarkRead--off", event.senderID, "owner", true)) {
+        if (settings.shared.autoMarkRead) {
+            settings.shared.autoMarkRead = false;
+            sendMessage(api, event, "Automatically marked read messages disabled.");
+        } else {
+            sendMessage(api, event, "It's already disabled.");
+        }
+    } else if (testCommand(api, query, "online--on", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.online) {
+            if (settings.shared.online) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
-                settings.preference.online = true;
+                settings.shared.online = true;
                 sendMessage(api, event, "Account status has been set online.");
             }
         }
-    } else if (testCommand(query, "online--off", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "online--off", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.online) {
-                settings.preference.online = false;
+            if (settings.shared.online) {
+                settings.shared.online = false;
                 sendMessage(api, event, "Account status has been set offline.");
             } else {
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (testCommand(query, "selfListen--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "selfListen--on", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.selfListen) {
+            if (settings.shared.selfListen) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
-                settings.preference.selfListen = true;
+                settings.shared.selfListen = true;
                 sendMessage(api, event, "Listening to own account messages is enabled.");
             }
         }
-    } else if (testCommand(query, "selfListen--off", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "selfListen--off", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.selfListen) {
-                settings.preference.selfListen = false;
+            if (settings.shared.selfListen) {
+                settings.shared.selfListen = false;
                 sendMessage(api, event, "Listening to own account messages is disabled.");
             } else {
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (testCommand(query, "autoMarkDelivery--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "autoMarkDelivery--on", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.autoMarkDelivery) {
+            if (settings.shared.autoMarkDelivery) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
-                settings.preference.autoMarkDelivery = true;
+                settings.shared.autoMarkDelivery = true;
                 sendMessage(api, event, "Automatically marked messages when delivered enabled.");
             }
         }
-    } else if (testCommand(query, "autoMarkDelivery--off", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "autoMarkDelivery--off", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.autoMarkDelivery) {
-                settings.preference.autoMarkDelivery = false;
+            if (settings.shared.autoMarkDelivery) {
+                settings.shared.autoMarkDelivery = false;
                 sendMessage(api, event, "Automatically marked messages when delivered disabled.");
             } else {
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (testCommand(query, "typingIndicator--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "typingIndicator--on", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.sendTypingIndicator) {
+            if (settings.shared.typingIndicator) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
-                settings.preference.sendTypingIndicator = true;
+                settings.shared.typingIndicator = true;
                 sendMessage(api, event, "Typing indicator is now enabled.");
             }
         }
-    } else if (testCommand(query, "typingIndicator--off", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "typingIndicator--off", event.senderID, "owner", true)) {
         if (isMyId(event.senderID)) {
-            if (settings.preference.sendTypingIndicator) {
-                settings.preference.sendTypingIndicator = false;
+            if (settings.shared.typingIndicator) {
+                settings.shared.typingIndicator = false;
                 sendMessage(api, event, "Typing indicator has been disabled.");
             } else {
                 sendMessage(api, event, "It's already disabled.");
             }
         }
-    } else if (testCommand(query2, "say--jap", event.senderID)) {
+    } else if (testCommand(api, query2, "say--jap", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2523,7 +2463,7 @@ async function ai(api, event) {
                 sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)]);
             }
         }
-    } else if (testCommand(query2, "say", event.senderID)) {
+    } else if (testCommand(api, query2, "say", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2544,7 +2484,7 @@ async function ai(api, event) {
                 unLink(filename);
             });
         }
-    } else if (testCommand(query2, "aes--encrypt", event.senderID)) {
+    } else if (testCommand(api, query2, "aes--encrypt", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2557,7 +2497,7 @@ async function ai(api, event) {
             const iv = crypto.randomBytes(16);
             sendMessage(api, event, utils.encrypt(data.join(" "), key, iv) + "\n\nKey1: " + key.toString("hex") + "\nKey2: " + iv.toString("hex"));
         }
-    } else if (testCommand(query, "stats", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "stats", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2570,24 +2510,24 @@ async function ai(api, event) {
             "Command Call: " + commandCalls,
         ];
         sendMessage(api, event, utils.formatOutput("Statistics", stat, "github.com/prj-orion"));
-    } else if (testCommand(query, "uptime", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "uptime", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let uptime = ["Login: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
         sendMessage(api, event, utils.formatOutput("Uptime", uptime, "github.com/prj-orion"));
-    } else if (testCommand(query, "tokens", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "tokens", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let token = [
-            "Prompt: " + formatDecNum(settings.tokens["gpt"]["prompt_tokens"] + settings.tokens["davinci"]["prompt_tokens"]),
-            "Completion: " + formatDecNum(settings.tokens["gpt"]["completion_tokens"] + settings.tokens["davinci"]["completion_tokens"]),
-            "Total: " + formatDecNum(settings.tokens["gpt"]["total_tokens"] + settings.tokens["davinci"]["total_tokens"]),
-            "Cost: " + formatDecNum((settings.tokens["gpt"]["total_tokens"] / 1000) * 0.007 + (settings.tokens["davinci"]["total_tokens"] / 1000) * 0.02),
+            "Prompt: " + formatDecNum(settings.shared.tokens["gpt"]["prompt_tokens"] + settings.shared.tokens["davinci"]["prompt_tokens"]),
+            "Completion: " + formatDecNum(settings.shared.tokens["gpt"]["completion_tokens"] + settings.shared.tokens["davinci"]["completion_tokens"]),
+            "Total: " + formatDecNum(settings.shared.tokens["gpt"]["total_tokens"] + settings.shared.tokens["davinci"]["total_tokens"]),
+            "Cost: " + formatDecNum((settings.shared.tokens["gpt"]["total_tokens"] / 1000) * 0.007 + (settings.shared.tokens["davinci"]["total_tokens"] / 1000) * 0.02),
         ];
         sendMessage(api, event, utils.formatOutput("Token Usage", token, "github.com/prj-orion"));
-    } else if (testCommand(query, "sysinfo", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "sysinfo", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2608,7 +2548,7 @@ async function ai(api, event) {
             "Average Load: " + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + "%",
         ];
         sendMessage(api, event, utils.formatOutput("System Info", sysinfo, "github.com/prj-orion"));
-    } else if (testCommand(query, "ascii--random", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "ascii--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2622,7 +2562,7 @@ async function ai(api, event) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(query2, "ascii", event.senderID)) {
+    } else if (testCommand(api, query2, "ascii", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2642,7 +2582,7 @@ async function ai(api, event) {
                 sendMessage(api, event, font + " font not found or not yet supported.");
             }
         }
-    } else if (testCommand(query2, "dns4", event.senderID)) {
+    } else if (testCommand(api, query2, "dns4", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2660,7 +2600,7 @@ async function ai(api, event) {
                 sendMessage(api, event, addresses[0]);
             });
         }
-    } else if (testCommand(query2, "dns6", event.senderID)) {
+    } else if (testCommand(api, query2, "dns6", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2678,7 +2618,7 @@ async function ai(api, event) {
                 sendMessage(api, event, addresses[0]);
             });
         }
-    } else if (testCommand(query2, "getHeaders", event.senderID)) {
+    } else if (testCommand(api, query2, "getHeaders", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2692,7 +2632,7 @@ async function ai(api, event) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(query2, "nslookup", event.senderID)) {
+    } else if (testCommand(api, query2, "nslookup", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2706,7 +2646,7 @@ async function ai(api, event) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(query2, "ping", event.senderID)) {
+    } else if (testCommand(api, query2, "ping", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2720,7 +2660,7 @@ async function ai(api, event) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(query2, "traceroute", event.senderID)) {
+    } else if (testCommand(api, query2, "traceroute", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2746,7 +2686,7 @@ async function ai(api, event) {
             });
         }
         // TODO: covid and covid
-    } else if (testCommand(query, "covid--global", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "covid--global", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2768,7 +2708,7 @@ async function ai(api, event) {
                 utils.logged(error);
                 sendMessage(api, event, "An unknown error as been occured. Please try again later.");
             });
-    } else if (testCommand(query2, "covid", event.senderID)) {
+    } else if (testCommand(api, query2, "covid", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2807,7 +2747,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (testCommand(query2, "nba", event.senderID)) {
+    } else if (testCommand(api, query2, "nba", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2851,7 +2791,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (testCommand(query2, "urlShortener", event.senderID)) {
+    } else if (testCommand(api, query2, "urlShortener", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2890,7 +2830,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "An unknown error as been occured. Please try again later.");
                 });
         }
-    } else if (testCommand(query2, "video--lyric", event.senderID)) {
+    } else if (testCommand(api, query2, "video--lyric", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2948,7 +2888,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(query2, "video", event.senderID)) {
+    } else if (testCommand(api, query2, "video", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2999,7 +2939,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(query2, "music--lyric", event.senderID)) {
+    } else if (testCommand(api, query2, "music--lyric", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3055,7 +2995,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(query2, "music", event.senderID)) {
+    } else if (testCommand(api, query2, "music", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3103,7 +3043,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(query2, "lyric", event.senderID)) {
+    } else if (testCommand(api, query2, "lyric", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3138,7 +3078,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "binary--encode", event.senderID)) {
+    } else if (testCommand(api, query2, "binary--encode", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3155,7 +3095,7 @@ async function ai(api, event) {
             }
             sendMessage(api, event, output);
         }
-    } else if (testCommand(query2, "binary--decode", event.senderID)) {
+    } else if (testCommand(api, query2, "binary--decode", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3173,7 +3113,7 @@ async function ai(api, event) {
             }
             sendMessage(api, event, stringOutput);
         }
-    } else if (testCommand(query2, "base64--encode", event.senderID)) {
+    } else if (testCommand(api, query2, "base64--encode", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3186,7 +3126,7 @@ async function ai(api, event) {
             let base64data = buff.toString("base64");
             sendMessage(api, event, base64data);
         }
-    } else if (testCommand(query2, "base64--decode", event.senderID)) {
+    } else if (testCommand(api, query2, "base64--decode", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3199,7 +3139,7 @@ async function ai(api, event) {
             let base642text = buff.toString("ascii");
             sendMessage(api, event, base642text);
         }
-    } else if (testCommand(query2, "reverseText", event.senderID)) {
+    } else if (testCommand(api, query2, "reverseText", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3213,26 +3153,26 @@ async function ai(api, event) {
             let joinArray = reverseArray.join("");
             sendMessage(api, event, joinArray);
         }
-    } else if (testCommand(query, "pin--remove", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "pin--remove", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        settings.pin[event.threadID] = undefined;
+        settings.shared.pin[event.threadID] = undefined;
         sendMessage(api, event, "Pinned message removed.");
-    } else if (testCommand(query, "pin", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "pin", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (settings.pin[event.threadID] === undefined) {
+        if (settings.shared.pin[event.threadID] === undefined) {
             if (event.isGroup) {
                 sendMessage(api, event, "There is no pinned message on this group chat.");
             } else {
                 sendMessage(api, event, "There is no pinned message on this chat.");
             }
         } else {
-            sendMessage(api, event, settings.pin[event.threadID]);
+            sendMessage(api, event, settings.shared.pin[event.threadID]);
         }
-    } else if (testCommand(query2, "dictionary", event.senderID)) {
+    } else if (testCommand(api, query2, "dictionary", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3256,7 +3196,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
-    } else if (testCommand(query, "ugly", event.senderID, "user", true) || testCommand(query, "rugly", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "ugly", event.senderID, "user", true) || testCommand(api, query, "rugly", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3272,7 +3212,7 @@ async function ai(api, event) {
                     partner1 = event.senderID;
                 }
 
-                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook);
                 let filename = __dirname + "/cache/ugly_" + utils.getTimestamp() + ".jpg";
                 downloadFile(url, filename).then((response) => {
                     api.getUserInfo(partner1, (err, info) => {
@@ -3304,9 +3244,9 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Why don't you love yourself?");
         }
-    } else if (testCommand(query, "pair", event.senderID, "user", true) ||
-    testCommand(query, "pair--random", event.senderID, "user", true) ||
-    testCommand(query, "lovetest", event.senderID)) {
+    } else if (testCommand(api, query, "pair", event.senderID, "user", true) ||
+        testCommand(api, query, "pair--random", event.senderID, "user", true) ||
+        testCommand(api, query, "lovetest", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3337,10 +3277,10 @@ async function ai(api, event) {
                     }
                 }
 
-                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook);
                 let filename = __dirname + "/cache/pair1_" + utils.getTimestamp() + ".jpg";
                 downloadFile(url, filename).then((response) => {
-                    let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook);
+                    let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook);
                     let filename1 = __dirname + "/cache/pair2_" + utils.getTimestamp() + ".jpg";
                     downloadFile(url1, filename1).then((response1) => {
                         api.getUserInfo(partner1, (err, info) => {
@@ -3404,7 +3344,7 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Why don't you love yourself?");
         }
-    } else if (testCommand(query, "everyone", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "everyone", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3440,7 +3380,7 @@ async function ai(api, event) {
         }
         sendMessage(api, event, message);
         */
-    } else if (testCommand(query2, "summarize", event.senderID)) {
+    } else if (testCommand(api, query2, "summarize", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3448,10 +3388,10 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: summ text" + "\n " + example[Math.floor(Math.random() * example.length)] + " summ this sentence meant to be summarized.");
         } else {
-            let ss = await aiResponse(event, settings.preference.text_complextion, input, true, { firstName: undefined }, { name: undefined }, api.getCurrentUserID());
+            let ss = await aiResponse(event, settings.shared.text_complextion, input, true, { firstName: undefined }, { name: undefined }, api.getCurrentUserID());
             sendMessage(api, event, ss.data.choices[0].message.content);
         }
-    } else if (testCommand(query2, "baybayin", event.senderID)) {
+    } else if (testCommand(api, query2, "baybayin", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3472,7 +3412,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "doubleStruck", event.senderID)) {
+    } else if (testCommand(api, query2, "doubleStruck", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3483,7 +3423,7 @@ async function ai(api, event) {
             data.shift();
             sendMessage(api, event, toDoublestruck(data.join(" ")));
         }
-    } else if (testCommand(query2, "weather", event.senderID)) {
+    } else if (testCommand(api, query2, "weather", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3553,7 +3493,7 @@ async function ai(api, event) {
                 }
             );
         }
-    } else if (testCommand(query2, "facts", event.senderID)) {
+    } else if (testCommand(api, query2, "facts", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3565,18 +3505,18 @@ async function ai(api, event) {
             let url = "https://api.popcat.xyz/facts?text=" + data.join(" ");
             parseImage(api, event, url, __dirname + "/cache/facts_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query, "wouldYourRather", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "wouldYourRather", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let getWyr = wyr[Math.floor(Math.random() * wyr.length)];
         sendMessage(api, event, "Would you rather " + getWyr.ops1 + " or " + getWyr.ops2);
-    } else if (testCommand(query, "facts--meow", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "facts--meow", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         sendMessage(api, event, cat[Math.floor(Math.random() * cat.length)]);
-    } else if (testCommand(query, "facts--math", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "facts--math", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3591,7 +3531,7 @@ async function ai(api, event) {
                 sendMessage(api, event, response);
             }
         });
-    } else if (testCommand(query, "facts--date", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "facts--date", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3606,7 +3546,7 @@ async function ai(api, event) {
                 sendMessage(api, event, response);
             }
         });
-    } else if (testCommand(query, "facts--trivia", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "facts--trivia", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3621,7 +3561,7 @@ async function ai(api, event) {
                 sendMessage(api, event, response);
             }
         });
-    } else if (testCommand(query, "facts--year", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "facts--year", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3636,7 +3576,7 @@ async function ai(api, event) {
                 sendMessage(api, event, response);
             }
         });
-    } else if (testCommand(query2, "getProfilePic", event.senderID)) {
+    } else if (testCommand(api, query2, "getProfilePic", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3647,7 +3587,7 @@ async function ai(api, event) {
             id = event.senderID;
         }
         parseImage(api, event, getProfilePic(id), __dirname + "/cache/profilepic_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(query2, "github", event.senderID)) {
+    } else if (testCommand(api, query2, "github", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3715,7 +3655,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "periodicTable", event.senderID)) {
+    } else if (testCommand(api, query2, "periodicTable", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3752,7 +3692,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "npm", event.senderID)) {
+    } else if (testCommand(api, query2, "npm", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3784,7 +3724,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "steam", event.senderID)) {
+    } else if (testCommand(api, query2, "steam", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3818,7 +3758,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "imdb", event.senderID)) {
+    } else if (testCommand(api, query2, "imdb", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3852,7 +3792,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "itunes", event.senderID)) {
+    } else if (testCommand(api, query2, "itunes", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3886,7 +3826,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query, "car", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "car", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3907,7 +3847,7 @@ async function ai(api, event) {
                 });
             }
         });
-    } else if (testCommand(query, "rcolor", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "rcolor", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3930,7 +3870,7 @@ async function ai(api, event) {
                 });
             }
         });
-    } else if (testCommand(query, "pickuplines", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "pickuplines", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3941,12 +3881,12 @@ async function ai(api, event) {
                 sendMessage(api, event, response.pickupline);
             }
         });
-    } else if (testCommand(query, "fbi", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "fbi", event.senderID, "user", true)) {
         let message = {
             attachment: fs.createReadStream(__dirname + "/src/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
         sendMessage(api, event, message);
-    } else if (testCommand(query2, "thread--emoji", event.senderID, "user", true)) {
+    } else if (testCommand(api, query2, "thread--emoji", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3962,7 +3902,7 @@ async function ai(api, event) {
                 if (err) return utils.logged(err);
             });
         }
-    } else if (testCommand(query2, "sendReport", event.senderID)) {
+    } else if (testCommand(api, query2, "sendReport", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3977,33 +3917,33 @@ async function ai(api, event) {
             data.shift();
             let report = "send_message_report " + event.senderID + " " + data.join(" ");
             utils.logged(report);
-            api.sendMessage(report, api.getCurrentUserID(), (err, messageInfo) => {
-                if (err) utils.logged(err);
+            api.sendMessage(report, settings[login].owner, (err, messageInfo) => {
+                if (err) return utils.logged(err);
+                sendMessage(api, event, "The engineers have been notified.");
             });
-            sendMessage(api, event, "The engineers have been notified.");
         }
-    } else if (testCommand(query, "sync", event.senderID, "root", true)) {
-            exec("git pull", function (err, stdout, stderr) {
-                sendMessage(api, event, stdout + "\n\n" + stderr);
-            });
-    } else if (testCommand(query, "push", event.senderID, "root", true)) {
-            exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
-                sendMessage(api, event, stdout + "\n\n" + stderr);
-            });
-    } else if (testCommand(query, "unblock--all", event.senderID, "root", true)) {
-            let size = users.blocked.length;
-            if (size == 0) {
-                sendMessage(api, event, "No users blocked.");
-            } else {
-                users.blocked = [];
-                sendMessage(api, event, size + " users have been unblocked.");
-            }
-    } else if (testCommand(query, "unblock--everyone", event.senderID, "root", true)) {
-            let size = users.bot.length + users.blocked.length;
+    } else if (testCommand(api, query, "sync", event.senderID, "root", true)) {
+        exec("git pull", function (err, stdout, stderr) {
+            sendMessage(api, event, stdout + "\n\n" + stderr);
+        });
+    } else if (testCommand(api, query, "push", event.senderID, "root", true)) {
+        exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
+            sendMessage(api, event, stdout + "\n\n" + stderr);
+        });
+    } else if (testCommand(api, query, "unblock--all", event.senderID, "root", true)) {
+        let size = users.blocked.length;
+        if (size == 0) {
+            sendMessage(api, event, "No users blocked.");
+        } else {
             users.blocked = [];
-            users.bot = [];
             sendMessage(api, event, size + " users have been unblocked.");
-    } else if (testCommand(query2, "git", event.senderID)) {
+        }
+    } else if (testCommand(api, query, "unblock--everyone", event.senderID, "root", true)) {
+        let size = users.bot.length + users.blocked.length;
+        users.blocked = [];
+        users.bot = [];
+        sendMessage(api, event, size + " users have been unblocked.");
+    } else if (testCommand(api, query2, "git", event.senderID)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -4021,7 +3961,7 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (testCommand(query2, "shell", event.senderID)) {
+    } else if (testCommand(api, query2, "shell", event.senderID)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -4040,19 +3980,19 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (testCommand(query, "acceptMessageRequest", event.senderID, "owner", true)) {
-            api.handleMessageRequest(event.senderID, true, (err) => {
-                if (err) {
-                    utils.logged(err);
-                    sendMessage(api, event, "Failed to accept request! Have you send a message first?");
-                } else {
-                    api.sendMessage(updateFont("Hello World", event.senderID), event.senderID, (err, messageInfo) => {
-                        if (err) utils.logged(err);
-                    });
-                    sendMessage(api, event, "Please check your inbox.");
-                }
-            });
-    } else if (testCommand(query2, "handleMessageRequest", event.senderID)) {
+    } else if (testCommand(api, query, "acceptMessageRequest", event.senderID, "owner", true)) {
+        api.handleMessageRequest(event.senderID, true, (err) => {
+            if (err) {
+                utils.logged(err);
+                sendMessage(api, event, "Failed to accept request! Have you send a message first?");
+            } else {
+                api.sendMessage(updateFont("Hello World", event.senderID), event.senderID, (err, messageInfo) => {
+                    if (err) utils.logged(err);
+                });
+                sendMessage(api, event, "Please check your inbox.");
+            }
+        });
+    } else if (testCommand(api, query2, "handleMessageRequest", event.senderID)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -4074,39 +4014,39 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (testCommand(query2, "cors--add", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "cors--add", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cors -add url" + "\n " + example[Math.floor(Math.random() * example.length)] + " addCORS https://mrepol742.github.io");
         } else {
             data.shift();
             let cors = data.join(" ");
-            if (corsWhitelist.includes(cors)) {
+            if (settings.shared.cors.includes(cors)) {
                 sendMessage(api, event, "Address is already authorized.");
             } else if (!/^(http|https):\/\//.test(cors)) {
                 sendMessage(api, event, "Invalid address! Missing http(s).");
             } else {
-                corsWhitelist.push(cors);
+                settings.shared.cors.push(cors);
                 sendMessage(api, event, cors + " authorized!");
             }
         }
-    } else if (testCommand(query2, "cors--del", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "cors--del", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cors --del url" + "\n " + example[Math.floor(Math.random() * example.length)] + " remCORS https://mrepol742.github.io");
         } else {
             data.shift();
             let cors = data.join(" ");
-            if (corsWhitelist.includes(cors)) {
+            if (settings.shared.cors.includes(cors)) {
                 sendMessage(api, event, "Address is already authorized.");
             } else if (!/^(http|https):\/\//.test(cors)) {
                 sendMessage(api, event, "Invalid address! Missing http(s).");
             } else {
-                corsWhitelist.pop(cors);
+                settings.shared.cors.pop(cors);
                 sendMessage(api, event, cors + " deauthorize!");
             }
         }
-    } else if (testCommand(query2, "changeBio", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "changeBio", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changeBio text" + "\n " + example[Math.floor(Math.random() * example.length)] + " changebio Hello There");
@@ -4118,7 +4058,7 @@ async function ai(api, event) {
             });
             sendMessage(api, event, "Bio Message is now set to `" + data.join(" ") + "`");
         }
-    } else if (testCommand(query2, "handleFriendRequest", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "handleFriendRequest", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleFriendRequest uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " acceptfriendrequest 0000000000000");
@@ -4134,8 +4074,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "getMaxTokens", event.senderID, "root")) {
-    } else if (testCommand(query2, "setMaxTokens", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "maxTokens", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setMaxTokens int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setMaxTokens 1000.");
@@ -4147,12 +4086,11 @@ async function ai(api, event) {
             } else if (num < 10) {
                 sendMessage(api, event, "Opps! the minimum value 10");
             } else {
-                settings.preference.max_tokens = num;
+                settings.shared.max_tokens = num;
                 sendMessage(api, event, "Max Tokens is now set to " + num);
             }
         }
-    } else if (testCommand(query2, "getTemperature", event.senderID, "root")) {
-    } else if (testCommand(query2, "setTemperature", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "temperature", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setTemperature int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setTemperature 0.");
@@ -4164,11 +4102,11 @@ async function ai(api, event) {
             } else if (num < -0) {
                 sendMessage(api, event, "Opps! the minimum value 0.1");
             } else {
-                settings.preference.temperature = num;
+                settings.shared.temperature = num;
                 sendMessage(api, event, "Temperature is now set to " + num);
             }
         }
-    } else if (testCommand(query2, "fbdl", event.senderID)) {
+    } else if (testCommand(api, query2, "fbdl", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4215,7 +4153,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "HTTP(s) protocol not found.");
             }
         }
-    } else if (query2 == "top") {
+    } else if (testCommand(api, query2, "top", event.senderID, "user", true)) {
         let lead = [];
         for (let i = 0; i < users.list.length; i++) {
             if (!(users.list[i].balance === undefined)) {
@@ -4231,7 +4169,7 @@ async function ai(api, event) {
             }
         }
         sendMessage(api, event, utils.formatOutput("Top Users Leaderboards", construct, "github.com/prj-orion"));
-    } else if (query2 == "balance" || query2 == "bal") {
+    } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
                 let sendID = event.senderID;
@@ -4240,7 +4178,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
             }
         });
-    } else if (testCommand(query2, "mdl", event.senderID)) {
+    } else if (testCommand(api, query2, "mdl", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4274,7 +4212,7 @@ async function ai(api, event) {
                 });
             });
         }
-    } else if (testCommand(query2, "mal", event.senderID)) {
+    } else if (testCommand(api, query2, "mal", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4314,10 +4252,11 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "setFrequencyPenalty", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "owner--set", event.senderID, "root", true)) {
+    } else if (testCommand(api, query2, "penalty--frequency", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setFrequencyPenalty int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setFrequencyPenalty 1.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --frequency int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --frequency 1.");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4326,14 +4265,14 @@ async function ai(api, event) {
             } else if (num < -2) {
                 sendMessage(api, event, "Opps! the minimum value -2");
             } else {
-                settings.preference.frequency_penalty = num;
+                settings.shared.frequency_penalty = num;
                 sendMessage(api, event, "Frequency Penalty is now set to " + num);
             }
         }
-    } else if (testCommand(query2, "setPresencePenalty", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "penalty--presence", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setPresencePenalty int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setPresencePenalty 1.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --presence int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --presence 1.");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4342,26 +4281,24 @@ async function ai(api, event) {
             } else if (num < -2) {
                 sendMessage(api, event, "Opps! the minimum value -2");
             } else {
-                settings.preference.presence_penalty = num;
+                settings.shared.presence_penalty = num;
                 sendMessage(api, event, "Presence Penalty is now set to " + num);
             }
         }
-    } else if (testCommand(query2, "setTextComplextion", event.senderID, "root")) {
-        if (isMyId(event.senderID)) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Opps! Houston, we have a problem!");
-            } else {
-                data.shift();
-                let num = data.join(" ");
-                settings.preference.text_complextion = num;
-                sendMessage(api, event, "Text Complextion is now set to " + num);
-            }
-        }
-    } else if (testCommand(query2, "setMaxImage", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "textComplextion", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Opps! Houston, we have a problem!");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: presencePenalty int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setPresencePenalty 1.");
+        } else {
+            data.shift();
+            let num = data.join(" ");
+            settings.shared.text_complextion = num;
+            sendMessage(api, event, "Text Complextion is now set to " + num);
+        }
+    } else if (testCommand(api, query2, "maxImage", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: presencePenalty int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setPresencePenalty 1.");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4370,11 +4307,11 @@ async function ai(api, event) {
             } else if (num < 1) {
                 sendMessage(api, event, "Opps! the minimum value is 1.");
             } else {
-                settings.preference.max_image = num;
+                settings.shared.max_image = num;
                 sendMessage(api, event, "Max Image is now set to " + num);
             }
         }
-    } else if (testCommand(query2, "setProbabilityMass", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "probabilityMass", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setProbabilityMass int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setProbabilityMass 0.1.");
@@ -4386,11 +4323,11 @@ async function ai(api, event) {
             } else if (num < -0) {
                 sendMessage(api, event, "Opps! the minimum value is 0.");
             } else {
-                settings.preference.probability_mass = num;
+                settings.shared.probability_mass = num;
                 sendMessage(api, event, "Probability Mass is now set to " + num);
             }
         }
-    } else if (testCommand(query2, "add--user", event.senderID)) {
+    } else if (testCommand(api, query2, "add--user", event.senderID)) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
@@ -4421,16 +4358,16 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
             }
         }
-    } else if (testCommand(query2, "thread--theme", event.senderID)) {
+    } else if (testCommand(api, query2, "thread--theme", event.senderID)) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(
                 api,
                 event,
                 "Houston! Unknown or missing option.\n\n Usage: thread --theme theme instead.\n\nTheme:\nDefaultBlue, HotPink, AquaBlue, BrightPurple\nCoralPink, Orange, Green, LavenderPurple\nRed, Yellow, TealBlue, Aqua\nMango, Berry, Citrus, Candy" +
-                    "\n\n" +
-                    example[Math.floor(Math.random() * example.length)] +
-                    "\nthreadColor DefaultBlue"
+                "\n\n" +
+                example[Math.floor(Math.random() * example.length)] +
+                "\nthreadColor DefaultBlue"
             );
         } else {
             data.shift();
@@ -4447,7 +4384,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: threadColor theme" + "\n " + example[Math.floor(Math.random() * example.length)] + " gcolor DefaultBlue");
             }
         }
-    } else if (testCommand(query2, "kickUser", event.senderID, "owner")) {
+    } else if (testCommand(api, query2, "remove--user", event.senderID, "owner")) {
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return utils.logged(err);
             if (gc.isGroup) {
@@ -4458,7 +4395,7 @@ async function ai(api, event) {
                 }
                 let data = input.split(" ");
                 if (data.length < 2) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: kickUser @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " kickUser @Zero Two");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
                 } else {
                     let id = Object.keys(event.mentions)[0];
                     if (id === undefined) {
@@ -4487,10 +4424,10 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
-    } else if (testCommand(query2, "isBot", event.senderID, "admin")) {
+    } else if (testCommand(api, query2, "block--bot", event.senderID, "admin")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: isBot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " isBot @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4525,10 +4462,10 @@ async function ai(api, event) {
                 sendMessage(api, event, "Noted.");
             }
         }
-    } else if (testCommand(query2, "block--user", event.senderID, "owner")) {
+    } else if (testCommand(api, query2, "block--user", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block--user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockUser @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4553,24 +4490,24 @@ async function ai(api, event) {
             }
             blockUser(api, event, id);
         }
-    } else if (testCommand(query, "block--thread", event.senderID, "owner", true)) {
-            blockGroup(api, event, event.threadID);
-    } else if (testCommand(query2, "block--thread--tid", event.senderID, "owner")) {
+    } else if (testCommand(api, query, "block--thread", event.senderID, "owner", true)) {
+        blockGroup(api, event, event.threadID);
+    } else if (testCommand(api, query2, "block--thread--tid", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --thread --tid tid" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockthread 5000050005");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --thread --tid tid" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --thread --tid 5000050005");
         } else {
             data.shift();
             blockGroup(api, event, data.join(" "));
         }
-    } else if (testCommand(query2, "tts--enable", event.senderID)) {
+    } else if (testCommand(api, query2, "tts--enable", event.senderID)) {
         enableTTS(api, event, event.threadID);
-    } else if (testCommand(query2, "tts--disable", event.senderID)) {
+    } else if (testCommand(api, query2, "tts--disable", event.senderID)) {
         disableTTS(api, event, event.threadID);
-    } else if (testCommand(query2, "unblock--user", event.senderID, "owner")) {
+    } else if (testCommand(api, query2, "unblock--user", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblockUser @Zero Two");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (id === undefined) {
@@ -4595,7 +4532,7 @@ async function ai(api, event) {
             }
             unblockUser(api, event, id);
         }
-    } else if (testCommand(query2, "setKey", event.senderID, "owner")) {
+    } else if (testCommand(api, query2, "setKey", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2 && !data[1].includes(":")) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setKey name:key instead.");
@@ -4604,7 +4541,7 @@ async function ai(api, event) {
             settings.apikey[inp[0]] = inp[1];
             sendMessage(api, event, "Successfully saved " + inp[0] + ".");
         }
-    } else if (testCommand(query2, "fontIgnore", event.senderID, "owner")) {
+    } else if (testCommand(api, query2, "fontIgnore", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
@@ -4630,8 +4567,8 @@ async function ai(api, event) {
             }
             fontIgnore(api, event, id);
         }
-    } else if (testCommand(query2, "clear--data", event.senderID, "root")) {
-        if (!settings.preference.isDebugEnabled) {
+    } else if (testCommand(api, query2, "clear--data", event.senderID, "root")) {
+        if (!settings.shared.maintenance) {
             return sendMessage(api, event, "Debug mode is disabled!");
         }
         let a = await cleanjs.array(groups);
@@ -4645,7 +4582,7 @@ async function ai(api, event) {
             users = JSON.parse(t1);
         }
         sendMessage(api, event, "Cleaning done.");
-    } else if (testCommand(query2, "add--admin", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "add--admin", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
@@ -4671,7 +4608,7 @@ async function ai(api, event) {
             }
             addAdmin(api, event, id);
         }
-    } else if (testCommand(query2, "add--token", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "add--token", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.lenght < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
@@ -4707,7 +4644,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Added 1500 tokens to the account holder.");
             });
         }
-    } else if (testCommand(query2, "remove--admin", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "remove--admin", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.lenght < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
@@ -4735,79 +4672,79 @@ async function ai(api, event) {
             }
             remAdmin(api, event, id);
         }
-    } else if (testCommand(query, "unsend--on", event.senderID, "owner", true)) {
-            if (settings.preference.onUnsend) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.preference.onUnsend = true;
-                sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
-            }
-    } else if (testCommand(query, "unsend--off", event.senderID, "owner", true)) {
-            if (settings.preference.onUnsend) {
-                settings.preference.onUnsend = false;
-                sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-    } else if (testCommand(query, "leave--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "unsend--on", event.senderID, "owner", true)) {
+        if (settings.shared.unsend) {
+            sendMessage(api, event, "It's already enabled.");
+        } else {
+            settings.shared.unsend = true;
+            sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
+        }
+    } else if (testCommand(api, query, "unsend--off", event.senderID, "owner", true)) {
+        if (settings.shared.unsend) {
+            settings.shared.unsend = false;
+            sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
+        } else {
+            sendMessage(api, event, "It's already disabled.");
+        }
+    } else if (testCommand(api, query, "leave--on", event.senderID, "owner", true)) {
         if (users.admin.includes(event.senderID)) {
-            if (settings.preference.antiLeave) {
+            if (settings.shared.leave) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
-                settings.preference.antiLeave = true;
+                settings.shared.leave = true;
                 sendMessage(api, event, "Readding of user who left is now enabled.");
             }
         }
-    } else if (testCommand(query, "leave--off", event.senderID, "owner", true)) {
-            if (settings.preference.antiLeave) {
-                settings.preference.antiLeave = false;
-                sendMessage(api, event, "Readding of user who left is been disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-    } else if (testCommand(query, "delay--on", event.senderID, "root", true)) {
-            if (settings.preference.onDelay) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.preference.onDelay = true;
-                sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
-            }
-    } else if (testCommand(query, "delay--off", event.senderID, "root", true)) {
-            if (settings.preference.onDelay) {
-                settings.preference.onDelay = false;
-                sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-    } else if (testCommand(query, "nsfw--on", event.senderID, "owner", true)) {
-            if (settings.preference.onNsfw) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.preference.onNsfw = true;
-                sendMessage(api, event, "Not Safe For Work are now enabled.");
-            }
-    } else if (testCommand(query, "nsfw--off", event.senderID, "owner", true)) {
-            if (settings.preference.onNsfw) {
-                settings.preference.onNsfw = false;
-                sendMessage(api, event, "Not Safe For Work is been disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-    } else if (testCommand(query, "simultaneousExec--on", event.senderID, "owner", true)) {
-            if (settings.preference.preventSimultaneousExecution) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.preference.preventSimultaneousExecution = true;
-                sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
-            }
-    } else if (testCommand(query, "simultaneousExec--off", event.senderID, "owner", true)) {
-            if (settings.preference.preventSimultaneousExecution) {
-                settings.preference.preventSimultaneousExecution = false;
-                sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-    } else if (testCommand(query, "group--member", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "leave--off", event.senderID, "owner", true)) {
+        if (settings.shared.leave) {
+            settings.shared.leave = false;
+            sendMessage(api, event, "Readding of user who left is been disabled.");
+        } else {
+            sendMessage(api, event, "It's already disabled.");
+        }
+    } else if (testCommand(api, query, "delay--on", event.senderID, "root", true)) {
+        if (settings.shared.delay) {
+            sendMessage(api, event, "It's already enabled.");
+        } else {
+            settings.shared.delay = true;
+            sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
+        }
+    } else if (testCommand(api, query, "delay--off", event.senderID, "root", true)) {
+        if (settings.shared.delay) {
+            settings.shared.delay = false;
+            sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
+        } else {
+            sendMessage(api, event, "It's already disabled.");
+        }
+    } else if (testCommand(api, query, "nsfw--on", event.senderID, "owner", true)) {
+        if (settings.shared.nsfw) {
+            sendMessage(api, event, "It's already enabled.");
+        } else {
+            settings.shared.nsfw = true;
+            sendMessage(api, event, "Not Safe For Work are now enabled.");
+        }
+    } else if (testCommand(api, query, "nsfw--off", event.senderID, "owner", true)) {
+        if (settings.shared.nsfw) {
+            settings.shared.nsfw = false;
+            sendMessage(api, event, "Not Safe For Work is been disabled.");
+        } else {
+            sendMessage(api, event, "It's already disabled.");
+        }
+    } else if (testCommand(api, query, "simultaneousExec--on", event.senderID, "root", true)) {
+        if (settings.shared.simultaneousExec) {
+            sendMessage(api, event, "It's already enabled.");
+        } else {
+            settings.shared.simultaneousExec = true;
+            sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
+        }
+    } else if (testCommand(api, query, "simultaneousExec--off", event.senderID, "root", true)) {
+        if (settings.shared.simultaneousExec) {
+            settings.shared.simultaneousExec = false;
+            sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
+        } else {
+            sendMessage(api, event, "It's already disabled.");
+        }
+    } else if (testCommand(api, query, "group--member", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4820,7 +4757,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
-    } else if (testCommand(query2, "group--info", event.senderID)) {
+    } else if (testCommand(api, query2, "group--info", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4890,7 +4827,7 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
-    } else if (testCommand(query2, "group--name", event.senderID)) {
+    } else if (testCommand(api, query2, "group--name", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4914,9 +4851,9 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
-    } else if (testCommand(query, "tid", event.senderID, "user", true) ||
-    testCommand(query2, "gid", event.senderID) ||
-    testCommand(query, "uid", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "tid", event.senderID, "user", true) ||
+        testCommand(api, query2, "gid", event.senderID) ||
+        testCommand(api, query, "uid", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4952,142 +4889,28 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "[" + event.senderID + "]");
         }
-    } else if (testCommand(query2, "cmd", event.senderID)) {
+    } else if (testCommand(api, query2, "cmd", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let cdd = {};
         let data = input.split(" ");
         if (data[1] == "next") {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
+                if (cmdPage["help" + (functionRegistry[event.threadID] + 1)] !== undefined) {
+                    sendMessage(api, event, formatGen(cmdPage["help" + functionRegistry[event.threadID]]));
+                    functionRegistry[event.threadID] = functionRegistry[event.threadID] + 1;
                 } else {
-                    aa = "there";
+                    sendMessage(api, event, formatGen(cmdPage["help1"]));
+                    functionRegistry[event.threadID] = 1;
                 }
-
-                switch (functionRegistry[event.threadID]) {
-                    default:
-                    case 0:
-                        cdd["body"] = help;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 1;
-                        break;
-                    case 1:
-                        cdd["body"] = help1;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 2;
-                        break;
-                    case 2:
-                        cdd["body"] = help2;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 3;
-                        break;
-                    case 3:
-                        cdd["body"] = help3;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 4;
-                        break;
-                    case 4:
-                        cdd["body"] = help4;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 5;
-                        break;
-                    case 5:
-                        cdd["body"] = help5;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 6;
-                        break;
-                    case 6:
-                        cdd["body"] = help6;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 7;
-                        break;
-                    case 7:
-                        cdd["body"] = help7;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 8;
-                        break;
-                    case 8:
-                        cdd["body"] = help8;
-                        sendMessage(api, event, cdd);
-                        functionRegistry[event.threadID] = 0;
-                        break;
-                }
-            });
         } else if (data[1] == "owner") {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                cdd["body"] = helpowner;
-                sendMessage(api, event, cdd);
-            });
+            sendMessage(api, event, formatGen(cmdPage["owner"]));
         } else if (data[1] == "root") {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                cdd["body"] = helproot;
-                sendMessage(api, event, cdd);
-            });
-        } else if (data[1] == "user") {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                cdd["body"] = helpuser;
-                sendMessage(api, event, cdd);
-            });
-        } else if (data[1] == "group") {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                cdd["body"] = helpgroup;
-                sendMessage(api, event, cdd);
-            });
-        } else if (data[1] == "all") {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                let message = {
-                    body: "Hello " + aa + ", sadly due to the long list of commands i cannot send it all here, though you can navigate them at the https://mrepol742.github.io/project-orion/#cmdall.",
-                    url: "https://mrepol742.github.io/project-orion/#cmdall",
-                };
-                sendMessage(api, event, message);
-            });
+            sendMessage(api, event, formatGen(cmdPage["root"]));
         } else {
-            getUserProfile(event.senderID, async function (name) {
-                let aa = "";
-                if (name.firstName != undefined) {
-                    aa = name.firstName;
-                } else {
-                    aa = "there";
-                }
-                cdd["body"] = help.replaceAll("%USER%", aa);
-                sendMessage(api, event, cdd);
-                functionRegistry[event.threadID] = 1;
-            });
+            sendMessage(api, event, formatGen(cmdPage["help1"]));
+            functionRegistry[event.threadID] = 1;
         }
-    } else if (testCommand(query2, "wiki", event.senderID)) {
+    } else if (testCommand(api, query2, "wiki", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5114,21 +4937,21 @@ async function ai(api, event) {
             });
         }
     } else if (
-    testCommand(query2, "kiss", event.senderID) ||
-    testCommand(query2, "lick", event.senderID) ||
-    testCommand(query2, "hug", event.senderID) ||
-    testCommand(query2, "cuddle", event.senderID) ||
-    testCommand(query2, "headpat", event.senderID) ||
-    testCommand(query2, "blush", event.senderID) ||
-    testCommand(query2, "wave", event.senderID) ||
-    testCommand(query2, "highfive", event.senderID) ||
-    testCommand(query2, "bite", event.senderID) ||
-    testCommand(query2, "kick", event.senderID) ||
-    testCommand(query2, "wink", event.senderID) ||
-    testCommand(query2, "cringe", event.senderID) ||
-    testCommand(query2, "slap", event.senderID) ||
-    testCommand(query2, "kill", event.senderID) ||
-    testCommand(query2, "smug", event.senderID)
+        testCommand(api, query2, "kiss", event.senderID) ||
+        testCommand(api, query2, "lick", event.senderID) ||
+        testCommand(api, query2, "hug", event.senderID) ||
+        testCommand(api, query2, "cuddle", event.senderID) ||
+        testCommand(api, query2, "headpat", event.senderID) ||
+        testCommand(api, query2, "blush", event.senderID) ||
+        testCommand(api, query2, "wave", event.senderID) ||
+        testCommand(api, query2, "highfive", event.senderID) ||
+        testCommand(api, query2, "bite", event.senderID) ||
+        testCommand(api, query2, "kick", event.senderID) ||
+        testCommand(api, query2, "wink", event.senderID) ||
+        testCommand(api, query2, "cringe", event.senderID) ||
+        testCommand(api, query2, "slap", event.senderID) ||
+        testCommand(api, query2, "kill", event.senderID) ||
+        testCommand(api, query2, "smug", event.senderID)
     ) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5167,20 +4990,20 @@ async function ai(api, event) {
             getAnimeGif(api, event, id, prrr);
         }
     } else if (
-    testCommand(query2, "gun", event.senderID) ||
-    testCommand(query2, "wanted", event.senderID) ||
-    testCommand(query2, "clown", event.senderID) ||
-    testCommand(query2, "drip", event.senderID) ||
-    testCommand(query2, "communist", event.senderID) ||
-    testCommand(query2, "advert", event.senderID) ||
-    testCommand(query2, "uncover", event.senderID) ||
-    testCommand(query2, "jail", event.senderID) ||
-    testCommand(query2, "invert", event.senderID) ||
-    testCommand(query2, "pet", event.senderID) ||
-    testCommand(query2, "mnm", event.senderID) ||
-    testCommand(query2, "greyscale", event.senderID) ||
-    testCommand(query2, "jokeover", event.senderID) ||
-    testCommand(query2, "blur", event.senderID)
+        testCommand(api, query2, "gun", event.senderID) ||
+        testCommand(api, query2, "wanted", event.senderID) ||
+        testCommand(api, query2, "clown", event.senderID) ||
+        testCommand(api, query2, "drip", event.senderID) ||
+        testCommand(api, query2, "communist", event.senderID) ||
+        testCommand(api, query2, "advert", event.senderID) ||
+        testCommand(api, query2, "uncover", event.senderID) ||
+        testCommand(api, query2, "jail", event.senderID) ||
+        testCommand(api, query2, "invert", event.senderID) ||
+        testCommand(api, query2, "pet", event.senderID) ||
+        testCommand(api, query2, "mnm", event.senderID) ||
+        testCommand(api, query2, "greyscale", event.senderID) ||
+        testCommand(api, query2, "jokeover", event.senderID) ||
+        testCommand(api, query2, "blur", event.senderID)
     ) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5215,7 +5038,7 @@ async function ai(api, event) {
             }
             getPopcatImage(api, event, id, prrr);
         }
-    } else if (testCommand(query2, "ship", event.senderID)) {
+    } else if (testCommand(api, query2, "ship", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5265,7 +5088,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
             }
         }
-    } else if (testCommand(query2, "whoWouldWin", event.senderID)) {
+    } else if (testCommand(api, query2, "whoWouldWin", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5315,7 +5138,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
             }
         }
-    } else if (testCommand(query2, "formatNumbers", event.senderID)) {
+    } else if (testCommand(api, query2, "formatNumbers", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5326,7 +5149,7 @@ async function ai(api, event) {
             data.shift();
             sendMessage(api, event, numberWithCommas(data.join(" ")));
         }
-    } else if (testCommand(query2, "stalk", event.senderID)) {
+    } else if (testCommand(api, query2, "stalk", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5434,7 +5257,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "morse", event.senderID)) {
+    } else if (testCommand(api, query2, "morse", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5455,7 +5278,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "lulcat", event.senderID) || testCommand(query2, "mock", event.senderID)) {
+    } else if (testCommand(api, query2, "lulcat", event.senderID) || testCommand(api, query2, "mock", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5476,7 +5299,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "coding", event.senderID)) {
+    } else if (testCommand(api, query2, "coding", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5498,12 +5321,12 @@ async function ai(api, event) {
                 });
             }
         });
-    } else if (testCommand(query, "joke", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "joke", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         sendMessage(api, event, joke[Math.floor(Math.random() * joke.length)]);
-    } else if (testCommand(query, "barrier", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "barrier", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5512,12 +5335,12 @@ async function ai(api, event) {
             attachment: fs.createReadStream(__dirname + "/src/web/barrier.jpg"),
         };
         sendMessage(api, event, message);
-    } else if (testCommand(query, "didYouKnow", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "didYouKnow", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         sendMessage(api, event, "Did you know?\n\n" + dyk[Math.floor(Math.random() * dyk.length)]);
-    } else if (testCommand(query, "thoughts", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "thoughts", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5528,7 +5351,7 @@ async function ai(api, event) {
                 sendMessage(api, event, response.result);
             }
         });
-    } else if (testCommand(query2, "drake", event.senderID)) {
+    } else if (testCommand(api, query2, "drake", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5540,7 +5363,7 @@ async function ai(api, event) {
             let text = data.join(" ").split(":");
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/drake_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "pika", event.senderID)) {
+    } else if (testCommand(api, query2, "pika", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5551,7 +5374,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + data.join(" "), __dirname + "/cache/pika_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query, "meme", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "meme", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5566,12 +5389,12 @@ async function ai(api, event) {
                 parseImage(api, event, response.image, __dirname + "/cache/meme_" + utils.getTimestamp() + ".png");
             }
         });
-    } else if (testCommand(query, "conan", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "conan", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/conan_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(query2, "oogway", event.senderID)) {
+    } else if (testCommand(api, query2, "oogway", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5582,7 +5405,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + data.join(" "), __dirname + "/cache/oogway_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "hanime", event.senderID)) {
+    } else if (testCommand(api, query2, "hanime", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5608,7 +5431,7 @@ async function ai(api, event) {
                 }
             }
         });
-    } else if (testCommand(query2, "anime", event.senderID)) {
+    } else if (testCommand(api, query2, "anime", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5618,9 +5441,9 @@ async function ai(api, event) {
                 api,
                 event,
                 "Houston! Unknown or missing option.\n\n Usage: anime category \n Categories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" +
-                    "\n\n" +
-                    example[Math.floor(Math.random() * example.length)] +
-                    "\nanime waifu"
+                "\n\n" +
+                example[Math.floor(Math.random() * example.length)] +
+                "\nanime waifu"
             );
         } else {
             data.shift();
@@ -5633,7 +5456,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "getImage", event.senderID)) {
+    } else if (testCommand(api, query2, "getImage", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5649,7 +5472,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
-    } else if (testCommand(query2, "qrcode", event.senderID)) {
+    } else if (testCommand(api, query2, "qrcode", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5664,7 +5487,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + data.join(" "), __dirname + "/cache/qrcode_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "alert", event.senderID)) {
+    } else if (testCommand(api, query2, "alert", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5675,7 +5498,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + data.join(" "), __dirname + "/cache/alert_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "caution", event.senderID)) {
+    } else if (testCommand(api, query2, "caution", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5686,7 +5509,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/caution_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "screenshot", event.senderID)) {
+    } else if (testCommand(api, query2, "screenshot", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5706,7 +5529,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
-    } else if (testCommand(query2, "unforgivable", event.senderID)) {
+    } else if (testCommand(api, query2, "unforgivable", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5717,7 +5540,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + data.join(" "), __dirname + "/cache/god_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "sadcat", event.senderID)) {
+    } else if (testCommand(api, query2, "sadcat", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5728,7 +5551,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/sadcat_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "pooh", event.senderID)) {
+    } else if (testCommand(api, query2, "pooh", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5740,17 +5563,17 @@ async function ai(api, event) {
             let text = data.join(" ").split(":");
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/pooh_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query, "wallpaper--land--random", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "wallpaper--land--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(query, "wallpaper--port--random", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "wallpaper--port--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(query2, "wallpaper--land", event.senderID)) {
+    } else if (testCommand(api, query2, "wallpaper--land", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5761,7 +5584,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "wallpaper--port", event.senderID)) {
+    } else if (testCommand(api, query2, "wallpaper--port", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5772,7 +5595,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(query2, "qoute--anime", event.senderID)) {
+    } else if (testCommand(api, query2, "qoute--anime", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5787,7 +5610,7 @@ async function ai(api, event) {
                 sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
             }
         });
-    } else if (testCommand(query, "qoute--advice", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "qoute--advice", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5807,7 +5630,7 @@ async function ai(api, event) {
                 sendMessage(api, event, result);
             }
         });
-    } else if (testCommand(query2, "time--timezone", event.senderID)) {
+    } else if (testCommand(api, query2, "time--timezone", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5823,7 +5646,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time Asia/Manila");
             }
         }
-    } else if (testCommand(query, "time", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "time", event.senderID, "user", true)) {
         getUserProfile(event.senderID, async function (name) {
             if (name.firstName != undefined && !(name.timezone === undefined)) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime(name.timezone));
@@ -5831,7 +5654,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
             }
         });
-    } else if (testCommand(query2, "qoute--inspiration", event.senderID)) {
+    } else if (testCommand(api, query2, "qoute--inspiration", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5851,7 +5674,7 @@ async function ai(api, event) {
                 sendMessage(api, event, result);
             }
         });
-    } else if (testCommand(query2, "qoute--motivation", event.senderID)) {
+    } else if (testCommand(api, query2, "qoute--motivation", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5871,7 +5694,7 @@ async function ai(api, event) {
                 sendMessage(api, event, result);
             }
         });
-    } else if (testCommand(query, "newyear", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "newyear", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5887,7 +5710,7 @@ async function ai(api, event) {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
         };
         sendMessage(api, event, message);
-    } else if (testCommand(query, "christmas", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "christmas", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5903,7 +5726,7 @@ async function ai(api, event) {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
         };
         sendMessage(api, event, message);
-    } else if (testCommand(query, "verse--random", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "verse--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5923,7 +5746,7 @@ async function ai(api, event) {
                 sendMessage(api, event, result);
             }
         });
-    } else if (testCommand(query, "verse--today", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "verse--today", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5943,7 +5766,7 @@ async function ai(api, event) {
                 sendMessage(api, event, result);
             }
         });
-    } else if (testCommand(query2, "verse", event.senderID)) {
+    } else if (testCommand(api, query2, "verse", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5967,21 +5790,21 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query, "refreshState", event.senderID, "owner", true)) {
-            fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".bin", getAppState(api), "utf8");
-            utils.logged("cookie_state synchronized");
-            sendMessage(api, event, "The AppState refreshed.");
-            fb_stateD = utils.getCurrentTime();
-    } else if (testCommand(query, "saveState", event.senderID, "user", true)) {
-            saveState();
-            sendMessage(api, event, "The state have saved successfully.");
-    } else if (testCommand(query, "test", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "refreshState", event.senderID, "owner", true)) {
+        fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".bin", getAppState(api), "utf8");
+        utils.logged("cookie_state synchronized");
+        sendMessage(api, event, "The AppState refreshed.");
+        fb_stateD = utils.getCurrentTime();
+    } else if (testCommand(api, query, "saveState", event.senderID, "user", true)) {
+        saveState();
+        sendMessage(api, event, "The state have saved successfully.");
+    } else if (testCommand(api, query, "test", event.senderID, "user", true)) {
         if (crashes > 0) {
             sendMessage(
                 api,
                 event,
                 crashes +
-                    " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues using this format:\n\n   What did you do:\n   What result are you expecting:\n   What result did you get:\n   When did this happened:\n   Where did this happened:"
+                " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues using this format:\n\n   What did you do:\n   What result are you expecting:\n   What result did you get:\n   When did this happened:\n   Where did this happened:"
             );
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
@@ -6013,7 +5836,7 @@ async function ai(api, event) {
        }
        sendMessage(api, event, message)
        */
-    } else if (testCommand(query2, "setNickname", event.senderID)) {
+    } else if (testCommand(api, query2, "setNickname", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6026,7 +5849,7 @@ async function ai(api, event) {
                 if (err) return utils.logged(err);
             });
         }
-    } else if (testCommand(query, "setNickname--random", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "setNickname--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6043,7 +5866,7 @@ async function ai(api, event) {
                 });
             }
         });
-    } else if (testCommand(query2, "setBirthday", event.senderID)) {
+    } else if (testCommand(api, query2, "setBirthday", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6064,7 +5887,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "setTimezone", event.senderID)) {
+    } else if (testCommand(api, query2, "setTimezone", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6085,7 +5908,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "setAddress", event.senderID)) {
+    } else if (testCommand(api, query2, "setAddress", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6106,7 +5929,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "setBio", event.senderID)) {
+    } else if (testCommand(api, query2, "setBio", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6123,7 +5946,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "setUsername", event.senderID)) {
+    } else if (testCommand(api, query2, "setUsername", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6143,7 +5966,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(query2, "setGender", event.senderID)) {
+    } else if (testCommand(api, query2, "setGender", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -6309,7 +6132,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     if (no_font === undefined) {
         no_font = false;
     }
-    if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
+    if (!users.admin.includes(event.senderID) && settings.shared.delay && bn) {
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
@@ -6403,7 +6226,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
     if (message_id === undefined) {
         message_id = event.messageID;
     }
-    if (!users.admin.includes(event.senderID) && settings.preference.onDelay && bn) {
+    if (!users.admin.includes(event.senderID) && settings.shared.delay && bn) {
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
@@ -6484,11 +6307,6 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
     if (err) {
         utils.logged(err);
         if (err.error == 3252001 || err.error == 1404078) {
-            if (err.error == 3252001) {
-                settings.preference.error = 3252001;
-            } else {
-                settings.preference.error = 1404078;
-            }
             blockedCall.push(api.getCurrentUserID());
         } else if (err.error == 1545049) {
             sendMessageError(api, "Message is too long to be sent.", thread_id, message_id, id);
@@ -6600,7 +6418,7 @@ function isGoingToFast(api, event) {
         }
     }
     // TODO: prevent from executing if the query is default
-    if (!settings.preference.preventSimultaneousExecution || input.split(" ").length < 2) {
+    if (!settings.shared.simultaneousExec || input.split(" ").length < 2) {
         return false;
     }
     if (!users.admin.includes(event.senderID)) {
@@ -6635,7 +6453,7 @@ function isItBotOrNot(api, event) {
                 .replace(/\p{Diacritic}/gu, "")
                 .toLowerCase()
         ) &&
-            !settings.preference.onNsfw &&
+            !settings.shared.nsfw &&
             !users.admin.includes(id)) ||
         (input.trim().length > 5 && event.attachments.length != 0 && eventTypes.includes(event.attachments[0].type))
     ) {
@@ -6718,7 +6536,7 @@ function countConsonants(str) {
 }
 
 function getProfilePic(id) {
-    return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=" + settings.apikey.facebook;
+    return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook;
 }
 
 // from 3 am to 11 am
@@ -6765,15 +6583,15 @@ function getTimeDate(tz) {
 
 function getCurrentDateAndTime(tz) {
     let options = {
-            timeZone: tz,
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-            hour12: false,
-        },
+        timeZone: tz,
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+    },
         formatter = new Intl.DateTimeFormat([], options);
 
     return formatter.format(new Date());
@@ -6795,7 +6613,7 @@ function getSuffix(i) {
 }
 
 function isMyId(id) {
-    return id == rootAccess;
+    return id == settings.shared.root;
 }
 
 function getWelcomeImage(name, gname, Tmem, id) {
@@ -6807,7 +6625,7 @@ async function getImages(api, event, images) {
     let time = utils.getTimestamp();
     let name = [];
     let i;
-    for (i = 0; i < parseInt(settings.preference.max_image) && i < images.length; i++) {
+    for (i = 0; i < parseInt(settings.shared.max_image) && i < images.length; i++) {
         let url = nonUU(images, true);
         await sleep(500);
         let fname = __dirname + "/cache/findimg_" + i + "_" + time + ".png";
@@ -7024,11 +6842,7 @@ async function bgRemove(api, event) {
 
 async function unLink(dir) {
     await sleep(1000 * 120);
-    if (fs.existsSync(dir)) {
-        fs.unlinkSync(dir, (err) => {
-            if (err) utils.logged(err);
-        });
-    }
+    unlinkIfExists(dir);
 }
 
 const convertBytes = function (bytes) {
@@ -7543,9 +7357,9 @@ async function aiResponse(event, complextion, text, repeat, user, group, uid) {
     try {
         const ai = await openai.createCompletion(generateParamaters(event, complextion, text, user, group, uid));
 
-        settings.tokens["davinci"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
-        settings.tokens["davinci"]["completion_tokens"] += ai.data.usage.completion_tokens;
-        settings.tokens["davinci"]["total_tokens"] += ai.data.usage.total_tokens;
+        settings.shared.tokens["davinci"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
+        settings.shared.tokens["davinci"]["completion_tokens"] += ai.data.usage.completion_tokens;
+        settings.shared.tokens["davinci"]["total_tokens"] += ai.data.usage.total_tokens;
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
 
         let text1 = ai.data.choices[0].text;
@@ -7563,10 +7377,10 @@ async function aiResponse(event, complextion, text, repeat, user, group, uid) {
         utils.logged(error);
         if (repeat) {
             utils.logged("attempt_initiated_2 text-davinci-002 " + text);
-            let newResponse = await aiResponse(event, getNewComplextion(settings.preference.text_complextion), text, false, user, group, api.getCurrentUserID());
-            settings.tokens["davinci"]["prompt_tokens"] += newResponse.data.usage.prompt_tokens;
-            settings.tokens["davinci"]["completion_tokens"] += newResponse.data.usage.completion_tokens;
-            settings.tokens["davinci"]["total_tokens"] += newResponse.data.usage.total_tokens;
+            let newResponse = await aiResponse(event, getNewComplextion(settings.shared.text_complextion), text, false, user, group, api.getCurrentUserID());
+            settings.shared.tokens["davinci"]["prompt_tokens"] += newResponse.data.usage.prompt_tokens;
+            settings.shared.tokens["davinci"]["completion_tokens"] += newResponse.data.usage.completion_tokens;
+            settings.shared.tokens["davinci"]["total_tokens"] += newResponse.data.usage.total_tokens;
             utils.logged("tokens_used prompt: " + newResponse.data.usage.prompt_tokens + " completion: " + newResponse.data.usage.completion_tokens + " total: " + newResponse.data.usage.total_tokens);
             return newResponse;
         }
@@ -7591,7 +7405,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
             { role: "user", content: text },
         ];
         let ai = await openai.createChatCompletion({
-            model: settings.preference.primary_text_complextion,
+            model: settings.shared.primary_text_complextion,
             messages: mssg,
             functions: [
                 {
@@ -7713,9 +7527,9 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
             function_call: "auto",
         });
 
-        settings.tokens["gpt"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
-        settings.tokens["gpt"]["completion_tokens"] += ai.data.usage.completion_tokens;
-        settings.tokens["gpt"]["total_tokens"] += ai.data.usage.total_tokens;
+        settings.shared.tokens["gpt"]["prompt_tokens"] += ai.data.usage.prompt_tokens;
+        settings.shared.tokens["gpt"]["completion_tokens"] += ai.data.usage.completion_tokens;
+        settings.shared.tokens["gpt"]["total_tokens"] += ai.data.usage.total_tokens;
 
         utils.logged("tokens_used prompt: " + ai.data.usage.prompt_tokens + " completion: " + ai.data.usage.completion_tokens + " total: " + ai.data.usage.total_tokens);
         let message = ai.data.choices[0].message;
@@ -7733,7 +7547,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: "generate a 2 sentence response using this `You can open the commands list by sending cmd or func.`",
                     });
                     let ai222a = await openai.createChatCompletion({
-                        model: settings.preference.primary_text_complextion,
+                        model: settings.shared.primary_text_complextion,
                         messages: constructa,
                     });
                     return ai222a;
@@ -7755,7 +7569,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         }
                     });
                     return await openai.createChatCompletion({
-                        model: settings.preference.primary_text_complextion,
+                        model: settings.shared.primary_text_complextion,
                         messages: mssg,
                     });
                 case "get_joke":
@@ -7766,7 +7580,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: '{"joke": "' + joke[Math.floor(Math.random() * joke.length)] + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: settings.preference.primary_text_complextion,
+                        model: settings.shared.primary_text_complextion,
                         messages: mssg,
                     });
                 case "get_date_time":
@@ -7779,7 +7593,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: '{"time": "' + response.time.hours + '", "date": "' + response.time.date + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: settings.preference.primary_text_complextion,
+                        model: settings.shared.primary_text_complextion,
                         messages: mssg,
                     });
                 case "get_weather_info":
@@ -7848,7 +7662,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                                 content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
                             });
                             return await openai.createChatCompletion({
-                                model: settings.preference.primary_text_complextion,
+                                model: settings.shared.primary_text_complextion,
                                 messages: mssg,
                             });
                         }
@@ -7857,7 +7671,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                     let web = await getWebResults(argument.query, 3, false);
                     if (argument.query == web) {
                         return await openai.createChatCompletion({
-                            model: settings.preference.primary_text_complextion,
+                            model: settings.shared.primary_text_complextion,
                             messages: mssg,
                         });
                     }
@@ -7868,7 +7682,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                         content: '{"result": "' + web + '"}',
                     });
                     return await openai.createChatCompletion({
-                        model: settings.preference.primary_text_complextion,
+                        model: settings.shared.primary_text_complextion,
                         messages: mssg,
                     });
                 case "say":
@@ -7905,7 +7719,7 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
                             */
                     }
                     let ai222 = await openai.createChatCompletion({
-                        model: settings.preference.primary_text_complextion,
+                        model: settings.shared.primary_text_complextion,
                         messages: construct,
                     });
                     ai222.data.choices[0].message.content += "[" + argument.format + "=" + argument.name + "]";
@@ -7915,8 +7729,8 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
         return ai;
     } catch (error) {
         utils.logged(error);
-        utils.logged("attempt_initiated_1 " + settings.preference.text_complextion + " " + text);
-        return await aiResponse(event, settings.preference.text_complextion, text, repeat, user, group, uid);
+        utils.logged("attempt_initiated_1 " + settings.shared.text_complextion + " " + text);
+        return await aiResponse(event, settings.shared.text_complextion, text, repeat, user, group, uid);
     }
 }
 
@@ -7951,11 +7765,11 @@ function generateParamaters(event, complextion, text, user, group, uid) {
     return {
         model: complextion,
         prompt: pro,
-        temperature: parseInt(settings.preference.temperature),
-        max_tokens: parseInt(settings.preference.max_tokens),
-        top_p: parseInt(settings.preference.probability_mass),
-        frequency_penalty: parseInt(settings.preference.frequency_penalty),
-        presence_penalty: parseInt(settings.preference.presence_penalty),
+        temperature: parseInt(settings.shared.temperature),
+        max_tokens: parseInt(settings.shared.max_tokens),
+        top_p: parseInt(settings.shared.probability_mass),
+        frequency_penalty: parseInt(settings.shared.frequency_penalty),
+        presence_penalty: parseInt(settings.shared.presence_penalty),
     };
 }
 
@@ -8030,17 +7844,15 @@ function findPrefix(event, id) {
 function saveState() {
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
-    fs.writeFileSync(__dirname + "/data/shared_pref.json", JSON.stringify(settings, null, 4), "utf8");
+    fs.writeFileSync(__dirname + "/data/preferences.json", JSON.stringify(settings, null, 4), "utf8");
     fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
     fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
-    fs.writeFileSync(__dirname + "/data/cors.json", JSON.stringify(corsWhitelist, null, 4), "utf8");
-    fs.writeFileSync(__dirname + "/data/apikey.json", JSON.stringify(suspectedAPI, null, 4), "utf8");
 }
 
 function getIdFromUrl(url) {
     try {
         return url.match(/id=(\d+)/)[1];
-    } catch (err) {}
+    } catch (err) { }
     return "";
 }
 
@@ -8245,7 +8057,7 @@ async function downloadFile(fileUrl, outputLocationPath) {
                 });
             });
         })
-        .catch(function (error) {});
+        .catch(function (error) { });
 }
 
 async function searchimgr(api, event, filename) {
@@ -8286,9 +8098,9 @@ function getCountryOrigin(model) {
 function getStatus() {
     if (listenStatus == 1) {
         return "Not Login";
-    } else if (settings.preference.isStop) {
+    } else if (settings.shared.stop) {
         return "Offline";
-    } else if (settings.preference.isDebugEnabled) {
+    } else if (settings.shared.maintenance) {
         return "Maintenance";
     }
     return "Online";
@@ -8300,7 +8112,7 @@ function getRoutes() {
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + req.headers.origin + " " + url);
         if (url == "/cache" || url == "/cache/index.html") {
-            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 if (fs.existsSync(__dirname + "/cache/" + data)) {
                     res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
@@ -8318,7 +8130,7 @@ function getRoutes() {
                 res.end();
             }
         } else if (url == "/chat" || url == "/chat/index.html") {
-            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 let latest = data.split("%jk__lio%")[1];
                 let aiRR = await aiResponse({ type: "external" }, "text-davinci-003", "User: " + data + "\nUser: " + latest, true, { name: undefined }, { name: undefined }, 0);
@@ -8343,7 +8155,7 @@ function getRoutes() {
                 res.end();
             }
         } else if (url == "/search" || url == "/search/index.html") {
-            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 let results = [];
                 try {
@@ -8370,14 +8182,14 @@ function getRoutes() {
                         res.setHeader("Content-Type", "application/json");
                         res.writeHead(200);
                         res.end(JSON.stringify(results));
-                    } catch (err) {}
-                } catch (err) {}
+                    } catch (err) { }
+                } catch (err) { }
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
                 res.end();
             }
         } else if (url == "/searchimg" || url == "/searchimg/index.html") {
-            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 let results = [];
                 try {
@@ -8390,13 +8202,13 @@ function getRoutes() {
                     res.setHeader("Content-Type", "application/json");
                     res.writeHead(200);
                     res.end(JSON.stringify(results));
-                } catch (err) {}
+                } catch (err) { }
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
                 res.end();
             }
         } else if (url == "/query/get_block_user") {
-            if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
                 res.setHeader("Content-Type", "application/json");
                 res.writeHead(200);
                 let b = JSON.stringify(users.blocked);
@@ -8598,7 +8410,7 @@ async function sendAiMessage(api, event, ss) {
                     n: 1,
                     size: "1024x1024",
                 });
-                settings.tokens["dell"] += 1;
+                settings.shared.tokens["dell"] += 1;
                 let url = response.data.data[0].url;
                 utils.logged("downloading_attachment " + url);
                 if (/^(http|https):\/\//.test(url)) {
@@ -8924,11 +8736,7 @@ function deleteCacheData(mode) {
             for (fe = 0; fe < files.length; fe++) {
                 let file = files[fe];
                 if (mode) {
-                    if (fs.existsSync(__dirname + "/cache/" + file)) {
-                        fs.unlinkSync(__dirname + "/cache/" + file, (err) => {
-                            if (err) utils.logged(err);
-                        });
-                    }
+                    unlinkIfExists(__dirname + "/cache/" + file);
                 } else {
                     unLink(__dirname + "/cache/" + file);
                 }
@@ -9018,6 +8826,14 @@ function writeFile(dir, content) {
     }
 }
 
+function unlinkIfExists(dir) {
+    if (fs.existsSync(dir)) {
+        fs.unlinkSync(dir, (err) => {
+            if (err) return utils.logged(err);
+        });
+    }
+}
+
 const readLineAsync = (msg) => {
     return new Promise((resolve) => {
         readline.question(msg, (userRes) => {
@@ -9027,27 +8843,35 @@ const readLineAsync = (msg) => {
 };
 
 async function addAccount() {
-    const userRes = await readLineAsync("Enter your facebook cookies: ");
-    if (!isJson(userRes)) {
-        utils.logged("failed_login invalid facebook cookies");
+    const contOrNot = await readLineAsync("Do you want to add an account? [Y/n]: ");
+    if (contOrNot != "Y" && contOrNot != "y") {
+        utils.logged("no_account exiting now");
         process.exit(0);
-        return;
     }
-    let appsss = JSON.parse(userRes);
+    const userRes = await readLineAsync("Enter your facebook cookies: ");
+    let buff = Buffer.from(userRes, "base64");
+    const base642text = buff.toString("ascii");
+    if (!isJson(base642text)) {
+        utils.logged("failed_login invalid facebook cookies");
+        return addAccount();
+    }
+    const appsss = JSON.parse(base642text);
     if (Array.isArray(appsss)) {
-        let a = true;
+        let a = false;
         for (item in appsss) {
             if (appsss[item].key == "c_user") {
                 let login = appsss[item].value;
+                settings[login] = settings.default;
                 redfox_fb(
                     {
-                        appState: userRes,
+                        appState: appsss,
                     },
                     login,
                     function (isLogin) {
                         if (isLogin) {
+                            a = true;
                             utils.logged("failed_login failed to login to " + login);
-                            process.exit(0);
+                            return addAccount();
                         } else {
                             utils.logged("success_login account " + login + "  is now connected");
 
@@ -9062,46 +8886,62 @@ async function addAccount() {
                             }
 
                             saveState();
+
+                            settings[login].owner = login;
+                            settings.shared.root = login;
                         }
                     }
                 );
-            } else {
+            }
+            if (a) {
                 utils.logged("failed_login invalid facebook cookies");
-                process.exit(0);
+                return addAccount();
             }
         }
     } else {
         utils.logged("failed_login invalid facebook cookies");
-        process.exit(0);
+        return addAccount();
     }
 }
 
 function isJson(str) {
     try {
-        JSON.parse(str);
+        Array.isArray(JSON.parse(str));
+        return true;
     } catch (e) {
-        return false;
     }
-    return true;
+    return false;
 }
 
-function testCommand(message, prefix, senderID, permission, regex) {
+function testCommand(api, message, prefix, senderID, permission, regex) {
     if (!permission) {
         permission = "user";
     }
     if (!regex) {
         regex = true;
     }
+
     if (permission != "user") {
-        if (!(isMyId(senderID) && permission == "root") || !(users.admin.includes(senderID) && permission == "admin")) {
+        if (!(isMyId(senderID) && permission == "root")) {
+            if (!(settings[api.getCurrentUserID()].owner == "senderID" && permission == "owner")) {
+                if (!users.admin.includes(senderID)) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+        } else {
             return false;
         }
     }
 
+    prefix = prefix.toLowerCase();
+
     if (!regex) return prefix == message;
 
     const regExp = new RegExp("(^" + prefix + "|^" + prefix + "s)");
-    return regex.test(message);
+    return regExp.test(message);
 }
 
 function addBalance(user, token) {
