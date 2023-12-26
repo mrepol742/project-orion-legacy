@@ -27,7 +27,7 @@
         "primary_text_complextion": "gpt-3.5-turbo-16k-0613",
         "max_image": "12",
         "apikey": {
-            "ai": "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",
+            "ai": "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",
             "facebook": "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662"
         },
         "cors": [
@@ -38,9 +38,9 @@
         "pin": {},
         "tokens": {
             "gpt": {
-                "prompt_tokens": 62862000,
-                "completion_tokens": 22329556,
-                "total_tokens": 85191556
+                "prompt_tokens": 62863601,
+                "completion_tokens": 22329643,
+                "total_tokens": 85193244
             },
             "davinci": {
                 "prompt_tokens": 1340538,
@@ -48,7 +48,8 @@
                 "total_tokens": 1931995
             },
             "dell": 867
-        }
+        },
+        "unsend": true
     },
     "100071743848974": {
         "leave": false,
