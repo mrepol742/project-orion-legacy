@@ -6,9 +6,9 @@
     "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
-        "start": "clear && while [ true ]; do node index.js ; done",
-        "test": "clear && jshint index.js",
-        "check": "clear && node --check index.js",
+        "setup": "npm install && apt install traceroute cowsay figlet neofetch",
+        "start": "clear && while [ true ]; do node --trace-deprecation index.js ; done",
+        "dev": "nodemon --trace-deprecation index.js",
         "jshint": "jshint index.js",
         "prettier": "prettier ./ --write"
     },
@@ -38,7 +38,7 @@
         "googlethis": "^1.8.0",
         "https-proxy-agent": "^7.0.2",
         "mqtt": "^4.3.7",
-        "openai": "^3.2.1",
+        "openai": "^4.24.0",
         "request": "^2.88.2",
         "weather-js": "^2.0.0",
         "websocket-stream": "^5.5.2",
@@ -46,6 +46,7 @@
     },
     "devDependencies": {
         "jshint": "^2.13.6",
+        "nodemon": "^3.0.2",
         "prettier": "^2.8.4"
     },
     "engines": {

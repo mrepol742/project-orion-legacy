@@ -1,6 +1,6 @@
-/node_modules
+/node_modules/*
 /cache/*
-!cache/.gitkeep
-/log/*
-!log/.gitkeep
-build
+/data/cookies/*
+/build/*
+/data/functionRegistry.json
+/data/threadRegistry.json
