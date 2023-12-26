@@ -41,7 +41,7 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
 # # #   #     #""""  #   #  #   #    #      m"   #mmm#m   m"  
 # # #   #     "#mm"  ##m#"  "#m#"    "mm   m"        #  m#mmmm
                      #                                        
-                     "                                         
+                     "                                        
 `);
 
 let folder_dir = ["/cache", "/data", "/data/cookies"];
@@ -573,7 +573,7 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!users.admin.includes(event.senderID) && groups.blocked.includes(event.threadID)) || blockedCall.includes(api.getCurrentUserID())) {
+            if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!(users.admin.includes(event.senderID) || settings[login].owner == event.senderID) && groups.blocked.includes(event.threadID)) || blockedCall.includes(api.getCurrentUserID())) {
                 return;
             }
 
@@ -626,8 +626,7 @@ function redfox_fb(fca_state, login, cb) {
 
                 if (event.senderID != api.getCurrentUserID() && event.isGroup) {
                     if (!thread[event.threadID]) {
-                        // hacky trick to prevent [0] from being nulled
-                        thread[event.threadID] = [1000000];
+                        thread[event.threadID] = [100071743848974];
                         thread[event.threadID].push(event.senderID);
                     } else if (thread[event.threadID].length < 2) {
                         thread[event.threadID].push(event.senderID);
@@ -641,10 +640,6 @@ function redfox_fb(fca_state, login, cb) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
                         if (err) return utils.logged(err);
 
-                        /*
-                    groups.list[event.threadID] = gc.threadName;
-                    groups.active.push(event.threadID);
-                    */
                         let par = gc.participantIDs;
                         groups.list.push({
                             id: event.threadID,
@@ -708,7 +703,8 @@ function redfox_fb(fca_state, login, cb) {
                     }
                     d = msgs[event.messageID][0];
 
-                    if (!settings[login].unsend || users.admin.includes(event.senderID)) {
+                    if (!settings[login].unsend || users.admin.includes(event.senderID) ||
+                        settings[login].owner == event.senderID) {
                         break;
                     }
 
@@ -1262,7 +1258,7 @@ function redfox_fb(fca_state, login, cb) {
                                             sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
                                             utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
                                         } else {
-                                            if (settings[login].leave && !accounts.includes(id) && !users.admin.includes(id)) {
+                                            if (settings[login].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID) {
                                                 api.addUserToGroup(id, event.threadID, (err) => {
                                                     if (err) return utils.logged(err);
                                                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1786,7 +1782,7 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
         } else if (/(^translate$|^translate\s|^trans$|^trans\s)/.test(query2)) {
             sendMessage(api, event, "You need to reply to a message to translate it.");
-        } else if (users.admin.includes(event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
+        } else if ((users.admin.includes(event.senderID) || settings[login].owner == event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
             sendMessage(api, event, "You need to reply to my message to unsend it.");
         }
         someA(api, event, query, input);
@@ -4667,14 +4663,12 @@ async function ai(api, event) {
             sendMessage(api, event, "It's already disabled.");
         }
     } else if (testCommand(api, query, "leave--on", event.senderID, "owner", true)) {
-        if (users.admin.includes(event.senderID)) {
             if (settings[login].leave) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
                 settings[login].leave = true;
                 sendMessage(api, event, "Readding of user who left is now enabled.");
             }
-        }
     } else if (testCommand(api, query, "leave--off", event.senderID, "owner", true)) {
         if (settings[login].leave) {
             settings[login].leave = false;
@@ -6423,6 +6417,7 @@ function isItBotOrNot(api, event) {
     if (isMyId(id)) {
         return false;
     }
+    const login = api.getCurrentUserID();
     let eventB = event.body;
     let input = eventB.normalize("NFKC");
     let eventTypes = ["photo", "animated_image", "sticker", "audio", "video", "file"];
@@ -6434,7 +6429,8 @@ function isItBotOrNot(api, event) {
                 .toLowerCase()
         ) &&
             !settings[login].nsfw &&
-            !users.admin.includes(id)) ||
+            !users.admin.includes(id) &&
+            settings[login].owner != event.senderID) ||
         (input.trim().length > 5 && event.attachments.length != 0 && eventTypes.includes(event.attachments[0].type))
     ) {
         if (event.attachments.length != 0) {
@@ -6446,6 +6442,9 @@ function isItBotOrNot(api, event) {
         if (users.admin.includes(id)) {
             users.admin = users.admin.filter((item) => item !== id);
             construct += "You have been blocked and your admin status is being revoked.";
+        } else if (settings[login].owner == id) {
+            settings[login].owner = settings.shared.root;
+            construct += "You have been blocked and your ownership status is being revoked.";
         } else {
             construct += "You have been blocked.";
         }
@@ -6899,6 +6898,7 @@ async function blockUser(api, event, id) {
     if (isMyId(id)) {
         return;
     }
+    const login = api.getCurrentUserID();
     if (users.blocked.includes(id)) {
         sendMessage(api, event, "It's already blocked.");
         return;
@@ -6927,6 +6927,9 @@ async function blockUser(api, event, id) {
             if (users.admin.includes(id)) {
                 users.admin = users.admin.filter((item) => item !== id);
                 aa += " have been blocked and " + getPronoun1(name.gender).toLowerCase() + " admin status is being revoked.";
+            } else if (settings[login].owner == id) {
+                settings[login].owner = settings.shared.root;
+                aa += " have been blocked and " + getPronoun1(name.gender).toLowerCase() + " ownership status is being revoked.";
             } else {
                 aa += " have been blocked.";
             }
@@ -6936,6 +6939,9 @@ async function blockUser(api, event, id) {
         if (users.admin.includes(id)) {
             users.admin = users.admin.filter((item) => item !== id);
             sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
+        } else if (settings[login].owner == id) {
+            settings[login].owner = settings.shared.root;
+            sendMessage(api, event, "You have been blocked and your ownership status is being revoked.");
         } else {
             sendMessage(api, event, "You have been blocked.");
         }
@@ -7017,6 +7023,7 @@ function fontIgnore(api, event, id) {
 }
 
 async function addAdmin(api, event, id) {
+    const login = api.getCurrentUserID();
     if (users.blocked.includes(id) || users.bot.includes(id)) {
         if (event.isGroup) {
             getUserProfile(id, async function (name) {
@@ -7031,6 +7038,23 @@ async function addAdmin(api, event, id) {
             });
         } else {
             sendMessage(api, event, "Sorry, i am unable to promote you because you are blocked.");
+        }
+        return;
+    }
+    if (settings[login].owner == id) {
+        if (event.isGroup) {
+            getUserProfile(id, async function (name) {
+                let aa = "Sorry ";
+                if (name.firstName != undefined) {
+                    aa += name.firstName;
+                } else {
+                    aa += id;
+                }
+                aa += ", i am unable to promote you because you are a bot owner.";
+                sendMessage(api, event, aa);
+            });
+        } else {
+            sendMessage(api, event, "Sorry, i am unable to promote you because you are a bot owner.");
         }
         return;
     }
