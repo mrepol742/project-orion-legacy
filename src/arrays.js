@@ -1,6 +1,9 @@
 /*jshint esversion: 9 */
-/*jshint -W097 */
-/*jshint -W117 */
+/*jshint -W018 */
+/*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
 
 /*
  *
@@ -18,8 +21,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-"use strict";
 
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?", "hello", "hi", "hellooooo", "hiiiiii"];

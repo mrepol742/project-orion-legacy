@@ -49,7 +49,7 @@ for (folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
 }
 
-let data_json = ["functionRegistry", "groups", "pin", "preferences", "threadRegistry", "users"];
+let data_json = ["functionRegistry", "groups", "pin", "accountPreferences", "threadPreferences", "threadRegistry", "users"];
 for (file in data_json) {
     writeFile(__dirname + "/data/" + data_json[file] + ".json", "{}");
 }
@@ -57,7 +57,8 @@ for (file in data_json) {
 /*
  * LOAD DATA
  */
-let settings = JSON.parse(fs.readFileSync(__dirname + "/data/preferences.json", "utf8"));
+let settings = JSON.parse(fs.readFileSync(__dirname + "/data/accountPreferences.json", "utf8"));
+let settingsThread = JSON.parse(fs.readFileSync(__dirname + "/data/threadPreferences.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
 let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
@@ -238,7 +239,14 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
                 let login = files[appStates].replace(".bin", "");
                 accounts.push(login);
                 let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".bin", "utf8");
+                if (!/^\d+$/.test(login)) {
+                    unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
+                }
                 if (state.includes("facebook.com") || state.includes("messenger.com")) {
+                    login = getUserIdFromAppState(JSON.parse(state));
+                    if (!settings[login]) {
+                        settings[login] = settings.default;
+                    }
                     redfox_fb(
                         {
                             appState: JSON.parse(state),
@@ -309,7 +317,7 @@ utils.logged("task_clear global initiated");
 function redfox_fb(fca_state, login, cb) {
     redfox(fca_state, (err, api) => {
         if (err) {
-            if (err.error !== undefined && err.error == "Not logged in") {
+            if (err.error && err.error == "Not logged in") {
                 utils.logged("api_not_signin " + login);
             }
             if (isMyId(login)) {
@@ -363,7 +371,7 @@ function redfox_fb(fca_state, login, cb) {
         task(
             function () {
                 let min = Math.floor(600000 + Math.random() + 300000);
-                if (!(userPresence[login] === undefined)) {
+                if (userPresence[login]) {
                     for (root in userPresence[login]) {
                         let data = userPresence[login][root];
                         for (keys in Object.keys(data)) {
@@ -382,7 +390,7 @@ function redfox_fb(fca_state, login, cb) {
 
                                 api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
                                     if (err) utils.logged(err);
-                                    if (!(userPresence[login] === undefined)) {
+                                    if (userPresence[login]) {
                                         for (root0 in userPresence[login]) {
                                             let data0 = userPresence[login][root0];
                                             for (keys0 in Object.keys(data0)) {
@@ -414,7 +422,7 @@ function redfox_fb(fca_state, login, cb) {
 
         let isAppState = true;
 
-        if (!(settings.shared.restart[0] === undefined && settings.shared.restart[1] === undefined) && isCalled && settings.shared.restart[2] == login) {
+        if (!(settings.shared.restart[0] && settings.shared.restart[1]) && isCalled && settings.shared.restart[2] == login) {
             api.sendMessage(updateFont("Successfully restarted", settings.shared.restart[0]), settings.shared.restart[0], settings.shared.restart[1]);
             settings.shared.restart = [];
             isCalled = false;
@@ -452,12 +460,16 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (threadRegistry[event.threadID] === undefined && !isMyId(api.getCurrentUserID())) {
+            if (!settingsThread[event.threadID]) {
+                settingsThread[event.threadID] = settingsThread.default;
+            }
+
+            if (!threadRegistry[event.threadID] && !isMyId(api.getCurrentUserID())) {
                 threadRegistry[event.threadID] = api.getCurrentUserID();
                 utils.logged("group_register " + api.getCurrentUserID());
             }
 
-            if (!(threadRegistry[event.threadID] === undefined) && threadRegistry[event.threadID] != api.getCurrentUserID()) {
+            if (threadRegistry[event.threadID] && threadRegistry[event.threadID] != api.getCurrentUserID()) {
                 return;
             }
 
@@ -505,9 +517,9 @@ function redfox_fb(fca_state, login, cb) {
                             sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
                             sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues");
-                        } else if (settings.shared.stop) {
+                        } else if (settings[login].stop) {
                             sendMessage(api, event, "The program is currently offline.");
-                        } else if (settings.shared.maintenance) {
+                        } else if (settings[login].maintenance) {
                             sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues");
                         } else {
                             getUserProfile(event.senderID, async function (name) {
@@ -544,7 +556,7 @@ function redfox_fb(fca_state, login, cb) {
                             sendMessage(api, event, "You are already muted.");
                         } else {
                             users.muted.push(event.senderID);
-                            if (!(userPresence[api.getCurrentUserID()] === undefined)) {
+                            if (userPresence[api.getCurrentUserID()]) {
                                 for (root0 in userPresence[api.getCurrentUserID()]) {
                                     let data0 = userPresence[api.getCurrentUserID()][root0];
                                     for (keys0 in Object.keys(data0)) {
@@ -571,16 +583,16 @@ function redfox_fb(fca_state, login, cb) {
                 let query2 = formatQuery(input);
                 let query = query2;
 
-                if (testCommand(api, query, "stop", event.senderID, "root", true)) {
+                if (testCommand(api, query, "stop", event.senderID, "owner", true)) {
                     sendMessage(api, event, "Program stopped its state.");
-                    settings.shared.stop = true;
+                    settings[login].stop = true;
                     return;
                 } else if (testCommand(api, query, "destroy", event.senderID, "root", true)) {
                     sendMessage(api, event, "Program destroyed its state.");
                     return;
-                } else if (testCommand(api, query, "resume", event.senderID, "root", true)) {
+                } else if (testCommand(api, query, "resume", event.senderID, "owner", true)) {
                     sendMessage(api, event, "Program resumed its state.");
-                    settings.shared.stop = false;
+                    settings[login].stop = false;
                     return;
                 } else if (testCommand(api, query, "restart", event.senderID, "root", true)) {
                     saveState();
@@ -594,11 +606,11 @@ function redfox_fb(fca_state, login, cb) {
                     process.exit(0);
                 }
 
-                if (settings.shared.stop) {
+                if (settings[login].stop) {
                     return;
                 }
 
-                if (settings.shared.maintenance && !accounts.includes(event.senderID)) {
+                if (settings[login].maintenance && !accounts.includes(event.senderID)) {
                     if (event.type == "message" || event.type == "message_reply") {
                         if (isGoingToFast1(event, threadMaintenance, 30)) {
                             return;
@@ -613,7 +625,7 @@ function redfox_fb(fca_state, login, cb) {
                 }
 
                 if (event.senderID != api.getCurrentUserID() && event.isGroup) {
-                    if (thread[event.threadID] === undefined) {
+                    if (!thread[event.threadID]) {
                         // hacky trick to prevent [0] from being nulled
                         thread[event.threadID] = [1000000];
                         thread[event.threadID].push(event.senderID);
@@ -683,7 +695,7 @@ function redfox_fb(fca_state, login, cb) {
                         !users.bot.includes(event.userID) &&
                         !users.blocked.includes(event.senderID) &&
                         event.senderID != event.userID &&
-                        !(event.reaction === undefined)
+                        event.reaction
                     ) {
                         reactMessage(api, event, event.reaction);
                         emo.push(event.messageID);
@@ -691,12 +703,12 @@ function redfox_fb(fca_state, login, cb) {
                     break;
                 case "message_unsend":
                     let d = msgs[event.messageID];
-                    if (d === undefined) {
+                    if (!d) {
                         break;
                     }
                     d = msgs[event.messageID][0];
 
-                    if (!settings.shared.unsend || users.admin.includes(event.senderID)) {
+                    if (!settings[login].unsend || users.admin.includes(event.senderID)) {
                         break;
                     }
 
@@ -996,7 +1008,7 @@ function redfox_fb(fca_state, login, cb) {
                     }
                     break;
                 case "event":
-                    if (!(event.author === undefined) && event.author == api.getCurrentUserID()) {
+                    if (event.author && event.author == api.getCurrentUserID()) {
                         break;
                     }
                     /*
@@ -1168,7 +1180,7 @@ function redfox_fb(fca_state, login, cb) {
                                 let mentioned = [];
                                 let i2 = 0;
                                 while (true) {
-                                    if (event.logMessageData.addedParticipants[i2] === undefined) {
+                                    if (!event.logMessageData.addedParticipants[i2]) {
                                         break;
                                     }
                                     let partID = event.logMessageData.addedParticipants[i2].userFbId;
@@ -1250,7 +1262,7 @@ function redfox_fb(fca_state, login, cb) {
                                             sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
                                             utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
                                         } else {
-                                            if (settings.shared.leave && !accounts.includes(id) && !users.admin.includes(id)) {
+                                            if (settings[login].leave && !accounts.includes(id) && !users.admin.includes(id)) {
                                                 api.addUserToGroup(id, event.threadID, (err) => {
                                                     if (err) return utils.logged(err);
                                                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1419,7 +1431,7 @@ async function ai22(api, event, query, query2) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+        if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || event.messageReply.attachments[0].type != "audio") {
                 sendMessage(api, event, "I cannot see an audio. Please reply totext to an audio.");
             } else {
@@ -1602,7 +1614,7 @@ async function ai22(api, event, query, query2) {
                         }
                     }
                 } catch (error) {
-                    if (!(error.response === undefined)) {
+                    if (error.response) {
                         if (error.response.status >= 400) {
                             sendMessage(
                                 api,
@@ -1666,7 +1678,7 @@ async function ai22(api, event, query, query2) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+        if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1) {
                 sendMessage(api, event, "I cannot see an image. Please reply image --bgremove to an image.");
             } else {
@@ -1679,7 +1691,7 @@ async function ai22(api, event, query, query2) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+        if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || (event.messageReply.attachments[0].type != "photo" && event.messageReply.attachments[0].type != "animated_image" && event.messageReply.attachments[0].type != "sticker")) {
                 sendMessage(api, event, "I cannot see an image. Please reply image --reverse to an image.");
             } else {
@@ -1719,8 +1731,8 @@ async function ai22(api, event, query, query2) {
 
 async function ai(api, event) {
     const login = api.getCurrentUserID();
-    const eventB = event.body;
-    const input = eventB.normalize("NFKC");
+    let eventB = event.body;
+    let input = eventB.normalize("NFKC");
 
     let query2 = formatQuery(input);
     let query = query2;
@@ -1737,7 +1749,6 @@ async function ai(api, event) {
             eventB = event.body;
             input = eventB.normalize("NFKC");
             query2 = formatQuery(input);
-            query2;
         }
     }
     reaction(api, event, query, input);
@@ -1791,7 +1802,7 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: image text" + "\n " + example[Math.floor(Math.random() * example.length)] + " searchimg melvin jones repol");
         } else {
-            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
                 data.shift();
                 let images = await google.image(data.join(" "), googleImageOptions);
                 getImages(api, event, images);
@@ -1820,7 +1831,7 @@ async function ai(api, event) {
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search --dnt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " searchincog Who is Melvin Jones Repol");
         } else {
-            let query =  getDataFromQuery(data);
+            let query = getDataFromQuery(data);
             getResponseData("https://api.duckduckgo.com/?q=" + query + "&format=json&pretty=1").then((response) => {
                 if (response == null) {
                     sendMessage(
@@ -1885,6 +1896,7 @@ async function ai(api, event) {
                     getGroupProfile(event.threadID, async function (group) {
                         let respo = await aiResponse2(event, text, true, user, group, api.getCurrentUserID());
                         addBalance(user, respo.usage.total_tokens);
+                        addToken(login, "gpt", respo);
                         const choices = respo.choices[0];
                         const pornhub = choices.message === undefined ? choices.text : choices.message.content;
                         sendAiMessage(api, event, pornhub);
@@ -1892,6 +1904,7 @@ async function ai(api, event) {
                 } else {
                     let respo = await aiResponse2(event, text, true, user, { name: undefined }, api.getCurrentUserID());
                     addBalance(user, respo.usage.total_tokens);
+                    addToken(login, "gpt", respo);
                     const choices = respo.choices[0];
                     const xvideos = choices.message === undefined ? choices.text : choices.message.content;
                     sendAiMessage(api, event, xvideos);
@@ -1920,9 +1933,7 @@ async function ai(api, event) {
                         },
                     ],
                 });
-                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.usage.prompt_tokens;
-                settings.shared.tokens["gpt"]["completion_tokens"] += completion.usage.completion_tokens;
-                settings.shared.tokens["gpt"]["total_tokens"] += completion.usage.total_tokens;
+                addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues right now. Please try it again later.");
@@ -1948,9 +1959,7 @@ async function ai(api, event) {
                         { role: "user", content: data.join(" ") },
                     ],
                 });
-                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.usage.prompt_tokens;
-                settings.shared.tokens["gpt"]["completion_tokens"] += completion.usage.completion_tokens;
-                settings.shared.tokens["gpt"]["total_tokens"] += completion.usage.total_tokens;
+                addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
@@ -1966,7 +1975,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-                const response = await openai.createCompletion({
+                const response = await openai.completions.create({
                     model: "text-davinci-003",
                     prompt: "You are Misaka an AI trained by Melvin Jones Repol, to reluctantly replies using childish, wrong spelling and mix cases messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
@@ -1975,9 +1984,7 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.shared.tokens["davinci"]["prompt_tokens"] += response.usage.prompt_tokens;
-                settings.shared.tokens["davinci"]["completion_tokens"] += response.usage.completion_tokens;
-                settings.shared.tokens["davinci"]["total_tokens"] += response.usage.total_tokens;
+                addToken(login, "davinci", response);
                 let text = response.choices[0].text;
                 if (response.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -1988,7 +1995,7 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                if (!(error.response === undefined)) {
+                if (error.response) {
                     if (error.response.status >= 400) {
                         sendMessage(
                             api,
@@ -2019,9 +2026,7 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
-                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.usage.prompt_tokens;
-                settings.shared.tokens["gpt"]["completion_tokens"] += completion.usage.completion_tokens;
-                settings.shared.tokens["gpt"]["total_tokens"] += completion.usage.total_tokens;
+                addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
@@ -2045,9 +2050,7 @@ async function ai(api, event) {
                     model: "gpt-3.5-turbo",
                     messages: [{ role: "user", content: content }],
                 });
-                settings.shared.tokens["gpt"]["prompt_tokens"] += completion.usage.prompt_tokens;
-                settings.shared.tokens["gpt"]["completion_tokens"] += completion.usage.completion_tokens;
-                settings.shared.tokens["gpt"]["total_tokens"] += completion.usage.total_tokens;
+                addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
@@ -2073,7 +2076,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-                const response = await openai.createCompletion({
+                const response = await openai.completions.create({
                     model: "text-davinci-003",
                     prompt: "You are Sim an AI trained by Melvin Jones Repol, to reluctantly replies using sexy and horny messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
@@ -2082,9 +2085,7 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.shared.tokens["davinci"]["prompt_tokens"] += response.usage.prompt_tokens;
-                settings.shared.tokens["davinci"]["completion_tokens"] += response.usage.completion_tokens;
-                settings.shared.tokens["davinci"]["total_tokens"] += response.usage.total_tokens;
+                addToken(login, "davinci", response);
                 let text = response.choices[0].text;
                 if (response.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -2095,7 +2096,7 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                if (!(error.response === undefined)) {
+                if (error.response) {
                     if (error.response.status >= 400) {
                         sendMessage(
                             api,
@@ -2118,7 +2119,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-                const response = await openai.createCompletion({
+                const response = await openai.completions.create({
                     model: "text-davinci-003",
                     prompt: "You are Melbin an AI trained by Melvin Jones Repol, to reluctantly replies using sarcastic and funny messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
@@ -2127,9 +2128,7 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.shared.tokens["davinci"]["prompt_tokens"] += response.usage.prompt_tokens;
-                settings.shared.tokens["davinci"]["completion_tokens"] += response.usage.completion_tokens;
-                settings.shared.tokens["davinci"]["total_tokens"] += response.usage.total_tokens;
+                addToken(login, "davinci", response);
                 let text = response.choices[0].text;
                 if (response.choices[0].finish_reason == "length") {
                     if (!text.endsWith(".")) {
@@ -2140,7 +2139,7 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                if (!(error.response === undefined)) {
+                if (error.response) {
                     if (error.response.status >= 400) {
                         sendMessage(
                             api,
@@ -2163,7 +2162,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-                const response = await openai.createCompletion({
+                const response = await openai.completions.create({
                     model: "text-davinci-003",
                     prompt: data.join(" "),
                     temperature: 0.7,
@@ -2172,9 +2171,7 @@ async function ai(api, event) {
                     frequency_penalty: 0,
                     presence_penalty: 0,
                 });
-                settings.shared.tokens["davinci"]["prompt_tokens"] += response.usage.prompt_tokens;
-                settings.shared.tokens["davinci"]["completion_tokens"] += response.usage.completion_tokens;
-                settings.shared.tokens["davinci"]["total_tokens"] += response.usage.total_tokens;
+                addToken(login, "davinci", response);
                 sendMessage(api, event, response.choices[0].text);
             } catch (err) {
                 sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
@@ -2190,7 +2187,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-                const response = await openai.createCompletion({
+                const response = await openai.completions.create({
                     model: "text-davinci-003",
                     prompt: "You are Codex an AI trained by Melvin Jones Repol, to reluctantly replies using programming codes based on User text.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
@@ -2199,12 +2196,10 @@ async function ai(api, event) {
                     frequency_penalty: 0.5,
                     presence_penalty: 0,
                 });
-                settings.shared.tokens["davinci"]["prompt_tokens"] += response.usage.prompt_tokens;
-                settings.shared.tokens["davinci"]["completion_tokens"] += response.usage.completion_tokens;
-                settings.shared.tokens["davinci"]["total_tokens"] += response.usage.total_tokens;
+                addToken(login, "davinci", response);
                 sendAiMessage(api, event, response.choices[0].text);
             } catch (error) {
-                if (!(error.response === undefined)) {
+                if (error.response) {
                     if (error.response.status >= 400) {
                         sendMessage(
                             api,
@@ -2227,7 +2222,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-                const response = await openai.createImage({
+                const response = await openai.image.create({
                     prompt: data.join(" "),
                     n: 4,
                     size: "1024x1024",
@@ -2248,7 +2243,7 @@ async function ai(api, event) {
                 sendMessage(api, event, message);
             } catch (error) {
                 utils.logged(error);
-                if (!(error.response === undefined)) {
+                if (error.response) {
                     if (error.response.status >= 400) {
                         sendMessage(
                             api,
@@ -2319,15 +2314,15 @@ async function ai(api, event) {
             if (err) utils.logged(err);
         });
     } else if (testCommand(api, query, "maintenance--on", event.senderID, "root", true)) {
-        if (settings.shared.maintenance) {
+        if (settings[login].maintenance) {
             sendMessage(api, event, "It's already enabled.");
         } else {
-            settings.shared.maintenance = true;
+            settings[login].maintenance = true;
             sendMessage(api, event, "Maintenance status has been enabled.");
         }
     } else if (testCommand(api, query, "maintenance--off", event.senderID, "root", true)) {
-        if (settings.shared.maintenance) {
-            settings.shared.maintenance = false;
+        if (settings[login].maintenance) {
+            settings[login].maintenance = false;
             sendMessage(api, event, "Maintenance status has been disabled.");
         } else {
             sendMessage(api, event, "It's already disabled.");
@@ -2562,7 +2557,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: rascii text" + "\n " + example[Math.floor(Math.random() * example.length)] + " ascii hello world");
         } else {
             let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
-            exec("cd src/ascii && figlet -f " + font + " " +  getDataFromQuery(data), function (err, stdout, stderr) {
+            exec("cd src/ascii && figlet -f " + font + " " + getDataFromQuery(data), function (err, stdout, stderr) {
                 sendMessage(api, event, stdout + "\n\n" + stderr);
             });
         }
@@ -2842,8 +2837,8 @@ async function ai(api, event) {
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " videolyric In The End by Linkin Park");
         } else {
-            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
-                let qsearch =  getDataFromQuery(data);
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
+                let qsearch = getDataFromQuery(data);
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(qsearch, { type: "video" });
                 if (search.results) {
@@ -2899,11 +2894,11 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video In The End by Linkin Park");
         } else {
-            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(data.join(" "), { type: "video" });
-                if (search.results && !(search.results[0].title === undefined)) {
+                if (search.results && search.results[0].title) {
                     utils.logged("download_video_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
@@ -2921,11 +2916,11 @@ async function ai(api, event) {
                         file.write(chunk);
                     }
                     let construct = search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes";
-                    if (!(search.results[0].author === undefined)) {
+                    if (search.results[0].author) {
                         construct += "\nAuthor: " + search.results[0].author.name;
                     }
                     construct += "\nUploaded: " + search.results[0].published.text + "\nViews: " + search.results[0].view_count.text;
-                    if (!(search.results[0].snippets === undefined)) {
+                    if (search.results[0].snippets) {
                         construct += "\n\n" + search.results[0].snippets[0].text.text;
                     }
                     let message = {
@@ -2950,7 +2945,7 @@ async function ai(api, event) {
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " musiclyric In The End by Linkin Park");
         } else {
-            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
                 let qsearch = getDataFromQuery(data);
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(qsearch, { type: "song" });
@@ -3005,11 +3000,11 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music In The End by Linkin Park");
         } else {
-            if (threadIdMV[event.threadID] === undefined || threadIdMV[event.threadID] == true) {
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
-                if (search.results && !(search.results[0].title === undefined)) {
+                if (search.results && search.results[0].title) {
                     utils.logged("download_music_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
                         type: "audio+video",
@@ -3025,10 +3020,10 @@ async function ai(api, event) {
                         file.write(chunk);
                     }
                     let construct = search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes";
-                    if (!(search.results[0].album === undefined)) {
+                    if (search.results[0].album) {
                         construct += "\nAlbum: " + search.results[0].album.name;
                     }
-                    if (!(search.results[0].artist === undefined)) {
+                    if (search.results[0].artist) {
                         construct += "\nArtist: " + search.results[0].artist.name;
                     }
                     let message = {
@@ -3088,7 +3083,7 @@ async function ai(api, event) {
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: binary --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " encodeBinary fundamentals in engineering");
         } else {
-            let Input =  getDataFromQuery(data);
+            let Input = getDataFromQuery(data);
             let output = "";
             let i;
             for (i = 0; i < Input.length; i++) {
@@ -3121,7 +3116,7 @@ async function ai(api, event) {
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: base64 --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " base64 --encode fundamentals in engineering");
         } else {
-            let buff = Buffer.from( getDataFromQuery(data));
+            let buff = Buffer.from(getDataFromQuery(data));
             let base64data = buff.toString("base64");
             sendMessage(api, event, base64data);
         }
@@ -3155,13 +3150,13 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        settings.shared.pin[event.threadID] = undefined;
+        delete settings.shared.pin[event.threadID];
         sendMessage(api, event, "Pinned message removed.");
     } else if (testCommand(api, query, "pin", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (settings.shared.pin[event.threadID] === undefined) {
+        if (!settings.shared.pin[event.threadID]) {
             if (event.isGroup) {
                 sendMessage(api, event, "There is no pinned message on this group chat.");
             } else {
@@ -3270,7 +3265,7 @@ async function ai(api, event) {
                 } else {
                     partner1 = Object.keys(event.mentions)[0];
                     partner2 = Object.keys(event.mentions)[1];
-                    if (partner1 === undefined || partner2 === undefined) {
+                    if (!partner1 || !partner2) {
                         return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n " + example[Math.floor(Math.random() * example.length)] + " lovetest @Edogawa Conan: @Ran Mouri");
                     }
                 }
@@ -3387,6 +3382,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: summ text" + "\n " + example[Math.floor(Math.random() * example.length)] + " summ this sentence meant to be summarized.");
         } else {
             let ss = await aiResponse(event, settings.shared.text_complextion, input, true, { firstName: undefined }, { name: undefined }, api.getCurrentUserID());
+            addToken(login, "davinci", ss);
             sendMessage(api, event, ss.choices[0].message.content);
         }
     } else if (testCommand(api, query2, "baybayin", event.senderID)) {
@@ -4017,7 +4013,7 @@ async function ai(api, event) {
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cors -add url" + "\n " + example[Math.floor(Math.random() * example.length)] + " addCORS https://mrepol742.github.io");
         } else {
-            let cors =  getDataFromQuery(data);
+            let cors = getDataFromQuery(data);
             if (settings.shared.cors.includes(cors)) {
                 sendMessage(api, event, "Address is already authorized.");
             } else if (!/^(http|https):\/\//.test(cors)) {
@@ -4152,7 +4148,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "top", event.senderID, "user", true)) {
         let lead = [];
         for (let i = 0; i < users.list.length; i++) {
-            if (!(users.list[i].balance === undefined)) {
+            if (users.list[i].balance) {
                 lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
             }
         }
@@ -4254,7 +4250,7 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --frequency int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --frequency 1.");
         } else {
-            let num =  getDataFromQuery(data);
+            let num = getDataFromQuery(data);
             if (num > 2) {
                 sendMessage(api, event, "Opps! the limit is 2.");
             } else if (num < -2) {
@@ -4269,7 +4265,7 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --presence int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --presence 1.");
         } else {
-            let num =  getDataFromQuery(data);
+            let num = getDataFromQuery(data);
             if (num > 2) {
                 sendMessage(api, event, "Opps! the limit is 2.");
             } else if (num < -2) {
@@ -4326,7 +4322,7 @@ async function ai(api, event) {
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
         } else {
-            let pref =  getDataFromQuery(data);
+            let pref = getDataFromQuery(data);
             if (pref.split("").length >= 15) {
                 if (/^\d+$/.test(pref)) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -4363,7 +4359,7 @@ async function ai(api, event) {
                 "\nthread --theme DefaultBlue"
             );
         } else {
-            let pref =  getDataFromQuery(data).toLowerCase();
+            let pref = getDataFromQuery(data).toLowerCase();
             if (gcolorn.includes(pref)) {
                 api.setThreadColor(gcolor[pref], event.threadID, (err) => {
                     if (err) {
@@ -4390,8 +4386,8 @@ async function ai(api, event) {
                     sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
                 } else {
                     let id = Object.keys(event.mentions)[0];
-                    if (id === undefined) {
-                        let user =  getDataFromQuery(data);
+                    if (!id) {
+                        let user = getDataFromQuery(data);
                         let attem = getIdFromUrl(user);
                         if (/^[0-9]+$/.test(attem)) {
                             id = attem;
@@ -4421,8 +4417,8 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                let user =  getDataFromQuery(data);
+            if (!id) {
+                let user = getDataFromQuery(data);
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
@@ -4458,8 +4454,8 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                let user =  getDataFromQuery(data);
+            if (!id) {
+                let user = getDataFromQuery(data);
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
@@ -4484,7 +4480,7 @@ async function ai(api, event) {
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --thread --tid tid" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --thread --tid 5000050005");
         } else {
-            blockGroup(api, event,  getDataFromQuery(data, [0, 2]));
+            blockGroup(api, event, getDataFromQuery(data, [0, 2]));
         }
     } else if (testCommand(api, query, "block--thread", event.senderID, "owner", true)) {
         blockGroup(api, event, event.threadID);
@@ -4498,7 +4494,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
+            if (!id) {
                 let user = getDataFromQuery(data);
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
@@ -4534,7 +4530,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
+            if (!id) {
                 data.shift();
                 let user = data.join(" ");
                 let attem = getIdFromUrl(user);
@@ -4555,8 +4551,8 @@ async function ai(api, event) {
             fontIgnore(api, event, id);
         }
     } else if (testCommand(api, query2, "clear--data", event.senderID, "root")) {
-        if (!settings.shared.maintenance) {
-            return sendMessage(api, event, "Debug mode is disabled!");
+        if (!settings[login].maintenance) {
+            return sendMessage(api, event, "Maintenance is disabled!");
         }
         let a = await cleanjs.array(groups);
         if (a != null) {
@@ -4575,8 +4571,8 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                let user =  getDataFromQuery(data);
+            if (!id) {
+                let user = getDataFromQuery(data);
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
@@ -4600,8 +4596,8 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                let user =  getDataFromQuery(data);
+            if (!id) {
+                let user = getDataFromQuery(data);
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
@@ -4621,7 +4617,7 @@ async function ai(api, event) {
                 }
             }
             getUserProfile(id, async function (user) {
-                if (user.balance === undefined) {
+                if (!user.balance) {
                     user["balance"] = 1500;
                 } else {
                     user["balance"] += 1500;
@@ -4635,8 +4631,8 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
-                let user =  getDataFromQuery(data);
+            if (!id) {
+                let user = getDataFromQuery(data);
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
@@ -4657,31 +4653,31 @@ async function ai(api, event) {
             remAdmin(api, event, id);
         }
     } else if (testCommand(api, query, "unsend--on", event.senderID, "owner", true)) {
-        if (settings.shared.unsend) {
+        if (settings[login].unsend) {
             sendMessage(api, event, "It's already enabled.");
         } else {
-            settings.shared.unsend = true;
+            settings[login].unsend = true;
             sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if (testCommand(api, query, "unsend--off", event.senderID, "owner", true)) {
-        if (settings.shared.unsend) {
-            settings.shared.unsend = false;
+        if (settings[login].unsend) {
+            settings[login].unsend = false;
             sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
         } else {
             sendMessage(api, event, "It's already disabled.");
         }
     } else if (testCommand(api, query, "leave--on", event.senderID, "owner", true)) {
         if (users.admin.includes(event.senderID)) {
-            if (settings.shared.leave) {
+            if (settings[login].leave) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
-                settings.shared.leave = true;
+                settings[login].leave = true;
                 sendMessage(api, event, "Readding of user who left is now enabled.");
             }
         }
     } else if (testCommand(api, query, "leave--off", event.senderID, "owner", true)) {
-        if (settings.shared.leave) {
-            settings.shared.leave = false;
+        if (settings[login].leave) {
+            settings[login].leave = false;
             sendMessage(api, event, "Readding of user who left is been disabled.");
         } else {
             sendMessage(api, event, "It's already disabled.");
@@ -4701,15 +4697,15 @@ async function ai(api, event) {
             sendMessage(api, event, "It's already disabled.");
         }
     } else if (testCommand(api, query, "nsfw--on", event.senderID, "owner", true)) {
-        if (settings.shared.nsfw) {
+        if (settings[login].nsfw) {
             sendMessage(api, event, "It's already enabled.");
         } else {
-            settings.shared.nsfw = true;
+            settings[login].nsfw = true;
             sendMessage(api, event, "Not Safe For Work are now enabled.");
         }
     } else if (testCommand(api, query, "nsfw--off", event.senderID, "owner", true)) {
-        if (settings.shared.nsfw) {
-            settings.shared.nsfw = false;
+        if (settings[login].nsfw) {
+            settings[login].nsfw = false;
             sendMessage(api, event, "Not Safe For Work is been disabled.");
         } else {
             sendMessage(api, event, "It's already disabled.");
@@ -4879,7 +4875,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data[1] == "next") {
-            if (cmdPage["help" + (functionRegistry[event.threadID] + 1)] !== undefined) {
+            if (cmdPage["help" + (functionRegistry[event.threadID] + 1)]) {
                 sendMessage(api, event, formatGen(cmdPage["help" + functionRegistry[event.threadID]]));
                 functionRegistry[event.threadID] = functionRegistry[event.threadID] + 1;
             } else {
@@ -4946,7 +4942,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
+            if (!id) {
                 data.shift();
                 let user = data.join(" ");
                 let attem = getIdFromUrl(user);
@@ -4998,7 +4994,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
+            if (!id) {
                 data.shift();
                 let user = data.join(" ");
                 let attem = getIdFromUrl(user);
@@ -5033,7 +5029,7 @@ async function ai(api, event) {
             if (input.split("@").length - 1 >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
-                if (id1 === undefined || id2 === undefined) {
+                if (!id1 || !id2) {
                     sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
                     return;
                 }
@@ -5083,7 +5079,7 @@ async function ai(api, event) {
             if (input.split("@").length - 1 >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
-                if (id1 === undefined || id2 === undefined) {
+                if (!id1 || !id2) {
                     sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
                     return;
                 }
@@ -5142,7 +5138,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " stalk @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
-            if (id === undefined) {
+            if (!id) {
                 data.shift();
                 let user = data.join(" ");
                 let attem = getIdFromUrl(user);
@@ -5172,45 +5168,45 @@ async function ai(api, event) {
                     );
                 } else {
                     let construct = response.name;
-                    if (!(response.username === undefined)) {
+                    if (response.username) {
                         construct += " @" + response.username;
                     }
                     construct += "\n";
-                    if (!(response.gender === undefined)) {
+                    if (response.gender) {
                         construct += "\n\n    ⦿ Gender: " + response.gender;
                     }
-                    if (!(response.love["name"] === undefined)) {
+                    if (response.love["name"]) {
                         construct += "\n    ⦿ Lover: " + response.love["name"];
                     }
-                    if (!(response.birthday === undefined)) {
+                    if (response.birthday) {
                         construct += "\n    ⦿ Birthdate: " + response.birthday;
                     }
-                    if (!(response.location === undefined)) {
+                    if (response.location) {
                         construct += "\n    ⦿ Location: " + response.location;
                     }
-                    if (!(response.hometown === undefined)) {
+                    if (response.hometown) {
                         construct += "\n    ⦿ Hometown: " + response.hometown;
                     }
-                    if (!(response.follower === undefined)) {
+                    if (response.follower) {
                         construct += "\n    ⦿ Follower: " + numberWithCommas(response.follower);
                     }
-                    if (!(response.work === undefined)) {
+                    if (response.work) {
                         construct += "\n    ⦿ Work: ";
                         let i;
                         for (i = 0; i < response.work.length; i++) {
                             construct += "\n        " + response.work[i].employer["name"];
-                            if (!(response.work[i].position === undefined)) {
+                            if (response.work[i].position) {
                                 construct += " | " + response.work[i].position["name"];
                             }
                         }
                     }
-                    if (!(response.about === undefined)) {
+                    if (response.about) {
                         construct += "\n\n   " + response.about;
                     }
-                    if (!(response.qoutes === undefined)) {
+                    if (response.qoutes) {
                         construct += "\n" + response.quotes;
                     }
-                    if (!(response.created_time === undefined)) {
+                    if (response.created_time) {
                         construct += "\n\nThis account was created on " + response.created_time.replace("||", " at ");
                     }
                     construct = construct.replaceAll("Không công khai", "Not public").replaceAll("Không có dữ liệu!", "No data");
@@ -5229,7 +5225,7 @@ async function ai(api, event) {
                                 },
                             ],
                         };
-                        if (!(response.love["name"] === undefined)) {
+                        if (response.love["name"]) {
                             message.mentions.push({
                                 tag: response.love["name"],
                                 id: response.love["id"],
@@ -5394,7 +5390,7 @@ async function ai(api, event) {
             return;
         }
         getUserProfile(event.senderID, async function (user) {
-            if (user.balance === undefined) {
+            if (!user.balance) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
             } else if (1000 > user.balance) {
                 sendMessage(api, event, "You don't have enough balance!");
@@ -5632,7 +5628,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query, "time", event.senderID, "user", true)) {
         getUserProfile(event.senderID, async function (name) {
-            if (name.firstName != undefined && !(name.timezone === undefined)) {
+            if (name.firstName != undefined && name.timezone) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime(name.timezone));
             } else {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
@@ -6101,19 +6097,19 @@ function parseImage(api, event, url, dir) {
 }
 
 async function sendMessage(api, event, message, thread_id, message_id, bn, voice, no_font) {
-    if (bn === undefined) {
+    if (!bn) {
         bn = true;
     }
-    if (voice === undefined) {
+    if (!voice) {
         voice = true;
     }
-    if (thread_id === undefined) {
+    if (!thread_id) {
         thread_id = event.threadID;
     }
-    if (message_id === undefined) {
+    if (!message_id) {
         message_id = event.messageID;
     }
-    if (no_font === undefined) {
+    if (!no_font) {
         no_font = false;
     }
     if (!users.admin.includes(event.senderID) && settings.shared.delay && bn) {
@@ -6121,7 +6117,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
         getUserProfile(event.senderID, async function (name) {
-            if (userPresence[api.getCurrentUserID()] === undefined) {
+            if (!userPresence[api.getCurrentUserID()]) {
                 userPresence[api.getCurrentUserID()] = [];
             }
             for (root0 in userPresence[api.getCurrentUserID()]) {
@@ -6138,10 +6134,10 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
             userPresence[api.getCurrentUserID()].push(threadidfor);
         });
     }
-    if (message == "" || (!(message.body === undefined) && message.body == "")) {
+    if (message == "" || (message.body && message.body == "")) {
         sendMMMS(api, event, "It appears the AI sends a blank message. Please try again.");
     } else if (event.isGroup && event.senderID != api.getCurrentUserID()) {
-        if (thread[event.threadID] === undefined || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
+        if (!thread[event.threadID] || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             utils.logged("send_message_reply " + thread_id + " " + getMessageBody(message));
             if (voice && typeof message === "string" && message.length < 200 && groups.tts.includes(event.threadID)) {
                 const url = GoogleTTS.getAudioUrl(message, voiceOptions);
@@ -6198,16 +6194,16 @@ function getMessageBody(message) {
 }
 
 async function sendMessageOnly(api, event, message, thread_id, message_id, bn, voice) {
-    if (bn === undefined) {
+    if (!bn) {
         bn = true;
     }
-    if (voice === undefined) {
+    if (!voice) {
         voice = true;
     }
-    if (thread_id === undefined) {
+    if (!thread_id) {
         thread_id = event.threadID;
     }
-    if (message_id === undefined) {
+    if (!message_id) {
         message_id = event.messageID;
     }
     if (!users.admin.includes(event.senderID) && settings.shared.delay && bn) {
@@ -6215,7 +6211,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
         getUserProfile(event.senderID, async function (name) {
-            if (userPresence[api.getCurrentUserID()] === undefined) {
+            if (!userPresence[api.getCurrentUserID()]) {
                 userPresence[api.getCurrentUserID()] = [];
             }
             for (root0 in userPresence[api.getCurrentUserID()]) {
@@ -6232,7 +6228,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
             userPresence[api.getCurrentUserID()].push(threadidfor);
         });
     }
-    if (message == "" || (!(message.body === undefined) && message.body == "")) {
+    if (message == "" || (message.body && message.body == "")) {
         sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice, false);
     } else {
         utils.logged("send_message " + event.threadID + " " + JSON.stringify(message));
@@ -6331,7 +6327,7 @@ async function reactMessage(api, event, reaction) {
         return;
     }
     await sleep(4000);
-    if (reaction === undefined) {
+    if (!reaction) {
         return;
     }
     utils.logged("react_message " + event.threadID + " " + reaction);
@@ -6350,7 +6346,7 @@ function formatQuery(string) {
     let str = string.replace(pictographic, "");
     // remove custom fancy fonts
     //let normal = str.normalize("NFKC");
-   // let specialCharacters = str.replace(normalize, "");
+    // let specialCharacters = str.replace(normalize, "");
     // only allow letters and numbers
     let normal1 = str.normalize("NFD").replace(/\p{Diacritic}/gu, "");
     let latin = normal1.replace(latinC, "");
@@ -6406,7 +6402,7 @@ function isGoingToFast(api, event) {
         return false;
     }
     if (!users.admin.includes(event.senderID)) {
-        if (!(cmd[event.senderID] === undefined)) {
+        if (cmd[event.senderID]) {
             if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
                 let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 15;
                 if (seconds > 2) {
@@ -6437,7 +6433,7 @@ function isItBotOrNot(api, event) {
                 .replace(/\p{Diacritic}/gu, "")
                 .toLowerCase()
         ) &&
-            !settings.shared.nsfw &&
+            !settings[login].nsfw &&
             !users.admin.includes(id)) ||
         (input.trim().length > 5 && event.attachments.length != 0 && eventTypes.includes(event.attachments[0].type))
     ) {
@@ -6461,7 +6457,7 @@ function isItBotOrNot(api, event) {
 }
 
 function isGoingToFast1(event, list, time) {
-    if (!(list[event.threadID] === undefined)) {
+    if (list[event.threadID]) {
         if (Math.floor(Date.now() / 1000) < list[event.threadID]) {
             utils.logged("going_to_fast " + event.threadID + " " + ((list[event.threadID] - Math.floor(Date.now() / 1000)) % (60 * time)));
             return true;
@@ -6480,7 +6476,7 @@ async function getResponseData(url) {
     let data = await axios
         .get(encodeURI(url))
         .then((response) => {
-            if (response.data.error === undefined) {
+            if (!response.data.error) {
                 return response.data;
             } else {
                 utils.logged("response_null " + url);
@@ -6907,7 +6903,7 @@ async function blockUser(api, event, id) {
         sendMessage(api, event, "It's already blocked.");
         return;
     }
-    if (!(userPresence[api.getCurrentUserID()] === undefined)) {
+    if (userPresence[api.getCurrentUserID()]) {
         for (root0 in userPresence[api.getCurrentUserID()]) {
             let data0 = userPresence[api.getCurrentUserID()][root0];
             for (keys0 in Object.keys(data0)) {
@@ -6918,11 +6914,7 @@ async function blockUser(api, event, id) {
             }
         }
     }
-    /* 
-    if (!(userPresence[event.threadID] === undefined)) {
-        userPresence[event.threadID] = null;
-    }
-    */
+    
     users.blocked.push(id);
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
@@ -7341,9 +7333,6 @@ async function aiResponse(event, complextion, text, repeat, user, group, uid) {
     try {
         const ai = await openai.chat.completions.create(generateParamaters(event, complextion, text, user, group, uid));
 
-        settings.shared.tokens["davinci"]["prompt_tokens"] += ai.usage.prompt_tokens;
-        settings.shared.tokens["davinci"]["completion_tokens"] += ai.usage.completion_tokens;
-        settings.shared.tokens["davinci"]["total_tokens"] += ai.usage.total_tokens;
         utils.logged("tokens_used prompt: " + ai.usage.prompt_tokens + " completion: " + ai.usage.completion_tokens + " total: " + ai.usage.total_tokens);
 
         let text1 = ai.choices[0].text;
@@ -7511,16 +7500,12 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
             function_call: "auto",
         });
 
-        settings.shared.tokens["gpt"]["prompt_tokens"] += ai.usage.prompt_tokens;
-        settings.shared.tokens["gpt"]["completion_tokens"] += ai.usage.completion_tokens;
-        settings.shared.tokens["gpt"]["total_tokens"] += ai.usage.total_tokens;
-
         utils.logged("tokens_used prompt: " + ai.usage.prompt_tokens + " completion: " + ai.usage.completion_tokens + " total: " + ai.usage.total_tokens);
         let message = ai.choices[0].message;
         if (ai.choices[0].finish_reason == "length" && !message.content.endsWith(".")) {
             ai.choices[0].message = "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
             return ai;
-        } else if (message.content == null && !(message.function_call === undefined)) {
+        } else if (message.function_call) {
             let functionName = message.function_call.name;
             const argument = JSON.parse(message.function_call.arguments);
             switch (functionName) {
@@ -7828,7 +7813,8 @@ function findPrefix(event, id) {
 function saveState() {
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
-    fs.writeFileSync(__dirname + "/data/preferences.json", JSON.stringify(settings, null, 4), "utf8");
+    fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings, null, 4), "utf8");
+    fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread, null, 4), "utf8");
     fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
     fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
 }
@@ -7971,7 +7957,7 @@ function toMathSans(text) {
 
 function updateFont(message, id) {
     if (typeof message === "object") {
-        if (!(message.url === undefined)) {
+        if (message.url) {
             let url = message.url;
             if (url.includes("facebook.com")) {
                 message["url"] = "https://mrepol742.github.io/search?query=" + url;
@@ -7989,12 +7975,12 @@ function updateFont(message, id) {
         return formatCodeBlock(mathS);
     }
     let body = message.body;
-    if (body == " " || body == "" || body === undefined || body == "@everyone") {
+    if (body == " " || body == "" || !body || body == "@everyone") {
         return message;
     }
     let mathS1 = toMathSans(body);
     message.body = formatCodeBlock(mathS1);
-    if (!(message.mentions === undefined)) {
+    if (message.mentions) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
             let i;
@@ -8077,17 +8063,6 @@ function getCountryOrigin(model) {
         return "Philippines";
     }
     return "Singapore";
-}
-
-function getStatus() {
-    if (listenStatus == 1) {
-        return "Not Login";
-    } else if (settings.shared.stop) {
-        return "Offline";
-    } else if (settings.shared.maintenance) {
-        return "Maintenance";
-    }
-    return "Online";
 }
 
 function getRoutes() {
@@ -8203,11 +8178,11 @@ function getRoutes() {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
                 res.end();
             }
-        } else if (!(traceroute[url] === undefined)) {
+        } else if (traceroute[url]) {
             res.setHeader("Content-Type", "text/html");
             res.writeHead(200);
             res.end(traceroute[url]);
-        } else if (!(threadInfo[url] === undefined)) {
+        } else if (threadInfo[url]) {
             let hh = threadpage + "";
             let summary = threadInfo[url].summary;
             let info = threadInfo[url].info;
@@ -8469,7 +8444,7 @@ async function sendAiMessage(api, event, ss) {
         }
     }
 
-    if (message["url"] === undefined && event.attachments.length > 0) {
+    if (!message["url"] && event.attachments.length > 0) {
         let url = [];
         let i;
         for (i = 0; i < event.attachments.length; i++) {
@@ -8512,7 +8487,7 @@ async function sendAiMessage(api, event, ss) {
 
 function nonUU(images, isMax) {
     let loc = 0;
-    if (isMax === undefined) {
+    if (!isMax) {
         loc = Math.floor(Math.random() * 10) + 1;
     } else {
         loc = Math.floor(Math.random() * images.length);
@@ -8566,7 +8541,7 @@ function getGroupProfile(id, cb) {
 }
 
 function formatMention(name, text) {
-    if (name === undefined || name == "") {
+    if (!name || name == "") {
         return;
     }
     if (text.includes("@")) {
@@ -8577,35 +8552,35 @@ function formatMention(name, text) {
 
 function tellUser(user, group) {
     let construct = "";
-    if (user.firstName === undefined) {
+    if (!user.firstName) {
         construct += "\nCurrent date: " + getCurrentDateAndTime("Asia/Manila") + " Asia/Manila\n";
     }
     if (user.firstName != undefined) {
-        if (!(user.timezone === undefined)) {
+        if (user.timezone) {
             construct += "\nCurrent date: " + getCurrentDateAndTime(user.timezone) + " " + user.timezone + "\n";
         } else {
             construct += "\nCurrent date: " + getCurrentDateAndTime("Asia/Manila") + " Asia/Manila\n";
         }
         construct += "You are talking to " + user.name + ". ";
-        if (!(user.birthday === undefined)) {
+        if (user.birthday) {
             construct += getPronoun1(user.gender) + " birthday is on " + user.birthday + " so " + getPronoun(user.gender).toLowerCase() + " is ";
             let day = user.birthday;
             let dates = day.split("/");
             construct += calculateAge(new Date(dates[2], dates[0], dates[1])) + " years old. ";
         }
-        if (!(user.userName === undefined) || user.userName != "No data") {
+        if (user.userName || user.userName != "No data") {
             construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
         }
-        if (!(user.location === undefined)) {
+        if (user.location) {
             construct += getPronoun(user.gender) + " is currently living in " + user.location + ". ";
         }
-        if (!(user.bio === undefined)) {
+        if (user.bio) {
             construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
         }
     }
     if (group.name != null) {
         construct += "You are in " + group.name + " group";
-        if (!(group.members === undefined)) {
+        if (group.members) {
             construct += ", it's member is " + group.members + ". ";
         } else {
             construct += ". ";
@@ -8620,27 +8595,27 @@ function tellUser(user, group) {
 
 function tellUser2(user, group) {
     let construct = "";
-    if (!(user.name === undefined) && user.name != "No data") {
+    if (user.name && user.name != "No data") {
         construct += "The user name is " + user.name + ". ";
-        if (!(user.birthday === undefined) && user.birthday != "No data") {
+        if (user.birthday && user.birthday != "No data") {
             construct += getPronoun1(user.gender) + " birthday is on " + user.birthday + " so " + getPronoun(user.gender).toLowerCase() + " is ";
             let day = user.birthday;
             let dates = day.split("/");
             construct += calculateAge(new Date(dates[2], dates[0], dates[1])) + " years old. ";
         }
-        if (!(user.userName === undefined) && user.userName != "No data") {
+        if (user.userName && user.userName != "No data") {
             construct += getPronoun1(user.gender) + " username is " + user.userName + ". ";
         }
-        if (!(user.location === undefined) && user.location != "No data") {
+        if (user.location && user.location != "No data") {
             construct += getPronoun(user.gender) + " is currently living in " + user.location + ". ";
         }
-        if (!(user.bio === undefined) && user.bio != "No data") {
+        if (user.bio && user.bio != "No data") {
             construct += getPronoun1(user.gender) + " bio is " + user.bio + ". ";
         }
     }
     if (group.name != null) {
         construct += "You both in " + group.name + " group";
-        if (!(group.members === undefined)) {
+        if (group.members) {
             construct += ", it's member is " + group.members + ". ";
         } else {
             construct += ". ";
@@ -8650,7 +8625,7 @@ function tellUser2(user, group) {
 }
 
 function getPronoun(gender) {
-    if (gender === undefined || gender == "No data") {
+    if (!gender || gender == "No data") {
         return "This person";
     }
     let gg = gender == 1 ? "female" : "male";
@@ -8661,7 +8636,7 @@ function getPronoun(gender) {
 }
 
 function getPronoun1(gender) {
-    if (gender === undefined || gender == "No data") {
+    if (!gender || gender == "No data") {
         return "This person";
     }
     let gg = gender == 1 ? "female" : "male";
@@ -8697,7 +8672,7 @@ async function getWebResults(ask, count, containUrl) {
         } else {
             construct += "\n";
             for (let i = 1; i < count; i++) {
-                if (!(response.results[i].title === undefined)) {
+                if (response.results[i].title) {
                     if (containUrl) {
                         construct += response.results[i].url;
                     }
@@ -8777,7 +8752,7 @@ function formatMdlRes(str) {
 }
 
 function getFbDLQuality(req) {
-    if (req.data.links["Download High Quality"] === undefined) {
+    if (!req.data.links["Download High Quality"]) {
         return req.data.links["Download Low Quality"];
     }
     return req.data.links["Download High Quality"];
@@ -8841,51 +8816,55 @@ async function addAccount() {
     }
     const appsss = JSON.parse(base642text);
     if (Array.isArray(appsss)) {
-        let a = false;
-        for (item in appsss) {
-            if (appsss[item].key == "c_user") {
-                let login = appsss[item].value;
-                settings[login] = settings.default;
-                redfox_fb(
-                    {
-                        appState: appsss,
-                    },
-                    login,
-                    function (isLogin) {
-                        if (isLogin) {
-                            a = true;
-                            utils.logged("failed_login failed to login to " + login);
-                            return addAccount();
-                        } else {
-                            utils.logged("success_login account " + login + "  is now connected");
+        let login = getUserIdFromAppState(appsss);
+        if (login) {
+            settings[login] = settings.default;
+            redfox_fb(
+                {
+                    appState: appsss,
+                },
+                login,
+                function (isLogin) {
+                    if (isLogin) {
+                        utils.logged("failed_login failed to login to " + login);
+                        return addAccount();
+                    } else {
+                        utils.logged("success_login account " + login + "  is now connected");
 
-                            accounts.push(login);
+                        accounts.push(login);
 
-                            if (users.blocked.includes(login)) {
-                                users.blocked = users.blocked.filter((item) => item !== login);
-                            }
-
-                            if (users.bot.includes(login)) {
-                                users.bot = users.bot.filter((item) => item !== login);
-                            }
-
-                            saveState();
-
-                            settings[login].owner = login;
-                            settings.shared.root = login;
+                        if (users.blocked.includes(login)) {
+                            users.blocked = users.blocked.filter((item) => item !== login);
                         }
+
+                        if (users.bot.includes(login)) {
+                            users.bot = users.bot.filter((item) => item !== login);
+                        }
+
+                        saveState();
+
+                        settings[login].owner = login;
+                        settings.shared.root = login;
                     }
-                );
-            }
-            if (a) {
-                utils.logged("failed_login invalid facebook cookies");
-                return addAccount();
-            }
+                }
+            );
+        } else {
+            utils.logged("failed_login invalid facebook cookies");
+            return addAccount();
         }
     } else {
         utils.logged("failed_login invalid facebook cookies");
         return addAccount();
     }
+}
+
+function getUserIdFromAppState(cookie) {
+    for (item in cookie) {
+        if (cookie[item].key == "c_user") {
+            return cookie[item].value;
+        }
+    }
+    return undefined;
 }
 
 function isJson(str) {
@@ -8929,11 +8908,17 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
 }
 
 function addBalance(user, token) {
-    if (user.balance === undefined) {
+    if (!user.balance) {
         user["balance"] = token;
         return;
     }
     user["balance"] += token;
+}
+
+function addToken(login, type, data) {
+    settings[login].tokens[type]["prompt_tokens"] += data.usage.prompt_tokens;
+    settings[login].tokens[type]["completion_tokens"] += data.usage.completion_tokens;
+    settings[login].tokens[type]["total_tokens"] += data.usage.total_tokens;
 }
 
 function getDataFromQuery(arr, remove) {

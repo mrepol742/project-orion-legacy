@@ -1,3 +1,10 @@
+/*jshint esversion: 9 */
+/*jshint -W018 */
+/*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
+
 const canvasGif = require("canvas-gif");
 var Canvas = require("canvas");
 const fs = require("fs");
@@ -153,4 +160,4 @@ function toMathSans(text) {
 
 module.exports = {
     generateWelcomeGif
-}
+};
