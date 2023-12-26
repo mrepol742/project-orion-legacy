@@ -1,3 +1,10 @@
+/*jshint esversion: 9 */
+/*jshint -W018 */
+/*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
+
 const fs = require("fs");
 const axios = require("axios");
 
@@ -5,16 +12,16 @@ let wyr = [];
 
 async function main() {
 for (let i = 0; i < 3000; i++) {
-    await sleep(500)
+    await sleep(500);
 getResponseData("https://meowfacts.herokuapp.com/").then((response) => {
    
     if (response == null) {
-        console.log("null")
+        console.log("null");
     } else {
       if (!wyr.includes(response.data) && response.data != null) {
-            console.log("added " + response.data)
+            console.log("added " + response.data);
             wyr.push(response.data);
-            fs.writeFileSync(__dirname + "/cat.json", JSON.stringify(wyr), "utf8")
+            fs.writeFileSync(__dirname + "/cat.json", JSON.stringify(wyr), "utf8");
       }
     }
 });

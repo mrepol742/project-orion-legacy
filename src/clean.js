@@ -1,3 +1,10 @@
+/*jshint esversion: 9 */
+/*jshint -W018 */
+/*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
+
 async function array(groups) {
     try {
 
@@ -7,7 +14,7 @@ async function array(groups) {
         if (!ids.includes(id)) {
             ids.push(id);
         } else {
-            delete groups.list[a]
+            delete groups.list[a];
         }
     }
     
@@ -21,4 +28,4 @@ async function array(groups) {
 
 module.exports = {
     array
-}
+};

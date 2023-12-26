@@ -23,7 +23,4 @@ jobs:
                   cache: "npm"
             - run: |
                   npm ci
-                  node --check index.js
-                  cd src
-                  node --check arrays.js
-                  node --check cmd.js
+                  jshint *.js src/*.js

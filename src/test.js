@@ -1,4 +1,11 @@
-const welcomeGif = require("./welcome.js")
+/*jshint esversion: 9 */
+/*jshint -W018 */
+/*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
+
+const welcomeGif = require("./welcome.js");
 
 
 async function main() {

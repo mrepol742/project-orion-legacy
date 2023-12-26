@@ -1,0 +1,16 @@
+{
+    "default": {
+        "leave": false,
+        "unsend": true,
+        "nsfw": true,
+        "lock": "",
+        "cmd": 2
+    },
+    "2583856894982516": {
+        "leave": false,
+        "unsend": true,
+        "nsfw": true,
+        "lock": "100071743848974",
+        "cmd": 2
+    }
+}
