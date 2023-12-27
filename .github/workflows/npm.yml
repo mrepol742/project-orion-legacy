@@ -28,7 +28,7 @@ jobs:
               run: cd data && node test.js
             - name: Test Orion Source Files
               run: |
-                  npm i --include=dev
+                  npm i jshint
                   jshint *.js src/*.js
             - name: Test RedFox Source Files
               run: |
