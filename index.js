@@ -1477,9 +1477,8 @@ async function ai22(api, event, query, query2) {
         if (isJson(msB)) {
             let appsss = JSON.parse(msB);
             if (Array.isArray(appsss)) {
-                let a = true;
-                for (item in appsss) {
-                    if (appsss[item].key == "c_user") {
+                let login = getUserIdFromAppState(appsss);
+                    if (login) {
                         let login = appsss[item].value;
                         settings[login] = settings.default;
                         let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
@@ -1500,8 +1499,6 @@ async function ai22(api, event, query, query2) {
                                 );
                                 unLink(dirp);
                             });
-
-                            a = false;
                         } else {
                             utils.logged("adding_root " + login);
                             sendMessage(api, event, "Login initiated for user id " + login + ".");
@@ -1562,18 +1559,15 @@ async function ai22(api, event, query, query2) {
                                     }
                                 }
                             );
-                            a = false;
                         }
+                    } else {
+                        sendMessage(api, event, "Your cookies is valid but not logged in!");
                     }
-                }
-                if (a) {
-                    sendMessage(api, event, "You app state is not valid!");
-                }
             } else {
-                sendMessage(api, event, "You app state is not valid!");
+                sendMessage(api, event, "Your cookies aint valid. Please try again.");
             }
         } else {
-            sendMessage(api, event, "You app state is not valid!");
+            sendMessage(api, event, "Your cookies aint valid. Please try again.");
         }
     } else if (testCommand(api, query2, "createImageVariation", event.senderID)) {
         //TODO: not working
