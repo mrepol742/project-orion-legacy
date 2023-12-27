@@ -22,7 +22,7 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: "npm"
             - run: |
-                  npm ci
+                  npm ci --include=dev
                   cd src/redfox
                   node --check index.js
                   node --check utils.js
