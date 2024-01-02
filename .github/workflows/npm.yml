@@ -32,6 +32,5 @@ jobs:
                   npm run jshint *.js src/*.js
             - name: Test RedFox Source Files
               run: |
-                  cd src/redfox
-                  npm run jshint *.js src/*.js
+                  npm run jshint src/redfox/*.js src/redfox/src/*.js
 
