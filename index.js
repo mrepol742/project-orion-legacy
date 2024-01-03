@@ -1477,9 +1477,8 @@ async function ai22(api, event, query, query2) {
         if (isJson(msB)) {
             let appsss = JSON.parse(msB);
             if (Array.isArray(appsss)) {
-                let a = true;
-                for (item in appsss) {
-                    if (appsss[item].key == "c_user") {
+                let login = getUserIdFromAppState(appsss);
+                    if (login) {
                         let login = appsss[item].value;
                         settings[login] = settings.default;
                         let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
@@ -1500,8 +1499,6 @@ async function ai22(api, event, query, query2) {
                                 );
                                 unLink(dirp);
                             });
-
-                            a = false;
                         } else {
                             utils.logged("adding_root " + login);
                             sendMessage(api, event, "Login initiated for user id " + login + ".");
@@ -1562,18 +1559,15 @@ async function ai22(api, event, query, query2) {
                                     }
                                 }
                             );
-                            a = false;
                         }
+                    } else {
+                        sendMessage(api, event, "Your cookies is valid but not logged in!");
                     }
-                }
-                if (a) {
-                    sendMessage(api, event, "You app state is not valid!");
-                }
             } else {
-                sendMessage(api, event, "You app state is not valid!");
+                sendMessage(api, event, "Your cookies aint valid. Please try again.");
             }
         } else {
-            sendMessage(api, event, "You app state is not valid!");
+            sendMessage(api, event, "Your cookies aint valid. Please try again.");
         }
     } else if (testCommand(api, query2, "createImageVariation", event.senderID)) {
         //TODO: not working
@@ -5810,19 +5804,6 @@ async function ai(api, event) {
        }
        sendMessage(api, event, message)
        */
-    } else if (testCommand(api, query2, "setNickname", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setNickname text" + "\n " + example[Math.floor(Math.random() * example.length)] + " setnickname Darling");
-        } else {
-            data.shift();
-            api.setNickname(data.join(" "), event.threadID, event.senderID, (err) => {
-                if (err) return utils.logged(err);
-            });
-        }
     } else if (testCommand(api, query, "setNickname--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5840,6 +5821,19 @@ async function ai(api, event) {
                 });
             }
         });
+    } else if (testCommand(api, query2, "setNickname", event.senderID)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setNickname text" + "\n " + example[Math.floor(Math.random() * example.length)] + " setnickname Darling");
+        } else {
+            data.shift();
+            api.setNickname(data.join(" "), event.threadID, event.senderID, (err) => {
+                if (err) return utils.logged(err);
+            });
+        }
     } else if (testCommand(api, query2, "setBirthday", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -8909,17 +8903,23 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
     }
 
     if (permission != "user") {
-        if (!(isMyId(senderID) && permission == "root")) {
-            if (!(settings[api.getCurrentUserID()].owner == "senderID" && permission == "owner")) {
-                if (!users.admin.includes(senderID)) {
-                    return false;
-                }
-            } else {
+        if (permission == "root") {
+            if (!isMyId(senderID)) {
+                // deny access to root user if the id did not match
                 return false;
             }
-
-        } else {
-            return false;
+        } else if (permission == "owner") {
+            if (!(settings[api.getCurrentUserID()].owner == senderID)) {
+                if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
+                    // check if the account owner is the sender and
+                    // also verify if the sender is admin if not false
+                    return false;
+                }
+                if (users.admin.includes(senderID) && api.getCurrentUserID() ==  settings.shared.root) {
+                    // prevent admins from accessing the control of the root account
+                    return false;
+                }
+            }
         }
     }
 

@@ -1,5 +1,10 @@
 /* eslint-disable no-prototype-builtins */
-"use strict";
+/*jshint esversion: 9 */
+/*jshint -W018 */
+/*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
 
 var bluebird = require("bluebird");
 var request = bluebird.promisify(require("request").defaults({ jar: true }));

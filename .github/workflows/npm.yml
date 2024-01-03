@@ -1,11 +1,12 @@
-name: Red Fox CI
+name: Project Orion CI
 
 on:
     push:
         branches: ["master"]
     pull_request:
         branches: ["master"]
-
+    workflow_dispatch:
+      
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -21,8 +22,15 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: "npm"
-            - run: |
-                  npm ci --include=dev
-                  cd src/redfox
-                  node --check index.js
-                  node --check utils.js
+            - name: npm Clean Install
+              run: npm ci
+            - name: Test JSON Files
+              run: cd data && node test.js
+            - name: Test Orion Source Files
+              run: |
+                  npm i --include=dev
+                  npm run jshint *.js src/*.js
+            - name: Test RedFox Source Files
+              run: |
+                  npm run jshint src/redfox/*.js src/redfox/src/*.js
+

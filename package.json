@@ -9,7 +9,7 @@
         "setup": "npm install && apt install traceroute cowsay figlet neofetch",
         "start": "clear && while [ true ]; do node --trace-deprecation index.js ; done",
         "dev": "nodemon --trace-deprecation index.js",
-        "jshint": "jshint index.js",
+        "jshint": "jshint",
         "prettier": "prettier ./ --write"
     },
     "keywords": [],

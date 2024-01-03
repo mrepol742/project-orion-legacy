@@ -1,4 +1,10 @@
-"use strict";
+/*jshint esversion: 9 */
+/*jshint -W018 */
+/*jshint -W069 */
+/*jshint -W083 */
+/*jshint -W088 */
+/*jshint -W038 */
+
 
 var utils = require("./utils");
 var cheerio = require("cheerio");
