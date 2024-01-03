@@ -2,5 +2,3 @@
 /cache/*
 /data/cookies/*
 /build/*
-/data/functionRegistry.json
-/data/threadRegistry.json

@@ -49,7 +49,7 @@ for (folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
 }
 
-let data_json = ["functionRegistry", "groups", "pin", "accountPreferences", "threadPreferences", "threadRegistry", "users"];
+let data_json = ["groups", "pin", "accountPreferences", "threadPreferences", "users"];
 for (file in data_json) {
     writeFile(__dirname + "/data/" + data_json[file] + ".json", "{}");
 }
@@ -61,8 +61,6 @@ let settings = JSON.parse(fs.readFileSync(__dirname + "/data/accountPreferences.
 let settingsThread = JSON.parse(fs.readFileSync(__dirname + "/data/threadPreferences.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
-let threadRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/threadRegistry.json"));
-let functionRegistry = JSON.parse(fs.readFileSync(__dirname + "/data/functionRegistry.json"));
 let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/data/ascii.json"));
 let dyk = JSON.parse(fs.readFileSync(__dirname + "/data/dyk.json"));
 let wyr = JSON.parse(fs.readFileSync(__dirname + "/data/wyr.json"));
@@ -111,7 +109,6 @@ let blockedCall = [];
 
 let isCalled = true;
 let commandCalls = 0;
-let listenStatus = 0;
 let crashes = 0;
 
 const pictographic = /\p{Extended_Pictographic}/gu;
@@ -226,6 +223,13 @@ process.on("beforeExit", (code) => {
     utils.logged("process_before_exit " + code);
 });
 
+process.on("exit", (code) => {
+        console.log("");
+        saveState();
+        utils.logged("save_state ");
+        utils.logged("fca_status offline");
+});
+
 /*
  * INITIALIZE LOGIN
  */
@@ -315,19 +319,16 @@ utils.logged("task_clear global initiated");
  */
 
 function redfox_fb(fca_state, login, cb) {
-    redfox(fca_state, (err, api) => {
+    new redfox(fca_state, (err, api) => {
         if (err) {
             if (err.error && err.error == "Not logged in") {
                 utils.logged("api_not_signin " + login);
             }
-            if (isMyId(login)) {
-                listenStatus = 1;
-            }
             utils.logged("api_login_error " + login);
             accounts = accounts.filter((item) => item !== login);
-            for (tR in threadRegistry) {
-                if (threadRegistry[tR] == login) {
-                    delete threadRegistry[tR];
+            for (threads in settingsThread) {
+                if (settingsThread[threads].lock == login) {
+                    delete settingsThread[threads];
                 }
             }
             unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
@@ -338,25 +339,6 @@ function redfox_fb(fca_state, login, cb) {
             }
             return;
         }
-
-        process.on("exit", (code) => {
-            if (accounts.includes(api.getCurrentUserID())) {
-                console.log("");
-                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
-                utils.logged("login_state " + login + " saved");
-                saveState();
-                utils.logged("save_state " + login);
-                utils.logged("fca_status " + login + " offline");
-                /*
-    server.close();
-    TODO: must be do on the last part of exit
-            server1.close();
-            utils.logged("server_status offline");
-            utils.logged("process_exit goodbye :( " + code);
-            utils.logged("project_orion offline");
-            */
-            }
-        });
 
         task(
             function () {
@@ -430,15 +412,12 @@ function redfox_fb(fca_state, login, cb) {
 
         api.eventListener(async (err, event) => {
             if (err) {
-                if (isMyId(login)) {
-                    listenStatus = 1;
-                }
                 // TODO: review prevent deleting of account if the api connection
                 utils.logged("api_listen_error " + login);
                 accounts = accounts.filter((item) => item !== login);
-                for (tR in threadRegistry) {
-                    if (threadRegistry[tR] == login) {
-                        delete threadRegistry[tR];
+                for (threads in settingsThread) {
+                    if (settingsThread[threads].lock == login) {
+                        delete settingsThread[threads];
                     }
                 }
 
@@ -464,12 +443,12 @@ function redfox_fb(fca_state, login, cb) {
                 settingsThread[event.threadID] = settingsThread.default;
             }
 
-            if (!threadRegistry[event.threadID] && !isMyId(api.getCurrentUserID())) {
-                threadRegistry[event.threadID] = api.getCurrentUserID();
+            if (!settingsThread[event.threadID].lock && !isMyId(api.getCurrentUserID())) {
+                settingsThread[event.threadID].lock = api.getCurrentUserID();
                 utils.logged("group_register " + api.getCurrentUserID());
             }
 
-            if (threadRegistry[event.threadID] && threadRegistry[event.threadID] != api.getCurrentUserID()) {
+            if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
                 return;
             }
 
@@ -537,7 +516,7 @@ function redfox_fb(fca_state, login, cb) {
                     } else if (testCommand(api, query, "unblock--thread", event.senderID, "owner")) {
                         let data = input.split(" ");
                         if (data.length < 3) {
-                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblockthread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblockthread 5000050005");
+                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --thread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --thread 5000050005");
                         } else {
                             unblockGroup(api, event, getDataFromQuery(data));
                         }
@@ -584,16 +563,22 @@ function redfox_fb(fca_state, login, cb) {
                 let query = query2;
 
                 if (testCommand(api, query, "stop", event.senderID, "owner", true)) {
+                    if (!settings[login].stop) {
                     sendMessage(api, event, "Program stopped its state.");
                     settings[login].stop = true;
-                    return;
+                    } else {
+                        sendMessage(api, event, "Program is already been stopped.");
+                    }
                 } else if (testCommand(api, query, "destroy", event.senderID, "root", true)) {
                     sendMessage(api, event, "Program destroyed its state.");
                     return;
                 } else if (testCommand(api, query, "resume", event.senderID, "owner", true)) {
+                    if (settings[login].stop) {
                     sendMessage(api, event, "Program resumed its state.");
                     settings[login].stop = false;
-                    return;
+                    } else {
+                        sendMessage(api, event, "Program is already been resumed.");
+                    }
                 } else if (testCommand(api, query, "restart", event.senderID, "root", true)) {
                     saveState();
                     let rs = [];
@@ -610,7 +595,9 @@ function redfox_fb(fca_state, login, cb) {
                     return;
                 }
 
-                if (settings[login].maintenance && !accounts.includes(event.senderID)) {
+                if (settings[login].maintenance && 
+                    (settings[login].owner != event.senderID && !users.admin.includes(event.senderID) &&
+                    settings.shared.root != api.getCurrentUserID())) {
                     if (event.type == "message" || event.type == "message_reply") {
                         if (isGoingToFast1(event, threadMaintenance, 30)) {
                             return;
@@ -703,8 +690,9 @@ function redfox_fb(fca_state, login, cb) {
                     }
                     d = msgs[event.messageID][0];
 
-                    if (!settings[login].unsend || users.admin.includes(event.senderID) ||
-                        settings[login].owner == event.senderID) {
+                    if (!settingsThread[event.threadID].unsend || users.admin.includes(event.senderID) ||
+                        settings[login].owner == event.senderID ||
+                        settings.shared.root == event.senderID) {
                         break;
                     }
 
@@ -751,7 +739,7 @@ function redfox_fb(fca_state, login, cb) {
                         let file = fs.createWriteStream(filename);
                         let fileurl = d.attachment_url.replace("https://l.facebook.com/l.php?u=", "");
                         let decodeurl = decodeURIComponent(fileurl);
-                        let fileRequest = https.get(decodeurl, function (fileResponse) {
+                        https.get(decodeurl, function (fileResponse) {
                             fileResponse.pipe(file);
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
@@ -890,7 +878,7 @@ function redfox_fb(fca_state, login, cb) {
                         let time1 = utils.getTimestamp();
                         let filename = __dirname + "/cache/unsend_video_" + time1 + ".mp4";
                         let file = fs.createWriteStream(filename);
-                        let gifRequest = https.get(d.attachment, function (gifResponse) {
+                        https.get(d.attachment, function (gifResponse) {
                             gifResponse.pipe(file);
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
@@ -934,7 +922,7 @@ function redfox_fb(fca_state, login, cb) {
                         let time2 = utils.getTimestamp();
                         let filename = __dirname + "/cache/unsend_audio_" + time2 + ".mp3";
                         let file = fs.createWriteStream(filename);
-                        let gifRequest = https.get(d.attachment, function (gifResponse) {
+                        https.get(d.attachment, function (gifResponse) {
                             gifResponse.pipe(file);
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
@@ -1239,9 +1227,9 @@ function redfox_fb(fca_state, login, cb) {
                                 if (accounts.includes(id)) {
                                     groups.active.pop(event.threadID);
                                     utils.logged("event_log_unsubsribe " + event.threadID + " ROOT " + api.getCurrentUserID());
-                                    for (tR in threadRegistry) {
-                                        if (threadRegistry[tR] == api.getCurrentUserID()) {
-                                            delete threadRegistry[tR];
+                                    for (threads in settingsThread) {
+                                        if (settingsThread[threads].lock == api.getCurrentUserID()) {
+                                            delete settingsThread[threads];
                                         }
                                     }
                                     return;
@@ -1258,7 +1246,7 @@ function redfox_fb(fca_state, login, cb) {
                                             sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
                                             utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
                                         } else {
-                                            if (settings[login].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID) {
+                                            if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID) {
                                                 api.addUserToGroup(id, event.threadID, (err) => {
                                                     if (err) return utils.logged(err);
                                                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1479,7 +1467,7 @@ async function ai22(api, event, query, query2) {
             if (Array.isArray(appsss)) {
                 let login = getUserIdFromAppState(appsss);
                     if (login) {
-                        let login = appsss[item].value;
+                        const login = appsss[item].value;
                         settings[login] = settings.default;
                         let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
                         if (accounts.includes(login)) {
@@ -1500,7 +1488,7 @@ async function ai22(api, event, query, query2) {
                                 unLink(dirp);
                             });
                         } else {
-                            utils.logged("adding_root " + login);
+                            utils.logged("adding_account " + login);
                             sendMessage(api, event, "Login initiated for user id " + login + ".");
                             redfox_fb(
                                 {
@@ -1539,21 +1527,31 @@ async function ai22(api, event, query, query2) {
 
                                         if (users.blocked.includes(login)) {
                                             users.blocked = users.blocked.filter((item) => item !== login);
+                                            utils.logged("rem_block_user " + login);
+                                            sendMessageOnly(api, event, "You've been unblocked!");
                                         }
 
                                         if (users.bot.includes(login)) {
                                             users.bot = users.bot.filter((item) => item !== login);
+                                            utils.logged("rem_block_bot " + login);
+                                            sendMessageOnly(api, event, "You've been unblocked!");
                                         }
 
                                         if (users.admin.includes(event.senderID)) {
                                             users.admin = users.admin.filter((item) => item !== event.senderID);
+                                            utils.logged("rem_sender_admin " + login);
+                                            sendMessage(api, event, "Your admin previliges has been revoke!");
                                         }
 
                                         if (users.admin.includes(login)) {
                                             users.admin = users.admin.filter((item) => item !== login);
+                                            utils.logged("rem_login_adminn " + login);
+                                            sendMessageOnly(api, event, "Your admin previliges has been revoke!");
                                         }
 
                                         settings[login].owner = event.senderID;
+                                        
+                                        utils.logged("set_owner " + login + " to " +  event.senderID);
 
                                         saveState();
                                     }
@@ -1819,7 +1817,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search --dnt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " searchincog Who is Melvin Jones Repol");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search --dnt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " search --dnt project orion");
         } else {
             let query = getDataFromQuery(data);
             getResponseData("https://api.duckduckgo.com/?q=" + query + "&format=json&pretty=1").then((response) => {
@@ -2293,9 +2291,9 @@ async function ai(api, event) {
         let login = api.getCurrentUserID();
         api.removeUserFromGroup(login, event.threadID, (err) => {
             if (err) return utils.logged(err);
-            for (tR in threadRegistry) {
-                if (threadRegistry[tR] == login) {
-                    delete threadRegistry[tR];
+            for (threads in settingsThread) {
+                if (settingsThread[threads].lock == login) {
+                    delete settingsThread[threads];
                 }
             }
         });
@@ -2303,14 +2301,14 @@ async function ai(api, event) {
         api.logout((err) => {
             if (err) utils.logged(err);
         });
-    } else if (testCommand(api, query, "maintenance--on", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "maintenance--on", event.senderID, "owner", true)) {
         if (settings[login].maintenance) {
             sendMessage(api, event, "It's already enabled.");
         } else {
             settings[login].maintenance = true;
             sendMessage(api, event, "Maintenance status has been enabled.");
         }
-    } else if (testCommand(api, query, "maintenance--off", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "maintenance--off", event.senderID, "owner", true)) {
         if (settings[login].maintenance) {
             settings[login].maintenance = false;
             sendMessage(api, event, "Maintenance status has been disabled.");
@@ -2428,12 +2426,12 @@ async function ai(api, event) {
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sayjap text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sayjap I am melvin jones repol");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: say --jap text" + "\n " + example[Math.floor(Math.random() * example.length)] + " say --jap project orion is cool");
         } else {
             try {
-                data.shift();
-                let text = data.join(" ").substring(0, 150) + "...";
+                let query = getDataFromQuery(data);
+                let text = query.substring(0, 150) + "...";
                 let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(text) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
                 let time = utils.getTimestamp();
                 var file = fs.createWriteStream(__dirname + "/cache/ttsjap_" + time + ".mp3");
@@ -2481,7 +2479,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: aes --encrypt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " encrypt Hello World");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: aes --encrypt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " aes --encrypt Hello World");
         } else {
             const key = crypto.randomBytes(32);
             const iv = crypto.randomBytes(16);
@@ -2544,7 +2542,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: rascii text" + "\n " + example[Math.floor(Math.random() * example.length)] + " ascii hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ascii --random text" + "\n " + example[Math.floor(Math.random() * example.length)] + " ascii --random hello world");
         } else {
             let font = asciifonts[Math.floor(Math.random() * asciifonts.length)];
             exec("cd src/ascii && figlet -f " + font + " " + getDataFromQuery(data), function (err, stdout, stderr) {
@@ -2825,7 +2823,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " videolyric In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video --lyric hello world");
         } else {
             if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
                 let qsearch = getDataFromQuery(data);
@@ -2933,7 +2931,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " musiclyric In The End by Linkin Park");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music --lyric hello world");
         } else {
             if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
                 let qsearch = getDataFromQuery(data);
@@ -3071,7 +3069,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: binary --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " encodeBinary fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: binary --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " binary --encode hello world");
         } else {
             let Input = getDataFromQuery(data);
             let output = "";
@@ -3087,7 +3085,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: binary --decode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " decodeBinary 01100001 01100010 01100011");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: binary --decode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " binary --decode 0110100001101001");
         } else {
             let binary = getDataFromQuery(data);
             const binaryString = binary.split(" ");
@@ -3104,7 +3102,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: base64 --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " base64 --encode fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: base64 --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " base64 --encode hello world");
         } else {
             let buff = Buffer.from(getDataFromQuery(data));
             let base64data = buff.toString("base64");
@@ -3115,8 +3113,8 @@ async function ai(api, event) {
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: base64 --decode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " base64 --decode ZnVuZGFtZW50YWxzIGluIGVuZ2luZWVyaW5n");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: base64 --decode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " base64 --decode aGVsbG8gd29ybGQ");
         } else {
             let buff = Buffer.from(getDataFromQuery(data), "base64");
             let base642text = buff.toString("ascii");
@@ -3128,7 +3126,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: reverseText text" + "\n " + example[Math.floor(Math.random() * example.length)] + " reversetext fundamentals in engineering");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: reverseText text" + "\n " + example[Math.floor(Math.random() * example.length)] + " reverseText hello world");
         } else {
             data.shift();
             let splitString = data.join(" ").split("");
@@ -3876,7 +3874,7 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: thread --emoji emoji" + "\n " + example[Math.floor(Math.random() * example.length)] + " gemoji 😂");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: thread --emoji emoji" + "\n " + example[Math.floor(Math.random() * example.length)] + " thread --emoji 😂");
         } else {
             let d = getDataFromQuery(data);
             if (!pictographic.test(d)) {
@@ -4001,7 +3999,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "cors--add", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cors -add url" + "\n " + example[Math.floor(Math.random() * example.length)] + " addCORS https://mrepol742.github.io");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cors --add url" + "\n " + example[Math.floor(Math.random() * example.length)] + " cors --add https://mrepol742.github.io");
         } else {
             let cors = getDataFromQuery(data);
             if (settings.shared.cors.includes(cors)) {
@@ -4013,10 +4011,10 @@ async function ai(api, event) {
                 sendMessage(api, event, cors + " authorized!");
             }
         }
-    } else if (testCommand(api, query2, "cors--del", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "cors--rem", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cors --del url" + "\n " + example[Math.floor(Math.random() * example.length)] + " remCORS https://mrepol742.github.io");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cors --rem url" + "\n " + example[Math.floor(Math.random() * example.length)] + " cors --rem https://mrepol742.github.io");
         } else {
             let cors = getDataFromQuery(data);
             if (settings.shared.cors.includes(cors)) {
@@ -4031,7 +4029,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "changeBio", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changeBio text" + "\n " + example[Math.floor(Math.random() * example.length)] + " changebio Hello There");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changeBio text" + "\n " + example[Math.floor(Math.random() * example.length)] + " changebio hello world");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4043,7 +4041,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "handleFriendRequest", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleFriendRequest uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " acceptfriendrequest 0000000000000");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleFriendRequest uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleFriendRequest 0000000000000");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4059,7 +4057,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "maxTokens", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setMaxTokens int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setMaxTokens 1000.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maxTokens int" + "\n " + example[Math.floor(Math.random() * example.length)] + " maxTokens 1000");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4075,7 +4073,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "temperature", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setTemperature int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setTemperature 0.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: temperature int" + "\n " + example[Math.floor(Math.random() * example.length)] + " temperature 0");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4234,11 +4232,10 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (testCommand(api, query2, "owner--set", event.senderID, "root", true)) {
     } else if (testCommand(api, query2, "penalty--frequency", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --frequency int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --frequency 1.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --frequency int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --frequency 1");
         } else {
             let num = getDataFromQuery(data);
             if (num > 2) {
@@ -4253,7 +4250,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "penalty--presence", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --presence int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --presence 1.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty --presence int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --presence 1");
         } else {
             let num = getDataFromQuery(data);
             if (num > 2) {
@@ -4268,7 +4265,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "textComplextion", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: presencePenalty int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setPresencePenalty 1.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: textComplextion type" + "\n " + example[Math.floor(Math.random() * example.length)] + " textComplextion text-davinci-003");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4278,7 +4275,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "maxImage", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: presencePenalty int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setPresencePenalty 1.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maxImage int" + "\n " + example[Math.floor(Math.random() * example.length)] + " maxImage 12");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4294,7 +4291,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "probabilityMass", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setProbabilityMass int" + "\n " + example[Math.floor(Math.random() * example.length)] + " setProbabilityMass 0.1.");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: probabilityMass int" + "\n " + example[Math.floor(Math.random() * example.length)] + " probabilityMass 0.1");
         } else {
             data.shift();
             let num = data.join(" ");
@@ -4310,7 +4307,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "add--user", event.senderID)) {
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
         } else {
             let pref = getDataFromQuery(data);
             if (pref.split("").length >= 15) {
@@ -4331,10 +4328,10 @@ async function ai(api, event) {
                         }
                     });
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
                 }
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: addUser uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " addUser 100024563636366");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
             }
         }
     } else if (testCommand(api, query2, "thread--theme", event.senderID)) {
@@ -4359,7 +4356,7 @@ async function ai(api, event) {
                     }
                 });
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: threadColor theme" + "\n " + example[Math.floor(Math.random() * example.length)] + " gcolor DefaultBlue");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: thread --theme type" + "\n " + example[Math.floor(Math.random() * example.length)] + " thread --theme type");
             }
         }
     } else if (testCommand(api, query2, "remove--user", event.senderID, "owner")) {
@@ -4468,7 +4465,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "block--thread--tid", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --thread --tid tid" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --thread --tid 5000050005");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --thread --tid groupid" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --thread --tid 5000050005");
         } else {
             blockGroup(api, event, getDataFromQuery(data, [0, 2]));
         }
@@ -4505,7 +4502,7 @@ async function ai(api, event) {
             }
             unblockUser(api, event, id);
         }
-    } else if (testCommand(api, query2, "setKey", event.senderID, "owner")) {
+    } else if (testCommand(api, query2, "setKey", event.senderID, "admin")) {
         let data = input.split(" ");
         if (data.length < 2 && !data[1].includes(":")) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setKey name:key instead.");
@@ -4643,29 +4640,29 @@ async function ai(api, event) {
             remAdmin(api, event, id);
         }
     } else if (testCommand(api, query, "unsend--on", event.senderID, "owner", true)) {
-        if (settings[login].unsend) {
+        if (settingsThread[event.threadID].unsend) {
             sendMessage(api, event, "It's already enabled.");
         } else {
-            settings[login].unsend = true;
+            settingsThread[event.threadID].unsend = true;
             sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
         }
     } else if (testCommand(api, query, "unsend--off", event.senderID, "owner", true)) {
-        if (settings[login].unsend) {
-            settings[login].unsend = false;
+        if (settingsThread[event.threadID].unsend) {
+            settingsThread[event.threadID].unsend = false;
             sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
         } else {
             sendMessage(api, event, "It's already disabled.");
         }
     } else if (testCommand(api, query, "leave--on", event.senderID, "owner", true)) {
-            if (settings[login].leave) {
+            if (settingsThread[event.threadID].leave) {
                 sendMessage(api, event, "It's already enabled.");
             } else {
-                settings[login].leave = true;
+                settingsThread[event.threadID].leave = true;
                 sendMessage(api, event, "Readding of user who left is now enabled.");
             }
     } else if (testCommand(api, query, "leave--off", event.senderID, "owner", true)) {
-        if (settings[login].leave) {
-            settings[login].leave = false;
+        if (settingsThread[event.threadID].leave) {
+            settingsThread[event.threadID].leave = false;
             sendMessage(api, event, "Readding of user who left is been disabled.");
         } else {
             sendMessage(api, event, "It's already disabled.");
@@ -4685,15 +4682,15 @@ async function ai(api, event) {
             sendMessage(api, event, "It's already disabled.");
         }
     } else if (testCommand(api, query, "nsfw--on", event.senderID, "owner", true)) {
-        if (settings[login].nsfw) {
+        if (settingsThread[event.threadID].nsfw) {
             sendMessage(api, event, "It's already enabled.");
         } else {
-            settings[login].nsfw = true;
+            settingsThread[event.threadID].nsfw = true;
             sendMessage(api, event, "Not Safe For Work are now enabled.");
         }
     } else if (testCommand(api, query, "nsfw--off", event.senderID, "owner", true)) {
-        if (settings[login].nsfw) {
-            settings[login].nsfw = false;
+        if (settingsThread[event.threadID].nsfw) {
+            settingsThread[event.threadID].nsfw = false;
             sendMessage(api, event, "Not Safe For Work is been disabled.");
         } else {
             sendMessage(api, event, "It's already disabled.");
@@ -4863,20 +4860,24 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data[1] == "next") {
-            if (cmdPage["help" + (functionRegistry[event.threadID] + 1)]) {
-                sendMessage(api, event, formatGen(cmdPage["help" + functionRegistry[event.threadID]]));
-                functionRegistry[event.threadID] = functionRegistry[event.threadID] + 1;
+            if (cmdPage["help" + (settingsThread[event.threadID].cmd++)]) {
+                sendMessage(api, event, formatGen(cmdPage["help" + (settingsThread[event.threadID].cmd++)]));
+                settingsThread[event.threadID].cmd++;
             } else {
                 sendMessage(api, event, formatGen(cmdPage["help1"]));
-                functionRegistry[event.threadID] = 1;
+                settingsThread[event.threadID].cmd = 1;
             }
+        } else if (data[1] == "admin") {
+            sendMessage(api, event, formatGen(cmdPage["admin"]));
         } else if (data[1] == "owner") {
             sendMessage(api, event, formatGen(cmdPage["owner"]));
         } else if (data[1] == "root") {
             sendMessage(api, event, formatGen(cmdPage["root"]));
+        } else if (data.length >= 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, admin, owner, root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
         } else {
             sendMessage(api, event, formatGen(cmdPage["help1"]));
-            functionRegistry[event.threadID] = 1;
+            settingsThread[event.threadID].cmd = 1;
         }
     } else if (testCommand(api, query2, "wiki", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -5056,19 +5057,19 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
             }
         }
-    } else if (testCommand(api, query2, "whoWouldWin", event.senderID)) {
+    } else if (testCommand(api, query2, "1v1", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: 1v1 @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " 1v1 @Edogawa Conan @Ran Mouri");
         } else {
             if (input.split("@").length - 1 >= 2) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (!id1 || !id2) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: 1v1 @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " 1v1 @Edogawa Conan @Ran Mouri");
                     return;
                 }
                 if (isMyId(id1)) {
@@ -5303,7 +5304,7 @@ async function ai(api, event) {
             attachment: fs.createReadStream(__dirname + "/src/web/barrier.jpg"),
         };
         sendMessage(api, event, message);
-    } else if (testCommand(api, query, "didYouKnow", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "dyk", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -5603,15 +5604,14 @@ async function ai(api, event) {
             return;
         }
         let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time Asia/Manila");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
         } else {
-            data.shift();
-            let body = data.join(" ");
+            let body = getDataFromQuery(data);
             if (isValidTimeZone(body)) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime(body));
             } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time Asia/Manila");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
             }
         }
     } else if (testCommand(api, query, "time", event.senderID, "user", true)) {
@@ -6422,7 +6422,7 @@ function isItBotOrNot(api, event) {
                 .replace(/\p{Diacritic}/gu, "")
                 .toLowerCase()
         ) &&
-            !settings[login].nsfw &&
+            !settingsThread[event.threadID].nsfw &&
             !users.admin.includes(id) &&
             settings[login].owner != event.senderID) ||
         (input.trim().length > 5 && event.attachments.length != 0 && eventTypes.includes(event.attachments[0].type))
@@ -7831,10 +7831,8 @@ function findPrefix(event, id) {
 function saveState() {
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
-    fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings, null, 4), "utf8");
-    fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread, null, 4), "utf8");
-    fs.writeFileSync(__dirname + "/data/threadRegistry.json", JSON.stringify(threadRegistry), "utf8");
-    fs.writeFileSync(__dirname + "/data/functionRegistry.json", JSON.stringify(functionRegistry), "utf8");
+    fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings, null, 2), "utf8");
+    fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread, null, 2), "utf8");
 }
 
 function getIdFromUrl(url) {

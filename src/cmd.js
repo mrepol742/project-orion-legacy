@@ -24,7 +24,7 @@ function gen() {
         let query = commands[cmd].replace("testCommand(", "").replace(")", "");
         query = query.replaceAll('"', "").replaceAll("--", " --").split(", ");
 
-        query[2] = "    " + query[2];
+        query[2] = query[2];
 
         let permission = query[4];
         if (["root", "owner"].includes(permission)) {
@@ -53,10 +53,11 @@ function gen() {
 }
 
 function formatGen(gen) {
-    let strs = "usage: command <option>\noperations:\n";
+    let strs = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
     for (a in gen) {
-        strs += gen[a] + "\n";
+        strs += "│  ⦿ " + gen[a] + "\n";
     }
+    strs += "│\n└─ @ỹ@cmd-prj- orion";
     return strs;
 }
 
