@@ -1,5 +1,5 @@
 {
-  "6892455817496558": {
+  "default": {
     "leave": false,
     "unsend": true,
     "nsfw": true,
@@ -11,37 +11,37 @@
     "nsfw": true,
     "cmd": 1
   },
+  "2583856894982516": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1
+  },
+  "undefined": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1
+  },
+  "6892455817496558": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1
+  },
+  "24656864413928695": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1
+  },
   "9492786270746965": {
     "leave": false,
     "unsend": true,
     "nsfw": true,
     "cmd": 1
   },
-  "24546568141608847": {
-    "leave": false,
-    "unsend": true,
-    "nsfw": true,
-    "cmd": 1
-  },
-  "7001323873296148": {
-    "leave": false,
-    "unsend": true,
-    "nsfw": true,
-    "cmd": 1
-  },
-  "24395153463462043": {
-    "leave": false,
-    "unsend": true,
-    "nsfw": true,
-    "cmd": 1
-  },
-  "7382627011811112": {
-    "leave": false,
-    "unsend": true,
-    "nsfw": true,
-    "cmd": 1
-  },
-  "7149937088425346": {
+  "5976601362468709": {
     "leave": false,
     "unsend": true,
     "nsfw": true,
@@ -52,12 +52,5 @@
     "unsend": true,
     "nsfw": true,
     "cmd": 1
-  },
-  "100065290644543": {
-    "leave": false,
-    "unsend": true,
-    "nsfw": true,
-    "cmd": 1,
-    "lock": "61553500994391"
   }
 }

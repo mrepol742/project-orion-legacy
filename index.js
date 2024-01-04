@@ -115,7 +115,6 @@ const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 
-
 /*
  * CREATE SERVER
  */
@@ -144,7 +143,6 @@ let sitemappage = fs.readFileSync(__dirname + "/src/web/sitemap.xml");
 let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 let loadFileF1 = Date.now() - loadFile1;
 utils.logged("web_resource_loaded done " + loadFileF1 + "ms");
-
 
 deleteCacheData(true);
 
@@ -224,10 +222,10 @@ process.on("beforeExit", (code) => {
 });
 
 process.on("exit", (code) => {
-        console.log("");
-        saveState();
-        utils.logged("save_state ");
-        utils.logged("fca_status offline");
+    console.log("");
+    saveState();
+    utils.logged("save_state ");
+    utils.logged("fca_status offline");
 });
 
 /*
@@ -328,7 +326,7 @@ function redfox_fb(fca_state, login, cb) {
             accounts = accounts.filter((item) => item !== login);
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                    delete settingsThread[threads];
+                    delete settingsThread[threads]['lock'];
                 }
             }
             unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
@@ -338,6 +336,10 @@ function redfox_fb(fca_state, login, cb) {
                 return cb(true);
             }
             return;
+        }
+
+        if (!settings[login]) {
+            settings[login] = settings.default;
         }
 
         task(
@@ -417,7 +419,7 @@ function redfox_fb(fca_state, login, cb) {
                 accounts = accounts.filter((item) => item !== login);
                 for (threads in settingsThread) {
                     if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                        delete settingsThread[threads];
+                        delete settingsThread[threads]['lock'];
                     }
                 }
 
@@ -446,8 +448,8 @@ function redfox_fb(fca_state, login, cb) {
                 });
             }
 
-            if (!settingsThread[event.threadID].lock && !isMyId(api.getCurrentUserID())) {
-                settingsThread[event.threadID].lock = api.getCurrentUserID();
+            if (!isMyId(api.getCurrentUserID())) {
+                settingsThread[event.threadID]['lock'] = api.getCurrentUserID();
                 utils.logged("group_register " + api.getCurrentUserID());
             }
 
@@ -555,7 +557,13 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID) || users.muted.includes(event.senderID) || (!(users.admin.includes(event.senderID) || settings[login].owner == event.senderID) && groups.blocked.includes(event.threadID)) || blockedCall.includes(api.getCurrentUserID())) {
+            if (
+                users.blocked.includes(event.senderID) ||
+                users.bot.includes(event.senderID) ||
+                users.muted.includes(event.senderID) ||
+                (!(users.admin.includes(event.senderID) || settings[login].owner == event.senderID) && groups.blocked.includes(event.threadID)) ||
+                blockedCall.includes(api.getCurrentUserID())
+            ) {
                 return;
             }
 
@@ -567,8 +575,8 @@ function redfox_fb(fca_state, login, cb) {
 
                 if (testCommand(api, query, "stop", event.senderID, "owner", true)) {
                     if (!settings[login].stop) {
-                    sendMessage(api, event, "Program stopped its state.");
-                    settings[login].stop = true;
+                        sendMessage(api, event, "Program stopped its state.");
+                        settings[login].stop = true;
                     } else {
                         sendMessage(api, event, "Program is already been stopped.");
                     }
@@ -577,8 +585,8 @@ function redfox_fb(fca_state, login, cb) {
                     return;
                 } else if (testCommand(api, query, "resume", event.senderID, "owner", true)) {
                     if (settings[login].stop) {
-                    sendMessage(api, event, "Program resumed its state.");
-                    settings[login].stop = false;
+                        sendMessage(api, event, "Program resumed its state.");
+                        settings[login].stop = false;
                     } else {
                         sendMessage(api, event, "Program is already been resumed.");
                     }
@@ -598,9 +606,7 @@ function redfox_fb(fca_state, login, cb) {
                     return;
                 }
 
-                if (settings[login].maintenance && 
-                    (settings[login].owner != event.senderID && !users.admin.includes(event.senderID) &&
-                    settings.shared.root != api.getCurrentUserID())) {
+                if (settings[login].maintenance && settings[login].owner != event.senderID && !users.admin.includes(event.senderID) && settings.shared.root != api.getCurrentUserID()) {
                     if (event.type == "message" || event.type == "message_reply") {
                         if (isGoingToFast1(event, threadMaintenance, 30)) {
                             return;
@@ -638,15 +644,12 @@ function redfox_fb(fca_state, login, cb) {
                         });
 
                         sendMessageOnly(api, event, {
-                            body:
-                                "Bot successfully connected to this thread\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion."
+                            body: "Bot successfully connected to this thread\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
                         });
                         sendMessageOnly(api, event, {
-                            body:
-                                "Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io",
-                            url: "https://mrepol742.github.io"
+                            body: "Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io",
+                            url: "https://mrepol742.github.io",
                         });
-
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
@@ -695,9 +698,7 @@ function redfox_fb(fca_state, login, cb) {
                     }
                     d = msgs[event.messageID][0];
 
-                    if (!settingsThread[event.threadID].unsend || users.admin.includes(event.senderID) ||
-                        settings[login].owner == event.senderID ||
-                        settings.shared.root == event.senderID) {
+                    if (!settingsThread[event.threadID].unsend || users.admin.includes(event.senderID) || settings[login].owner == event.senderID || settings.shared.root == event.senderID) {
                         break;
                     }
 
@@ -1234,7 +1235,7 @@ function redfox_fb(fca_state, login, cb) {
                                     utils.logged("event_log_unsubsribe " + event.threadID + " ROOT " + api.getCurrentUserID());
                                     for (threads in settingsThread) {
                                         if (settingsThread[threads].lock && settingsThread[threads].lock == api.getCurrentUserID()) {
-                                            delete settingsThread[threads];
+                                            delete settingsThread[threads]['lock'];
                                         }
                                     }
                                     return;
@@ -1471,101 +1472,103 @@ async function ai22(api, event, query, query2) {
             let appsss = JSON.parse(msB);
             if (Array.isArray(appsss)) {
                 let login = getUserIdFromAppState(appsss);
-                    if (login) {
-                        const login = appsss[item].value;
+                if (login) {
+                    const login = appsss[item].value;
+                    if (!settings[login]) {
                         settings[login] = settings.default;
-                        let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
-                        if (accounts.includes(login)) {
-                            downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                                let msg = updateFont("The account uid " + login + " is already connected to the main server.", login);
-                                let message = {
-                                    body: msg,
-                                    attachment: fs.createReadStream(dirp),
-                                };
-                                api.sendMessage(
-                                    message,
-                                    event.threadID,
-                                    (err, messageInfo) => {
-                                        if (err) utils.logged(err);
-                                    },
-                                    event.messageReply.messageID
-                                );
-                                unLink(dirp);
-                            });
-                        } else {
-                            utils.logged("adding_account " + login);
-                            sendMessage(api, event, "Login initiated for user id " + login + ".");
-                            redfox_fb(
-                                {
-                                    appState: appsss,
+                    }
+                    let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
+                    if (accounts.includes(login)) {
+                        downloadFile(getProfilePic(login), dirp).then(async (response) => {
+                            let msg = updateFont("The account uid " + login + " is already connected to the main server.", login);
+                            let message = {
+                                body: msg,
+                                attachment: fs.createReadStream(dirp),
+                            };
+                            api.sendMessage(
+                                message,
+                                event.threadID,
+                                (err, messageInfo) => {
+                                    if (err) utils.logged(err);
                                 },
-                                login,
-                                function (isLogin) {
-                                    if (isLogin) {
+                                event.messageReply.messageID
+                            );
+                            unLink(dirp);
+                        });
+                    } else {
+                        utils.logged("adding_account " + login);
+                        sendMessage(api, event, "Login initiated for user id " + login + ".");
+                        redfox_fb(
+                            {
+                                appState: appsss,
+                            },
+                            login,
+                            function (isLogin) {
+                                if (isLogin) {
+                                    api.sendMessage(
+                                        updateFont("Failed to Login " + login, login),
+                                        event.threadID,
+                                        (err, messageInfo) => {
+                                            if (err) utils.logged(err);
+                                        },
+                                        event.messageReply.messageID
+                                    );
+                                } else {
+                                    downloadFile(getProfilePic(login), dirp).then(async (response) => {
+                                        let msg = updateFont("Account " + login + " is now connected to the main server.", login);
+                                        let message = {
+                                            body: msg,
+                                            attachment: fs.createReadStream(dirp),
+                                        };
                                         api.sendMessage(
-                                            updateFont("Failed to Login " + login, login),
+                                            message,
                                             event.threadID,
                                             (err, messageInfo) => {
                                                 if (err) utils.logged(err);
                                             },
                                             event.messageReply.messageID
                                         );
-                                    } else {
-                                        downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                                            let msg = updateFont("Account " + login + " is now connected to the main server.", login);
-                                            let message = {
-                                                body: msg,
-                                                attachment: fs.createReadStream(dirp),
-                                            };
-                                            api.sendMessage(
-                                                message,
-                                                event.threadID,
-                                                (err, messageInfo) => {
-                                                    if (err) utils.logged(err);
-                                                },
-                                                event.messageReply.messageID
-                                            );
-                                            unLink(dirp);
-                                        });
+                                        unLink(dirp);
+                                    });
 
-                                        accounts.push(login);
+                                    accounts.push(login);
 
-                                        if (users.blocked.includes(login)) {
-                                            users.blocked = users.blocked.filter((item) => item !== login);
-                                            utils.logged("rem_block_user " + login);
-                                            sendMessageOnly(api, event, "You've been unblocked!");
-                                        }
-
-                                        if (users.bot.includes(login)) {
-                                            users.bot = users.bot.filter((item) => item !== login);
-                                            utils.logged("rem_block_bot " + login);
-                                            sendMessageOnly(api, event, "You've been unblocked!");
-                                        }
-
-                                        if (users.admin.includes(event.senderID)) {
-                                            users.admin = users.admin.filter((item) => item !== event.senderID);
-                                            utils.logged("rem_sender_admin " + login);
-                                            sendMessage(api, event, "Your admin previliges has been revoke!");
-                                        }
-
-                                        if (users.admin.includes(login)) {
-                                            users.admin = users.admin.filter((item) => item !== login);
-                                            utils.logged("rem_login_adminn " + login);
-                                            sendMessageOnly(api, event, "Your admin previliges has been revoke!");
-                                        }
-
-                                        settings[login].owner = event.senderID;
-                                        
-                                        utils.logged("set_owner " + login + " to " +  event.senderID);
-
-                                        saveState();
+                                    if (users.blocked.includes(login)) {
+                                        users.blocked = users.blocked.filter((item) => item !== login);
+                                        utils.logged("rem_block_user " + login);
+                                        sendMessageOnly(api, event, "You've been unblocked!");
                                     }
+
+                                    if (users.bot.includes(login)) {
+                                        users.bot = users.bot.filter((item) => item !== login);
+                                        utils.logged("rem_block_bot " + login);
+                                        sendMessageOnly(api, event, "You've been unblocked!");
+                                    }
+
+                                    if (users.admin.includes(event.senderID)) {
+                                        users.admin = users.admin.filter((item) => item !== event.senderID);
+                                        utils.logged("rem_sender_admin " + login);
+                                        sendMessage(api, event, "Your admin previliges has been revoke!");
+                                    }
+
+                                    if (users.admin.includes(login)) {
+                                        users.admin = users.admin.filter((item) => item !== login);
+                                        utils.logged("rem_login_adminn " + login);
+                                        sendMessageOnly(api, event, "Your admin previliges has been revoke!");
+                                    }
+
+                                    settings[login].owner = event.senderID;
+
+                                    utils.logged("set_owner " + login + " to " + event.senderID);
+
+                                    saveState();
                                 }
-                            );
-                        }
-                    } else {
-                        sendMessage(api, event, "Your cookies is valid but not logged in!");
+                            }
+                        );
                     }
+                } else {
+                    sendMessage(api, event, "Your cookies is valid but not logged in!");
+                }
             } else {
                 sendMessage(api, event, "Your cookies aint valid. Please try again.");
             }
@@ -1607,11 +1610,11 @@ async function ai22(api, event, query, query2) {
                         }
                     }
                 } catch (error) {
-                            sendMessage(
-                                api,
-                                event,
-                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                            );
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                 }
             });
         }
@@ -1982,11 +1985,11 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             }
         }
     } else if (testCommand(api, query2, "chad", event.senderID)) {
@@ -2077,11 +2080,11 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             }
         }
     } else if (testCommand(api, query2, "melbin", event.senderID)) {
@@ -2114,11 +2117,11 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             }
         }
     } else if (testCommand(api, query2, "openai", event.senderID)) {
@@ -2168,11 +2171,11 @@ async function ai(api, event) {
                 addToken(login, "davinci", response);
                 sendAiMessage(api, event, response.choices[0].text);
             } catch (error) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             }
         }
     } else if (testCommand(api, query2, "dell", event.senderID)) {
@@ -2205,11 +2208,11 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, message);
             } catch (error) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             }
         }
     } else if (testCommand(api, query2, "poli", event.senderID)) {
@@ -2261,7 +2264,7 @@ async function ai(api, event) {
             if (err) return utils.logged(err);
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                    delete settingsThread[threads];
+                    delete settingsThread[threads]['lock'];
                 }
             }
         });
@@ -3206,9 +3209,7 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Why don't you love yourself?");
         }
-    } else if (testCommand(api, query, "pair", event.senderID, "user", true) ||
-        testCommand(api, query, "pair--random", event.senderID, "user", true) ||
-        testCommand(api, query, "lovetest", event.senderID)) {
+    } else if (testCommand(api, query, "pair", event.senderID, "user", true) || testCommand(api, query, "pair--random", event.senderID, "user", true) || testCommand(api, query, "lovetest", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4322,9 +4323,9 @@ async function ai(api, event) {
                 api,
                 event,
                 "Houston! Unknown or missing option.\n\n Usage: thread --theme theme instead.\n\nTheme:\nDefaultBlue, HotPink, AquaBlue, BrightPurple\nCoralPink, Orange, Green, LavenderPurple\nRed, Yellow, TealBlue, Aqua\nMango, Berry, Citrus, Candy" +
-                "\n\n" +
-                example[Math.floor(Math.random() * example.length)] +
-                "\nthread --theme DefaultBlue"
+                    "\n\n" +
+                    example[Math.floor(Math.random() * example.length)] +
+                    "\nthread --theme DefaultBlue"
             );
         } else {
             let pref = getDataFromQuery(data).toLowerCase();
@@ -4635,12 +4636,12 @@ async function ai(api, event) {
             sendMessage(api, event, "It's already disabled.");
         }
     } else if (testCommand(api, query, "leave--on", event.senderID, "owner", true)) {
-            if (settingsThread[event.threadID].leave) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settingsThread[event.threadID].leave = true;
-                sendMessage(api, event, "Readding of user who left is now enabled.");
-            }
+        if (settingsThread[event.threadID].leave) {
+            sendMessage(api, event, "It's already enabled.");
+        } else {
+            settingsThread[event.threadID].leave = true;
+            sendMessage(api, event, "Readding of user who left is now enabled.");
+        }
     } else if (testCommand(api, query, "leave--off", event.senderID, "owner", true)) {
         if (settingsThread[event.threadID].leave) {
             settingsThread[event.threadID].leave = false;
@@ -4797,9 +4798,7 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
-    } else if (testCommand(api, query, "tid", event.senderID, "user", true) ||
-        testCommand(api, query2, "gid", event.senderID) ||
-        testCommand(api, query, "uid", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "tid", event.senderID, "user", true) || testCommand(api, query2, "gid", event.senderID) || testCommand(api, query, "uid", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -4841,8 +4840,8 @@ async function ai(api, event) {
         }
         let data = input.split(" ");
         if (data[1] == "next") {
-            if (cmdPage["help" + (settingsThread[event.threadID].cmd++)]) {
-                sendMessage(api, event, formatGen(cmdPage["help" + (settingsThread[event.threadID].cmd++)]));
+            if (cmdPage["help" + settingsThread[event.threadID].cmd++]) {
+                sendMessage(api, event, formatGen(cmdPage["help" + settingsThread[event.threadID].cmd++]));
                 settingsThread[event.threadID].cmd++;
             } else {
                 sendMessage(api, event, formatGen(cmdPage["help1"]));
@@ -5391,9 +5390,9 @@ async function ai(api, event) {
                 api,
                 event,
                 "Houston! Unknown or missing option.\n\n Usage: anime category \n Categories: \nwaifu, neko, shinobu, megumin,\nbully, cuddle, cry, hug,\nawoo, kiss, lick, pat,\nsmug, bonk, yeet, blush,\nsmile, wave, highfive, handhold,\nnom, bite, glomp, slap,\nkill, kick, happy, wink,\npoke, dance and cringe" +
-                "\n\n" +
-                example[Math.floor(Math.random() * example.length)] +
-                "\nanime waifu"
+                    "\n\n" +
+                    example[Math.floor(Math.random() * example.length)] +
+                    "\nanime waifu"
             );
         } else {
             data.shift();
@@ -5753,7 +5752,7 @@ async function ai(api, event) {
                 api,
                 event,
                 crashes +
-                " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues using this format:\n\n   What did you do:\n   What result are you expecting:\n   What result did you get:\n   When did this happened:\n   Where did this happened:"
+                    " unhandled exception detected. if you believe there was something wrong please report at https://github.com/prj-orion/issues using this format:\n\n   What did you do:\n   What result are you expecting:\n   What result did you get:\n   When did this happened:\n   Where did this happened:"
             );
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
@@ -6539,15 +6538,15 @@ function getTimeDate(tz) {
 
 function getCurrentDateAndTime(tz) {
     let options = {
-        timeZone: tz,
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
-        hour12: false,
-    },
+            timeZone: tz,
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: false,
+        },
         formatter = new Intl.DateTimeFormat([], options);
 
     return formatter.format(new Date());
@@ -6891,7 +6890,7 @@ async function blockUser(api, event, id) {
             }
         }
     }
-    
+
     users.blocked.push(id);
     if (event.isGroup) {
         getUserProfile(id, async function (name) {
@@ -7821,7 +7820,7 @@ function saveState() {
 function getIdFromUrl(url) {
     try {
         return url.match(/id=(\d+)/)[1];
-    } catch (err) { }
+    } catch (err) {}
     return "";
 }
 
@@ -8026,7 +8025,7 @@ async function downloadFile(fileUrl, outputLocationPath) {
                 });
             });
         })
-        .catch(function (error) { });
+        .catch(function (error) {});
 }
 
 async function searchimgr(api, event, filename) {
@@ -8140,8 +8139,8 @@ function getRoutes() {
                         res.setHeader("Content-Type", "application/json");
                         res.writeHead(200);
                         res.end(JSON.stringify(results));
-                    } catch (err) { }
-                } catch (err) { }
+                    } catch (err) {}
+                } catch (err) {}
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
                 res.end();
@@ -8160,7 +8159,7 @@ function getRoutes() {
                     res.setHeader("Content-Type", "application/json");
                     res.writeHead(200);
                     res.end(JSON.stringify(results));
-                } catch (err) { }
+                } catch (err) {}
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
                 res.end();
@@ -8817,7 +8816,9 @@ async function addAccount() {
     if (Array.isArray(appsss)) {
         let login = getUserIdFromAppState(appsss);
         if (login) {
-            settings[login] = settings.default;
+            if (!settings[login]) {
+                settings[login] = settings.default;
+            }
             redfox_fb(
                 {
                     appState: appsss,
@@ -8834,10 +8835,22 @@ async function addAccount() {
 
                         if (users.blocked.includes(login)) {
                             users.blocked = users.blocked.filter((item) => item !== login);
+                            utils.logged("rem_block_user " + login);
                         }
 
                         if (users.bot.includes(login)) {
                             users.bot = users.bot.filter((item) => item !== login);
+                            utils.logged("rem_block_bot " + login);
+                        }
+
+                        if (users.admin.includes(event.senderID)) {
+                            users.admin = users.admin.filter((item) => item !== event.senderID);
+                            utils.logged("rem_sender_admin " + login);
+                        }
+
+                        if (users.admin.includes(login)) {
+                            users.admin = users.admin.filter((item) => item !== login);
+                            utils.logged("rem_login_adminn " + login);
                         }
 
                         saveState();
@@ -8870,8 +8883,7 @@ function isJson(str) {
     try {
         Array.isArray(JSON.parse(str));
         return true;
-    } catch (e) {
-    }
+    } catch (e) {}
     return false;
 }
 
@@ -8879,45 +8891,50 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
     if (!permission) {
         permission = "user";
     }
+    
     if (!regex) {
-        regex = true;
+        regex = false;
     }
 
     prefix = prefix.toLowerCase().replace("--", " --");
 
-    if (!regex) return prefix == message;
-
+    if (regex) {
+        if (prefix == message) return checkCmdPermission(api, permission, senderID);
+        return false;
+    }
     const regExp = new RegExp("(^" + prefix + "|^" + prefix + "s)");
-    if (regExp.test(message)) {
-        if (permission != "user") {
-            if (permission == "root") {
-                if (!isMyId(senderID)) {
-                    // deny access to root user if the id did not match
-                    utils.logged("access_denied root " + senderID);
+   if (regExp.test(message)) return checkCmdPermission(api, permission, senderID);
+return false;
+}
+
+function checkCmdPermission(api, permission, senderID) {
+    if (permission != "user") {
+        if (permission == "root") {
+            if (!isMyId(senderID)) {
+                // deny access to root user if the id did not match
+                utils.logged("access_denied root " + senderID);
+                return false;
+            }
+            utils.logged("access_granted root " + senderID);
+        } else if (permission == "owner") {
+            if (!(settings[api.getCurrentUserID()].owner == senderID)) {
+                if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
+                    // check if the account owner is the sender and
+                    // also verify if the sender is admin if not false
+                    utils.logged("access_denied user is not admin " + senderID);
                     return false;
                 }
-                utils.logged("access_granted root " + senderID);
-            } else if (permission == "owner") {
-                if (!(settings[api.getCurrentUserID()].owner == senderID)) {
-                    if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
-                        // check if the account owner is the sender and
-                        // also verify if the sender is admin if not false
-                        utils.logged("access_denied user is not admin " + senderID);
-                        return false;
-                    }
-                    if (users.admin.includes(senderID) && api.getCurrentUserID() ==  settings.shared.root) {
-                        // prevent admins from accessing the control of the root account
-                        utils.logged("access_denied access to root " + senderID);
-                        return false;
-                    }
-                    utils.logged("access_granted admin " + senderID);
+                if (users.admin.includes(senderID) && api.getCurrentUserID() == settings.shared.root) {
+                    // prevent admins from accessing the control of the root account
+                    utils.logged("access_denied access to root " + senderID);
+                    return false;
                 }
-                utils.logged("access_granted owner " + senderID);
+                utils.logged("access_granted admin " + senderID);
             }
+            utils.logged("access_granted owner " + senderID);
         }
-        return true;
     }
-    return false;
+    return true;
 }
 
 function addBalance(user, token) {
@@ -8939,8 +8956,7 @@ function getDataFromQuery(arr, remove) {
         remove = [0, 1];
     }
 
-    for (let i = remove.length - 1; i >= 0; i--)
-        arr.splice(remove[i], 1);
+    for (let i = remove.length - 1; i >= 0; i--) arr.splice(remove[i], 1);
 
     return arr.join(" ");
 }
