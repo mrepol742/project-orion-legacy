@@ -22,7 +22,7 @@
       },
       "dell": 0
     },
-    "owner": ""
+    "owner": "100039660703227"
   },
   "shared": {
     "root": "100071743848974",
@@ -120,7 +120,7 @@
       },
       "dell": 0
     },
-    "owner": "100071743848974"
+    "owner": "100039660703227"
   },
   "100093516094229": {
     "stop": false,
@@ -221,5 +221,55 @@
       "dell": 0
     },
     "owner": "100058594941918"
+  },
+  "61555136345950": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 4598,
+        "completion_tokens": 1223,
+        "total_tokens": 5821
+      },
+      "davinci": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "dell": 0
+    },
+    "owner": "100039660703227"
+  },
+  "100094974786751": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 4598,
+        "completion_tokens": 1223,
+        "total_tokens": 5821
+      },
+      "davinci": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "dell": 0
+    },
+    "owner": "100039660703227"
   }
 }
