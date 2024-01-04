@@ -91,7 +91,7 @@ const axios = require("axios");
 const crypto = require("crypto");
 const cheerio = require("cheerio");
 const OpenAI = require("openai");
-const { sup, hey, unsendMessage, idknow, funD, days, months, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, gcolorn, example, heyMelbin, heySim, domains, problemE } = require("./src/arrays.js");
+const { sup, hey, unsendMessage, funD, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, example, heyMelbin, heySim, domains } = require("./src/arrays.js");
 
 let threadInfo = {};
 let traceroute = {};
@@ -327,7 +327,7 @@ function redfox_fb(fca_state, login, cb) {
             utils.logged("api_login_error " + login);
             accounts = accounts.filter((item) => item !== login);
             for (threads in settingsThread) {
-                if (settingsThread[threads].lock == login) {
+                if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                     delete settingsThread[threads];
                 }
             }
@@ -416,7 +416,7 @@ function redfox_fb(fca_state, login, cb) {
                 utils.logged("api_listen_error " + login);
                 accounts = accounts.filter((item) => item !== login);
                 for (threads in settingsThread) {
-                    if (settingsThread[threads].lock == login) {
+                    if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                         delete settingsThread[threads];
                     }
                 }
@@ -441,6 +441,9 @@ function redfox_fb(fca_state, login, cb) {
 
             if (!settingsThread[event.threadID]) {
                 settingsThread[event.threadID] = settingsThread.default;
+                api.muteThread(event.threadID, -1, (err) => {
+                    if (err) utils.logged(err);
+                });
             }
 
             if (!settingsThread[event.threadID].lock && !isMyId(api.getCurrentUserID())) {
@@ -634,14 +637,16 @@ function redfox_fb(fca_state, login, cb) {
                             members: par.length,
                         });
 
-                        api.muteThread(event.threadID, -1, (err) => {
-                            if (err) utils.logged(err);
-                        });
-
                         sendMessageOnly(api, event, {
                             body:
                                 "Bot successfully connected to this thread\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion."
                         });
+                        sendMessageOnly(api, event, {
+                            body:
+                                "Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io",
+                            url: "https://mrepol742.github.io"
+                        });
+
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
@@ -1228,7 +1233,7 @@ function redfox_fb(fca_state, login, cb) {
                                     groups.active.pop(event.threadID);
                                     utils.logged("event_log_unsubsribe " + event.threadID + " ROOT " + api.getCurrentUserID());
                                     for (threads in settingsThread) {
-                                        if (settingsThread[threads].lock == api.getCurrentUserID()) {
+                                        if (settingsThread[threads].lock && settingsThread[threads].lock == api.getCurrentUserID()) {
                                             delete settingsThread[threads];
                                         }
                                     }
@@ -1602,17 +1607,11 @@ async function ai22(api, event, query, query2) {
                         }
                     }
                 } catch (error) {
-                    if (error.response) {
-                        if (error.response.status >= 400) {
                             sendMessage(
                                 api,
                                 event,
                                 "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                             );
-                        } else {
-                            sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                        }
-                    }
                 }
             });
         }
@@ -1983,17 +1982,11 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                if (error.response) {
-                    if (error.response.status >= 400) {
                         sendMessage(
                             api,
                             event,
                             "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
-                    } else {
-                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                    }
-                }
             }
         }
     } else if (testCommand(api, query2, "chad", event.senderID)) {
@@ -2084,17 +2077,11 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                if (error.response) {
-                    if (error.response.status >= 400) {
                         sendMessage(
                             api,
                             event,
                             "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
-                    } else {
-                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                    }
-                }
             }
         }
     } else if (testCommand(api, query2, "melbin", event.senderID)) {
@@ -2127,17 +2114,11 @@ async function ai(api, event) {
                 }
                 sendAiMessage(api, event, text);
             } catch (error) {
-                if (error.response) {
-                    if (error.response.status >= 400) {
                         sendMessage(
                             api,
                             event,
                             "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
-                    } else {
-                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                    }
-                }
             }
         }
     } else if (testCommand(api, query2, "openai", event.senderID)) {
@@ -2187,17 +2168,11 @@ async function ai(api, event) {
                 addToken(login, "davinci", response);
                 sendAiMessage(api, event, response.choices[0].text);
             } catch (error) {
-                if (error.response) {
-                    if (error.response.status >= 400) {
                         sendMessage(
                             api,
                             event,
                             "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
-                    } else {
-                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                    }
-                }
             }
         }
     } else if (testCommand(api, query2, "dell", event.senderID)) {
@@ -2230,18 +2205,11 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, message);
             } catch (error) {
-                utils.logged(error);
-                if (error.response) {
-                    if (error.response.status >= 400) {
                         sendMessage(
                             api,
                             event,
                             "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
                         );
-                    } else {
-                        sendMessage(api, event, idknow[Math.floor(Math.random() * idknow.length)]);
-                    }
-                }
             }
         }
     } else if (testCommand(api, query2, "poli", event.senderID)) {
@@ -2292,7 +2260,7 @@ async function ai(api, event) {
         api.removeUserFromGroup(login, event.threadID, (err) => {
             if (err) return utils.logged(err);
             for (threads in settingsThread) {
-                if (settingsThread[threads].lock == login) {
+                if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                     delete settingsThread[threads];
                 }
             }
@@ -2449,7 +2417,12 @@ async function ai(api, event) {
                     });
                 });
             } catch (err) {
-                sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)]);
+                utils.logged(err);
+                sendMessage(
+                    api,
+                    event,
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                );
             }
         }
     } else if (testCommand(api, query2, "say", event.senderID)) {
@@ -2581,7 +2554,11 @@ async function ai(api, event) {
             dns.resolve4(data.join(" "), (err, addresses) => {
                 if (err) {
                     utils.logged(err);
-                    sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)]);
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                     return;
                 }
                 sendMessage(api, event, addresses[0]);
@@ -2599,7 +2576,11 @@ async function ai(api, event) {
             dns.resolve6(data.join(" "), (err, addresses) => {
                 if (err) {
                     utils.logged(err);
-                    sendMessage(api, event, problemE[Math.floor(Math.random() * problemE.length)]);
+                    sendMessage(
+                        api,
+                        event,
+                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                    );
                     return;
                 }
                 sendMessage(api, event, addresses[0]);
@@ -4026,7 +4007,7 @@ async function ai(api, event) {
                 sendMessage(api, event, cors + " deauthorize!");
             }
         }
-    } else if (testCommand(api, query2, "changeBio", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "changeBio", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changeBio text" + "\n " + example[Math.floor(Math.random() * example.length)] + " changebio hello world");
@@ -4038,7 +4019,7 @@ async function ai(api, event) {
             });
             sendMessage(api, event, "Bio Message is now set to `" + data.join(" ") + "`");
         }
-    } else if (testCommand(api, query2, "handleFriendRequest", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "handleFriendRequest", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleFriendRequest uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleFriendRequest 0000000000000");
@@ -4347,7 +4328,7 @@ async function ai(api, event) {
             );
         } else {
             let pref = getDataFromQuery(data).toLowerCase();
-            if (gcolorn.includes(pref)) {
+            if (Object.keys(gcolor).includes(pref)) {
                 api.setThreadColor(gcolor[pref], event.threadID, (err) => {
                     if (err) {
                         sendMessage(api, event, "Unable to change the group color. Please try again later.");
@@ -6005,10 +5986,12 @@ function reaction(api, event, query, input) {
         sendMessage(api, event, "Have an emergency? Don't wait call 911!");
     } else if (query == "same") {
         sendMessage(api, event, "(2)");
-    } else if (query == "k" || query == "y") {
+    } else if (query == "k") {
         sendMessage(api, event, "women");
     } else if (query == "wdym") {
         sendMessage(api, event, "what do you mean?");
+    } else if (query == "stfu") {
+        sendMessage(api, event, "sht da fck up!!!");
     }
 }
 
@@ -6217,14 +6200,14 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
         });
     }
     if (message == "" || (message.body && message.body == "")) {
-        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice, false);
+        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice, false, true);
     } else {
         utils.logged("send_message " + event.threadID + " " + JSON.stringify(message));
-        sendMMMS(api, message, thread_id, message_id, event.senderID, voice, false);
+        sendMMMS(api, message, thread_id, message_id, event.senderID, voice, false, true);
     }
 }
 
-async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font) {
+async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
     if (voiceE && typeof message === "string" && message.length < 200 && groups.tts.includes(thread_id)) {
         const url = GoogleTTS.getAudioUrl(message, voiceOptions);
         let time = utils.getTimestamp();
@@ -6254,7 +6237,7 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font
             updateFont1 = await updateFont(message, id);
         }
         let num = Math.floor(Math.random() * 10);
-        if (num % 2 == 0) {
+        if (num % 2 == 0 || sendMessageOnly) {
             api.sendMessage(updateFont1, thread_id, (err, messageInfo) => {
                 sendMessageErr(api, thread_id, message_id, id, err);
             });
@@ -8900,33 +8883,41 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
         regex = true;
     }
 
-    if (permission != "user") {
-        if (permission == "root") {
-            if (!isMyId(senderID)) {
-                // deny access to root user if the id did not match
-                return false;
-            }
-        } else if (permission == "owner") {
-            if (!(settings[api.getCurrentUserID()].owner == senderID)) {
-                if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
-                    // check if the account owner is the sender and
-                    // also verify if the sender is admin if not false
-                    return false;
-                }
-                if (users.admin.includes(senderID) && api.getCurrentUserID() ==  settings.shared.root) {
-                    // prevent admins from accessing the control of the root account
-                    return false;
-                }
-            }
-        }
-    }
-
     prefix = prefix.toLowerCase().replace("--", " --");
 
     if (!regex) return prefix == message;
 
     const regExp = new RegExp("(^" + prefix + "|^" + prefix + "s)");
-    return regExp.test(message);
+    if (regExp.test(message)) {
+        if (permission != "user") {
+            if (permission == "root") {
+                if (!isMyId(senderID)) {
+                    // deny access to root user if the id did not match
+                    utils.logged("access_denied root " + senderID);
+                    return false;
+                }
+                utils.logged("access_granted root " + senderID);
+            } else if (permission == "owner") {
+                if (!(settings[api.getCurrentUserID()].owner == senderID)) {
+                    if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
+                        // check if the account owner is the sender and
+                        // also verify if the sender is admin if not false
+                        utils.logged("access_denied user is not admin " + senderID);
+                        return false;
+                    }
+                    if (users.admin.includes(senderID) && api.getCurrentUserID() ==  settings.shared.root) {
+                        // prevent admins from accessing the control of the root account
+                        utils.logged("access_denied access to root " + senderID);
+                        return false;
+                    }
+                    utils.logged("access_granted admin " + senderID);
+                }
+                utils.logged("access_granted owner " + senderID);
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 function addBalance(user, token) {

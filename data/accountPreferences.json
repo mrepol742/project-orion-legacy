@@ -22,11 +22,11 @@
       },
       "dell": 0
     },
-    "owner": "100058594941918"
+    "owner": ""
   },
   "shared": {
     "root": "100071743848974",
-    "delay": false,
+    "delay": true,
     "frequency_penalty": "0",
     "temperature": "0.5",
     "max_tokens": "2048",
@@ -59,9 +59,9 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 4598,
-        "completion_tokens": 1223,
-        "total_tokens": 5821
+        "prompt_tokens": 4964,
+        "completion_tokens": 1300,
+        "total_tokens": 6264
       },
       "davinci": {
         "prompt_tokens": 0,
@@ -97,81 +97,6 @@
     },
     "owner": "100092581786728"
   },
-  "100046351269353": {
-    "stop": false,
-    "events": true,
-    "forceLogin": true,
-    "autoMarkRead": false,
-    "online": true,
-    "selfListen": true,
-    "typingIndicator": false,
-    "autoMarkDelivery": false,
-    "maintenance": false,
-    "tokens": {
-      "gpt": {
-        "prompt_tokens": 2795,
-        "completion_tokens": 761,
-        "total_tokens": 3556
-      },
-      "davinci": {
-        "prompt_tokens": 0,
-        "completion_tokens": 0,
-        "total_tokens": 0
-      },
-      "dell": 0
-    },
-    "owner": "100088347234178"
-  },
-  "61553801171635": {
-    "stop": false,
-    "events": true,
-    "forceLogin": true,
-    "autoMarkRead": false,
-    "online": true,
-    "selfListen": true,
-    "typingIndicator": false,
-    "autoMarkDelivery": false,
-    "maintenance": false,
-    "tokens": {
-      "gpt": {
-        "prompt_tokens": 377,
-        "completion_tokens": 18,
-        "total_tokens": 395
-      },
-      "davinci": {
-        "prompt_tokens": 0,
-        "completion_tokens": 0,
-        "total_tokens": 0
-      },
-      "dell": 0
-    },
-    "owner": "100088347234178"
-  },
-  "100094974786751": {
-    "stop": false,
-    "events": true,
-    "forceLogin": true,
-    "autoMarkRead": false,
-    "online": true,
-    "selfListen": true,
-    "typingIndicator": false,
-    "autoMarkDelivery": false,
-    "maintenance": false,
-    "tokens": {
-      "gpt": {
-        "prompt_tokens": 760,
-        "completion_tokens": 242,
-        "total_tokens": 1002
-      },
-      "davinci": {
-        "prompt_tokens": 0,
-        "completion_tokens": 0,
-        "total_tokens": 0
-      },
-      "dell": 0
-    },
-    "owner": "100088347234178"
-  },
   "61553500994391": {
     "stop": false,
     "events": true,
@@ -195,7 +120,7 @@
       },
       "dell": 0
     },
-    "owner": "100039660703227"
+    "owner": "100071743848974"
   },
   "100093516094229": {
     "stop": false,
