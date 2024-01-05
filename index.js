@@ -658,6 +658,10 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
+            if (settings[login].maintenance && !["message", "message_reply"].includes(event.type)) {
+                return;
+            }
+
             switch (event.type) {
                 case "message":
                 case "message_reply":
@@ -4531,8 +4535,7 @@ async function ai(api, event) {
             return;
         }
         const login = api.getCurrentUserID();
-        if (settings[login].owner && settings[login].owner != "") {
-            const uid = settings[login].owner;
+        const uid = settings[login].owner;
 
             api.getUserInfo(uid, (err, info) => {
                 if (err) return utils.logged(err);
@@ -4547,9 +4550,6 @@ async function ai(api, event) {
                     unLink(dirp);
                 });
             });
-        } else {
-            sendMessage(api, event, "This account has no owner set!");
-        }
 
     } else if (testCommand(api, query2, "clear--thread-lock", event.senderID, "admin", true)) {
         if (!settings[login].maintenance) {
