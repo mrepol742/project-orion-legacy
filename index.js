@@ -406,10 +406,9 @@ function redfox_fb(fca_state, login, cb) {
 
         let isAppState = true;
 
-        if (!(settings.shared.restart[0] && settings.shared.restart[1]) && isCalled && settings.shared.restart[2] == login) {
+        if (settings.shared.restart && settings.shared.restart[2] == login) {
             api.sendMessage(updateFont("Successfully restarted", settings.shared.restart[0]), settings.shared.restart[0], settings.shared.restart[1]);
-            settings.shared.restart = [];
-            isCalled = false;
+            delete settings.shared.restart;
         }
 
         api.eventListener(async (err, event) => {
@@ -598,7 +597,7 @@ function redfox_fb(fca_state, login, cb) {
                     rs.push(event.threadID);
                     rs.push(event.messageID);
                     rs.push(api.getCurrentUserID());
-                    settings.shared.restart = rs;
+                    settings.shared["restart"] = rs;
                     sendMessage(api, event, "Restarting program...");
                     await sleep(2000);
                     process.exit(0);
