@@ -3,7 +3,7 @@
 /*jshint -W069 */
 /*jshint -W083 */
 /*jshint -W088 */
-/*jshint -W038 */;
+/*jshint -W038 */
 
 module.exports = function (_defaultFuncs, _api, _ctx) {
     // Currently the only colors that can be passed to api.setThreadColor(); may change if Facebook adds more
