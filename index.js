@@ -4531,16 +4531,16 @@ async function ai(api, event) {
             return;
         }
         const login = api.getCurrentUserID();
-        if (settings[login].owner) {
-            let uid = settings[login].owner;
+        if (settings[login].owner && settings[login].owner != "") {
+            const uid = settings[login].owner;
 
             api.getUserInfo(uid, (err, info) => {
                 if (err) return utils.logged(err);
                 let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
                 downloadFile(getProfilePic(uid), dirp).then(async (response) => {
-                    
+                    const fname = info[uid]["firstName"];
                     let message = {
-                        body: utils.formatOutput("Account Owner", [info[uid]["firstName"], uid], "github.com/prj-orion"),
+                        body: utils.formatOutput("Account Owner", [fname, uid], "github.com/prj-orion"),
                         attachment: fs.createReadStream(dirp),
                     };
                     sendMessage(api, event, message);
