@@ -579,7 +579,8 @@
     "leave": false,
     "unsend": true,
     "nsfw": true,
-    "cmd": 1
+    "cmd": 1,
+    "lock": "100094974786751"
   },
   "7128468133851155": {
     "leave": false,
@@ -864,7 +865,8 @@
     "leave": false,
     "unsend": true,
     "nsfw": true,
-    "cmd": 1
+    "cmd": 1,
+    "lock": "100094974786751"
   },
   "7174161545980108": {
     "leave": false,
@@ -908,7 +910,8 @@
     "leave": false,
     "unsend": true,
     "nsfw": true,
-    "cmd": 1
+    "cmd": 1,
+    "lock": "100094974786751"
   },
   "6554351168018015": {
     "leave": false,
@@ -1021,7 +1024,8 @@
     "leave": false,
     "unsend": true,
     "nsfw": true,
-    "cmd": 1
+    "cmd": 1,
+    "lock": "100094974786751"
   },
   "6610513115732821": {
     "leave": false,
@@ -1132,7 +1136,8 @@
     "leave": false,
     "unsend": true,
     "nsfw": true,
-    "cmd": 1
+    "cmd": 1,
+    "lock": "100094974786751"
   },
   "6354153811328554": {
     "leave": false,
@@ -2083,7 +2088,8 @@
     "leave": false,
     "unsend": true,
     "nsfw": true,
-    "cmd": 1
+    "cmd": 1,
+    "lock": "61553500994391"
   },
   "6307981579301699": {
     "leave": false,
@@ -2346,7 +2352,8 @@
     "leave": false,
     "unsend": true,
     "nsfw": true,
-    "cmd": 1
+    "cmd": 1,
+    "lock": "61553500994391"
   },
   "24765257839739361": {
     "leave": false,
@@ -3259,6 +3266,34 @@
     "lock": "100094974786751"
   },
   "6408837989226409": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1,
+    "lock": "100094974786751"
+  },
+  "6869836209747102": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1,
+    "lock": "100094974786751"
+  },
+  "6719114781550390": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1,
+    "lock": "100094974786751"
+  },
+  "25309162615349184": {
+    "leave": false,
+    "unsend": true,
+    "nsfw": true,
+    "cmd": 1,
+    "lock": "100094974786751"
+  },
+  "7516935291668587": {
     "leave": false,
     "unsend": true,
     "nsfw": true,
