@@ -4,7 +4,7 @@
 /*jshint -W069 */
 /*jshint -W083 */
 /*jshint -W088 */
-/*jshint -W038 */;
+/*jshint -W038 */
 
 var utils = require("../utils");
 var mqtt = require("mqtt");

@@ -326,7 +326,7 @@ function redfox_fb(fca_state, login, cb) {
             accounts = accounts.filter((item) => item !== login);
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                    delete settingsThread[threads]['lock'];
+                    delete settingsThread[threads]["lock"];
                 }
             }
             unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
@@ -419,7 +419,7 @@ function redfox_fb(fca_state, login, cb) {
                 accounts = accounts.filter((item) => item !== login);
                 for (threads in settingsThread) {
                     if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                        delete settingsThread[threads]['lock'];
+                        delete settingsThread[threads]["lock"];
                     }
                 }
 
@@ -441,23 +441,25 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if (!settingsThread[event.threadID]) {
-                settingsThread[event.threadID] = settingsThread.default;
-                api.muteThread(event.threadID, -1, (err) => {
-                    if (err) utils.logged(err);
-                });
-            }
-
             if (!isMyId(api.getCurrentUserID())) {
-                settingsThread[event.threadID]['lock'] = api.getCurrentUserID();
-                utils.logged("group_register " + api.getCurrentUserID());
+                if (!settingsThread[event.threadID]) {
+                    settingsThread[event.threadID] = settingsThread.default;
+                    api.muteThread(event.threadID, -1, (err) => {
+                        if (err) utils.logged(err);
+                    });
+                }    
+
+                if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
+                    return;
+                }
+
+                settingsThread[event.threadID]["lock"] = api.getCurrentUserID();
+                utils.logged("thread_lock " + event.threadID + " to " + api.getCurrentUserID());
             }
 
-            if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
-                return;
-            }
 
-            if ((event.type == "message" || event.type == "message_reply") && (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
+            if ((event.type == "message" || event.type == "message_reply") && 
+            (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
                 let body = event.body;
                 let result = !!body.match(/^[!@#$%&*~\-=_|?+/<>:;]/);
                 if (result) {
@@ -603,20 +605,6 @@ function redfox_fb(fca_state, login, cb) {
                 }
 
                 if (settings[login].stop) {
-                    return;
-                }
-
-                if (settings[login].maintenance && settings[login].owner != event.senderID && !users.admin.includes(event.senderID) && settings.shared.root != api.getCurrentUserID()) {
-                    if (event.type == "message" || event.type == "message_reply") {
-                        if (isGoingToFast1(event, threadMaintenance, 30)) {
-                            return;
-                        }
-
-                        sendMessage(api, event, {
-                            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moment. \n\nhttps://mrepol742.github.io/project-orion/chat",
-                            url: "https://mrepol742.github.io/project-orion/chat?msg=" + btoa(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
-                        });
-                    }
                     return;
                 }
 
@@ -1071,7 +1059,7 @@ function redfox_fb(fca_state, login, cb) {
                                     }
                                 } else {
                                     if (event.logMessageData.TARGET_ID == api.getCurrentUserID()) {
-                                        sendMessage(api, event, "Finally i am an admin now.. " + "I can finally removes those who fucks me.");
+                                        sendMessage(api, event, "Finally.. " + " at last i can removes those who fu*ks me.");
                                         api.getThreadInfo(event.threadID, async (err, gc) => {
                                             if (err) return utils.logged(err);
                                             let admins = gc.adminIDs;
@@ -1235,7 +1223,7 @@ function redfox_fb(fca_state, login, cb) {
                                     utils.logged("event_log_unsubsribe " + event.threadID + " ROOT " + api.getCurrentUserID());
                                     for (threads in settingsThread) {
                                         if (settingsThread[threads].lock && settingsThread[threads].lock == api.getCurrentUserID()) {
-                                            delete settingsThread[threads]['lock'];
+                                            delete settingsThread[threads]["lock"];
                                         }
                                     }
                                     return;
@@ -1252,7 +1240,7 @@ function redfox_fb(fca_state, login, cb) {
                                             sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
                                             utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
                                         } else {
-                                            if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID) {
+                                            if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID && settings.shared.root != event.senderID) {
                                                 api.addUserToGroup(id, event.threadID, (err) => {
                                                     if (err) return utils.logged(err);
                                                     api.getThreadInfo(event.threadID, (err, gc) => {
@@ -1336,8 +1324,8 @@ async function ai22(api, event, query, query2) {
         if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
             sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
         } else {
-            sendMessage(api, event, "Message are been schedule to send to " + groups.list.length + " groups.");
-            sendMessageToAll(api, event);
+            sendMessage(api, event, "Under maintenance.");
+          //  sendMessageToAll(api, event);
         }
     } else if (testCommand(api, query, "unsend", event.senderID, "owner", true)) {
         if (event.messageReply.senderID == api.getCurrentUserID()) {
@@ -2242,7 +2230,7 @@ async function ai(api, event) {
                 );
             }
         }
-    } else if (testCommand(api, query, "clear--cache", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "clear--cache", event.senderID, "admin", true)) {
         let count = 0;
         fs.readdir(__dirname + "/cache/", function (err, files) {
             if (err) {
@@ -2264,11 +2252,12 @@ async function ai(api, event) {
             if (err) return utils.logged(err);
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                    delete settingsThread[threads]['lock'];
+                    delete settingsThread[threads]["lock"];
                 }
             }
         });
     } else if (testCommand(api, query, "logout", event.senderID, "owner", true)) {
+        sendMessage(api, event, "sayonara... logging out!");
         api.logout((err) => {
             if (err) utils.logged(err);
         });
@@ -2290,21 +2279,29 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let construct = "";
+        let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
         for (let i = 0; i < accounts.length; i++) {
             getUserProfile(accounts[i], async function (name) {
                 if (name.name != undefined) {
-                    construct += "Name: " + name.name + "\nID: " + accounts[i];
+                    construct += "│ Name: " + name.name + "\n│ Uid: " + accounts[i];
                 } else {
-                    construct += "ID: " + accounts[i];
+                    construct += "│ Uid: " + accounts[i];
                 }
                 if (blockedCall.includes(accounts[i])) {
-                    construct += "\nStatus: Temporarily Blocked\n\n";
+                    construct += "\n│ Status: Temporarily Blocked";
                 } else {
-                    construct += "\nStatus: Online\n\n";
+                    if (settings[login].stop) {
+                        construct += "\n│ Status: Stop";
+                    } else if (settings[login].maintenance) {
+                        construct += "\n│ Status: Maintenance";
+                    } else {
+                        construct += "\n│ Status: Online";
+                    }
                 }
+                construct += "\n│ Owner: " + settings[login].owner + "\n│\n";
             });
         }
+        construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(api, event, construct);
     } else if (testCommand(api, query, "autoMarkRead--on", event.senderID, "owner", true)) {
         if (settings.shared.autoMarkRead) {
@@ -3846,6 +3843,9 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query, "fbi", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         let message = {
             attachment: fs.createReadStream(__dirname + "/src/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
@@ -3925,8 +3925,7 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (testCommand(api, query2, "shell", event.senderID)) {
-        if (isMyId(event.senderID)) {
+    } else if (testCommand(api, query2, "shell", event.senderID, "root")) {
             let data = input.split(" ");
             if (data.length < 2) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n " + example[Math.floor(Math.random() * example.length)] + " shell uptime");
@@ -3943,8 +3942,7 @@ async function ai(api, event) {
                     }
                 });
             }
-        }
-    } else if (testCommand(api, query, "acceptMessageRequest", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "handleMessageRequest", event.senderID, "owner", true)) {
         api.handleMessageRequest(event.senderID, true, (err) => {
             if (err) {
                 utils.logged(err);
@@ -3956,14 +3954,12 @@ async function ai(api, event) {
                 sendMessage(api, event, "Please check your inbox.");
             }
         });
-    } else if (testCommand(api, query2, "handleMessageRequest", event.senderID)) {
-        if (isMyId(event.senderID)) {
+    } else if (testCommand(api, query2, "handleMessageRequest--tid", event.senderID, "admin")) {
             let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " acceptmessagerequest 0000000000000");
+            if (data.length < 3) {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest --tid threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleMessageRequest --tid 0000000000000");
             } else {
-                data.shift();
-                let num = data.join(" ");
+                let num = getDataFromQuery(data);
                 // TODO: check if true accept else deny
                 api.handleMessageRequest(num, true, (err) => {
                     if (err) {
@@ -3977,7 +3973,6 @@ async function ai(api, event) {
                     }
                 });
             }
-        }
     } else if (testCommand(api, query2, "cors--add", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
@@ -4026,7 +4021,6 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleFriendRequest uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleFriendRequest 0000000000000");
         } else {
             data.shift();
-            let num = data.join(" ");
             api.handleFriendRequest(data.join(" "), true, (err) => {
                 if (err) {
                     utils.logged(err);
@@ -4116,6 +4110,9 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "top", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         let lead = [];
         for (let i = 0; i < users.list.length; i++) {
             if (users.list[i].balance) {
@@ -4132,6 +4129,9 @@ async function ai(api, event) {
         }
         sendMessage(api, event, utils.formatOutput("Top Users Leaderboards", construct, "github.com/prj-orion"));
     } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
                 let sendID = event.senderID;
@@ -4287,6 +4287,9 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "add--user", event.senderID)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
@@ -4317,6 +4320,9 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "thread--theme", event.senderID)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(
@@ -4519,7 +4525,44 @@ async function ai(api, event) {
             }
             fontIgnore(api, event, id);
         }
-    } else if (testCommand(api, query2, "clear--data", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "owner", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        const login = api.getCurrentUserID();
+        if (settings[login].owner) {
+            let uid = settings[login].owner;
+
+            api.getUserInfo(uid, (err, info) => {
+                if (err) return utils.logged(err);
+                let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
+                downloadFile(getProfilePic(uid), dirp).then(async (response) => {
+                    
+                    let message = {
+                        body: utils.formatOutput("Account Owner", [info[uid]["firstName"], uid], "github.com/prj-orion"),
+                        attachment: fs.createReadStream(dirp),
+                    };
+                    sendMessage(api, event, message);
+                    unLink(dirp);
+                });
+            });
+        } else {
+            sendMessage(api, event, "This account has no owner set!");
+        }
+
+    } else if (testCommand(api, query2, "clear--thread-lock", event.senderID, "admin", true)) {
+        if (!settings[login].maintenance) {
+            return sendMessage(api, event, "Maintenance is disabled!");
+        }
+        let count = 0;
+        for (threads in settingsThread) {
+            if (settingsThread[threads].lock) {
+                delete settingsThread[threads]["lock"];
+                count++;
+            }
+        }
+        sendMessage(api, event, count + " deleted.");
+    } else if (testCommand(api, query2, "clear--dup-data", event.senderID, "root", true)) {
         if (!settings[login].maintenance) {
             return sendMessage(api, event, "Maintenance is disabled!");
         }
@@ -4832,7 +4875,7 @@ async function ai(api, event) {
                 sendMessage(api, event, message);
             });
         } else {
-            sendMessage(api, event, "[" + event.senderID + "]");
+            sendMessage(api, event, utils.formatOutput("!--!", JSON.parse("[" + event.senderID + "]"), "github.com/prj-orion"));
         }
     } else if (testCommand(api, query2, "cmd", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -6336,6 +6379,19 @@ function containsAny(str, substrings) {
 }
 
 function isGoingToFast(api, event) {
+    const login = api.getCurrentUserID();
+    if (settings[login].maintenance && settings[login].owner != event.senderID && !users.admin.includes(event.senderID) && settings.shared.root != event.senderID) {
+        if (isGoingToFast1(event, threadMaintenance, 30)) {
+            return true;
+        }
+
+        sendMessage(api, event, {
+            body: "Hold on a moment this system is currently under maintenance...I will be right back in few moment. \n\nhttps://mrepol742.github.io/project-orion/chat",
+            url: "https://mrepol742.github.io/project-orion/chat?msg=" + btoa(event.body) + "&utm_source=messenger&ref=messenger.com&utm_campaign=maintenance",
+        });
+        return true;
+    }
+
     let eventB = event.body;
     let input = eventB.normalize("NFKC");
     commandCalls++;
@@ -8891,7 +8947,7 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
     if (!permission) {
         permission = "user";
     }
-    
+
     if (!regex) {
         regex = false;
     }
@@ -8903,8 +8959,8 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
         return false;
     }
     const regExp = new RegExp("(^" + prefix + "|^" + prefix + "s)");
-   if (regExp.test(message)) return checkCmdPermission(api, permission, senderID);
-return false;
+    if (regExp.test(message)) return checkCmdPermission(api, permission, senderID);
+    return false;
 }
 
 function checkCmdPermission(api, permission, senderID) {
@@ -8917,7 +8973,7 @@ function checkCmdPermission(api, permission, senderID) {
             }
             utils.logged("access_granted root " + senderID);
         } else if (permission == "owner") {
-            if (!(settings[api.getCurrentUserID()].owner == senderID)) {
+            if (!(settings[api.getCurrentUserID()].owner == senderID) || api.getCurrentUserID() == senderID) {
                 if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
                     // check if the account owner is the sender and
                     // also verify if the sender is admin if not false
