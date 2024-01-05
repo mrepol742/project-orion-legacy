@@ -448,12 +448,14 @@ function redfox_fb(fca_state, login, cb) {
                     });
                 }    
 
+                if (!settingsThread[event.threadID].lock) {
+                    settingsThread[event.threadID]["lock"] = api.getCurrentUserID();
+                    utils.logged("thread_lock " + event.threadID + " to " + api.getCurrentUserID());
+                }
+
                 if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
                     return;
                 }
-
-                settingsThread[event.threadID]["lock"] = api.getCurrentUserID();
-                utils.logged("thread_lock " + event.threadID + " to " + api.getCurrentUserID());
             }
 
 
