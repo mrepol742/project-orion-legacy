@@ -45,7 +45,9 @@
       "http://0.0.0.0:8000"
     ],
     "restart": [],
-    "pin": {}
+    "pin": {
+      "6561269570663182": "Rule don't change the photo🙂"
+    }
   },
   "100071743848974": {
     "stop": false,
@@ -81,17 +83,17 @@
     "selfListen": true,
     "typingIndicator": false,
     "autoMarkDelivery": false,
-    "maintenance": false,
+    "maintenance": true,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 369,
-        "completion_tokens": 108,
-        "total_tokens": 477
+        "prompt_tokens": 749,
+        "completion_tokens": 176,
+        "total_tokens": 925
       },
       "davinci": {
-        "prompt_tokens": 0,
-        "completion_tokens": 0,
-        "total_tokens": 0
+        "prompt_tokens": 38,
+        "completion_tokens": 20,
+        "total_tokens": 58
       },
       "dell": 0
     },
@@ -109,9 +111,9 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 6159,
-        "completion_tokens": 868,
-        "total_tokens": 7027
+        "prompt_tokens": 8176,
+        "completion_tokens": 1576,
+        "total_tokens": 9752
       },
       "davinci": {
         "prompt_tokens": 0,
@@ -134,9 +136,9 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 815,
-        "completion_tokens": 264,
-        "total_tokens": 1079
+        "prompt_tokens": 2537,
+        "completion_tokens": 1188,
+        "total_tokens": 3725
       },
       "davinci": {
         "prompt_tokens": 0,
@@ -145,7 +147,7 @@
       },
       "dell": 0
     },
-    "owner": "100065290644543"
+    "owner": "61554713339075"
   },
   "100094974786751": {
     "stop": false,
@@ -159,14 +161,14 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 69146,
-        "completion_tokens": 20079,
-        "total_tokens": 89225
+        "prompt_tokens": 95918,
+        "completion_tokens": 30494,
+        "total_tokens": 126412
       },
       "davinci": {
-        "prompt_tokens": 262,
-        "completion_tokens": 158,
-        "total_tokens": 420
+        "prompt_tokens": 829,
+        "completion_tokens": 896,
+        "total_tokens": 1725
       },
       "dell": 0
     },
@@ -181,17 +183,17 @@
     "selfListen": true,
     "typingIndicator": false,
     "autoMarkDelivery": false,
-    "maintenance": true,
+    "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 5625,
-        "completion_tokens": 1311,
-        "total_tokens": 6936
+        "prompt_tokens": 10879,
+        "completion_tokens": 2188,
+        "total_tokens": 13067
       },
       "davinci": {
-        "prompt_tokens": 380,
-        "completion_tokens": 224,
-        "total_tokens": 604
+        "prompt_tokens": 921,
+        "completion_tokens": 504,
+        "total_tokens": 1425
       },
       "dell": 0
     },
@@ -234,14 +236,14 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 2377,
-        "completion_tokens": 402,
-        "total_tokens": 2779
+        "prompt_tokens": 3614,
+        "completion_tokens": 825,
+        "total_tokens": 4439
       },
       "davinci": {
-        "prompt_tokens": 0,
-        "completion_tokens": 0,
-        "total_tokens": 0
+        "prompt_tokens": 152,
+        "completion_tokens": 28,
+        "total_tokens": 180
       },
       "dell": 0
     },
@@ -259,14 +261,14 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 7915,
-        "completion_tokens": 2149,
-        "total_tokens": 10064
+        "prompt_tokens": 22995,
+        "completion_tokens": 7629,
+        "total_tokens": 30624
       },
       "davinci": {
-        "prompt_tokens": 495,
-        "completion_tokens": 235,
-        "total_tokens": 730
+        "prompt_tokens": 645,
+        "completion_tokens": 327,
+        "total_tokens": 972
       },
       "dell": 0
     },
@@ -295,6 +297,6 @@
       },
       "dell": 0
     },
-    "owner": "61554782822811"
+    "owner": "61554713339075"
   }
 }
