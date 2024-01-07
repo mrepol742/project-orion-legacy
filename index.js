@@ -1582,18 +1582,22 @@ async function ai22(api, event, query, query2) {
             let filename = __dirname + "/cache/createimagevar_" + utils.getTimestamp() + ".png";
             downloadFile(url, filename).then(async (response2) => {
                 try {
-                    const response = await openai.createImageVariation(fs.createReadStream(filename), 4, "1024x1024");
+                    const response = await openai.images.createVariation({
+                        image: fs.createReadStream(filename), 
+                        n: 4,
+                        size: "1024x1024"
+                    });
                     let i;
                     let attch = [];
                     let time = utils.getTimestamp();
-                    for (i = 0; i < response.data.data.length; i++) {
+                    for (i = 0; i < response.data.length; i++) {
                         await sleep(1000);
                         let fname = __dirname + "/cache/createimagevar_" + i + "_" + time + ".png";
-                        await downloadFile(response.data.data[i].url, fname).then(async (response2) => {
+                        await downloadFile(response.data[i].url, fname).then(async (response2) => {
                             await attch.push(fs.createReadStream(fname));
                             unLink(fname);
                         });
-                        if (i == response.data.data.length) {
+                        if (i == response.data.length) {
                             let ss2 = {
                                 body: " ",
                                 attachment: attach,
@@ -1748,6 +1752,21 @@ async function ai(api, event) {
     if (event.type == "message_reply" && event.messageReply.senderID != event.senderID && event.messageReply.senderID != api.getCurrentUserID()) {
         return;
     }
+    if (event.type == "message_reply" && event.threadID == settings[login].owner) {
+        let messageReplyBody = event.messageReply.body;
+        let splitNL = messageReplyBody.split("\n");
+        let name = splitNL[2].normalize("NFKC").replace("│  name: ", "");
+        let id = splitNL[3].normalize("NFKC").replace("│  uid: ", "");
+        let tid = splitNL[4].normalize("NFKC").replace("│  tid: ", "");
+        let mid = splitNL[5].normalize("NFKC").replace("│  mid: ", "");
+        console.log(tid + " " + mid)
+        api.sendMessage(updateFont(event.body), tid, (err, messageInfo) => {
+            if (err) return utils.logged(err);
+            sendMessage(api, event, "Reply has been sent to " + name + " with an uid of " + id);
+        }, mid);
+        return;
+    }
+
     if (event.type == "message") {
         if (query == "addinstance") {
             sendMessage(api, event, "You need to reply to a message with an app state json array.");
@@ -2181,20 +2200,21 @@ async function ai(api, event) {
         } else {
             data.shift();
             try {
-                const response = await openai.image.create({
+                const response = await openai.images.generate({
+                    model: "dall-e-2",
                     prompt: data.join(" "),
                     n: 4,
                     size: "1024x1024",
                 });
-                settings.shared.tokens["dell"] += response.data.data.length;
+                settings.shared.tokens["dell"] += response.data.length;
                 let message = {
                     attachment: [],
                 };
                 sendMessage(api, event, "upload is now progress please wait...");
-                for (let i = 0; i < response.data.data.length; i++) {
+                for (let i = 0; i < response.data.length; i++) {
                     await sleep(1000);
                     let dir = __dirname + "/cache/createimg_" + utils.getTimestamp() + ".png";
-                    await downloadFile(response.data.data[i].url, dir).then((response) => {
+                    await downloadFile(response.data[i].url, dir).then((response) => {
                         message.attachment.push(fs.createReadStream(dir));
                         unLink(dir);
                     });
@@ -3163,7 +3183,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
             }
         }
-    } else if (testCommand(api, query, "ugly", event.senderID, "user", true) || testCommand(api, query, "rugly", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "ugly", event.senderID, "user", true) || testCommand(api, query, "ugly--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3173,7 +3193,7 @@ async function ai(api, event) {
 
                 let members = info.participantIDs.length;
                 var partner1 = 0;
-                if (query == "rugly") {
+                if (query == "ugly--random") {
                     partner1 = info.participantIDs[Math.floor(Math.random() * members)];
                 } else {
                     partner1 = event.senderID;
@@ -3209,7 +3229,7 @@ async function ai(api, event) {
                 });
             });
         } else {
-            sendMessage(api, event, "Why don't you love yourself?");
+            sendMessage(api, event, "Your ugly as wtf!!");
         }
     } else if (testCommand(api, query, "pair", event.senderID, "user", true) || testCommand(api, query, "pair--random", event.senderID, "user", true) || testCommand(api, query, "lovetest", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -3228,7 +3248,7 @@ async function ai(api, event) {
                 let members = info.participantIDs.length;
                 var partner1 = 0;
                 var partner2 = 0;
-                if (query == "pair--random") {
+                if (query == "pair --random") {
                     partner1 = info.participantIDs[Math.floor(Math.random() * members)];
                     partner2 = info.participantIDs[Math.floor(Math.random() * members)];
                 } else if (query == "pair") {
@@ -3238,7 +3258,13 @@ async function ai(api, event) {
                     partner1 = Object.keys(event.mentions)[0];
                     partner2 = Object.keys(event.mentions)[1];
                     if (!partner1 || !partner2) {
-                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name:@name" + "\n " + example[Math.floor(Math.random() * example.length)] + " lovetest @Edogawa Conan: @Ran Mouri");
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lovetest @name @name" + "\n " + example[Math.floor(Math.random() * example.length)] + " lovetest @Edogawa Conan @Ran Mouri");
+                    }
+                    if (partner1 == partner2) {
+                        return sendMessage(api, event, "talking 'bout self love!");
+                    }
+                    if (partner1 == settings.shared.root || partner2 == settings.shared.root) {
+                        return sendMessage(api, event, "impossible... just it.");
                     }
                 }
 
@@ -3884,11 +3910,17 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sendReport text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sendReport There is a problem in ______ that cause ______.");
         } else {
             data.shift();
-            let report = "send_message_report " + event.senderID + " " + data.join(" ");
-            utils.logged(report);
-            api.sendMessage(report, settings[login].owner, (err, messageInfo) => {
-                if (err) return utils.logged(err);
-                sendMessage(api, event, "The engineers have been notified.");
+            getUserProfile(event.senderID, async function (name) {
+                let nR = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
+                if (name.name != undefined) {
+                    nR += '│  name: ' + name.name + "\n";
+                }
+                nR += `│  uid: ` + event.senderID + `\n│  tid: ` + event.threadID + `\n│  mid: ` + event.messageID + `\n│\n└─ @ỹ@cmd-prj- orion`;
+                nR += "\n\n" + data.join(" ");
+                api.sendMessage(updateFont(nR), settings[login].owner, (err, messageInfo) => {
+                    if (err) return utils.logged(err);
+                    sendMessage(api, event, "The owner have been notified!");
+                });
             });
         }
     } else if (testCommand(api, query, "sync", event.senderID, "root", true)) {
@@ -6035,6 +6067,8 @@ function reaction(api, event, query, input) {
         sendMessage(api, event, "what do you mean?");
     } else if (query == "stfu") {
         sendMessage(api, event, "sht da fck up!!!");
+    } else if (query == "puff") {
+        sendMessage(api, event, "pufftt!$^&");
     }
 }
 
@@ -8419,13 +8453,14 @@ async function sendAiMessage(api, event, ss) {
             message.body = ss.replace(/\[(c|C)reatepicture=(.*?)\]/g, "");
             try {
                 utils.logged("create_picture " + sqq);
-                const response = await openai.createImage({
+                const response = await openai.images.generate({
+                    model: "dall-e-2",
                     prompt: sqq,
                     n: 1,
                     size: "1024x1024",
                 });
                 settings.shared.tokens["dell"] += 1;
-                let url = response.data.data[0].url;
+                let url = response.data[0].url;
                 utils.logged("downloading_attachment " + url);
                 if (/^(http|https):\/\//.test(url)) {
                     let dir = __dirname + "/cache/createimg_" + utils.getTimestamp() + ".png";
@@ -9009,10 +9044,6 @@ function addToken(login, type, data) {
 }
 
 function getDataFromQuery(arr, remove) {
-    if (!remove) {
-        remove = [0, 1];
-    }
-
     for (let i = remove.length - 1; i >= 0; i--) arr.splice(remove[i], 1);
 
     return arr.join(" ");
