@@ -169,22 +169,22 @@ const googleImageOptions = {
 };
 
 let errorResponse = {
-        choices: [
-            {
-                finish_reason: "error",
-                index: 0,
-                message: {
-                    content:
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues",
-                    role: "assistant",
-                },
+    choices: [
+        {
+            finish_reason: "error",
+            index: 0,
+            message: {
+                content:
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues",
+                role: "assistant",
             },
-        ],
-        usage: {
-            completion_tokens: 1,
-            prompt_tokens: 1,
-            total_tokens: 1,
-        }
+        },
+    ],
+    usage: {
+        completion_tokens: 1,
+        prompt_tokens: 1,
+        total_tokens: 1,
+    },
 };
 
 const openai = new OpenAI({
@@ -444,7 +444,7 @@ function redfox_fb(fca_state, login, cb) {
                     api.muteThread(event.threadID, -1, (err) => {
                         if (err) utils.logged(err);
                     });
-                }    
+                }
 
                 if (!settingsThread[event.threadID].lock) {
                     settingsThread[event.threadID]["lock"] = api.getCurrentUserID();
@@ -456,9 +456,7 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-
-            if ((event.type == "message" || event.type == "message_reply") && 
-            (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
+            if ((event.type == "message" || event.type == "message_reply") && (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
                 let body = event.body;
                 let result = !!body.match(/^[!@#$%&*~\-=_|?+/<>:;]/);
                 if (result) {
@@ -1328,7 +1326,7 @@ async function ai22(api, event, query, query2) {
             sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
         } else {
             sendMessage(api, event, "Under maintenance.");
-          //  sendMessageToAll(api, event);
+            //  sendMessageToAll(api, event);
         }
     } else if (testCommand(api, query, "unsend", event.senderID, "owner", true)) {
         if (event.messageReply.senderID == api.getCurrentUserID()) {
@@ -1554,12 +1552,12 @@ async function ai22(api, event, query, query2) {
 
                                     saveState();
 
-                                     for (pref in settings) {
+                                    for (pref in settings) {
                                         if (settings[pref].owner && settings[pref].owner == event.senderID) {
-                settings[login]["openai"] = settings[pref].openai;
-                break;
-            }
-        }
+                                            settings[login]["openai"] = settings[pref].openai;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         );
@@ -1589,9 +1587,9 @@ async function ai22(api, event, query, query2) {
                 try {
                     const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                     const response = await openai.images.createVariation({
-                        image: fs.createReadStream(filename), 
+                        image: fs.createReadStream(filename),
                         n: 4,
-                        size: "1024x1024"
+                        size: "1024x1024",
                     });
                     let i;
                     let attch = [];
@@ -1765,10 +1763,15 @@ async function ai(api, event) {
         let id = splitNL[3].normalize("NFKC").replace("│  uid: ", "");
         let tid = splitNL[4].normalize("NFKC").replace("│  tid: ", "");
         let mid = splitNL[5].normalize("NFKC").replace("│  mid: ", "");
-        api.sendMessage(updateFont(event.body), tid, (err, messageInfo) => {
-            if (err) return utils.logged(err);
-            sendMessage(api, event, "Reply has been sent to " + name + " with an uid of " + id);
-        }, mid);
+        api.sendMessage(
+            updateFont(event.body),
+            tid,
+            (err, messageInfo) => {
+                if (err) return utils.logged(err);
+                sendMessage(api, event, "Reply has been sent to " + name + " with an uid of " + id);
+            },
+            mid
+        );
         return;
     }
 
@@ -3928,7 +3931,7 @@ async function ai(api, event) {
             getUserProfile(event.senderID, async function (name) {
                 let nR = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
                 if (name.name != undefined) {
-                    nR += '│  name: ' + name.name + "\n";
+                    nR += "│  name: " + name.name + "\n";
                 }
                 nR += `│  uid: ` + event.senderID + `\n│  tid: ` + event.threadID + `\n│  mid: ` + event.messageID + `\n│\n└─ @ỹ@cmd-prj- orion`;
                 nR += "\n\n" + data.join(" ");
@@ -3978,22 +3981,22 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "shell", event.senderID, "root")) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n " + example[Math.floor(Math.random() * example.length)] + " shell uptime");
-            } else {
-                data.shift();
-                let sff = data.join(" ");
-                exec(sff, function (err, stdout, stderr) {
-                    let str = stdout + "\n\n" + stderr;
-                    let com = str.replaceAll(/\s+/g, "");
-                    if (com == "") {
-                        sendMessage(api, event, "Done.");
-                    } else {
-                        sendMessage(api, event, str);
-                    }
-                });
-            }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n " + example[Math.floor(Math.random() * example.length)] + " shell uptime");
+        } else {
+            data.shift();
+            let sff = data.join(" ");
+            exec(sff, function (err, stdout, stderr) {
+                let str = stdout + "\n\n" + stderr;
+                let com = str.replaceAll(/\s+/g, "");
+                if (com == "") {
+                    sendMessage(api, event, "Done.");
+                } else {
+                    sendMessage(api, event, str);
+                }
+            });
+        }
     } else if (testCommand(api, query, "handleMessageRequest", event.senderID, "owner", true)) {
         api.handleMessageRequest(event.senderID, true, (err) => {
             if (err) {
@@ -4007,24 +4010,24 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query2, "handleMessageRequest--tid", event.senderID, "admin")) {
-            let data = input.split(" ");
-            if (data.length < 3) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest --tid threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleMessageRequest --tid 0000000000000");
-            } else {
-                let num = getDataFromQuery(data);
-                // TODO: check if true accept else deny
-                api.handleMessageRequest(num, true, (err) => {
-                    if (err) {
-                        utils.logged(err);
-                        sendMessage(api, event, "Failed to accept request! Have you send a message first?");
-                    } else {
-                        api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
-                            if (err) utils.logged(err);
-                        });
-                        sendMessage(api, event, "Please check your inbox.");
-                    }
-                });
-            }
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest --tid threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleMessageRequest --tid 0000000000000");
+        } else {
+            let num = getDataFromQuery(data);
+            // TODO: check if true accept else deny
+            api.handleMessageRequest(num, true, (err) => {
+                if (err) {
+                    utils.logged(err);
+                    sendMessage(api, event, "Failed to accept request! Have you send a message first?");
+                } else {
+                    api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
+                        if (err) utils.logged(err);
+                    });
+                    sendMessage(api, event, "Please check your inbox.");
+                }
+            });
+        }
     } else if (testCommand(api, query2, "cors--add", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
@@ -4409,7 +4412,7 @@ async function ai(api, event) {
                     return;
                 }
                 let data = input.split(" ");
-                if (data.length < 3) {
+                if (data.length < 3 && event.type != "message_reply") {
                     sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
                 } else {
                     let id = Object.keys(event.mentions)[0];
@@ -4418,7 +4421,7 @@ async function ai(api, event) {
                         let attem = getIdFromUrl(user);
                         if (/^[0-9]+$/.test(attem)) {
                             id = attem;
-                        } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        } else if (/^[0-9]+$/.test(user)) {
                             id = user;
                         } else if (event.type == "message_reply") {
                             id = event.messageReply.senderID;
@@ -4440,7 +4443,7 @@ async function ai(api, event) {
         });
     } else if (testCommand(api, query2, "block--bot", event.senderID, "admin")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4449,7 +4452,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -4477,7 +4480,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "block--user", event.senderID, "owner")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4486,20 +4489,21 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return utils.logged(err);
-                        blockUser(api, event, data[0].userID);
-                    });
-                    return;
+                    for (user in users.list) {
+                        let name = users.list[user].name;
+                        if (name) {
+                        let userName = name.normalize("NFKC").toLowerCase()
+                           if (userName == user) {
+                            id = users.list[user].uid;
+                            break;
+                           }
+                        } 
+                    }
                 }
-            } else if (isMyId(id)) {
-                return;
-            }
+            } 
             blockUser(api, event, id);
         }
     } else if (testCommand(api, query2, "block--thread--tid", event.senderID, "owner")) {
@@ -4517,7 +4521,7 @@ async function ai(api, event) {
         disableTTS(api, event, event.threadID);
     } else if (testCommand(api, query2, "unblock--user", event.senderID, "owner")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4526,7 +4530,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -4549,14 +4553,13 @@ async function ai(api, event) {
         } else {
             data.shift();
             let count = 0;
-        for (pref in settings) {
-            if (settings[pref].owner && settings[pref].owner == event.senderID) {
-                settings[pref]["openai"] = data.join(" ");
-                count++;
+            for (pref in settings) {
+                if (settings[pref].owner && settings[pref].owner == event.senderID) {
+                    settings[pref]["openai"] = data.join(" ");
+                    count++;
+                }
             }
-        }
-        sendMessage(api, event, "Changes has been reflect to " + count + " accounts...");
-
+            sendMessage(api, event, "Changes has been reflect to " + count + " accounts...");
         }
     } else if (testCommand(api, query2, "setKey", event.senderID, "admin")) {
         let data = input.split(" ");
@@ -4569,7 +4572,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "fontIgnore", event.senderID, "owner")) {
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4579,7 +4582,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -4600,19 +4603,19 @@ async function ai(api, event) {
         const login = api.getCurrentUserID();
         const uid = settings[login].owner;
 
-            api.getUserInfo(uid, (err, info) => {
-                if (err) return utils.logged(err);
-                let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
-                downloadFile(getProfilePic(uid), dirp).then(async (response) => {
-                    const fname = info[uid]["firstName"];
-                    let message = {
-                        body: utils.formatOutput("Account Owner", [fname, uid], "github.com/prj-orion"),
-                        attachment: fs.createReadStream(dirp),
-                    };
-                    sendMessage(api, event, message);
-                    unLink(dirp);
-                });
+        api.getUserInfo(uid, (err, info) => {
+            if (err) return utils.logged(err);
+            let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
+            downloadFile(getProfilePic(uid), dirp).then(async (response) => {
+                const fname = info[uid]["firstName"];
+                let message = {
+                    body: utils.formatOutput("Account Owner", [fname, uid], "github.com/prj-orion"),
+                    attachment: fs.createReadStream(dirp),
+                };
+                sendMessage(api, event, message);
+                unLink(dirp);
             });
+        });
     } else if (testCommand(api, query2, "reset--thread-lock", event.senderID, "owner", true)) {
         delete settingsThread[event.threadID]["lock"];
         sendMessage(api, event, "Lock has been lift.");
@@ -4639,7 +4642,7 @@ async function ai(api, event) {
         sendMessage(api, event, "Cleaning done.");
     } else if (testCommand(api, query2, "add--admin", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4648,7 +4651,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -4664,7 +4667,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "add--token", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.lenght < 3) {
+        if (data.lenght < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4673,7 +4676,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -4699,7 +4702,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "remove--admin", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.lenght < 2) {
+        if (data.lenght < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4708,7 +4711,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
@@ -5020,7 +5023,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
@@ -5072,7 +5075,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
@@ -5216,7 +5219,7 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
@@ -5851,12 +5854,7 @@ async function ai(api, event) {
         sendMessage(api, event, "The state have saved successfully.");
     } else if (testCommand(api, query, "test", event.senderID, "user", true)) {
         if (crashes > 0) {
-            sendMessage(
-                api,
-                event,
-                crashes +
-                    " crash caught. \nhttps://github.com/prj-orion/issues"
-            );
+            sendMessage(api, event, crashes + " crash caught. \nhttps://github.com/prj-orion/issues");
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
         }
@@ -6989,7 +6987,11 @@ function removeUser(api, event, id) {
 }
 
 async function blockUser(api, event, id) {
-    if (isMyId(id)) {
+    if (isMyId(id) || accounts.includes(id)) {
+        if (isMyId(event.senderID)) {
+            return;
+        }
+        id = event.senderID;
         return;
     }
     const login = api.getCurrentUserID();
@@ -7022,7 +7024,12 @@ async function blockUser(api, event, id) {
                 users.admin = users.admin.filter((item) => item !== id);
                 aa += " have been blocked and " + getPronoun1(name.gender).toLowerCase() + " admin status is being revoked.";
             } else if (settings[login].owner == id) {
-                settings[login].owner = settings.shared.root;
+                for (pref in settings) {
+                    if (settings[pref].owner && settings[pref].owner == id) {
+                        settings[pref].owner = settings.shared.root;
+                        break;
+                    }
+                }
                 aa += " have been blocked and " + getPronoun1(name.gender).toLowerCase() + " ownership status is being revoked.";
             } else {
                 aa += " have been blocked.";
@@ -7034,7 +7041,12 @@ async function blockUser(api, event, id) {
             users.admin = users.admin.filter((item) => item !== id);
             sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
         } else if (settings[login].owner == id) {
-            settings[login].owner = settings.shared.root;
+            for (pref in settings) {
+                if (settings[pref].owner && settings[pref].owner == id) {
+                    settings[pref].owner = settings.shared.root;
+                    break;
+                }
+            }
             sendMessage(api, event, "You have been blocked and your ownership status is being revoked.");
         } else {
             sendMessage(api, event, "You have been blocked.");
@@ -9072,6 +9084,9 @@ function addToken(login, type, data) {
 }
 
 function getDataFromQuery(arr, remove) {
+    if (!remove) {
+        remove = [0, 1];
+    }
     for (let i = remove.length - 1; i >= 0; i--) arr.splice(remove[i], 1);
 
     return arr.join(" ");
@@ -9080,10 +9095,10 @@ function getDataFromQuery(arr, remove) {
 function getApiKey(login) {
     if (settings[login].openai) {
         return {
-            apiKey: settings[login].openai
+            apiKey: settings[login].openai,
         };
     }
     return {
-        apiKey: settings.shared.apikey.ai
+        apiKey: settings.shared.apikey.ai,
     };
 }
