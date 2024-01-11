@@ -4423,16 +4423,11 @@ async function ai(api, event) {
                             id = attem;
                         } else if (/^[0-9]+$/.test(user)) {
                             id = user;
-                        } else if (event.type == "message_reply") {
-                            id = event.messageReply.senderID;
                         } else {
-                            api.getUserID(user.replace("@", ""), (err, data) => {
-                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                removeUser(api, event, data[0].userID);
-                            });
+                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
                             return;
                         }
-                    } else if (isMyId(id)) {
+                    } else if (isMyId(id) && accounts.includes(id)) {
                         return;
                     }
                     removeUser(api, event, id);
@@ -4454,21 +4449,11 @@ async function ai(api, event) {
                     id = attem;
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return utils.logged(err);
-                        if (users.bot.includes(data[0].userID)) {
-                            sendMessage(api, event, "I already knew it.");
-                        } else {
-                            users.bot.push(data[0].userID);
-                            sendMessage(api, event, "Noted.");
-                        }
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
                     return;
                 }
-            } else if (isMyId(id)) {
+            } else if (isMyId(id) && accounts.includes(id)) {
                 return;
             }
             if (users.bot.includes(id)) {
@@ -4492,16 +4477,8 @@ async function ai(api, event) {
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else {
-                    for (user in users.list) {
-                        let name = users.list[user].name;
-                        if (name) {
-                        let userName = name.normalize("NFKC").toLowerCase()
-                           if (userName == user) {
-                            id = users.list[user].uid;
-                            break;
-                           }
-                        } 
-                    }
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
+                    return;
                 }
             } 
             blockUser(api, event, id);
@@ -4532,16 +4509,11 @@ async function ai(api, event) {
                     id = attem;
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        unblockUser(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
                     return;
                 }
-            } else if (isMyId(id)) {
+            } else if (isMyId(id) && accounts.includes(id)) {
                 return;
             }
             unblockUser(api, event, id);
@@ -4584,13 +4556,8 @@ async function ai(api, event) {
                     id = attem;
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        fontIgnore(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
                     return;
                 }
             }
@@ -4653,13 +4620,8 @@ async function ai(api, event) {
                     id = attem;
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        addAdmin(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
                     return;
                 }
             }
@@ -4678,16 +4640,8 @@ async function ai(api, event) {
                     id = attem;
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getUserProfile(data[0].userID, async function (user) {
-                            addBalance(user, 1500);
-                            sendMessage(api, event, "Added 1500 tokens to the account holder.");
-                        });
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
                     return;
                 }
             }
@@ -4713,16 +4667,11 @@ async function ai(api, event) {
                     id = attem;
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        remAdmin(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
                     return;
                 }
-            } else if (isMyId(id)) {
+            } else if (isMyId(id) && accounts.includes(id)) {
                 return;
             }
             remAdmin(api, event, id);
@@ -5027,17 +4976,12 @@ async function ai(api, event) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data2) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getAnimeGif(api, event, data2[0].userID, prrr);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
                     return;
                 }
             } else if (isMyId(id)) {
-                id = event.senderID;
+                return;
             }
             if (prrr == "headpat") {
                 prrr = "pat";
@@ -5079,17 +5023,12 @@ async function ai(api, event) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data2) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getPopcatImage(api, event, data2[0].userID, prrr);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
                     return;
                 }
             } else if (isMyId(id)) {
-                id = event.senderID;
+                return;
             }
             getPopcatImage(api, event, id, prrr);
         }
@@ -5223,16 +5162,12 @@ async function ai(api, event) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        id = data[0].userID;
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " stalk @Zero Two");
+                    return;
                 }
             } else if (isMyId(id)) {
-                id = event.senderID;
+                return;
             }
             await getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
                 if (response == null) {
@@ -6994,6 +6929,7 @@ async function blockUser(api, event, id) {
         id = event.senderID;
         return;
     }
+
     const login = api.getCurrentUserID();
     if (users.blocked.includes(id)) {
         sendMessage(api, event, "It's already blocked.");

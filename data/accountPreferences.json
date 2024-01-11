@@ -22,7 +22,8 @@
       },
       "dell": 0
     },
-    "owner": "61554713339075"
+    "owner": "100039660703227",
+    "openai": "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"
   },
   "shared": {
     "root": "100071743848974",
@@ -44,10 +45,12 @@
       "https://mrepol742.github.io",
       "http://0.0.0.0:8000"
     ],
-    "restart": [],
     "pin": {
-      "6561269570663182": "Don't test me\nDon't spam the bot",
-      "6874146942704204": "𝖣𝗈𝗇'𝗍 𝗍𝖾𝗌𝗍 𝗆𝖾"
+      "6561269570663182": "Don't mess with Bra King",
+      "6874146942704204": "Well y'all just stupid you know that",
+      "7006402626123275": "Don't mess with Bra King",
+      "7602271396454211": "Don't mess with Bra King",
+      "5737251886344292": "Bra King is the King"
     }
   },
   "100071743848974": {
@@ -73,7 +76,8 @@
       },
       "dell": 0
     },
-    "owner": "100071743848974"
+    "owner": "100071743848974",
+    "openai": "sk-somethinf"
   },
   "100093516094229": {
     "stop": false,
@@ -84,7 +88,7 @@
     "selfListen": true,
     "typingIndicator": false,
     "autoMarkDelivery": false,
-    "maintenance": true,
+    "maintenance": false,
     "tokens": {
       "gpt": {
         "prompt_tokens": 749,
@@ -98,7 +102,8 @@
       },
       "dell": 0
     },
-    "owner": "100071743848974"
+    "owner": "100071743848974",
+    "openai": "sk-somethinf"
   },
   "61553500994391": {
     "stop": false,
@@ -112,18 +117,19 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 22822,
-        "completion_tokens": 4869,
-        "total_tokens": 27691
+        "prompt_tokens": 56696,
+        "completion_tokens": 10966,
+        "total_tokens": 67662
       },
       "davinci": {
-        "prompt_tokens": 33,
-        "completion_tokens": 20,
-        "total_tokens": 53
+        "prompt_tokens": 669,
+        "completion_tokens": 440,
+        "total_tokens": 1109
       },
       "dell": 0
     },
-    "owner": "100039660703227"
+    "owner": "100039660703227",
+    "openai": "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"
   },
   "61555136345950": {
     "stop": false,
@@ -137,9 +143,9 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 3537,
-        "completion_tokens": 3300,
-        "total_tokens": 6837
+        "prompt_tokens": 5166,
+        "completion_tokens": 3774,
+        "total_tokens": 8940
       },
       "davinci": {
         "prompt_tokens": 0,
@@ -162,18 +168,19 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 238314,
-        "completion_tokens": 68879,
-        "total_tokens": 307193
+        "prompt_tokens": 626276,
+        "completion_tokens": 194626,
+        "total_tokens": 820902
       },
       "davinci": {
-        "prompt_tokens": 2051,
-        "completion_tokens": 1843,
-        "total_tokens": 3894
+        "prompt_tokens": 3097,
+        "completion_tokens": 2534,
+        "total_tokens": 5631
       },
       "dell": 0
     },
-    "owner": "100094974786751"
+    "owner": "61553801171635",
+    "openai": "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"
   },
   "61552734637916": {
     "stop": false,
@@ -187,9 +194,9 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 18382,
-        "completion_tokens": 3365,
-        "total_tokens": 21747
+        "prompt_tokens": 25075,
+        "completion_tokens": 4673,
+        "total_tokens": 29748
       },
       "davinci": {
         "prompt_tokens": 1016,
@@ -198,7 +205,8 @@
       },
       "dell": 0
     },
-    "owner": "61554713339075"
+    "owner": "61554713339075",
+    "openai": "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"
   },
   "100078253608758": {
     "stop": false,
@@ -237,9 +245,9 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 3989,
-        "completion_tokens": 991,
-        "total_tokens": 4980
+        "prompt_tokens": 59572,
+        "completion_tokens": 14769,
+        "total_tokens": 74341
       },
       "davinci": {
         "prompt_tokens": 233,
@@ -262,9 +270,9 @@
     "maintenance": false,
     "tokens": {
       "gpt": {
-        "prompt_tokens": 34179,
-        "completion_tokens": 9550,
-        "total_tokens": 43729
+        "prompt_tokens": 39106,
+        "completion_tokens": 11091,
+        "total_tokens": 50197
       },
       "davinci": {
         "prompt_tokens": 794,
@@ -273,7 +281,8 @@
       },
       "dell": 0
     },
-    "owner": "100076713696307"
+    "owner": "61553801171635",
+    "openai": "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"
   },
   "61555039000557": {
     "stop": false,
@@ -298,7 +307,8 @@
       },
       "dell": 0
     },
-    "owner": "61554713339075"
+    "owner": "61554713339075",
+    "openai": "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"
   },
   "61554868901345": {
     "stop": false,
@@ -348,6 +358,189 @@
       },
       "dell": 0
     },
-    "owner": "61554713339075"
+    "owner": "61554713339075",
+    "openai": "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"
+  },
+  "61551159306902": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 4770,
+        "completion_tokens": 3382,
+        "total_tokens": 8152
+      },
+      "davinci": {
+        "prompt_tokens": 76,
+        "completion_tokens": 31,
+        "total_tokens": 107
+      },
+      "dell": 0
+    },
+    "owner": "61554713339075",
+    "openai": "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"
+  },
+  "61555114573704": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 2848,
+        "completion_tokens": 435,
+        "total_tokens": 3283
+      },
+      "davinci": {
+        "prompt_tokens": 66,
+        "completion_tokens": 132,
+        "total_tokens": 198
+      },
+      "dell": 0
+    },
+    "owner": "100039660703227",
+    "openai": "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"
+  },
+  "61554993586533": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 3490,
+        "completion_tokens": 619,
+        "total_tokens": 4109
+      },
+      "davinci": {
+        "prompt_tokens": 35,
+        "completion_tokens": 9,
+        "total_tokens": 44
+      },
+      "dell": 0
+    },
+    "owner": "100074356417495",
+    "openai": "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"
+  },
+  "61554360393992": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 3075,
+        "completion_tokens": 747,
+        "total_tokens": 3822
+      },
+      "davinci": {
+        "prompt_tokens": 35,
+        "completion_tokens": 9,
+        "total_tokens": 44
+      },
+      "dell": 0
+    },
+    "owner": "61554713339075",
+    "openai": "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"
+  },
+  "61555326905281": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 1191,
+        "completion_tokens": 250,
+        "total_tokens": 1441
+      },
+      "davinci": {
+        "prompt_tokens": 35,
+        "completion_tokens": 9,
+        "total_tokens": 44
+      },
+      "dell": 0
+    },
+    "owner": "100039660703227",
+    "openai": "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"
+  },
+  "61555049950822": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 1675,
+        "completion_tokens": 324,
+        "total_tokens": 1999
+      },
+      "davinci": {
+        "prompt_tokens": 35,
+        "completion_tokens": 9,
+        "total_tokens": 44
+      },
+      "dell": 0
+    },
+    "owner": "100073100306986",
+    "openai": "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"
+  },
+  "61555548687187": {
+    "stop": false,
+    "events": true,
+    "forceLogin": true,
+    "autoMarkRead": false,
+    "online": true,
+    "selfListen": true,
+    "typingIndicator": false,
+    "autoMarkDelivery": false,
+    "maintenance": false,
+    "tokens": {
+      "gpt": {
+        "prompt_tokens": 1191,
+        "completion_tokens": 250,
+        "total_tokens": 1441
+      },
+      "davinci": {
+        "prompt_tokens": 35,
+        "completion_tokens": 9,
+        "total_tokens": 44
+      },
+      "dell": 0
+    },
+    "owner": "100039660703227",
+    "openai": "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"
   }
 }
