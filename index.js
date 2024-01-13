@@ -2304,19 +2304,30 @@ async function ai(api, event) {
         api.logout((err) => {
             if (err) utils.logged(err);
         });
-    } else if (testCommand(api, query, "maintenance--on", event.senderID, "owner", true)) {
-        if (settings[login].maintenance) {
-            sendMessage(api, event, "It's already enabled.");
+    } else if (testCommand(api, query, "maintenance", event.senderID, "owner", true)) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
         } else {
-            settings[login].maintenance = true;
-            sendMessage(api, event, "Maintenance status has been enabled.");
-        }
-    } else if (testCommand(api, query, "maintenance--off", event.senderID, "owner", true)) {
-        if (settings[login].maintenance) {
-            settings[login].maintenance = false;
-            sendMessage(api, event, "Maintenance status has been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].maintenance) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].maintenance = true;
+                    sendMessage(api, event, "Maintenance status has been enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].maintenance) {
+                    settings[login].maintenance = false;
+                    sendMessage(api, event, "Maintenance status has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
+            }
         }
     } else if (testCommand(api, query, "userlist", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -2347,89 +2358,128 @@ async function ai(api, event) {
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(api, event, construct);
     } else if (testCommand(api, query, "autoMarkRead--on", event.senderID, "owner", true)) {
-        if (settings.shared.autoMarkRead) {
-            sendMessage(api, event, "It's already enabled.");
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
         } else {
-            settings.shared.autoMarkRead = true;
-            sendMessage(api, event, "Automatically marked read messages enabled.");
-        }
-    } else if (testCommand(api, query, "autoMarkRead--off", event.senderID, "owner", true)) {
-        if (settings.shared.autoMarkRead) {
-            settings.shared.autoMarkRead = false;
-            sendMessage(api, event, "Automatically marked read messages disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "online--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.online) {
-                sendMessage(api, event, "It's already enabled.");
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].autoMarkRead) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].autoMarkRead = true;
+                    sendMessage(api, event, "Automatically marked read messages enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].autoMarkRead) {
+                    settings[login].autoMarkRead = false;
+                    sendMessage(api, event, "Automatically marked read messages disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                settings.shared.online = true;
-                sendMessage(api, event, "Account status has been set online.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
             }
         }
-    } else if (testCommand(api, query, "online--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.online) {
-                settings.shared.online = false;
-                sendMessage(api, event, "Account status has been set offline.");
+    } else if (testCommand(api, query, "online--on", event.senderID, "owner", true)) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].online) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].online = true;
+                    sendMessage(api, event, "Account status has been set online.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].online) {
+                    settings[login].online = false;
+                    sendMessage(api, event, "Account status has been set offline.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                sendMessage(api, event, "It's already disabled.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
             }
         }
     } else if (testCommand(api, query, "selfListen--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.selfListen) {
-                sendMessage(api, event, "It's already enabled.");
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].selfListen) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].selfListen = true;
+                    sendMessage(api, event, "Self listen has been enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].selfListen) {
+                    settings[login].selfListen = false;
+                    sendMessage(api, event, "Self listen has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                settings.shared.selfListen = true;
-                sendMessage(api, event, "Listening to own account messages is enabled.");
-            }
-        }
-    } else if (testCommand(api, query, "selfListen--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.selfListen) {
-                settings.shared.selfListen = false;
-                sendMessage(api, event, "Listening to own account messages is disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
             }
         }
     } else if (testCommand(api, query, "autoMarkDelivery--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.autoMarkDelivery) {
-                sendMessage(api, event, "It's already enabled.");
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].autoMarkDelivery) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].autoMarkDelivery = true;
+                    sendMessage(api, event, "Automatically marked messages when delivered enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].autoMarkDelivery) {
+                    settings[login].autoMarkDelivery = false;
+                    sendMessage(api, event, "Automatically marked messages when delivered disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                settings.shared.autoMarkDelivery = true;
-                sendMessage(api, event, "Automatically marked messages when delivered enabled.");
-            }
-        }
-    } else if (testCommand(api, query, "autoMarkDelivery--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.autoMarkDelivery) {
-                settings.shared.autoMarkDelivery = false;
-                sendMessage(api, event, "Automatically marked messages when delivered disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
             }
         }
     } else if (testCommand(api, query, "typingIndicator--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.typingIndicator) {
-                sendMessage(api, event, "It's already enabled.");
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: typingIndicator status" + "\n " + example[Math.floor(Math.random() * example.length)] + " typingIndicator --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].typingIndicator) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].typingIndicator = true;
+                    sendMessage(api, event, "Typing indicator is now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].typingIndicator) {
+                    settings[login].typingIndicator = false;
+                    sendMessage(api, event, "Typing indicator has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                settings.shared.typingIndicator = true;
-                sendMessage(api, event, "Typing indicator is now enabled.");
-            }
-        }
-    } else if (testCommand(api, query, "typingIndicator--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.typingIndicator) {
-                settings.shared.typingIndicator = false;
-                sendMessage(api, event, "Typing indicator has been disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: typingIndicator status" + "\n " + example[Math.floor(Math.random() * example.length)] + " typingIndicator --on");
             }
         }
     } else if (testCommand(api, query2, "say--jap", event.senderID)) {
@@ -4677,6 +4727,7 @@ async function ai(api, event) {
             remAdmin(api, event, id);
         }
     } else if (testCommand(api, query, "unsend--on", event.senderID, "owner", true)) {
+        //TODO:
         if (settingsThread[event.threadID].unsend) {
             sendMessage(api, event, "It's already enabled.");
         } else {
