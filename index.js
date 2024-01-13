@@ -187,10 +187,6 @@ let errorResponse = {
     },
 };
 
-const openai = new OpenAI({
-    apiKey: settings.shared.apikey.ai,
-});
-
 /*
  * PROCESS
  */
@@ -1325,8 +1321,7 @@ async function ai22(api, event, query, query2) {
         if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
             sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
         } else {
-            sendMessage(api, event, "Under maintenance.");
-            //  sendMessageToAll(api, event);
+            sendMessageToAll(api, event);
         }
     } else if (testCommand(api, query, "unsend", event.senderID, "owner", true)) {
         if (event.messageReply.senderID == api.getCurrentUserID()) {
@@ -1796,8 +1791,6 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
         } else if (/(^translate$|^translate\s|^trans$|^trans\s)/.test(query2)) {
             sendMessage(api, event, "You need to reply to a message to translate it.");
-        } else if ((users.admin.includes(event.senderID) || settings[login].owner == event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
-            sendMessage(api, event, "You need to reply to my message to unsend it.");
         }
         someA(api, event, query, input);
     }
@@ -2357,7 +2350,7 @@ async function ai(api, event) {
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(api, event, construct);
-    } else if (testCommand(api, query, "autoMarkRead--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "autoMarkRead", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
@@ -2382,7 +2375,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
             }
         }
-    } else if (testCommand(api, query, "online--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "online", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
@@ -2407,7 +2400,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
             }
         }
-    } else if (testCommand(api, query, "selfListen--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "selfListen", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
@@ -2432,7 +2425,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
             }
         }
-    } else if (testCommand(api, query, "autoMarkDelivery--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "autoMarkDelivery", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
@@ -2457,7 +2450,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
             }
         }
-    } else if (testCommand(api, query, "typingIndicator--on", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "typingIndicator", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: typingIndicator status" + "\n " + example[Math.floor(Math.random() * example.length)] + " typingIndicator --on");
@@ -3949,6 +3942,21 @@ async function ai(api, event) {
             attachment: fs.createReadStream(__dirname + "/src/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
         sendMessage(api, event, message);
+    } else if (testCommand(api, query2, "friendlist", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        api.getFriendsList((err, data) => {
+            if (err) return console.error(err);
+            let countBirthdays = 0;
+            for (d in data) {
+                if (data[d].isBirthday) {
+                    countBirthdays = 1;
+                    countBirthdays++;
+                }
+            }
+            sendMessage(api, event, utils.formatOutput("Bot Friend List", [data.length + " friends", countBirthdays + " birthdays"], "github.com/prj-orion"));
+        });
     } else if (testCommand(api, query2, "thread--emoji", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -4193,11 +4201,15 @@ async function ai(api, event) {
                 if (response.data == false) {
                     sendMessage(api, event, "Unable to download unsupported video source.");
                 }
+
+                let title = response.data.title;
                 if (response.data.success) {
-                    sendMessage(api, event, {
-                        body: response.data.title + " is now in download progress...",
-                    });
-                    let title = response.data.title;
+                    if (title == "Facebook") {
+                        sendMessage(api, event, "Your video is now in download progress...");
+                        title = "Here is it:";
+                    } else {
+                        sendMessage(api, event, title + " is now in download progress...");
+                    }
                     let url = getFbDLQuality(response);
                     let filename = __dirname + "/cache/fbdl_" + utils.getTimestamp() + ".mp4";
                     downloadFile(url, filename).then((response1) => {
@@ -4218,6 +4230,43 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
+        api.getThreadInfo(event.threadID, (err, gc) => {
+            if (err) return utils.logged(err);
+            if (gc.isGroup) {
+                let lead = [];
+                let participantIDs = gc.participantIDs;
+                for (let i = 0; i < users.list.length; i++) {
+                    let cuid = users.list[i].id;
+                    if (users.list[i].balance && participantIDs.includes(cuid)) {
+                        lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
+                    }
+                }
+                lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+                let construct = [];
+                let totalL = lead.length;
+                if (totalL >= 31) {
+                    totalL = 31;
+                }
+                for (let i1 = 1; i1 < totalL; i1++) {
+                    if (!accounts.includes(lead[i1 - 1].id)) {
+                        construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
+                    }
+                }
+                sendMessage(api, event, utils.formatOutput("Top User Thread", construct, "github.com/prj-orion"));
+            } else {
+                getUserProfile(event.senderID, async function (name) {
+                    if (name.balance != undefined) {
+                        sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.006) + "$ " + name.firstName], "github.com/prj-orion"));
+                    } else {
+                        sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
+                    }
+                });
+            }
+        });
+    } else if (testCommand(api, query2, "top--global", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         let lead = [];
         for (let i = 0; i < users.list.length; i++) {
             if (users.list[i].balance) {
@@ -4232,17 +4281,16 @@ async function ai(api, event) {
                 construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
             }
         }
-        sendMessage(api, event, utils.formatOutput("Top Users Leaderboards", construct, "github.com/prj-orion"));
+        sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
     } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
-                let sendID = event.senderID;
-                sendMessage(api, event, "You currently have " + formatDecNum((name.balance / 1000) * 0.006) + " $ in your bank ends with " + sendID.substr(-4));
+                sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.006) + "$ " + name.firstName], "github.com/prj-orion"));
             } else {
-                sendMessage(api, event, "You have 0 $ balance yet.");
+                sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
             }
         });
     } else if (testCommand(api, query2, "mdl", event.senderID)) {
@@ -4530,7 +4578,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
                     return;
                 }
-            } 
+            }
             blockUser(api, event, id);
         }
     } else if (testCommand(api, query2, "block--thread--tid", event.senderID, "owner")) {
@@ -4726,183 +4774,242 @@ async function ai(api, event) {
             }
             remAdmin(api, event, id);
         }
-    } else if (testCommand(api, query, "unsend--on", event.senderID, "owner", true)) {
-        //TODO:
-        if (settingsThread[event.threadID].unsend) {
-            sendMessage(api, event, "It's already enabled.");
+    } else if (testCommand(api, query, "unsendMessages", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unsendMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " unsendMessages --on");
         } else {
-            settingsThread[event.threadID].unsend = true;
-            sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
-        }
-    } else if (testCommand(api, query, "unsend--off", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].unsend) {
-            settingsThread[event.threadID].unsend = false;
-            sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "leave--on", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].leave) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settingsThread[event.threadID].leave = true;
-            sendMessage(api, event, "Readding of user who left is now enabled.");
-        }
-    } else if (testCommand(api, query, "leave--off", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].leave) {
-            settingsThread[event.threadID].leave = false;
-            sendMessage(api, event, "Readding of user who left is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "delay--on", event.senderID, "root", true)) {
-        if (settings.shared.delay) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settings.shared.delay = true;
-            sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
-        }
-    } else if (testCommand(api, query, "delay--off", event.senderID, "root", true)) {
-        if (settings.shared.delay) {
-            settings.shared.delay = false;
-            sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "nsfw--on", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].nsfw) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settingsThread[event.threadID].nsfw = true;
-            sendMessage(api, event, "Not Safe For Work are now enabled.");
-        }
-    } else if (testCommand(api, query, "nsfw--off", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].nsfw) {
-            settingsThread[event.threadID].nsfw = false;
-            sendMessage(api, event, "Not Safe For Work is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "simultaneousExec--on", event.senderID, "root", true)) {
-        if (settings.shared.simultaneousExec) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settings.shared.simultaneousExec = true;
-            sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
-        }
-    } else if (testCommand(api, query, "simultaneousExec--off", event.senderID, "root", true)) {
-        if (settings.shared.simultaneousExec) {
-            settings.shared.simultaneousExec = false;
-            sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "group--member", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return utils.logged(err);
-            if (gc.isGroup) {
-                let arr = gc.participantIDs;
-                sendMessage(api, event, "This group has about " + arr.length + " members.");
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settingsThread[event.threadID].unsend) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settingsThread[event.threadID].unsend = true;
+                    sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settingsThread[event.threadID].unsend) {
+                    settingsThread[event.threadID].unsend = false;
+                    sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unsendMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " unsendMessages --on");
             }
-        });
-    } else if (testCommand(api, query2, "group--info", event.senderID)) {
+        }
+    } else if (testCommand(api, query, "leaveThread", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settingsThread[event.threadID].leave) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settingsThread[event.threadID].leave = true;
+                    sendMessage(api, event, "Readding of user who left is now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settingsThread[event.threadID].leave) {
+                    settingsThread[event.threadID].leave = false;
+                    sendMessage(api, event, "Readding of user who left is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
+            }
+        }
+    } else if (testCommand(api, query, "delayMessages", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: delayMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " delayMessages --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings.shared.delay) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings.shared.delay = true;
+                    sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings.shared.delay) {
+                    settings.shared.delay = false;
+                    sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: delayMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " delayMessages --on");
+            }
+        }
+    } else if (testCommand(api, query, "nsfw", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nsfw status" + "\n " + example[Math.floor(Math.random() * example.length)] + " nsfw --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settingsThread[event.threadID].nsfw) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settingsThread[event.threadID].nsfw = true;
+                    sendMessage(api, event, "Not Safe For Work are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settingsThread[event.threadID].nsfw) {
+                    settingsThread[event.threadID].nsfw = false;
+                    sendMessage(api, event, "Not Safe For Work is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nsfw status" + "\n " + example[Math.floor(Math.random() * example.length)] + " nsfw --on");
+            }
+        }
+    } else if (testCommand(api, query, "simultaneousExec", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: simultaneousExec status" + "\n " + example[Math.floor(Math.random() * example.length)] + " simultaneousExec --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings.shared.simultaneousExec) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings.shared.simultaneousExec = true;
+                    sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings.shared.simultaneousExec) {
+                    settings.shared.simultaneousExec = false;
+                    sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: simultaneousExec status" + "\n " + example[Math.floor(Math.random() * example.length)] + " simultaneousExec --on");
+            }
+        }
+    } else if (testCommand(api, query, "group", event.senderID, "user")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (event.isGroup) {
-            api.getThreadInfo(event.threadID, (err, a) => {
-                if (err) utils.logged(err);
-                let inf = "";
-                let usern = a.userInfo.length;
-                for (b in a.userInfo) {
-                    inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
-                    inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
-                    inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
-                    inf += '<div class="absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4">' + a.userInfo[b].name + "</div>";
-                    inf += "</div>";
-                    inf += "</div>";
-                }
-                let summ = "<b>Message Count: </b>" + a.messageCount + "<br>";
-                summ += "<b>Members Count: </b>" + usern + "<br>";
-                if (a.emoji != null) {
-                    summ += "<b>Emoji: </b> " + a.emoji + "<br>";
-                }
-                summ += "<b>Color: </b> " + a.color + "<br>";
-                summ += "<b>Admins:</b><br>";
-                let i;
-                for (i = 0; i < a.adminIDs.length; i++) {
-                    let i2;
-                    for (i2 = 0; i2 < a.userInfo.length; i2++) {
-                        let id = a.adminIDs[i].id;
-                        if (a.userInfo[i2].id == id) {
-                            summ += a.userInfo[i2].name + "<br>";
-                        }
-                    }
-                }
-                if (a.approvalMode) {
-                    if (a.approvalQueue.length == 0) {
-                        summ += "<b>Approval: Yes</b><br>";
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group type" + "\n " + example[Math.floor(Math.random() * example.length)] + " group --member");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--member") {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return utils.logged(err);
+                    if (gc.isGroup) {
+                        let arr = gc.participantIDs;
+                        sendMessage(api, event, "This group has about " + arr.length + " members.");
                     } else {
-                        summ += "<b>Approval List: </b><br>";
-                        let i33;
-                        for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
-                            let i23;
-                            for (i23 = 0; i23 < a.userInfo.length; i23++) {
-                                let id3 = a.approvalQueue[i33].id;
-                                if (a.userInfo[i23].id == id3) {
-                                    summ += a.userInfo[i23].name + "<br>";
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
+                });
+            } else if (value == "--info") {
+                if (event.isGroup) {
+                    api.getThreadInfo(event.threadID, (err, a) => {
+                        if (err) utils.logged(err);
+                        let inf = "";
+                        let usern = a.userInfo.length;
+                        for (b in a.userInfo) {
+                            inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
+                            inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
+                            inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
+                            inf += '<div class="absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4">' + a.userInfo[b].name + "</div>";
+                            inf += "</div>";
+                            inf += "</div>";
+                        }
+                        let summ = "<b>Message Count: </b>" + a.messageCount + "<br>";
+                        summ += "<b>Members Count: </b>" + usern + "<br>";
+                        if (a.emoji != null) {
+                            summ += "<b>Emoji: </b> " + a.emoji + "<br>";
+                        }
+                        summ += "<b>Color: </b> " + a.color + "<br>";
+                        summ += "<b>Admins:</b><br>";
+                        let i;
+                        for (i = 0; i < a.adminIDs.length; i++) {
+                            let i2;
+                            for (i2 = 0; i2 < a.userInfo.length; i2++) {
+                                let id = a.adminIDs[i].id;
+                                if (a.userInfo[i2].id == id) {
+                                    summ += a.userInfo[i2].name + "<br>";
                                 }
                             }
                         }
-                    }
-                }
+                        if (a.approvalMode) {
+                            if (a.approvalQueue.length == 0) {
+                                summ += "<b>Approval: Yes</b><br>";
+                            } else {
+                                summ += "<b>Approval List: </b><br>";
+                                let i33;
+                                for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
+                                    let i23;
+                                    for (i23 = 0; i23 < a.userInfo.length; i23++) {
+                                        let id3 = a.approvalQueue[i33].id;
+                                        if (a.userInfo[i23].id == id3) {
+                                            summ += a.userInfo[i23].name + "<br>";
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
-                threadInfo["/" + a.threadID] = {
-                    threadName: a.threadName,
-                    summary: summ,
-                    info: inf,
-                    icon: a.imageSrc,
-                    color: a.color,
-                };
+                        threadInfo["/" + a.threadID] = {
+                            threadName: a.threadName,
+                            summary: summ,
+                            info: inf,
+                            icon: a.imageSrc,
+                            color: a.color,
+                        };
 
-                let urll = "http://50.253.118.57:8080/" + event.threadID;
-                let message = {
-                    body: "This group information can be see at " + urll,
-                    url: urll,
-                };
-                sendMessage(api, event, message);
-            });
-        } else {
-            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-        }
-    } else if (testCommand(api, query2, "group--name", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        if (event.isGroup) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                if (event.isGroup) {
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return utils.logged(err);
-                        sendMessage(api, event, gc.threadName);
+                        let urll = "http://50.253.118.57:8080/" + event.threadID;
+                        let message = {
+                            body: "This group information can be see at " + urll,
+                            url: urll,
+                        };
+                        sendMessage(api, event, message);
                     });
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group --name text" + "\n " + example[Math.floor(Math.random() * example.length)] + " gname Darling in the Franxx >3");
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                }
+            } else if (value == "--name") {
+                if (event.isGroup) {
+                    let data = input.split(" ");
+                    if (data.length < 2) {
+                        if (event.isGroup) {
+                            api.getThreadInfo(event.threadID, (err, gc) => {
+                                if (err) return utils.logged(err);
+                                sendMessage(api, event, gc.threadName);
+                            });
+                        } else {
+                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group --name text" + "\n " + example[Math.floor(Math.random() * example.length)] + " gname Darling in the Franxx >3");
+                        }
+                    } else {
+                        data.shift();
+                        api.setTitle(data.join(" "), event.threadID, (err, obj) => {
+                            if (err) return utils.logged(err);
+                        });
+                    }
+                } else {
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             } else {
-                data.shift();
-                api.setTitle(data.join(" "), event.threadID, (err, obj) => {
-                    if (err) return utils.logged(err);
-                });
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group type" + "\n " + example[Math.floor(Math.random() * example.length)] + " group --member");
             }
-        } else {
-            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
     } else if (testCommand(api, query, "tid", event.senderID, "user", true) || testCommand(api, query2, "gid", event.senderID) || testCommand(api, query, "uid", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -5636,41 +5743,83 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(api, query2, "qoute--anime", event.senderID)) {
+    } else if (testCommand(api, query2, "qoute", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://animechan.vercel.app/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--anime") {
+                getResponseData("https://animechan.vercel.app/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
+                    }
+                });
+            } else if (value == "--advice") {
+                getResponseData("https://zenquotes.io/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        let result;
+                        let i;
+                        for (i = 0; i < response.length; i++) {
+                            result = response[i].q;
+                        }
+                        sendMessage(api, event, result);
+                    }
+                });
+            } else if (value == "--inspiration") {
+                getResponseData("https://zenquotes.io/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        let result;
+                        let i;
+                        for (i = 0; i < response.length; i++) {
+                            result = response[i].a + " says\n" + response[i].q;
+                        }
+                        sendMessage(api, event, result);
+                    }
+                });
+            } else if (value == "--motivation") {
+                getResponseData("https://zenquotes.io/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        let result;
+                        let i;
+                        for (i = 0; i < response.length; i++) {
+                            result = response[i].q + "\n\nby " + response[i].a;
+                        }
+                        sendMessage(api, event, result);
+                    }
+                });
             } else {
-                sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
             }
-        });
-    } else if (testCommand(api, query, "qoute--advice", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
         }
-        getResponseData("https://zenquotes.io/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].q;
-                }
-                sendMessage(api, event, result);
-            }
-        });
     } else if (testCommand(api, query2, "time--timezone", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5692,46 +5841,6 @@ async function ai(api, event) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime(name.timezone));
             } else {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
-            }
-        });
-    } else if (testCommand(api, query2, "qoute--inspiration", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://zenquotes.io/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].a + " says\n" + response[i].q;
-                }
-                sendMessage(api, event, result);
-            }
-        });
-    } else if (testCommand(api, query2, "qoute--motivation", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://zenquotes.io/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].q + "\n\nby " + response[i].a;
-                }
-                sendMessage(api, event, result);
             }
         });
     } else if (testCommand(api, query, "newyear", event.senderID, "user", true)) {
@@ -7869,43 +7978,54 @@ function getNewComplextion(complextion) {
 
 // TODO check
 async function sendMessageToAll(api, event) {
-    let message = event.messageReply.body;
-    let time = utils.getTimestamp();
-    let count = 0;
-    let accm = [];
+    api.getThreadList(50, null, ["INBOX"], async (err, list) => {
+        if (err) return utils.logged(err);
+        getUserProfile(event.senderID, async function (name) {
+            for (tid in list) {
+                let threadID = list[tid].threadID;
+                if (!groups.blocked.includes(threadID) && !users.blocked.includes(threadID) && !users.bot.includes(threadID) && !users.muted.includes(threadID)) {
+                    let nR = "⋆｡° Notification from \n│\n";
+                    if (name.name != undefined) {
+                        nR += "│  name: " + name.name + "\n";
+                    }
+                    nR += `│\n└─ @ỹ@cmd-prj- orion`;
+                    nR += "\n\n" + event.messageReply.body;
 
-    if (event.messageReply.attachments.length != 0) {
-        let format = getFormat(event.messageReply.attachments[0].type);
-        for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
-            await sleep(1000);
-            let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
-            downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
-        }
-        let i1;
-        for (i1 = 0; i1 < count; i1++) {
-            accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
-        }
-    }
-    for (gp in groups.active) {
-        if (!groups.blocked.includes(groups.active[gp])) {
-            await sleep(5000);
-            let body = {
-                body: message,
-            };
-            if (accm.length > 0) {
-                body["attachment"] = accm;
-            }
-            api.sendMessage(body, groups.active[gp], (err12, messageInfo) => {
-                if (err12) {
-                    utils.logged(err12);
-                    groups.active.pop(groups.active[gp]);
-                    return;
+                    let message = nR;
+                    let time = utils.getTimestamp();
+                    let count = 1;
+                    let accm = [];
+
+                    if (event.messageReply.attachments.length != 0) {
+                        let format = getFormat(event.messageReply.attachments[0].type);
+                        for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+                            await sleep(1000);
+                            let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
+                            downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
+                        }
+                        let i1;
+                        for (i1 = 0; i1 < count; i1++) {
+                            accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
+                        }
+                    }
+
+                    await sleep(5000);
+                    let body = {
+                        body: message,
+                    };
+                    if (accm.length > 0) {
+                        body["attachment"] = accm;
+                    }
+                    api.sendMessage(body, threadID, (err12, messageInfo) => {
+                        if (err12) utils.logged(err12);
+                        count++;
+                    });
+
+                    sendMessage(api, event, "Message has been schedule to be send to  " + count + " groups.");
                 }
-                count++;
-            });
-        }
-    }
-    sendMessage(api, event, "Message successfully send to " + count + " groups.");
+            }
+        });
+    });
 }
 
 function numberWithCommas(x) {
@@ -9049,6 +9169,8 @@ function checkCmdPermission(api, permission, senderID) {
                     return false;
                 }
                 utils.logged("access_granted admin " + senderID);
+                // useless
+                return true;
             }
             utils.logged("access_granted owner " + senderID);
         }
