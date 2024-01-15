@@ -169,27 +169,23 @@ const googleImageOptions = {
 };
 
 let errorResponse = {
-        choices: [
-            {
-                finish_reason: "error",
-                index: 0,
-                message: {
-                    content:
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues",
-                    role: "assistant",
-                },
+    choices: [
+        {
+            finish_reason: "error",
+            index: 0,
+            message: {
+                content:
+                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues",
+                role: "assistant",
             },
-        ],
-        usage: {
-            completion_tokens: 1,
-            prompt_tokens: 1,
-            total_tokens: 1,
-        }
+        },
+    ],
+    usage: {
+        completion_tokens: 1,
+        prompt_tokens: 1,
+        total_tokens: 1,
+    },
 };
-
-const openai = new OpenAI({
-    apiKey: settings.shared.apikey.ai,
-});
 
 /*
  * PROCESS
@@ -444,7 +440,7 @@ function redfox_fb(fca_state, login, cb) {
                     api.muteThread(event.threadID, -1, (err) => {
                         if (err) utils.logged(err);
                     });
-                }    
+                }
 
                 if (!settingsThread[event.threadID].lock) {
                     settingsThread[event.threadID]["lock"] = api.getCurrentUserID();
@@ -456,9 +452,7 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-
-            if ((event.type == "message" || event.type == "message_reply") && 
-            (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
+            if ((event.type == "message" || event.type == "message_reply") && (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
                 let body = event.body;
                 let result = !!body.match(/^[!@#$%&*~\-=_|?+/<>:;]/);
                 if (result) {
@@ -1327,8 +1321,7 @@ async function ai22(api, event, query, query2) {
         if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
             sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
         } else {
-            sendMessage(api, event, "Under maintenance.");
-          //  sendMessageToAll(api, event);
+            sendMessageToAll(api, event);
         }
     } else if (testCommand(api, query, "unsend", event.senderID, "owner", true)) {
         if (event.messageReply.senderID == api.getCurrentUserID()) {
@@ -1471,7 +1464,7 @@ async function ai22(api, event, query, query2) {
                     let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
                     if (accounts.includes(login)) {
                         downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                            let msg = updateFont("The account uid " + login + " is already connected to the main server.", login);
+                            let msg = updateFont("This already connected to the main server!", login);
                             let message = {
                                 body: msg,
                                 attachment: fs.createReadStream(dirp),
@@ -1497,7 +1490,7 @@ async function ai22(api, event, query, query2) {
                             function (isLogin) {
                                 if (isLogin) {
                                     api.sendMessage(
-                                        updateFont("Failed to Login " + login, login),
+                                        updateFont("Failed to Login!", login),
                                         event.threadID,
                                         (err, messageInfo) => {
                                             if (err) utils.logged(err);
@@ -1506,11 +1499,14 @@ async function ai22(api, event, query, query2) {
                                     );
                                 } else {
                                     downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                                        let msg = updateFont("Account " + login + " is now connected to the main server.", login);
                                         let message = {
-                                            body: msg,
+                                            body: updateFont("Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.", login),
                                             attachment: fs.createReadStream(dirp),
                                         };
+                                        let message1 = {
+                                            body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login), 
+                                            url: "https://mrepol742.github.io",
+                                        }
                                         api.sendMessage(
                                             message,
                                             event.threadID,
@@ -1519,6 +1515,21 @@ async function ai22(api, event, query, query2) {
                                             },
                                             event.messageReply.messageID
                                         );
+                                        api.sendMessage(
+                                            "Thank you for using Project Orion!",
+                                            login,
+                                            (err, messageInfo) => {
+                                                if (err) utils.logged(err);
+                                            }
+                                        );
+                                        api.sendMessage(
+                                            message1,
+                                            login,
+                                            (err, messageInfo) => {
+                                                if (err) utils.logged(err);
+                                            }
+                                        );
+
                                         unLink(dirp);
                                     });
 
@@ -1554,12 +1565,12 @@ async function ai22(api, event, query, query2) {
 
                                     saveState();
 
-                                     for (pref in settings) {
+                                    for (pref in settings) {
                                         if (settings[pref].owner && settings[pref].owner == event.senderID) {
-                settings[login]["openai"] = settings[pref].openai;
-                break;
-            }
-        }
+                                            settings[login]["openai"] = settings[pref].openai;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         );
@@ -1589,9 +1600,9 @@ async function ai22(api, event, query, query2) {
                 try {
                     const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                     const response = await openai.images.createVariation({
-                        image: fs.createReadStream(filename), 
+                        image: fs.createReadStream(filename),
                         n: 4,
-                        size: "1024x1024"
+                        size: "1024x1024",
                     });
                     let i;
                     let attch = [];
@@ -1765,10 +1776,15 @@ async function ai(api, event) {
         let id = splitNL[3].normalize("NFKC").replace("│  uid: ", "");
         let tid = splitNL[4].normalize("NFKC").replace("│  tid: ", "");
         let mid = splitNL[5].normalize("NFKC").replace("│  mid: ", "");
-        api.sendMessage(updateFont(event.body), tid, (err, messageInfo) => {
-            if (err) return utils.logged(err);
-            sendMessage(api, event, "Reply has been sent to " + name + " with an uid of " + id);
-        }, mid);
+        api.sendMessage(
+            updateFont(event.body),
+            tid,
+            (err, messageInfo) => {
+                if (err) return utils.logged(err);
+                sendMessage(api, event, "Reply has been sent to " + name + " with an uid of " + id);
+            },
+            mid
+        );
         return;
     }
 
@@ -1793,8 +1809,6 @@ async function ai(api, event) {
             sendMessage(api, event, "You need to reply to a message to pin a message.");
         } else if (/(^translate$|^translate\s|^trans$|^trans\s)/.test(query2)) {
             sendMessage(api, event, "You need to reply to a message to translate it.");
-        } else if ((users.admin.includes(event.senderID) || settings[login].owner == event.senderID) && (query == "remove" || query == "unsent" || query == "delete" || query == "unsend")) {
-            sendMessage(api, event, "You need to reply to my message to unsend it.");
         }
         someA(api, event, query, input);
     }
@@ -2301,19 +2315,30 @@ async function ai(api, event) {
         api.logout((err) => {
             if (err) utils.logged(err);
         });
-    } else if (testCommand(api, query, "maintenance--on", event.senderID, "owner", true)) {
-        if (settings[login].maintenance) {
-            sendMessage(api, event, "It's already enabled.");
+    } else if (testCommand(api, query, "maintenance", event.senderID, "owner", true)) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
         } else {
-            settings[login].maintenance = true;
-            sendMessage(api, event, "Maintenance status has been enabled.");
-        }
-    } else if (testCommand(api, query, "maintenance--off", event.senderID, "owner", true)) {
-        if (settings[login].maintenance) {
-            settings[login].maintenance = false;
-            sendMessage(api, event, "Maintenance status has been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].maintenance) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].maintenance = true;
+                    sendMessage(api, event, "Maintenance status has been enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].maintenance) {
+                    settings[login].maintenance = false;
+                    sendMessage(api, event, "Maintenance status has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
+            }
         }
     } else if (testCommand(api, query, "userlist", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -2343,90 +2368,129 @@ async function ai(api, event) {
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(api, event, construct);
-    } else if (testCommand(api, query, "autoMarkRead--on", event.senderID, "owner", true)) {
-        if (settings.shared.autoMarkRead) {
-            sendMessage(api, event, "It's already enabled.");
+    } else if (testCommand(api, query, "autoMarkRead", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
         } else {
-            settings.shared.autoMarkRead = true;
-            sendMessage(api, event, "Automatically marked read messages enabled.");
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].autoMarkRead) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].autoMarkRead = true;
+                    sendMessage(api, event, "Automatically marked read messages enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].autoMarkRead) {
+                    settings[login].autoMarkRead = false;
+                    sendMessage(api, event, "Automatically marked read messages disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
+            }
         }
-    } else if (testCommand(api, query, "autoMarkRead--off", event.senderID, "owner", true)) {
-        if (settings.shared.autoMarkRead) {
-            settings.shared.autoMarkRead = false;
-            sendMessage(api, event, "Automatically marked read messages disabled.");
+    } else if (testCommand(api, query, "online", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
         } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "online--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.online) {
-                sendMessage(api, event, "It's already enabled.");
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].online) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].online = true;
+                    sendMessage(api, event, "Account status has been set online.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].online) {
+                    settings[login].online = false;
+                    sendMessage(api, event, "Account status has been set offline.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                settings.shared.online = true;
-                sendMessage(api, event, "Account status has been set online.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
             }
         }
-    } else if (testCommand(api, query, "online--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.online) {
-                settings.shared.online = false;
-                sendMessage(api, event, "Account status has been set offline.");
+    } else if (testCommand(api, query, "selfListen", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].selfListen) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].selfListen = true;
+                    sendMessage(api, event, "Self listen has been enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].selfListen) {
+                    settings[login].selfListen = false;
+                    sendMessage(api, event, "Self listen has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                sendMessage(api, event, "It's already disabled.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
             }
         }
-    } else if (testCommand(api, query, "selfListen--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.selfListen) {
-                sendMessage(api, event, "It's already enabled.");
+    } else if (testCommand(api, query, "autoMarkDelivery", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].autoMarkDelivery) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].autoMarkDelivery = true;
+                    sendMessage(api, event, "Automatically marked messages when delivered enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].autoMarkDelivery) {
+                    settings[login].autoMarkDelivery = false;
+                    sendMessage(api, event, "Automatically marked messages when delivered disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                settings.shared.selfListen = true;
-                sendMessage(api, event, "Listening to own account messages is enabled.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
             }
         }
-    } else if (testCommand(api, query, "selfListen--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.selfListen) {
-                settings.shared.selfListen = false;
-                sendMessage(api, event, "Listening to own account messages is disabled.");
+    } else if (testCommand(api, query, "typingIndicator", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: typingIndicator status" + "\n " + example[Math.floor(Math.random() * example.length)] + " typingIndicator --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].typingIndicator) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].typingIndicator = true;
+                    sendMessage(api, event, "Typing indicator is now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].typingIndicator) {
+                    settings[login].typingIndicator = false;
+                    sendMessage(api, event, "Typing indicator has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-        }
-    } else if (testCommand(api, query, "autoMarkDelivery--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.autoMarkDelivery) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.shared.autoMarkDelivery = true;
-                sendMessage(api, event, "Automatically marked messages when delivered enabled.");
-            }
-        }
-    } else if (testCommand(api, query, "autoMarkDelivery--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.autoMarkDelivery) {
-                settings.shared.autoMarkDelivery = false;
-                sendMessage(api, event, "Automatically marked messages when delivered disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
-            }
-        }
-    } else if (testCommand(api, query, "typingIndicator--on", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.typingIndicator) {
-                sendMessage(api, event, "It's already enabled.");
-            } else {
-                settings.shared.typingIndicator = true;
-                sendMessage(api, event, "Typing indicator is now enabled.");
-            }
-        }
-    } else if (testCommand(api, query, "typingIndicator--off", event.senderID, "owner", true)) {
-        if (isMyId(event.senderID)) {
-            if (settings.shared.typingIndicator) {
-                settings.shared.typingIndicator = false;
-                sendMessage(api, event, "Typing indicator has been disabled.");
-            } else {
-                sendMessage(api, event, "It's already disabled.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: typingIndicator status" + "\n " + example[Math.floor(Math.random() * example.length)] + " typingIndicator --on");
             }
         }
     } else if (testCommand(api, query2, "say--jap", event.senderID)) {
@@ -2515,7 +2579,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let uptime = ["Login: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
+        let uptime = ["Account: 0s", "Orion: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
         sendMessage(api, event, utils.formatOutput("Uptime", uptime, "github.com/prj-orion"));
     } else if (testCommand(api, query, "tokens", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -2541,7 +2605,7 @@ async function ai(api, event) {
             "Node: v" + process.versions.node + " " + os.endianness(),
             "Orion: " + package.name + " v" + package.version,
             "RAM: " + convertBytes(os.freemem()) + "/" + convertBytes(os.totalmem()),
-            "ROM: " + convertBytes(rom) + "/28.89 GB",
+            "ROM: " + convertBytes(rom) + "/35 GB",
             "RSS: " + convertBytes(process.memoryUsage().rss),
             "Heap: " + convertBytes(process.memoryUsage().heapUsed) + "/" + convertBytes(process.memoryUsage().heapTotal),
             "External: " + convertBytes(process.memoryUsage().external),
@@ -3896,6 +3960,21 @@ async function ai(api, event) {
             attachment: fs.createReadStream(__dirname + "/src/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
         sendMessage(api, event, message);
+    } else if (testCommand(api, query2, "friendlist", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        api.getFriendsList((err, data) => {
+            if (err) return console.error(err);
+            let countBirthdays = 0;
+            for (d in data) {
+                if (data[d].isBirthday) {
+                    countBirthdays = 1;
+                    countBirthdays++;
+                }
+            }
+            sendMessage(api, event, utils.formatOutput("Bot Friend List", [data.length + " friends", countBirthdays + " birthdays"], "github.com/prj-orion"));
+        });
     } else if (testCommand(api, query2, "thread--emoji", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3928,7 +4007,7 @@ async function ai(api, event) {
             getUserProfile(event.senderID, async function (name) {
                 let nR = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
                 if (name.name != undefined) {
-                    nR += '│  name: ' + name.name + "\n";
+                    nR += "│  name: " + name.name + "\n";
                 }
                 nR += `│  uid: ` + event.senderID + `\n│  tid: ` + event.threadID + `\n│  mid: ` + event.messageID + `\n│\n└─ @ỹ@cmd-prj- orion`;
                 nR += "\n\n" + data.join(" ");
@@ -3978,22 +4057,22 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "shell", event.senderID, "root")) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n " + example[Math.floor(Math.random() * example.length)] + " shell uptime");
-            } else {
-                data.shift();
-                let sff = data.join(" ");
-                exec(sff, function (err, stdout, stderr) {
-                    let str = stdout + "\n\n" + stderr;
-                    let com = str.replaceAll(/\s+/g, "");
-                    if (com == "") {
-                        sendMessage(api, event, "Done.");
-                    } else {
-                        sendMessage(api, event, str);
-                    }
-                });
-            }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n " + example[Math.floor(Math.random() * example.length)] + " shell uptime");
+        } else {
+            data.shift();
+            let sff = data.join(" ");
+            exec(sff, function (err, stdout, stderr) {
+                let str = stdout + "\n\n" + stderr;
+                let com = str.replaceAll(/\s+/g, "");
+                if (com == "") {
+                    sendMessage(api, event, "Done.");
+                } else {
+                    sendMessage(api, event, str);
+                }
+            });
+        }
     } else if (testCommand(api, query, "handleMessageRequest", event.senderID, "owner", true)) {
         api.handleMessageRequest(event.senderID, true, (err) => {
             if (err) {
@@ -4007,24 +4086,24 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query2, "handleMessageRequest--tid", event.senderID, "admin")) {
-            let data = input.split(" ");
-            if (data.length < 3) {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest --tid threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleMessageRequest --tid 0000000000000");
-            } else {
-                let num = getDataFromQuery(data);
-                // TODO: check if true accept else deny
-                api.handleMessageRequest(num, true, (err) => {
-                    if (err) {
-                        utils.logged(err);
-                        sendMessage(api, event, "Failed to accept request! Have you send a message first?");
-                    } else {
-                        api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
-                            if (err) utils.logged(err);
-                        });
-                        sendMessage(api, event, "Please check your inbox.");
-                    }
-                });
-            }
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest --tid threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleMessageRequest --tid 0000000000000");
+        } else {
+            let num = getDataFromQuery(data);
+            // TODO: check if true accept else deny
+            api.handleMessageRequest(num, true, (err) => {
+                if (err) {
+                    utils.logged(err);
+                    sendMessage(api, event, "Failed to accept request! Have you send a message first?");
+                } else {
+                    api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
+                        if (err) utils.logged(err);
+                    });
+                    sendMessage(api, event, "Please check your inbox.");
+                }
+            });
+        }
     } else if (testCommand(api, query2, "cors--add", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
@@ -4140,11 +4219,15 @@ async function ai(api, event) {
                 if (response.data == false) {
                     sendMessage(api, event, "Unable to download unsupported video source.");
                 }
+
+                let title = response.data.title;
                 if (response.data.success) {
-                    sendMessage(api, event, {
-                        body: response.data.title + " is now in download progress...",
-                    });
-                    let title = response.data.title;
+                    if (title == "Facebook") {
+                        sendMessage(api, event, "Your video is now in download progress...");
+                        title = "Here is it:";
+                    } else {
+                        sendMessage(api, event, title + " is now in download progress...");
+                    }
                     let url = getFbDLQuality(response);
                     let filename = __dirname + "/cache/fbdl_" + utils.getTimestamp() + ".mp4";
                     downloadFile(url, filename).then((response1) => {
@@ -4165,6 +4248,43 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
+        api.getThreadInfo(event.threadID, (err, gc) => {
+            if (err) return utils.logged(err);
+            if (gc.isGroup) {
+                let lead = [];
+                let participantIDs = gc.participantIDs;
+                for (let i = 0; i < users.list.length; i++) {
+                    let cuid = users.list[i].id;
+                    if (users.list[i].balance && participantIDs.includes(cuid)) {
+                        lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
+                    }
+                }
+                lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+                let construct = [];
+                let totalL = lead.length;
+                if (totalL >= 31) {
+                    totalL = 31;
+                }
+                for (let i1 = 1; i1 < totalL; i1++) {
+                    if (!accounts.includes(lead[i1 - 1].id)) {
+                        construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
+                    }
+                }
+                sendMessage(api, event, utils.formatOutput("Top User Thread", construct, "github.com/prj-orion"));
+            } else {
+                getUserProfile(event.senderID, async function (name) {
+                    if (name.balance != undefined) {
+                        sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.006) + "$ " + name.firstName], "github.com/prj-orion"));
+                    } else {
+                        sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
+                    }
+                });
+            }
+        });
+    } else if (testCommand(api, query2, "top--global", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         let lead = [];
         for (let i = 0; i < users.list.length; i++) {
             if (users.list[i].balance) {
@@ -4179,17 +4299,16 @@ async function ai(api, event) {
                 construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
             }
         }
-        sendMessage(api, event, utils.formatOutput("Top Users Leaderboards", construct, "github.com/prj-orion"));
+        sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
     } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
-                let sendID = event.senderID;
-                sendMessage(api, event, "You currently have " + formatDecNum((name.balance / 1000) * 0.006) + " $ in your bank ends with " + sendID.substr(-4));
+                sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.006) + "$ " + name.firstName], "github.com/prj-orion"));
             } else {
-                sendMessage(api, event, "You have 0 $ balance yet.");
+                sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
             }
         });
     } else if (testCommand(api, query2, "mdl", event.senderID)) {
@@ -4409,7 +4528,7 @@ async function ai(api, event) {
                     return;
                 }
                 let data = input.split(" ");
-                if (data.length < 3) {
+                if (data.length < 3 && event.type != "message_reply") {
                     sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
                 } else {
                     let id = Object.keys(event.mentions)[0];
@@ -4418,18 +4537,13 @@ async function ai(api, event) {
                         let attem = getIdFromUrl(user);
                         if (/^[0-9]+$/.test(attem)) {
                             id = attem;
-                        } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                        } else if (/^[0-9]+$/.test(user)) {
                             id = user;
-                        } else if (event.type == "message_reply") {
-                            id = event.messageReply.senderID;
                         } else {
-                            api.getUserID(user.replace("@", ""), (err, data) => {
-                                if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                                removeUser(api, event, data[0].userID);
-                            });
+                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
                             return;
                         }
-                    } else if (isMyId(id)) {
+                    } else if (isMyId(id) && accounts.includes(id)) {
                         return;
                     }
                     removeUser(api, event, id);
@@ -4440,7 +4554,7 @@ async function ai(api, event) {
         });
     } else if (testCommand(api, query2, "block--bot", event.senderID, "admin")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4449,23 +4563,13 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return utils.logged(err);
-                        if (users.bot.includes(data[0].userID)) {
-                            sendMessage(api, event, "I already knew it.");
-                        } else {
-                            users.bot.push(data[0].userID);
-                            sendMessage(api, event, "Noted.");
-                        }
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
                     return;
                 }
-            } else if (isMyId(id)) {
+            } else if (isMyId(id) && accounts.includes(id)) {
                 return;
             }
             if (users.bot.includes(id)) {
@@ -4477,7 +4581,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "block--user", event.senderID, "owner")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4486,19 +4590,12 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return utils.logged(err);
-                        blockUser(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
                     return;
                 }
-            } else if (isMyId(id)) {
-                return;
             }
             blockUser(api, event, id);
         }
@@ -4517,7 +4614,7 @@ async function ai(api, event) {
         disableTTS(api, event, event.threadID);
     } else if (testCommand(api, query2, "unblock--user", event.senderID, "owner")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4526,18 +4623,13 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        unblockUser(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
                     return;
                 }
-            } else if (isMyId(id)) {
+            } else if (isMyId(id) && accounts.includes(id)) {
                 return;
             }
             unblockUser(api, event, id);
@@ -4549,14 +4641,13 @@ async function ai(api, event) {
         } else {
             data.shift();
             let count = 0;
-        for (pref in settings) {
-            if (settings[pref].owner && settings[pref].owner == event.senderID) {
-                settings[pref]["openai"] = data.join(" ");
-                count++;
+            for (pref in settings) {
+                if (settings[pref].owner && settings[pref].owner == event.senderID) {
+                    settings[pref]["openai"] = data.join(" ");
+                    count++;
+                }
             }
-        }
-        sendMessage(api, event, "Changes has been reflect to " + count + " accounts...");
-
+            sendMessage(api, event, "Changes has been reflect to " + count + " accounts...");
         }
     } else if (testCommand(api, query2, "setKey", event.senderID, "admin")) {
         let data = input.split(" ");
@@ -4569,7 +4660,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "fontIgnore", event.senderID, "owner")) {
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4579,15 +4670,10 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        fontIgnore(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
                     return;
                 }
             }
@@ -4600,19 +4686,19 @@ async function ai(api, event) {
         const login = api.getCurrentUserID();
         const uid = settings[login].owner;
 
-            api.getUserInfo(uid, (err, info) => {
-                if (err) return utils.logged(err);
-                let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
-                downloadFile(getProfilePic(uid), dirp).then(async (response) => {
-                    const fname = info[uid]["firstName"];
-                    let message = {
-                        body: utils.formatOutput("Account Owner", [fname, uid], "github.com/prj-orion"),
-                        attachment: fs.createReadStream(dirp),
-                    };
-                    sendMessage(api, event, message);
-                    unLink(dirp);
-                });
+        api.getUserInfo(uid, (err, info) => {
+            if (err) return utils.logged(err);
+            let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
+            downloadFile(getProfilePic(uid), dirp).then(async (response) => {
+                const fname = info[uid]["firstName"];
+                let message = {
+                    body: utils.formatOutput("Account Owner", [fname, uid], "github.com/prj-orion"),
+                    attachment: fs.createReadStream(dirp),
+                };
+                sendMessage(api, event, message);
+                unLink(dirp);
             });
+        });
     } else if (testCommand(api, query2, "reset--thread-lock", event.senderID, "owner", true)) {
         delete settingsThread[event.threadID]["lock"];
         sendMessage(api, event, "Lock has been lift.");
@@ -4639,7 +4725,7 @@ async function ai(api, event) {
         sendMessage(api, event, "Cleaning done.");
     } else if (testCommand(api, query2, "add--admin", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.length < 3) {
+        if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4648,15 +4734,10 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        addAdmin(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
                     return;
                 }
             }
@@ -4664,7 +4745,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "add--token", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.lenght < 3) {
+        if (data.lenght < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4673,18 +4754,10 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getUserProfile(data[0].userID, async function (user) {
-                            addBalance(user, 1500);
-                            sendMessage(api, event, "Added 1500 tokens to the account holder.");
-                        });
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
                     return;
                 }
             }
@@ -4699,7 +4772,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "remove--admin", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.lenght < 2) {
+        if (data.lenght < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
@@ -4708,198 +4781,253 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        remAdmin(api, event, data[0].userID);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
                     return;
                 }
-            } else if (isMyId(id)) {
+            } else if (isMyId(id) && accounts.includes(id)) {
                 return;
             }
             remAdmin(api, event, id);
         }
-    } else if (testCommand(api, query, "unsend--on", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].unsend) {
-            sendMessage(api, event, "It's already enabled.");
+    } else if (testCommand(api, query, "unsendMessages", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unsendMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " unsendMessages --on");
         } else {
-            settingsThread[event.threadID].unsend = true;
-            sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
-        }
-    } else if (testCommand(api, query, "unsend--off", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].unsend) {
-            settingsThread[event.threadID].unsend = false;
-            sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "leave--on", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].leave) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settingsThread[event.threadID].leave = true;
-            sendMessage(api, event, "Readding of user who left is now enabled.");
-        }
-    } else if (testCommand(api, query, "leave--off", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].leave) {
-            settingsThread[event.threadID].leave = false;
-            sendMessage(api, event, "Readding of user who left is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "delay--on", event.senderID, "root", true)) {
-        if (settings.shared.delay) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settings.shared.delay = true;
-            sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
-        }
-    } else if (testCommand(api, query, "delay--off", event.senderID, "root", true)) {
-        if (settings.shared.delay) {
-            settings.shared.delay = false;
-            sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "nsfw--on", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].nsfw) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settingsThread[event.threadID].nsfw = true;
-            sendMessage(api, event, "Not Safe For Work are now enabled.");
-        }
-    } else if (testCommand(api, query, "nsfw--off", event.senderID, "owner", true)) {
-        if (settingsThread[event.threadID].nsfw) {
-            settingsThread[event.threadID].nsfw = false;
-            sendMessage(api, event, "Not Safe For Work is been disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "simultaneousExec--on", event.senderID, "root", true)) {
-        if (settings.shared.simultaneousExec) {
-            sendMessage(api, event, "It's already enabled.");
-        } else {
-            settings.shared.simultaneousExec = true;
-            sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
-        }
-    } else if (testCommand(api, query, "simultaneousExec--off", event.senderID, "root", true)) {
-        if (settings.shared.simultaneousExec) {
-            settings.shared.simultaneousExec = false;
-            sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
-        } else {
-            sendMessage(api, event, "It's already disabled.");
-        }
-    } else if (testCommand(api, query, "group--member", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return utils.logged(err);
-            if (gc.isGroup) {
-                let arr = gc.participantIDs;
-                sendMessage(api, event, "This group has about " + arr.length + " members.");
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settingsThread[event.threadID].unsend) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settingsThread[event.threadID].unsend = true;
+                    sendMessage(api, event, "Resending of unsend messages and attachments are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settingsThread[event.threadID].unsend) {
+                    settingsThread[event.threadID].unsend = false;
+                    sendMessage(api, event, "Resending of unsend messages and attachments is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
             } else {
-                sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unsendMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " unsendMessages --on");
             }
-        });
-    } else if (testCommand(api, query2, "group--info", event.senderID)) {
+        }
+    } else if (testCommand(api, query, "leaveThread", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settingsThread[event.threadID].leave) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settingsThread[event.threadID].leave = true;
+                    sendMessage(api, event, "Readding of user who left is now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settingsThread[event.threadID].leave) {
+                    settingsThread[event.threadID].leave = false;
+                    sendMessage(api, event, "Readding of user who left is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
+            }
+        }
+    } else if (testCommand(api, query, "delayMessages", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: delayMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " delayMessages --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings.shared.delay) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings.shared.delay = true;
+                    sendMessage(api, event, "Delay on messages, replies and reaction are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings.shared.delay) {
+                    settings.shared.delay = false;
+                    sendMessage(api, event, "Delay on messages, replies and reaction is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: delayMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " delayMessages --on");
+            }
+        }
+    } else if (testCommand(api, query, "nsfw", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nsfw status" + "\n " + example[Math.floor(Math.random() * example.length)] + " nsfw --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settingsThread[event.threadID].nsfw) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settingsThread[event.threadID].nsfw = true;
+                    sendMessage(api, event, "Not Safe For Work are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settingsThread[event.threadID].nsfw) {
+                    settingsThread[event.threadID].nsfw = false;
+                    sendMessage(api, event, "Not Safe For Work is been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nsfw status" + "\n " + example[Math.floor(Math.random() * example.length)] + " nsfw --on");
+            }
+        }
+    } else if (testCommand(api, query, "simultaneousExec", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: simultaneousExec status" + "\n " + example[Math.floor(Math.random() * example.length)] + " simultaneousExec --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings.shared.simultaneousExec) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings.shared.simultaneousExec = true;
+                    sendMessage(api, event, "Prevention of simulataneous execution are now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings.shared.simultaneousExec) {
+                    settings.shared.simultaneousExec = false;
+                    sendMessage(api, event, "Prevention of simulataneous execution is now disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: simultaneousExec status" + "\n " + example[Math.floor(Math.random() * example.length)] + " simultaneousExec --on");
+            }
+        }
+    } else if (testCommand(api, query, "group", event.senderID, "user")) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        if (event.isGroup) {
-            api.getThreadInfo(event.threadID, (err, a) => {
-                if (err) utils.logged(err);
-                let inf = "";
-                let usern = a.userInfo.length;
-                for (b in a.userInfo) {
-                    inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
-                    inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
-                    inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
-                    inf += '<div class="absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4">' + a.userInfo[b].name + "</div>";
-                    inf += "</div>";
-                    inf += "</div>";
-                }
-                let summ = "<b>Message Count: </b>" + a.messageCount + "<br>";
-                summ += "<b>Members Count: </b>" + usern + "<br>";
-                if (a.emoji != null) {
-                    summ += "<b>Emoji: </b> " + a.emoji + "<br>";
-                }
-                summ += "<b>Color: </b> " + a.color + "<br>";
-                summ += "<b>Admins:</b><br>";
-                let i;
-                for (i = 0; i < a.adminIDs.length; i++) {
-                    let i2;
-                    for (i2 = 0; i2 < a.userInfo.length; i2++) {
-                        let id = a.adminIDs[i].id;
-                        if (a.userInfo[i2].id == id) {
-                            summ += a.userInfo[i2].name + "<br>";
-                        }
-                    }
-                }
-                if (a.approvalMode) {
-                    if (a.approvalQueue.length == 0) {
-                        summ += "<b>Approval: Yes</b><br>";
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group type" + "\n " + example[Math.floor(Math.random() * example.length)] + " group --member");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--member") {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return utils.logged(err);
+                    if (gc.isGroup) {
+                        let arr = gc.participantIDs;
+                        sendMessage(api, event, "This group has about " + arr.length + " members.");
                     } else {
-                        summ += "<b>Approval List: </b><br>";
-                        let i33;
-                        for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
-                            let i23;
-                            for (i23 = 0; i23 < a.userInfo.length; i23++) {
-                                let id3 = a.approvalQueue[i33].id;
-                                if (a.userInfo[i23].id == id3) {
-                                    summ += a.userInfo[i23].name + "<br>";
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
+                });
+            } else if (value == "--info") {
+                if (event.isGroup) {
+                    api.getThreadInfo(event.threadID, (err, a) => {
+                        if (err) utils.logged(err);
+                        let inf = "";
+                        let usern = a.userInfo.length;
+                        for (b in a.userInfo) {
+                            inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
+                            inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
+                            inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
+                            inf += '<div class="absolute w-full py-2.5 bottom-0 inset-x-0 bg-blue-400 text-white text-xs text-center leading-4">' + a.userInfo[b].name + "</div>";
+                            inf += "</div>";
+                            inf += "</div>";
+                        }
+                        let summ = "<b>Message Count: </b>" + a.messageCount + "<br>";
+                        summ += "<b>Members Count: </b>" + usern + "<br>";
+                        if (a.emoji != null) {
+                            summ += "<b>Emoji: </b> " + a.emoji + "<br>";
+                        }
+                        summ += "<b>Color: </b> " + a.color + "<br>";
+                        summ += "<b>Admins:</b><br>";
+                        let i;
+                        for (i = 0; i < a.adminIDs.length; i++) {
+                            let i2;
+                            for (i2 = 0; i2 < a.userInfo.length; i2++) {
+                                let id = a.adminIDs[i].id;
+                                if (a.userInfo[i2].id == id) {
+                                    summ += a.userInfo[i2].name + "<br>";
                                 }
                             }
                         }
-                    }
-                }
+                        if (a.approvalMode) {
+                            if (a.approvalQueue.length == 0) {
+                                summ += "<b>Approval: Yes</b><br>";
+                            } else {
+                                summ += "<b>Approval List: </b><br>";
+                                let i33;
+                                for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
+                                    let i23;
+                                    for (i23 = 0; i23 < a.userInfo.length; i23++) {
+                                        let id3 = a.approvalQueue[i33].id;
+                                        if (a.userInfo[i23].id == id3) {
+                                            summ += a.userInfo[i23].name + "<br>";
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
-                threadInfo["/" + a.threadID] = {
-                    threadName: a.threadName,
-                    summary: summ,
-                    info: inf,
-                    icon: a.imageSrc,
-                    color: a.color,
-                };
+                        threadInfo["/" + a.threadID] = {
+                            threadName: a.threadName,
+                            summary: summ,
+                            info: inf,
+                            icon: a.imageSrc,
+                            color: a.color,
+                        };
 
-                let urll = "http://50.253.118.57:8080/" + event.threadID;
-                let message = {
-                    body: "This group information can be see at " + urll,
-                    url: urll,
-                };
-                sendMessage(api, event, message);
-            });
-        } else {
-            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-        }
-    } else if (testCommand(api, query2, "group--name", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        if (event.isGroup) {
-            let data = input.split(" ");
-            if (data.length < 2) {
-                if (event.isGroup) {
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return utils.logged(err);
-                        sendMessage(api, event, gc.threadName);
+                        let urll = "http://50.253.118.57:8080/" + event.threadID;
+                        let message = {
+                            body: "This group information can be see at " + urll,
+                            url: urll,
+                        };
+                        sendMessage(api, event, message);
                     });
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group --name text" + "\n " + example[Math.floor(Math.random() * example.length)] + " gname Darling in the Franxx >3");
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                }
+            } else if (value == "--name") {
+                if (event.isGroup) {
+                    let data = input.split(" ");
+                    if (data.length < 2) {
+                        if (event.isGroup) {
+                            api.getThreadInfo(event.threadID, (err, gc) => {
+                                if (err) return utils.logged(err);
+                                sendMessage(api, event, gc.threadName);
+                            });
+                        } else {
+                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group --name text" + "\n " + example[Math.floor(Math.random() * example.length)] + " gname Darling in the Franxx >3");
+                        }
+                    } else {
+                        data.shift();
+                        api.setTitle(data.join(" "), event.threadID, (err, obj) => {
+                            if (err) return utils.logged(err);
+                        });
+                    }
+                } else {
+                    sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
                 }
             } else {
-                data.shift();
-                api.setTitle(data.join(" "), event.threadID, (err, obj) => {
-                    if (err) return utils.logged(err);
-                });
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group type" + "\n " + example[Math.floor(Math.random() * example.length)] + " group --member");
             }
-        } else {
-            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
         }
     } else if (testCommand(api, query, "tid", event.senderID, "user", true) || testCommand(api, query2, "gid", event.senderID) || testCommand(api, query, "uid", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -5020,21 +5148,16 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data2) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getAnimeGif(api, event, data2[0].userID, prrr);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
                     return;
                 }
             } else if (isMyId(id)) {
-                id = event.senderID;
+                return;
             }
             if (prrr == "headpat") {
                 prrr = "pat";
@@ -5072,21 +5195,16 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data2) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        getPopcatImage(api, event, data2[0].userID, prrr);
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
                     return;
                 }
             } else if (isMyId(id)) {
-                id = event.senderID;
+                return;
             }
             getPopcatImage(api, event, id, prrr);
         }
@@ -5216,20 +5334,16 @@ async function ai(api, event) {
                 let attem = getIdFromUrl(user);
                 if (/^[0-9]+$/.test(attem)) {
                     id = attem;
-                } else if (/^[0-9]+$/.test(user) && user.length == 15) {
+                } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
-                } else if (event.type == "message_reply") {
-                    id = event.messageReply.senderID;
                 } else {
-                    api.getUserID(user.replace("@", ""), (err, data) => {
-                        if (err) return sendMessage(api, event, "Unfortunately i couldn't find the name you mentioned. Please try it again later.");
-                        id = data[0].userID;
-                    });
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " stalk @Zero Two");
+                    return;
                 }
             } else if (isMyId(id)) {
-                id = event.senderID;
+                return;
             }
             await getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
                 if (response == null) {
@@ -5647,41 +5761,83 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(api, query2, "qoute--anime", event.senderID)) {
+    } else if (testCommand(api, query2, "qoute", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        getResponseData("https://animechan.vercel.app/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--anime") {
+                getResponseData("https://animechan.vercel.app/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
+                    }
+                });
+            } else if (value == "--advice") {
+                getResponseData("https://zenquotes.io/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        let result;
+                        let i;
+                        for (i = 0; i < response.length; i++) {
+                            result = response[i].q;
+                        }
+                        sendMessage(api, event, result);
+                    }
+                });
+            } else if (value == "--inspiration") {
+                getResponseData("https://zenquotes.io/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        let result;
+                        let i;
+                        for (i = 0; i < response.length; i++) {
+                            result = response[i].a + " says\n" + response[i].q;
+                        }
+                        sendMessage(api, event, result);
+                    }
+                });
+            } else if (value == "--motivation") {
+                getResponseData("https://zenquotes.io/api/random").then((response) => {
+                    if (response == null) {
+                        sendMessage(
+                            api,
+                            event,
+                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
+                        );
+                    } else {
+                        let result;
+                        let i;
+                        for (i = 0; i < response.length; i++) {
+                            result = response[i].q + "\n\nby " + response[i].a;
+                        }
+                        sendMessage(api, event, result);
+                    }
+                });
             } else {
-                sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
             }
-        });
-    } else if (testCommand(api, query, "qoute--advice", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
         }
-        getResponseData("https://zenquotes.io/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].q;
-                }
-                sendMessage(api, event, result);
-            }
-        });
     } else if (testCommand(api, query2, "time--timezone", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5703,46 +5859,6 @@ async function ai(api, event) {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime(name.timezone));
             } else {
                 sendMessage(api, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
-            }
-        });
-    } else if (testCommand(api, query2, "qoute--inspiration", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://zenquotes.io/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].a + " says\n" + response[i].q;
-                }
-                sendMessage(api, event, result);
-            }
-        });
-    } else if (testCommand(api, query2, "qoute--motivation", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        getResponseData("https://zenquotes.io/api/random").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].q + "\n\nby " + response[i].a;
-                }
-                sendMessage(api, event, result);
             }
         });
     } else if (testCommand(api, query, "newyear", event.senderID, "user", true)) {
@@ -5851,12 +5967,7 @@ async function ai(api, event) {
         sendMessage(api, event, "The state have saved successfully.");
     } else if (testCommand(api, query, "test", event.senderID, "user", true)) {
         if (crashes > 0) {
-            sendMessage(
-                api,
-                event,
-                crashes +
-                    " crash caught. \nhttps://github.com/prj-orion/issues"
-            );
+            sendMessage(api, event, crashes + " crash caught. \nhttps://github.com/prj-orion/issues");
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
         }
@@ -6989,9 +7100,14 @@ function removeUser(api, event, id) {
 }
 
 async function blockUser(api, event, id) {
-    if (isMyId(id)) {
+    if (isMyId(id) || accounts.includes(id)) {
+        if (isMyId(event.senderID)) {
+            return;
+        }
+        id = event.senderID;
         return;
     }
+
     const login = api.getCurrentUserID();
     if (users.blocked.includes(id)) {
         sendMessage(api, event, "It's already blocked.");
@@ -7022,7 +7138,12 @@ async function blockUser(api, event, id) {
                 users.admin = users.admin.filter((item) => item !== id);
                 aa += " have been blocked and " + getPronoun1(name.gender).toLowerCase() + " admin status is being revoked.";
             } else if (settings[login].owner == id) {
-                settings[login].owner = settings.shared.root;
+                for (pref in settings) {
+                    if (settings[pref].owner && settings[pref].owner == id) {
+                        settings[pref].owner = settings.shared.root;
+                        break;
+                    }
+                }
                 aa += " have been blocked and " + getPronoun1(name.gender).toLowerCase() + " ownership status is being revoked.";
             } else {
                 aa += " have been blocked.";
@@ -7034,7 +7155,12 @@ async function blockUser(api, event, id) {
             users.admin = users.admin.filter((item) => item !== id);
             sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
         } else if (settings[login].owner == id) {
-            settings[login].owner = settings.shared.root;
+            for (pref in settings) {
+                if (settings[pref].owner && settings[pref].owner == id) {
+                    settings[pref].owner = settings.shared.root;
+                    break;
+                }
+            }
             sendMessage(api, event, "You have been blocked and your ownership status is being revoked.");
         } else {
             sendMessage(api, event, "You have been blocked.");
@@ -7870,43 +7996,54 @@ function getNewComplextion(complextion) {
 
 // TODO check
 async function sendMessageToAll(api, event) {
-    let message = event.messageReply.body;
-    let time = utils.getTimestamp();
-    let count = 0;
-    let accm = [];
+    api.getThreadList(50, null, ["INBOX"], async (err, list) => {
+        if (err) return utils.logged(err);
+        getUserProfile(event.senderID, async function (name) {
+            for (tid in list) {
+                let threadID = list[tid].threadID;
+                if (!groups.blocked.includes(threadID) && !users.blocked.includes(threadID) && !users.bot.includes(threadID) && !users.muted.includes(threadID)) {
+                    let nR = "⋆｡° Notification from \n│\n";
+                    if (name.name != undefined) {
+                        nR += "│  name: " + name.name + "\n";
+                    }
+                    nR += `│\n└─ @ỹ@cmd-prj- orion`;
+                    nR += "\n\n" + event.messageReply.body;
 
-    if (event.messageReply.attachments.length != 0) {
-        let format = getFormat(event.messageReply.attachments[0].type);
-        for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
-            await sleep(1000);
-            let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
-            downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
-        }
-        let i1;
-        for (i1 = 0; i1 < count; i1++) {
-            accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
-        }
-    }
-    for (gp in groups.active) {
-        if (!groups.blocked.includes(groups.active[gp])) {
-            await sleep(5000);
-            let body = {
-                body: message,
-            };
-            if (accm.length > 0) {
-                body["attachment"] = accm;
-            }
-            api.sendMessage(body, groups.active[gp], (err12, messageInfo) => {
-                if (err12) {
-                    utils.logged(err12);
-                    groups.active.pop(groups.active[gp]);
-                    return;
+                    let message = nR;
+                    let time = utils.getTimestamp();
+                    let count = 1;
+                    let accm = [];
+
+                    if (event.messageReply.attachments.length != 0) {
+                        let format = getFormat(event.messageReply.attachments[0].type);
+                        for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+                            await sleep(1000);
+                            let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
+                            downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
+                        }
+                        let i1;
+                        for (i1 = 0; i1 < count; i1++) {
+                            accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
+                        }
+                    }
+
+                    await sleep(5000);
+                    let body = {
+                        body: message,
+                    };
+                    if (accm.length > 0) {
+                        body["attachment"] = accm;
+                    }
+                    api.sendMessage(body, threadID, (err12, messageInfo) => {
+                        if (err12) utils.logged(err12);
+                        count++;
+                    });
+
+                    sendMessage(api, event, "Message has been schedule to be send to  " + count + " groups.");
                 }
-                count++;
-            });
-        }
-    }
-    sendMessage(api, event, "Message successfully send to " + count + " groups.");
+            }
+        });
+    });
 }
 
 function numberWithCommas(x) {
@@ -9050,6 +9187,8 @@ function checkCmdPermission(api, permission, senderID) {
                     return false;
                 }
                 utils.logged("access_granted admin " + senderID);
+                // useless
+                return true;
             }
             utils.logged("access_granted owner " + senderID);
         }
@@ -9072,6 +9211,9 @@ function addToken(login, type, data) {
 }
 
 function getDataFromQuery(arr, remove) {
+    if (!remove) {
+        remove = [0, 1];
+    }
     for (let i = remove.length - 1; i >= 0; i--) arr.splice(remove[i], 1);
 
     return arr.join(" ");
@@ -9080,10 +9222,10 @@ function getDataFromQuery(arr, remove) {
 function getApiKey(login) {
     if (settings[login].openai) {
         return {
-            apiKey: settings[login].openai
+            apiKey: settings[login].openai,
         };
     }
     return {
-        apiKey: settings.shared.apikey.ai
+        apiKey: settings.shared.apikey.ai,
     };
 }
