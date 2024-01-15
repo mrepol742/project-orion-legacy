@@ -2315,7 +2315,7 @@ async function ai(api, event) {
         api.logout((err) => {
             if (err) utils.logged(err);
         });
-    } else if (testCommand(api, query, "maintenance", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "maintenance", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
