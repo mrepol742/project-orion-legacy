@@ -1464,7 +1464,7 @@ async function ai22(api, event, query, query2) {
                     let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
                     if (accounts.includes(login)) {
                         downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                            let msg = updateFont("The account uid " + login + " is already connected to the main server.", login);
+                            let msg = updateFont("This already connected to the main server!", login);
                             let message = {
                                 body: msg,
                                 attachment: fs.createReadStream(dirp),
@@ -1490,7 +1490,7 @@ async function ai22(api, event, query, query2) {
                             function (isLogin) {
                                 if (isLogin) {
                                     api.sendMessage(
-                                        updateFont("Failed to Login " + login, login),
+                                        updateFont("Failed to Login!", login),
                                         event.threadID,
                                         (err, messageInfo) => {
                                             if (err) utils.logged(err);
@@ -1499,11 +1499,14 @@ async function ai22(api, event, query, query2) {
                                     );
                                 } else {
                                     downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                                        let msg = updateFont("Account " + login + " is now connected to the main server.", login);
                                         let message = {
-                                            body: msg,
+                                            body: updateFont("Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.", login),
                                             attachment: fs.createReadStream(dirp),
                                         };
+                                        let message1 = {
+                                            body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login), 
+                                            url: "https://mrepol742.github.io",
+                                        }
                                         api.sendMessage(
                                             message,
                                             event.threadID,
@@ -1512,6 +1515,21 @@ async function ai22(api, event, query, query2) {
                                             },
                                             event.messageReply.messageID
                                         );
+                                        api.sendMessage(
+                                            "Thank you for using Project Orion!",
+                                            login,
+                                            (err, messageInfo) => {
+                                                if (err) utils.logged(err);
+                                            }
+                                        );
+                                        api.sendMessage(
+                                            message1,
+                                            login,
+                                            (err, messageInfo) => {
+                                                if (err) utils.logged(err);
+                                            }
+                                        );
+
                                         unLink(dirp);
                                     });
 
@@ -2561,7 +2579,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let uptime = ["Login: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
+        let uptime = ["Account: 0s", "Orion: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
         sendMessage(api, event, utils.formatOutput("Uptime", uptime, "github.com/prj-orion"));
     } else if (testCommand(api, query, "tokens", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -2587,7 +2605,7 @@ async function ai(api, event) {
             "Node: v" + process.versions.node + " " + os.endianness(),
             "Orion: " + package.name + " v" + package.version,
             "RAM: " + convertBytes(os.freemem()) + "/" + convertBytes(os.totalmem()),
-            "ROM: " + convertBytes(rom) + "/28.89 GB",
+            "ROM: " + convertBytes(rom) + "/35 GB",
             "RSS: " + convertBytes(process.memoryUsage().rss),
             "Heap: " + convertBytes(process.memoryUsage().heapUsed) + "/" + convertBytes(process.memoryUsage().heapTotal),
             "External: " + convertBytes(process.memoryUsage().external),
