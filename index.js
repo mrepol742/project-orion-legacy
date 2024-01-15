@@ -441,20 +441,32 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
+            // check if thread lock exists and is not equal to current bot id
+                // then return
+                if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
+                    return;
+                }
+
+            // if the current bot id is not the root user
             if (!isMyId(api.getCurrentUserID())) {
+                // if the settings thread is undefined
                 if (!settingsThread[event.threadID]) {
+                    // set the defaults
                     settingsThread[event.threadID] = settingsThread.default;
+                    // mute the threads
                     api.muteThread(event.threadID, -1, (err) => {
                         if (err) utils.logged(err);
                     });
                 }
 
+                // check if thread lock didnt exists
                 if (!settingsThread[event.threadID].lock) {
+                    // apply thread lock from the first bot
                     settingsThread[event.threadID]["lock"] = api.getCurrentUserID();
                     utils.logged("thread_lock " + event.threadID + " to " + api.getCurrentUserID());
                 }
 
-                if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
+                if (settingsThread[event.threadID].lock != api.getCurrentUserID()) {
                     return;
                 }
             }
