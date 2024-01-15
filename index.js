@@ -471,7 +471,7 @@ function redfox_fb(fca_state, login, cb) {
                 }
             }
 
-            if ((event.type == "message" || event.type == "message_reply") && (accounts.includes(event.senderID) || event.senderID == api.getCurrentUserID())) {
+            if ((event.type == "message" || event.type == "message_reply") && event.senderID == api.getCurrentUserID()) {
                 let body = event.body;
                 let result = !!body.match(/^[!@#$%&*~\-=_|?+/<>:;]/);
                 if (result) {
