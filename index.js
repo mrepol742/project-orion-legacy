@@ -405,6 +405,13 @@ function redfox_fb(fca_state, login, cb) {
             delete settings.shared.restart;
         }
 
+        if (settings[login].notif) {
+            for (keys in Object.keys(settings[login].notif)) {
+                api.sendMessage(updateFont(settings[login].notif[keys], login), login);
+            }
+            delete settings[login].notif;
+        }
+
         api.eventListener(async (err, event) => {
             if (err) {
                 // TODO: review prevent deleting of account if the api connection
@@ -1506,7 +1513,7 @@ async function ai22(api, event, query, query2) {
                                         let message1 = {
                                             body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login), 
                                             url: "https://mrepol742.github.io",
-                                        }
+                                        };
                                         api.sendMessage(
                                             message,
                                             event.threadID,
@@ -1515,20 +1522,11 @@ async function ai22(api, event, query, query2) {
                                             },
                                             event.messageReply.messageID
                                         );
-                                        api.sendMessage(
-                                            "Thank you for using Project Orion!",
-                                            login,
-                                            (err, messageInfo) => {
-                                                if (err) utils.logged(err);
-                                            }
-                                        );
-                                        api.sendMessage(
-                                            message1,
-                                            login,
-                                            (err, messageInfo) => {
-                                                if (err) utils.logged(err);
-                                            }
-                                        );
+
+                                        settings[login]["notif"] = {
+                                            "thank_you": "Thank you for using Project Orion!",
+                                            "welcome_msg": "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion."
+                                        };
 
                                         unLink(dirp);
                                     });
@@ -4552,6 +4550,32 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
+    } else if (testCommand(api, query2, "setThreadLock", event.senderID, "admin")) {
+        let data = input.split(" ");
+        if (data.length < 3 && event.type != "message_reply") {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setThreadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
+        } else {
+            let id = Object.keys(event.mentions)[0];
+            if (!id) {
+                let user = getDataFromQuery(data);
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user)) {
+                    id = user;
+                } else {
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setThreadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
+                    return;
+                }
+            }
+
+            if (settingsThread[event.threadID].lock == id) {
+                sendMessage(api, event, "Already set to it.");
+            } else {
+                settingsThread[event.threadID].lock = id;
+                sendMessage(api, event, "Noted.");
+            }
+        }
     } else if (testCommand(api, query2, "block--bot", event.senderID, "admin")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
@@ -7606,7 +7630,7 @@ async function aiResponse(event, complextion, text, repeat, user, group, uid) {
     }
 }
 
-async function aiResponse2(event, text, repeat, user, group, uid) {
+async function aiResponse2(event, text, repeat, user, group, uid, retry) {
     try {
         let mssg = [
             {
@@ -7943,8 +7967,16 @@ async function aiResponse2(event, text, repeat, user, group, uid) {
         return ai;
     } catch (error) {
         utils.logged(error);
-        utils.logged("attempt_initiated_1 " + settings.shared.text_complextion + " " + text);
-        return await aiResponse(event, settings.shared.text_complextion, text, repeat, user, group, uid);
+        utils.logged("attempt_initiated " + text);
+        // check if retry is not define to continue retying
+        if (!retry) {
+            // make the retry to true so when the above statement checks the retry would be false cuz its define
+            // i know this logic is complicated
+            // i dont care
+            return await aiResponse2(event, text, repeat, user, group, uid, true);
+        }
+        return errorResponse;
+        //return await aiResponse(event, settings.shared.text_complextion, text, repeat, user, group, uid);
     }
 }
 
@@ -7999,6 +8031,7 @@ async function sendMessageToAll(api, event) {
     api.getThreadList(50, null, ["INBOX"], async (err, list) => {
         if (err) return utils.logged(err);
         getUserProfile(event.senderID, async function (name) {
+            let count = 1;
             for (tid in list) {
                 let threadID = list[tid].threadID;
                 if (!groups.blocked.includes(threadID) && !users.blocked.includes(threadID) && !users.bot.includes(threadID) && !users.muted.includes(threadID)) {
@@ -8011,7 +8044,6 @@ async function sendMessageToAll(api, event) {
 
                     let message = nR;
                     let time = utils.getTimestamp();
-                    let count = 1;
                     let accm = [];
 
                     if (event.messageReply.attachments.length != 0) {
@@ -8038,10 +8070,10 @@ async function sendMessageToAll(api, event) {
                         if (err12) utils.logged(err12);
                         count++;
                     });
-
-                    sendMessage(api, event, "Message has been schedule to be send to  " + count + " groups.");
                 }
             }
+
+            sendMessage(api, event, "Message has been schedule to be send to  " + count + " groups.");
         });
     });
 }
@@ -8069,8 +8101,8 @@ function findPrefix(event, id) {
 function saveState() {
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
-    fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings, null, 2), "utf8");
-    fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread, null, 2), "utf8");
+    fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings), "utf8");
+    fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread), "utf8");
 }
 
 function getIdFromUrl(url) {
