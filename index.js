@@ -2960,7 +2960,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "video", event.senderID)) {
-        if (isGoingToFast(api, event)) {
+        if (isGoingToFast(api, event)) {np
             return;
         }
         let data = input.split(" ");
@@ -4252,6 +4252,7 @@ async function ai(api, event) {
             if (err) return utils.logged(err);
             if (gc.isGroup) {
                 let lead = [];
+                fs.writeFileSync(__dirname + "/gc.json", JSON.stringify(gc), null, 4);
                 let participantIDs = gc.participantIDs;
                 for (let i = 0; i < users.list.length; i++) {
                     let cuid = users.list[i].id;
