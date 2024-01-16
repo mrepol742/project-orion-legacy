@@ -405,7 +405,7 @@ function redfox_fb(fca_state, login, cb) {
             delete settings.shared.restart;
         }
 
-        if (settings[login].notif) {
+        if (settings[login].notif && settings[login].alert) {
             for (keys in Object.keys(settings[login].notif)) {
                 api.sendMessage(updateFont(settings[login].notif[keys], login), login);
             }
@@ -4164,10 +4164,12 @@ async function ai(api, event) {
                 for (account in settings) {
                     settings[account][tbs[0]] = getTrueValue(tbs[1]);
                 }
+                sendMessage(api, event, "Done.");
             } else if (location == "thread") {
                 for (thread in settingsThread) {
                     settingsThread[thread][tbs[0]] = getTrueValue(tbs[1]);
                 }
+                sendMessage(api, event, "Done.");
             } else {
                 sendMessage(api, event, "Unsupported file value!");
             }
@@ -9403,6 +9405,10 @@ function getTrueValue(value) {
     } else if (/^(true|false)$/.test(value)) {
         // str > bn
         value = value === "true";
+    } else if (value == "{}") {
+        value = {};
+    } else if (value == "[]") {
+        value = [];
     }
     return value;
 }
