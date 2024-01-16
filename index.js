@@ -4121,17 +4121,37 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (testCommand(api, query2, "blockCommand", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "block --command", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockCommand cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockCommand cmd");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --command cmd");
         } else {
-            data.shift();
-            let command = data.join(" ");
+            let command = getDataFromQuery(data);
             if (!settings.shared["block_cmd"]) {
                 settings.shared["block_cmd"] = [];
             }
-            settings.shared["block_cmd"].push(command);
+            if (settings.shared["block_cmd"].includes(command)) {
+                sendMessage(api, event, "This command is already in blocked list.");
+            } else {
+                settings.shared["block_cmd"].push(command);
+                sendMessage(api, event, "command `" + command + "` has been blocked.");
+            }
+        }
+    } else if (testCommand(api, query2, "unblock --command", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --command cmd");
+        } else {
+            let command = getDataFromQuery(data);
+            if (!settings.shared["block_cmd"]) {
+                settings.shared["block_cmd"] = [];
+            }
+            if (settings.shared["block_cmd"].includes(command)) {
+                sendMessage(api, event, "This command is not in block list.");
+            } else {
+                settings.shared["block_cmd"] = settings.shared["block_cmd"].filter((item) => item !== command);
+                sendMessage(api, event, "command `" + command + "` has been unblocked.");
+            }
         }
     } else if (testCommand(api, query2, "insertData", event.senderID, "root")) {
         let data = input.split(" ");
