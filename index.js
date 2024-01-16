@@ -4121,7 +4121,7 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (testCommand(api, query2, "block --command", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "block--command", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --command cmd");
@@ -4137,7 +4137,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "command `" + command + "` has been blocked.");
             }
         }
-    } else if (testCommand(api, query2, "unblock --command", event.senderID, "root")) {
+    } else if (testCommand(api, query2, "unblock--command", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --command cmd");
