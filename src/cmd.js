@@ -8,7 +8,7 @@
 const fs = require("fs");
 
 function gen() {
-    let arr = fs.readFileSync("../index.js") + "";
+    let arr = fs.readFileSync("index.js") + "";
 
     let commands = arr.match(/testCommand\((.*?)\)/g);
 
