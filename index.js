@@ -442,10 +442,10 @@ function redfox_fb(fca_state, login, cb) {
             }
 
             // check if thread lock exists and is not equal to current bot id
-                // then return
-                if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
-                    return;
-                }
+            // then return
+            if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
+                return;
+            }
 
             // if the current bot id is not the root user
             if (!isMyId(api.getCurrentUserID())) {
@@ -681,6 +681,7 @@ function redfox_fb(fca_state, login, cb) {
                     break;
                 case "message_reaction":
                     if (
+                        settings[login].mirrorReaction &&
                         !accounts.includes(event.userID) &&
                         !accounts.includes(event.senderID) &&
                         !emo.includes(event.messageID) &&
@@ -1033,9 +1034,9 @@ function redfox_fb(fca_state, login, cb) {
                                     sendMessage(api, event, "I can join in but i won't gonna talk. Never!");
                                 }
                                 */
-                                sendMessage(api, event, "Sorry, Melvin Jones is a bit busy this time. Please try it again later.");
+                                sendMessage(api, event, "Unfortunately, my owner is a bit busy this time. Please call again later.\n\nThank you.");
                             } else if (event.logMessageData.event == "missed_call") {
-                                sendMessage(api, event, "Sorry, Melvin Jones is a bit busy this time. Please try it again later.");
+                                sendMessage(api, event, "Unfortunately, my owner is a bit busy this time. Please call again later.\n\nThank you.");
                             } else {
                                 /*
                                 if (event.logMessageData.call_duration > 20) {
@@ -1519,11 +1520,14 @@ async function ai22(api, event, query, query2) {
                                 } else {
                                     downloadFile(getProfilePic(login), dirp).then(async (response) => {
                                         let message = {
-                                            body: updateFont("Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.", login),
+                                            body: updateFont(
+                                                "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
+                                                login
+                                            ),
                                             attachment: fs.createReadStream(dirp),
                                         };
                                         let message1 = {
-                                            body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login), 
+                                            body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login),
                                             url: "https://mrepol742.github.io",
                                         };
                                         api.sendMessage(
@@ -1536,8 +1540,9 @@ async function ai22(api, event, query, query2) {
                                         );
 
                                         settings[login]["notif"] = {
-                                            "thank_you": "Thank you for using Project Orion!",
-                                            "welcome_msg": "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion."
+                                            thank_you: "Thank you for using Project Orion!",
+                                            welcome_msg:
+                                                "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
                                         };
 
                                         unLink(dirp);
@@ -1892,7 +1897,7 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if (isMyPrefix(findPr, input, query2)) {
+    } else if ((findPr != false && input.startsWith(findPr)) || testCommand(api, query2, "mj", event.senderID || testCommand(api, query2, "beshy", event.senderID))) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2426,6 +2431,56 @@ async function ai(api, event) {
                 }
             } else {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
+            }
+        }
+    } else if (testCommand(api, query, "autoReaction", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoReaction --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].autoReaction) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].autoReaction = true;
+                    sendMessage(api, event, "Auto reaction has been enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].autoReaction) {
+                    settings[login].autoReaction = false;
+                    sendMessage(api, event, "Auto reaction has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: autoReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoReaction --on");
+            }
+        }
+    } else if (testCommand(api, query, "mirrorReaction", event.senderID, "owner")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mirrorReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " mirrorReaction --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings[login].mirrorReaction) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings[login].mirrorReaction = true;
+                    sendMessage(api, event, "Mirror reaction has been enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings[login].mirrorReaction) {
+                    settings[login].mirrorReaction = false;
+                    sendMessage(api, event, "Mirror reaction has been disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mirrorReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " mirrorReaction --on");
             }
         }
     } else if (testCommand(api, query, "selfListen", event.senderID, "owner")) {
@@ -4066,6 +4121,37 @@ async function ai(api, event) {
                 });
             }
         }
+    } else if (testCommand(api, query2, "blockCommand", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: blockCommand cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " blockCommand cmd");
+        } else {
+            data.shift();
+            let command = data.join(" ");
+            if (settings.shared["block_cmd"]) {
+                settings.shared["block_cmd"] = [];
+            }
+            settings.shared["block_cmd"].push(command);
+        }
+    } else if (testCommand(api, query2, "insertData", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: insertData file name:value" + "\n " + example[Math.floor(Math.random() * example.length)] + " insertData account nsfw:true");
+        } else {
+            let location = data[1];
+            let tbs = data[2].split(":");
+            if (location == "account") {
+                for (account in settings) {
+                    settings[account][tbs[0]] = getTrueValue(tbs[1]);
+                }
+            } else if (location == "thread") {
+                for (thread in settingsThread) {
+                    settingsThread[thread][tbs[0]] = getTrueValue(tbs[1]);
+                }
+            } else {
+                sendMessage(api, event, "Unsupported file value!");
+            }
+        }
     } else if (testCommand(api, query2, "shell", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4262,6 +4348,7 @@ async function ai(api, event) {
             if (err) return utils.logged(err);
             if (gc.isGroup) {
                 let lead = [];
+                fs.writeFileSync(__dirname + "/gc.json", JSON.stringify(gc), null, 4);
                 let participantIDs = gc.participantIDs;
                 for (let i = 0; i < users.list.length; i++) {
                     let cuid = users.list[i].id;
@@ -6217,6 +6304,9 @@ function someA(api, event, query, input) {
 }
 
 function reaction(api, event, query, input) {
+    if (!settings[api.getCurrentUserID()].autoReaction) {
+        return;
+    }
     if (containsAny(query, happyEE) || input.includes("😂") || input.includes("🤣") || input.includes("😆")) {
         if (query.includes("hahahaha") || query.includes("hahhaha") || query.includes("ahhahahh")) {
             sendMessage(api, event, funD[Math.floor(Math.random() * funD.length)]);
@@ -7611,7 +7701,8 @@ function saveEvent(api, event) {
 
 async function aiResponse(event, complextion, text, repeat, user, group, uid) {
     try {
-        const openai = new OpenAI(getApiKey(uid));
+        const apikey = getApiKey(uid);
+        const openai = new OpenAI(apikey);
         const ai = await openai.chat.completions.create(generateParamaters(event, complextion, text, user, group, uid));
 
         utils.logged("tokens_used prompt: " + ai.usage.prompt_tokens + " completion: " + ai.usage.completion_tokens + " total: " + ai.usage.total_tokens);
@@ -7626,6 +7717,7 @@ async function aiResponse(event, complextion, text, repeat, user, group, uid) {
         } else if (text1.includes("You are an AI trained by Melvin Jones Repol to respond like human.") || text1.includes("You are talking to Melvin Jones Repol.")) {
             ai.choices[0].text = "I got you!! haha. \n\nIs the text above";
         }
+        settings[settings.shared.root].openai = apikey;
         return ai;
     } catch (error) {
         utils.logged(error);
@@ -7658,7 +7750,8 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
             },
             { role: "user", content: text },
         ];
-        const openai = new OpenAI(getApiKey(uid));
+        const apikey = getApiKey(uid);
+        const openai = new OpenAI(apikey);
         let ai = await openai.chat.completions.create({
             model: settings.shared.primary_text_complextion,
             messages: mssg,
@@ -7784,6 +7877,9 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
 
         utils.logged("tokens_used prompt: " + ai.usage.prompt_tokens + " completion: " + ai.usage.completion_tokens + " total: " + ai.usage.total_tokens);
         let message = ai.choices[0].message;
+
+        settings[settings.shared.root].openai = apikey;
+
         if (ai.choices[0].finish_reason == "length" && !message.content.endsWith(".")) {
             ai.choices[0].message = "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
             return ai;
@@ -9189,6 +9285,9 @@ function isJson(str) {
 }
 
 function testCommand(api, message, prefix, senderID, permission, regex) {
+    if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) {
+        return false;
+    }
     if (!permission) {
         permission = "user";
     }
@@ -9272,4 +9371,18 @@ function getApiKey(login) {
     return {
         apiKey: settings.shared.apikey.ai,
     };
+}
+
+function getTrueValue(value) {
+    if (/^\d+$/.test(value)) {
+        // str > int
+        value = parseInt(value);
+    } else if (/^[+-]?\d+(\.\d+)?$/.test(value)) {
+        // str > fl/db
+        value = parseFloat(value);
+    } else if (/^(true|false)$/.test(value)) {
+        // str > bn
+        value = value === "true";
+    }
+    return value;
 }
