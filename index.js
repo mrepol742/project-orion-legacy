@@ -443,7 +443,7 @@ function redfox_fb(fca_state, login, cb) {
 
             // check if thread lock exists and is not equal to current bot id
             // then return
-            if (settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
+            if (settingsThread[event.threadID] && settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != api.getCurrentUserID()) {
                 return;
             }
 
@@ -4128,7 +4128,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             let command = data.join(" ");
-            if (settings.shared["block_cmd"]) {
+            if (!settings.shared["block_cmd"]) {
                 settings.shared["block_cmd"] = [];
             }
             settings.shared["block_cmd"].push(command);
