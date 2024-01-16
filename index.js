@@ -4147,20 +4147,19 @@ async function ai(api, event) {
                 settings.shared["block_cmd"] = [];
             }
             if (settings.shared["block_cmd"].includes(command)) {
-                sendMessage(api, event, "This command is not in block list.");
-            } else {
                 settings.shared["block_cmd"] = settings.shared["block_cmd"].filter((item) => item !== command);
                 sendMessage(api, event, "command `" + command + "` has been unblocked.");
+            } else {
+                sendMessage(api, event, "This command is not in block list.");
             }
         }
     } else if (testCommand(api, query2, "insertData", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: insertData file name:value" + "\n " + example[Math.floor(Math.random() * example.length)] + " insertData account nsfw:true");
         } else {
             let location = data[1];
-            let ddd = data[2];
-            let tbs = ddd.split(":");
+            let tbs = data[2].split(":");
             if (location == "account") {
                 for (account in settings) {
                     settings[account][tbs[0]] = getTrueValue(tbs[1]);
