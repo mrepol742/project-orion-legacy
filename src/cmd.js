@@ -8,7 +8,7 @@
 const fs = require("fs");
 
 function gen() {
-    let arr = fs.readFileSync("index.js") + "";
+    let arr = fs.readFileSync("../index.js") + "";
 
     let commands = arr.match(/testCommand\((.*?)\)/g);
 
@@ -20,6 +20,8 @@ function gen() {
     let helpCount = 1;
     let help = {};
 
+    let commandAll = [];
+
     for (cmd in commands) {
         let query = commands[cmd].replace("testCommand(", "").replace(")", "");
         query = query.replaceAll('"', "").replaceAll("--", " --").split(", ");
@@ -27,24 +29,31 @@ function gen() {
         query[2] = query[2];
 
         let permission = query[4];
-        if (["root", "owner"].includes(permission)) {
+        if (["root", "owner", "admin"].includes(permission)) {
             if (help[permission] !== undefined) {
                 help[permission].push(query[2]);
             } else {
-            help[permission] = [query[2]];
+                help[permission] = [query[2]];
             }
         } else {
-            count++;
+            commandAll.push(query[2]);
+        }
+    }
 
-            if (count % 21 == 0) {
-                helpCount++;
+    help["root"] = help["root"].sort((a, b) => a.localeCompare(b));
+    help["owner"] = help["owner"].sort((a, b) => a.localeCompare(b));
+    help["admin"] = help["admin"].sort((a, b) => a.localeCompare(b));
+    commandAll = commandAll.sort((a, b) => a.localeCompare(b));
 
+    for (cmd in commandAll) {
+        count++;
+        if (count % 21 == 0) {
+            helpCount++;
+        } else {
+            if (help["help" + helpCount] !== undefined) {
+                help["help" + helpCount].push(commandAll[cmd]);
             } else {
-                if (help["help" + helpCount] !== undefined) {
-                    help["help" + helpCount].push(query[2]);
-                } else {
-                help["help" + helpCount] = [query[2]];
-                }
+                help["help" + helpCount] = [commandAll[cmd]];
             }
         }
     }
@@ -61,7 +70,14 @@ function formatGen(gen) {
     return strs;
 }
 
+/*
+
+* let gen1 = JSON.parse(gen());
+* console.log(formatGen(gen1["admin"]))
+
+*/
+
 module.exports = {
     gen: gen,
-    formatGen: formatGen
+    formatGen: formatGen,
 };
