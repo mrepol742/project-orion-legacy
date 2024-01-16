@@ -4123,7 +4123,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "block--command", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --command cmd");
         } else {
             let command = getDataFromQuery(data);
@@ -4139,7 +4139,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "unblock--command", event.senderID, "root")) {
         let data = input.split(" ");
-        if (data.length < 2) {
+        if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --command cmd");
         } else {
             let command = getDataFromQuery(data);
@@ -4159,7 +4159,8 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: insertData file name:value" + "\n " + example[Math.floor(Math.random() * example.length)] + " insertData account nsfw:true");
         } else {
             let location = data[1];
-            let tbs = data[2].split(":");
+            let ddd = data[2];
+            let tbs = ddd.split(":");
             if (location == "account") {
                 for (account in settings) {
                     settings[account][tbs[0]] = getTrueValue(tbs[1]);
