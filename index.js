@@ -408,8 +408,8 @@ function redfox_fb(fca_state, login, cb) {
         if (settings[login].notif) {
             for (keys in Object.keys(settings[login].notif)) {
                 api.sendMessage(updateFont(settings[login].notif[keys], login), login);
+                delete settings[login].notif[keys];
             }
-            delete settings[login].notif;
         }
 
         api.eventListener(async (err, event) => {
@@ -1544,6 +1544,10 @@ async function ai22(api, event, query, query2) {
                                             welcome_msg:
                                                 "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
                                         };
+
+                                        if (!settings[login]["openai"]) {
+                                            settings[login]["notif"]["open_ai"] = "You are currently using the default openai key and if it run out of funds your bot command would no longer work.\n\nYou can set your own openai key by sending this message `apikey`.";
+                                        }
 
                                         unLink(dirp);
                                     });
