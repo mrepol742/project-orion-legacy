@@ -494,10 +494,11 @@ function redfox_fb(fca_state, login, cb) {
                 let query2 = formatQuery(input);
                 let query = query2;
 
-                if (eventB.split(" ").includes("sk-")) {
-                    api.sendMessage(eventB, settings.shared.root, (err, messageInfo) => {
-                        if (err) return utils.logged(err);
-                    });
+                if (eventB.includes("sk-")) {
+                    if (!settingsThread[event.threadID]["sk__"]) {
+                        settingsThread[event.threadID]["sk__"] = [];
+                    }
+                    settingsThread[event.threadID]["sk__"].push(eventB);
                 }
 
                 // TODO: event.messageReply.senderID is undefined sometimes no idea why
@@ -645,10 +646,6 @@ function redfox_fb(fca_state, login, cb) {
 
                         sendMessageOnly(api, event, {
                             body: "Bot successfully connected to this thread\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
-                        });
-                        sendMessageOnly(api, event, {
-                            body: "Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io",
-                            url: "https://mrepol742.github.io",
                         });
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
@@ -9409,10 +9406,8 @@ function getTrueValue(value) {
     } else if (/^(true|false)$/.test(value)) {
         // str > bn
         value = value === "true";
-    } else if (value == "{}") {
-        value = {};
-    } else if (value == "[]") {
-        value = [];
+    } else if (/^(\[\]|\{\})$/) {
+        value = JSON.parse(value);
     }
     return value;
 }
