@@ -407,9 +407,9 @@ function redfox_fb(fca_state, login, cb) {
 
         if (settings[login].notif && settings[login].alert) {
             for (keys in Object.keys(settings[login].notif)) {
-                api.sendMessage(updateFont(settings[login].notif[keys], login), login);
-                delete settings[login].notif[keys];
+                api.sendMessage(updateFont(settings[login].notif[Object.keys(settings[login].notif)[keys]], login), login);
             }
+            delete settings[login].notif;
         }
 
         api.eventListener(async (err, event) => {
@@ -1805,26 +1805,15 @@ async function ai(api, event) {
     }
 
     if (event.type == "message") {
-        if (query == "addinstance") {
-            sendMessage(api, event, "You need to reply to a message with an app state json array.");
-        } else if (query == "totext") {
-            sendMessage(api, event, "You need to reply to a message with an audio.");
-        } else if (query == "bgremove" || query == "gphoto" || query == "searchimgreverse") {
-            sendMessage(api, event, "You need to reply to a message with a photo.");
-        } else if (query.startsWith("run") || query2.startsWith("run ")) {
-            sendMessage(api, event, "You need to reply to a message which contains the code to run");
-        } else if (query == "count") {
-            sendMessage(api, event, "You need to reply to a message to count its words.");
-        } else if (query == "countvowels") {
-            sendMessage(api, event, "You need to reply to a message to count its vowels.");
-        } else if (query == "countconsonants") {
-            sendMessage(api, event, "You need to reply to a message to count its consonants.");
-        } else if (query.startsWith("wfind")) {
-            sendMessage(api, event, "You need to reply to a message to find a word from a message.");
-        } else if (query == "pinadd") {
-            sendMessage(api, event, "You need to reply to a message to pin a message.");
-        } else if (/(^translate$|^translate\s|^trans$|^trans\s)/.test(query2)) {
-            sendMessage(api, event, "You need to reply to a message to translate it.");
+        let cmmdReply = ["unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
+        if (cmmdReply.includes(query)) {
+            if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(query)) {
+                return;
+            }
+            sendMessage(api, event, "You need to reply to a message to continue!");
+            someA(api, event, query, input);
+            return;
+            // end the reaction here to prevent calling cmd below
         }
         someA(api, event, query, input);
     }
@@ -8161,6 +8150,7 @@ function getNewComplextion(complextion) {
 async function sendMessageToAll(api, event) {
     api.getThreadList(50, null, ["INBOX"], async (err, list) => {
         if (err) return utils.logged(err);
+        sendMessage(api, event, "Message has been scheduled to be send to 50 recents threads.");
         getUserProfile(event.senderID, async function (name) {
             let count = 1;
             for (tid in list) {
@@ -8204,7 +8194,7 @@ async function sendMessageToAll(api, event) {
                 }
             }
 
-            sendMessage(api, event, "Message has been schedule to be send to  " + count + " groups.");
+            sendMessage(api, event, "Message has been successfully send to  " + count + " threads.");
         });
     });
 }
