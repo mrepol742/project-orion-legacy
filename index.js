@@ -6570,6 +6570,10 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
 }
 
 async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
+    getUserProfile(event.senderID, async function (user) {
+        let countTokens = countWords(message) + countVowel(message) + countConsonants(message);
+        addBalance(user, countTokens);
+    });
     if (voiceE && typeof message === "string" && message.length < 200 && groups.tts.includes(thread_id)) {
         const url = GoogleTTS.getAudioUrl(message, voiceOptions);
         let time = utils.getTimestamp();
@@ -9361,6 +9365,13 @@ function checkCmdPermission(api, permission, senderID) {
                 return true;
             }
             utils.logged("access_granted owner " + senderID);
+        } else if (permission == "admin") {
+            if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
+                // check if the account owner is the sender and
+                // also verify if the sender is admin if not false
+                utils.logged("access_denied user is not admin " + senderID);
+                return false;
+            }
         }
     }
     return true;
