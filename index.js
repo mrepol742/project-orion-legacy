@@ -4392,7 +4392,7 @@ async function ai(api, event) {
             } else {
                 getUserProfile(event.senderID, async function (name) {
                     if (name.balance != undefined) {
-                        sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.006) + "$ " + name.firstName], "github.com/prj-orion"));
+                        sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                     } else {
                         sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
                     }
@@ -4424,7 +4424,7 @@ async function ai(api, event) {
         }
         getUserProfile(event.senderID, async function (name) {
             if (name.balance != undefined) {
-                sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.006) + "$ " + name.firstName], "github.com/prj-orion"));
+                sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
             } else {
                 sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
             }
@@ -6445,7 +6445,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     if (!no_font) {
         no_font = false;
     }
-    if (!users.admin.includes(event.senderID) && settings.shared.delay && bn) {
+    if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && settings.shared.root != event.senderID && settings.shared.delay && bn) {
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
