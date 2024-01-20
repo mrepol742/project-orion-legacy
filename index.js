@@ -2357,25 +2357,27 @@ async function ai(api, event) {
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
         for (let i = 0; i < accounts.length; i++) {
             getUserProfile(accounts[i], async function (name) {
+                construct += "│\n";
                 if (name.name != undefined) {
                     construct += "│   ⦿ Name: " + name.name + "\n│   ⦿ uid: " + accounts[i];
                 } else {
                     construct += "│   ⦿ uid: " + accounts[i];
                 }
                 if (blockedCall.includes(accounts[i])) {
-                    construct += "\n│   ⦿ Status: Temporarily Blocked";
+                    construct += "\n│   ⦿ Status: Temporarily Blocked\n";
                 } else {
                     if (settings[accounts[i]].stop) {
-                        construct += "\n│   ⦿ Status: Stop";
+                        construct += "\n│   ⦿ Status: Stop\n";
                     } else if (settings[accounts[i]].maintenance) {
-                        construct += "\n│   ⦿ Status: Maintenance";
+                        construct += "\n│   ⦿ Status: Maintenance\n";
                     } else {
-                        construct += "\n│   ⦿ Status: Online";
+                        construct += "\n│   ⦿ Status: Online\n";
                     }
                 }
                 if (accounts[i] != settings[accounts[i]].owner) {
-                construct += "\n│   ⦿ Owner: " + settings[accounts[i]].owner + "\n│\n";
+                construct += "\n│   ⦿ Owner: " + settings[accounts[i]].owner + "\n";
                 }
+                construct += "│\n";
             });
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
