@@ -106,6 +106,7 @@ let userWhoSendDamnReports = {};
 let msgs = {};
 let accounts = [];
 let blockedCall = [];
+let ongoingLogin = [];
 
 let isCalled = true;
 let commandCalls = 0;
@@ -1496,7 +1497,10 @@ async function ai22(api, event, query, query2) {
                             );
                             unLink(dirp);
                         });
+                    } else if (ongoingLogin.includes(login)) {
+                        sendMessage(api, event, "Please wait your account is still loggin-in...!");
                     } else {
+                        ongoingLogin.push(login);
                         utils.logged("adding_account " + login);
                         sendMessage(api, event, "Login initiated for user id " + login + ".");
                         redfox_fb(
@@ -1505,6 +1509,7 @@ async function ai22(api, event, query, query2) {
                             },
                             login,
                             function (isLogin) {
+                                ongoingLogin = ongoingLogin.filter((item) => item !== login);
                                 if (isLogin) {
                                     api.sendMessage(
                                         updateFont("Failed to Login!", login),
@@ -1805,7 +1810,7 @@ async function ai(api, event) {
     }
 
     if (event.type == "message") {
-        let cmmdReply = ["unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
+        let cmmdReply = ["addInstance", "unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
         if (cmmdReply.includes(query)) {
             if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(query)) {
                 return;
@@ -2353,22 +2358,24 @@ async function ai(api, event) {
         for (let i = 0; i < accounts.length; i++) {
             getUserProfile(accounts[i], async function (name) {
                 if (name.name != undefined) {
-                    construct += "│ Name: " + name.name + "\n│ Uid: " + accounts[i];
+                    construct += "│   ⦿ Name: " + name.name + "\n│   ⦿ uid: " + accounts[i];
                 } else {
-                    construct += "│ Uid: " + accounts[i];
+                    construct += "│   ⦿ uid: " + accounts[i];
                 }
                 if (blockedCall.includes(accounts[i])) {
-                    construct += "\n│ Status: Temporarily Blocked";
+                    construct += "\n│   ⦿ Status: Temporarily Blocked";
                 } else {
                     if (settings[accounts[i]].stop) {
-                        construct += "\n│ Status: Stop";
+                        construct += "\n│   ⦿ Status: Stop";
                     } else if (settings[accounts[i]].maintenance) {
-                        construct += "\n│ Status: Maintenance";
+                        construct += "\n│   ⦿ Status: Maintenance";
                     } else {
-                        construct += "\n│ Status: Online";
+                        construct += "\n│   ⦿ Status: Online";
                     }
                 }
-                construct += "\n│ Owner: " + settings[accounts[i]].owner + "\n│\n";
+                if (accounts[i] != settings[accounts[i]].owner) {
+                construct += "\n│   ⦿ Owner: " + settings[accounts[i]].owner + "\n│\n";
+                }
             });
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
@@ -7357,9 +7364,7 @@ async function unblockUser(api, event, id) {
         return;
     }
 
-    if (isMyId(event.senderID)) {
-        users.bot = users.bot.filter((item) => item !== id);
-    }
+    if (users.blocked.includes(id)) {
     users.blocked = users.blocked.filter((item) => item !== id);
     api.setMessageReaction(
         ":heart:",
@@ -7369,6 +7374,13 @@ async function unblockUser(api, event, id) {
         },
         true
     );
+    } else {
+        if (isMyId(event.senderID)) {
+            users.bot = users.bot.filter((item) => item !== id);
+        } else {
+            sendMessage(api, event, "Unable to unblocked!");
+        }
+    }
 }
 
 function fontIgnore(api, event, id) {
