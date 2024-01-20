@@ -2354,7 +2354,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
+        let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (let i = 0; i < accounts.length; i++) {
             getUserProfile(accounts[i], async function (name) {
                 construct += "│\n";
@@ -2375,9 +2375,8 @@ async function ai(api, event) {
                     }
                 }
                 if (accounts[i] != settings[accounts[i]].owner) {
-                construct += "\n│   ⦿ Owner: " + settings[accounts[i]].owner + "\n";
+                construct += "│   ⦿ Owner: " + settings[accounts[i]].owner + "\n";
                 }
-                construct += "│\n";
             });
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
