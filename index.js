@@ -6570,7 +6570,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
 }
 
 async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
-    getUserProfile(event.senderID, async function (user) {
+    getUserProfile(id, async function (user) {
         let countTokens = countWords(message) + countVowel(message) + countConsonants(message);
         addBalance(user, countTokens);
     });
