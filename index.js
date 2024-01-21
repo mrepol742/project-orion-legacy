@@ -69,6 +69,7 @@ let joke = JSON.parse(fs.readFileSync(__dirname + "/data/joke.json"));
 let cat = JSON.parse(fs.readFileSync(__dirname + "/data/cat.json"));
 let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 let cmdPage = JSON.parse(gen());
+let R_S_H_12_mmm = fs.existsSync(__dirname + "/.nosave");
 
 console.log("\tProject Information");
 console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + (users.blocked.length + users.bot.length) + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
@@ -1118,6 +1119,7 @@ function redfox_fb(fca_state, login, cb) {
                             }
                             break;
                         case "log:approval_mode":
+                            /*
                             let isJoinable1 = event.logMessageData.joinable_mode;
                             if (isJoinable1 != 0) {
                                 sendMessage(api, event, "Hays admin enable member requests...");
@@ -1125,13 +1127,13 @@ function redfox_fb(fca_state, login, cb) {
                                 sendMessage(api, event, "Anyone can now add ya friends without pesting the adminds...");
                             }
                             utils.logged("approval_mode " + isJoinable1);
+                            */
+                            utils.logged(event);
                             break;
                         case "log:pin_messages":
-                            console.log("called");
                             utils.logged(event);
                             break;
                         case "log:unpin_messages":
-                            console.log("called a");
                             utils.logged(event);
                             break;
                         case "log:group_link":
@@ -1141,6 +1143,7 @@ function redfox_fb(fca_state, login, cb) {
                             } else {
                                 sendMessage(api, event, "Anyone can join using the group link. Invite ya friends..");
                             }
+                            utils.logged(event);
                             break;
                         case "log:magic_words":
                             let mcw = event.logMessageData.magic_word;
@@ -1560,12 +1563,22 @@ async function ai22(api, event, query, query2) {
                                         users.blocked = users.blocked.filter((item) => item !== login);
                                         utils.logged("rem_block_user " + login);
                                         sendMessageOnly(api, event, "You've been unblocked!");
+                                        getUserProfile(login, async function (name) {
+                                            if (name.balance) {
+                                                name.balance -= 1500;
+                                            }
+                                        });
                                     }
 
                                     if (users.bot.includes(login)) {
                                         users.bot = users.bot.filter((item) => item !== login);
                                         utils.logged("rem_block_bot " + login);
                                         sendMessageOnly(api, event, "You've been unblocked!");
+                                        getUserProfile(login, async function (name) {
+                                            if (name.balance) {
+                                                name.balance -= 3000;
+                                            }
+                                        });
                                     }
 
                                     if (users.admin.includes(event.senderID)) {
@@ -2375,7 +2388,7 @@ async function ai(api, event) {
                     }
                 }
                 if (accounts[i] != settings[accounts[i]].owner) {
-                construct += "│   ⦿ Owner: " + settings[accounts[i]].owner + "\n";
+                    construct += "│   ⦿ Owner: " + settings[accounts[i]].owner + "\n";
                 }
             });
         }
@@ -2642,7 +2655,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let uptime = ["Account: 0s", "Orion: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
+        let uptime = ["Login: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
         sendMessage(api, event, utils.formatOutput("Uptime", uptime, "github.com/prj-orion"));
     } else if (testCommand(api, query, "tokens", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -4366,66 +4379,86 @@ async function ai(api, event) {
         }
         api.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return utils.logged(err);
-            if (gc.isGroup) {
-                let lead = [];
-                fs.writeFileSync(__dirname + "/gc.json", JSON.stringify(gc), null, 4);
-                let participantIDs = gc.participantIDs;
-                for (let i = 0; i < users.list.length; i++) {
-                    let cuid = users.list[i].id;
-                    if (users.list[i].balance && participantIDs.includes(cuid)) {
-                        lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
-                    }
-                }
-                lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
-                let construct = [];
-                let totalL = lead.length;
-                if (totalL >= 31) {
-                    totalL = 31;
-                }
-                for (let i1 = 1; i1 < totalL; i1++) {
-                    if (!accounts.includes(lead[i1 - 1].id)) {
-                        construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
-                    }
-                }
-                sendMessage(api, event, utils.formatOutput("Top User Thread", construct, "github.com/prj-orion"));
-            } else {
-                getUserProfile(event.senderID, async function (name) {
-                    if (name.balance != undefined) {
-                        sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
+            getUserProfile(event.senderID, async function (user) {
+                if (!user.balance) {
+                    sendMessage(api, event, "You have 0 $ balance yet.");
+                } else if (1000 > user.balance) {
+                    sendMessage(api, event, "You don't have enough balance!");
+                } else {
+                    if (gc.isGroup) {
+                        let lead = [];
+                        let participantIDs = gc.participantIDs;
+                        for (let i = 0; i < users.list.length; i++) {
+                            let cuid = users.list[i].id;
+                            if (users.list[i].balance && participantIDs.includes(cuid)) {
+                                lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
+                            }
+                        }
+                        lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+                        let construct = [];
+                        let totalL = lead.length;
+                        if (totalL >= 31) {
+                            totalL = 31;
+                        }
+                        for (let i1 = 1; i1 < totalL; i1++) {
+                            if (!accounts.includes(lead[i1 - 1].id)) {
+                                const money = formatDecNum((lead[i1 - 1].balance / 1000) * 0.007);
+                                if (money != 0.0) {
+                                    construct.push(money + "$ " + lead[i1 - 1].name);
+                                }
+                            }
+                        }
+                        sendMessage(api, event, utils.formatOutput("Top User Thread", construct, "github.com/prj-orion"));
                     } else {
-                        sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
+                        sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((user.balance / 1000) * 0.007) + "$ " + user.firstName], "github.com/prj-orion"));
                     }
-                });
-            }
+                    user.balance -= 1000;
+                }
+            });
         });
     } else if (testCommand(api, query2, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let lead = [];
-        for (let i = 0; i < users.list.length; i++) {
-            if (users.list[i].balance) {
-                lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
-            }
-        }
-        lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+        getUserProfile(event.senderID, async function (user) {
+            if (!user.balance) {
+                sendMessage(api, event, "You have 0 $ balance yet.");
+            } else if (1000 > user.balance) {
+                sendMessage(api, event, "You don't have enough balance!");
+            } else {
+                let lead = [];
+                for (let i = 0; i < users.list.length; i++) {
+                    if (users.list[i].balance) {
+                        lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
+                    }
+                }
+                lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
 
-        let construct = [];
-        for (let i1 = 1; i1 < 31; i1++) {
-            if (!accounts.includes(lead[i1 - 1].id)) {
-                construct.push(formatDecNum((lead[i1 - 1].balance / 1000) * 0.007) + "$ " + lead[i1 - 1].name);
+                let construct = [];
+                for (let i1 = 1; i1 < 31; i1++) {
+                    if (!accounts.includes(lead[i1 - 1].id)) {
+                        const money = formatDecNum((lead[i1 - 1].balance / 1000) * 0.007);
+                        if (money != 0.0) {
+                            construct.push(money + "$ " + lead[i1 - 1].name);
+                        }
+                    }
+                }
+                sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
+                user.balance -= 1000;
             }
-        }
-        sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
+        });
     } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getUserProfile(event.senderID, async function (name) {
-            if (name.balance != undefined) {
-                sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
+            if (!name.balance) {
+                sendMessage(api, event, "You have 0 $ balance yet.");
+            } else if (1000 > name.balance) {
+                sendMessage(api, event, "You don't have enough balance!");
             } else {
-                sendMessage(api, event, utils.formatOutput("Balance", ["0 $ " + name.firstName], "github.com/prj-orion"));
+                sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
+                name.balance -= 1000;
             }
         });
     } else if (testCommand(api, query2, "mdl", event.senderID)) {
@@ -5213,12 +5246,21 @@ async function ai(api, event) {
             return;
         }
         let data = input.split(" ");
+        let NP = "\n\n< prev  ─────────  next >";
         if (data[1] == "next") {
             if (cmdPage["help" + settingsThread[event.threadID].cmd++]) {
-                sendMessage(api, event, formatGen(cmdPage["help" + settingsThread[event.threadID].cmd++]));
+                sendMessage(api, event, formatGen(cmdPage["help" + settingsThread[event.threadID].cmd++]) + NP);
                 settingsThread[event.threadID].cmd++;
             } else {
-                sendMessage(api, event, formatGen(cmdPage["help1"]));
+                sendMessage(api, event, formatGen(cmdPage["help1"]) + NP);
+                settingsThread[event.threadID].cmd = 1;
+            }
+        } else if (data[1] == "prev") {
+            if (cmdPage["help" + settingsThread[event.threadID].cmd - 1]) {
+                sendMessage(api, event, formatGen(cmdPage["help" + settingsThread[event.threadID].cmd - 1]) + NP);
+                settingsThread[event.threadID].cmd = settingsThread[event.threadID].cmd - 1;
+            } else {
+                sendMessage(api, event, formatGen(cmdPage["help1"]) + NP);
                 settingsThread[event.threadID].cmd = 1;
             }
         } else if (data[1] == "admin") {
@@ -5227,11 +5269,11 @@ async function ai(api, event) {
             sendMessage(api, event, formatGen(cmdPage["owner"]));
         } else if (data[1] == "root") {
             sendMessage(api, event, formatGen(cmdPage["root"]));
-        } else if (data.length >= 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, admin, owner, root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
-        } else {
-            sendMessage(api, event, formatGen(cmdPage["help1"]));
+        } else if (input == "cmd") {
+            sendMessage(api, event, formatGen(cmdPage["help1"]) + NP);
             settingsThread[event.threadID].cmd = 1;
+        } else {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, prev, admin, owner and root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
         }
     } else if (testCommand(api, query2, "wiki", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -6568,14 +6610,19 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
     }
 }
 
+function getMessageFromObj(message) {
+    if (typeof message === "string") return message;
+    return message.body;
+}
+
 async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
     getUserProfile(id, async function (user) {
-        let splitNewLines = message.split("\n");
+        let splitNewLines = getMessageFromObj(message).split("\n");
         splitNewLines.shift();
         splitNewLines.pop();
         splitNewLines = splitNewLines.join(" ");
         let countTokens = countWords(splitNewLines) + countVowel(splitNewLines) + countConsonants(splitNewLines);
-        addBalance(user, (countTokens / 3));
+        addBalance(user, countTokens / 3);
     });
     if (voiceE && typeof message === "string" && message.length < 200 && groups.tts.includes(thread_id)) {
         const url = GoogleTTS.getAudioUrl(message, voiceOptions);
@@ -7374,18 +7421,28 @@ async function unblockUser(api, event, id) {
     }
 
     if (users.blocked.includes(id)) {
-    users.blocked = users.blocked.filter((item) => item !== id);
-    api.setMessageReaction(
-        ":heart:",
-        event.messageID,
-        (err) => {
-            if (err) utils.logged(err);
-        },
-        true
-    );
+        users.blocked = users.blocked.filter((item) => item !== id);
+        api.setMessageReaction(
+            ":heart:",
+            event.messageID,
+            (err) => {
+                if (err) utils.logged(err);
+            },
+            true
+        );
+        getUserProfile(id, async function (name) {
+            if (name.balance) {
+                name.balance -= 1500;
+            }
+        });
     } else {
         if (isMyId(event.senderID)) {
             users.bot = users.bot.filter((item) => item !== id);
+            getUserProfile(id, async function (name) {
+                if (name.balance) {
+                    name.balance -= 3000;
+                }
+            });
         } else {
             sendMessage(api, event, "Unable to unblocked!");
         }
@@ -8241,6 +8298,7 @@ function findPrefix(event, id) {
 }
 
 function saveState() {
+    if (R_S_H_12_mmm) return;
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings), "utf8");
@@ -9267,16 +9325,21 @@ async function addAccount() {
                         if (users.blocked.includes(login)) {
                             users.blocked = users.blocked.filter((item) => item !== login);
                             utils.logged("rem_block_user " + login);
+                            getUserProfile(login, async function (name) {
+                                if (name.balance) {
+                                    name.balance -= 1500;
+                                }
+                            });
                         }
 
                         if (users.bot.includes(login)) {
                             users.bot = users.bot.filter((item) => item !== login);
                             utils.logged("rem_block_bot " + login);
-                        }
-
-                        if (users.admin.includes(event.senderID)) {
-                            users.admin = users.admin.filter((item) => item !== event.senderID);
-                            utils.logged("rem_sender_admin " + login);
+                            getUserProfile(login, async function (name) {
+                                if (name.balance) {
+                                    name.balance -= 3000;
+                                }
+                            });
                         }
 
                         if (users.admin.includes(login)) {
