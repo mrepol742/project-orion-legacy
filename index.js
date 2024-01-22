@@ -1559,11 +1559,17 @@ async function ai22(api, event, query, query2) {
 
                                     accounts.push(login);
 
+
+                                    settings[login].owner = event.senderID;
+
+                                    utils.logged("set_owner " + login + " to " + event.senderID);
+
+
                                     if (users.blocked.includes(login)) {
                                         users.blocked = users.blocked.filter((item) => item !== login);
                                         utils.logged("rem_block_user " + login);
                                         sendMessageOnly(api, event, "You've been unblocked!");
-                                        getUserProfile(login, async function (name) {
+                                        getUserProfile(settings[login].owner, async function (name) {
                                             if (name.balance) {
                                                 name.balance -= 1500;
                                             }
@@ -1574,7 +1580,7 @@ async function ai22(api, event, query, query2) {
                                         users.bot = users.bot.filter((item) => item !== login);
                                         utils.logged("rem_block_bot " + login);
                                         sendMessageOnly(api, event, "You've been unblocked!");
-                                        getUserProfile(login, async function (name) {
+                                        getUserProfile(settings[login].owner, async function (name) {
                                             if (name.balance) {
                                                 name.balance -= 3000;
                                             }
@@ -1592,10 +1598,6 @@ async function ai22(api, event, query, query2) {
                                         utils.logged("rem_login_adminn " + login);
                                         sendMessageOnly(api, event, "Your admin previliges has been revoke!");
                                     }
-
-                                    settings[login].owner = event.senderID;
-
-                                    utils.logged("set_owner " + login + " to " + event.senderID);
 
                                     saveState();
 
@@ -4101,6 +4103,10 @@ async function ai(api, event) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
+        } else if (testCommand(api, query, "push--force", event.senderID, "root", true)) {
+        exec('git add . && git commit -m "Initial Commit" && git push origin master --force', function (err, stdout, stderr) {
+            sendMessage(api, event, stdout + "\n\n" + stderr);
+        });
     } else if (testCommand(api, query, "unblock--all", event.senderID, "root", true)) {
         let size = users.blocked.length;
         if (size == 0) {
@@ -4461,6 +4467,35 @@ async function ai(api, event) {
                 name.balance -= 1000;
             }
         });
+    } else if (testCommand(api, query2, "balance--user", event.senderID)) {
+        let data = input.split(" ");
+        if (data.length < 3 && event.type != "message_reply") {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: balance --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " balance --user @Zero Two");
+        } else {
+            let id = Object.keys(event.mentions)[0];
+            if (!id) {
+                let user = getDataFromQuery(data);
+                let attem = getIdFromUrl(user);
+                if (/^[0-9]+$/.test(attem)) {
+                    id = attem;
+                } else if (/^[0-9]+$/.test(user)) {
+                    id = user;
+                } else {
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: balance --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " balance --user @Zero Two");
+                    return;
+                }
+            }
+            getUserProfile(id, async function (name) {
+                if (!name.balance) {
+                    sendMessage(api, event, "You have no balance to continue.");
+                } else if (1000 > name.balance) {
+                    sendMessage(api, event, "You don't have enough balance to continue!");
+                } else {
+                    sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
+                    name.balance -= 1000;
+                }
+            });
+        }
     } else if (testCommand(api, query2, "mdl", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -5016,6 +5051,31 @@ async function ai(api, event) {
                 }
             } else {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
+            }
+        }
+         } else if (testCommand(api, query, "webApi", event.senderID, "root")) {
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: webApi status" + "\n " + example[Math.floor(Math.random() * example.length)] + " webApi --on");
+        } else {
+            data.shift();
+            let value = data.join(" ");
+            if (value == "--on") {
+                if (settings.shared.webApi) {
+                    sendMessage(api, event, "It's already enabled.");
+                } else {
+                    settings.shared.webApi = true;
+                    sendMessage(api, event, "Web API is now enabled.");
+                }
+            } else if (value == "--off") {
+                if (settings.shared.webApi) {
+                    settings.shared.webApi = false;
+                    sendMessage(api, event, "Web API is now disabled.");
+                } else {
+                    sendMessage(api, event, "It's already disabled.");
+                }
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: webApi status" + "\n " + example[Math.floor(Math.random() * example.length)] + " webApi --on");
             }
         }
     } else if (testCommand(api, query, "delayMessages", event.senderID, "root")) {
