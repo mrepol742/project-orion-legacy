@@ -9465,7 +9465,7 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
         if (prefix == message) return checkCmdPermission(api, permission, senderID);
         return false;
     }
-    const regExp = new RegExp("(^" + prefix + "|^" + prefix + "s)");
+    const regExp = new RegExp("(^" + prefix + "$|^" + prefix + "\\s)");
     if (regExp.test(message)) return checkCmdPermission(api, permission, senderID);
     return false;
 }
