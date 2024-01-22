@@ -4485,13 +4485,19 @@ async function ai(api, event) {
                     return;
                 }
             }
-            getUserProfile(id, async function (name) {
+            getUserProfile(event.senderID, async function (name) {
                 if (!name.balance) {
-                    sendMessage(api, event, "You have no balance to continue.");
+                    sendMessage(api, event, "You have 0 $ balance yet.");
                 } else if (1000 > name.balance) {
-                    sendMessage(api, event, "You don't have enough balance to continue!");
+                    sendMessage(api, event, "You don't have enough balance!");
                 } else {
-                    sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
+                    getUserProfile(id, async function (name) {
+                        if (!name.balance) {
+                            sendMessage(api, event, name + " have 0 $ balance.");
+                        } else {
+                            sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
+                        }
+                    });
                     name.balance -= 1000;
                 }
             });
