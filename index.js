@@ -1471,6 +1471,30 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "Invalid Key!");
             }
         }
+    } else if (testCommand(api, query2, "balance--transfer", event.senderID)) {
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: balance --transfer amount" + "\n " + example[Math.floor(Math.random() * example.length)] + " balance --transfer 1000");
+        } else {
+            let transferTo = event.messageReply.senderID;
+            if (/^\d+$/.test(data[2])) {
+                let amount = parseInt(data[2]);
+                getUserProfile(event.senderID, async function (name) {
+                    if (!name.balance) {
+                        sendMessage(api, event, "You have 0 $ balance yet.");
+                    } else if (amount + 500 > name.balance) {
+                        sendMessage(api, event, "You don't have enough balance!");
+                    } else {
+                        getUserProfile(transferTo, async function (name) {
+                            addBalance(name, amount);
+                        });
+                        name.balance -= 500;
+                    }
+                });
+            } else {
+                sendMessage(api, event, "Must be number!");
+            }
+        }
     } else if (testCommand(api, query, "addInstance", event.senderID, "user", true)) {
         let msB = event.messageReply.body;
         if (isJson(msB)) {
@@ -1559,11 +1583,9 @@ async function ai22(api, event, query, query2) {
 
                                     accounts.push(login);
 
-
                                     settings[login].owner = event.senderID;
 
                                     utils.logged("set_owner " + login + " to " + event.senderID);
-
 
                                     if (users.blocked.includes(login)) {
                                         users.blocked = users.blocked.filter((item) => item !== login);
@@ -1825,7 +1847,7 @@ async function ai(api, event) {
     }
 
     if (event.type == "message") {
-        let cmmdReply = ["addInstance", "unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
+        let cmmdReply = ["balance--transfer", "addinstance", "unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
         if (cmmdReply.includes(query)) {
             if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(query)) {
                 return;
@@ -4103,7 +4125,7 @@ async function ai(api, event) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
-        } else if (testCommand(api, query, "push--force", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "push--force", event.senderID, "root", true)) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master --force', function (err, stdout, stderr) {
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
@@ -4383,14 +4405,15 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return utils.logged(err);
-            getUserProfile(event.senderID, async function (user) {
-                if (!user.balance) {
-                    sendMessage(api, event, "You have 0 $ balance yet.");
-                } else if (1000 > user.balance) {
-                    sendMessage(api, event, "You don't have enough balance!");
-                } else {
+        getUserProfile(event.senderID, async function (user) {
+            if (!user.balance) {
+                sendMessage(api, event, "You have 0 $ balance yet.");
+            } else if (1000 > user.balance) {
+                sendMessage(api, event, "You don't have enough balance!");
+            } else {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return utils.logged(err);
+
                     if (gc.isGroup) {
                         let lead = [];
                         let participantIDs = gc.participantIDs;
@@ -4419,8 +4442,8 @@ async function ai(api, event) {
                         sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((user.balance / 1000) * 0.007) + "$ " + user.firstName], "github.com/prj-orion"));
                     }
                     user.balance -= 1000;
-                }
-            });
+                });
+            }
         });
     } else if (testCommand(api, query2, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -4474,15 +4497,19 @@ async function ai(api, event) {
         } else {
             let id = Object.keys(event.mentions)[0];
             if (!id) {
-                let user = getDataFromQuery(data);
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user)) {
-                    id = user;
+                if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: balance --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " balance --user @Zero Two");
-                    return;
+                    let user = getDataFromQuery(data);
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user)) {
+                        id = user;
+                    } else {
+                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: balance --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " balance --user @Zero Two");
+                        return;
+                    }
                 }
             }
             getUserProfile(event.senderID, async function (name) {
@@ -4657,26 +4684,22 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
         } else {
             let pref = getDataFromQuery(data);
-            if (pref.split("").length >= 15) {
-                if (/^\d+$/.test(pref)) {
-                    api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return utils.logged(err);
-                        if (gc.isGroup) {
-                            api.addUserToGroup(pref, event.threadID, (err) => {
-                                if (err) {
-                                    sendMessage(api, event, "The user could not be added to the group. Please try again later.");
-                                }
-                                if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
-                                    sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
-                                }
-                            });
-                        } else {
-                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
-                        }
-                    });
-                } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
-                }
+            if (/^\d+$/.test(pref)) {
+                api.getThreadInfo(event.threadID, (err, gc) => {
+                    if (err) return utils.logged(err);
+                    if (gc.isGroup) {
+                        api.addUserToGroup(pref, event.threadID, (err) => {
+                            if (err) {
+                                sendMessage(api, event, "The user could not be added to the group. Please try again later.");
+                            }
+                            if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
+                                sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
+                            }
+                        });
+                    } else {
+                        sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                    }
+                });
             } else {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
             }
@@ -4724,18 +4747,20 @@ async function ai(api, event) {
                 } else {
                     let id = Object.keys(event.mentions)[0];
                     if (!id) {
-                        let user = getDataFromQuery(data);
-                        let attem = getIdFromUrl(user);
-                        if (/^[0-9]+$/.test(attem)) {
-                            id = attem;
-                        } else if (/^[0-9]+$/.test(user)) {
-                            id = user;
+                        if (event.type == "message_reply") {
+                            id = event.messageReply.senderID;
                         } else {
-                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
-                            return;
+                            let user = getDataFromQuery(data);
+                            let attem = getIdFromUrl(user);
+                            if (/^[0-9]+$/.test(attem)) {
+                                id = attem;
+                            } else if (/^[0-9]+$/.test(user)) {
+                                id = user;
+                            } else {
+                                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
+                                return;
+                            }
                         }
-                    } else if (isMyId(id) && accounts.includes(id)) {
-                        return;
                     }
                     removeUser(api, event, id);
                 }
@@ -4743,48 +4768,72 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
-    } else if (testCommand(api, query2, "setThreadLock", event.senderID, "admin")) {
+    } else if (testCommand(api, query2, "setThreadLock", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setThreadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (!id) {
-                let user = getDataFromQuery(data);
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user)) {
-                    id = user;
+                if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setThreadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
-                    return;
+                    let user = getDataFromQuery(data);
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user)) {
+                        id = user;
+                    } else {
+                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setThreadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
+                        return;
+                    }
                 }
             }
+            if (accounts.includes(id)) {
+                if (settingsThread[event.threadID].lock == id) {
+                    sendMessage(api, event, "Already set to it.");
+                } else {
+                    api.getThreadInfo(event.threadID, (err, gc) => {
+                        if (err) return utils.logged(err);
 
-            if (settingsThread[event.threadID].lock == id) {
-                sendMessage(api, event, "Already set to it.");
+                        if (gc.isGroup) {
+                            let participantIDs = gc.participantIDs;
+                            if (participantIDs.includes(id)) {
+                                settingsThread[event.threadID].lock = id;
+                                sendMessage(api, event, "Noted.");
+                            } else {
+                                sendMessage(api, event, "Unable to find the account on this group!");
+                            }
+                        } else {
+                            sendMessage(api, event, "Unfortunately this is a personal chat and not a group chat.");
+                        }
+                    });
+                }
             } else {
-                settingsThread[event.threadID].lock = id;
-                sendMessage(api, event, "Noted.");
+                sendMessage(api, event, "No orion found on this account!.");
             }
         }
-    } else if (testCommand(api, query2, "block--bot", event.senderID, "admin")) {
+    } else if (testCommand(api, query2, "block--bot", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
         } else {
             let id = Object.keys(event.mentions)[0];
             if (!id) {
-                let user = getDataFromQuery(data);
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user)) {
-                    id = user;
+                if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
-                    return;
+                    let user = getDataFromQuery(data);
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user)) {
+                        id = user;
+                    } else {
+                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
+                        return;
+                    }
                 }
             } else if (isMyId(id) && accounts.includes(id)) {
                 return;
@@ -4794,6 +4843,9 @@ async function ai(api, event) {
             } else {
                 users.bot.push(id);
                 sendMessage(api, event, "Noted.");
+                getUserProfile(event.senderID, async function (user) {
+                    addBalance(user, 1500);
+                });
             }
         }
     } else if (testCommand(api, query2, "block--user", event.senderID, "owner")) {
@@ -4803,15 +4855,19 @@ async function ai(api, event) {
         } else {
             let id = Object.keys(event.mentions)[0];
             if (!id) {
-                let user = getDataFromQuery(data);
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user)) {
-                    id = user;
+                if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
-                    return;
+                    let user = getDataFromQuery(data);
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user)) {
+                        id = user;
+                    } else {
+                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
+                        return;
+                    }
                 }
             }
             blockUser(api, event, id);
@@ -4836,18 +4892,24 @@ async function ai(api, event) {
         } else {
             let id = Object.keys(event.mentions)[0];
             if (!id) {
-                let user = getDataFromQuery(data);
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user)) {
-                    id = user;
+                if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
-                    return;
+                    if (event.type == "message_reply") {
+                        id = event.messageReply.senderID;
+                    } else {
+                        let user = getDataFromQuery(data);
+                        let attem = getIdFromUrl(user);
+                        if (/^[0-9]+$/.test(attem)) {
+                            id = attem;
+                        } else if (/^[0-9]+$/.test(user)) {
+                            id = user;
+                        } else {
+                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
+                            return;
+                        }
+                    }
                 }
-            } else if (isMyId(id) && accounts.includes(id)) {
-                return;
             }
             unblockUser(api, event, id);
         }
@@ -4947,15 +5009,19 @@ async function ai(api, event) {
         } else {
             let id = Object.keys(event.mentions)[0];
             if (!id) {
-                let user = getDataFromQuery(data);
-                let attem = getIdFromUrl(user);
-                if (/^[0-9]+$/.test(attem)) {
-                    id = attem;
-                } else if (/^[0-9]+$/.test(user)) {
-                    id = user;
+                if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
-                    return;
+                    let user = getDataFromQuery(data);
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user)) {
+                        id = user;
+                    } else {
+                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
+                        return;
+                    }
                 }
             }
             addAdmin(api, event, id);
@@ -5059,7 +5125,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
             }
         }
-         } else if (testCommand(api, query, "webApi", event.senderID, "root")) {
+    } else if (testCommand(api, query, "webApi", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: webApi status" + "\n " + example[Math.floor(Math.random() * example.length)] + " webApi --on");
@@ -5335,7 +5401,7 @@ async function ai(api, event) {
             sendMessage(api, event, formatGen(cmdPage["owner"]));
         } else if (data[1] == "root") {
             sendMessage(api, event, formatGen(cmdPage["root"]));
-        } else if (input == "cmd") {
+        } else if (query2 == "cmd") {
             sendMessage(api, event, formatGen(cmdPage["help1"]) + NP);
             settingsThread[event.threadID].cmd = 1;
         } else {
@@ -7526,6 +7592,14 @@ function fontIgnore(api, event, id) {
 
 async function addAdmin(api, event, id) {
     const login = api.getCurrentUserID();
+    if (settings.shared.root == id) {
+        sendMessage(api, event, "Root user is already an admin!");
+        return;
+    }
+    if (accounts.includes(id)) {
+        sendMessage(api, event, "Orion account cannot be an admin!");
+        return;
+    }
     if (users.blocked.includes(id) || users.bot.includes(id)) {
         if (event.isGroup) {
             getUserProfile(id, async function (name) {
@@ -9480,7 +9554,8 @@ function checkCmdPermission(api, permission, senderID) {
             }
             utils.logged("access_granted root " + senderID);
         } else if (permission == "owner") {
-            if (!(settings[api.getCurrentUserID()].owner == senderID) || api.getCurrentUserID() == senderID) {
+            if (api.getCurrentUserID() == senderID) return true;
+            if (!(settings[api.getCurrentUserID()].owner == senderID)) {
                 if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
                     // check if the account owner is the sender and
                     // also verify if the sender is admin if not false
