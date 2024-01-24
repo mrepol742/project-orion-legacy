@@ -1496,152 +1496,185 @@ async function ai22(api, event, query, query2) {
             }
         }
     } else if (testCommand(api, query, "addInstance", event.senderID, "user", true)) {
-        let msB = event.messageReply.body;
-        if (isJson(msB)) {
-            let appsss = JSON.parse(msB);
-            if (Array.isArray(appsss)) {
-                let login = getUserIdFromAppState(appsss);
-                if (login) {
-                    const login = appsss[item].value;
-                    if (!settings[login]) {
-                        settings[login] = settings.default;
-                    }
-                    let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
-                    if (accounts.includes(login)) {
-                        downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                            let msg = updateFont("This already connected to the main server!", login);
-                            let message = {
-                                body: msg,
-                                attachment: fs.createReadStream(dirp),
-                            };
-                            api.sendMessage(
-                                message,
-                                event.threadID,
-                                (err, messageInfo) => {
-                                    if (err) utils.logged(err);
-                                },
-                                event.messageReply.messageID
-                            );
-                            unLink(dirp);
-                        });
-                    } else if (ongoingLogin.includes(login)) {
-                        sendMessage(api, event, "Please wait your account is still loggin-in...!");
-                    } else {
-                        ongoingLogin.push(login);
-                        utils.logged("adding_account " + login);
-                        sendMessage(api, event, "Login initiated for user id " + login + ".");
-                        redfox_fb(
-                            {
-                                appState: appsss,
-                            },
-                            login,
-                            function (isLogin) {
-                                ongoingLogin = ongoingLogin.filter((item) => item !== login);
-                                if (isLogin) {
+        getUserProfile(event.senderID, async function (name) {
+            if (!name.balance) {
+                sendMessage(api, event, "You dont have enought balance to continue!");
+            } else if (name.balance < 0) {
+                sendMessage(api, event, "You still have unpaid balances!");
+            } else {
+                let msB = event.messageReply.body;
+                if (isJson(msB)) {
+                    let appsss = JSON.parse(msB);
+                    if (Array.isArray(appsss)) {
+                        let login = getUserIdFromAppState(appsss);
+                        if (login) {
+                            const login = appsss[item].value;
+                            if (!settings[login]) {
+                                settings[login] = settings.default;
+                            }
+                            let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
+                            if (accounts.includes(login)) {
+                                downloadFile(getProfilePic(login), dirp).then(async (response) => {
+                                    let msg = updateFont("This already connected to the main server!", login);
+                                    let message = {
+                                        body: msg,
+                                        attachment: fs.createReadStream(dirp),
+                                    };
                                     api.sendMessage(
-                                        updateFont("Failed to Login!", login),
+                                        message,
                                         event.threadID,
                                         (err, messageInfo) => {
                                             if (err) utils.logged(err);
                                         },
                                         event.messageReply.messageID
                                     );
-                                } else {
-                                    downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                                        let message = {
-                                            body: updateFont(
-                                                "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
-                                                login
-                                            ),
-                                            attachment: fs.createReadStream(dirp),
-                                        };
-                                        let message1 = {
-                                            body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login),
-                                            url: "https://mrepol742.github.io",
-                                        };
-                                        api.sendMessage(
-                                            message,
-                                            event.threadID,
-                                            (err, messageInfo) => {
-                                                if (err) utils.logged(err);
-                                            },
-                                            event.messageReply.messageID
-                                        );
-
-                                        settings[login]["notif"] = {
-                                            thank_you: "Thank you for using Project Orion!",
-                                            welcome_msg:
-                                                "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
-                                        };
-
-                                        if (!settings[login]["openai"]) {
-                                            settings[login]["notif"]["open_ai"] = "You are currently using the default openai key and if it run out of funds your bot command would no longer work.\n\nYou can set your own openai key by sending this message `apikey`.";
-                                        }
-
-                                        unLink(dirp);
-                                    });
-
-                                    accounts.push(login);
-
-                                    settings[login].owner = event.senderID;
-
-                                    utils.logged("set_owner " + login + " to " + event.senderID);
-
-                                    if (users.blocked.includes(login)) {
-                                        users.blocked = users.blocked.filter((item) => item !== login);
-                                        utils.logged("rem_block_user " + login);
-                                        sendMessageOnly(api, event, "You've been unblocked!");
-                                        getUserProfile(settings[login].owner, async function (name) {
-                                            if (name.balance) {
-                                                name.balance -= 1500;
+                                    unLink(dirp);
+                                });
+                            } else if (ongoingLogin.includes(login)) {
+                                sendMessage(api, event, "Please wait your account is still loggin-in...!");
+                            } else {
+                                ongoingLogin.push(login);
+                                utils.logged("adding_account " + login);
+                                sendMessage(api, event, "Login initiated for user id " + login + ".");
+                                redfox_fb(
+                                    {
+                                        appState: appsss,
+                                    },
+                                    login,
+                                    function (isLogin) {
+                                        ongoingLogin = ongoingLogin.filter((item) => item !== login);
+                                        if (isLogin) {
+                                            api.sendMessage(
+                                                updateFont("Failed to Login!", login),
+                                                event.threadID,
+                                                (err, messageInfo) => {
+                                                    if (err) utils.logged(err);
+                                                },
+                                                event.messageReply.messageID
+                                            );
+                                        } else {
+                                            downloadFile(getProfilePic(login), dirp).then(async (response) => {
+                                                let message = {
+                                                    body: updateFont(
+                                                        "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
+                                                        login
+                                                    ),
+                                                    attachment: fs.createReadStream(dirp),
+                                                };
+                                                let message1 = {
+                                                    body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login),
+                                                    url: "https://mrepol742.github.io",
+                                                };
+                                                api.sendMessage(
+                                                    message,
+                                                    event.threadID,
+                                                    (err, messageInfo) => {
+                                                        if (err) utils.logged(err);
+                                                    },
+                                                    event.messageReply.messageID
+                                                );
+        
+                                                settings[login]["notif"] = {
+                                                    thank_you: "Thank you for using Project Orion!",
+                                                    welcome_msg:
+                                                        "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
+                                                };
+        
+                                                if (!settings[login]["openai"]) {
+                                                    settings[login]["notif"]["open_ai"] = "You are currently using the default openai key and if it run out of funds your bot command would no longer work.\n\nYou can set your own openai key by sending this message `apikey`.";
+                                                }
+        
+                                                unLink(dirp);
+                                            });
+        
+                                            accounts.push(login);
+        
+                                            settings[login].owner = event.senderID;
+        
+                                            utils.logged("set_owner " + login + " to " + event.senderID);
+        
+                                            if (users.blocked.includes(login)) {
+                                                users.blocked = users.blocked.filter((item) => item !== login);
+                                                utils.logged("rem_block_user " + login);
+                                                sendMessageOnly(api, event, "You've been unblocked!");
+                                                getUserProfile(settings[login].owner, async function (name) {
+                                                    if (name.balance) {
+                                                        name.balance -= 3000;
+                                                    }
+                                                });
+                                                if (event.senderID != settings.shared.root) {
+                                                    getUserProfile(event.senderID, async function (name) {
+                                                        if (name.balance) {
+                                                            name.balance -= 1500;
+                                                        }
+                                                    });
+                                                }
                                             }
-                                        });
-                                    }
-
-                                    if (users.bot.includes(login)) {
-                                        users.bot = users.bot.filter((item) => item !== login);
-                                        utils.logged("rem_block_bot " + login);
-                                        sendMessageOnly(api, event, "You've been unblocked!");
-                                        getUserProfile(settings[login].owner, async function (name) {
-                                            if (name.balance) {
-                                                name.balance -= 3000;
+        
+                                            if (users.bot.includes(login)) {
+                                                users.bot = users.bot.filter((item) => item !== login);
+                                                utils.logged("rem_block_bot " + login);
+                                                sendMessageOnly(api, event, "You've been unblocked!");
+                                                getUserProfile(settings[login].owner, async function (name) {
+                                                    if (name.balance) {
+                                                        name.balance -= 6000;
+                                                    }
+                                                });
+                                                if (event.senderID != settings.shared.root) {
+                                                    getUserProfile(event.senderID, async function (name) {
+                                                        if (name.balance) {
+                                                            name.balance -= 3000;
+                                                        }
+                                                    });
+                                                }
                                             }
-                                        });
-                                    }
-
-                                    if (users.admin.includes(event.senderID)) {
-                                        users.admin = users.admin.filter((item) => item !== event.senderID);
-                                        utils.logged("rem_sender_admin " + login);
-                                        sendMessage(api, event, "Your admin previliges has been revoke!");
-                                    }
-
-                                    if (users.admin.includes(login)) {
-                                        users.admin = users.admin.filter((item) => item !== login);
-                                        utils.logged("rem_login_adminn " + login);
-                                        sendMessageOnly(api, event, "Your admin previliges has been revoke!");
-                                    }
-
-                                    saveState();
-
-                                    for (pref in settings) {
-                                        if (settings[pref].owner && settings[pref].owner == event.senderID) {
-                                            settings[login]["openai"] = settings[pref].openai;
-                                            break;
+        
+                                            if (users.admin.includes(event.senderID)) {
+                                                users.admin = users.admin.filter((item) => item !== event.senderID);
+                                                utils.logged("rem_sender_admin " + login);
+                                                sendMessage(api, event, "Your admin previliges has been revoke!");
+                                                getUserProfile(event.senderID, async function (name) {
+                                                    if (name.balance) {
+                                                        name.balance += 2000;
+                                                    }
+                                                });
+                                            }
+        
+                                            if (users.admin.includes(login)) {
+                                                users.admin = users.admin.filter((item) => item !== login);
+                                                utils.logged("rem_login_adminn " + login);
+                                                sendMessageOnly(api, event, "Your admin previliges has been revoke!");
+                                                getUserProfile(event.senderID, async function (name) {
+                                                    if (name.balance) {
+                                                        name.balance += 2000;
+                                                    }
+                                                });
+                                            }
+        
+                                            saveState();
+        
+                                            for (pref in settings) {
+                                                if (settings[pref].owner && settings[pref].owner == event.senderID) {
+                                                    settings[login]["openai"] = settings[pref].openai;
+                                                    break;
+                                                }
+                                            }
                                         }
                                     }
-                                }
+                                );
                             }
-                        );
+                        } else {
+                            sendMessage(api, event, "Your cookies is valid but not logged in!");
+                        }
+                    } else {
+                        sendMessage(api, event, "Your cookies aint valid. Please try again.");
                     }
                 } else {
-                    sendMessage(api, event, "Your cookies is valid but not logged in!");
+                    sendMessage(api, event, "Your cookies aint valid. Please try again.");
                 }
-            } else {
-                sendMessage(api, event, "Your cookies aint valid. Please try again.");
             }
-        } else {
-            sendMessage(api, event, "Your cookies aint valid. Please try again.");
-        }
+        });
+        
     } else if (testCommand(api, query2, "createImageVariation", event.senderID)) {
         //TODO: not working
         if (isGoingToFast(api, event)) {
@@ -4419,7 +4452,7 @@ async function ai(api, event) {
                         let participantIDs = gc.participantIDs;
                         for (let i = 0; i < users.list.length; i++) {
                             let cuid = users.list[i].id;
-                            if (users.list[i].balance && participantIDs.includes(cuid)) {
+                            if (users.list[i].balance && participantIDs.includes(cuid) && cuid != settings.shared.root) {
                                 lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
                             }
                         }
@@ -4441,7 +4474,9 @@ async function ai(api, event) {
                     } else {
                         sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((user.balance / 1000) * 0.007) + "$ " + user.firstName], "github.com/prj-orion"));
                     }
+                    if (event.senderID != settings.shared.root) {
                     user.balance -= 1000;
+                    }
                 });
             }
         });
@@ -4457,7 +4492,7 @@ async function ai(api, event) {
             } else {
                 let lead = [];
                 for (let i = 0; i < users.list.length; i++) {
-                    if (users.list[i].balance) {
+                    if (users.list[i].balance && users.list[i].id != settings.shared.root) {
                         lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
                     }
                 }
@@ -4473,7 +4508,9 @@ async function ai(api, event) {
                     }
                 }
                 sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
+                if (event.senderID != settings.shared.root) {
                 user.balance -= 1000;
+                }
             }
         });
     } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
@@ -4481,13 +4518,19 @@ async function ai(api, event) {
             return;
         }
         getUserProfile(event.senderID, async function (name) {
+            if (event.senderID == settings.shared.root) {
+                sendMessage(api, event, utils.formatOutput("Balance", ["unlimited $ " + name.firstName], "github.com/prj-orion"));
+                return;
+            }
             if (!name.balance) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
             } else if (1000 > name.balance) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
                 sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
-                name.balance -= 1000;
+                if (event.senderID != settings.shared.root) {
+                    name.balance -= 1000;
+                    }
             }
         });
     } else if (testCommand(api, query2, "balance--user", event.senderID)) {
@@ -4513,6 +4556,10 @@ async function ai(api, event) {
                 }
             }
             getUserProfile(event.senderID, async function (name) {
+                if (id == settings.shared.root) {
+                    sendMessage(api, event, utils.formatOutput("Balance", ["unlimited $ " + name.firstName], "github.com/prj-orion"));
+                    return;
+                }
                 if (!name.balance) {
                     sendMessage(api, event, "You have 0 $ balance yet.");
                 } else if (1000 > name.balance) {
@@ -4525,7 +4572,9 @@ async function ai(api, event) {
                             sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                         }
                     });
+                    if (id != settings.shared.root) {
                     name.balance -= 1000;
+                    }
                 }
             });
         }
@@ -4835,7 +4884,9 @@ async function ai(api, event) {
                         return;
                     }
                 }
-            } else if (isMyId(id) && accounts.includes(id)) {
+            }
+            if (isMyId(id) && accounts.includes(id)) {
+                sendMessage(api, event, "Failed!");
                 return;
             }
             if (users.bot.includes(id)) {
@@ -5893,9 +5944,9 @@ async function ai(api, event) {
             return;
         }
         getUserProfile(event.senderID, async function (user) {
-            if (!user.balance) {
+            if (!user.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
-            } else if (1000 > user.balance) {
+            } else if (1000 > user.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
                 let data = input.split(" ");
@@ -5908,7 +5959,9 @@ async function ai(api, event) {
                             sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         } else {
                             parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
+                            if (event.senderID != settings.shared.root) {
                             user.balance -= 1000;
+                            }
                         }
                     });
                 }
@@ -7567,6 +7620,13 @@ async function unblockUser(api, event, id) {
                 name.balance -= 1500;
             }
         });
+        if (event.senderID != settings.shared.root) {
+        getUserProfile(event.senderID, async function (name) {
+            if (name.balance) {
+                name.balance -= 500;
+            }
+        });
+    }
     } else {
         if (isMyId(event.senderID)) {
             users.bot = users.bot.filter((item) => item !== id);
