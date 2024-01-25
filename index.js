@@ -1573,26 +1573,26 @@ async function ai22(api, event, query, query2) {
                                                     },
                                                     event.messageReply.messageID
                                                 );
-        
+
                                                 settings[login]["notif"] = {
                                                     thank_you: "Thank you for using Project Orion!",
                                                     welcome_msg:
                                                         "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
                                                 };
-        
+
                                                 if (!settings[login]["openai"]) {
                                                     settings[login]["notif"]["open_ai"] = "You are currently using the default openai key and if it run out of funds your bot command would no longer work.\n\nYou can set your own openai key by sending this message `apikey`.";
                                                 }
-        
+
                                                 unLink(dirp);
                                             });
-        
+
                                             accounts.push(login);
-        
+
                                             settings[login].owner = event.senderID;
-        
+
                                             utils.logged("set_owner " + login + " to " + event.senderID);
-        
+
                                             if (users.blocked.includes(login)) {
                                                 users.blocked = users.blocked.filter((item) => item !== login);
                                                 utils.logged("rem_block_user " + login);
@@ -1610,7 +1610,7 @@ async function ai22(api, event, query, query2) {
                                                     });
                                                 }
                                             }
-        
+
                                             if (users.bot.includes(login)) {
                                                 users.bot = users.bot.filter((item) => item !== login);
                                                 utils.logged("rem_block_bot " + login);
@@ -1628,7 +1628,7 @@ async function ai22(api, event, query, query2) {
                                                     });
                                                 }
                                             }
-        
+
                                             if (users.admin.includes(event.senderID)) {
                                                 users.admin = users.admin.filter((item) => item !== event.senderID);
                                                 utils.logged("rem_sender_admin " + login);
@@ -1639,7 +1639,7 @@ async function ai22(api, event, query, query2) {
                                                     }
                                                 });
                                             }
-        
+
                                             if (users.admin.includes(login)) {
                                                 users.admin = users.admin.filter((item) => item !== login);
                                                 utils.logged("rem_login_adminn " + login);
@@ -1650,9 +1650,9 @@ async function ai22(api, event, query, query2) {
                                                     }
                                                 });
                                             }
-        
+
                                             saveState();
-        
+
                                             for (pref in settings) {
                                                 if (settings[pref].owner && settings[pref].owner == event.senderID) {
                                                     settings[login]["openai"] = settings[pref].openai;
@@ -1674,7 +1674,6 @@ async function ai22(api, event, query, query2) {
                 }
             }
         });
-        
     } else if (testCommand(api, query2, "createImageVariation", event.senderID)) {
         //TODO: not working
         if (isGoingToFast(api, event)) {
@@ -1832,18 +1831,20 @@ async function ai(api, event) {
     let query2 = formatQuery(input);
     let query = query2;
 
-    if (event.body != "." && event.body != "?" && event.body != "!" && event.type == "message_reply") {
-        ai22(api, event, query, query2);
-        // TODO: undefined sender id no idea why
-        if (accounts.includes(event.messageReply.senderID)) {
-            someA(api, event, query, input);
-        }
-    } else {
-        if (event.type == "message_reply") {
+    if (event.type == "message_reply") {
+        if (event.body != "." && event.body != "?" && event.body != "!") {
+            ai22(api, event, query, query2);
+            // TODO: undefined sender id no idea why
+            if (accounts.includes(event.messageReply.senderID)) {
+                someA(api, event, query, input);
+            }
+        } else {
             event.body = event.messageReply.body;
+            event.type = "message";
             eventB = event.body;
             input = eventB.normalize("NFKC");
             query2 = formatQuery(input);
+            query = query2;
         }
     }
     reaction(api, event, query, input);
@@ -3405,7 +3406,7 @@ async function ai(api, event) {
 
                 let members = info.participantIDs.length;
                 var partner1 = 0;
-                if (query == "ugly--random") {
+                if (query == "ugly --random") {
                     partner1 = info.participantIDs[Math.floor(Math.random() * members)];
                 } else {
                     partner1 = event.senderID;
@@ -4475,7 +4476,7 @@ async function ai(api, event) {
                         sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((user.balance / 1000) * 0.007) + "$ " + user.firstName], "github.com/prj-orion"));
                     }
                     if (event.senderID != settings.shared.root) {
-                    user.balance -= 1000;
+                        user.balance -= 1000;
                     }
                 });
             }
@@ -4509,7 +4510,7 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
                 if (event.senderID != settings.shared.root) {
-                user.balance -= 1000;
+                    user.balance -= 1000;
                 }
             }
         });
@@ -4530,7 +4531,7 @@ async function ai(api, event) {
                 sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                 if (event.senderID != settings.shared.root) {
                     name.balance -= 1000;
-                    }
+                }
             }
         });
     } else if (testCommand(api, query2, "balance--user", event.senderID)) {
@@ -4573,7 +4574,7 @@ async function ai(api, event) {
                         }
                     });
                     if (id != settings.shared.root) {
-                    name.balance -= 1000;
+                        name.balance -= 1000;
                     }
                 }
             });
@@ -5960,7 +5961,7 @@ async function ai(api, event) {
                         } else {
                             parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
                             if (event.senderID != settings.shared.root) {
-                            user.balance -= 1000;
+                                user.balance -= 1000;
                             }
                         }
                     });
@@ -6337,7 +6338,7 @@ async function ai(api, event) {
         sendMessage(api, event, "The state have saved successfully.");
     } else if (testCommand(api, query, "test", event.senderID, "user", true)) {
         if (crashes > 0) {
-            sendMessage(api, event, crashes + " crash caught. \nhttps://github.com/prj-orion/issues");
+            sendMessage(api, event, utils.formatOutput("Crash", [crashes + " uncaught exception "], "github.com/prj-orion"));
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
         }
@@ -7621,12 +7622,12 @@ async function unblockUser(api, event, id) {
             }
         });
         if (event.senderID != settings.shared.root) {
-        getUserProfile(event.senderID, async function (name) {
-            if (name.balance) {
-                name.balance -= 500;
-            }
-        });
-    }
+            getUserProfile(event.senderID, async function (name) {
+                if (name.balance) {
+                    name.balance -= 500;
+                }
+            });
+        }
     } else {
         if (isMyId(event.senderID)) {
             users.bot = users.bot.filter((item) => item !== id);
