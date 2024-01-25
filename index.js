@@ -1485,8 +1485,8 @@ async function ai22(api, event, query, query2) {
                     } else if (amount + 500 > name.balance) {
                         sendMessage(api, event, "You don't have enough balance!");
                     } else {
-                        getUserProfile(transferTo, async function (name) {
-                            addBalance(name, amount);
+                        getUserProfile(transferTo, async function (name1) {
+                            addBalance(name1, amount);
                         });
                         name.balance -= 500;
                     }
@@ -1881,7 +1881,7 @@ async function ai(api, event) {
     }
 
     if (event.type == "message") {
-        let cmmdReply = ["balance--transfer", "addinstance", "unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
+        let cmmdReply = ["balance --transfer", "addinstance", "unsend", "notify", "totext", "bgremove", "gphoto", "image --reverse", "run", "count", "count --vowels", "count --consonants", "wfind", "pin --add", "translate"];
         if (cmmdReply.includes(query)) {
             if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(query)) {
                 return;
@@ -4971,14 +4971,17 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: apikey key" + "\n " + example[Math.floor(Math.random() * example.length)] + " apikey sk-blablablaabla");
         } else {
             data.shift();
+            let data1 = [];
             let count = 0;
             for (pref in settings) {
                 if (settings[pref].owner && settings[pref].owner == event.senderID) {
+                    data1.push(pref);
                     settings[pref]["openai"] = data.join(" ");
                     count++;
                 }
             }
-            sendMessage(api, event, "Changes has been reflect to " + count + " accounts...");
+
+            sendMessage(api, event, "Changes have been reflected to following accounts:\n" + utils.formatOutput("ApiKey", data1, "github.com/prj-orion"));
         }
     } else if (testCommand(api, query2, "setKey", event.senderID, "admin")) {
         let data = input.split(" ");
@@ -6861,6 +6864,7 @@ function sendMessageErr(api, thread_id, message_id, id, err) {
         utils.logged(err);
         if (err.error == 3252001 || err.error == 1404078) {
             blockedCall.push(api.getCurrentUserID());
+            delete settingsThread[thread_id]["lock"];
         } else if (err.error == 1545049) {
             sendMessageError(api, "Message is too long to be sent.", thread_id, message_id, id);
         } else if (err.error == 1545051) {
