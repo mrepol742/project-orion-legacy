@@ -7,16 +7,130 @@
         "date": "2024-01-27T11:21:15.067Z",
         "stacktrace": {}
     },
+    "113164929": {
+        "date": "2024-01-27T11:40:51.389Z",
+        "cuid": "61555621421703",
+        "event": {
+            "type": "message_reply",
+            "threadID": "5575074482532460",
+            "messageID": "mid.$gABPOgC4gsGyTe_44u2NSrjdtW9RM",
+            "senderID": "100091919341274",
+            "attachments": [
+                {
+                    "type": "audio",
+                    "filename": "audioclip-1706355648000-7579.aac",
+                    "ID": "AT0nWT4om7Hbm8nlb0bcMqqm0MS8DVtypc8jlyqykYVrZJTQbEEvmWEpWah4RV47kmFMdDk-vWzFpuQd6Y2H3TldkN2pv7-oNJOXXuFL0AzKxDOUryoZtuQ5s1fdAjYtY-494D3-4SxR2TcqD0DaontUjUY",
+                    "audioType": "VOICE_MESSAGE",
+                    "duration": 7579,
+                    "url": "https://cdn.fbsbx.com/v/t59.3654-21/421915633_352873260935993_1365444248897553749_n.aac/audioclip-1706355648000-7579.aac?_nc_cat=110&ccb=1-7&_nc_sid=d61c36&_nc_eui2=AeGFCJYjhIW3XFBk79M2XjRutNml18h1oi202aXXyHWiLf5EpS3co3Ocv_OCx45oteaE0MkIhMbdZgRpxIDs7X1F&_nc_ohc=YWc8ZC9JMPMAX-HmQdX&_nc_ht=cdn.fbsbx.com&oh=03_AdQI7OJu7DikcfEV0wvoXH1BHPWQFZtWOjED03651PqXYg&oe=65B659E6&dl=1",
+                    "isVoiceMail": false
+                }
+            ],
+            "body": "",
+            "isGroup": true,
+            "mentions": {},
+            "timestamp": 1706355650747,
+            "messageReply": {
+                "threadID": "5575074482532460",
+                "messageID": "mid.$gABPOgC4gsGyTe_tk0mNSrYMguAKW",
+                "senderID": "61550230537297",
+                "attachments": [
+                    {
+                        "type": "photo",
+                        "ID": "924804408736728",
+                        "filename": "image-924804408736728",
+                        "thumbnailUrl": "https://scontent.xx.fbcdn.net/v/t1.15752-9/421248667_924804412070061_6266307467582490785_n.jpg?stp=cp0_dst-jpg_s50x50&_nc_cat=101&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeGm6vl6sjp00Q-k7Lgrr95SdIOYIDYuE5p0g5ggNi4TmiLWWEMXUdDe52I4Qpi0OCkqKukc7Bi-NMK5NCaL7iBH&_nc_ohc=cLui501euZ0AX9PCSxY&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRPD8p0sSVV2JAT5LjqExIS2YK-6AqTWN009xcfaTTZqw&oe=65DC76C0",
+                        "previewUrl": "https://scontent.xx.fbcdn.net/v/t1.15752-9/421248667_924804412070061_6266307467582490785_n.jpg?stp=dst-jpg_p280x280&_nc_cat=101&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeGm6vl6sjp00Q-k7Lgrr95SdIOYIDYuE5p0g5ggNi4TmiLWWEMXUdDe52I4Qpi0OCkqKukc7Bi-NMK5NCaL7iBH&_nc_ohc=cLui501euZ0AX9PCSxY&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdREKKurgTqY-5KMditp1G5GAS0tPhnLRN1Gau0P5mTmpg&oe=65DC76C0",
+                        "previewWidth": 298,
+                        "previewHeight": 280,
+                        "largePreviewUrl": "https://scontent.xx.fbcdn.net/v/t1.15752-9/421248667_924804412070061_6266307467582490785_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeGm6vl6sjp00Q-k7Lgrr95SdIOYIDYuE5p0g5ggNi4TmiLWWEMXUdDe52I4Qpi0OCkqKukc7Bi-NMK5NCaL7iBH&_nc_ohc=cLui501euZ0AX9PCSxY&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRlN3oydQH8zKdGBpRUVthQmn_DxUe7tcLyoS8FjrOvlg&oe=65DC76C0",
+                        "largePreviewWidth": 479,
+                        "largePreviewHeight": 450,
+                        "url": "https://scontent.xx.fbcdn.net/v/t1.15752-9/421248667_924804412070061_6266307467582490785_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=8cd0a2&_nc_eui2=AeGm6vl6sjp00Q-k7Lgrr95SdIOYIDYuE5p0g5ggNi4TmiLWWEMXUdDe52I4Qpi0OCkqKukc7Bi-NMK5NCaL7iBH&_nc_ohc=cLui501euZ0AX9PCSxY&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRlN3oydQH8zKdGBpRUVthQmn_DxUe7tcLyoS8FjrOvlg&oe=65DC76C0",
+                        "width": 479,
+                        "height": 450,
+                        "name": "image-924804408736728"
+                    }
+                ],
+                "body": "",
+                "isGroup": true,
+                "mentions": {},
+                "timestamp": 1706355465426
+            }
+        },
+        "stacktrace": {}
+    },
+    "116295742": {
+        "date": "2024-01-27T11:49:00.143Z",
+        "stacktrace": {}
+    },
     "128045034": {
         "date": "2024-01-27T11:05:31.946Z",
+        "stacktrace": {}
+    },
+    "128804600": {
+        "date": "2024-01-27T11:41:51.255Z",
         "stacktrace": {}
     },
     "146237265": {
         "date": "2024-01-27T11:23:09.109Z",
         "stacktrace": {}
     },
+    "155890075": {
+        "date": "2024-01-27T11:55:58.719Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100088347234178",
+            "body": "Mj sup",
+            "threadID": "100088347234178",
+            "messageID": "mid.$cAAAADo8Icz2TfAtr2WNSsYjogPsS",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706356515801",
+            "isGroup": false
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0cf4aaad85f6a-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:55:58 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=U8lM_wQG9GA_g14jFsHYzTN3VdPUBpDJO2BoiAY3BTs-1706356558-1-AWpCE4izEZRbicDO5BaRa7AMs0OvvuQkBLgFPTqtBD8KguGmA8fAjVkfmwU6/MatyQXNI4nuTxGurYNDrmgj+hI=; path=/; expires=Sat, 27-Jan-24 12:25:58 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=kCUkXspk68c7nYIarmw1s4spwGl9_P_AMtwgoYfD.4g-1706356558720-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39810",
+                "x-ratelimit-reset-requests": "23h53m24.247s",
+                "x-ratelimit-reset-tokens": "285ms",
+                "x-request-id": "6c98d19272471908055c678ab19d12a6"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
     "165033079": {
         "date": "2024-01-27T11:19:43.945Z",
+        "stacktrace": {}
+    },
+    "165361770": {
+        "date": "2024-01-27T11:46:50.237Z",
         "stacktrace": {}
     },
     "172901883": {
@@ -29,6 +143,18 @@
     },
     "180682325": {
         "date": "2024-01-27T11:04:48.198Z",
+        "stacktrace": {}
+    },
+    "181846408": {
+        "date": "2024-01-27T11:50:40.020Z",
+        "stacktrace": {}
+    },
+    "182441319": {
+        "date": "2024-01-27T11:50:36.330Z",
+        "stacktrace": {}
+    },
+    "187724232": {
+        "date": "2024-01-27T11:48:56.390Z",
         "stacktrace": {}
     },
     "194001070": {
@@ -45,6 +171,14 @@
     },
     "204436465": {
         "date": "2024-01-27T11:23:37.759Z",
+        "stacktrace": {}
+    },
+    "205420392": {
+        "date": "2024-01-27T11:48:38.320Z",
+        "stacktrace": {}
+    },
+    "206831012": {
+        "date": "2024-01-27T11:41:37.682Z",
         "stacktrace": {}
     },
     "235173220": {
@@ -133,6 +267,63 @@
             "lid": "7328739556131544835"
         }
     },
+    "275734118": {
+        "date": "2024-01-27T11:53:10.760Z",
+        "stacktrace": {}
+    },
+    "278527888": {
+        "date": "2024-01-27T11:49:33.686Z",
+        "stacktrace": {}
+    },
+    "285152638": {
+        "date": "2024-01-27T11:45:56.677Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100093579005606",
+            "body": "Mj no",
+            "threadID": "7559928624038061",
+            "messageID": "mid.$gABrbtwwpwK2TfAGkOWNSrxV1b-g6",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706355874873",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0c097df14448e-SIN",
+                "connection": "keep-alive",
+                "content-length": "508",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:45:56 GMT",
+                "retry-after": "432",
+                "retry-after-ms": "432000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=XTCRQ_AMqq1wyqmoy2pELppVPlV70LGYXFFEi_RY9JY-1706355956-1-AXhU9qp4VvUWZHfwFGC0/4UOn8DvFrj/G7fatjf69IZXPmL1RtgBCcbX/1v5DCANWNfrJQ3JgNHmCR2TFLnTPdk=; path=/; expires=Sat, 27-Jan-24 12:15:56 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=WOweXWOmAAjLEhb79A6F83NWt3tCV4Rd6T8ys_O6zVE-1706355956678-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39821",
+                "x-ratelimit-reset-requests": "23h56m14.294s",
+                "x-ratelimit-reset-tokens": "268ms",
+                "x-request-id": "48a3da2ecddf3d0c8af3c03d028344eb"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per day (RPD): Limit 200, Used 200, Requested 1. Please try again in 7m12s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
     "292371383": {
         "date": "2024-01-27T11:13:29.210Z",
         "stacktrace": {}
@@ -141,8 +332,79 @@
         "date": "2024-01-27T11:25:43.730Z",
         "stacktrace": {}
     },
+    "311673732": {
+        "date": "2024-01-27T11:53:11.755Z",
+        "stacktrace": {}
+    },
+    "318292689": {
+        "date": "2024-01-27T11:45:16.668Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message_reply",
+            "threadID": "7559928624038061",
+            "messageID": "mid.$gABrbtwwpwK2TfAF8XWNSrwmX-feg",
+            "senderID": "100055290002226",
+            "attachments": [],
+            "body": "Mj ignore everyone",
+            "isGroup": true,
+            "mentions": {},
+            "timestamp": 1706355864669,
+            "messageReply": {
+                "threadID": "7559928624038061",
+                "messageID": "mid.$gABrbtwwpwK2TfAEa3GNSrvQgtxlf",
+                "senderID": "100094974786751",
+                "attachments": [],
+                "body": "𝗐𝗁𝗒 𝖽𝗈𝗇𝗍 𝗒𝗈𝗎 𝖼𝗅𝖾𝖺𝗋𝖾𝖽 𝖾𝗏𝖾𝗋𝗒𝗈𝗇𝖾𝗌 𝗇𝗂𝖼𝗄𝗇𝖺𝗆𝖾 𝗍𝗁𝖾𝗇?",
+                "isGroup": true,
+                "mentions": {},
+                "timestamp": 1706355839708
+            }
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0bf9dc9123ff0-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:45:16 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=zm..oDiPCWJLRj0fs5gGqIG1uFe_WY0eLtksf5T5OyE-1706355916-1-Ab2Ur89OBdsXZgLLS6Nog3dn0T2DlBTPjLiu260Do/B8rMXm4Mzn4Cwap4xh0aQ8OHdMFnKhX9rr01TtIIopm9M=; path=/; expires=Sat, 27-Jan-24 12:15:16 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=k.j5TgyYVU8gzU_ay7wfR5btFuJG95n4xkc5Nydu_1E-1706355916667-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39609",
+                "x-ratelimit-reset-requests": "23h56m54.304s",
+                "x-ratelimit-reset-tokens": "585ms",
+                "x-request-id": "4ca7c39c9c22bcc4bb2599f3625087af"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
     "336472083": {
         "date": "2024-01-27T11:21:33.168Z",
+        "stacktrace": {}
+    },
+    "339396089": {
+        "date": "2024-01-27T11:39:31.204Z",
+        "stacktrace": {}
+    },
+    "339546620": {
+        "date": "2024-01-27T11:38:39.627Z",
         "stacktrace": {}
     },
     "342227500": {
@@ -197,8 +459,69 @@
         "date": "2024-01-27T11:06:31.928Z",
         "stacktrace": {}
     },
+    "356847603": {
+        "date": "2024-01-27T11:43:59.108Z",
+        "stacktrace": {}
+    },
     "362299190": {
         "date": "2024-01-27T11:11:56.322Z",
+        "stacktrace": {}
+    },
+    "370285741": {
+        "date": "2024-01-27T11:47:37.596Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "61555677955912",
+            "body": "Mj give me a unique and cold nickname that will go with my name",
+            "threadID": "6759416497478219",
+            "messageID": "mid.$gABgDp0s4mkuTfAPFj2NSr58z50lD",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706356014479",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0c30eaf9a4496-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:47:37 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=jum1MBlSy1pBKzPIYugvJPW41qYYwI2tVxRBriFIuFQ-1706356057-1-AULnJuYhBBjtpGz61FpqsCSBz7sFtfKW/Zm7IKyt0fFdi+SDU7VlWsI0gkGSbTRFkAiOhEBZp3g/GKnaCnyS4S0=; path=/; expires=Sat, 27-Jan-24 12:17:37 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=C20JZOBOuhootybszla8TUJluaL_t_dwILofz0DQZ0k-1706356057597-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39792",
+                "x-ratelimit-reset-requests": "23h54m33.376s",
+                "x-ratelimit-reset-tokens": "312ms",
+                "x-request-id": "007ef4f447e5ba9d15a7890130a50896"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
+    "371752144": {
+        "date": "2024-01-27T11:40:45.073Z",
+        "stacktrace": {}
+    },
+    "380200748": {
+        "date": "2024-01-27T11:38:41.661Z",
         "stacktrace": {}
     },
     "382297844": {
@@ -239,6 +562,36 @@
             "lid": "7328734853423245075"
         }
     },
+    "414702949": {
+        "date": "2024-01-27T11:52:14.274Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "7138616079503187",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "61551894485183"
+            },
+            "logMessageBody": "Dïane 🙂 removed Nataniel Nsuka from the group.",
+            "author": "100094580693450"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328744650878124151"
+        }
+    },
+    "420712103": {
+        "date": "2024-01-27T11:50:01.668Z",
+        "stacktrace": {}
+    },
+    "428541927": {
+        "date": "2024-01-27T11:44:25.311Z",
+        "stacktrace": {}
+    },
     "437413032": {
         "date": "2024-01-27T11:23:04.131Z",
         "stacktrace": {}
@@ -265,8 +618,24 @@
             "lid": "7328740081485077730"
         }
     },
+    "456225680": {
+        "date": "2024-01-27T11:55:08.865Z",
+        "stacktrace": {}
+    },
+    "458855978": {
+        "date": "2024-01-27T11:40:35.576Z",
+        "stacktrace": {}
+    },
     "459757471": {
         "date": "2024-01-27T11:30:33.046Z",
+        "stacktrace": {}
+    },
+    "462169249": {
+        "date": "2024-01-27T11:42:31.313Z",
+        "stacktrace": {}
+    },
+    "466181507": {
+        "date": "2024-01-27T11:44:01.084Z",
         "stacktrace": {}
     },
     "470416564": {
@@ -325,6 +694,14 @@
             "lid": "7328732358068468943"
         }
     },
+    "525812907": {
+        "date": "2024-01-27T11:51:08.628Z",
+        "stacktrace": {}
+    },
+    "527360485": {
+        "date": "2024-01-27T11:52:35.498Z",
+        "stacktrace": {}
+    },
     "531629426": {
         "date": "2024-01-27T11:23:39.909Z",
         "stacktrace": {}
@@ -337,13 +714,186 @@
         "date": "2024-01-27T11:28:48.754Z",
         "stacktrace": {}
     },
+    "551072427": {
+        "date": "2024-01-27T11:55:38.205Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100071743848974",
+            "body": "mj test",
+            "threadID": "2583856894982516",
+            "messageID": "mid.$gAAkuARBgOXSTfAqEPGNSsU9DIeh2",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706356456508",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0ceca6a784a29-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:55:38 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=IkksUgpv8Vklakt_J3o6x4rpMZR94.5DHjEkUyrAJHM-1706356538-1-Af4TORqrzUvgeZI3Zg6sLbyebRGijH4txtvjYBE+SX7hmpe4YCWj5xSI117OXSXxUYMtI8sP4lnKeY5QfIxhvR4=; path=/; expires=Sat, 27-Jan-24 12:25:38 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=q4oGoYTMXPfabdC7ggNM5RAUL_.d6YMSaGQIsPXtDRc-1706356538207-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39796",
+                "x-ratelimit-reset-requests": "23h53m44.755s",
+                "x-ratelimit-reset-tokens": "306ms",
+                "x-request-id": "8353c78dbf011b25cd1a4c266dbca93f"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
     "558205433": {
         "date": "2024-01-27T11:06:12.206Z",
+        "stacktrace": {}
+    },
+    "562424138": {
+        "date": "2024-01-27T11:44:53.787Z",
         "stacktrace": {}
     },
     "567108984": {
         "date": "2024-01-27T11:27:26.257Z",
         "stacktrace": {}
+    },
+    "590268637": {
+        "date": "2024-01-27T11:54:33.649Z",
+        "stacktrace": {}
+    },
+    "592830047": {
+        "date": "2024-01-27T11:42:24.265Z",
+        "stacktrace": {}
+    },
+    "611408657": {
+        "date": "2024-01-27T11:54:02.812Z",
+        "stacktrace": {}
+    },
+    "614343331": {
+        "date": "2024-01-27T11:46:41.780Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100090001903519",
+            "body": "Mj sup",
+            "threadID": "24508358488778238",
+            "messageID": "mid.$gAFcSOOHAZf6TfAKgDWNSr1XWYS21",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706355939341",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0c1b1c80c401c-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:46:41 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=deuyJpThlMdtiJ7sVbRHTAjmOcyMKDhrDqbRsTlU8lg-1706356001-1-AVOz6n9lUJYajMjcsjLD35Y1PkK0i+99Nyj9ot333clOs279pcLeXhlXBWZAzkTubkBebypgomMV6yFP/hC5Aa4=; path=/; expires=Sat, 27-Jan-24 12:16:41 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=wFTt2mWvJ5bCbFPHKNy8CL24vDJpidoIyctONv4_6Ns-1706356001779-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39817",
+                "x-ratelimit-reset-requests": "23h55m29.187s",
+                "x-ratelimit-reset-tokens": "274ms",
+                "x-request-id": "530416f50a003039c84a62f525ebea47"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
+    "619520243": {
+        "date": "2024-01-27T11:54:37.771Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message_reply",
+            "threadID": "7559928624038061",
+            "messageID": "mid.$gABrbtwwpwK2TfAopmmNSsTS5St55",
+            "senderID": "100055290002226",
+            "attachments": [],
+            "body": "Mj I'll remove you🤌🏾",
+            "isGroup": true,
+            "mentions": {},
+            "timestamp": 1706356433306,
+            "messageReply": {
+                "threadID": "7559928624038061",
+                "messageID": "mid.$gABrbtwwpwK2TfAmsKmNSsRhP6rWF",
+                "senderID": "100094974786751",
+                "attachments": [],
+                "body": "^@^𝖢^𝖠>^𝖣^𝖠^@^𝖯^𝖢^𝖠𝖫^𝖣^𝖠^@^𝖳^@^𝖢^𝖠\n- 𝗉𝗋𝗈𝗃𝖾𝖼𝗍 𝗈𝗋𝗂𝗈𝗇 𝖻𝗎𝗂𝗅𝖽 𝖿𝗋𝗈𝗆 𝗀𝗂𝗍𝗁𝗎𝖻.𝖼𝗈𝗆/𝗉𝗋𝗃-𝗈𝗋𝗂𝗈𝗇^𝖬\n^@^𝖢@𝖱𝟨𝟢𝟢𝟥^𝖬\n- 𝗂𝗇𝗍𝖾𝗀𝖾𝗋 𝖽𝗂𝗏𝗂𝖽𝖾 𝖻𝗒 𝟢^𝖬\n^@      ^@𝖱𝟨𝟢𝟢𝟫^𝖬\n- 𝟦𝟤𝟫 𝖱𝖺𝗍𝖾 𝗅𝗂𝗆𝗂𝗍 𝗋𝖾𝖺𝖼𝗁𝖾𝖽 𝖿𝗈𝗋 𝗀𝗉𝗍-𝟥.𝟧-𝗍𝗎𝗋𝖻𝗈-𝟣𝟨𝗄-𝟢𝟨𝟣𝟥 𝗂𝗇 𝗈𝗋𝗀𝖺𝗇𝗂𝗓𝖺𝗍𝗂𝗈𝗇 𝗈𝗋𝗀-𝖼𝖤𝟢𝗈𝟩𝟫𝗄𝟢𝗋𝗀𝖠𝖨𝖰𝗄𝗅𝖶𝖨𝟤𝖸𝖷𝗁𝟩𝖥𝖵 𝗈𝗇 𝗋𝖾𝗊𝗎𝖾𝗌𝗍𝗌 𝗉𝖾𝗋 𝗆𝗂𝗇 (𝖱𝖯𝖬): 𝖫𝗂𝗆𝗂𝗍 𝟥, 𝖴𝗌𝖾𝖽 𝟥, 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝟣. 𝖯𝗅𝖾𝖺𝗌𝖾 𝗍𝗋𝗒 𝖺𝗀𝖺𝗂𝗇 𝗂𝗇 𝟤𝟢𝗌. 𝖵𝗂𝗌𝗂𝗍 https://platform.openai.com/account/rate-limits 𝗍𝗈 𝗅𝖾𝖺𝗋𝗇 𝗆𝗈𝗋𝖾. 𝖸𝗈𝗎 𝖼𝖺𝗇 𝗂𝗇𝖼𝗋𝖾𝖺𝗌𝖾 𝗒𝗈𝗎𝗋 𝗋𝖺𝗍𝖾 𝗅𝗂𝗆𝗂𝗍 𝖻𝗒 𝖺𝖽𝖽𝗂𝗇𝗀 𝖺 𝗉𝖺𝗒𝗆𝖾𝗇𝗍 𝗆𝖾𝗍𝗁𝗈𝖽 𝗍𝗈 𝗒𝗈𝗎𝗋 𝖺𝖼𝖼𝗈𝗎𝗇𝗍 𝖺𝗍 https://platform.openai.com/account/billing.^M\n^@^R^@R6018^M\n- 𝖤𝗋𝗋𝗈𝗋^𝖬\n^@ṻ^@^𝖬\n@ỹ@𝗋𝗎𝗇-𝗍𝗂𝗆𝖾 𝖾𝗋𝗋𝗈𝗋 ^@^𝖡^@𝖱𝟨𝟢𝟢𝟤^𝖬\n- 𝖿𝗅𝗈𝖺𝗍𝗂𝗇𝗀-𝗉𝗈𝗂𝗇𝗍 𝗌𝗎𝗉𝗉𝗈𝗋𝗍 𝗇𝗈𝗍 𝗅𝗈𝖺𝖽𝖾𝖽^𝖬\n\n𝖤𝗋𝗋𝗈𝗋 𝖨𝖣: 𝟫𝟧𝟩𝟧𝟣𝟨𝟨𝟩𝟨\n𝖱𝖾𝗉𝗈𝗋𝗍 𝖺𝗍: https://github.com/prj-orion/issues/issues/new",
+                "isGroup": true,
+                "mentions": {},
+                "timestamp": 1706356401194
+            }
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0cd50b94aa033-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:54:37 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=2gD5c2fi09CaKDi4AlEVwZvx8OGbpUEDRRTLpgUhqPo-1706356477-1-Af3n9L+aAs0E0eiYoKB4JElkrwNEdJGa20kta0mNXwjpBcbmAChxPkTJzCouBcg46Jr5A95nVqpesGJBUJG3a0Y=; path=/; expires=Sat, 27-Jan-24 12:24:37 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=rl96p4d601YsUJ84qkqNjqt2xop6GZP_lpxiJsn2ix4-1706356477772-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39675",
+                "x-ratelimit-reset-requests": "23h54m45.186s",
+                "x-ratelimit-reset-tokens": "486ms",
+                "x-request-id": "292cbbb71365c254160fdbac1f58b33d"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
     },
     "641903704": {
         "date": "2024-01-27T10:58:52.282Z",
@@ -369,6 +919,10 @@
     },
     "658845467": {
         "date": "2024-01-27T11:22:16.354Z",
+        "stacktrace": {}
+    },
+    "659375282": {
+        "date": "2024-01-27T11:52:21.544Z",
         "stacktrace": {}
     },
     "666016814": {
@@ -420,6 +974,10 @@
             "type": "requests"
         }
     },
+    "667472312": {
+        "date": "2024-01-27T11:43:41.636Z",
+        "stacktrace": {}
+    },
     "670428881": {
         "date": "2024-01-27T11:05:20.972Z",
         "stacktrace": {}
@@ -446,16 +1004,54 @@
             "lid": "7328737555498739717"
         }
     },
+    "686923991": {
+        "date": "2024-01-27T11:44:32.019Z",
+        "stacktrace": {}
+    },
+    "687472463": {
+        "date": "2024-01-27T11:43:38.418Z",
+        "stacktrace": {}
+    },
     "701482709": {
         "date": "2024-01-27T11:07:25.196Z",
+        "stacktrace": {}
+    },
+    "717238724": {
+        "date": "2024-01-27T11:49:28.722Z",
         "stacktrace": {}
     },
     "719960444": {
         "date": "2024-01-27T11:23:53.145Z",
         "stacktrace": {}
     },
+    "722766802": {
+        "date": "2024-01-27T11:36:41.699Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "7138616079503187",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100093102840148"
+            },
+            "logMessageBody": "Matthias Matth Rakotonarivo left the group.",
+            "author": "100093102840148"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328740644303335096"
+        }
+    },
     "732523526": {
         "date": "2024-01-27T11:11:57.392Z",
+        "stacktrace": {}
+    },
+    "733553686": {
+        "date": "2024-01-27T11:49:15.511Z",
         "stacktrace": {}
     },
     "736394228": {
@@ -470,6 +1066,63 @@
         "date": "2024-01-27T11:19:46.822Z",
         "stacktrace": {}
     },
+    "775405343": {
+        "date": "2024-01-27T11:39:46.584Z",
+        "stacktrace": {}
+    },
+    "786803552": {
+        "date": "2024-01-27T11:47:55.152Z",
+        "stacktrace": {}
+    },
+    "788704307": {
+        "date": "2024-01-27T11:45:37.502Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100093579005606",
+            "body": "Mj no",
+            "threadID": "7559928624038061",
+            "messageID": "mid.$gABrbtwwpwK2TfAGkOWNSrxV1b-g6",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706355874873",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0c0200fcf40d6-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:45:37 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=4_sfANWOz6Q3hCt4TowQVbF88FiM2025.em8nBMjI6g-1706355937-1-ASrMNYlAq+vcNxc5unj2nmhbRAttfdWBiorG51xfGpmKunUxKh9eFqCZkjcEdhpoSQjXTgE1F4zP8TpJPdlfMjU=; path=/; expires=Sat, 27-Jan-24 12:15:37 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=yukxXjKnzwjBHcDLYOSzrxEGtSsn13BjEccJC1r4cV4-1706355937502-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39822",
+                "x-ratelimit-reset-requests": "23h56m33.464s",
+                "x-ratelimit-reset-tokens": "267ms",
+                "x-request-id": "270c9aecb158beda3cce012cac5100ee"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
     "797875927": {
         "date": "2024-01-27T11:07:00.544Z",
         "stacktrace": {}
@@ -478,13 +1131,108 @@
         "date": "2024-01-27T11:27:51.877Z",
         "stacktrace": {}
     },
+    "806451562": {
+        "date": "2024-01-27T11:56:01.657Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100071743848974",
+            "body": "push",
+            "threadID": "2583856894982516",
+            "messageID": "mid.$gAAkuARBgOXSTfAwdzmNSsbWvT19S",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706356561358",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "code": 1,
+            "killed": false,
+            "signal": null,
+            "cmd": "git add . && git commit -m \"Initial Commit\" && git push origin master"
+        }
+    },
     "811086572": {
         "date": "2024-01-27T11:01:40.296Z",
         "stacktrace": {}
     },
+    "821163771": {
+        "date": "2024-01-27T11:45:29.378Z",
+        "stacktrace": {}
+    },
+    "821728179": {
+        "date": "2024-01-27T11:46:03.118Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "61555677955912",
+            "body": "Mj I need a poetic letter, for a crush, telling people how you're proud to have a crush on her",
+            "threadID": "6759416497478219",
+            "messageID": "mid.$gABgDp0s4mkuTfAG9LmNSrx0eqmQt",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706355881262",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0c0c019c6448e-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:46:03 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=wo4xiTsv8jvEu2c.TeMBR7b2YU._yXYjbTGbyOBRiXc-1706355963-1-AfcP9TOd2T0rWkJqR+BH6SqyezZ859RMZCDfbBTtDPgAl/B+COd/pveUIvIz1GufphmVMkWxU/mJJP22IZMUWPw=; path=/; expires=Sat, 27-Jan-24 12:16:03 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=xg8ACoh7kw7sRF2_ZItqTnkEs_J95wYA5L1lrIK8njQ-1706355963118-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39784",
+                "x-ratelimit-reset-requests": "23h56m7.846s",
+                "x-ratelimit-reset-tokens": "324ms",
+                "x-request-id": "c5089b937142886460b0ca6d6aabcfdf"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
     "827197876": {
         "date": "2024-01-27T11:23:02.138Z",
         "stacktrace": {}
+    },
+    "841074242": {
+        "date": "2024-01-27T11:55:12.747Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100071743848974",
+            "body": "push",
+            "threadID": "2583856894982516",
+            "messageID": "mid.$gAAkuARBgOXSTfAteo2NSsYXdLW9L",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706356512419",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "code": 1,
+            "killed": false,
+            "signal": null,
+            "cmd": "git add . && git commit -m \"Initial Commit\" && git push origin master"
+        }
     },
     "843616687": {
         "date": "2024-01-27T11:05:02.044Z",
@@ -492,6 +1240,10 @@
     },
     "868527736": {
         "date": "2024-01-27T11:32:41.508Z",
+        "stacktrace": {}
+    },
+    "874579698": {
+        "date": "2024-01-27T11:49:27.118Z",
         "stacktrace": {}
     },
     "877290498": {
@@ -522,6 +1274,126 @@
     },
     "882363392": {
         "date": "2024-01-27T10:58:34.574Z",
+        "stacktrace": {}
+    },
+    "886641656": {
+        "date": "2024-01-27T11:52:50.114Z",
+        "cuid": "100093516094229",
+        "event": {
+            "type": "message",
+            "senderID": "100071743848974",
+            "body": "mj test",
+            "threadID": "2583856894982516",
+            "messageID": "mid.$gAAkuARBgOXSTfAkvjGNSsPodH9uz",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706356369292",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 401,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0caafda023df0-SIN",
+                "connection": "keep-alive",
+                "content-length": "301",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:52:50 GMT",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=j3pnqLLWUG8peSNocW3q909lBBFuYE88V3eKHOMHvEo-1706356370-1-AT/1U37WVFWNwzHOR6pY1tm6JF8iIHxIZ/0KZSGlL4NYfICqCp5V6b+uJ89CZzU2X1wQjktKfk7jmgcF/g035Xw=; path=/; expires=Sat, 27-Jan-24 12:22:50 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=Paev_fj8EUIAE3RFmP_lwfS5DSCYiPMRLvJU..3LVnA-1706356370114-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-request-id": "7cf2380fab855e4c59978ce452a6b520"
+            },
+            "error": {
+                "message": "Incorrect API key provided: sk-L4tH5***************************************EaKR. You can find your API key at https://platform.openai.com/account/api-keys.",
+                "type": "invalid_request_error",
+                "param": null,
+                "code": "invalid_api_key"
+            },
+            "code": "invalid_api_key",
+            "param": null,
+            "type": "invalid_request_error"
+        }
+    },
+    "888946585": {
+        "date": "2024-01-27T11:52:53.090Z",
+        "stacktrace": {}
+    },
+    "893114695": {
+        "date": "2024-01-27T11:43:59.104Z",
+        "stacktrace": {}
+    },
+    "894425903": {
+        "date": "2024-01-27T11:54:17.824Z",
+        "stacktrace": {}
+    },
+    "910205856": {
+        "date": "2024-01-27T11:54:57.928Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message_reply",
+            "threadID": "7559928624038061",
+            "messageID": "mid.$gABrbtwwpwK2TfAopmmNSsTS5St55",
+            "senderID": "100055290002226",
+            "attachments": [],
+            "body": "Mj I'll remove you🤌🏾",
+            "isGroup": true,
+            "mentions": {},
+            "timestamp": 1706356433306,
+            "messageReply": {
+                "threadID": "7559928624038061",
+                "messageID": "mid.$gABrbtwwpwK2TfAmsKmNSsRhP6rWF",
+                "senderID": "100094974786751",
+                "attachments": [],
+                "body": "^@^𝖢^𝖠>^𝖣^𝖠^@^𝖯^𝖢^𝖠𝖫^𝖣^𝖠^@^𝖳^@^𝖢^𝖠\n- 𝗉𝗋𝗈𝗃𝖾𝖼𝗍 𝗈𝗋𝗂𝗈𝗇 𝖻𝗎𝗂𝗅𝖽 𝖿𝗋𝗈𝗆 𝗀𝗂𝗍𝗁𝗎𝖻.𝖼𝗈𝗆/𝗉𝗋𝗃-𝗈𝗋𝗂𝗈𝗇^𝖬\n^@^𝖢@𝖱𝟨𝟢𝟢𝟥^𝖬\n- 𝗂𝗇𝗍𝖾𝗀𝖾𝗋 𝖽𝗂𝗏𝗂𝖽𝖾 𝖻𝗒 𝟢^𝖬\n^@      ^@𝖱𝟨𝟢𝟢𝟫^𝖬\n- 𝟦𝟤𝟫 𝖱𝖺𝗍𝖾 𝗅𝗂𝗆𝗂𝗍 𝗋𝖾𝖺𝖼𝗁𝖾𝖽 𝖿𝗈𝗋 𝗀𝗉𝗍-𝟥.𝟧-𝗍𝗎𝗋𝖻𝗈-𝟣𝟨𝗄-𝟢𝟨𝟣𝟥 𝗂𝗇 𝗈𝗋𝗀𝖺𝗇𝗂𝗓𝖺𝗍𝗂𝗈𝗇 𝗈𝗋𝗀-𝖼𝖤𝟢𝗈𝟩𝟫𝗄𝟢𝗋𝗀𝖠𝖨𝖰𝗄𝗅𝖶𝖨𝟤𝖸𝖷𝗁𝟩𝖥𝖵 𝗈𝗇 𝗋𝖾𝗊𝗎𝖾𝗌𝗍𝗌 𝗉𝖾𝗋 𝗆𝗂𝗇 (𝖱𝖯𝖬): 𝖫𝗂𝗆𝗂𝗍 𝟥, 𝖴𝗌𝖾𝖽 𝟥, 𝖱𝖾𝗊𝗎𝖾𝗌𝗍𝖾𝖽 𝟣. 𝖯𝗅𝖾𝖺𝗌𝖾 𝗍𝗋𝗒 𝖺𝗀𝖺𝗂𝗇 𝗂𝗇 𝟤𝟢𝗌. 𝖵𝗂𝗌𝗂𝗍 https://platform.openai.com/account/rate-limits 𝗍𝗈 𝗅𝖾𝖺𝗋𝗇 𝗆𝗈𝗋𝖾. 𝖸𝗈𝗎 𝖼𝖺𝗇 𝗂𝗇𝖼𝗋𝖾𝖺𝗌𝖾 𝗒𝗈𝗎𝗋 𝗋𝖺𝗍𝖾 𝗅𝗂𝗆𝗂𝗍 𝖻𝗒 𝖺𝖽𝖽𝗂𝗇𝗀 𝖺 𝗉𝖺𝗒𝗆𝖾𝗇𝗍 𝗆𝖾𝗍𝗁𝗈𝖽 𝗍𝗈 𝗒𝗈𝗎𝗋 𝖺𝖼𝖼𝗈𝗎𝗇𝗍 𝖺𝗍 https://platform.openai.com/account/billing.^M\n^@^R^@R6018^M\n- 𝖤𝗋𝗋𝗈𝗋^𝖬\n^@ṻ^@^𝖬\n@ỹ@𝗋𝗎𝗇-𝗍𝗂𝗆𝖾 𝖾𝗋𝗋𝗈𝗋 ^@^𝖡^@𝖱𝟨𝟢𝟢𝟤^𝖬\n- 𝖿𝗅𝗈𝖺𝗍𝗂𝗇𝗀-𝗉𝗈𝗂𝗇𝗍 𝗌𝗎𝗉𝗉𝗈𝗋𝗍 𝗇𝗈𝗍 𝗅𝗈𝖺𝖽𝖾𝖽^𝖬\n\n𝖤𝗋𝗋𝗈𝗋 𝖨𝖣: 𝟫𝟧𝟩𝟧𝟣𝟨𝟨𝟩𝟨\n𝖱𝖾𝗉𝗈𝗋𝗍 𝖺𝗍: https://github.com/prj-orion/issues/issues/new",
+                "isGroup": true,
+                "mentions": {},
+                "timestamp": 1706356401194
+            }
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0cdceaac79f6e-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:54:57 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=emZHfPqJ_MKsI1jRXn8zyeknsyqyyVyykVZFdUoynrw-1706356497-1-AfuCdSNpQnJP0tAvGl+DgjhY8ShQNl87QmLLBMhPIDpGZq8ce+prcgHlW8/nk2tn5OIeq/gzT7abYEWz0rZaEcs=; path=/; expires=Sat, 27-Jan-24 12:24:57 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=uv6aNjYGcgPdafw9q07STLWgPaO1LA5dWBwbNFwQVM0-1706356497928-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39666",
+                "x-ratelimit-reset-requests": "23h54m25.04s",
+                "x-ratelimit-reset-tokens": "500ms",
+                "x-request-id": "bcdbd144237b1b2ebe6e343910cb6658"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
+    "913538633": {
+        "date": "2024-01-27T11:49:17.614Z",
+        "stacktrace": {}
+    },
+    "943912373": {
+        "date": "2024-01-27T11:48:35.616Z",
         "stacktrace": {}
     },
     "945602480": {
@@ -560,12 +1432,77 @@
         },
         "stacktrace": {}
     },
+    "957516676": {
+        "date": "2024-01-27T11:53:18.440Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100055290002226",
+            "body": "Mj explain osmoregulation",
+            "threadID": "7559928624038061",
+            "messageID": "mid.$gABrbtwwpwK2TfAlEZ2NSsPp6EJjT",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706356374631",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c0cb60da773f55-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:53:18 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=b6mjoXWPII4qAKV4OWJtHMq3tHpcW8IbZeXf_ycRLEc-1706356398-1-AXqdmD7XTBVlR0Snk7F6O10H73jl8LI7xAmF/m1161exWAxfn/+XA+aNk6mZRjL6mtorcfNTPUVrWCisL0nrc3U=; path=/; expires=Sat, 27-Jan-24 12:23:18 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=qkhQAcHEm3NxItLJh7Sp.JeQ2XgtqrYExgFTG2_mjf4-1706356398439-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39808",
+                "x-ratelimit-reset-requests": "23h56m4.532s",
+                "x-ratelimit-reset-tokens": "288ms",
+                "x-request-id": "b79af744be537adc88e0da7e90f565a8"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
     "965247494": {
         "date": "2024-01-27T11:30:29.031Z",
         "stacktrace": {}
     },
+    "973408290": {
+        "date": "2024-01-27T11:44:45.325Z",
+        "stacktrace": {}
+    },
+    "982822910": {
+        "date": "2024-01-27T11:48:51.771Z",
+        "stacktrace": {}
+    },
+    "986089646": {
+        "date": "2024-01-27T11:38:27.704Z",
+        "stacktrace": {}
+    },
     "997465839": {
         "date": "2024-01-27T11:22:40.844Z",
+        "stacktrace": {}
+    },
+    "999299201": {
+        "date": "2024-01-27T11:47:57.416Z",
         "stacktrace": {}
     }
 }
