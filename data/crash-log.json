@@ -1,1 +1,571 @@
-{}
+{
+    "102557709": {
+        "date": "2024-01-27T11:06:21.487Z",
+        "stacktrace": {}
+    },
+    "108925872": {
+        "date": "2024-01-27T11:21:15.067Z",
+        "stacktrace": {}
+    },
+    "128045034": {
+        "date": "2024-01-27T11:05:31.946Z",
+        "stacktrace": {}
+    },
+    "146237265": {
+        "date": "2024-01-27T11:23:09.109Z",
+        "stacktrace": {}
+    },
+    "165033079": {
+        "date": "2024-01-27T11:19:43.945Z",
+        "stacktrace": {}
+    },
+    "172901883": {
+        "date": "2024-01-27T11:10:24.328Z",
+        "stacktrace": {}
+    },
+    "174222719": {
+        "date": "2024-01-27T11:34:12.543Z",
+        "stacktrace": {}
+    },
+    "180682325": {
+        "date": "2024-01-27T11:04:48.198Z",
+        "stacktrace": {}
+    },
+    "194001070": {
+        "date": "2024-01-27T11:23:08.230Z",
+        "stacktrace": {}
+    },
+    "198447164": {
+        "date": "2024-01-27T11:34:56.977Z",
+        "stacktrace": {}
+    },
+    "199378065": {
+        "date": "2024-01-27T11:24:13.313Z",
+        "stacktrace": {}
+    },
+    "204436465": {
+        "date": "2024-01-27T11:23:37.759Z",
+        "stacktrace": {}
+    },
+    "235173220": {
+        "date": "2024-01-27T11:20:17.977Z",
+        "stacktrace": {}
+    },
+    "239470752": {
+        "date": "2024-01-27T11:19:34.524Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "100093914165351",
+            "body": "",
+            "threadID": "7268178263216474",
+            "messageID": "mid.$gABnSXp-LEVqTe-q8r2NSqVk-rEtM",
+            "attachments": [
+                {
+                    "type": "audio",
+                    "filename": "audioclip-1706354371000-4234.aac",
+                    "ID": "AT0Q72eb1jEuxh69iEsQ3w38y9IyHXLZmJ8qvytkU-LlYTIVfS2yG2y7GoXhSP3aKgY7SnNfbkhi98vptLI0e147IrYdtFy8_M6uePBVyA-b61yvyXNWvCGP9kmmSPNZxfzXXsr7VBJSVAM1l_iaSHtyuzo",
+                    "audioType": "VOICE_MESSAGE",
+                    "duration": 4234,
+                    "url": "https://cdn.fbsbx.com/v/t59.3654-21/421906448_2855378827938348_7182287223991319302_n.aac/audioclip-1706354371000-4234.aac?_nc_cat=102&ccb=1-7&_nc_sid=d61c36&_nc_eui2=AeGwV30jg7pnM7e77gJr5fBVxzFGGuvGSvXHMUYa68ZK9cfuOL7cvOwaSQMoppIKg4i7bUd_Fgn7Mbulctr86gqO&_nc_ohc=ZRoymk9awMIAX8kGzsS&_nc_ht=cdn.fbsbx.com&oh=03_AdRfmQOPY29lXIqcDeBelWmS1ycTGJCklhY6bGpy36o_fw&oe=65B64F34&dl=1",
+                    "isVoiceMail": false
+                }
+            ],
+            "mentions": {},
+            "timestamp": "1706354373807",
+            "isGroup": true
+        },
+        "stacktrace": {}
+    },
+    "241358840": {
+        "date": "2024-01-27T11:11:43.405Z",
+        "stacktrace": {}
+    },
+    "249424528": {
+        "date": "2024-01-27T11:19:19.609Z",
+        "stacktrace": {}
+    },
+    "259419766": {
+        "date": "2024-01-27T11:01:40.040Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "6998702600246917",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100089358606874"
+            },
+            "logMessageBody": "Sebastian ʚĭɞ left the group.",
+            "author": "100089358606874"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328731615156839045"
+        }
+    },
+    "264773444": {
+        "date": "2024-01-27T11:01:22.462Z",
+        "stacktrace": {}
+    },
+    "271415932": {
+        "date": "2024-01-27T11:32:28.646Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "7268178263216474",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100078226504229"
+            },
+            "logMessageBody": "Düżä Mäřk Ďävë left the group.",
+            "author": "100078226504229"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328739556131544835"
+        }
+    },
+    "292371383": {
+        "date": "2024-01-27T11:13:29.210Z",
+        "stacktrace": {}
+    },
+    "308429167": {
+        "date": "2024-01-27T11:25:43.730Z",
+        "stacktrace": {}
+    },
+    "336472083": {
+        "date": "2024-01-27T11:21:33.168Z",
+        "stacktrace": {}
+    },
+    "342227500": {
+        "date": "2024-01-27T10:58:42.650Z",
+        "cuid": "61555621421703",
+        "event": {
+            "type": "message",
+            "senderID": "100092297541557",
+            "body": "",
+            "threadID": "5575074482532460",
+            "messageID": "mid.$gABPOgC4gsGyTe9eia2NSpJIwYKmZ",
+            "attachments": [
+                {
+                    "type": "audio",
+                    "filename": "audioclip-1706353119000-3056.aac",
+                    "ID": "AT3v4M-rlrBKL22lU8rQeT5pKw1xOcYnEnc0XqYNswXnqXisuSX2-81oxYQjNXRJjjVaeNRt4-xx3uPiNtq-ehMev2kj2grZA39PpTOWXuabytU3hCSGQHfh_KEzrZUwPIm_8Zb_7A1puFrXIn97Ku6nStI",
+                    "audioType": "VOICE_MESSAGE",
+                    "duration": 3056,
+                    "url": "https://cdn.fbsbx.com/v/t59.3654-21/422715574_402972855720802_1998036849389277930_n.aac/audioclip-1706353119000-3056.aac?_nc_cat=108&ccb=1-7&_nc_sid=d61c36&_nc_eui2=AeE2W8PSmY-kqfv-aboOAg6rlDdz6P5vq3iUN3Po_m-reIKTKdEeZFY3BpyJo_vC5wrmN6elQsuBcRQcyk4rq3jp&_nc_ohc=u3a8khFiQdMAX_ZJ1Cf&_nc_ht=cdn.fbsbx.com&oh=03_AdR0xpjyFWqMWgIeQ-xQb-DXxL5vk4kD-aTHOMW_mILjmg&oe=65B6CCF1&dl=1",
+                    "isVoiceMail": false
+                }
+            ],
+            "mentions": {},
+            "timestamp": "1706353121899",
+            "isGroup": true
+        },
+        "stacktrace": {}
+    },
+    "344599839": {
+        "date": "2024-01-27T11:27:48.573Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "7138616079503187",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100053339522784"
+            },
+            "logMessageBody": "Dïane 🙂 removed Karen Sandr'ah from the group.",
+            "author": "100094580693450"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328738355061566908"
+        }
+    },
+    "346291925": {
+        "date": "2024-01-27T11:06:31.928Z",
+        "stacktrace": {}
+    },
+    "362299190": {
+        "date": "2024-01-27T11:11:56.322Z",
+        "stacktrace": {}
+    },
+    "382297844": {
+        "date": "2024-01-27T11:21:33.195Z",
+        "stacktrace": {}
+    },
+    "382899248": {
+        "date": "2024-01-27T11:21:33.110Z",
+        "stacktrace": {}
+    },
+    "390223588": {
+        "date": "2024-01-27T11:23:54.515Z",
+        "stacktrace": {}
+    },
+    "391704484": {
+        "date": "2024-01-27T11:05:44.084Z",
+        "stacktrace": {}
+    },
+    "407233198": {
+        "date": "2024-01-27T11:14:13.877Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "7268178263216474",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100027820840728"
+            },
+            "logMessageBody": "Jin Dy left the group.",
+            "author": "100027820840728"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328734853423245075"
+        }
+    },
+    "437413032": {
+        "date": "2024-01-27T11:23:04.131Z",
+        "stacktrace": {}
+    },
+    "445259453": {
+        "date": "2024-01-27T11:34:30.741Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "24572241572420478",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100073587824264"
+            },
+            "logMessageBody": "Cherry Ann Engco left the group.",
+            "author": "100073587824264"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328740081485077730"
+        }
+    },
+    "459757471": {
+        "date": "2024-01-27T11:30:33.046Z",
+        "stacktrace": {}
+    },
+    "470416564": {
+        "date": "2024-01-27T11:27:04.941Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "7138616079503187",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100013168154639"
+            },
+            "logMessageBody": "Dïane 🙂 removed Dïane Yükï from the group.",
+            "author": "100094580693450"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328738164854315544"
+        }
+    },
+    "505718340": {
+        "date": "2024-01-27T11:22:40.976Z",
+        "stacktrace": {}
+    },
+    "518487150": {
+        "date": "2024-01-27T11:20:56.241Z",
+        "stacktrace": {}
+    },
+    "522078669": {
+        "date": "2024-01-27T11:19:45.288Z",
+        "stacktrace": {}
+    },
+    "525719305": {
+        "date": "2024-01-27T11:04:32.694Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "25128627180068998",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100000228180486"
+            },
+            "logMessageBody": "Ethel Albor left the group.",
+            "author": "100000228180486"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328732358068468943"
+        }
+    },
+    "531629426": {
+        "date": "2024-01-27T11:23:39.909Z",
+        "stacktrace": {}
+    },
+    "536773219": {
+        "date": "2024-01-27T11:00:59.924Z",
+        "stacktrace": {}
+    },
+    "550345972": {
+        "date": "2024-01-27T11:28:48.754Z",
+        "stacktrace": {}
+    },
+    "558205433": {
+        "date": "2024-01-27T11:06:12.206Z",
+        "stacktrace": {}
+    },
+    "567108984": {
+        "date": "2024-01-27T11:27:26.257Z",
+        "stacktrace": {}
+    },
+    "641903704": {
+        "date": "2024-01-27T10:58:52.282Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "24910627878528478",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100091487949456"
+            },
+            "logMessageBody": "Jo Jaemin left the group.",
+            "author": "100091487949456"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328730898204677578"
+        }
+    },
+    "658845467": {
+        "date": "2024-01-27T11:22:16.354Z",
+        "stacktrace": {}
+    },
+    "666016814": {
+        "date": "2024-01-27T11:13:08.020Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message",
+            "senderID": "61555263007342",
+            "body": "mj message me",
+            "threadID": "7268178263216474",
+            "messageID": "mid.$gABnSXp-LEVqTe-R8F2NSp8rkDj9l",
+            "attachments": [],
+            "mentions": {},
+            "timestamp": "1706353964055",
+            "isGroup": true
+        },
+        "stacktrace": {
+            "status": 429,
+            "headers": {
+                "alt-svc": "h3=\":443\"; ma=86400",
+                "cf-cache-status": "DYNAMIC",
+                "cf-ray": "84c09087be143f4d-SIN",
+                "connection": "keep-alive",
+                "content-length": "502",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 27 Jan 2024 11:13:08 GMT",
+                "retry-after": "20",
+                "retry-after-ms": "20000",
+                "server": "cloudflare",
+                "set-cookie": "__cf_bm=n6CVjNlhpqMEC0IBC6dhLYaj.xnS7DC_wMneA0TkrjA-1706353988-1-AdDpsOf6bw+8RdtnPN/OEBs7p0HzGTt2SL2ArnAdkLkpO62mCSotAV7sm9RIPqORyEvnznLQKxTrb2FssdB41+8=; path=/; expires=Sat, 27-Jan-24 11:43:08 GMT; domain=.api.openai.com; HttpOnly; Secure; SameSite=None, _cfuvid=X7MrFF.AuGY_v_2SGYnxKl91g.U6zXzWvPj9r0rwUFA-1706353988014-0-604800000; path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None",
+                "strict-transport-security": "max-age=15724800; includeSubDomains",
+                "vary": "Origin",
+                "x-ratelimit-limit-requests": "200",
+                "x-ratelimit-limit-tokens": "40000",
+                "x-ratelimit-remaining-requests": "0",
+                "x-ratelimit-remaining-tokens": "39818",
+                "x-ratelimit-reset-requests": "23h53m2.952s",
+                "x-ratelimit-reset-tokens": "273ms",
+                "x-request-id": "6ee8c4fcc58be7d6dbfdacd646c6d0a1"
+            },
+            "error": {
+                "message": "Rate limit reached for gpt-3.5-turbo-16k-0613 in organization org-cE0o79k0rgAIQklWI2YXh7FV on requests per min (RPM): Limit 3, Used 3, Requested 1. Please try again in 20s. Visit https://platform.openai.com/account/rate-limits to learn more. You can increase your rate limit by adding a payment method to your account at https://platform.openai.com/account/billing.",
+                "type": "requests",
+                "param": null,
+                "code": "rate_limit_exceeded"
+            },
+            "code": "rate_limit_exceeded",
+            "param": null,
+            "type": "requests"
+        }
+    },
+    "670428881": {
+        "date": "2024-01-27T11:05:20.972Z",
+        "stacktrace": {}
+    },
+    "679015877": {
+        "date": "2024-01-27T11:24:42.349Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "7268178263216474",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100027820840728"
+            },
+            "logMessageBody": "Jin Dy left the group.",
+            "author": "100027820840728"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328737555498739717"
+        }
+    },
+    "701482709": {
+        "date": "2024-01-27T11:07:25.196Z",
+        "stacktrace": {}
+    },
+    "719960444": {
+        "date": "2024-01-27T11:23:53.145Z",
+        "stacktrace": {}
+    },
+    "732523526": {
+        "date": "2024-01-27T11:11:57.392Z",
+        "stacktrace": {}
+    },
+    "736394228": {
+        "date": "2024-01-27T11:23:26.202Z",
+        "stacktrace": {}
+    },
+    "745818787": {
+        "date": "2024-01-27T11:27:10.766Z",
+        "stacktrace": {}
+    },
+    "752399840": {
+        "date": "2024-01-27T11:19:46.822Z",
+        "stacktrace": {}
+    },
+    "797875927": {
+        "date": "2024-01-27T11:07:00.544Z",
+        "stacktrace": {}
+    },
+    "805601103": {
+        "date": "2024-01-27T11:27:51.877Z",
+        "stacktrace": {}
+    },
+    "811086572": {
+        "date": "2024-01-27T11:01:40.296Z",
+        "stacktrace": {}
+    },
+    "827197876": {
+        "date": "2024-01-27T11:23:02.138Z",
+        "stacktrace": {}
+    },
+    "843616687": {
+        "date": "2024-01-27T11:05:02.044Z",
+        "stacktrace": {}
+    },
+    "868527736": {
+        "date": "2024-01-27T11:32:41.508Z",
+        "stacktrace": {}
+    },
+    "877290498": {
+        "date": "2024-01-27T11:26:43.999Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "event",
+            "threadID": "24572241572420478",
+            "logMessageType": "log:group_participants_left",
+            "logMessageData": {
+                "leftParticipantFbId": "100073983530270"
+            },
+            "logMessageBody": "Quadro Alas left the group.",
+            "author": "100073983530270"
+        },
+        "stacktrace": {
+            "__ar": 1,
+            "error": 1545052,
+            "errorSummary": "Unable to add user",
+            "errorDescription": "The user could not be added to the conversation. Please try again later.",
+            "payload": null,
+            "lid": "7328738076294212623"
+        }
+    },
+    "880195766": {
+        "date": "2024-01-27T11:34:12.733Z",
+        "stacktrace": {}
+    },
+    "882363392": {
+        "date": "2024-01-27T10:58:34.574Z",
+        "stacktrace": {}
+    },
+    "945602480": {
+        "date": "2024-01-27T11:19:12.190Z",
+        "cuid": "100094974786751",
+        "event": {
+            "type": "message_reply",
+            "threadID": "7268178263216474",
+            "messageID": "mid.$gABnSXp-LEVqTe-pk_2NSqUNS-xPb",
+            "senderID": "100093914165351",
+            "attachments": [
+                {
+                    "type": "audio",
+                    "filename": "audioclip-1706354348000-2329.aac",
+                    "ID": "AT2NFsQDkibSY_vUosd-QAuX-y9w0dWF4_UBo8d3YQ71u2RsTpUF5VEk6R7Ybld-7diTkDAC4if8o5a8BDRWYT9ZGa_MzS8JfNpkzMVozTjMKU6wTux2CJ7ZAvMCgMwbOgNJDi83xo7hABXmy-mPgNu_Ooo",
+                    "audioType": "VOICE_MESSAGE",
+                    "duration": 2329,
+                    "url": "https://cdn.fbsbx.com/v/t59.3654-21/422042722_317205647419562_3384378737880345199_n.aac/audioclip-1706354348000-2329.aac?_nc_cat=106&ccb=1-7&_nc_sid=d61c36&_nc_eui2=AeHdUuj-ldoRwRdeUjHv9KhmgKROSGZQKyuApE5IZlArK2f7Z5Qobg9Ly9Au6MkcLpq85Mlb11pNGkYazEF5a7qb&_nc_ohc=k5ZA3hyL9sEAX_-otgd&_nc_ht=cdn.fbsbx.com&oh=03_AdQUQg4N2U8s4luLi4F0iKPprp2rZaGbxynIp77oEGAcZg&oe=65B6BFE7&dl=1",
+                    "isVoiceMail": false
+                }
+            ],
+            "body": "",
+            "isGroup": true,
+            "mentions": {},
+            "timestamp": 1706354351359,
+            "messageReply": {
+                "threadID": "7268178263216474",
+                "messageID": "mid.$gABnSXp-LEVqTe-nQBGNSqR-mIavE",
+                "senderID": "100083026005750",
+                "attachments": [],
+                "body": "Tarong ba",
+                "isGroup": true,
+                "mentions": {},
+                "timestamp": 1706354313220
+            }
+        },
+        "stacktrace": {}
+    },
+    "965247494": {
+        "date": "2024-01-27T11:30:29.031Z",
+        "stacktrace": {}
+    },
+    "997465839": {
+        "date": "2024-01-27T11:22:40.844Z",
+        "stacktrace": {}
+    }
+}
