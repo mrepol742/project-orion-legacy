@@ -49,7 +49,7 @@ for (folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
 }
 
-let data_json = ["groups", "pin", "accountPreferences", "threadPreferences", "users"];
+let data_json = ["groups", "pin", "accountPreferences", "threadPreferences", "users", "crash-log"];
 for (file in data_json) {
     writeFile(__dirname + "/data/" + data_json[file] + ".json", "{}");
 }
@@ -67,6 +67,7 @@ let wyr = JSON.parse(fs.readFileSync(__dirname + "/data/wyr.json"));
 let Eball = JSON.parse(fs.readFileSync(__dirname + "/data/8ball.json"));
 let joke = JSON.parse(fs.readFileSync(__dirname + "/data/joke.json"));
 let cat = JSON.parse(fs.readFileSync(__dirname + "/data/cat.json"));
+let crashLog = JSON.parse(fs.readFileSync(__dirname + "/data/crash-log.json"));
 let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 let cmdPage = JSON.parse(gen());
 let R_S_H_12_mmm = fs.existsSync(__dirname + "/.nosave");
@@ -109,7 +110,6 @@ let accounts = [];
 let blockedCall = [];
 let ongoingLogin = [];
 
-let isCalled = true;
 let commandCalls = 0;
 let crashes = 0;
 
@@ -132,17 +132,12 @@ http.createServer(getRoutes()).listen(PORT, () => {
 let loadFile1 = Date.now();
 let homepage = fs.readFileSync(__dirname + "/src/web/index.html");
 let errorpage = fs.readFileSync(__dirname + "/src/web/404.html");
-let profilepage = fs.readFileSync(__dirname + "/src/web/profile.html");
 let threadpage = fs.readFileSync(__dirname + "/src/web/thread_ui.html");
-let googlev = fs.readFileSync(__dirname + "/src/web/google022983bf0cf659ae.html");
 let herop = fs.readFileSync(__dirname + "/src/web/hero.png");
 let faviconpng = fs.readFileSync(__dirname + "/src/web/favicon.png");
 let faviconico = fs.readFileSync(__dirname + "/src/web/favicon.ico");
 let banner = fs.readFileSync(__dirname + "/src/web/banner.png");
 let bannerlogo = fs.readFileSync(__dirname + "/src/web/logo.png");
-let robots = fs.readFileSync(__dirname + "/src/web/robots.txt");
-let sitemappage = fs.readFileSync(__dirname + "/src/web/sitemap.xml");
-let cmdlist = fs.readFileSync(__dirname + "/src/cmd.js");
 let loadFileF1 = Date.now() - loadFile1;
 utils.logged("web_resource_loaded done " + loadFileF1 + "ms");
 
@@ -170,25 +165,6 @@ const googleImageOptions = {
     strictSSL: false,
 };
 
-let errorResponse = {
-    choices: [
-        {
-            finish_reason: "error",
-            index: 0,
-            message: {
-                content:
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues",
-                role: "assistant",
-            },
-        },
-    ],
-    usage: {
-        completion_tokens: 1,
-        prompt_tokens: 1,
-        total_tokens: 1,
-    },
-};
-
 /*
  * PROCESS
  */
@@ -206,11 +182,11 @@ process.on("SIGINT", function () {
 });
 
 process.on("uncaughtException", (err, origin) => {
-    caughtException(err);
+    handleError({ stacktrace: err });
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-    caughtException(reason);
+    handleError({ stacktrace: reason });
 });
 
 process.on("beforeExit", (code) => {
@@ -229,7 +205,7 @@ process.on("exit", (code) => {
  */
 
 fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
-    if (err) return utils.logged(err);
+    if (err) return handleError({ stacktrace: err });
     if (files.length > 0) {
         let appStates;
         for (appStates = 0; appStates < files.length; appStates++) {
@@ -260,8 +236,8 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
                             },
                             login
                         );
-                    } catch (error) {
-                        utils.logged("invalid_decryption_key " + login);
+                    } catch (err1) {
+                        handleError({ stacktrace: err1 });
                     }
                 }
             }
@@ -315,10 +291,7 @@ utils.logged("task_clear global initiated");
 function redfox_fb(fca_state, login, cb) {
     new redfox(fca_state, (err, api) => {
         if (err) {
-            if (err.error && err.error == "Not logged in") {
-                utils.logged("api_not_signin " + login);
-            }
-            utils.logged("api_login_error " + login);
+            handleError({ stacktrace: err, cuid: login });
             accounts = accounts.filter((item) => item !== login);
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
@@ -369,7 +342,7 @@ function redfox_fb(fca_state, login, cb) {
                                 }
 
                                 api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
-                                    if (err) utils.logged(err);
+                                    if (err) return handleError({ stacktrace: err, cuid: login });
                                     if (userPresence[login]) {
                                         for (root0 in userPresence[login]) {
                                             let data0 = userPresence[login][root0];
@@ -416,8 +389,8 @@ function redfox_fb(fca_state, login, cb) {
 
         api.eventListener(async (err, event) => {
             if (err) {
-                // TODO: review prevent deleting of account if the api connection
-                utils.logged("api_listen_error " + login);
+                handleError({ stacktrace: err, cuid: login, e: event });
+
                 accounts = accounts.filter((item) => item !== login);
                 for (threads in settingsThread) {
                     if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
@@ -457,7 +430,7 @@ function redfox_fb(fca_state, login, cb) {
                     settingsThread[event.threadID] = settingsThread.default;
                     // mute the threads
                     api.muteThread(event.threadID, -1, (err) => {
-                        if (err) utils.logged(err);
+                        if (err) return handleError({ stacktrace: err, cuid: login });
                     });
                 }
 
@@ -637,7 +610,7 @@ function redfox_fb(fca_state, login, cb) {
 
                 if (!groups.list.find((thread) => event.threadID === thread.id) && event.isGroup) {
                     api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return utils.logged(err);
+                        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID() });
 
                         let par = gc.participantIDs;
                         groups.list.push({
@@ -653,11 +626,11 @@ function redfox_fb(fca_state, login, cb) {
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                             if (response == null) {
                                 api.setNickname("Edogawa Conan", event.threadID, api.getCurrentUserID(), (err) => {
-                                    if (err) return utils.logged(err);
+                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID() });
                                 });
                             } else {
                                 api.setNickname(response.names[0] + " " + response.names[1], event.threadID, api.getCurrentUserID(), (err) => {
-                                    if (err) return utils.logged(err);
+                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID() });
                                 });
                             }
                         });
@@ -712,7 +685,7 @@ function redfox_fb(fca_state, login, cb) {
                         unsendGif(api, event, d);
                     } else if (d.type == "share") {
                         api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return utils.logged(err);
+                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                             if (d.message == " ") {
                                 d.message = d.attachment;
                             }
@@ -753,7 +726,7 @@ function redfox_fb(fca_state, login, cb) {
                             fileResponse.pipe(file);
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
-                                    if (err) return utils.logged(err);
+                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                     if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                         let constructMMM = "You deleted this file.\n";
                                         constructMMM += d.message;
@@ -791,7 +764,7 @@ function redfox_fb(fca_state, login, cb) {
                         });
                     } else if (d.type == "location") {
                         api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return utils.logged(err);
+                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                             if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let constructMMM = "You deleted this location.\n";
                                 let message1 = {
@@ -818,7 +791,7 @@ function redfox_fb(fca_state, login, cb) {
                         });
                     } else if (d.type == "location_sharing") {
                         api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return utils.logged(err);
+                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                             if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let constructMMM = "You deleted this live location.\n";
                                 let message1 = {
@@ -852,7 +825,7 @@ function redfox_fb(fca_state, login, cb) {
                         });
                     } else if (d.type == "sticker") {
                         api.getUserInfo(event.senderID, async (err, data) => {
-                            if (err) return utils.logged(err);
+                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                             if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let constructMMM = "You deleted this sticker.\n";
                                 let message = {
@@ -892,7 +865,7 @@ function redfox_fb(fca_state, login, cb) {
                             gifResponse.pipe(file);
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
-                                    if (err) return utils.logged(err);
+                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                     if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                         let constructMMM = "You deleted this video.\n";
                                         constructMMM += d.message;
@@ -936,7 +909,7 @@ function redfox_fb(fca_state, login, cb) {
                             gifResponse.pipe(file);
                             file.on("finish", function () {
                                 api.getUserInfo(event.senderID, (err, data) => {
-                                    if (err) return utils.logged(err);
+                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                     if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                         let constructMMM = "You deleted this voice message.\n";
                                         constructMMM += d.message;
@@ -974,7 +947,7 @@ function redfox_fb(fca_state, login, cb) {
                         });
                     } else {
                         api.getUserInfo(event.senderID, (err, data) => {
-                            if (err) return utils.logged(err);
+                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                             if (!groups.list.find((thread) => event.threadID === thread.id)) {
                                 let message = "You deleted this message.\n\n" + d.message;
                                 sendMessageOnly(api, event, message);
@@ -1066,7 +1039,7 @@ function redfox_fb(fca_state, login, cb) {
                         case "log:change_admins":
                             let isRemove = event.logMessageData.ADMIN_EVENT;
                             api.getUserInfo(event.logMessageData.TARGET_ID, (err, data) => {
-                                if (err) return utils.logged(err);
+                                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                 if (isRemove == "remove_admin") {
                                     if (event.logMessageData.TARGET_ID == api.getCurrentUserID()) {
                                         sendMessage(api, event, "What have i done, for you to remove me as admin?");
@@ -1077,13 +1050,13 @@ function redfox_fb(fca_state, login, cb) {
                                     if (event.logMessageData.TARGET_ID == api.getCurrentUserID()) {
                                         sendMessage(api, event, "Finally.. " + " at last i can removes those who fu*ks me.");
                                         api.getThreadInfo(event.threadID, async (err, gc) => {
-                                            if (err) return utils.logged(err);
+                                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                             let admins = gc.adminIDs;
                                             for (admin in admins) {
                                                 if (!accounts.includes(admins[admin].id)) {
                                                     await sleep(3000);
                                                     api.setAdminStatus(event.threadID, admins[admin].id, false, (err) => {
-                                                        if (err) return utils.logged(err);
+                                                        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                                     });
                                                 }
                                             }
@@ -1108,11 +1081,11 @@ function redfox_fb(fca_state, login, cb) {
                                 getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
                                     if (response == null) {
                                         api.setNickname("Edogawa Conan", event.threadID, api.getCurrentUserID(), (err) => {
-                                            if (err) return utils.logged(err);
+                                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                         });
                                     } else {
                                         api.setNickname(response.names[0] + " " + response.names[1], event.threadID, api.getCurrentUserID(), (err) => {
-                                            if (err) return utils.logged(err);
+                                            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                         });
                                     }
                                 });
@@ -1156,7 +1129,7 @@ function redfox_fb(fca_state, login, cb) {
                             break;
                         case "log:group_participants_add":
                             api.getThreadInfo(event.threadID, async (err, gc) => {
-                                if (err) return utils.logged(err);
+                                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                 getGroupProfile(event.threadID, async function (group) {
                                     if (group.name != null) {
                                         let arr = gc.participantIDs;
@@ -1227,7 +1200,7 @@ function redfox_fb(fca_state, login, cb) {
                             break;
                         case "log:group_participants_left":
                             api.getThreadInfo(event.threadID, (err, gc) => {
-                                if (err) utils.logged(err);
+                                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                 getGroupProfile(event.threadID, function (group) {
                                     if (group.name != null) {
                                         let arr = gc.participantIDs;
@@ -1247,57 +1220,54 @@ function redfox_fb(fca_state, login, cb) {
                                     return;
                                 }
                                 api.getUserInfo(id, (err, data) => {
-                                    if (err) {
-                                        return utils.logged(err);
+                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                                    let gcn = gc.threadName;
+                                    let arr = gc.participantIDs;
+                                    if (users.blocked.includes(id) || users.bot.includes(id)) {
+                                        return;
+                                    } else if (data[id].name == "Facebook user") {
+                                        sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
+                                        utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
                                     } else {
-                                        let gcn = gc.threadName;
-                                        let arr = gc.participantIDs;
-                                        if (users.blocked.includes(id) || users.bot.includes(id)) {
-                                            return;
-                                        } else if (data[id].name == "Facebook user") {
-                                            sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
-                                            utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
-                                        } else {
-                                            if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID && settings.shared.root != event.senderID) {
-                                                api.addUserToGroup(id, event.threadID, (err) => {
-                                                    if (err) return utils.logged(err);
-                                                    api.getThreadInfo(event.threadID, (err, gc) => {
-                                                        if (err) return utils.logged(err);
-                                                        if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
-                                                            if (event.author == id) {
-                                                                sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone i added you back waiting for admins to accept you!!");
-                                                            } else {
-                                                                api.getUserInfo(event.author, (err1, data1) => {
-                                                                    if (err1) utils.logged(err1);
-                                                                    sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No... i added you back!");
-                                                                });
-                                                            }
+                                        if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID && settings.shared.root != event.senderID) {
+                                            api.addUserToGroup(id, event.threadID, (err) => {
+                                                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                                                api.getThreadInfo(event.threadID, (err, gc) => {
+                                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                                                    if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
+                                                        if (event.author == id) {
+                                                            sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone i added you back waiting for admins to accept you!!");
                                                         } else {
-                                                            if (event.author == id) {
-                                                                sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone!!");
-                                                            } else {
-                                                                api.getUserInfo(event.author, (err1, data1) => {
-                                                                    if (err1) utils.logged(err1);
-                                                                    sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No...");
-                                                                });
-                                                            }
+                                                            api.getUserInfo(event.author, (err1, data1) => {
+                                                                if (err1) return handleError({ stacktrace: err1, cuid: api.getCurrentUserID(), e: event });
+                                                                sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No... i added you back!");
+                                                            });
                                                         }
-                                                    });
+                                                    } else {
+                                                        if (event.author == id) {
+                                                            sendMessage(api, event, "You think " + data[id].firstName + ", you can leave us all here alone!!");
+                                                        } else {
+                                                            api.getUserInfo(event.author, (err1, data1) => {
+                                                                if (err1) return handleError({ stacktrace: err1, cuid: api.getCurrentUserID(), e: event });
+                                                                sendMessage(api, event, "You think " + data1[event.author].firstName + " you can kick " + data[id].firstName + " out of this group!! No...");
+                                                            });
+                                                        }
+                                                    }
                                                 });
-                                            } else {
-                                                let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
-                                                downloadFile(getProfilePic(id), dirp).then(async (response) => {
-                                                    let img = await welcomejs.generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(");
-                                                    let message = {
-                                                        body: "Sayonara " + data[id].name + ", may the force be with you :(",
-                                                        attachment: fs.createReadStream(img),
-                                                    };
-                                                    sendMessage(api, event, message);
-                                                    unLink(dirp);
-                                                    unLink(img);
-                                                });
-                                                utils.logged("event_log_unsubsribe " + event.threadID + " " + data[id].name);
-                                            }
+                                            });
+                                        } else {
+                                            let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
+                                            downloadFile(getProfilePic(id), dirp).then(async (response) => {
+                                                let img = await welcomejs.generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(");
+                                                let message = {
+                                                    body: "Sayonara " + data[id].name + ", may the force be with you :(",
+                                                    attachment: fs.createReadStream(img),
+                                                };
+                                                sendMessage(api, event, message);
+                                                unLink(dirp);
+                                                unLink(img);
+                                            });
+                                            utils.logged("event_log_unsubsribe " + event.threadID + " " + data[id].name);
                                         }
                                     }
                                 });
@@ -1305,7 +1275,7 @@ function redfox_fb(fca_state, login, cb) {
                             break;
                         case "log:thread_name":
                             api.getUserInfo(event.author, (err, data) => {
-                                if (err) return utils.logged(err);
+                                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                 getGroupProfile(event.threadID, async function (group) {
                                     let msgs;
                                     if (group.name != null) {
@@ -1347,7 +1317,7 @@ async function ai22(api, event, query, query2) {
     } else if (testCommand(api, query, "unsend", event.senderID, "owner", true)) {
         if (event.messageReply.senderID == api.getCurrentUserID()) {
             api.unsendMessage(event.messageReply.messageID, (err) => {
-                if (err) utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
         }
     } else if (testCommand(api, query, "pin--add", event.senderID, "user", true)) {
@@ -1417,9 +1387,8 @@ async function ai22(api, event, query, query2) {
                 data.shift();
                 let response = await google.search(event.messageReply.body + " in " + data.join(" "), googleSearchOptions);
                 sendMessage(api, event, response.translation.target_text + " (" + response.translation.target_language + ") ");
-            } catch (error) {
-                utils.logged(error);
-                sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query, "totext", event.senderID, "user", true)) {
@@ -1436,14 +1405,8 @@ async function ai22(api, event, query, query2) {
                     try {
                         const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
                         sendMessage(api, event, response.data.text, event.threadID, event.messageReply.messageID, true, false);
-                    } catch (error) {
-                        sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.", event.threadID, event.messageReply.messageID, true, false);
-                        if (error.response) {
-                            console.log(error.response.status);
-                            console.log(error.response.data);
-                        } else {
-                            console.log(error.message);
-                        }
+                    } catch (err) {
+                        sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     }
                     unLink(dir);
                 });
@@ -1495,7 +1458,7 @@ async function ai22(api, event, query, query2) {
                 sendMessage(api, event, "Must be number!");
             }
         }
-    } else if (testCommand(api, query, "addInstance", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "add--instance", event.senderID, "user", true)) {
         getUserProfile(event.senderID, async function (name) {
             if (!name.balance) {
                 sendMessage(api, event, "You dont have enought balance to continue!");
@@ -1524,7 +1487,7 @@ async function ai22(api, event, query, query2) {
                                         message,
                                         event.threadID,
                                         (err, messageInfo) => {
-                                            if (err) utils.logged(err);
+                                            if (err) return utils.logged(err);
                                         },
                                         event.messageReply.messageID
                                     );
@@ -1569,7 +1532,7 @@ async function ai22(api, event, query, query2) {
                                                     message,
                                                     event.threadID,
                                                     (err, messageInfo) => {
-                                                        if (err) utils.logged(err);
+                                                        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                                                     },
                                                     event.messageReply.messageID
                                                 );
@@ -1713,12 +1676,8 @@ async function ai22(api, event, query, query2) {
                             unLink(filename);
                         }
                     }
-                } catch (error) {
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
+                } catch (err) {
+                    sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 }
             });
         }
@@ -1812,7 +1771,7 @@ async function ai22(api, event, query, query2) {
                 let filename = __dirname + "/cache/gphoto_" + utils.getTimestamp() + ".png";
                 downloadFile(url, filename).then((response) => {
                     api.setGroupImage(fs.createReadStream(filename), event.threadID, (err) => {
-                        if (err) return utils.logged(err);
+                        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                     });
                     unLink(filename);
                 });
@@ -1872,7 +1831,7 @@ async function ai(api, event) {
             updateFont(event.body),
             tid,
             (err, messageInfo) => {
-                if (err) return utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 sendMessage(api, event, "Reply has been sent to " + name + " with an uid of " + id);
             },
             mid
@@ -1881,7 +1840,7 @@ async function ai(api, event) {
     }
 
     if (event.type == "message") {
-        let cmmdReply = ["balance --transfer", "addinstance", "unsend", "notify", "totext", "bgremove", "gphoto", "image --reverse", "run", "count", "count --vowels", "count --consonants", "wfind", "pin --add", "translate"];
+        let cmmdReply = ["balance --transfer", "add --instance", "unsend", "notify", "totext", "bgremove", "gphoto", "image --reverse", "run", "count", "count --vowels", "count --consonants", "wfind", "pin --add", "translate"];
         if (cmmdReply.includes(query)) {
             if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(query)) {
                 return;
@@ -1935,30 +1894,23 @@ async function ai(api, event) {
         } else {
             let query = getDataFromQuery(data);
             getResponseData("https://api.duckduckgo.com/?q=" + query + "&format=json&pretty=1").then((response) => {
-                if (response == null) {
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                if (response.Abstract == "") {
+                    sendMessage(api, event, "No results found for `" + query + "`");
                 } else {
-                    if (response.Abstract == "") {
-                        sendMessage(api, event, "No results found for `" + query + "`");
+                    if (response.Image == "") {
+                        sendMessage(api, event, response.Abstract);
                     } else {
-                        if (response.Image == "") {
-                            sendMessage(api, event, response.Abstract);
-                        } else {
-                            let url = "https://duckduckgo.com" + response.Image;
-                            let dir = __dirname + "/cache/duckduckgo_" + utils.getTimestamp() + ".png";
-                            downloadFile(url, dir).then((response1) => {
-                                let message = {
-                                    body: response.Abstract,
-                                    attachment: fs.createReadStream(dir),
-                                };
-                                sendMessage(api, event, message);
-                                unLink(dir);
-                            });
-                        }
+                        let url = "https://duckduckgo.com" + response.Image;
+                        let dir = __dirname + "/cache/duckduckgo_" + utils.getTimestamp() + ".png";
+                        downloadFile(url, dir).then((response1) => {
+                            let message = {
+                                body: response.Abstract,
+                                attachment: fs.createReadStream(dir),
+                            };
+                            sendMessage(api, event, message);
+                            unLink(dir);
+                        });
                     }
                 }
             });
@@ -2039,7 +1991,7 @@ async function ai(api, event) {
                 addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
-                sendMessage(api, event, "Mj is having an issues right now. Please try it again later.");
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "chatgpt", event.senderID)) {
@@ -2066,7 +2018,7 @@ async function ai(api, event) {
                 addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
-                sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "misaka", event.senderID)) {
@@ -2099,12 +2051,8 @@ async function ai(api, event) {
                     }
                 }
                 sendAiMessage(api, event, text);
-            } catch (error) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "chad", event.senderID)) {
@@ -2129,7 +2077,7 @@ async function ai(api, event) {
                 addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
-                sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "nraf", event.senderID)) {
@@ -2154,7 +2102,7 @@ async function ai(api, event) {
                 addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
-                sendMessage(api, event, "Mj is having an issues connecting to ChatGPT servers right now.");
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "8ball", event.senderID)) {
@@ -2197,12 +2145,8 @@ async function ai(api, event) {
                     }
                 }
                 sendAiMessage(api, event, text);
-            } catch (error) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "melbin", event.senderID)) {
@@ -2235,12 +2179,8 @@ async function ai(api, event) {
                     }
                 }
                 sendAiMessage(api, event, text);
-            } catch (error) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "openai", event.senderID)) {
@@ -2266,7 +2206,7 @@ async function ai(api, event) {
                 addToken(login, "davinci", response);
                 sendMessage(api, event, response.choices[0].text);
             } catch (err) {
-                sendMessage(api, event, "Mj is having an issues connecting to OpenAI servers right now.");
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "codex", event.senderID)) {
@@ -2291,12 +2231,8 @@ async function ai(api, event) {
                 });
                 addToken(login, "davinci", response);
                 sendAiMessage(api, event, response.choices[0].text);
-            } catch (error) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "dell", event.senderID)) {
@@ -2330,12 +2266,8 @@ async function ai(api, event) {
                     });
                 }
                 sendMessage(api, event, message);
-            } catch (error) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "poli", event.senderID)) {
@@ -2357,20 +2289,13 @@ async function ai(api, event) {
                     unLink(dir);
                 });
             } catch (err) {
-                utils.logged(err);
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query, "clear--cache", event.senderID, "admin", true)) {
         let count = 0;
         fs.readdir(__dirname + "/cache/", function (err, files) {
-            if (err) {
-                return utils.logged(err);
-            }
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             files.forEach(function (file) {
                 count++;
                 unLink(__dirname + "/cache/" + file);
@@ -2384,7 +2309,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "left", event.senderID, "owner", true)) {
         let login = api.getCurrentUserID();
         api.removeUserFromGroup(login, event.threadID, (err) => {
-            if (err) return utils.logged(err);
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                     delete settingsThread[threads]["lock"];
@@ -2394,7 +2319,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "logout", event.senderID, "owner", true)) {
         sendMessage(api, event, "sayonara... logging out!");
         api.logout((err) => {
-            if (err) utils.logged(err);
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         });
     } else if (testCommand(api, query, "maintenance", event.senderID, "owner")) {
         let data = input.split(" ");
@@ -2421,7 +2346,35 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
             }
         }
-    } else if (testCommand(api, query, "userlist", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "list--admin", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
+        for (admin in users.admin) {
+            getUserProfile(users.admin[admin], async function (name) {
+                construct += "│\n";
+                construct += "│   ⦿ Name: " + name.name + "\n";
+                construct += "│   ⦿ uid: " + users.admin[admin] + "\n";
+            });
+        }
+        construct += "│\n└─ @ỹ@cmd-prj- orion";
+        sendMessage(api, event, construct);
+    } else if (testCommand(api, query, "list--owner", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
+        for (let i = 0; i < accounts.length; i++) {
+            getUserProfile(settings[accounts[i]].owner, async function (name) {
+                construct += "│\n";
+                construct += "│   ⦿ Name: " + name.name + "\n";
+                construct += "│   ⦿ uid: " + accounts[i] + "\n";
+            });
+        }
+        construct += "│\n└─ @ỹ@cmd-prj- orion";
+        sendMessage(api, event, construct);
+    } else if (testCommand(api, query, "list--instance", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -2641,8 +2594,8 @@ async function ai(api, event) {
                 let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(text) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
                 let time = utils.getTimestamp();
                 var file = fs.createWriteStream(__dirname + "/cache/ttsjap_" + time + ".mp3");
-                var gifRequest = https.get(responses, function (gifResponse) {
-                    gifResponse.pipe(file);
+                https.get(responses, function (response) {
+                    response.pipe(file);
                     file.on("finish", function () {
                         var message = {
                             attachment: fs.createReadStream(__dirname + "/cache/ttsjap_" + time + ".mp3").on("end", async () => {
@@ -2655,12 +2608,7 @@ async function ai(api, event) {
                     });
                 });
             } catch (err) {
-                utils.logged(err);
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query2, "say", event.senderID)) {
@@ -2790,15 +2738,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             dns.resolve4(data.join(" "), (err, addresses) => {
-                if (err) {
-                    utils.logged(err);
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
-                    return;
-                }
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 sendMessage(api, event, addresses[0]);
             });
         }
@@ -2812,15 +2752,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             dns.resolve6(data.join(" "), (err, addresses) => {
-                if (err) {
-                    utils.logged(err);
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
-                    return;
-                }
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 sendMessage(api, event, addresses[0]);
             });
         }
@@ -2877,6 +2809,7 @@ async function ai(api, event) {
             data.shift();
             let aa = data.join(" ");
             exec("traceroute " + aa, function (err, stdout, stderr) {
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
                     traceroute["/" + aa] = stdout;
@@ -2910,9 +2843,8 @@ async function ai(api, event) {
                 let covid = "⦿ Deaths " + numberWithCommas(data.data.data["deaths"]) + "\n⦿ Confirmed: " + numberWithCommas(data.data.data["confirmed"]) + "\n⦿ Location: " + data.data.data["location"];
                 sendMessage(api, event, covid);
             })
-            .catch(function (error) {
-                utils.logged(error);
-                sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+            .catch(function (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
     } else if (testCommand(api, query2, "covid", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -2948,9 +2880,8 @@ async function ai(api, event) {
                         sendMessage(api, event, "Country not found.");
                     }
                 })
-                .catch(function (error) {
-                    utils.logged(error);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                .catch(function (err) {
+                    sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 });
         }
     } else if (testCommand(api, query2, "nba", event.senderID)) {
@@ -2992,9 +2923,8 @@ async function ai(api, event) {
                     message.push("Division: " + data.data.data[0].team.division);
                     sendMessage(api, event, utils.formatOutput(data.data.data[0].first_name + " " + data.data.data[0].last_name, message, "github.com/prj-orion"));
                 })
-                .catch(function (error) {
-                    utils.logged(error);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                .catch(function (err) {
+                    sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 });
         }
     } else if (testCommand(api, query2, "urlShortener", event.senderID)) {
@@ -3031,9 +2961,8 @@ async function ai(api, event) {
                     };
                     sendMessage(api, event, message);
                 })
-                .catch(function (error) {
-                    utils.logged(error);
-                    sendMessage(api, event, "An unknown error as been occured. Please try again later.");
+                .catch(function (err) {
+                    sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 });
         }
     } else if (testCommand(api, query2, "video--lyric", event.senderID)) {
@@ -3066,23 +2995,17 @@ async function ai(api, event) {
                         file.write(chunk);
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + qsearch).then((response) => {
-                        if (response == null) {
-                            sendMessage(
-                                api,
-                                event,
-                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                            );
-                        } else {
-                            let title = response.result.s_title;
-                            let image = response.result.s_image;
-                            let artist = response.result.s_artist;
-                            let lyrics = response.result.s_lyrics;
-                            let message = {
-                                body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n"),
-                                attachment: fs.createReadStream(filename),
-                            };
-                            sendMessage(api, event, message);
-                        }
+                        if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                        let title = response.result.s_title;
+                        let image = response.result.s_image;
+                        let artist = response.result.s_artist;
+                        let lyrics = response.result.s_lyrics;
+                        let message = {
+                            body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n"),
+                            attachment: fs.createReadStream(filename),
+                        };
+                        sendMessage(api, event, message);
+
                         threadIdMV[event.threadID] = true;
                         unLink(filename);
                     });
@@ -3172,23 +3095,17 @@ async function ai(api, event) {
                         file.write(chunk);
                     }
                     getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + qsearch).then((response) => {
-                        if (response == null) {
-                            sendMessage(
-                                api,
-                                event,
-                                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                            );
-                        } else {
-                            let title = response.result.s_title;
-                            let image = response.result.s_image;
-                            let artist = response.result.s_artist;
-                            let lyrics = response.result.s_lyrics;
-                            let message = {
-                                body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n"),
-                                attachment: fs.createReadStream(filename),
-                            };
-                            sendMessage(api, event, message);
-                        }
+                        if (response == null) return;
+                        sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                        let title = response.result.s_title;
+                        let image = response.result.s_image;
+                        let artist = response.result.s_artist;
+                        let lyrics = response.result.s_lyrics;
+                        let message = {
+                            body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n"),
+                            attachment: fs.createReadStream(filename),
+                        };
+                        sendMessage(api, event, message);
                         threadIdMV[event.threadID] = true;
                         unLink(filename);
                     });
@@ -3258,28 +3175,21 @@ async function ai(api, event) {
             data.shift();
             let text = data.join(" ");
             getResponseData("https://sampleapi-mraikero-01.vercel.app/get/lyrics?title=" + text).then((response) => {
-                if (response == null) {
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
-                } else {
-                    let title = response.result.s_title;
-                    let image = response.result.s_image;
-                    let artist = response.result.s_artist;
-                    let lyrics = response.result.s_lyrics + "";
-                    let time = utils.getTimestamp();
-                    let filename = __dirname + "/cache/lyrics_" + time + ".png";
-                    downloadFile(encodeURI(image), filename).then((response) => {
-                        let message = {
-                            body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n"),
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                let title = response.result.s_title;
+                let image = response.result.s_image;
+                let artist = response.result.s_artist;
+                let lyrics = response.result.s_lyrics + "";
+                let time = utils.getTimestamp();
+                let filename = __dirname + "/cache/lyrics_" + time + ".png";
+                downloadFile(encodeURI(image), filename).then((response) => {
+                    let message = {
+                        body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n"),
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessage(api, event, message);
+                    unLink(filename);
+                });
             });
         }
     } else if (testCommand(api, query2, "binary--encode", event.senderID)) {
@@ -3392,8 +3302,8 @@ async function ai(api, event) {
                     sendMessage(api, event, message);
                     unLink(dir);
                 });
-            } catch (error) {
-                sendMessage(api, event, "Unfortunately, i cannot find any relevant results to your query.");
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
     } else if (testCommand(api, query, "ugly", event.senderID, "user", true) || testCommand(api, query, "ugly--random", event.senderID, "user", true)) {
@@ -3402,7 +3312,7 @@ async function ai(api, event) {
         }
         if (event.isGroup) {
             api.getThreadInfo(event.threadID, (err, info) => {
-                if (err) return utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
 
                 let members = info.participantIDs.length;
                 var partner1 = 0;
@@ -3416,7 +3326,7 @@ async function ai(api, event) {
                 let filename = __dirname + "/cache/ugly_" + utils.getTimestamp() + ".jpg";
                 downloadFile(url, filename).then((response) => {
                     api.getUserInfo(partner1, (err, info) => {
-                        if (err) return utils.logged(err);
+                        if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                         let name1 = info[partner1]["firstName"];
 
                         let pre = Math.floor(Math.random() * 100) + "%";
@@ -3456,7 +3366,7 @@ async function ai(api, event) {
         }
         if (event.isGroup) {
             api.getThreadInfo(event.threadID, (err, info) => {
-                if (err) return utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
 
                 let members = info.participantIDs.length;
                 var partner1 = 0;
@@ -3488,11 +3398,11 @@ async function ai(api, event) {
                     let filename1 = __dirname + "/cache/pair2_" + utils.getTimestamp() + ".jpg";
                     downloadFile(url1, filename1).then((response1) => {
                         api.getUserInfo(partner1, (err, info) => {
-                            if (err) return utils.logged(err);
+                            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                             let name1 = info[partner1]["firstName"];
 
                             api.getUserInfo(partner2, (err, info1) => {
-                                if (err) return utils.logged(err);
+                                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
 
                                 let love = Math.floor(Math.random() * 100) + "%";
                                 let charm = Math.floor(Math.random() * 100) + "%";
@@ -3548,13 +3458,13 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "Why don't you love yourself?");
         }
-    } else if (testCommand(api, query, "everyone", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "@everyone", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         if (event.isGroup) {
             api.getThreadInfo(event.threadID, (err, info) => {
-                if (err) return utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
 
                 const a = "\u200E";
                 let message = {
@@ -3584,18 +3494,6 @@ async function ai(api, event) {
         }
         sendMessage(api, event, message);
         */
-    } else if (testCommand(api, query2, "summarize", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: summ text" + "\n " + example[Math.floor(Math.random() * example.length)] + " summ this sentence meant to be summarized.");
-        } else {
-            let ss = await aiResponse(event, settings.shared.text_complextion, input, true, { firstName: undefined }, { name: undefined }, api.getCurrentUserID());
-            addToken(login, "davinci", ss);
-            sendMessage(api, event, ss.choices[0].message.content);
-        }
     } else if (testCommand(api, query2, "baybayin", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -3606,15 +3504,8 @@ async function ai(api, event) {
         } else {
             data.shift();
             getResponseData("https://api-baybayin-transliterator.vercel.app/?text=" + data.join(" ")).then((response) => {
-                if (response == null) {
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
-                } else {
-                    sendMessage(api, event, response.baybay);
-                }
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                sendMessage(api, event, response.baybay);
             });
         }
     } else if (testCommand(api, query2, "doubleStruck", event.senderID)) {
@@ -3643,7 +3534,7 @@ async function ai(api, event) {
                     degreeType: "C",
                 },
                 (err, r) => {
-                    if (err) return utils.logged(err);
+                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     let d = r[0];
                     let time = utils.getTimestamp();
                     let filename = __dirname + "/cache/weather_" + time + ".png";
@@ -3726,60 +3617,32 @@ async function ai(api, event) {
             return;
         }
         getResponseData("http://numbersapi.com/random/math").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                sendMessage(api, event, response);
-            }
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+            sendMessage(api, event, response);
         });
     } else if (testCommand(api, query, "facts--date", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("http://numbersapi.com/random/date").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                sendMessage(api, event, response);
-            }
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+            sendMessage(api, event, response);
         });
     } else if (testCommand(api, query, "facts--trivia", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("http://numbersapi.com/random/trivia").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                sendMessage(api, event, response);
-            }
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+            sendMessage(api, event, response);
         });
     } else if (testCommand(api, query, "facts--year", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("http://numbersapi.com/random/year").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                sendMessage(api, event, response);
-            }
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+            sendMessage(api, event, response);
         });
     } else if (testCommand(api, query2, "getProfilePic", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -3806,58 +3669,57 @@ async function ai(api, event) {
                 userN = userN.slice(1);
             }
             getResponseData("https://api.github.com/users/" + userN).then((response) => {
-                if (response == null || response.message == "Not Found") {
-                    sendMessage(api, event, 'Unfortunately github user "' + userN + '" was not found.');
-                } else {
-                    let name = response.name;
-                    let email = response.email;
-                    let bio = response.bio;
-                    let company = response.company;
-                    let location = response.location;
-                    let url = response.blog;
-                    let followers = response.followers;
-                    let following = response.following;
-                    let public_repos = response.public_repos;
-                    let public_gists = response.public_gists;
-                    let avatar = response.avatar_url;
-                    let time = utils.getTimestamp();
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                if (response.message == "Not Found") return sendMessage(api, event, 'Unfortunately github user "' + userN + '" was not found.');
 
-                    if (bio == "No Bio") {
-                        bio = "";
-                    }
+                let name = response.name;
+                let email = response.email;
+                let bio = response.bio;
+                let company = response.company;
+                let location = response.location;
+                let url = response.blog;
+                let followers = response.followers;
+                let following = response.following;
+                let public_repos = response.public_repos;
+                let public_gists = response.public_gists;
+                let avatar = response.avatar_url;
+                let time = utils.getTimestamp();
 
-                    let filename = __dirname + "/cache/github_avatar_" + time + ".png";
-                    downloadFile(encodeURI(avatar), filename).then((response) => {
-                        let message = {
-                            body:
-                                "⦿ Name: " +
-                                name +
-                                "\n⦿ Email: " +
-                                email +
-                                "\n⦿ Location: " +
-                                location +
-                                "\n⦿ Company: " +
-                                company +
-                                "\n⦿ Website: " +
-                                url +
-                                "\n⦿ Followers: " +
-                                followers +
-                                "\n⦿ Following: " +
-                                following +
-                                "\n⦿ Public Repository: " +
-                                public_repos +
-                                "\n⦿ Public Gists: " +
-                                public_gists +
-                                "\n\n" +
-                                bio +
-                                "\nhttps://github.com/" +
-                                userN,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
+                if (bio == "No Bio") {
+                    bio = "";
                 }
+
+                let filename = __dirname + "/cache/github_avatar_" + time + ".png";
+                downloadFile(encodeURI(avatar), filename).then((response) => {
+                    let message = {
+                        body:
+                            "⦿ Name: " +
+                            name +
+                            "\n⦿ Email: " +
+                            email +
+                            "\n⦿ Location: " +
+                            location +
+                            "\n⦿ Company: " +
+                            company +
+                            "\n⦿ Website: " +
+                            url +
+                            "\n⦿ Followers: " +
+                            followers +
+                            "\n⦿ Following: " +
+                            following +
+                            "\n⦿ Public Repository: " +
+                            public_repos +
+                            "\n⦿ Public Gists: " +
+                            public_gists +
+                            "\n\n" +
+                            bio +
+                            "\nhttps://github.com/" +
+                            userN,
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessage(api, event, message);
+                    unLink(filename);
+                });
             });
         }
     } else if (testCommand(api, query2, "periodicTable", event.senderID)) {
@@ -3869,32 +3731,29 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: element name" + "\n " + example[Math.floor(Math.random() * example.length)] + " element hydrogen");
         } else {
             data.shift();
-            let symbol = data.join(" ");
-            getResponseData("https://api.popcat.xyz/periodic-table?element=" + symbol).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately element "' + symbol + '" was not found.');
-                } else {
-                    let name = response.name;
-                    let symbol = response.symbol;
-                    let atomic_number = response.atomic_number;
-                    let atomic_mass = response.atomic_mass;
-                    let period = response.period;
-                    let phase = response.phase;
-                    let discovered_by = response.discovered_by;
-                    let image = response.image;
-                    let summary = response.summary;
-                    let time = utils.getTimestamp();
+            let squery = data.join(" ");
+            getResponseData("https://api.popcat.xyz/periodic-table?element=" + squery).then((response) => {
+                if (response == null) return sendMessage(api, event, 'Unfortunately element "' + squery + '" was not found.');
+                let name = response.name;
+                let symbol = response.symbol;
+                let atomic_number = response.atomic_number;
+                let atomic_mass = response.atomic_mass;
+                let period = response.period;
+                let phase = response.phase;
+                let discovered_by = response.discovered_by;
+                let image = response.image;
+                let summary = response.summary;
+                let time = utils.getTimestamp();
 
-                    let filename = __dirname + "/cache/element_" + time + ".png";
-                    downloadFile(encodeURI(image), filename).then((response) => {
-                        let message = {
-                            body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
+                let filename = __dirname + "/cache/element_" + time + ".png";
+                downloadFile(encodeURI(image), filename).then((response) => {
+                    let message = {
+                        body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessage(api, event, message);
+                    unLink(filename);
+                });
             });
         }
     } else if (testCommand(api, query2, "npm", event.senderID)) {
@@ -3906,27 +3765,24 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: npm name" + "\n " + example[Math.floor(Math.random() * example.length)] + " npm mrepol742");
         } else {
             data.shift();
-            let name = data.join(" ");
-            getResponseData("https://api.popcat.xyz/npm?q=" + name).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately npm "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
-                } else {
-                    let name = response.name;
-                    let version = response.version;
-                    let description = response.description;
-                    let author = response.author;
-                    let last_published = response.last_published;
-                    let downloads_this_year = response.downloads_this_year;
-                    let repository = response.repository;
-                    let author_email = response.author_email;
-                    let message = {
-                        body: "⦿ Name: " + name + " v" + version + "\n⦿ Author: " + author + "\n⦿ Email: " + author_email + "\n⦿ Updated on: " + last_published + "\n⦿ Repository: " + repository + "\n\n" + description,
-                    };
-                    if (repository != "None") {
-                        message["url"] = repository;
-                    }
-                    sendMessage(api, event, message);
+            let nquery = data.join(" ");
+            getResponseData("https://api.popcat.xyz/npm?q=" + nquery).then((response) => {
+                if (response == null) return sendMessage(api, event, 'Unfortunately npm "' + nquery + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                let name = response.name;
+                let version = response.version;
+                let description = response.description;
+                let author = response.author;
+                let last_published = response.last_published;
+                let downloads_this_year = response.downloads_this_year;
+                let repository = response.repository;
+                let author_email = response.author_email;
+                let message = {
+                    body: "⦿ Name: " + name + " v" + version + "\n⦿ Author: " + author + "\n⦿ Email: " + author_email + "\n⦿ Updated on: " + last_published + "\n⦿ Repository: " + repository + "\n\n" + description,
+                };
+                if (repository != "None") {
+                    message["url"] = repository;
                 }
+                sendMessage(api, event, message);
             });
         }
     } else if (testCommand(api, query2, "steam", event.senderID)) {
@@ -3938,29 +3794,26 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: steam name" + "\n " + example[Math.floor(Math.random() * example.length)] + " steam minecraft");
         } else {
             data.shift();
-            let name = data.join(" ");
-            getResponseData("https://api.popcat.xyz/steam?q=" + name).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately the "' + name + '" was not found on steam.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
-                } else {
-                    let name = response.name;
-                    let developers = response.developers;
-                    let website = response.website;
-                    let description = response.description;
-                    let banner = response.banner;
-                    let price = response.price;
-                    let time = utils.getTimestamp();
+            let nquery = data.join(" ");
+            getResponseData("https://api.popcat.xyz/steam?q=" + nquery).then((response) => {
+                if (response == null) return sendMessage(api, event, 'Unfortunately the "' + nquery + '" was not found on steam.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                let name = response.name;
+                let developers = response.developers;
+                let website = response.website;
+                let description = response.description;
+                let banner = response.banner;
+                let price = response.price;
+                let time = utils.getTimestamp();
 
-                    let filename = __dirname + "/cache/steam_" + time + ".png";
-                    downloadFile(encodeURI(banner), filename).then((response) => {
-                        let message = {
-                            body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
+                let filename = __dirname + "/cache/steam_" + time + ".png";
+                downloadFile(encodeURI(banner), filename).then((response) => {
+                    let message = {
+                        body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessage(api, event, message);
+                    unLink(filename);
+                });
             });
         }
     } else if (testCommand(api, query2, "imdb", event.senderID)) {
@@ -3974,27 +3827,24 @@ async function ai(api, event) {
             data.shift();
             let name = data.join(" ");
             getResponseData("https://api.popcat.xyz/imdb?q=" + name).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately imdb "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
-                } else {
-                    let title = response.title;
-                    let year = response.year;
-                    let runtime = response.runtime;
-                    let actors = response.actors;
-                    let poster = response.poster;
-                    let genres = response.genres;
-                    let plot = response.plot;
-                    let time = utils.getTimestamp();
-                    let filename = __dirname + "/cache/imdb_" + time + ".png";
-                    downloadFile(encodeURI(poster), filename).then((response) => {
-                        let message = {
-                            body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
+                if (response == null) return sendMessage(api, event, 'Unfortunately imdb "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                let title = response.title;
+                let year = response.year;
+                let runtime = response.runtime;
+                let actors = response.actors;
+                let poster = response.poster;
+                let genres = response.genres;
+                let plot = response.plot;
+                let time = utils.getTimestamp();
+                let filename = __dirname + "/cache/imdb_" + time + ".png";
+                downloadFile(encodeURI(poster), filename).then((response) => {
+                    let message = {
+                        body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessage(api, event, message);
+                    unLink(filename);
+                });
             });
         }
     } else if (testCommand(api, query2, "itunes", event.senderID)) {
@@ -4006,29 +3856,26 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: itunes title" + "\n " + example[Math.floor(Math.random() * example.length)] + " itunes in the end");
         } else {
             data.shift();
-            let name = data.join(" ");
-            getResponseData("https://api.popcat.xyz/itunes?q=" + name).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, 'Unfortunately the "' + name + '" was not found in itunes music.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
-                } else {
-                    let name = response.name;
-                    let artist = response.artist;
-                    let album = response.album;
-                    let genre = response.genre;
-                    let length = response.length.replace("s", "");
-                    let lenghtM = (Math.round((length / 60) * 100) / 100).toFixed(2);
-                    let thumbnail = response.thumbnail;
-                    let time = utils.getTimestamp();
-                    let filename = __dirname + "/cache/itunes_" + time + ".png";
-                    downloadFile(encodeURI(thumbnail), filename).then((response) => {
-                        let message = {
-                            body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
-                            attachment: fs.createReadStream(filename),
-                        };
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
-                }
+            let nquery = data.join(" ");
+            getResponseData("https://api.popcat.xyz/itunes?q=" + nquery).then((response) => {
+                if (response == null) return sendMessage(api, event, 'Unfortunately the "' + nquery + '" was not found in itunes music.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                let name = response.name;
+                let artist = response.artist;
+                let album = response.album;
+                let genre = response.genre;
+                let length = response.length.replace("s", "");
+                let lenghtM = (Math.round((length / 60) * 100) / 100).toFixed(2);
+                let thumbnail = response.thumbnail;
+                let time = utils.getTimestamp();
+                let filename = __dirname + "/cache/itunes_" + time + ".png";
+                downloadFile(encodeURI(thumbnail), filename).then((response) => {
+                    let message = {
+                        body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessage(api, event, message);
+                    unLink(filename);
+                });
             });
         }
     } else if (testCommand(api, query, "car", event.senderID, "user", true)) {
@@ -4036,55 +3883,46 @@ async function ai(api, event) {
             return;
         }
         getResponseData("https://api.popcat.xyz/car").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                let image = response.image;
-                let title = response.title;
-                let filename = __dirname + "/cache/car_" + utils.getTimestamp() + ".png";
-                downloadFile(encodeURI(image), filename).then((response) => {
-                    let message = {
-                        body: title,
-                        attachment: fs.createReadStream(filename),
-                    };
-                    sendMessage(api, event, message);
-                    unLink(filename);
-                });
-            }
+            if (response == null) return sendMessage(api, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            let image = response.image;
+            let title = response.title;
+            let filename = __dirname + "/cache/car_" + utils.getTimestamp() + ".png";
+            downloadFile(encodeURI(image), filename).then((response) => {
+                let message = {
+                    body: title,
+                    attachment: fs.createReadStream(filename),
+                };
+                sendMessage(api, event, message);
+                unLink(filename);
+            });
         });
     } else if (testCommand(api, query, "rcolor", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately color fades away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                let hex = response.hex;
-                let name = response.name;
-                let url = response.image;
-                let time = utils.getTimestamp();
-                let filename = __dirname + "/cache/color_" + time + ".png";
-                downloadFile(encodeURI(url), filename).then((response) => {
-                    let message = {
-                        body: name + " #" + hex,
-                        attachment: fs.createReadStream(filename),
-                    };
-                    sendMessage(api, event, message);
-                    unLink(filename);
-                });
-            }
+            if (response == null) return sendMessage(api, event, "Unfortunately color fades away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            let hex = response.hex;
+            let name = response.name;
+            let url = response.image;
+            let time = utils.getTimestamp();
+            let filename = __dirname + "/cache/color_" + time + ".png";
+            downloadFile(encodeURI(url), filename).then((response) => {
+                let message = {
+                    body: name + " #" + hex,
+                    attachment: fs.createReadStream(filename),
+                };
+                sendMessage(api, event, message);
+                unLink(filename);
+            });
         });
     } else if (testCommand(api, query, "pickuplines", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                sendMessage(api, event, response.pickupline);
-            }
+            if (response == null) return sendMessage(api, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            sendMessage(api, event, response.pickupline);
         });
     } else if (testCommand(api, query, "fbi", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -4099,7 +3937,7 @@ async function ai(api, event) {
             return;
         }
         api.getFriendsList((err, data) => {
-            if (err) return console.error(err);
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             let countBirthdays = 0;
             for (d in data) {
                 if (data[d].isBirthday) {
@@ -4122,7 +3960,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Unable to set the chat quick reaction. Invalid emoji.");
             }
             api.setThreadEmoji(d, event.threadID, (err) => {
-                if (err) return utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
         }
     } else if (testCommand(api, query2, "sendReport", event.senderID)) {
@@ -4146,21 +3984,24 @@ async function ai(api, event) {
                 nR += `│  uid: ` + event.senderID + `\n│  tid: ` + event.threadID + `\n│  mid: ` + event.messageID + `\n│\n└─ @ỹ@cmd-prj- orion`;
                 nR += "\n\n" + data.join(" ");
                 api.sendMessage(updateFont(nR), settings[login].owner, (err, messageInfo) => {
-                    if (err) return utils.logged(err);
+                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     sendMessage(api, event, "The owner have been notified!");
                 });
             });
         }
     } else if (testCommand(api, query, "sync", event.senderID, "root", true)) {
         exec("git pull", function (err, stdout, stderr) {
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
     } else if (testCommand(api, query, "push", event.senderID, "root", true)) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
     } else if (testCommand(api, query, "push--force", event.senderID, "root", true)) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master --force', function (err, stdout, stderr) {
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
     } else if (testCommand(api, query, "unblock--all", event.senderID, "root", true)) {
@@ -4184,6 +4025,7 @@ async function ai(api, event) {
             } else {
                 data.shift();
                 exec("git " + data.join(" "), function (err, stdout, stderr) {
+                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     let str = stdout + "\n\n" + stderr;
                     let com = str.replaceAll(/\s+/g, "");
                     if (com == "") {
@@ -4255,6 +4097,7 @@ async function ai(api, event) {
             data.shift();
             let sff = data.join(" ");
             exec(sff, function (err, stdout, stderr) {
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 let str = stdout + "\n\n" + stderr;
                 let com = str.replaceAll(/\s+/g, "");
                 if (com == "") {
@@ -4266,15 +4109,11 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query, "handleMessageRequest", event.senderID, "owner", true)) {
         api.handleMessageRequest(event.senderID, true, (err) => {
-            if (err) {
-                utils.logged(err);
-                sendMessage(api, event, "Failed to accept request! Have you send a message first?");
-            } else {
-                api.sendMessage(updateFont("Hello World", event.senderID), event.senderID, (err, messageInfo) => {
-                    if (err) utils.logged(err);
-                });
-                sendMessage(api, event, "Please check your inbox.");
-            }
+            if (err) return sendMessage(api, event, "Failed to accept request! Have you send a message first?");
+            api.sendMessage(updateFont("Hello World", event.senderID), event.senderID, (err, messageInfo) => {
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+            });
+            sendMessage(api, event, "Please check your inbox.");
         });
     } else if (testCommand(api, query2, "handleMessageRequest--tid", event.senderID, "admin")) {
         let data = input.split(" ");
@@ -4284,15 +4123,11 @@ async function ai(api, event) {
             let num = getDataFromQuery(data);
             // TODO: check if true accept else deny
             api.handleMessageRequest(num, true, (err) => {
-                if (err) {
-                    utils.logged(err);
-                    sendMessage(api, event, "Failed to accept request! Have you send a message first?");
-                } else {
-                    api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
-                        if (err) utils.logged(err);
-                    });
-                    sendMessage(api, event, "Please check your inbox.");
-                }
+                if (err) return sendMessage(api, event, "Failed to accept request! Have you send a message first?");
+                api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
+                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                });
+                sendMessage(api, event, "Please check your inbox.");
             });
         }
     } else if (testCommand(api, query2, "cors--add", event.senderID, "root")) {
@@ -4331,11 +4166,10 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: changeBio text" + "\n " + example[Math.floor(Math.random() * example.length)] + " changebio hello world");
         } else {
             data.shift();
-            let num = data.join(" ");
             api.setBio(data.join(" "), true, (err) => {
-                if (err) utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
-            sendMessage(api, event, "Bio Message is now set to `" + data.join(" ") + "`");
+            sendMessage(api, event, "Done");
         }
     } else if (testCommand(api, query2, "handleFriendRequest", event.senderID, "owner")) {
         let data = input.split(" ");
@@ -4344,12 +4178,8 @@ async function ai(api, event) {
         } else {
             data.shift();
             api.handleFriendRequest(data.join(" "), true, (err) => {
-                if (err) {
-                    utils.logged(err);
-                    sendMessage(api, event, "Failed to accept request!");
-                } else {
-                    sendMessage(api, event, "Friend Request Accepted!");
-                }
+                if (err) return sendMessage(api, event, "Failed to accept request!");
+                sendMessage(api, event, "Friend Request Accepted!");
             });
         }
     } else if (testCommand(api, query2, "maxTokens", event.senderID, "root")) {
@@ -4407,9 +4237,8 @@ async function ai(api, event) {
                     },
                 };
                 const response = await axios.request(options);
-                if (response.data == false) {
-                    sendMessage(api, event, "Unable to download unsupported video source.");
-                }
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                if (!response.data) return sendMessage(api, event, "Unable to download unsupported video source.");
 
                 let title = response.data.title;
                 if (response.data.success) {
@@ -4446,7 +4275,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
                 api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (err) return utils.logged(err);
+                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
 
                     if (gc.isGroup) {
                         let lead = [];
@@ -4589,6 +4418,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             axios.get("https://mydramalist.com/search?q=" + data.join(" ")).then((response) => {
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                 let mal = cheerio.load(response.data);
                 const findSearchResults = mal("h6");
 
@@ -4597,6 +4427,8 @@ async function ai(api, event) {
                 let mldurl = "https://mydramalist.com" + url;
 
                 axios.get(mldurl).then((response1) => {
+                    if (response1 == null) return sendMessage(api, event, handleError({ stacktrace: response1, cuid: api.getCurrentUserID(), e: event }));
+
                     let res = cheerio.load(response1.data, { decodeEntities: false });
                     let construct = formatMdlRes(res(".list-item"))
                         .replace(/\s+/g, " ")
@@ -4623,6 +4455,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             axios.get("https://myanimelist.net/search/all?cat=all&q=" + data.join(" ")).then((response) => {
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                 let mal = cheerio.load(response.data);
 
                 const findSearchResults = mal("a");
@@ -4630,6 +4463,8 @@ async function ai(api, event) {
                     if (String(mal(findSearchResults[i]).attr("class")).includes("hoverinfo_trigger")) {
                         let malurl = mal(findSearchResults[i]).attr("href");
                         axios.get(malurl).then((response1) => {
+                            if (response1 == null) return sendMessage(api, event, handleError({ stacktrace: response1, cuid: api.getCurrentUserID(), e: event }));
+
                             let mal1 = cheerio.load(response1.data, { decodeEntities: false });
 
                             let construct = "Title: " + formatMalRes(mal1(".title-name"), false);
@@ -4736,12 +4571,10 @@ async function ai(api, event) {
             let pref = getDataFromQuery(data);
             if (/^\d+$/.test(pref)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (err) return utils.logged(err);
+                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     if (gc.isGroup) {
                         api.addUserToGroup(pref, event.threadID, (err) => {
-                            if (err) {
-                                sendMessage(api, event, "The user could not be added to the group. Please try again later.");
-                            }
+                            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                             if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
                                 sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
                             }
@@ -4772,11 +4605,8 @@ async function ai(api, event) {
             let pref = getDataFromQuery(data).toLowerCase();
             if (Object.keys(gcolor).includes(pref)) {
                 api.setThreadColor(gcolor[pref], event.threadID, (err) => {
-                    if (err) {
-                        sendMessage(api, event, "Unable to change the group color. Please try again later.");
-                    } else {
-                        utils.logged("change_color " + event.threadID + " " + gcolor[pref]);
-                    }
+                    if (err) return sendMessage(api, event, "Unable to change the group color. Please try again later.");
+                    utils.logged("change_color " + event.threadID + " " + gcolor[pref]);
                 });
             } else {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: thread --theme type" + "\n " + example[Math.floor(Math.random() * example.length)] + " thread --theme type");
@@ -4784,12 +4614,11 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "remove--user", event.senderID, "owner")) {
         api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return utils.logged(err);
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event }));
             if (gc.isGroup) {
                 let arr = gc.participantIDs;
                 if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID())) {
-                    sendMessage(api, event, "Unfortunately i am not an admin on this group. I have no rights to kick any members.");
-                    return;
+                    return sendMessage(api, event, "Unfortunately i am not an admin on this group. I have no rights to kick any members.");
                 }
                 let data = input.split(" ");
                 if (data.length < 3 && event.type != "message_reply") {
@@ -4807,8 +4636,7 @@ async function ai(api, event) {
                             } else if (/^[0-9]+$/.test(user)) {
                                 id = user;
                             } else {
-                                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
-                                return;
+                                return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remove --user @Zero Two");
                             }
                         }
                     }
@@ -4835,8 +4663,7 @@ async function ai(api, event) {
                     } else if (/^[0-9]+$/.test(user)) {
                         id = user;
                     } else {
-                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setThreadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
-                        return;
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setThreadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
                     }
                 }
             }
@@ -4845,7 +4672,7 @@ async function ai(api, event) {
                     sendMessage(api, event, "Already set to it.");
                 } else {
                     api.getThreadInfo(event.threadID, (err, gc) => {
-                        if (err) return utils.logged(err);
+                        if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
 
                         if (gc.isGroup) {
                             let participantIDs = gc.participantIDs;
@@ -4881,8 +4708,7 @@ async function ai(api, event) {
                     } else if (/^[0-9]+$/.test(user)) {
                         id = user;
                     } else {
-                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
-                        return;
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
                     }
                 }
             }
@@ -4917,8 +4743,7 @@ async function ai(api, event) {
                     } else if (/^[0-9]+$/.test(user)) {
                         id = user;
                     } else {
-                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
-                        return;
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
                     }
                 }
             }
@@ -4957,8 +4782,7 @@ async function ai(api, event) {
                         } else if (/^[0-9]+$/.test(user)) {
                             id = user;
                         } else {
-                            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
-                            return;
+                            return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
                         }
                     }
                 }
@@ -5007,8 +4831,7 @@ async function ai(api, event) {
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
-                    return;
+                    return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
                 }
             }
             fontIgnore(api, event, id);
@@ -5021,7 +4844,7 @@ async function ai(api, event) {
         const uid = settings[login].owner;
 
         api.getUserInfo(uid, (err, info) => {
-            if (err) return utils.logged(err);
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
             downloadFile(getProfilePic(uid), dirp).then(async (response) => {
                 const fname = info[uid]["firstName"];
@@ -5074,8 +4897,7 @@ async function ai(api, event) {
                     } else if (/^[0-9]+$/.test(user)) {
                         id = user;
                     } else {
-                        sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
-                        return;
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
                     }
                 }
             }
@@ -5095,8 +4917,7 @@ async function ai(api, event) {
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
-                    return;
+                    return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
                 }
             }
             getUserProfile(id, async function (user) {
@@ -5122,10 +4943,10 @@ async function ai(api, event) {
                 } else if (/^[0-9]+$/.test(user)) {
                     id = user;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
-                    return;
+                    return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
                 }
-            } else if (isMyId(id) && accounts.includes(id)) {
+            }
+            if (isMyId(id) && accounts.includes(id)) {
                 return;
             }
             remAdmin(api, event, id);
@@ -5292,7 +5113,7 @@ async function ai(api, event) {
             let value = data.join(" ");
             if (value == "--member") {
                 api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (err) return utils.logged(err);
+                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     if (gc.isGroup) {
                         let arr = gc.participantIDs;
                         sendMessage(api, event, "This group has about " + arr.length + " members.");
@@ -5303,7 +5124,7 @@ async function ai(api, event) {
             } else if (value == "--info") {
                 if (event.isGroup) {
                     api.getThreadInfo(event.threadID, (err, a) => {
-                        if (err) utils.logged(err);
+                        if (err) sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                         let inf = "";
                         let usern = a.userInfo.length;
                         for (b in a.userInfo) {
@@ -5373,7 +5194,7 @@ async function ai(api, event) {
                     if (data.length < 2) {
                         if (event.isGroup) {
                             api.getThreadInfo(event.threadID, (err, gc) => {
-                                if (err) return utils.logged(err);
+                                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                                 sendMessage(api, event, gc.threadName);
                             });
                         } else {
@@ -5382,7 +5203,7 @@ async function ai(api, event) {
                     } else {
                         data.shift();
                         api.setTitle(data.join(" "), event.threadID, (err, obj) => {
-                            if (err) return utils.logged(err);
+                            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                         });
                     }
                 } else {
@@ -5412,7 +5233,7 @@ async function ai(api, event) {
                 id1 = event.messageReply.senderID;
             }
             api.getUserInfo(id1, (err, info) => {
-                if (err) return utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 let message = {
                     body: info[id1]["firstName"] + " uid is " + id1,
                     mentions: [
@@ -5472,20 +5293,17 @@ async function ai(api, event) {
         } else {
             data.shift();
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "Unfortunately the wiki " + data.join(" ") + " was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-                } else {
-                    let dir = __dirname + "/cache/wiki_" + utils.getTimestamp() + ".png";
-                    let url = response.originalimage.source;
-                    downloadFile(url, dir).then((response1) => {
-                        let image = {
-                            body: response.title + "\n- " + response.description + "\n\n" + response.extract,
-                            attachment: fs.createReadStream(dir),
-                        };
-                        sendMessage(api, event, image);
-                        unLink(dir);
-                    });
-                }
+                if (response == null) return sendMessage(api, event, "Unfortunately the wiki " + data.join(" ") + " was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                let dir = __dirname + "/cache/wiki_" + utils.getTimestamp() + ".png";
+                let url = response.originalimage.source;
+                downloadFile(url, dir).then((response1) => {
+                    let image = {
+                        body: response.title + "\n- " + response.description + "\n\n" + response.extract,
+                        attachment: fs.createReadStream(dir),
+                    };
+                    sendMessage(api, event, image);
+                    unLink(dir);
+                });
             });
         }
     } else if (
@@ -5525,12 +5343,10 @@ async function ai(api, event) {
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
-                    return;
+                    return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
                 }
-            } else if (isMyId(id)) {
-                return;
             }
+            if (isMyId(id)) return;
             if (prrr == "headpat") {
                 prrr = "pat";
             }
@@ -5572,12 +5388,10 @@ async function ai(api, event) {
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
-                    return;
+                    return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + prrr + " @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + prrr + " @Zero Two");
                 }
-            } else if (isMyId(id)) {
-                return;
             }
+            if (isMyId(id)) return;
             getPopcatImage(api, event, id, prrr);
         }
     } else if (testCommand(api, query2, "ship", event.senderID)) {
@@ -5592,8 +5406,7 @@ async function ai(api, event) {
                 let id1 = Object.keys(event.mentions)[0];
                 let id2 = Object.keys(event.mentions)[1];
                 if (!id1 || !id2) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
-                    return;
+                    return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
                 }
                 if (isMyId(id1)) {
                     id1 = event.senderID;
@@ -5620,11 +5433,11 @@ async function ai(api, event) {
                                 });
                             })
                             .catch(function (err) {
-                                utils.logged(err);
+                                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                             });
                     })
                     .catch(function (err) {
-                        utils.logged(err);
+                        sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     });
             } else {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
@@ -5670,11 +5483,11 @@ async function ai(api, event) {
                                 });
                             })
                             .catch(function (err) {
-                                utils.logged(err);
+                                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                             });
                     })
                     .catch(function (err) {
-                        utils.logged(err);
+                        sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     });
             } else {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
@@ -5711,88 +5524,79 @@ async function ai(api, event) {
                 } else if (user.startsWith("me")) {
                     id = event.senderID;
                 } else {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " stalk @Zero Two");
-                    return;
+                    return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " stalk @Zero Two");
                 }
-            } else if (isMyId(id)) {
-                return;
             }
+            if (isMyId(id)) return;
             await getResponseData("https://sumiproject.space/facebook/getinfo?uid=" + id).then((response) => {
-                if (response == null) {
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
-                } else {
-                    let construct = response.name;
-                    if (response.username) {
-                        construct += " @" + response.username;
-                    }
-                    construct += "\n";
-                    if (response.gender) {
-                        construct += "\n\n    ⦿ Gender: " + response.gender;
-                    }
-                    if (response.love["name"]) {
-                        construct += "\n    ⦿ Lover: " + response.love["name"];
-                    }
-                    if (response.birthday) {
-                        construct += "\n    ⦿ Birthdate: " + response.birthday;
-                    }
-                    if (response.location) {
-                        construct += "\n    ⦿ Location: " + response.location;
-                    }
-                    if (response.hometown) {
-                        construct += "\n    ⦿ Hometown: " + response.hometown;
-                    }
-                    if (response.follower) {
-                        construct += "\n    ⦿ Follower: " + numberWithCommas(response.follower);
-                    }
-                    if (response.work) {
-                        construct += "\n    ⦿ Work: ";
-                        let i;
-                        for (i = 0; i < response.work.length; i++) {
-                            construct += "\n        " + response.work[i].employer["name"];
-                            if (response.work[i].position) {
-                                construct += " | " + response.work[i].position["name"];
-                            }
-                        }
-                    }
-                    if (response.about) {
-                        construct += "\n\n   " + response.about;
-                    }
-                    if (response.qoutes) {
-                        construct += "\n" + response.quotes;
-                    }
-                    if (response.created_time) {
-                        construct += "\n\nThis account was created on " + response.created_time.replace("||", " at ");
-                    }
-                    construct = construct.replaceAll("Không công khai", "Not public").replaceAll("Không có dữ liệu!", "No data");
-                    let time = utils.getTimestamp();
-                    utils.logged(construct);
-                    utils.logged(response);
-                    let filename = __dirname + "/cache/stalk_" + time + ".png";
-                    downloadFile(response.avatar, filename).then((response23) => {
-                        let message = {
-                            body: construct,
-                            attachment: fs.createReadStream(filename),
-                            mentions: [
-                                {
-                                    tag: response.name,
-                                    id: response.uid,
-                                },
-                            ],
-                        };
-                        if (response.love["name"]) {
-                            message.mentions.push({
-                                tag: response.love["name"],
-                                id: response.love["id"],
-                            });
-                        }
-                        sendMessage(api, event, message);
-                        unLink(filename);
-                    });
+                if (response == null) sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                let construct = response.name;
+                if (response.username) {
+                    construct += " @" + response.username;
                 }
+                construct += "\n";
+                if (response.gender) {
+                    construct += "\n\n    ⦿ Gender: " + response.gender;
+                }
+                if (response.love["name"]) {
+                    construct += "\n    ⦿ Lover: " + response.love["name"];
+                }
+                if (response.birthday) {
+                    construct += "\n    ⦿ Birthdate: " + response.birthday;
+                }
+                if (response.location) {
+                    construct += "\n    ⦿ Location: " + response.location;
+                }
+                if (response.hometown) {
+                    construct += "\n    ⦿ Hometown: " + response.hometown;
+                }
+                if (response.follower) {
+                    construct += "\n    ⦿ Follower: " + numberWithCommas(response.follower);
+                }
+                if (response.work) {
+                    construct += "\n    ⦿ Work: ";
+                    let i;
+                    for (i = 0; i < response.work.length; i++) {
+                        construct += "\n        " + response.work[i].employer["name"];
+                        if (response.work[i].position) {
+                            construct += " | " + response.work[i].position["name"];
+                        }
+                    }
+                }
+                if (response.about) {
+                    construct += "\n\n   " + response.about;
+                }
+                if (response.qoutes) {
+                    construct += "\n" + response.quotes;
+                }
+                if (response.created_time) {
+                    construct += "\n\nThis account was created on " + response.created_time.replace("||", " at ");
+                }
+                construct = construct.replaceAll("Không công khai", "Not public").replaceAll("Không có dữ liệu!", "No data");
+                let time = utils.getTimestamp();
+                utils.logged(construct);
+                utils.logged(response);
+                let filename = __dirname + "/cache/stalk_" + time + ".png";
+                downloadFile(response.avatar, filename).then((response23) => {
+                    let message = {
+                        body: construct,
+                        attachment: fs.createReadStream(filename),
+                        mentions: [
+                            {
+                                tag: response.name,
+                                id: response.uid,
+                            },
+                        ],
+                    };
+                    if (response.love["name"]) {
+                        message.mentions.push({
+                            tag: response.love["name"],
+                            id: response.love["id"],
+                        });
+                    }
+                    sendMessage(api, event, message);
+                    unLink(filename);
+                });
             });
         }
     } else if (testCommand(api, query2, "morse", event.senderID)) {
@@ -5805,15 +5609,8 @@ async function ai(api, event) {
         } else {
             data.shift();
             getResponseData("https://api.popcat.xyz/texttomorse?text=" + data.join(" ")).then((response) => {
-                if (response == null) {
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
-                } else {
-                    sendMessage(api, event, response.morse);
-                }
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                sendMessage(api, event, response.morse);
             });
         }
     } else if (testCommand(api, query2, "lulcat", event.senderID) || testCommand(api, query2, "mock", event.senderID)) {
@@ -5826,15 +5623,8 @@ async function ai(api, event) {
         } else {
             data.shift();
             getResponseData("https://api.popcat.xyz/" + data[0] + "?text=" + data.join(" ")).then((response) => {
-                if (response == null) {
-                    sendMessage(
-                        api,
-                        event,
-                        "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                    );
-                } else {
-                    sendMessage(api, event, response.text);
-                }
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                sendMessage(api, event, response.text);
             });
         }
     } else if (testCommand(api, query2, "coding", event.senderID)) {
@@ -5842,22 +5632,19 @@ async function ai(api, event) {
             return;
         }
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                let url = response.url;
-                let title = response.title;
-                let time = utils.getTimestamp();
-                let filename = __dirname + "/cache/coding_" + time + ".png";
-                downloadFile(encodeURI(url), filename).then((response) => {
-                    let message = {
-                        body: title,
-                        attachment: fs.createReadStream(filename),
-                    };
-                    sendMessage(api, event, message);
-                    unLink(filename);
-                });
-            }
+            if (response == null) return sendMessage(api, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            let url = response.url;
+            let title = response.title;
+            let time = utils.getTimestamp();
+            let filename = __dirname + "/cache/coding_" + time + ".png";
+            downloadFile(encodeURI(url), filename).then((response) => {
+                let message = {
+                    body: title,
+                    attachment: fs.createReadStream(filename),
+                };
+                sendMessage(api, event, message);
+                unLink(filename);
+            });
         });
     } else if (testCommand(api, query, "joke", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -5883,11 +5670,8 @@ async function ai(api, event) {
             return;
         }
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
-            if (response == null) {
-                sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-            } else {
-                sendMessage(api, event, response.result);
-            }
+            if (response == null) return sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            sendMessage(api, event, response.result);
         });
     } else if (testCommand(api, query2, "drake", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -5917,15 +5701,8 @@ async function ai(api, event) {
             return;
         }
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                parseImage(api, event, response.image, __dirname + "/cache/meme_" + utils.getTimestamp() + ".png");
-            }
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+            parseImage(api, event, response.image, __dirname + "/cache/meme_" + utils.getTimestamp() + ".png");
         });
     } else if (testCommand(api, query, "conan", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -5959,13 +5736,10 @@ async function ai(api, event) {
                 } else {
                     data.shift();
                     getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
-                        if (response == null) {
-                            sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-                        } else {
-                            parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
-                            if (event.senderID != settings.shared.root) {
-                                user.balance -= 1000;
-                            }
+                        if (response == null) return sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                        parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
+                        if (event.senderID != settings.shared.root) {
+                            user.balance -= 1000;
                         }
                     });
                 }
@@ -5989,11 +5763,8 @@ async function ai(api, event) {
             data.shift();
             let text = data.join(" ");
             getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
-                if (response == null) {
-                    sendMessage(api, event, "I cannot find any relavant result about " + text + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
-                } else {
-                    parseImage(api, event, response.url, __dirname + "/cache/anime_" + utils.getTimestamp() + ".png");
-                }
+                if (response == null) return sendMessage(api, event, "I cannot find any relavant result about " + text + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                parseImage(api, event, response.url, __dirname + "/cache/anime_" + utils.getTimestamp() + ".png");
             });
         }
     } else if (testCommand(api, query2, "getImage", event.senderID)) {
@@ -6135,6 +5906,7 @@ async function ai(api, event) {
             data.shift();
             parseImage(api, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
         }
+        //TODO: continue here
     } else if (testCommand(api, query2, "qoute", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
@@ -6147,66 +5919,38 @@ async function ai(api, event) {
             let value = data.join(" ");
             if (value == "--anime") {
                 getResponseData("https://animechan.vercel.app/api/random").then((response) => {
-                    if (response == null) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
-                    } else {
-                        sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
-                    }
+                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                    sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
                 });
             } else if (value == "--advice") {
                 getResponseData("https://zenquotes.io/api/random").then((response) => {
-                    if (response == null) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
-                    } else {
-                        let result;
-                        let i;
-                        for (i = 0; i < response.length; i++) {
-                            result = response[i].q;
-                        }
-                        sendMessage(api, event, result);
+                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                    let result;
+                    let i;
+                    for (i = 0; i < response.length; i++) {
+                        result = response[i].q;
                     }
+                    sendMessage(api, event, result);
                 });
             } else if (value == "--inspiration") {
                 getResponseData("https://zenquotes.io/api/random").then((response) => {
-                    if (response == null) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
-                    } else {
-                        let result;
-                        let i;
-                        for (i = 0; i < response.length; i++) {
-                            result = response[i].a + " says\n" + response[i].q;
-                        }
-                        sendMessage(api, event, result);
+                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                    let result;
+                    let i;
+                    for (i = 0; i < response.length; i++) {
+                        result = response[i].a + " says\n" + response[i].q;
                     }
+                    sendMessage(api, event, result);
                 });
             } else if (value == "--motivation") {
                 getResponseData("https://zenquotes.io/api/random").then((response) => {
-                    if (response == null) {
-                        sendMessage(
-                            api,
-                            event,
-                            "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                        );
-                    } else {
-                        let result;
-                        let i;
-                        for (i = 0; i < response.length; i++) {
-                            result = response[i].q + "\n\nby " + response[i].a;
-                        }
-                        sendMessage(api, event, result);
+                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                    let result;
+                    let i;
+                    for (i = 0; i < response.length; i++) {
+                        result = response[i].q + "\n\nby " + response[i].a;
                     }
+                    sendMessage(api, event, result);
                 });
             } else {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
@@ -6239,6 +5983,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
+        // TODO: update
         let yr = new Date().getFullYear() + 1;
         let future = new Date("Jan 1, " + yr + " 00:00:00").getTime();
         let now = new Date().getTime();
@@ -6255,6 +6000,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
+        // TODO: update
         let yr = new Date().getFullYear();
         let future = new Date("Dec 25, " + yr + " 00:00:00").getTime();
         let now = new Date().getTime();
@@ -6272,40 +6018,26 @@ async function ai(api, event) {
             return;
         }
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
-                }
-                sendMessage(api, event, result);
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+            let result;
+            let i;
+            for (i = 0; i < response.length; i++) {
+                result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
             }
+            sendMessage(api, event, result);
         });
     } else if (testCommand(api, query, "verse--today", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                let result;
-                let i;
-                for (i = 0; i < response.length; i++) {
-                    result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
-                }
-                sendMessage(api, event, result);
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+            let result;
+            let i;
+            for (i = 0; i < response.length; i++) {
+                result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
             }
+            sendMessage(api, event, result);
         });
     } else if (testCommand(api, query2, "verse", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -6318,25 +6050,22 @@ async function ai(api, event) {
             data.shift();
             let body = data.join(" ");
             getResponseData("http://labs.bible.org/api/?passage=" + body + "&type=json").then((r) => {
-                if (r == null) {
-                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n " + example[Math.floor(Math.random() * example.length)] + " verse Job 4:9");
-                } else {
-                    let result = "";
-                    let total = r.length;
-                    let i;
-                    for (i = 0; i < total; i++) {
-                        result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse;
-                    }
-                    sendMessage(api, event, result);
+                if (r == null) return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n " + example[Math.floor(Math.random() * example.length)] + " verse Job 4:9");
+                let result = "";
+                let total = r.length;
+                let i;
+                for (i = 0; i < total; i++) {
+                    result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse;
                 }
+                sendMessage(api, event, result);
             });
         }
-    } else if (testCommand(api, query, "refreshState", event.senderID, "owner", true)) {
+    } else if (testCommand(api, query, "state--refresh", event.senderID, "owner", true)) {
         fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".bin", getAppState(api), "utf8");
         utils.logged("cookie_state synchronized");
         sendMessage(api, event, "The AppState refreshed.");
         fb_stateD = utils.getCurrentTime();
-    } else if (testCommand(api, query, "saveState", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "state--save", event.senderID, "user", true)) {
         saveState();
         sendMessage(api, event, "The state have saved successfully.");
     } else if (testCommand(api, query, "test", event.senderID, "user", true)) {
@@ -6345,49 +6074,15 @@ async function ai(api, event) {
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
         }
-        /*
-       let message = {
-        share: {
-          "url": null,
-              "title": "Reel by SIGMA CHAD MEMES",
-              "description": "Facebook",
-              "source": "",
-              "image": "https://scontent.xx.fbcdn.net/v/t51.36329-15/344783643_1239136033628951_334450389941963020_n.jpg?stp=dst-jpg_p240x240&_nc_cat=108&ccb=1-7&_nc_sid=9c38a0&_nc_ohc=mhNoipjWtwAAX9vDVHu&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=00_AfD95f-wFDSQKfCzTxepi89fcMj2J3Dm_bmbyC-uYWUwsQ&oe=6463C5A1",
-              "width": 240,
-              "height": 240,
-              "playable": false,
-              "duration": 0,
-              "playableUrl": "https://www.facebook.com/",
-              "subattachments": [],
-              "properties": {},
-              "facebookUrl": null,
-              "target": null,
-              "styleList": [
-                "messenger_generic_template",
-                "share",
-                "fallback"
-              ]
-            
-            }
-       }
-       sendMessage(api, event, message)
-       */
     } else if (testCommand(api, query, "setNickname--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
             return;
         }
         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
-            if (response == null) {
-                sendMessage(
-                    api,
-                    event,
-                    "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-                );
-            } else {
-                api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
-                    if (err) return utils.logged(err);
-                });
-            }
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+            api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+            });
         });
     } else if (testCommand(api, query2, "setNickname", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -6399,7 +6094,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             api.setNickname(data.join(" "), event.threadID, event.senderID, (err) => {
-                if (err) return utils.logged(err);
+                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
         }
     } else if (testCommand(api, query2, "setBirthday", event.senderID)) {
@@ -6698,7 +6393,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
         });
     }
     if (message == "" || (message.body && message.body == "")) {
-        sendMMMS(api, event, "It appears the AI sends a blank message. Please try again.");
+        sendMMMS(api, event, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice, false, true);
     } else if (event.isGroup && event.senderID != api.getCurrentUserID()) {
         if (!thread[event.threadID] || thread[event.threadID].length == 0 || thread[event.threadID][0] != thread[event.threadID][1]) {
             utils.logged("send_message_reply " + thread_id + " " + getMessageBody(message));
@@ -6714,10 +6409,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                         message,
                         thread_id,
                         (err, messageInfo) => {
-                            if (err) {
-                                utils.logged(err);
-                                sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, id);
-                            }
+                            if (err) return sendMessageErr(api, event, thread_id, message_id, id, err);
                         },
                         message_id
                     );
@@ -6734,18 +6426,18 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                     updateFont1,
                     thread_id,
                     (err, messageInfo) => {
-                        sendMessageErr(api, thread_id, message_id, event.senderID, err);
+                        if (err) return sendMessageErr(api, thread_id, message_id, event.senderID, err);
                     },
                     message_id
                 );
             }
         } else {
             utils.logged("send_message " + thread_id + " " + getMessageBody(message));
-            sendMMMS(api, message, thread_id, message_id, event.senderID, voice, no_font);
+            sendMMMS(api, event, message, thread_id, message_id, event.senderID, voice, no_font);
         }
     } else {
         utils.logged("send_message " + thread_id + " " + getMessageBody(message));
-        sendMMMS(api, message, thread_id, message_id, event.senderID, voice, no_font);
+        sendMMMS(api, event, message, thread_id, message_id, event.senderID, voice, no_font);
     }
 }
 
@@ -6792,10 +6484,10 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
         });
     }
     if (message == "" || (message.body && message.body == "")) {
-        sendMMMS(api, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice, false, true);
+        sendMMMS(api, event, "It appears the AI sends a blank message. Please try again.", thread_id, message_id, event.senderID, voice, false, true);
     } else {
         utils.logged("send_message " + event.threadID + " " + JSON.stringify(message));
-        sendMMMS(api, message, thread_id, message_id, event.senderID, voice, false, true);
+        sendMMMS(api, event, message, thread_id, message_id, event.senderID, voice, false, true);
     }
 }
 
@@ -6804,7 +6496,7 @@ function getMessageFromObj(message) {
     return message.body;
 }
 
-async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
+async function sendMMMS(api, event, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
     getUserProfile(id, async function (user) {
         let splitNewLines = getMessageFromObj(message).split("\n");
         splitNewLines.shift();
@@ -6825,10 +6517,7 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font
                 message,
                 thread_id,
                 (err, messageInfo) => {
-                    if (err) {
-                        utils.logged(err);
-                        sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, id);
-                    }
+                    if (err) return sendMessageErr(api, event, thread_id, message_id, id, err);
                 },
                 message_id
             );
@@ -6844,14 +6533,14 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font
         let num = Math.floor(Math.random() * 10);
         if (num % 2 == 0 || sendMessageOnly) {
             api.sendMessage(updateFont1, thread_id, (err, messageInfo) => {
-                sendMessageErr(api, thread_id, message_id, id, err);
+                if (err) return sendMessageErr(api, event, thread_id, message_id, id, err);
             });
         } else {
             api.sendMessage(
                 updateFont1,
                 thread_id,
                 (err, messageInfo) => {
-                    sendMessageErr(api, thread_id, message_id, id, err);
+                    if (err) return sendMessageErr(api, event, thread_id, message_id, id, err);
                 },
                 message_id
             );
@@ -6859,38 +6548,34 @@ async function sendMMMS(api, message, thread_id, message_id, id, voiceE, no_font
     }
 }
 
-function sendMessageErr(api, thread_id, message_id, id, err) {
-    if (err) {
-        utils.logged(err);
-        if (err.error == 3252001 || err.error == 1404078) {
-            blockedCall.push(api.getCurrentUserID());
-            delete settingsThread[thread_id]["lock"];
-        } else if (err.error == 1545049) {
-            sendMessageError(api, "Message is too long to be sent.", thread_id, message_id, id);
-        } else if (err.error == 1545051) {
-            sendMessageError(api, "Failure to send the response due to an invalid image.", thread_id, message_id, id);
-        } else if (err.error == 1404102) {
-            sendMessageError(api, "Failure to send message because the reponse contains url in which prohibited in Facebook.", thread_id, message_id, id);
-        } else if (err.error == 1545023) {
-            sendMessageError(api, "The AI response seems empty. No idea why thought.", thread_id, message_id, id);
-        } else if (err.error == "Invalid url") {
-            sendMessageError(api, "The message contains invalid link so it was not sent.", thread_id, message_id, id);
-        } else {
-            sendMessageError(api, "Unable to send message. Please try it again later.", thread_id, message_id, id);
-        }
+function sendMessageErr(api, event, thread_id, message_id, id, err) {
+    let errMM = handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+    let message;
+    if (err.error == 3252001 || err.error == 1404078) {
+        blockedCall.push(api.getCurrentUserID());
+        delete settingsThread[thread_id]["lock"];
+        return;
+    } else if (err.error == 1545049) {
+        message = "Message failed to send due to its length.";
+    } else if (err.error == 1545051) {
+        message = "Message failed to send due to an invalid image.";
+    } else if (err.error == 1404102) {
+        message = "Message failed to send due to it contains blockedlisted urls.";
+    } else if (err.error == 1545023) {
+        message = "Message sent was empty.";
+    } else if (err.error == "Invalid url") {
+        message = "Message failed to send due to invalid link.";
+    } else {
+        message = errMM.body;
     }
-}
-
-function sendMessageError(api, message, thread_id, message_id, id) {
-    let messageA = {
-        body: updateFont(message, id),
-        url: "https://github.com/prj-orion/issues",
-    };
     api.sendMessage(
-        messageA,
+        {
+            body: updateFont(message, id),
+            url: "https://github.com/prj-orion/issues/issues/new",
+        },
         thread_id,
         (err, messageInfo) => {
-            if (err) utils.logged(err);
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         },
         message_id
     );
@@ -6912,7 +6597,7 @@ async function reactMessage(api, event, reaction) {
         reaction,
         event.messageID,
         (err) => {
-            if (err) utils.logged(err);
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         },
         true
     );
@@ -6962,7 +6647,7 @@ function isGoingToFast(api, event) {
     utils.logged("event_body " + event.threadID + " " + input);
     if (!users.list.find((user) => event.senderID === user.id)) {
         api.getUserInfo(event.senderID, async (err, data1) => {
-            if (err) return utils.logged(err);
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             if (users.list.includes(event.senderID)) {
                 utils.logged("new_user_v2 " + event.threadID + " " + data1[event.senderID].name);
             } else {
@@ -6978,7 +6663,7 @@ function isGoingToFast(api, event) {
             reactMessage(api, event, ":heart:");
 
             api.muteThread(event.threadID, -1, (err) => {
-                if (err) utils.logged(err);
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             });
         });
     }
@@ -7074,12 +6759,12 @@ async function getResponseData(url) {
             if (!response.data.error) {
                 return response.data;
             } else {
-                utils.logged("response_null " + url);
+                handleError({ stacktrace: response });
                 return null;
             }
         })
         .catch((err) => {
-            utils.logged("response_data_err " + err);
+            handleError({ stacktrace: err });
             return null;
         });
     return data;
@@ -7242,7 +6927,7 @@ async function unsendPhoto(api, event, d) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
-        if (err) return utils.logged(err);
+        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         if (!groups.list.find((thread) => event.threadID === thread.id)) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
@@ -7308,7 +6993,7 @@ async function unsendGif(api, event, d) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
-        if (err) return utils.logged(err);
+        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         if (!groups.list.find((thread) => event.threadID === thread.id)) {
             let constructMMM = "You deleted this";
             if (images.length > 1) {
@@ -7391,8 +7076,8 @@ async function bgRemove(api, event) {
                         fs.writeFileSync(dataUrl, res.data);
                     }
                 })
-                .catch((error) => {
-                    return utils.logged(error);
+                .catch((err) => {
+                    return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                 });
         });
     }
@@ -7485,7 +7170,7 @@ function removeUser(api, event, id) {
         id = event.senderID;
     }
     api.removeUserFromGroup(id, event.threadID, (err) => {
-        if (err) utils.logged(err);
+        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
         utils.logged("user_remove " + event.threadID + " " + id);
     });
 }
@@ -7569,7 +7254,7 @@ function blockGroup(api, event, id) {
         ":heart:",
         event.messageID,
         (err) => {
-            if (err) utils.logged(err);
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
         },
         true
     );
@@ -7616,7 +7301,7 @@ async function unblockUser(api, event, id) {
             ":heart:",
             event.messageID,
             (err) => {
-                if (err) utils.logged(err);
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             },
             true
         );
@@ -7747,41 +7432,35 @@ function remAdmin(api, event, id) {
 
 function getAnimeGif(api, event, id, type) {
     getResponseData("https://api.waifu.pics/sfw/" + type).then((response) => {
-        if (response == null) {
-            sendMessage(
-                api,
-                event,
-                "An Unexpected Error Occured in our servers\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- project orion build from github.com/prj-orion^M\n^@^C@R6003^M\n- integer divide by 0^M\n^@      ^@R6009^M\n- not enough space for environment^M\n^@^R^@R6018^M\n- unexpected heap error^M\n^@ṻ^@^M\n@ỹ@run-time error ^@^B^@R6002^M\n- floating-point support not loaded^M\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues"
-            );
-        } else {
-            if (isMyId(id)) {
-                id = event.senderID;
-            }
-            api.getUserInfo(id, (err, info) => {
-                if (err) return utils.logged(err);
-                let name = info[id]["firstName"];
-                if (id == event.senderID) {
-                    name += " why don't you " + type + " yourself then.";
-                }
-                let time = utils.getTimestamp();
-                let filename = __dirname + "/cache/" + type + "_" + time + ".png";
-                downloadFile(encodeURI(response.url), filename).then((response) => {
-                    let image = {
-                        body: name,
-                        attachment: fs.createReadStream(filename),
-                        mentions: [
-                            {
-                                tag: name,
-                                id: id,
-                                fromIndex: 0,
-                            },
-                        ],
-                    };
-                    sendMessage(api, event, image);
-                    unLink(filename);
-                });
-            });
+        if (response == null) return;
+        sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+        if (isMyId(id)) {
+            id = event.senderID;
         }
+        api.getUserInfo(id, (err, info) => {
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event }));
+            let name = info[id]["firstName"];
+            if (id == event.senderID) {
+                name += " why don't you " + type + " yourself then.";
+            }
+            let time = utils.getTimestamp();
+            let filename = __dirname + "/cache/" + type + "_" + time + ".png";
+            downloadFile(encodeURI(response.url), filename).then((response) => {
+                let image = {
+                    body: name,
+                    attachment: fs.createReadStream(filename),
+                    mentions: [
+                        {
+                            tag: name,
+                            id: id,
+                            fromIndex: 0,
+                        },
+                    ],
+                };
+                sendMessage(api, event, image);
+                unLink(filename);
+            });
+        });
     });
 }
 
@@ -7795,7 +7474,7 @@ async function getPopcatImage(api, event, id, type) {
             parseImage(api, event, "https://api.popcat.xyz/" + type + "?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/" + type + "_" + utils.getTimestamp() + ".png");
         })
         .catch(function (err) {
-            utils.logged(err);
+            handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         });
 }
 
@@ -7809,14 +7488,8 @@ function voiceR(api, event) {
                 event.body = response.data.text;
                 event.attachments = [];
                 ai(api, event);
-            } catch (error) {
-                sendMessage(api, event, "It seems like there are problems with the server. Please try it again later.", event.threadID, event.messageReply.messageID, true, false);
-                if (error.response) {
-                    console.log(error.response.status);
-                    console.log(error.response.data);
-                } else {
-                    console.log(error.message);
-                }
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
             unLink(dir);
         });
@@ -7994,41 +7667,6 @@ function saveEvent(api, event) {
     }
 }
 
-async function aiResponse(event, complextion, text, repeat, user, group, uid) {
-    try {
-        const apikey = getApiKey(uid);
-        const openai = new OpenAI(apikey);
-        const ai = await openai.chat.completions.create(generateParamaters(event, complextion, text, user, group, uid));
-
-        utils.logged("tokens_used prompt: " + ai.usage.prompt_tokens + " completion: " + ai.usage.completion_tokens + " total: " + ai.usage.total_tokens);
-
-        let text1 = ai.choices[0].text;
-
-        if (ai.choices[0].finish_reason == "length") {
-            if (!text1.endsWith(".")) {
-                ai.choices[0].text = "The response is not complete and canceled due to its length and time required to evaluate. \nPlease try it again.";
-            }
-            ai.choices[0].text = "This is what i only know.\n" + text1;
-        } else if (text1.includes("You are an AI trained by Melvin Jones Repol to respond like human.") || text1.includes("You are talking to Melvin Jones Repol.")) {
-            ai.choices[0].text = "I got you!! haha. \n\nIs the text above";
-        }
-        settings[settings.shared.root].openai = apikey;
-        return ai;
-    } catch (error) {
-        utils.logged(error);
-        if (repeat) {
-            utils.logged("attempt_initiated_2 text-davinci-002 " + text);
-            let newResponse = await aiResponse(event, getNewComplextion(settings.shared.text_complextion), text, false, user, group, uid);
-            settings.shared.tokens["davinci"]["prompt_tokens"] += newResponse.usage.prompt_tokens;
-            settings.shared.tokens["davinci"]["completion_tokens"] += newResponse.usage.completion_tokens;
-            settings.shared.tokens["davinci"]["total_tokens"] += newResponse.usage.total_tokens;
-            utils.logged("tokens_used prompt: " + newResponse.usage.prompt_tokens + " completion: " + newResponse.usage.completion_tokens + " total: " + newResponse.usage.total_tokens);
-            return newResponse;
-        }
-        return errorResponse;
-    }
-}
-
 async function aiResponse2(event, text, repeat, user, group, uid, retry) {
     try {
         let mssg = [
@@ -8200,6 +7838,7 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
                                 role: "user",
                                 content: text,
                             });
+                            handleError({ stacktrace: response, cuid: uid, e: event });
                         } else {
                             mssg.push(message);
                             let lyrics = response.result.s_lyrics;
@@ -8247,61 +7886,62 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
                         },
                         async (err, r) => {
                             if (err) {
+                                handleError({ stacktrace: err, cuid: uid, e: event });
                                 mssg.push({
                                     role: "function",
                                     name: functionName,
                                     content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + argument.location + ' Not found."}',
                                 });
-                                return utils.logged(err);
+                            } else {
+                                let d = r[0];
+                                let m =
+                                    d.location.name +
+                                    " " +
+                                    d.location.lat +
+                                    " " +
+                                    d.location.long +
+                                    "\n\n" +
+                                    "Temperature: " +
+                                    d.current.temperature +
+                                    "°C / " +
+                                    ((d.current.temperature * 9) / 5 + 32) +
+                                    "°F\n" +
+                                    "Sky: " +
+                                    d.current.skytext +
+                                    "\n" +
+                                    "Feelslike: " +
+                                    d.current.feelslike +
+                                    "\n" +
+                                    "Humidity: " +
+                                    d.current.humidity +
+                                    "\n" +
+                                    "Wind Speed: " +
+                                    d.current.winddisplay +
+                                    "\n" +
+                                    "\nForecast\n" +
+                                    "Mon: " +
+                                    d.forecast[0].skytextday +
+                                    "\n" +
+                                    "Tue: " +
+                                    d.forecast[1].skytextday +
+                                    "\n" +
+                                    "Wed: " +
+                                    d.forecast[2].skytextday +
+                                    "\n" +
+                                    "Thu: " +
+                                    d.forecast[3].skytextday +
+                                    "\n" +
+                                    "Fri: " +
+                                    d.forecast[4].skytextday;
+                                if (d.location.alert != "") {
+                                    m += "\nAlert: " + d.location.alert;
+                                }
+                                mssg.push({
+                                    role: "function",
+                                    name: functionName,
+                                    content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
+                                });
                             }
-                            let d = r[0];
-                            let m =
-                                d.location.name +
-                                " " +
-                                d.location.lat +
-                                " " +
-                                d.location.long +
-                                "\n\n" +
-                                "Temperature: " +
-                                d.current.temperature +
-                                "°C / " +
-                                ((d.current.temperature * 9) / 5 + 32) +
-                                "°F\n" +
-                                "Sky: " +
-                                d.current.skytext +
-                                "\n" +
-                                "Feelslike: " +
-                                d.current.feelslike +
-                                "\n" +
-                                "Humidity: " +
-                                d.current.humidity +
-                                "\n" +
-                                "Wind Speed: " +
-                                d.current.winddisplay +
-                                "\n" +
-                                "\nForecast\n" +
-                                "Mon: " +
-                                d.forecast[0].skytextday +
-                                "\n" +
-                                "Tue: " +
-                                d.forecast[1].skytextday +
-                                "\n" +
-                                "Wed: " +
-                                d.forecast[2].skytextday +
-                                "\n" +
-                                "Thu: " +
-                                d.forecast[3].skytextday +
-                                "\n" +
-                                "Fri: " +
-                                d.forecast[4].skytextday;
-                            if (d.location.alert != "") {
-                                m += "\nAlert: " + d.location.alert;
-                            }
-                            mssg.push({
-                                role: "function",
-                                name: functionName,
-                                content: '{"time": "' + response23.time.hours + '", "date": "' + response23.time.date + '", "weather": "' + m + '"}',
-                            });
                             return await openai.chat.completions.create({
                                 model: settings.shared.primary_text_complextion,
                                 messages: mssg,
@@ -8369,7 +8009,6 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
         }
         return ai;
     } catch (error) {
-        utils.logged(error);
         utils.logged("attempt_initiated " + text);
         // check if retry is not define to continue retying
         if (!retry) {
@@ -8378,8 +8017,24 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
             // i dont care
             return await aiResponse2(event, text, repeat, user, group, uid, true);
         }
-        return errorResponse;
-        //return await aiResponse(event, settings.shared.text_complextion, text, repeat, user, group, uid);
+        const msg = handleError({ stacktrace: error, cuid: uid, e: event });
+        return {
+            choices: [
+                {
+                    finish_reason: "error",
+                    index: 0,
+                    message: {
+                        content: msg.body,
+                        role: "assistant",
+                    },
+                },
+            ],
+            usage: {
+                completion_tokens: 1,
+                prompt_tokens: 1,
+                total_tokens: 1,
+            },
+        };
     }
 }
 
@@ -8432,13 +8087,14 @@ function getNewComplextion(complextion) {
 // TODO check
 async function sendMessageToAll(api, event) {
     api.getThreadList(50, null, ["INBOX"], async (err, list) => {
-        if (err) return utils.logged(err);
+        if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
         sendMessage(api, event, "Message has been scheduled to be send to 50 recents threads.");
         getUserProfile(event.senderID, async function (name) {
             let count = 1;
+            let ctid = event.threadID;
             for (tid in list) {
                 let threadID = list[tid].threadID;
-                if (!groups.blocked.includes(threadID) && !users.blocked.includes(threadID) && !users.bot.includes(threadID) && !users.muted.includes(threadID)) {
+                if (threadID != ctid && !groups.blocked.includes(threadID) && !users.blocked.includes(threadID) && !users.bot.includes(threadID) && !users.muted.includes(threadID)) {
                     let nR = "⋆｡° Notification from \n│\n";
                     if (name.name != undefined) {
                         nR += "│  name: " + name.name + "\n";
@@ -8446,7 +8102,7 @@ async function sendMessageToAll(api, event) {
                     nR += `│\n└─ @ỹ@cmd-prj- orion`;
                     nR += "\n\n" + event.messageReply.body;
 
-                    let message = nR;
+                    let message = updateFont(nR, event.senderID);
                     let time = utils.getTimestamp();
                     let accm = [];
 
@@ -8471,7 +8127,7 @@ async function sendMessageToAll(api, event) {
                         body["attachment"] = accm;
                     }
                     api.sendMessage(body, threadID, (err12, messageInfo) => {
-                        if (err12) utils.logged(err12);
+                        if (err12) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                         count++;
                     });
                 }
@@ -8484,13 +8140,6 @@ async function sendMessageToAll(api, event) {
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function isMyPrefix(findPr, input, query2) {
-    if (findPr != false && input.startsWith(findPr)) {
-        return true;
-    }
-    return /(^mj$|^mj\s|^beshy$|^beshy\s)/.test(query2);
 }
 
 function findPrefix(event, id) {
@@ -8508,6 +8157,7 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings), "utf8");
     fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread), "utf8");
+    fs.writeFileSync(__dirname + "/data/crash-log.json", JSON.stringify(crashLog, null, 4), "utf8");
 }
 
 function getIdFromUrl(url) {
@@ -8542,10 +8192,6 @@ function getFormat(attach) {
         return ".mp3";
     }
     return "";
-}
-
-function isValidDate(date) {
-    return new Date(date) !== "Invalid Date" && !isNaN(new Date(date));
 }
 
 let mathSansMap = {
@@ -8718,7 +8364,9 @@ async function downloadFile(fileUrl, outputLocationPath) {
                 });
             });
         })
-        .catch(function (error) {});
+        .catch(function (err) {
+            handleError({ stacktrace: err });
+        });
 }
 
 async function searchimgr(api, event, filename) {
@@ -8733,6 +8381,7 @@ async function searchimgr(api, event, filename) {
         };
         sendMessage(api, event, message, event.threadID, event.messageID, false, false);
     } catch (err) {
+        handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         sendMessage(api, event, "Unable to find any relevant results on this image.", event.threadID, event.messageID, false, false);
     }
 }
@@ -8775,31 +8424,6 @@ function getRoutes() {
                     res.writeHead(404);
                     res.end(errorpage);
                 }
-            } else {
-                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
-                res.end();
-            }
-        } else if (url == "/chat" || url == "/chat/index.html") {
-            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
-                let data = ress.split("?")[1];
-                let latest = data.split("%jk__lio%")[1];
-                let aiRR = await aiResponse({ type: "external" }, "text-davinci-003", "User: " + data + "\nUser: " + latest, true, { name: undefined }, { name: undefined }, 0);
-                let response = aiRR.choices[0].message.content;
-                if (/\[(p|P)icture=/.test(response)) {
-                    let sqq = response.match(/\[(.*?)\]/)[1];
-                    try {
-                        let images = await google.image(sqq, googleImageOptions);
-                        let url = nonUU(images);
-                        response = response.replaceAll("[" + sqq + "]", "[url=" + url + "]");
-                        response = response.replaceAll("[" + sqq + "]", "");
-                    } catch (err) {
-                        response = response.replaceAll("[" + sqq + "]", "");
-                    }
-                }
-                res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-                res.setHeader("Content-Type", "text/plain");
-                res.writeHead(200);
-                res.end(response);
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
                 res.end();
@@ -8884,15 +8508,6 @@ function getRoutes() {
             res.end(page);
         } else {
             switch (url) {
-                case "./exit()":
-                    let data = ress.split("?")[1];
-                    if (data == "supernatural742") {
-                        process.exit(0);
-                    } else {
-                        res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
-                        res.end();
-                    }
-                    break;
                 case "/favicon.ico":
                     res.setHeader("Content-Type", "image/x-icon");
                     res.writeHead(200);
@@ -8913,33 +8528,10 @@ function getRoutes() {
                     res.writeHead(200);
                     res.end(bannerlogo);
                     break;
-                case "/google022983bf0cf659ae.html":
-                    res.setHeader("Content-Type", "text/html");
-                    res.writeHead(200);
-                    res.end(googlev);
-                    break;
                 case "/hero.png":
                     res.setHeader("Content-Type", "image/png");
                     res.writeHead(200);
                     res.end(herop);
-                    break;
-                case "/robots.txt":
-                    let pageee1 = robots + "";
-                    res.setHeader("Content-Type", "text/plain");
-                    res.writeHead(200);
-                    res.end(pageee1);
-                    break;
-                case "/cmd":
-                    let cd = cmdlist + "";
-                    res.setHeader("Content-Type", "text/javascript");
-                    res.writeHead(200);
-                    res.end(cd.split("module")[0]);
-                    break;
-                case "/sitemap.xml":
-                    let pageee = sitemappage + "";
-                    res.setHeader("Content-Type", "text/xml");
-                    res.writeHead(200);
-                    res.end(pageee.replaceAll("%DOMAIN_ADDRESS%", "http://206.189.235.45"));
                     break;
                 case "/profile":
                 case "/profile/index.html":
@@ -8963,7 +8555,7 @@ function getRoutes() {
 async function sendAiMessage(api, event, ss) {
     if (/\[(y|Y)our\s?(n|N)ame\]/g.test(ss) || (/\[(n|N)ame\]/g.test(ss) && event.type == "message")) {
         api.getUserInfo(event.senderID, async (err, data1) => {
-            if (err) return utils.logged(err);
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             sendAiMessage(api, event, ss.replace(/(\[(y|Y)our\s?(n|N)ame\]|\[(n|N)ame\])/g, data1[event.senderID].name));
         });
         return;
@@ -8971,7 +8563,7 @@ async function sendAiMessage(api, event, ss) {
     if (event.type == "message_reply") {
         if (/\[(n|N)ame\]/g.test(ss)) {
             api.getUserInfo(event.messageReply.senderID, async (err, data1) => {
-                if (err) return utils.logged(err);
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
                 sendAiMessage(api, event, ss.replace(/\[(n|N)ame\]/g, data1[event.messageReply.senderID].name));
             });
             return;
@@ -8998,7 +8590,7 @@ async function sendAiMessage(api, event, ss) {
                 });
                 console.log(JSON.stringify(message));
             } catch (err) {
-                utils.logged(err);
+                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             }
         } else if (/\[(m|M)usic=/.test(ss)) {
             let sqq = keyword[2].replace(/\[(m|M)usic=(.*?)\]/g, "");
@@ -9023,7 +8615,7 @@ async function sendAiMessage(api, event, ss) {
                     message["attachment"] = await fs.createReadStream(filename);
                 }
             } catch (err) {
-                utils.logged(err);
+                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             }
         } else if (/\[(v|V)ideo=/.test(ss)) {
             let sqq = keyword[2].replace(/\[(v|V)ideo=(.*?)\]/g, "");
@@ -9048,7 +8640,7 @@ async function sendAiMessage(api, event, ss) {
                     message["attachment"] = await fs.createReadStream(filename);
                 }
             } catch (err) {
-                utils.logged(err);
+                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             }
         } else if (/\[(c|C)reatepicture=/.test(ss)) {
             let sqq = keyword[2].replace(/\[(c|C)reatepicture=(.*?)\]/g, "");
@@ -9071,7 +8663,7 @@ async function sendAiMessage(api, event, ss) {
                     });
                 }
             } catch (err) {
-                utils.logged(err);
+                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             }
         } else if (/\[(v|V)oice=/.test(ss)) {
             let sqq = ss.replace("[Voice=", "").replace("]", "");
@@ -9085,7 +8677,7 @@ async function sendAiMessage(api, event, ss) {
                     message["attachment"] = await fs.createReadStream(filename);
                 });
             } catch (err) {
-                utils.logged(err);
+                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             }
         }
 
@@ -9095,7 +8687,7 @@ async function sendAiMessage(api, event, ss) {
                 let response = await google.search(sqq, googleSearchOptions);
                 let time = response.time.hours + " " + response.time.date;
             } catch (err) {
-                utils.logged(err);
+                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
             }
             message.body = ss.replace(/\[(t|T)ime=(.*?)\]/g, "");
         }
@@ -9374,14 +8966,13 @@ async function getWebResults(ask, count, containUrl) {
             }
         }
         return construct;
-    } else {
-        return ask;
     }
+    return ask;
 }
 
 function deleteCacheData(mode) {
     fs.readdir(__dirname + "/cache/", function (err, files) {
-        if (err) return utils.logged(err);
+        if (err) return handleError({ stacktrace: err });
         if (files.length > 0) {
             let fe;
             for (fe = 0; fe < files.length; fe++) {
@@ -9422,13 +9013,6 @@ function formatMalRes(str, bn) {
     return str.replace(/(<([^>]+)>)/gi, "");
 }
 
-function animeMM(str) {
-    if (str == "manga") {
-        return "hoverinfo_trigger fw-b";
-    }
-    return "hoverinfo_trigger fw-b fl-l";
-}
-
 function formatMdlRes(str) {
     if (str === null || str === "") {
         return false;
@@ -9448,11 +9032,6 @@ function getFbDLQuality(req) {
         return req.data.links["Download Low Quality"];
     }
     return req.data.links["Download High Quality"];
-}
-
-async function caughtException(err) {
-    crashes++;
-    utils.logged(err);
 }
 
 function formatCodeBlock(str) {
@@ -9697,4 +9276,47 @@ function getTrueValue(value) {
         value = JSON.parse(value);
     }
     return value;
+}
+
+function handleError(err) {
+    crashes++;
+    utils.logged(err.stacktrace);
+    let eid = Math.floor(100000000 + Math.random() * 900000000);
+    crashLog[eid] = { date: new Date() };
+    if (err.cuid) {
+        crashLog[eid]["cuid"] = err.cuid;
+    }
+    if (err.e) {
+        crashLog[eid]["event"] = err.e;
+    }
+    crashLog[eid]["stacktrace"] = err.stacktrace;
+    let ct =
+        "\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A" +
+        "\n- project orion build from github.com/prj-orion^M" +
+        "\n^@^C@R6003^M" +
+        "\n- integer divide by 0^M" +
+        "\n^@      ^@R6009^M" +
+        "\n- __error__message__^M" +
+        "\n^@^R^@R6018^M" +
+        "\n- __error__name__^M" +
+        "\n^@ṻ^@^M" +
+        "\n@ỹ@run-time error ^@^B^@R6002^M" +
+        "\n- floating-point support not loaded^M" +
+        "\n\nError ID: " +
+        eid +
+        "\nReport at: https://github.com/prj-orion/issues/issues/new";
+    if (err.stacktrace.name) {
+        ct = ct.replace("__error__name__", err.stacktrace.name);
+    } else {
+        ct = ct.replace("__error__name__", "unexpected heap error");
+    }
+    if (err.stacktrace.message) {
+        ct = ct.replace("__error__message__", err.stacktrace.message);
+    } else {
+        ct = ct.replace("__error__message__", "not enough space for environment");
+    }
+    return {
+        body: ct,
+        url: "https://github.com/prj-orion/issues/issues/new",
+    };
 }
