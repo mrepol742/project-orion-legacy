@@ -61,6 +61,7 @@ let settings = JSON.parse(fs.readFileSync(__dirname + "/data/accountPreferences.
 let settingsThread = JSON.parse(fs.readFileSync(__dirname + "/data/threadPreferences.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
+let quiz = JSON.parse(fs.readFileSync(__dirname + "/data/quiz.json", "utf-8"));
 let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/data/ascii.json"));
 let dyk = JSON.parse(fs.readFileSync(__dirname + "/data/dyk.json"));
 let wyr = JSON.parse(fs.readFileSync(__dirname + "/data/wyr.json"));
@@ -1308,6 +1309,40 @@ function sleep(ms) {
 async function ai22(api, event, query, query2) {
     const login = api.getCurrentUserID();
 
+    if (settings.shared.quiz) {
+        for (q in settings.shared.quiz) {
+            if (event.messageReply.messageID == settings.shared.quiz[q].messageID) {
+                let rawUserAnswer = event.body;
+                let userAnswer = rawUserAnswer.replaceAll(" ", "").toLowerCase();
+                getUserProfile(event.senderID, async function (name) {
+                    const points = Math.floor(Math.random() * 3000);
+                    if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
+                       if (!name.balance) {
+                         name["balance"] = points;
+                       }
+                       name.balance += points;
+                    } else {
+                        if (!name.balance) {
+                            name["balance"] = 0;
+                        }
+                        name.balance -= 150;
+                    }
+                });
+
+                if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
+                    sendMessage(api, event, "Answer Correct!");
+                    addBalance(event.senderID, Math.floor(Math.random() * 3000));
+                } else {
+                    sendMessage(api, event, "Wrong!");
+                }
+                delete settings.shared.quiz[q];
+                api.unsendMessage(event.messageReply.messageID, (err) => {
+                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                });
+                return;
+            }
+        }
+    }
     if (testCommand(api, query, "notify", event.senderID, "owner", true)) {
         if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
             sendMessage(api, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
@@ -2365,11 +2400,18 @@ async function ai(api, event) {
             return;
         }
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
-        for (let i = 0; i < accounts.length; i++) {
-            getUserProfile(settings[accounts[i]].owner, async function (name) {
+        let owners = [];
+        for (account in accounts) {
+            let owner = settings[accounts[account]].owner;
+            if (!owners.includes(owner)) {
+                owners.push(owner);
+            }
+        }
+        for (owner in owners) {
+            getUserProfile(owners[owner], async function (name) {
                 construct += "│\n";
                 construct += "│   ⦿ Name: " + name.name + "\n";
-                construct += "│   ⦿ uid: " + accounts[i] + "\n";
+                construct += "│   ⦿ uid: " + owners[owner] + "\n";
             });
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
@@ -2379,27 +2421,27 @@ async function ai(api, event) {
             return;
         }
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
-        for (let i = 0; i < accounts.length; i++) {
-            getUserProfile(accounts[i], async function (name) {
+        for (account in accounts) {
+            getUserProfile(accounts[account], async function (name) {
                 construct += "│\n";
                 if (name.name != undefined) {
-                    construct += "│   ⦿ Name: " + name.name + "\n│   ⦿ uid: " + accounts[i];
+                    construct += "│   ⦿ Name: " + name.name + "\n│   ⦿ uid: " + accounts[account];
                 } else {
-                    construct += "│   ⦿ uid: " + accounts[i];
+                    construct += "│   ⦿ uid: " + accounts[account];
                 }
-                if (blockedCall.includes(accounts[i])) {
+                if (blockedCall.includes(accounts[account])) {
                     construct += "\n│   ⦿ Status: Temporarily Blocked\n";
                 } else {
-                    if (settings[accounts[i]].stop) {
+                    if (settings[accounts[account]].stop) {
                         construct += "\n│   ⦿ Status: Stop\n";
-                    } else if (settings[accounts[i]].maintenance) {
+                    } else if (settings[accounts[account]].maintenance) {
                         construct += "\n│   ⦿ Status: Maintenance\n";
                     } else {
                         construct += "\n│   ⦿ Status: Online\n";
                     }
                 }
-                if (accounts[i] != settings[accounts[i]].owner) {
-                    construct += "│   ⦿ Owner: " + settings[accounts[i]].owner + "\n";
+                if (accounts[account] != settings[accounts[account]].owner) {
+                    construct += "│   ⦿ Owner: " + settings[accounts[account]].owner + "\n";
                 }
             });
         }
@@ -4614,7 +4656,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "remove--user", event.senderID, "owner")) {
         api.getThreadInfo(event.threadID, (err, gc) => {
-            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event }));
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             if (gc.isGroup) {
                 let arr = gc.participantIDs;
                 if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID())) {
@@ -4722,7 +4764,7 @@ async function ai(api, event) {
                 users.bot.push(id);
                 sendMessage(api, event, "Noted.");
                 getUserProfile(event.senderID, async function (user) {
-                    addBalance(user, 1500);
+                    addBalance(user, 4000);
                 });
             }
         }
@@ -6065,10 +6107,16 @@ async function ai(api, event) {
         utils.logged("cookie_state synchronized");
         sendMessage(api, event, "The AppState refreshed.");
         fb_stateD = utils.getCurrentTime();
-    } else if (testCommand(api, query, "state--save", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "state--save", event.senderID, "owner", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         saveState();
         sendMessage(api, event, "The state have saved successfully.");
     } else if (testCommand(api, query, "test", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
         if (crashes > 0) {
             sendMessage(api, event, utils.formatOutput("Crash", [crashes + " uncaught exception "], "github.com/prj-orion"));
         } else {
@@ -6083,6 +6131,34 @@ async function ai(api, event) {
             api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
+        });
+    } else if (testCommand(api, query, "quiz", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let picker = Math.floor(Math.random() * quiz.length);
+        let construct = quiz[picker].question + "\n";
+        let choiceN = ["A", "B", "C", "D"];
+        let cAA;
+        for (choice in quiz[picker].choices) {
+            let c = quiz[picker].choices[choice];
+            construct += "\n" + choiceN[choice] + ". " + c;
+            if (c.replaceAll(" ", "").toLowerCase() == quiz[picker].answer) {
+                cAA = choiceN[choice].toLowerCase();
+            }
+        }
+        const answer = quiz[picker].answer;
+        api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
+            if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
+            if (!settings.shared.quiz) {
+                settings.shared["quiz"] = [];
+            }
+
+            settings.shared.quiz.push({ correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: Math.floor(Date.now() / 1000) + 45 });
+            await sleep(60000);
+            api.unsendMessage(messageInfo.messageID, (err) => {
+                        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                    });
         });
     } else if (testCommand(api, query2, "setNickname", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -6426,7 +6502,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                     updateFont1,
                     thread_id,
                     (err, messageInfo) => {
-                        if (err) return sendMessageErr(api, thread_id, message_id, event.senderID, err);
+                        if (err) return sendMessageErr(api, event, thread_id, message_id, event.senderID, err);
                     },
                     message_id
                 );
@@ -6549,7 +6625,7 @@ async function sendMMMS(api, event, message, thread_id, message_id, id, voiceE, 
 }
 
 function sendMessageErr(api, event, thread_id, message_id, id, err) {
-    let errMM = handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+    let errMM = handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
     let message;
     if (err.error == 3252001 || err.error == 1404078) {
         blockedCall.push(api.getCurrentUserID());
@@ -6781,8 +6857,11 @@ function countWords(str) {
 }
 
 function countVowel(str) {
-    const count = str.match(/[aeiou]/gi).length;
-    return count;
+    const count = str.match(/[aeiou]/gi);
+    if (count) {
+        return count;
+    }
+    return 0;
 }
 
 function countConsonants(str) {
@@ -7170,7 +7249,7 @@ function removeUser(api, event, id) {
         id = event.senderID;
     }
     api.removeUserFromGroup(id, event.threadID, (err) => {
-        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         utils.logged("user_remove " + event.threadID + " " + id);
     });
 }
@@ -7254,7 +7333,7 @@ function blockGroup(api, event, id) {
         ":heart:",
         event.messageID,
         (err) => {
-            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
         },
         true
     );
@@ -7301,7 +7380,7 @@ async function unblockUser(api, event, id) {
             ":heart:",
             event.messageID,
             (err) => {
-                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             },
             true
         );
@@ -7438,7 +7517,7 @@ function getAnimeGif(api, event, id, type) {
             id = event.senderID;
         }
         api.getUserInfo(id, (err, info) => {
-            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event }));
+            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             let name = info[id]["firstName"];
             if (id == event.senderID) {
                 name += " why don't you " + type + " yourself then.";
@@ -8555,7 +8634,7 @@ function getRoutes() {
 async function sendAiMessage(api, event, ss) {
     if (/\[(y|Y)our\s?(n|N)ame\]/g.test(ss) || (/\[(n|N)ame\]/g.test(ss) && event.type == "message")) {
         api.getUserInfo(event.senderID, async (err, data1) => {
-            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             sendAiMessage(api, event, ss.replace(/(\[(y|Y)our\s?(n|N)ame\]|\[(n|N)ame\])/g, data1[event.senderID].name));
         });
         return;
@@ -8563,7 +8642,7 @@ async function sendAiMessage(api, event, ss) {
     if (event.type == "message_reply") {
         if (/\[(n|N)ame\]/g.test(ss)) {
             api.getUserInfo(event.messageReply.senderID, async (err, data1) => {
-                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                 sendAiMessage(api, event, ss.replace(/\[(n|N)ame\]/g, data1[event.messageReply.senderID].name));
             });
             return;
@@ -8590,7 +8669,7 @@ async function sendAiMessage(api, event, ss) {
                 });
                 console.log(JSON.stringify(message));
             } catch (err) {
-                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             }
         } else if (/\[(m|M)usic=/.test(ss)) {
             let sqq = keyword[2].replace(/\[(m|M)usic=(.*?)\]/g, "");
@@ -8615,7 +8694,7 @@ async function sendAiMessage(api, event, ss) {
                     message["attachment"] = await fs.createReadStream(filename);
                 }
             } catch (err) {
-                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             }
         } else if (/\[(v|V)ideo=/.test(ss)) {
             let sqq = keyword[2].replace(/\[(v|V)ideo=(.*?)\]/g, "");
@@ -8640,7 +8719,7 @@ async function sendAiMessage(api, event, ss) {
                     message["attachment"] = await fs.createReadStream(filename);
                 }
             } catch (err) {
-                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             }
         } else if (/\[(c|C)reatepicture=/.test(ss)) {
             let sqq = keyword[2].replace(/\[(c|C)reatepicture=(.*?)\]/g, "");
@@ -8663,7 +8742,7 @@ async function sendAiMessage(api, event, ss) {
                     });
                 }
             } catch (err) {
-                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             }
         } else if (/\[(v|V)oice=/.test(ss)) {
             let sqq = ss.replace("[Voice=", "").replace("]", "");
@@ -8677,7 +8756,7 @@ async function sendAiMessage(api, event, ss) {
                     message["attachment"] = await fs.createReadStream(filename);
                 });
             } catch (err) {
-                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             }
         }
 
@@ -8687,7 +8766,7 @@ async function sendAiMessage(api, event, ss) {
                 let response = await google.search(sqq, googleSearchOptions);
                 let time = response.time.hours + " " + response.time.date;
             } catch (err) {
-                handleError({ stacktrace: err, cuid: api.getCurrentUserId(), e: event });
+                handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             }
             message.body = ss.replace(/\[(t|T)ime=(.*?)\]/g, "");
         }
