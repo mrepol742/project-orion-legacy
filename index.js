@@ -73,6 +73,10 @@ let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 let cmdPage = JSON.parse(gen());
 let R_S_H_12_mmm = fs.existsSync(__dirname + "/.nosave");
 
+if (R_S_H_12_mmm) {
+    settingsThread = { default: { leave: false, unsend: false, nsfw: true, cmd: 1 } };
+}
+
 console.log("\tProject Information");
 console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + (users.blocked.length + users.bot.length) + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
 
@@ -1093,16 +1097,12 @@ function redfox_fb(fca_state, login, cb) {
                             }
                             break;
                         case "log:approval_mode":
-                            /*
-                            let isJoinable1 = event.logMessageData.joinable_mode;
-                            if (isJoinable1 != 0) {
+                            let isJoinable1 = event.logMessageData.APPROVAL_MODE;
+                            if (isJoinable1 == 1) {
                                 sendMessage(api, event, "Hays admin enable member requests...");
                             } else {
-                                sendMessage(api, event, "Anyone can now add ya friends without pesting the adminds...");
+                                sendMessage(api, event, "Anyone can now add ya friends without pesting the admins...");
                             }
-                            utils.logged("approval_mode " + isJoinable1);
-                            */
-                            utils.logged(event);
                             break;
                         case "log:pin_messages":
                             utils.logged(event);
@@ -1112,12 +1112,11 @@ function redfox_fb(fca_state, login, cb) {
                             break;
                         case "log:group_link":
                             let isJoinable = event.logMessageData.joinable_mode;
-                            if (isJoinable == 0) {
+                            if (isJoinable == 1) {
                                 sendMessage(api, event, "No one can join now using the group link :(.");
                             } else {
                                 sendMessage(api, event, "Anyone can join using the group link. Invite ya friends..");
                             }
-                            utils.logged(event);
                             break;
                         case "log:magic_words":
                             let mcw = event.logMessageData.magic_word;
@@ -1307,20 +1306,23 @@ function sleep(ms) {
 }
 
 async function ai22(api, event, query, query2) {
+    let eventB = event.body;
+    let input = eventB.normalize("NFKC");
+
     const login = api.getCurrentUserID();
 
     if (settings.shared.quiz) {
         for (q in settings.shared.quiz) {
             if (event.messageReply.messageID == settings.shared.quiz[q].messageID) {
-                let rawUserAnswer = event.body;
+                let rawUserAnswer = input;
                 let userAnswer = rawUserAnswer.replaceAll(" ", "").toLowerCase();
                 getUserProfile(event.senderID, async function (name) {
                     const points = Math.floor(Math.random() * 3000);
                     if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
-                       if (!name.balance) {
-                         name["balance"] = points;
-                       }
-                       name.balance += points;
+                        if (!name.balance) {
+                            name["balance"] = points;
+                        }
+                        name.balance += points;
                     } else {
                         if (!name.balance) {
                             name["balance"] = 0;
@@ -1453,8 +1455,6 @@ async function ai22(api, event, query, query2) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let eventB = event.body;
-        let input = eventB.normalize("NFKC");
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + " decrypt fwegerghergerg:gergergergerg");
@@ -1486,7 +1486,10 @@ async function ai22(api, event, query, query2) {
                         getUserProfile(transferTo, async function (name1) {
                             addBalance(name1, amount);
                         });
-                        name.balance -= 500;
+                        if (event.senderID != settings.shared.root) {
+                            name.balance -= 500;
+                        }
+                        sendMessage(api, event, "Transfer success of " + data[2] + ".");
                     }
                 });
             } else {
@@ -1720,7 +1723,6 @@ async function ai22(api, event, query, query2) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let input = event.body;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: run language \n Categories:\nJava, Python, C, C++,\nJavaScript and PHP" + "\n\n" + example[Math.floor(Math.random() * example.length)] + " run python");
@@ -6136,7 +6138,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) {
             return;
         }
-        let picker = Math.floor(Math.random() * quiz.length);
+        const picker = Math.floor(Math.random() * quiz.length);
         let construct = quiz[picker].question + "\n";
         let choiceN = ["A", "B", "C", "D"];
         let cAA;
@@ -6150,15 +6152,17 @@ async function ai(api, event) {
         const answer = quiz[picker].answer;
         api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
             if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
+
             if (!settings.shared.quiz) {
                 settings.shared["quiz"] = [];
             }
 
-            settings.shared.quiz.push({ correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: Math.floor(Date.now() / 1000) + 45 });
+            settings.shared.quiz.push({ correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: Math.floor(Date.now() / 1000) + 60 });
             await sleep(60000);
+            delete settings.shared.quiz[picker];
             api.unsendMessage(messageInfo.messageID, (err) => {
-                        if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
-                    });
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+            });
         });
     } else if (testCommand(api, query2, "setNickname", event.senderID)) {
         if (isGoingToFast(api, event)) {
@@ -7568,7 +7572,7 @@ function voiceR(api, event) {
                 event.attachments = [];
                 ai(api, event);
             } catch (err) {
-                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             }
             unLink(dir);
         });
