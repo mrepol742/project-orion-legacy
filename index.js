@@ -61,14 +61,16 @@ let settings = JSON.parse(fs.readFileSync(__dirname + "/data/accountPreferences.
 let settingsThread = JSON.parse(fs.readFileSync(__dirname + "/data/threadPreferences.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
-let quiz = JSON.parse(fs.readFileSync(__dirname + "/data/quiz.json", "utf-8"));
-let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/data/ascii.json"));
-let dyk = JSON.parse(fs.readFileSync(__dirname + "/data/dyk.json"));
-let wyr = JSON.parse(fs.readFileSync(__dirname + "/data/wyr.json"));
-let Eball = JSON.parse(fs.readFileSync(__dirname + "/data/8ball.json"));
-let joke = JSON.parse(fs.readFileSync(__dirname + "/data/joke.json"));
-let cat = JSON.parse(fs.readFileSync(__dirname + "/data/cat.json"));
 let crashLog = JSON.parse(fs.readFileSync(__dirname + "/data/crash-log.json"));
+
+let quiz = JSON.parse(fs.readFileSync(__dirname + "/src/data/quiz.json", "utf-8"));
+let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/src/data/ascii.json"));
+let dyk = JSON.parse(fs.readFileSync(__dirname + "/src/data/dyk.json"));
+let wyr = JSON.parse(fs.readFileSync(__dirname + "/src/data/wyr.json"));
+let Eball = JSON.parse(fs.readFileSync(__dirname + "/src/data/8ball.json"));
+let joke = JSON.parse(fs.readFileSync(__dirname + "/src/data/joke.json"));
+let cat = JSON.parse(fs.readFileSync(__dirname + "/src/data/cat.json"));
+
 let package = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 let cmdPage = JSON.parse(gen());
 let R_S_H_12_mmm = fs.existsSync(__dirname + "/.nosave");
@@ -4441,7 +4443,7 @@ async function ai(api, event) {
                 } else {
                     getUserProfile(id, async function (name) {
                         if (!name.balance) {
-                            sendMessage(api, event, name + " have 0 $ balance.");
+                            sendMessage(api, event, name.firstName + " have 0 $ balance.");
                         } else {
                             sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                         }
@@ -6140,15 +6142,19 @@ async function ai(api, event) {
         }
         const picker = Math.floor(Math.random() * quiz.length);
         let construct = quiz[picker].question + "\n";
-        let choiceN = ["A", "B", "C", "D"];
-        let cAA;
-        for (choice in quiz[picker].choices) {
-            let c = quiz[picker].choices[choice];
-            construct += "\n" + choiceN[choice] + ". " + c;
-            if (c.replaceAll(" ", "").toLowerCase() == quiz[picker].answer) {
-                cAA = choiceN[choice].toLowerCase();
+        let cAA = "";
+
+        if (quiz[picker].choices) {
+            let choiceN = ["A", "B", "C", "D"];
+            for (choice in quiz[picker].choices) {
+                let c = quiz[picker].choices[choice];
+                construct += "\n" + choiceN[choice] + ". " + c;
+                if (c.replaceAll(" ", "").toLowerCase() == quiz[picker].answer) {
+                    cAA = choiceN[choice].toLowerCase();
+                }
             }
         }
+
         const answer = quiz[picker].answer;
         api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
             if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
@@ -6156,6 +6162,8 @@ async function ai(api, event) {
             if (!settings.shared.quiz) {
                 settings.shared["quiz"] = [];
             }
+
+            if (!messageInfo.messageID) return utils.logged("undefined messageinfo.messageID");
 
             settings.shared.quiz.push({ correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: Math.floor(Date.now() / 1000) + 60 });
             await sleep(60000);
