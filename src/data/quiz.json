@@ -538,7 +538,7 @@
     {
         "question": "Which type of rice is commonly used in sushi?",
         "choices" : [
-            "Basmati", "Jasmine", "Arborio", "Sushi ricet"
+            "Basmati", "Jasmine", "Arborio", "Sushi rice"
         ],
         "answer": "sushirice",
         "topic": "cooking"
@@ -1214,5 +1214,754 @@
         ],
         "answer": "worldtradeorganization(wto)",
         "topic": "politics"
+    },
+    {
+        "question": "The capital of _______ is known for its historic landmarks, including the Colosseum and the Vatican City.",
+        "answer": "italy",
+        "topic": "random"
+    },
+    {
+        "question": "Photosynthesis is the process by which plants convert sunlight into energy, producing oxygen as a byproduct in the process of _______.",
+        "answer": "carbondioxideabsorption",
+        "topic": "random"
+    },
+    {
+        "question": "The law of supply and demand is a fundamental principle in _______ that explains the interaction between producers and consumers in a market.",
+        "answer": "economics",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is the largest planet in our solar system and is known for its prominent Great Red Spot.",
+        "answer": "jupiter",
+        "topic": "random"
+    },
+    {
+        "question": "The novel \"To Kill a Mockingbird\" by Harper Lee addresses issues of racial injustice and moral growth in the fictional town of _______.",
+        "answer": "maycomb",
+        "topic": "random"
+    },
+    {
+        "question": "The theory of relativity, formulated by _______ in the early 20th century, revolutionized our understanding of space, time, and gravity.",
+        "answer": "alberteistein",
+        "topic": "random"
+    },
+    {
+        "question": "The Great Barrier Reef, the world's largest coral reef system, is located off the coast of _______.",
+        "answer": "australia",
+        "topic": "random"
+    },
+    {
+        "question": "The Mona Lisa, painted by _______ during the Renaissance, is one of the most famous and iconic artworks in the world.",
+        "answer": "leonardodavinci",
+        "topic": "random"
+    },
+    {
+        "question": "The human skeletal system is composed of 206 bones, providing structure and support for the body's various functions, such as _______.",
+        "answer": "movementandprotectionoforgans",
+        "topic": "random"
+    },
+    {
+        "question": "The concept of \"survival of the fittest\" is closely associated with _______'s theory of natural selection.",
+        "answer": "charlesdarwin",
+        "topic": "random"
+    },
+    {
+        "question": "The Eiffel Tower, an iconic landmark, stands in the heart of _______ and attracts millions of visitors each year.",
+        "answer": "paris",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is the largest mammal on Earth and is known for its enormous size and distinctive spout.",
+        "answer": "thebluewhale",
+        "topic": "random"
+    },
+    {
+        "question": "The process of converting water into vapor through heating is known as _______.",
+        "answer": "evaporation",
+        "topic": "random"
+    },
+    {
+        "question": "The \"Mona Lisa\" is displayed in the _______ Museum, one of the world's most renowned art museums.",
+        "answer": "louvre",
+        "topic": "random"
+    },
+    {
+        "question": "The musical genre _______ originated in the African American communities of New Orleans and has diverse styles such as Dixieland and swing.",
+        "answer": "jazz",
+        "topic": "random"
+    },
+    {
+        "question": "The neurotransmitter dopamine plays a crucial role in regulating mood, pleasure, and motivation in the _______ system.",
+        "answer": "nervous",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is the process by which plants release water vapor into the atmosphere through small pores in their leaves.",
+        "answer": "transpiration",
+        "topic": "random"
+    },
+    {
+        "question": "The Taj Mahal, an iconic marble mausoleum, was built in the 17th century in the city of _______.",
+        "answer": "agra",
+        "topic": "random"
+    },
+    {
+        "question": "__________ is a programming language commonly used for web development and is known for its versatility and ease of learning.",
+        "answer": "javascript",
+        "topic": "random"
+    },
+    {
+        "question": "The concept of \"supply and demand\" is a fundamental principle in _______ that explains the interaction between producers and consumers in a market.",
+        "answer": "economics",
+        "topic": "random"
+    },
+    {
+        "question": "What is the name of my creator?",
+        "answer": "melvinjonesrepol",
+        "topic": "random"
+    },
+    {
+        "question": "What is my name?",
+        "answer": "mj",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: TNAAH\n(Hint: A place of worship)",
+        "answer": "athan",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: GLEOY\n(Hint: Honor and praise)",
+        "answer": "glory",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: NICEAM\n(Hint: A place to watch movies)",
+        "answer": "cinema",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: IHSP\n(Hint: A large boat)",
+        "answer": "ship",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: EVITAR\n(Hint: Energetic and engaged)",
+        "answer": "active",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: ELPORBME\n(Hint: An issue or challenge)",
+        "answer": "problem",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: PIRENC\n(Hint: A royal title)",
+        "answer": "prince",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: RYOSMTERY\n(Hint: Something difficult to understand)",
+        "answer": "mystery",
+        "topic": "random"
+    },
+    {
+        "question": "Jumbled Word: TINERNTE\n(Hint: Worldwide computer network)",
+        "answer": "internet",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Amazon River is the longest river in the world.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still perfectly edible.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Great Wall of China is visible from the Moon with the naked eye.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The currency of Switzerland is the Euro.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Mount Everest, the world's highest peak, is located in the Himalayas.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Atlantic Ocean is the largest ocean on Earth.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Cleopatra lived closer in time to the moon landing than to the construction of the Great Pyramid of Giza.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Bananas are berries.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Statue of Liberty was a gift from France to the United States.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Bees can recognize human faces..",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Earth is the only planet in our solar system that rotates clockwise.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Pacific Ocean is shrinking due to the movement of tectonic plates.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Mona Lisa has a twin sister.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The speed of light is faster than the speed of sound.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: A group of flamingos is called a \"flock.\"",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Earth's atmosphere is composed primarily of nitrogen.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Alaska is the easternmost state in the United States.",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: Jupiter has the shortest day of all the planets in our solar system..",
+        "answer": "false",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The Great Barrier Reef is the world's largest single structure made by living organisms.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "True/False: The platypus lays eggs.",
+        "answer": "true",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ mountain in the world is Mount Everest.",
+        "answer": "tallest",
+        "topic": "random"
+    },
+    {
+        "question": "In winter, polar bears have a __________ layer of fur to keep them warm.",
+        "answer": "thick",
+        "topic": "random"
+    },
+    {
+        "question": "__________ people attended the concert last night.",
+        "answer": "many",
+        "topic": "random"
+    },
+    {
+        "question": "The scientist made a __________ discovery that could revolutionize medicine.",
+        "answer": "groundbreaking",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ movie I watched last week was both thrilling and suspenseful.",
+        "answer": "exciting",
+        "topic": "random"
+    },
+    {
+        "question": "She owns a __________ collection of rare stamps.",
+        "answer": "valuable",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ mountain range stretches across several countries.",
+        "answer": "majestic",
+        "topic": "random"
+    },
+    {
+        "question": "In the garden, there is a __________ rose blooming with vibrant colors.",
+        "answer": "beautiful",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ building in the city is a marvel of modern architecture.",
+        "answer": "tallest",
+        "topic": "random"
+    },
+    {
+        "question": "The chef prepared a __________ dish using fresh, organic ingredients.",
+        "answer": "delicious",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ car on the market is known for its fuel efficiency.",
+        "answer": "greenest",
+        "topic": "random"
+    },
+    {
+        "question": "After the storm, a __________ rainbow appeared in the sky.",
+        "answer": "gorgeous",
+        "topic": "random"
+    },
+    {
+        "question": "The team conducted a __________ experiment to test the hypothesis.",
+        "answer": "controlled",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ forest is home to a diverse range of wildlife.",
+        "answer": "dense",
+        "topic": "random"
+    },
+    {
+        "question": "My grandmother has a __________ collection of antique furniture.",
+        "answer": "priceless",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ apple in the basket was chosen to make the pie.",
+        "answer": "juiciest",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ skyscraper in the city provides stunning panoramic views.",
+        "answer": "tallest",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ book on the shelf is a classic that everyone should read.",
+        "answer": "oldest",
+        "topic": "random"
+    },
+    {
+        "question": "We had a __________ time at the amusement park, riding roller coasters and enjoying the attractions.",
+        "answer": "fantastic",
+        "topic": "random"
+    },
+    {
+        "question": "The __________ student in the class received a special award for academic excellence.",
+        "answer": "brightest",
+        "topic": "random"
+    },
+    {
+        "question": "Naruto Uzumaki dreams of becoming the strongest __________ in his village.",
+        "answer": "ninja",
+        "topic": "random"
+    },
+    {
+        "question": "In the anime 'One Piece,' Monkey D. Luffy searches for the legendary treasure known as the _________.",
+        "answer": "onepiece",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Attack on Titan,' humanity battles giant creatures known as __________.",
+        "answer": "titans",
+        "topic": "random"
+    },
+    {
+        "question": "Saitama, the protagonist of 'One Punch Man,' defeats enemies with just a single __________.",
+        "answer": "punch",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'My Hero Academia' is set in a world where people have superpowers, also known as __________.",
+        "answer": "quirks",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Fullmetal Alchemist: Brotherhood' follows brothers Edward and Alphonse Elric as they search for the Philosopher's __________.",
+        "answer": "stone",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Demon Slayer,' Tanjiro Kamado joins the Demon Slayer Corps to avenge his family and cure his sister Nezuko from a demon __________.",
+        "answer": "curse",
+        "topic": "random"
+    },
+    {
+        "question": "The protagonist of 'Death Note,' Light Yagami, discovers a supernatural notebook that allows him to kill anyone by writing their name in the __________.",
+        "answer": "deathnote",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Dragon Ball Z,' Goku achieves a powerful transformation known as __________ Saiyan.",
+        "answer": "super",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Sword Art Online' explores the virtual world of Aincrad, where players find themselves trapped in a __________ MMORPG.",
+        "answer": "virtual",
+        "topic": "random"
+    },
+    {
+        "question": "In 'One Piece,' the main character Luffy aims to become the Pirate __________.",
+        "answer": "king",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Cowboy Bebop' follows a group of bounty hunters traveling through space on the spaceship __________.",
+        "answer": "bebop",
+        "topic": "random"
+    },
+    {
+        "question": "The magical girl series 'Sailor Moon' features a group of girls protecting the world from evil forces, led by the titular character, __________.",
+        "answer": "sailormoon",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Hunter x Hunter,' Gon Freecss aspires to become a Hunter and find his missing __________.",
+        "answer": "father",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Yu Yu Hakusho' follows Yusuke Urameshi, who is given a second chance at life after sacrificing himself to save a child from a __________.",
+        "answer": "car",
+        "topic": "random"
+    },
+    {
+        "question": "The character Inuyasha seeks the Shikon __________ to become a full demon.",
+        "answer": "jewel",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Neon Genesis Evangelion' involves the use of giant __________ to combat mysterious beings called Angels.",
+        "answer": "mechs",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Bleach' follows Ichigo Kurosaki, who gains the powers of a Soul Reaper after accidentally obtaining a __________.",
+        "answer": "zanpakuto",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Fullmetal Alchemist: Brotherhood,' Edward Elric loses his arm and leg while attempting to perform forbidden __________.",
+        "answer": "alchemy",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Fairy Tail' revolves around a guild of wizards, with Natsu Dragneel being a powerful __________.",
+        "answer": "firedragonslayer",
+        "topic": "random"
+    },
+    {
+        "question": "The character Light Yagami uses the __________ Death Note to eliminate criminals in 'Death Note'.",
+        "answer": "mysterious",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Tokyo Ghoul,' Kaneki Ken transforms into a half-ghoul after a chance encounter with a __________.",
+        "answer": "ghoul",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'My Hero Academia' is set in a world where students attend U.A. High School to become professional __________.",
+        "answer": "heroes",
+        "topic": "random"
+    },
+    {
+        "question": "The character Kenshin Himura in 'Rurouni Kenshin' is a former __________ seeking redemption for his past actions.",
+        "answer": "hitokiri",
+        "topic": "random"
+    },
+    {
+        "question": "The anime 'Code Geass' features a protagonist named Lelouch vi __________ who gains the power of Geass.",
+        "answer": "britannia",
+        "topic": "random"
+    },
+    {
+        "question": "In 'Demon Slayer,' Tanjiro Kamado's sister Nezuko becomes a demon after a __________ attack.",
+        "answer": "demon",
+        "topic": "random"
+    },
+    {
+        "question": "Who is the main character in Detective Conan?",
+        "choices" : [
+            "Shinichi Kudo", "Kaito Kuroba", "Heiji Hattori", "Ran Mouri"
+        ],
+        "answer": "shinichikudo",
+        "topic": "anime"
+    },
+    {
+        "question": "What is the name of the criminal organization that shrinks Shinichi Kudo into a child in Detective Conan?",
+        "choices" : [
+            "Black Organization", "Red Haibara Group", "White Syndicate", "Blue Crime Ring"
+        ],
+        "answer": "blackorganization",
+        "topic": "anime"
+    },
+    {
+        "question": "What is the name of Shinichi Kudo's childhood friend and romantic interest?",
+        "choices" : [
+            "Kazuha Toyama", "Sonoko Suzuki", "Ai Haibara", "Ran Mouri"
+        ],
+        "answer": "ranmouri",
+        "topic": "anime"
+    },
+    {
+        "question": "Who is known as the \"Detective of the West\" in Detective Conan?",
+        "choices" : [
+            "Heiji Hattori", "Conan Edogawa", "Kogoro Mouri", "Gin"
+        ],
+        "answer": "heijihattori",
+        "topic": "anime"
+    },
+    {
+        "question": "What is the alias used by Shinichi Kudo when he takes on the identity of a child detective?",
+        "choices" : [
+            "Conan Edogawa", "Kaito Kuroba", "Heiji Hattori", "Saguru Hakuba"
+        ],
+        "answer": "conanedogawa",
+        "topic": "anime"
+    },
+    {
+        "question": "What does SUV stand for in the automotive world?",
+        "choices" : [
+            "Sport Utility Vehicle", "Super Urban Van", "Speedy Undercarriage Venture", "Standard Undercarriage Vehicle"
+        ],
+        "answer": "sportutilityvehicle",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car company produces the Mustang model?",
+        "choices" : [
+            "Chevrolet", "Ford", "Honda", "Toyota"
+        ],
+        "answer": "ford",
+        "topic": "cars"
+    },
+    {
+        "question": "What does ABS stand for in relation to car safety?",
+        "choices" : [
+            "Automatic Braking System", "All-wheel Brake System", "Anti-lock Braking System", "Accelerated Brake Setup"
+        ],
+        "answer": "anti-lockbrakingsystem",
+        "topic": "cars"
+    },
+    {
+        "question": "Which country is known for the automaker Volkswagen?",
+        "choices" : [
+            "United States", "Germany", "Japan", "Italy"
+        ],
+        "answer": "germany",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the purpose of a catalytic converter in a car?",
+        "choices" : [
+            "Improve fuel efficiency", "Enhance horsepower", "Reduce emissions", "Increase tire lifespan"
+        ],
+        "answer": "reduceemissions",
+        "topic": "cars"
+    },
+    {
+        "question": "What does the term \"horsepower\" measure in a car engine?",
+        "choices" : [
+            "Speed", "Fuel efficiency", "Engine power", "Car weight"
+        ],
+        "answer": "enginepower",
+        "topic": "cars"
+    },
+    {
+        "question": "Which brand is famous for the luxury SUV model called the Range Rover?",
+        "choices" : [
+            "Mercedes-Benz", "Land Rover", "Audi", "Lexus"
+        ],
+        "answer": "landrover",
+        "topic": "cars"
+    },
+    {
+        "question": "What does EV stand for in the context of cars?",
+        "choices" : [
+            "Electric Vehicle", "Efficient Van", "Engine Vibration", "Eco-friendly Vehicle"
+        ],
+        "answer": "electricvehicle",
+        "topic": "cars"
+    },
+    {
+        "question": "In car terms, what does the acronym RPM stand for?",
+        "choices" : [
+            "Revolutions Per Minute", "Racing Performance Mode", "Roadside Parking Mechanism", "Rapid Power Movement"
+        ],
+        "answer": "revolutionsperminute",
+        "topic": "cars"
+    },
+    {
+        "question": "Which gas is commonly used in car air conditioning systems?",
+        "choices" : [
+            "Oxygen", "Nitrogen", "Helium", "Refrigerant (R134a)"
+        ],
+        "answer": "refrigerant(r134a)",
+        "topic": "cars"
+    },
+    {
+        "question": "What does 4WD stand for in the automotive world?",
+        "choices" : [
+            "Four-Wheel Drive", "Forward Wheel Drive", "Front Wheel Disengaged", "Four-Wheel Drift"
+        ],
+        "answer": "four-wheeldrive",
+        "topic": "cars"
+    },
+    {
+        "question": "Which brand is known for the iconic 911 model?",
+        "choices" : [
+            "Porsche", "Ferrari", "Lamborghini", "Aston Martin"
+        ],
+        "answer": "porsche",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the purpose of a differential in a car?",
+        "choices" : [
+            "Control fuel injection", "Transfer power between wheels", "Enhance aerodynamics", "Regulate tire pressure"
+        ],
+        "answer": "transferpowerbetweenwheels",
+        "topic": "cars"
+    },
+    {
+        "question": "Which automaker produces the Prius, a popular hybrid car model?",
+        "choices" : [
+            "Ford", "Toyota", "Honda", "Chevrolet"
+        ],
+        "answer": "toyota",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the primary function of an alternator in a car?",
+        "choices" : [
+            "Generate electricity", "Cool the engine", "Control suspension", "Measure tire pressure"
+        ],
+        "answer": "generateelectricity",
+        "topic": "cars"
+    },
+    {
+        "question": "What does the term \"MPG\" stand for in car specifications?",
+        "choices" : [
+            "Miles Per Gallon", "Maximum Power Gauge", "Motor Performance Grade", "Maintenance Policy Guide"
+        ],
+        "answer": "milespergallon",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car company produces the popular Civic model?",
+        "choices" : [
+            "Ford", "Honda", "Toyota", "Chevrolet"
+        ],
+        "answer": "honda",
+        "topic": "cars"
+    },
+    {
+        "question": "What does CVT stand for in relation to car transmissions?",
+        "choices" : [
+            "Constant Velocity Transmission", "Controlled Vibration Technology", "Continuous Variable Transmission", "Coordinated Valve Timing"
+        ],
+        "answer": "continuousvariabletransmission",
+        "topic": "cars"
+    },
+    {
+        "question": "Which luxury car brand has a logo featuring a silver arrow?",
+        "choices" : [
+            "BMW", "Mercedes-Benz", "Audi", "Jaguar"
+        ],
+        "answer": "mercedes-benz",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the primary function of a car's radiator?",
+        "choices" : [
+            "Brake fluid storage", "Engine cooling", "Fuel injection control", "Airbag deployment"
+        ],
+        "answer": "enginecooling",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car feature provides better traction on slippery roads?",
+        "choices" : [
+            "Cruise control", "ABS brakes", "Traction control", "Power windowst"
+        ],
+        "answer": "tractioncontrol",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the purpose of a turbocharger in a car engine?",
+        "choices" : [
+            "Increase fuel efficiency", "Enhance exhaust sound", "Improve horsepower", "Regulate tire pressure"
+        ],
+        "answer": "improvehorsepower",
+        "topic": "cars"
+    },
+    {
+        "question": "Which company produces the Wrangler, a popular off-road SUV model?",
+        "choices" : [
+            "Ford", "Toyota", "Jeep", "Chevrolet"
+        ],
+        "answer": "jeep",
+        "topic": "cars"
+    },
+    {
+        "question": "What is the function of a car's shock absorbers?",
+        "choices" : [
+            "Control steering", "Absorb road shocks", "Regulate fuel injection", "Adjust tire pressure"
+        ],
+        "answer": "absorbroadshocks",
+        "topic": "cars"
+    },
+    {
+        "question": "Which car component is responsible for igniting the fuel-air mixture in the engine?",
+        "choices" : [
+            "Spark plug", "Fuel injector", "Alternator", "Radiator"
+        ],
+        "answer": "sparkplug",
+        "topic": "cars"
+    },
+    {
+        "question": "Which brand is known for the luxury SUV model called the Cayenne?",
+        "choices" : [
+            "Porsche", "BMW", "Audi", "Mercedes-Benz"
+        ],
+        "answer": "Porsche",
+        "topic": "cars"
+    },
+    {
+        "question": "What does the term \"AWD\" stand for in the automotive world?",
+        "choices" : [
+            "All-Wheel Drive", "Automatic Window Display", "Accelerated Wheel Drive", "Adaptive Wiper Design"
+        ],
+        "answer": "all-wheeldrive",
+        "topic": "cars"
+    },
+    {
+        "question": "Which company produces the popular Silverado truck model?",
+        "choices" : [
+            "Ford", "Toyota", "Chevrolete", "Dodge"
+        ],
+        "answer": "chevrolet",
+        "topic": "cars"
     }
 ]
