@@ -4441,7 +4441,7 @@ async function ai(api, event) {
                 } else {
                     getUserProfile(id, async function (name) {
                         if (!name.balance) {
-                            sendMessage(api, event, name + " have 0 $ balance.");
+                            sendMessage(api, event, name.firstName + " have 0 $ balance.");
                         } else {
                             sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                         }
