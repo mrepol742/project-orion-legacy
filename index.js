@@ -1349,8 +1349,6 @@ async function ai22(api, event, query, query2) {
     let eventB = event.body;
     let input = eventB.normalize("NFKC");
 
-    const login = api.getCurrentUserID();
-
     if (settings.shared.quiz) {
         for (q in settings.shared.quiz) {
             if (settings.shared.quiz[q].messageID && event.messageReply.messageID == settings.shared.quiz[q].messageID) {
@@ -2024,7 +2022,33 @@ async function ai(api, event) {
                 }
             });
         }
-    } else if ((findPr != false && input.startsWith(findPr)) || testCommand(api, query2, "mj", event.senderID || testCommand(api, query2, "beshy", event.senderID))) {
+    } else if (testCommand(api, query2, "bb", event.senderID)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+        } else {
+            data.shift();
+            const url = "https://useblackbox.io/chat-request-v4";
+            const prompt = data.join(" ");
+            const requestData = {
+                textInput: prompt,
+                allMessages: [{ user: "You are `bb` a generative AI! You will output concise response in 1 paragraph 3 sentences and you can use emojis too. Here is the question: " + prompt }],
+                stream: "",
+                clickedContinue: false,
+            };
+
+            try {
+                const response = await axios.post(url, requestData);
+                let message = response.data.response[0][0];
+                sendMessage(api, event, message);
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+            }
+        }
+    } else if ((findPr != false && input.startsWith(findPr)) || testCommand(api, query2, "mj", event.senderID) || testCommand(api, query2, "beshy", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3635,7 +3659,7 @@ async function ai(api, event) {
             data.shift();
             getResponseData("https://api-baybayin-transliterator.vercel.app/?text=" + data.join(" ")).then((response) => {
                 if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
-                sendMessage(api, event, response.baybay);
+                sendMessage(api, event, response.baybayin);
             });
         }
     } else if (testCommand(api, query2, "doubleStruck", event.senderID)) {
@@ -6203,7 +6227,7 @@ async function ai(api, event) {
             if (!messageInfo.messageID) return utils.logged("undefined messageinfo.messageID");
 
             settings.shared.quiz.push({ uid: event.senderID, correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: new Date().toISOString() });
-            
+
             await sleep(60000);
             for (q in settings.shared.quiz) {
                 if (messageInfo.messageID == settings.shared.quiz[q].messageID && settings.shared.quiz[q].timeout) {
