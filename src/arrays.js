@@ -22,6 +22,8 @@
  * limitations under the License.
  */
 
+let quizCorrect = ["Well done!", "That's correct.", "Correct", "Good Job!", "Great.", "Awesome!", "You got it!", "Your right."];
+let quizWrong = ["Wrong.", "Try again later.", "Naaaah!", "Better luck next time", "Luck isnt at you this time!", "May luck be with you on the next question.", "Ain't lucky today.", "That was wrong."];
 let sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
 let hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?", "hello", "hi", "hellooooo", "hiiiiii"];
 let heyMelbin = ["Sup!!", "hey you!", "why!", "no?", "How are you!", "How you doing!", "wassup!", "whats new!", "how can i suss you!", "hello!!", "hi!!", "hellooooo...", "hiiiiii...."];
@@ -541,4 +543,6 @@ module.exports = {
     heyMelbin: heyMelbin,
     heySim: heySim,
     domains: domains,
+    quizCorrect: quizCorrect,
+    quizWrong: quizWrong
 };
