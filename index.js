@@ -448,8 +448,14 @@ function redfox_fb(fca_state, login, cb) {
                     utils.logged("thread_lock " + event.threadID + " to " + api.getCurrentUserID());
                 }
 
-                if (settingsThread[event.threadID].lock != api.getCurrentUserID()) {
-                    return;
+                const threadLock = settingsThread[event.threadID].lock 
+                if (threadLock != api.getCurrentUserID()) {
+                    if (accounts.includes(threadLock)) return;
+                        for (threads in settingsThread) {
+                            if (settingsThread[threads].lock && settingsThread[threads].lock == threadLock) {
+                                delete settingsThread[threads]["lock"];
+                            }
+                        }
                 }
             }
 
@@ -1229,21 +1235,19 @@ function redfox_fb(fca_state, login, cb) {
                             break;
                         case "log:group_participants_left":
                             api.getThreadInfo(event.threadID, (err, gc) => {
+                                let id = event.logMessageData.leftParticipantFbId;
+                                if (accounts.includes(id)) {
+                                    for (threads in settingsThread) {
+                                        if (settingsThread[threads].lock && settingsThread[threads].lock == id) {
+                                            delete settingsThread[threads]["lock"];
+                                        }
+                                    }
+                                }
+
                                 if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
                                 updateGroupData(gc, event.threadID);
 
-                                let id = event.logMessageData.leftParticipantFbId;
-                                if (accounts.includes(id)) {
-                                    groups.active.pop(event.threadID);
-                                    utils.logged("event_log_unsubsribe " + event.threadID + " ROOT " + api.getCurrentUserID());
-                                    for (threads in settingsThread) {
-                                        if (settingsThread[threads].lock && settingsThread[threads].lock == api.getCurrentUserID()) {
-                                            delete settingsThread[threads]["lock"];
-                                        }
-                                    }
-                                    return;
-                                }
                                 api.getUserInfo(id, (err, data) => {
                                     if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
@@ -1357,15 +1361,9 @@ async function ai22(api, event, query, query2) {
                 getUserProfile(event.senderID, async function (name) {
                     const points = Math.floor(Math.random() * 3000);
                     if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
-                        if (!name.balance) {
-                            name["balance"] = points;
-                        }
-                        name.balance += points;
+                        addBalance(name, points);
                     } else {
-                        if (!name.balance) {
-                            name["balance"] = 0;
-                        }
-                        name.balance -= 150;
+                        removeBalance(name, -150);
                     }
                 });
 
@@ -1669,15 +1667,11 @@ async function ai22(api, event, query, query2) {
                                                 utils.logged("rem_block_user " + login);
                                                 sendMessageOnly(api, event, "You've been unblocked!");
                                                 getUserProfile(settings[login].owner, async function (name) {
-                                                    if (name.balance) {
-                                                        name.balance -= 3000;
-                                                    }
+                                                    removeBalance(name, -3000);
                                                 });
                                                 if (event.senderID != settings.shared.root) {
                                                     getUserProfile(event.senderID, async function (name) {
-                                                        if (name.balance) {
-                                                            name.balance -= 1500;
-                                                        }
+                                                        removeBalance(name, -1500);
                                                     });
                                                 }
                                             }
@@ -1687,15 +1681,11 @@ async function ai22(api, event, query, query2) {
                                                 utils.logged("rem_block_bot " + login);
                                                 sendMessageOnly(api, event, "You've been unblocked!");
                                                 getUserProfile(settings[login].owner, async function (name) {
-                                                    if (name.balance) {
-                                                        name.balance -= 6000;
-                                                    }
+                                                    removeBalance(name, -6000);
                                                 });
                                                 if (event.senderID != settings.shared.root) {
                                                     getUserProfile(event.senderID, async function (name) {
-                                                        if (name.balance) {
-                                                            name.balance -= 3000;
-                                                        }
+                                                        removeBalance(name, -3000);
                                                     });
                                                 }
                                             }
@@ -1705,9 +1695,7 @@ async function ai22(api, event, query, query2) {
                                                 utils.logged("rem_sender_admin " + login);
                                                 sendMessage(api, event, "Your admin previliges has been revoke!");
                                                 getUserProfile(event.senderID, async function (name) {
-                                                    if (name.balance) {
-                                                        name.balance += 2000;
-                                                    }
+                                                    addBalance(name, 2000);
                                                 });
                                             }
 
@@ -1716,9 +1704,7 @@ async function ai22(api, event, query, query2) {
                                                 utils.logged("rem_login_adminn " + login);
                                                 sendMessageOnly(api, event, "Your admin previliges has been revoke!");
                                                 getUserProfile(event.senderID, async function (name) {
-                                                    if (name.balance) {
-                                                        name.balance += 2000;
-                                                    }
+                                                    addBalance(name, 2000);
                                                 });
                                             }
 
@@ -2442,12 +2428,13 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "left", event.senderID, "owner", true)) {
         let login = api.getCurrentUserID();
         api.removeUserFromGroup(login, event.threadID, (err) => {
-            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                     delete settingsThread[threads]["lock"];
                 }
             }
+
+            if (err) return handleError({ stacktrace: err, cuid: login, e: event });
         });
     } else if (testCommand(api, query, "logout", event.senderID, "owner", true)) {
         sendMessage(api, event, "sayonara... logging out!");
@@ -3268,6 +3255,7 @@ async function ai(api, event) {
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
+                console.log(JSON.stringify(JSON.contents))
                 if (search.results && search.results[0].title) {
                     utils.logged("download_music_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
@@ -4515,7 +4503,7 @@ async function ai(api, event) {
             } else {
                 sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                 if (event.senderID != settings.shared.root) {
-                    name.balance -= 1000;
+                    name.balance -= 500;
                 }
             }
         });
@@ -6706,7 +6694,11 @@ function sendMessageErr(api, event, thread_id, message_id, id, err) {
     let message;
     if (err.error == 3252001 || err.error == 1404078) {
         blockedCall.push(api.getCurrentUserID());
-        delete settingsThread[thread_id]["lock"];
+        for (threads in settingsThread) {
+            if (settingsThread[threads].lock && settingsThread[threads].lock == api.getCurrentUserID()) {
+                delete settingsThread[threads]["lock"];
+            }
+        }
         return;
     } else if (err.error == 1545049) {
         message = "Message failed to send due to its length.";
@@ -6928,24 +6920,21 @@ async function getResponseData(url) {
 }
 
 function countWords(str) {
-    try {
-        return str.split(" ").filter(function (n) {
-            return n != "";
-        }).length;
-    } catch (err) {
-        return 5;
-    }
+    if (!str) return 0;
+    return str.split(" ").filter(function (n) {
+        return n != "";
+    }).length;
 }
 
 function countVowel(str) {
+    if (!str) return 0;
     const count = str.match(/[aeiou]/gi);
-    if (count) {
-        return count;
-    }
+    if (count) return count;
     return 0;
 }
 
 function countConsonants(str) {
+    if (!str) return 0;
     var countConsonants = 0;
     for (i = 0; i < str.length; i++) {
         if (str[i] !== "a" && str[i] !== "e" && str[i] !== "i" && str[i] !== "o" && str[i] !== "u" && str[i] !== " ") {
@@ -7034,10 +7023,6 @@ function getSuffix(i) {
 
 function isMyId(id) {
     return id == settings.shared.root;
-}
-
-function getWelcomeImage(name, gname, Tmem, id) {
-    return "https://api.popcat.xyz/welcomecard?background=https://mrepol742.github.io/project-orion/background" + Math.floor(Math.random() * 9) + ".jpeg&text1=" + encodeURI(name) + "&text2=" + encodeURI(gname) + "&text3=" + getSuffix(Tmem) + " member&avatar=";
 }
 
 async function getImages(api, event, images) {
@@ -7462,25 +7447,16 @@ async function unblockUser(api, event, id) {
             true
         );
         getUserProfile(id, async function (name) {
-            if (name.balance) {
-                name.balance -= 1500;
-            }
+            removeBalance(name, -1500);
         });
         if (event.senderID != settings.shared.root) {
             getUserProfile(event.senderID, async function (name) {
-                if (name.balance) {
-                    name.balance -= 500;
-                }
+                removeBalance(name, -500);
             });
         }
     } else {
         if (isMyId(event.senderID)) {
             users.bot = users.bot.filter((item) => item !== id);
-            getUserProfile(id, async function (name) {
-                if (name.balance) {
-                    name.balance -= 3000;
-                }
-            });
         } else {
             sendMessage(api, event, "Unable to unblocked!");
         }
@@ -9186,9 +9162,7 @@ async function addAccount() {
                             users.blocked = users.blocked.filter((item) => item !== login);
                             utils.logged("rem_block_user " + login);
                             getUserProfile(login, async function (name) {
-                                if (name.balance) {
-                                    name.balance -= 1500;
-                                }
+                                removeBalance(name, -1500);
                             });
                         }
 
@@ -9196,9 +9170,7 @@ async function addAccount() {
                             users.bot = users.bot.filter((item) => item !== login);
                             utils.logged("rem_block_bot " + login);
                             getUserProfile(login, async function (name) {
-                                if (name.balance) {
-                                    name.balance -= 3000;
-                                }
+                                removeBalance(name, -3000);
                             });
                         }
 
@@ -9310,6 +9282,14 @@ function addBalance(user, token) {
         return;
     }
     user["balance"] += token;
+}
+
+function removeBalance(user, token) {
+    if (!user.balance) {
+        user["balance"] = token;
+        return;
+    }
+    user["balance"] -= token;
 }
 
 function addToken(login, type, data) {

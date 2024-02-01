@@ -42,7 +42,7 @@
         "request": "^2.88.2",
         "weather-js": "^2.0.0",
         "websocket-stream": "^5.5.2",
-        "youtubei.js": "^6.4.1"
+        "youtubei.js": "^7.0.0"
     },
     "devDependencies": {
         "jshint": "^2.13.6",
