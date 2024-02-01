@@ -448,7 +448,7 @@ function redfox_fb(fca_state, login, cb) {
                     utils.logged("thread_lock " + event.threadID + " to " + api.getCurrentUserID());
                 }
 
-                const threadLock = settingsThread[event.threadID].lock 
+                const threadLock = settingsThread[event.threadID].lock; 
                 if (threadLock != api.getCurrentUserID()) {
                     if (accounts.includes(threadLock)) return;
                         for (threads in settingsThread) {
@@ -1363,7 +1363,7 @@ async function ai22(api, event, query, query2) {
                     if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
                         addBalance(name, points);
                     } else {
-                        removeBalance(name, -150);
+                        removeBalance(name, 150);
                     }
                 });
 
@@ -1508,6 +1508,8 @@ async function ai22(api, event, query, query2) {
                 let dir = __dirname + "/cache/totext_" + utils.getTimestamp() + ".mp3";
                 downloadFile(encodeURI(url), dir).then(async (response) => {
                     try {
+                        const apikey = getApiKey(api.getCurrentUserID());
+                        const openai = new OpenAI(apikey);
                         const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
                         sendMessage(api, event, response.data.text, event.threadID, event.messageReply.messageID, true, false);
                     } catch (err) {
@@ -1667,11 +1669,11 @@ async function ai22(api, event, query, query2) {
                                                 utils.logged("rem_block_user " + login);
                                                 sendMessageOnly(api, event, "You've been unblocked!");
                                                 getUserProfile(settings[login].owner, async function (name) {
-                                                    removeBalance(name, -3000);
+                                                    removeBalance(name, 3000);
                                                 });
                                                 if (event.senderID != settings.shared.root) {
                                                     getUserProfile(event.senderID, async function (name) {
-                                                        removeBalance(name, -1500);
+                                                        removeBalance(name, 1500);
                                                     });
                                                 }
                                             }
@@ -1681,11 +1683,11 @@ async function ai22(api, event, query, query2) {
                                                 utils.logged("rem_block_bot " + login);
                                                 sendMessageOnly(api, event, "You've been unblocked!");
                                                 getUserProfile(settings[login].owner, async function (name) {
-                                                    removeBalance(name, -6000);
+                                                    removeBalance(name, 6000);
                                                 });
                                                 if (event.senderID != settings.shared.root) {
                                                     getUserProfile(event.senderID, async function (name) {
-                                                        removeBalance(name, -3000);
+                                                        removeBalance(name, 3000);
                                                     });
                                                 }
                                             }
@@ -3255,7 +3257,7 @@ async function ai(api, event) {
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
-                console.log(JSON.stringify(JSON.contents))
+
                 if (search.results && search.results[0].title) {
                     utils.logged("download_music_id " + search.results[0].id);
                     const stream = await yt.download(search.results[0].id, {
@@ -4492,13 +4494,9 @@ async function ai(api, event) {
             return;
         }
         getUserProfile(event.senderID, async function (name) {
-            if (event.senderID == settings.shared.root) {
-                sendMessage(api, event, utils.formatOutput("Balance", ["unlimited $ " + name.firstName], "github.com/prj-orion"));
-                return;
-            }
-            if (!name.balance) {
+            if (!name.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
-            } else if (1000 > name.balance) {
+            } else if (1000 > name.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
                 sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
@@ -4530,13 +4528,9 @@ async function ai(api, event) {
                 }
             }
             getUserProfile(event.senderID, async function (name) {
-                if (id == settings.shared.root) {
-                    sendMessage(api, event, utils.formatOutput("Balance", ["unlimited $ " + name.firstName], "github.com/prj-orion"));
-                    return;
-                }
-                if (!name.balance) {
+                if (!name.balance && event.senderID != settings.shared.root) {
                     sendMessage(api, event, "You have 0 $ balance yet.");
-                } else if (1000 > name.balance) {
+                } else if (1000 > name.balance && event.senderID != settings.shared.root) {
                     sendMessage(api, event, "You don't have enough balance!");
                 } else {
                     getUserProfile(id, async function (name) {
@@ -7447,11 +7441,11 @@ async function unblockUser(api, event, id) {
             true
         );
         getUserProfile(id, async function (name) {
-            removeBalance(name, -1500);
+            removeBalance(name, 1500);
         });
         if (event.senderID != settings.shared.root) {
             getUserProfile(event.senderID, async function (name) {
-                removeBalance(name, -500);
+                removeBalance(name, 500);
             });
         }
     } else {
@@ -7619,6 +7613,8 @@ function voiceR(api, event) {
         let dir = __dirname + "/cache/voicer_" + utils.getTimestamp() + ".mp3";
         downloadFile(encodeURI(url), dir).then(async (response) => {
             try {
+                const apikey = getApiKey(api.getCurrentUserID());
+                const openai = new OpenAI(apikey);
                 const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
                 event.body = response.data.text;
                 event.attachments = [];
@@ -9162,7 +9158,7 @@ async function addAccount() {
                             users.blocked = users.blocked.filter((item) => item !== login);
                             utils.logged("rem_block_user " + login);
                             getUserProfile(login, async function (name) {
-                                removeBalance(name, -1500);
+                                removeBalance(name, 1500);
                             });
                         }
 
@@ -9170,7 +9166,7 @@ async function addAccount() {
                             users.bot = users.bot.filter((item) => item !== login);
                             utils.logged("rem_block_bot " + login);
                             getUserProfile(login, async function (name) {
-                                removeBalance(name, -3000);
+                                removeBalance(name, 3000);
                             });
                         }
 
