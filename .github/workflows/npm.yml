@@ -25,7 +25,7 @@ jobs:
             - name: npm Clean Install
               run: npm ci
             - name: Test JSON Files
-              run: cd data && node test.js
+              run: node test/validate-json.js
             - name: Test Orion Source Files
               run: |
                   npm i --include=dev
