@@ -1234,8 +1234,7 @@ function redfox_fb(fca_state, login, cb) {
                             });
                             break;
                         case "log:group_participants_left":
-                            api.getThreadInfo(event.threadID, (err, gc) => {
-                                let id = event.logMessageData.leftParticipantFbId;
+                            let id = event.logMessageData.leftParticipantFbId;
                                 if (accounts.includes(id)) {
                                     for (threads in settingsThread) {
                                         if (settingsThread[threads].lock && settingsThread[threads].lock == id) {
@@ -1243,6 +1242,10 @@ function redfox_fb(fca_state, login, cb) {
                                         }
                                     }
                                 }
+                            
+                                if (id == api.getCurrentUserID())  return utils.logged("account_kick " + id);
+
+                            api.getThreadInfo(event.threadID, (err, gc) => {
 
                                 if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
@@ -1253,8 +1256,6 @@ function redfox_fb(fca_state, login, cb) {
 
                                     updateUserData(data, id);
 
-                                    let gcn = gc.threadName;
-                                    let arr = gc.participantIDs;
                                     if (users.blocked.includes(id) || users.bot.includes(id)) {
                                         return;
                                     } else if (data[id].name == "Facebook user") {
@@ -1263,7 +1264,13 @@ function redfox_fb(fca_state, login, cb) {
                                     } else {
                                         if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID && settings.shared.root != event.senderID) {
                                             api.addUserToGroup(id, event.threadID, (err) => {
-                                                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                                                if (err) {
+                                                    if (err.error == 1545052) {
+                                                        return sendMessage(api, event, data[id].firstName + " could not be added to the conversation. Please try again later.");
+                                                    }
+                                                    return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                                                }
+
                                                 api.getThreadInfo(event.threadID, (err, gc) => {
                                                     if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
@@ -1557,7 +1564,7 @@ async function ai22(api, event, query, query2) {
                             addBalance(name1, amount);
                         });
                         if (event.senderID != settings.shared.root) {
-                            name.balance -= 500;
+                            removeBalance(name, 500);
                         }
                         sendMessage(api, event, "Transfer success of " + data[2] + ".");
                     }
@@ -4451,7 +4458,7 @@ async function ai(api, event) {
                         sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((user.balance / 1000) * 0.007) + "$ " + user.firstName], "github.com/prj-orion"));
                     }
                     if (event.senderID != settings.shared.root) {
-                        user.balance -= 1000;
+                        removeBalance(user, 1000);
                     }
                 });
             }
@@ -4485,7 +4492,7 @@ async function ai(api, event) {
                 }
                 sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
                 if (event.senderID != settings.shared.root) {
-                    user.balance -= 1000;
+                    removeBalance(user, 1000);
                 }
             }
         });
@@ -4501,7 +4508,7 @@ async function ai(api, event) {
             } else {
                 sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                 if (event.senderID != settings.shared.root) {
-                    name.balance -= 500;
+                    removeBalance(name, 500);
                 }
             }
         });
@@ -4541,7 +4548,7 @@ async function ai(api, event) {
                         }
                     });
                     if (id != settings.shared.root) {
-                        name.balance -= 1000;
+                        removeBalance(name, 1000);
                     }
                 }
             });
@@ -4709,12 +4716,19 @@ async function ai(api, event) {
             let pref = getDataFromQuery(data);
             if (/^\d+$/.test(pref)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
-                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                    
                     if (gc.isGroup) {
                         updateGroupData(gc, event.threadID);
 
                         api.addUserToGroup(pref, event.threadID, (err) => {
-                            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                            if (err) {
+                                if (err.error == 1545052) {
+                                    return sendMessage(api, event, data[id].firstName + " could not be added to the conversation. Please try again later.");
+                                }
+                                return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+                            }
+                            
                             if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
                                 sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
                             }
@@ -5828,7 +5842,7 @@ async function ai(api, event) {
                         if (response == null) return sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
                         parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
                         if (event.senderID != settings.shared.root) {
-                            user.balance -= 1000;
+                            removeBalance(user, 1000);
                         }
                     });
                 }
@@ -6923,7 +6937,7 @@ function countWords(str) {
 function countVowel(str) {
     if (!str) return 0;
     const count = str.match(/[aeiou]/gi);
-    if (count) return count;
+    if (count) return count.length;
     return 0;
 }
 
@@ -9277,7 +9291,7 @@ function addBalance(user, token) {
         user["balance"] = token;
         return;
     }
-    user["balance"] += token;
+    user.balance += token;
 }
 
 function removeBalance(user, token) {
@@ -9285,7 +9299,7 @@ function removeBalance(user, token) {
         user["balance"] = token;
         return;
     }
-    user["balance"] -= token;
+    user.balance -= token;
 }
 
 function addToken(login, type, data) {
