@@ -448,14 +448,14 @@ function redfox_fb(fca_state, login, cb) {
                     utils.logged("thread_lock " + event.threadID + " to " + api.getCurrentUserID());
                 }
 
-                const threadLock = settingsThread[event.threadID].lock; 
+                const threadLock = settingsThread[event.threadID].lock;
                 if (threadLock != api.getCurrentUserID()) {
                     if (accounts.includes(threadLock)) return;
-                        for (threads in settingsThread) {
-                            if (settingsThread[threads].lock && settingsThread[threads].lock == threadLock) {
-                                delete settingsThread[threads]["lock"];
-                            }
+                    for (threads in settingsThread) {
+                        if (settingsThread[threads].lock && settingsThread[threads].lock == threadLock) {
+                            delete settingsThread[threads]["lock"];
                         }
+                    }
                 }
             }
 
@@ -1235,18 +1235,17 @@ function redfox_fb(fca_state, login, cb) {
                             break;
                         case "log:group_participants_left":
                             let id = event.logMessageData.leftParticipantFbId;
-                                if (accounts.includes(id)) {
-                                    for (threads in settingsThread) {
-                                        if (settingsThread[threads].lock && settingsThread[threads].lock == id) {
-                                            delete settingsThread[threads]["lock"];
-                                        }
+                            if (accounts.includes(id)) {
+                                for (threads in settingsThread) {
+                                    if (settingsThread[threads].lock && settingsThread[threads].lock == id) {
+                                        delete settingsThread[threads]["lock"];
                                     }
                                 }
-                            
-                                if (id == api.getCurrentUserID())  return utils.logged("account_kick " + id);
+                            }
+
+                            if (id == api.getCurrentUserID()) return utils.logged("account_kick " + id);
 
                             api.getThreadInfo(event.threadID, (err, gc) => {
-
                                 if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
                                 updateGroupData(gc, event.threadID);
@@ -1515,8 +1514,7 @@ async function ai22(api, event, query, query2) {
                 let dir = __dirname + "/cache/totext_" + utils.getTimestamp() + ".mp3";
                 downloadFile(encodeURI(url), dir).then(async (response) => {
                     try {
-                        const apikey = getApiKey(api.getCurrentUserID());
-                        const openai = new OpenAI(apikey);
+                        const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                         const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
                         sendMessage(api, event, response.data.text, event.threadID, event.messageReply.messageID, true, false);
                     } catch (err) {
@@ -4724,7 +4722,7 @@ async function ai(api, event) {
             if (/^\d+$/.test(pref)) {
                 api.getThreadInfo(event.threadID, (err, gc) => {
                     if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
-                    
+
                     if (gc.isGroup) {
                         updateGroupData(gc, event.threadID);
 
@@ -4735,7 +4733,7 @@ async function ai(api, event) {
                                 }
                                 return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                             }
-                            
+
                             if (!JSON.stringify(gc.adminIDs).includes(api.getCurrentUserID()) && gc.approvalMode) {
                                 sendMessage(api, event, "The user " + pref + " has been added and its on member approval lists.");
                             }
@@ -7634,8 +7632,7 @@ function voiceR(api, event) {
         let dir = __dirname + "/cache/voicer_" + utils.getTimestamp() + ".mp3";
         downloadFile(encodeURI(url), dir).then(async (response) => {
             try {
-                const apikey = getApiKey(api.getCurrentUserID());
-                const openai = new OpenAI(apikey);
+                const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                 const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
                 event.body = response.data.text;
                 event.attachments = [];
@@ -7835,8 +7832,7 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
             },
             { role: "user", content: text },
         ];
-        const apikey = getApiKey(uid);
-        const openai = new OpenAI(apikey);
+        const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
         let ai = await openai.chat.completions.create({
             model: settings.shared.primary_text_complextion,
             messages: mssg,
@@ -8763,6 +8759,7 @@ async function sendAiMessage(api, event, ss) {
             message.body = ss.replace(/\[(c|C)reatepicture=(.*?)\]/g, "");
             try {
                 utils.logged("create_picture " + sqq);
+                const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                 const response = await openai.images.generate({
                     model: "dall-e-2",
                     prompt: sqq,
