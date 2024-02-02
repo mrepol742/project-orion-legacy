@@ -3,19 +3,19 @@ const fs = require("fs");
 
 async function a() {
 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
-const search = await yt.music.search("in the end", { type: "song" });
+const search = await yt.search("in the end", { type: "video" });
 
-const contents = search.contents[0].contents[0];
-
+console.log(JSON.stringify(search.results[0].id, null, 1))
+return;
 if (contents && contents.title) {
 
     const stream = await yt.download(contents.id, {
-        type: "audio+video",
+        type: "video+audio",
         quality: "best",
         format: "mp4",
     });
 
-    let filename = "../cache/music_.mp3";
+    let filename = "../cache/music_.mp4";
     let file = fs.createWriteStream(filename);
 
     for await (chunk of Utils.streamToIterable(stream)) {

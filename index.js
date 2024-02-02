@@ -3113,12 +3113,12 @@ async function ai(api, event) {
                 let qsearch = getDataFromQuery(data);
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(qsearch, { type: "video" });
-                const contents = search.contents[0].contents[0];
+                const contents = search.results[0];
 
                 if (contents) {
                     utils.logged("download_video_lyrics_id " + contents.id);
                     const stream = await yt.download(contents.id, {
-                        type: "audio+video",
+                        type: "video+audio",
                         quality: "best",
                         format: "mp4",
                     });
@@ -3166,12 +3166,12 @@ async function ai(api, event) {
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(data.join(" "), { type: "video" });
-                const contents = search.contents[0].contents[0];
+                const contents = search.results[0];
 
                 if (contents) {
                     utils.logged("download_video_id " + contents.id);
                     const stream = await yt.download(contents.id, {
-                        type: "audio+video",
+                        type: "video+audio",
                         quality: "best",
                         format: "mp4",
                     });
@@ -3187,7 +3187,7 @@ async function ai(api, event) {
                     }
                     let construct = contents.title + "\n\nDuration: " + contents.duration.text + " minutes";
                     if (contents.author) {
-                        construct += "\nAuthor: " + contentsauthor.name;
+                        construct += "\nAuthor: " + contents.author.name;
                     }
                     construct += "\nUploaded: " + contents.published.text + "\nViews: " + contents.view_count.text;
                     if (contents.snippets) {
@@ -3224,7 +3224,7 @@ async function ai(api, event) {
                 if (contents) {
                     utils.logged("download_music_lyrics_id " + contents.id);
                     const stream = await yt.download(contents.id, {
-                        type: "audio+video",
+                        type: "audio",
                         quality: "best",
                         format: "mp4",
                     });
@@ -3275,7 +3275,7 @@ async function ai(api, event) {
                 if (contents) {
                     utils.logged("download_music_id " + contents.id);
                     const stream = await yt.download(contents.id, {
-                        type: "audio+video",
+                        type: "audio",
                         quality: "best",
                         format: "mp4",
                     });
@@ -8715,7 +8715,7 @@ async function sendAiMessage(api, event, ss) {
 
                 if (contents) {
                     const stream = await yt.download(contents.id, {
-                        type: "audio+video",
+                        type: "audio",
                         quality: "best",
                         format: "mp4",
                     });
@@ -8738,11 +8738,11 @@ async function sendAiMessage(api, event, ss) {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 utils.logged("search_video " + sqq);
                 const search = await yt.search(sqq, { type: "video" });
-                const contents = search.contents[0].contents[0];
+                const contents = search.results[0];
 
                 if (contents) {
                     const stream = await yt.download(contents.id, {
-                        type: "audio+video",
+                        type: "video+audio",
                         quality: "best",
                         format: "mp4",
                     });
