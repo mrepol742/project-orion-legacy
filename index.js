@@ -2831,7 +2831,7 @@ async function ai(api, event) {
             "Average Load: " + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + "%",
         ];
         sendMessage(api, event, utils.formatOutput("System Info", sysinfo, "github.com/prj-orion"));
-    } else if (testCommand(api, query, "ascii--random", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "ascii--random", event.senderID)) {
         if (isGoingToFast(api, event)) {
             return;
         }
@@ -3113,15 +3113,17 @@ async function ai(api, event) {
                 let qsearch = getDataFromQuery(data);
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(qsearch, { type: "video" });
-                if (search.results) {
-                    utils.logged("download_video_lyrics_id " + search.results[0].id);
-                    const stream = await yt.download(search.results[0].id, {
+                const contents = search.contents[0].contents[0];
+
+                if (contents) {
+                    utils.logged("download_video_lyrics_id " + contents.id);
+                    const stream = await yt.download(contents.id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    let title = search.results[0].title + "";
+                    let title = contents.title + "";
                     utils.logged("downloading_video_lyrics " + title);
                     sendMessage(api, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
@@ -3164,15 +3166,17 @@ async function ai(api, event) {
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.search(data.join(" "), { type: "video" });
-                if (search.results && search.results[0].title) {
-                    utils.logged("download_video_id " + search.results[0].id);
-                    const stream = await yt.download(search.results[0].id, {
+                const contents = search.contents[0].contents[0];
+
+                if (contents) {
+                    utils.logged("download_video_id " + contents.id);
+                    const stream = await yt.download(contents.id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    let title = search.results[0].title + "";
+                    let title = contents.title + "";
                     utils.logged("downloading_video " + title);
                     sendMessage(api, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
                     let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
@@ -3181,13 +3185,13 @@ async function ai(api, event) {
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    let construct = search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes";
-                    if (search.results[0].author) {
-                        construct += "\nAuthor: " + search.results[0].author.name;
+                    let construct = contents.title + "\n\nDuration: " + contents.duration.text + " minutes";
+                    if (contents.author) {
+                        construct += "\nAuthor: " + contentsauthor.name;
                     }
-                    construct += "\nUploaded: " + search.results[0].published.text + "\nViews: " + search.results[0].view_count.text;
-                    if (search.results[0].snippets) {
-                        construct += "\n\n" + search.results[0].snippets[0].text.text;
+                    construct += "\nUploaded: " + contents.published.text + "\nViews: " + contents.view_count.text;
+                    if (contents.snippets) {
+                        construct += "\n\n" + contents.snippets[0].text.text;
                     }
                     let message = {
                         body: construct,
@@ -3215,15 +3219,17 @@ async function ai(api, event) {
                 let qsearch = getDataFromQuery(data);
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(qsearch, { type: "song" });
-                if (search.results) {
-                    utils.logged("download_music_lyrics_id " + search.results[0].id);
-                    const stream = await yt.download(search.results[0].id, {
+                const contents = search.contents[0].contents[0];
+
+                if (contents) {
+                    utils.logged("download_music_lyrics_id " + contents.id);
+                    const stream = await yt.download(contents.id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    utils.logged("downloading_music_lyrics " + search.results[0].title);
+                    utils.logged("downloading_music_lyrics " + contents.title);
                     let filename = __dirname + "/cache/music_" + utils.getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
@@ -3264,28 +3270,29 @@ async function ai(api, event) {
                 data.shift();
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 const search = await yt.music.search(data.join(" "), { type: "song" });
+                const contents = search.contents[0].contents[0];
 
-                if (search.results && search.results[0].title) {
-                    utils.logged("download_music_id " + search.results[0].id);
-                    const stream = await yt.download(search.results[0].id, {
+                if (contents) {
+                    utils.logged("download_music_id " + contents.id);
+                    const stream = await yt.download(contents.id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
                     threadIdMV[event.threadID] = false;
-                    utils.logged("downloading_music " + search.results[0].title);
+                    utils.logged("downloading_music " + contents.title);
                     let filename = __dirname + "/cache/music_" + utils.getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
                     for await (chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
-                    let construct = search.results[0].title + "\n\nDuration: " + search.results[0].duration.text + " minutes";
-                    if (search.results[0].album) {
-                        construct += "\nAlbum: " + search.results[0].album.name;
+                    let construct = contents.title + "\n\nDuration: " + contents.duration.text + " minutes";
+                    if (contents.album) {
+                        construct += "\nAlbum: " + contents.album.name;
                     }
-                    if (search.results[0].artist) {
-                        construct += "\nArtist: " + search.results[0].artist.name;
+                    if (contents.artist) {
+                        construct += "\nArtist: " + contents.artist.name;
                     }
                     let message = {
                         body: construct,
@@ -8704,13 +8711,15 @@ async function sendAiMessage(api, event, ss) {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 utils.logged("search_music " + sqq);
                 const search = await yt.music.search(sqq, { type: "song" });
-                if (search.results) {
-                    const stream = await yt.download(search.results[0].id, {
+                const contents = search.contents[0].contents[0];
+
+                if (contents) {
+                    const stream = await yt.download(contents.id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
-                    utils.logged("downloading_attachment " + search.results[0].title);
+                    utils.logged("downloading_attachment " + contents.title);
                     let filename = __dirname + "/cache/attach_" + utils.getTimestamp() + ".mp3";
                     let file = fs.createWriteStream(filename);
 
@@ -8729,13 +8738,15 @@ async function sendAiMessage(api, event, ss) {
                 const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
                 utils.logged("search_video " + sqq);
                 const search = await yt.search(sqq, { type: "video" });
-                if (search.results) {
-                    const stream = await yt.download(search.results[0].id, {
+                const contents = search.contents[0].contents[0];
+
+                if (contents) {
+                    const stream = await yt.download(contents.id, {
                         type: "audio+video",
                         quality: "best",
                         format: "mp4",
                     });
-                    utils.logged("downloading_attachment " + search.results[0].title);
+                    utils.logged("downloading_attachment " + contents.title);
                     let filename = __dirname + "/cache/attach_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
