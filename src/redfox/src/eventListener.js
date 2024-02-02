@@ -503,6 +503,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
 
     switch (v.delta.class) {
         case "ReadReceipt":
+        case "AdminTextMessage":
             var fmtMsg;
             try {
                 fmtMsg = utils.formatDeltaReadReceipt(v.delta);
@@ -517,40 +518,6 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
             return (function () {
                 globalCallback(null, fmtMsg);
             })();
-        case "AdminTextMessage":
-            switch (v.delta.type) {
-                case "change_thread_quick_reaction":
-                case "change_thread_theme":
-                case "change_thread_nickname":
-                case "magic_words":
-                case "joinable_group_link_mode_change":
-                case "change_thread_approval_mode":
-                case "group_poll":
-                case "group_thread_created":
-                case "change_thread_admins":
-                case "messenger_call_log":
-                case "pin_messages_v2":
-                case "unpin_messages_v2":
-                case "participant_joined_group_call":
-                    var fmtMsg;
-                    try {
-                        fmtMsg = utils.formatDeltaEvent(v.delta);
-                    } catch (err) {
-                        return globalCallback({
-                            error: "Problem parsing message object.",
-                            detail: err,
-                            res: v.delta,
-                            type: "parse_error",
-                        });
-                    }
-                    return (function () {
-                        globalCallback(null, fmtMsg);
-                    })();
-                default:
-                    utils.logged("unsupported_admin_text_message " + v.delta.type);
-                    return;
-            }
-            break;
         //For group images
         case "ForcedFetch":
             if (!v.delta.threadKey) return;
