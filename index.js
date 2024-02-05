@@ -1432,9 +1432,7 @@ async function ai22(api, event, query, query2) {
             });
         }
     } else if (testCommand(api, query, "pin--add", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(api, event, "You need to reply pin add to a message which is not empty to pin it.");
         } else {
@@ -1442,36 +1440,28 @@ async function ai22(api, event, query, query2) {
             sendMessage(api, event, 'Message pinned.. Enter "pin" to show it.');
         }
     } else if (testCommand(api, query, "count--vowels", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(api, event, "You need to reply count --vowels to a message.");
         } else {
             sendMessage(api, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
         }
     } else if (testCommand(api, query, "count--consonants", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(api, event, "You need to reply count --consonants to a message.");
         } else {
             sendMessage(api, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
         }
     } else if (testCommand(api, query, "count", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(api, event, "You need to reply count to a message.");
         } else {
             sendMessage(api, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
         }
     } else if (testCommand(api, query2, "wfind", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wfind text" + "\n " + example[Math.floor(Math.random() * example.length)] + " wfind my name");
@@ -1487,9 +1477,7 @@ async function ai22(api, event, query, query2) {
             }
         }
     } else if (testCommand(api, query2, "translate", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (event.messageReply.body == "" || data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: translate language reply" + "\n " + example[Math.floor(Math.random() * example.length)] + " translate english [reply]");
@@ -1503,9 +1491,7 @@ async function ai22(api, event, query, query2) {
             }
         }
     } else if (testCommand(api, query, "totext", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || event.messageReply.attachments[0].type != "audio") {
                 sendMessage(api, event, "I cannot see an audio. Please reply totext to an audio.");
@@ -1527,9 +1513,7 @@ async function ai22(api, event, query, query2) {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
     } else if (testCommand(api, query2, "decrypt", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: decrypt key1:key2 instead.\n\n" + example[Math.floor(Math.random() * example.length)] + " decrypt fwegerghergerg:gergergergerg");
@@ -1743,9 +1727,7 @@ async function ai22(api, event, query, query2) {
         });
     } else if (testCommand(api, query2, "createImageVariation", event.senderID)) {
         //TODO: not working
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.messageReply.attachments.length < 1) {
             sendMessage(api, event, "I cannot see an image. Please reply createimagevar to an image.");
         } else if (event.messageReply.attachments.length > 1) {
@@ -1786,9 +1768,7 @@ async function ai22(api, event, query, query2) {
             });
         }
     } else if (testCommand(api, query2, "run", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: run language \n Categories:\nJava, Python, C, C++,\nJavaScript and PHP" + "\n\n" + example[Math.floor(Math.random() * example.length)] + " run python");
@@ -1831,9 +1811,7 @@ async function ai22(api, event, query, query2) {
             }
         }
     } else if (testCommand(api, query, "image--bgremove", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1) {
                 sendMessage(api, event, "I cannot see an image. Please reply image --bgremove to an image.");
@@ -1844,9 +1822,7 @@ async function ai22(api, event, query, query2) {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
     } else if (testCommand(api, query, "image--reverse", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || (event.messageReply.attachments[0].type != "photo" && event.messageReply.attachments[0].type != "animated_image" && event.messageReply.attachments[0].type != "sticker")) {
                 sendMessage(api, event, "I cannot see an image. Please reply image --reverse to an image.");
@@ -1861,9 +1837,7 @@ async function ai22(api, event, query, query2) {
             sendMessage(api, event, "Hold on... There is still a request in progress.");
         }
     } else if (testCommand(api, query, "gphoto", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.isGroup) {
             if (event.messageReply.attachments.length < 1) {
                 sendMessage(api, event, "I cannot see an image. Please reply gphoto to an image.");
@@ -1959,9 +1933,7 @@ async function ai(api, event) {
     let findPr = findPrefix(event, api.getCurrentUserID());
 
     if (testCommand(api, query2, "image", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: image text" + "\n " + example[Math.floor(Math.random() * example.length)] + " searchimg melvin jones repol");
@@ -1975,9 +1947,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "search", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " search Who is Melvin Jones Repol");
@@ -1988,9 +1958,7 @@ async function ai(api, event) {
             sendMessage(api, event, web);
         }
     } else if (testCommand(api, query2, "search--dnt", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: search --dnt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " search --dnt project orion");
@@ -2019,9 +1987,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "bb", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -2031,7 +1997,7 @@ async function ai(api, event) {
             const prompt = data.join(" ");
             const requestData = {
                 textInput: prompt,
-                allMessages: [{ user: "You are `bb` a generative AI! You will output concise response in 1 paragraph 3 sentences and you can use emojis too. Here is the question: " + prompt }],
+                allMessages: [{ user: "You are `bb` part of Project Orion and sister of `Mj` generative AI! You will output concise response in 1 paragraph 3 sentences and you can use emojis too. Here is the question: " + prompt }],
                 stream: "",
                 clickedContinue: false,
             };
@@ -2045,9 +2011,7 @@ async function ai(api, event) {
             }
         }
     } else if ((findPr != false && input.startsWith(findPr)) || testCommand(api, query2, "mj", event.senderID) || testCommand(api, query2, "beshy", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         //  return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
         let data = input.split(" ");
         if (data.length < 2 || (findPr != false && input == findPr)) {
@@ -2095,9 +2059,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "skynet", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -2124,9 +2086,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "chatgpt", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -2151,9 +2111,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "misaka", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -2185,9 +2143,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "chad", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -2210,9 +2166,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "nraf", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -2235,9 +2189,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "8ball", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, heySim[Math.floor(Math.random() * heySim.length)]);
@@ -2245,9 +2197,7 @@ async function ai(api, event) {
             sendMessage(api, event, Eball[Math.floor(Math.random() * Eball.length)]);
         }
     } else if (testCommand(api, query2, "sim", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, heySim[Math.floor(Math.random() * heySim.length)]);
@@ -2279,9 +2229,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "melbin", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, heyMelbin[Math.floor(Math.random() * heyMelbin.length)]);
@@ -2313,9 +2261,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "openai", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
@@ -2339,9 +2285,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "codex", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: codex text" + "\n " + example[Math.floor(Math.random() * example.length)] + " codex hello world in python");
@@ -2365,9 +2309,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "dell", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dell prompt" + "\n " + example[Math.floor(Math.random() * example.length)] + " dell a cat");
@@ -2400,9 +2342,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "poli", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: poli prompt" + "\n " + example[Math.floor(Math.random() * example.length)] + " poli a cat");
@@ -2477,9 +2417,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query, "list--admin", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (admin in users.admin) {
             getUserProfile(users.admin[admin], async function (name) {
@@ -2491,9 +2429,7 @@ async function ai(api, event) {
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(api, event, construct);
     } else if (testCommand(api, query, "list--owner", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         let owners = [];
         for (account in accounts) {
@@ -2512,9 +2448,7 @@ async function ai(api, event) {
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(api, event, construct);
     } else if (testCommand(api, query, "list--instance", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (account in accounts) {
             getUserProfile(accounts[account], async function (name) {
@@ -2718,9 +2652,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "say--jap", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: say --jap text" + "\n " + example[Math.floor(Math.random() * example.length)] + " say --jap project orion is cool");
@@ -2749,9 +2681,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "say", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: say text" + "\n " + example[Math.floor(Math.random() * example.length)] + " say I am melvin jones repol");
@@ -2770,9 +2700,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "aes--encrypt", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: aes --encrypt text" + "\n " + example[Math.floor(Math.random() * example.length)] + " aes --encrypt Hello World");
@@ -2782,9 +2710,7 @@ async function ai(api, event) {
             sendMessage(api, event, utils.encrypt(getDataFromQuery(data), key, iv) + "\n\nKey1: " + key.toString("hex") + "\nKey2: " + iv.toString("hex"));
         }
     } else if (testCommand(api, query, "stats", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let stat = [
             "Users: " + numberWithCommas(Object.keys(cmd).length) + "/" + numberWithCommas(users.list.length),
             "Groups: " + acGG.length + "/" + numberWithCommas(groups.list.length),
@@ -2795,15 +2721,11 @@ async function ai(api, event) {
         ];
         sendMessage(api, event, utils.formatOutput("Statistics", stat, "github.com/prj-orion"));
     } else if (testCommand(api, query, "uptime", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let uptime = ["Login: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
         sendMessage(api, event, utils.formatOutput("Uptime", uptime, "github.com/prj-orion"));
     } else if (testCommand(api, query, "tokens", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let token = [
             "Prompt: " + formatDecNum(settings.shared.tokens["gpt"]["prompt_tokens"] + settings.shared.tokens["davinci"]["prompt_tokens"]),
             "Completion: " + formatDecNum(settings.shared.tokens["gpt"]["completion_tokens"] + settings.shared.tokens["davinci"]["completion_tokens"]),
@@ -2812,9 +2734,7 @@ async function ai(api, event) {
         ];
         sendMessage(api, event, utils.formatOutput("Token Usage", token, "github.com/prj-orion"));
     } else if (testCommand(api, query, "sysinfo", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let avg_load = os.loadavg();
         let rom = await utils.getProjectTotalSize(__dirname + "/");
         let sysinfo = [
@@ -2833,9 +2753,7 @@ async function ai(api, event) {
         ];
         sendMessage(api, event, utils.formatOutput("System Info", sysinfo, "github.com/prj-orion"));
     } else if (testCommand(api, query, "ascii--random", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ascii --random text" + "\n " + example[Math.floor(Math.random() * example.length)] + " ascii --random hello world");
@@ -2846,9 +2764,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "ascii", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ascii font text" + "\n " + example[Math.floor(Math.random() * example.length)] + " ascii 3-D hello world");
@@ -2866,9 +2782,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "dns4", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns4 url" + "\n " + example[Math.floor(Math.random() * example.length)] + " dns4 google.com");
@@ -2880,9 +2794,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "dns6", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dns6 url" + "\n " + example[Math.floor(Math.random() * example.length)] + " dns6 google.com");
@@ -2894,9 +2806,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "getHeaders", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: getHeaders url" + "\n " + example[Math.floor(Math.random() * example.length)] + " header google.com");
@@ -2908,9 +2818,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "nslookup", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nslookup url" + "\n " + example[Math.floor(Math.random() * example.length)] + " nslookup google.com");
@@ -2922,9 +2830,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "ping", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ping url" + "\n " + example[Math.floor(Math.random() * example.length)] + " ping google.com");
@@ -2936,9 +2842,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "traceroute", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: traceroute url" + "\n " + example[Math.floor(Math.random() * example.length)] + " traceroute google.com");
@@ -2963,9 +2867,7 @@ async function ai(api, event) {
         }
         // TODO: covid and covid
     } else if (testCommand(api, query, "covid--global", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         const options = {
             method: "GET",
             url: "https://covid-19-coronavirus-statistics.p.rapidapi.com/v1/total",
@@ -2984,9 +2886,7 @@ async function ai(api, event) {
                 sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
     } else if (testCommand(api, query2, "covid", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: covid country" + "\n " + example[Math.floor(Math.random() * example.length)] + " covid Philippines");
@@ -3022,9 +2922,7 @@ async function ai(api, event) {
                 });
         }
     } else if (testCommand(api, query2, "nba", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: nba name" + "\n " + example[Math.floor(Math.random() * example.length)] + " nba Stephen Curry");
@@ -3065,9 +2963,7 @@ async function ai(api, event) {
                 });
         }
     } else if (testCommand(api, query2, "urlShortener", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
@@ -3103,9 +2999,7 @@ async function ai(api, event) {
                 });
         }
     } else if (testCommand(api, query2, "video--lyric", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video --lyric hello world");
@@ -3156,9 +3050,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "video", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video In The End by Linkin Park");
@@ -3209,9 +3101,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "music--lyric", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music --lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music --lyric hello world");
@@ -3260,9 +3150,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "music", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music In The End by Linkin Park");
@@ -3310,9 +3198,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "lyric", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: lyric text" + "\n " + example[Math.floor(Math.random() * example.length)] + " lyrics In The End by Linkin Park");
@@ -3338,9 +3224,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "binary--encode", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: binary --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " binary --encode hello world");
@@ -3354,9 +3238,7 @@ async function ai(api, event) {
             sendMessage(api, event, output);
         }
     } else if (testCommand(api, query2, "binary--decode", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: binary --decode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " binary --decode 0110100001101001");
@@ -3371,9 +3253,7 @@ async function ai(api, event) {
             sendMessage(api, event, stringOutput);
         }
     } else if (testCommand(api, query2, "base64--encode", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: base64 --encode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " base64 --encode hello world");
@@ -3383,9 +3263,7 @@ async function ai(api, event) {
             sendMessage(api, event, base64data);
         }
     } else if (testCommand(api, query2, "base64--decode", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: base64 --decode text" + "\n " + example[Math.floor(Math.random() * example.length)] + " base64 --decode aGVsbG8gd29ybGQ");
@@ -3395,9 +3273,7 @@ async function ai(api, event) {
             sendMessage(api, event, base642text);
         }
     } else if (testCommand(api, query2, "reverseText", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: reverseText text" + "\n " + example[Math.floor(Math.random() * example.length)] + " reverseText hello world");
@@ -3409,15 +3285,11 @@ async function ai(api, event) {
             sendMessage(api, event, joinArray);
         }
     } else if (testCommand(api, query, "pin--remove", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         delete settings.shared.pin[event.threadID];
         sendMessage(api, event, "Pinned message removed.");
     } else if (testCommand(api, query, "pin", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (!settings.shared.pin[event.threadID]) {
             if (event.isGroup) {
                 sendMessage(api, event, "There is no pinned message on this group chat.");
@@ -3428,9 +3300,7 @@ async function ai(api, event) {
             sendMessage(api, event, settings.shared.pin[event.threadID]);
         }
     } else if (testCommand(api, query2, "dictionary", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: dictionary text" + "\n " + example[Math.floor(Math.random() * example.length)] + " dictionary computer");
@@ -3452,9 +3322,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query, "ugly", event.senderID, "user", true) || testCommand(api, query, "ugly--random", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.isGroup) {
             api.getThreadInfo(event.threadID, (err, info) => {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
@@ -3505,9 +3373,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Your ugly as wtf!!");
         }
     } else if (testCommand(api, query, "pair", event.senderID, "user", true) || testCommand(api, query, "pair--random", event.senderID, "user", true) || testCommand(api, query, "lovetest", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (query.startsWith("lovetest")) {
             let data = input.split(" ");
             if (data.length < 3) {
@@ -3616,9 +3482,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Why don't you love yourself?");
         }
     } else if (testCommand(api, query, "@everyone", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.isGroup) {
             api.getThreadInfo(event.threadID, (err, info) => {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
@@ -3654,9 +3518,7 @@ async function ai(api, event) {
         sendMessage(api, event, message);
         */
     } else if (testCommand(api, query2, "baybayin", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: baybayin text" + "\n " + example[Math.floor(Math.random() * example.length)] + " baybayin ako ay filipino");
@@ -3668,9 +3530,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "doubleStruck", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: doubleStruck text" + "\n " + example[Math.floor(Math.random() * example.length)] + " doublestruck Hello World");
@@ -3679,9 +3539,7 @@ async function ai(api, event) {
             sendMessage(api, event, toDoublestruck(data.join(" ")));
         }
     } else if (testCommand(api, query2, "weather", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: weather location" + "\n " + example[Math.floor(Math.random() * example.length)] + " weather caloocan city");
@@ -3749,9 +3607,7 @@ async function ai(api, event) {
             );
         }
     } else if (testCommand(api, query2, "facts", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: facts text" + "\n " + example[Math.floor(Math.random() * example.length)] + " facts computer");
@@ -3761,52 +3617,38 @@ async function ai(api, event) {
             parseImage(api, event, url, __dirname + "/cache/facts_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query, "wouldYourRather", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let getWyr = wyr[Math.floor(Math.random() * wyr.length)];
         sendMessage(api, event, "Would you rather " + getWyr.ops1 + " or " + getWyr.ops2);
     } else if (testCommand(api, query, "facts--meow", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         sendMessage(api, event, cat[Math.floor(Math.random() * cat.length)]);
     } else if (testCommand(api, query, "facts--math", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("http://numbersapi.com/random/math").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, response);
         });
     } else if (testCommand(api, query, "facts--date", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("http://numbersapi.com/random/date").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, response);
         });
     } else if (testCommand(api, query, "facts--trivia", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("http://numbersapi.com/random/trivia").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, response);
         });
     } else if (testCommand(api, query, "facts--year", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("http://numbersapi.com/random/year").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, response);
         });
     } else if (testCommand(api, query2, "getProfilePic", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let id;
         if (event.type == "message_reply" && event.senderID != api.getCurrentUserID()) {
             id = event.messageReply.senderID;
@@ -3815,9 +3657,7 @@ async function ai(api, event) {
         }
         parseImage(api, event, getProfilePic(id), __dirname + "/cache/profilepic_" + utils.getTimestamp() + ".png");
     } else if (testCommand(api, query2, "github", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: github username" + "\n " + example[Math.floor(Math.random() * example.length)] + " github mrepol742");
@@ -3882,9 +3722,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "periodicTable", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: element name" + "\n " + example[Math.floor(Math.random() * example.length)] + " element hydrogen");
@@ -3916,9 +3754,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "npm", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: npm name" + "\n " + example[Math.floor(Math.random() * example.length)] + " npm mrepol742");
@@ -3945,9 +3781,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "steam", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: steam name" + "\n " + example[Math.floor(Math.random() * example.length)] + " steam minecraft");
@@ -3976,9 +3810,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "imdb", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: imdb name" + "\n " + example[Math.floor(Math.random() * example.length)] + " imdb iron man");
@@ -4007,9 +3839,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "itunes", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: itunes title" + "\n " + example[Math.floor(Math.random() * example.length)] + " itunes in the end");
@@ -4038,9 +3868,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query, "car", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/car").then((response) => {
             if (response == null) return sendMessage(api, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             let image = response.image;
@@ -4056,9 +3884,7 @@ async function ai(api, event) {
             });
         });
     } else if (testCommand(api, query, "rcolor", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
             if (response == null) return sendMessage(api, event, "Unfortunately color fades away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             let hex = response.hex;
@@ -4076,25 +3902,19 @@ async function ai(api, event) {
             });
         });
     } else if (testCommand(api, query, "pickuplines", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
             if (response == null) return sendMessage(api, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             sendMessage(api, event, response.pickupline);
         });
     } else if (testCommand(api, query, "fbi", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let message = {
             attachment: fs.createReadStream(__dirname + "/src/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
         sendMessage(api, event, message);
     } else if (testCommand(api, query2, "friendlist", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         api.getFriendsList((err, data) => {
             if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             let countBirthdays = 0;
@@ -4107,9 +3927,7 @@ async function ai(api, event) {
             sendMessage(api, event, utils.formatOutput("Bot Friend List", [data.length + " friends", countBirthdays + " birthdays"], "github.com/prj-orion"));
         });
     } else if (testCommand(api, query2, "thread--emoji", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: thread --emoji emoji" + "\n " + example[Math.floor(Math.random() * example.length)] + " thread --emoji 😂");
@@ -4123,9 +3941,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "sendReport", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (isGoingToFast1(event, userWhoSendDamnReports, 30)) {
             sendMessage(api, event, "Please wait a while. Before sending another report.");
             return;
@@ -4374,9 +4190,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "fbdl", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: fbdl url instead.");
@@ -4424,9 +4238,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "top", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
             if (!user.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
@@ -4472,32 +4284,16 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query2, "top--quiz", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
             let lead = [];
             for (let i = 0; i < users.list.length; i++) {
-                if (users.list[i].quiz_answered_incorrect || users.list[i].quiz_answered_correct) {
+                if (users.list[i].quiz_answered_correct) {
                     let quiz = {
                         name: users.list[i].firstName,
                         balance: users.list[i].balance,
+                        score: users.list[i].quiz_answered_correct,
                     };
-                    let count = 0;
-                    if (users.list[i].quiz_answered_incorrect) {
-                        count += users.list[i].quiz_answered_incorrect;
-                    }
-                    if (users.list[i].quiz_answered_correct) {
-                        let divide = false;
-                        if (count > 0) {
-                            divide = true;
-                        }
-                        count += users.list[i].quiz_answered_correct;
-                        if (divide) {
-                            count /= 2;
-                        }
-                    }
-                    quiz["score"] = count;
                     lead.push(quiz);
                 }
             }
@@ -4510,9 +4306,7 @@ async function ai(api, event) {
             sendMessage(api, event, utils.formatOutput("Top User Quiz", construct, "github.com/prj-orion"));
         });
     } else if (testCommand(api, query2, "top--global", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
             if (!user.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
@@ -4543,9 +4337,7 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (name) {
             if (!name.name) {
                 return sendMessage(api, event, "User not found!");
@@ -4597,9 +4389,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "mdl", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mdl text" + "\n " + example[Math.floor(Math.random() * example.length)] + " mdl detective conan");
@@ -4634,9 +4424,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "mal", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: mal text" + "\n " + example[Math.floor(Math.random() * example.length)] + " mal detective conan");
@@ -4749,9 +4537,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "add--user", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
@@ -4785,9 +4571,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "thread--theme", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(
@@ -5078,9 +4862,7 @@ async function ai(api, event) {
             fontIgnore(api, event, id);
         }
     } else if (testCommand(api, query2, "owner", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         const login = api.getCurrentUserID();
         const uid = settings[login].owner;
 
@@ -5342,9 +5124,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query, "group", event.senderID, "user")) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: group type" + "\n " + example[Math.floor(Math.random() * example.length)] + " group --member");
@@ -5462,9 +5242,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query, "tid", event.senderID, "user", true) || testCommand(api, query2, "gid", event.senderID) || testCommand(api, query, "uid", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (event.type == "message" && groups.list.find((thread) => event.threadID === thread.id) && (query == "tid" || query == "gid")) {
             getGroupProfile(event.threadID, async function (group) {
                 if (group.name != null) {
@@ -5501,9 +5279,7 @@ async function ai(api, event) {
             sendMessage(api, event, utils.formatOutput("!--!", JSON.parse("[" + event.senderID + "]"), "github.com/prj-orion"));
         }
     } else if (testCommand(api, query2, "cmd", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         let NP = "\n\n< prev  ─────────  next >";
         if (data[1] == "next") {
@@ -5535,9 +5311,7 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, prev, admin, owner and root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
         }
     } else if (testCommand(api, query2, "wiki", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wiki text" + "\n " + example[Math.floor(Math.random() * example.length)] + " wiki Google");
@@ -5574,9 +5348,7 @@ async function ai(api, event) {
         testCommand(api, query2, "kill", event.senderID) ||
         testCommand(api, query2, "smug", event.senderID)
     ) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
@@ -5619,9 +5391,7 @@ async function ai(api, event) {
         testCommand(api, query2, "jokeover", event.senderID) ||
         testCommand(api, query2, "blur", event.senderID)
     ) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         let prrr = data[0].replace(/[^\w\s]/gi, "");
         if (data.length < 2 && event.type != "message_reply") {
@@ -5646,9 +5416,7 @@ async function ai(api, event) {
             getPopcatImage(api, event, id, prrr);
         }
     } else if (testCommand(api, query2, "ship", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
@@ -5695,9 +5463,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "1v1", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: 1v1 @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " 1v1 @Edogawa Conan @Ran Mouri");
@@ -5745,9 +5511,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "formatNumbers", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: formatNumbers number" + "\n " + example[Math.floor(Math.random() * example.length)] + " formatnumbers 326346436");
@@ -5756,9 +5520,7 @@ async function ai(api, event) {
             sendMessage(api, event, numberWithCommas(data.join(" ")));
         }
     } else if (testCommand(api, query2, "stalk", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: stalk @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " stalk @Zero Two");
@@ -5787,9 +5549,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "morse", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: morse text" + "\n " + example[Math.floor(Math.random() * example.length)] + " morse .... . .-.. .-.. ---");
@@ -5801,9 +5561,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "lulcat", event.senderID) || testCommand(api, query2, "mock", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: " + data[0] + " text" + "\n " + example[Math.floor(Math.random() * example.length)] + " " + data[0] + " hello world");
@@ -5815,9 +5573,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "coding", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
             if (response == null) return sendMessage(api, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             let url = response.url;
@@ -5834,36 +5590,26 @@ async function ai(api, event) {
             });
         });
     } else if (testCommand(api, query, "joke", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         sendMessage(api, event, joke[Math.floor(Math.random() * joke.length)]);
     } else if (testCommand(api, query, "barrier", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let message = {
             body: "Anti horny barrier activated.",
             attachment: fs.createReadStream(__dirname + "/src/web/barrier.jpg"),
         };
         sendMessage(api, event, message);
     } else if (testCommand(api, query, "dyk", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         sendMessage(api, event, "Did you know?\n\n" + dyk[Math.floor(Math.random() * dyk.length)]);
     } else if (testCommand(api, query, "thoughts", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
             if (response == null) return sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
             sendMessage(api, event, response.result);
         });
     } else if (testCommand(api, query2, "drake", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: drake text1: text2" + "\n " + example[Math.floor(Math.random() * example.length)] + " drake error: bug");
@@ -5873,9 +5619,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/drake_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "pika", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pika text" + "\n " + example[Math.floor(Math.random() * example.length)] + " pika hayssss");
@@ -5884,22 +5628,16 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/pikachu?text=" + data.join(" "), __dirname + "/cache/pika_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query, "meme", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/meme").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             parseImage(api, event, response.image, __dirname + "/cache/meme_" + utils.getTimestamp() + ".png");
         });
     } else if (testCommand(api, query, "conan", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         parseImage(api, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/conan_" + utils.getTimestamp() + ".png");
     } else if (testCommand(api, query2, "oogway", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: oogway text" + "\n " + example[Math.floor(Math.random() * example.length)] + " oogway bug is not an error");
@@ -5908,9 +5646,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/oogway?text=" + data.join(" "), __dirname + "/cache/oogway_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "hanime", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
             if (!user.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
@@ -5933,9 +5669,7 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query2, "anime", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(
@@ -5955,9 +5689,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "getImage", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: getImage url" + "\n " + example[Math.floor(Math.random() * example.length)] + " parseImage https://mrepol742.github.io/favicon.ico");
@@ -5971,9 +5703,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "qrcode", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
@@ -5986,9 +5716,7 @@ async function ai(api, event) {
             parseImage(api, event, "http://api.qrserver.com/v1/create-qr-code/?150x150&data=" + data.join(" "), __dirname + "/cache/qrcode_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "alert", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: alert text" + "\n " + example[Math.floor(Math.random() * example.length)] + " alert hello world");
@@ -5997,9 +5725,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/alert?text=" + data.join(" "), __dirname + "/cache/alert_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "caution", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: caution text" + "\n " + example[Math.floor(Math.random() * example.length)] + " caution bug is not an error");
@@ -6008,9 +5734,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/caution_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "screenshot", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             let message = {
@@ -6028,9 +5752,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "unforgivable", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unforgivale text" + "\n " + example[Math.floor(Math.random() * example.length)] + " god explicit content");
@@ -6039,9 +5761,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/unforgivable?text=" + data.join(" "), __dirname + "/cache/god_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "sadcat", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: sadcat text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sadcat meoww");
@@ -6050,9 +5770,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/sadcat_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "pooh", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: pooh text1: text2" + "\n " + example[Math.floor(Math.random() * example.length)] + " pooh color: colour");
@@ -6062,19 +5780,13 @@ async function ai(api, event) {
             parseImage(api, event, "https://api.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/pooh_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query, "wallpaper--land--random", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         parseImage(api, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
     } else if (testCommand(api, query, "wallpaper--port--random", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         parseImage(api, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
     } else if (testCommand(api, query2, "wallpaper--land", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wallpaper --landscape text" + "\n " + example[Math.floor(Math.random() * example.length)] + " landscape night");
@@ -6083,9 +5795,7 @@ async function ai(api, event) {
             parseImage(api, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
         }
     } else if (testCommand(api, query2, "wallpaper--port", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: wallpaper --portrait text" + "\n " + example[Math.floor(Math.random() * example.length)] + " portrait rgb");
@@ -6095,9 +5805,7 @@ async function ai(api, event) {
         }
         //TODO: continue here
     } else if (testCommand(api, query2, "qoute", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
@@ -6144,9 +5852,7 @@ async function ai(api, event) {
             }
         }
     } else if (testCommand(api, query2, "time--timezone", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
@@ -6167,9 +5873,7 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query, "newyear", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         // TODO: update
         let yr = new Date().getFullYear() + 1;
         let future = new Date("Jan 1, " + yr + " 00:00:00").getTime();
@@ -6184,9 +5888,7 @@ async function ai(api, event) {
         };
         sendMessage(api, event, message);
     } else if (testCommand(api, query, "christmas", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         // TODO: update
         let yr = new Date().getFullYear();
         let future = new Date("Dec 25, " + yr + " 00:00:00").getTime();
@@ -6201,9 +5903,7 @@ async function ai(api, event) {
         };
         sendMessage(api, event, message);
     } else if (testCommand(api, query, "verse--random", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             let result;
@@ -6214,9 +5914,7 @@ async function ai(api, event) {
             sendMessage(api, event, result);
         });
     } else if (testCommand(api, query, "verse--today", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             let result;
@@ -6227,9 +5925,7 @@ async function ai(api, event) {
             sendMessage(api, event, result);
         });
     } else if (testCommand(api, query2, "verse", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n " + example[Math.floor(Math.random() * example.length)] + " verse Job 4:9");
@@ -6253,42 +5949,84 @@ async function ai(api, event) {
         sendMessage(api, event, "The AppState refreshed.");
         fb_stateD = utils.getCurrentTime();
     } else if (testCommand(api, query, "state--save", event.senderID, "owner", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
         saveState();
         sendMessage(api, event, "The state have saved successfully.");
     } else if (testCommand(api, query, "test", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         if (crashes > 0) {
             sendMessage(api, event, utils.formatOutput("Crash", [crashes + " uncaught exception "], "github.com/prj-orion"));
         } else {
             sendMessage(api, event, "It seems like everything is normal.");
         }
     } else if (testCommand(api, query, "setNickname--random", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
         });
-    } else if (testCommand(api, query, "quiz", event.senderID, "user", true)) {
-        if (isGoingToFast(api, event)) {
-            return;
+    } else if (testCommand(api, query, "coinflip--token", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) return;
+        let data = input.split(" ");
+        if (data.length < 4) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip --token amount type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip --token 200 heads");
+        } else {
+            let body = getDataFromQuery(data).split(" ");
+            body.shift();
+            if (!/^\d+$/.test(body[0])) return sendMessage(api, event, "Invalid token amount!");
+
+            if (body[1] == "heads" || body[1] == "tails") {
+                const picker = Math.floor(Math.random() * 2);
+                getUserProfile(event.senderID, async function (name) {
+                    if ((picker == 1 && body[1] == "heads") || (picker == 0 && body[1] == "tails")) {
+                        const points = Math.floor(Math.random() * 1500);
+                        addBalance(name, points);
+                        sendMessage(api, event, "You win!");
+                    } else {
+                        removeBalance(name, 1000);
+                        sendMessage(api, event, "You loss!");
+                    }
+                });
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip --token amount type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip --token 200 heads");
+            }
         }
+    } else if (testCommand(api, query, "coinflip", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) return;
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip heads");
+        } else {
+            data.shift();
+            let body = data.join(" ");
+            if (body == "heads" || body == "tails") {
+                const picker = Math.floor(Math.random() * 2);
+                getUserProfile(event.senderID, async function (name) {
+                    if ((picker == 1 && body == "heads") || (picker == 0 && body == "tails")) {
+                        const points = Math.floor(Math.random() * 1500);
+                        addBalance(name, points);
+                        sendMessage(api, event, "You win!");
+                    } else {
+                        removeBalance(name, 1000);
+                        sendMessage(api, event, "You loss!");
+                    }
+                });
+            } else {
+                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip heads");
+            }
+        }
+    } else if (testCommand(api, query, "quiz", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) return;
         const picker = Math.floor(Math.random() * quiz.length);
         let construct = quiz[picker].question + "\n";
         let cAA = "";
 
         if (quiz[picker].choices) {
             let choiceN = ["A", "B", "C", "D"];
-            for (choice in quiz[picker].choices) {
-                let c = quiz[picker].choices[choice];
+            let defineChoices = shuffle(quiz[picker].choices);
+            for (choice in defineChoices) {
+                let c = defineChoices[choice];
                 construct += "\n" + choiceN[choice] + ". " + c;
                 if (c.replaceAll(" ", "").toLowerCase() == quiz[picker].answer) {
                     cAA = choiceN[choice].toLowerCase();
@@ -6297,6 +6035,7 @@ async function ai(api, event) {
         }
 
         const answer = quiz[picker].answer;
+
         api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
             if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
 
@@ -6318,9 +6057,7 @@ async function ai(api, event) {
             }
         });
     } else if (testCommand(api, query2, "setNickname", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setNickname text" + "\n " + example[Math.floor(Math.random() * example.length)] + " setnickname Darling");
@@ -6331,9 +6068,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "setBirthday", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setBirthday date" + "\n " + example[Math.floor(Math.random() * example.length)] + " setbirthday 06/13/2002");
@@ -6352,9 +6087,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "setTimezone", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: settimezone timezone" + "\n " + example[Math.floor(Math.random() * example.length)] + " settimezone Asia/Manila");
@@ -6373,9 +6106,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "setAddress", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setAddress address" + "\n " + example[Math.floor(Math.random() * example.length)] + " setaddress Caloocan City, Philippines");
@@ -6394,9 +6125,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "setBio", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setBio bio" + "\n " + example[Math.floor(Math.random() * example.length)] + " setBio I liked playing games and watching movies.");
@@ -6411,9 +6140,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "setUsername", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setUsername username" + "\n " + example[Math.floor(Math.random() * example.length)] + " setUsername mrepol742");
@@ -6431,9 +6158,7 @@ async function ai(api, event) {
             });
         }
     } else if (testCommand(api, query2, "setGender", event.senderID)) {
-        if (isGoingToFast(api, event)) {
-            return;
-        }
+        if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setGender gender" + "\n " + example[Math.floor(Math.random() * example.length)] + " setgender male");
@@ -9501,4 +9226,15 @@ function updateGroupData(gc, gid) {
             group["members"] = arr.length;
         }
     });
+}
+
+function shuffle(array) {
+    let currentIndex = array.length,
+        randomIndex;
+    while (currentIndex > 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
 }
