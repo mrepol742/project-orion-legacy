@@ -5973,12 +5973,16 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip heads");
         } else {
             data.shift();
+            const picker = Math.floor(Math.random() * 2);
             if (/^\d+$/.test(data[0])) {
                 const points = parseInt(data[0]);
-                const picker = Math.floor(Math.random() * 2);
                 if (/^(head(s|)|tail(s|))$/.test(data[1])) {
                     getUserProfile(event.senderID, async function (name) {
-                        if ((picker == 1 && /^head(s|)$/.test(data[1])) || (picker == 0 && /^tail(s|)$/.test(data[1]))) {
+                        if (!name.balance && event.senderID != settings.shared.root) {
+                            sendMessage(api, event, "You have 0 $ balance yet.");
+                        } else if (points >= name.balance && event.senderID != settings.shared.root) {
+                            sendMessage(api, event, "You don't have enough balance!");
+                        } else if ((picker == 1 && /^head(s|)$/.test(data[1])) || (picker == 0 && /^tail(s|)$/.test(data[1]))) {
                             addBalance(name, points);
                             sendMessage(api, event, "You win!");
                         } else {
