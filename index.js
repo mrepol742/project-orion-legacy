@@ -6595,11 +6595,7 @@ function isGoingToFast(api, event) {
     let input = eventB.normalize("NFKC");
     commandCalls++;
     utils.logged("event_body " + event.threadID + " " + input);
-    if (
-        !users.list.find((user) => event.senderID === user.id) ||
-        // update old user data to newer ones
-        !!users.list.find((user) => event.senderID === user.id && user["name"] === undefined)
-    ) {
+    if (users.list.find((user) => event.senderID === user.id)) {
         api.getUserInfo(event.senderID, async (err, data1) => {
             if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             utils.logged("new_user " + event.threadID + " " + data1[event.senderID].name);
@@ -6622,6 +6618,14 @@ function isGoingToFast(api, event) {
             api.muteThread(event.threadID, -1, (err) => {
                 if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             });
+        });
+    }
+    if (!!users.list.find((user) => event.senderID === user.id && user["name"] === undefined)) {
+        api.getUserInfo(event.senderID, async (err, data1) => {
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+            utils.logged("old_user " + event.threadID + " " + data1[event.senderID].name);
+            updateUserData(data1, event.senderID);
+            reactMessage(api, event, ":heart:");
         });
     }
     if (!users.bot.includes(event.senderID)) {
