@@ -1561,6 +1561,7 @@ async function ai22(api, event, query, query2) {
                         getUserProfile(transferTo, async function (name1) {
                             addBalance(name1, amount);
                         });
+                        removeBalance(name, amount);
                         if (event.senderID != settings.shared.root) {
                             removeBalance(name, 500);
                         }
@@ -4887,6 +4888,38 @@ async function ai(api, event) {
                     addBalance(user, 4000);
                 });
             }
+        }
+    } else if (testCommand(api, query2, "penalty", event.senderID, "admin")) {
+        let data = input.split(" ");
+        if (data.length < 2 && event.type != "message_reply") {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty @Zero Two");
+        } else {
+            let id = Object.keys(event.mentions)[0];
+            if (!id) {
+                if (event.type == "message_reply") {
+                    id = event.messageReply.senderID;
+                } else {
+                    let user = getDataFromQuery(data);
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user)) {
+                        id = user;
+                    } else {
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty @Zero Two");
+                    }
+                }
+            }
+            getUserProfile(id, async function (user) {
+                if (!user.name) {
+                    return sendMessage(api, event, "User not found!");
+                }
+                if (!user.balance) {
+                    user["balance"] = 5000;
+                }
+                user.balance = -5000;
+                sendMessage(api, event, user.firstName + " has been penalize!");
+            });
         }
     } else if (testCommand(api, query2, "block--user", event.senderID, "owner")) {
         let data = input.split(" ");
