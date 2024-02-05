@@ -4899,7 +4899,8 @@ async function ai(api, event) {
                 if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
                 } else {
-                    let user = getDataFromQuery(data);
+                    data.shift();
+                    let user = data.join(" ");
                     let attem = getIdFromUrl(user);
                     if (/^[0-9]+$/.test(attem)) {
                         id = attem;
