@@ -4889,7 +4889,7 @@ async function ai(api, event) {
                 });
             }
         }
-    } else if (testCommand(api, query2, "penalty", event.senderID, "admin")) {
+    } else if (testCommand(api, query2, "penalty", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: penalty @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty @Zero Two");
@@ -4915,7 +4915,7 @@ async function ai(api, event) {
                     return sendMessage(api, event, "User not found!");
                 }
                 if (!user.balance) {
-                    user["balance"] = 5000;
+                    user["balance"] = -5000;
                 }
                 user.balance = -5000;
                 sendMessage(api, event, user.firstName + " has been penalize!");
