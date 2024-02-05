@@ -5966,32 +5966,6 @@ async function ai(api, event) {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
         });
-    } else if (testCommand(api, query, "coinflip--token", event.senderID, "user")) {
-        if (isGoingToFast(api, event)) return;
-        let data = input.split(" ");
-        if (data.length < 4) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip --token amount type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip --token 200 heads");
-        } else {
-            let body = getDataFromQuery(data).split(" ");
-            body.shift();
-            if (!/^\d+$/.test(body[0])) return sendMessage(api, event, "Invalid token amount!");
-
-            if (body[1] == "heads" || body[1] == "tails") {
-                const picker = Math.floor(Math.random() * 2);
-                getUserProfile(event.senderID, async function (name) {
-                    if ((picker == 1 && body[1] == "heads") || (picker == 0 && body[1] == "tails")) {
-                        const points = Math.floor(Math.random() * 1500);
-                        addBalance(name, points);
-                        sendMessage(api, event, "You win!");
-                    } else {
-                        removeBalance(name, 1000);
-                        sendMessage(api, event, "You loss!");
-                    }
-                });
-            } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip --token amount type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip --token 200 heads");
-            }
-        }
     } else if (testCommand(api, query, "coinflip", event.senderID, "user")) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
@@ -5999,16 +5973,29 @@ async function ai(api, event) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip heads");
         } else {
             data.shift();
-            let body = data.join(" ");
-            if (body == "heads" || body == "tails") {
+            if (/^\d+$/.test(data[0])) {
+                const points = parseInt(data[0]);
                 const picker = Math.floor(Math.random() * 2);
+                if (/^(head(s|)|tail(s|))$/.test(data[1])) {
+                    getUserProfile(event.senderID, async function (name) {
+                        if ((picker == 1 && /^head(s|)$/.test(data[1])) || (picker == 0 && /^tail(s|)$/.test(data[1]))) {
+                            addBalance(name, points);
+                            sendMessage(api, event, "You win!");
+                        } else {
+                            removeBalance(name, points);
+                            sendMessage(api, event, "You loss!");
+                        }
+                    });
+                } else {
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip token type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip 100 heads");
+                }
+            } else if (/^(head(s|)|tail(s|))$/.test(data[0])) {
                 getUserProfile(event.senderID, async function (name) {
-                    if ((picker == 1 && body == "heads") || (picker == 0 && body == "tails")) {
-                        const points = Math.floor(Math.random() * 1500);
-                        addBalance(name, points);
+                    if ((picker == 1 && /^head(s|)$/.test(data[0])) || (picker == 0 && /^tail(s|)$/.test(data[0]))) {
+                        addBalance(name, 500);
                         sendMessage(api, event, "You win!");
                     } else {
-                        removeBalance(name, 1000);
+                        removeBalance(name, 250);
                         sendMessage(api, event, "You loss!");
                     }
                 });
