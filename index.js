@@ -1365,7 +1365,7 @@ async function ai22(api, event, query, query2) {
                 let rawUserAnswer = input;
                 let userAnswer = rawUserAnswer.replaceAll(" ", "").toLowerCase();
                 getUserProfile(event.senderID, async function (name) {
-                    const points = Math.floor(Math.random() * 3000);
+                    const points = Math.floor(Math.random() * 1500);
                     if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
                         addBalance(name, points);
                     } else {
@@ -1725,6 +1725,8 @@ async function ai22(api, event, query, query2) {
                                                 }
                                             }
                                         }
+
+                                        return;
                                     }
                                 );
                             }
@@ -4436,6 +4438,9 @@ async function ai(api, event) {
 
                     updateGroupData(gc, event.threadID);
 
+                    if (event.senderID != settings.shared.root) {
+                        removeBalance(user, 1000);
+                    }
                     if (gc.isGroup) {
                         let lead = [];
                         let participantIDs = gc.participantIDs;
@@ -4463,11 +4468,46 @@ async function ai(api, event) {
                     } else {
                         sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((user.balance / 1000) * 0.007) + "$ " + user.firstName], "github.com/prj-orion"));
                     }
-                    if (event.senderID != settings.shared.root) {
-                        removeBalance(user, 1000);
-                    }
                 });
             }
+        });
+    } else if (testCommand(api, query2, "top--quiz", event.senderID, "user", true)) {
+        if (isGoingToFast(api, event)) {
+            return;
+        }
+        getUserProfile(event.senderID, async function (user) {
+            let lead = [];
+            for (let i = 0; i < users.list.length; i++) {
+                if (users.list[i].quiz_answered_incorrect || users.list[i].quiz_answered_correct) {
+                    let quiz = {
+                        name: users.list[i].firstName,
+                        balance: users.list[i].balance,
+                    };
+                    let count = 0;
+                    if (users.list[i].quiz_answered_incorrect) {
+                        count += users.list[i].quiz_answered_incorrect;
+                    }
+                    if (users.list[i].quiz_answered_correct) {
+                        let divide = false;
+                        if (count > 0) {
+                            divide = true;
+                        }
+                        count += users.list[i].quiz_answered_correct;
+                        if (divide) {
+                            count /= 2;
+                        }
+                    }
+                    quiz["score"] = count;
+                    lead.push(quiz);
+                }
+            }
+            lead.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+
+            let construct = [];
+            for (let i1 = 1; i1 < 31; i1++) {
+                construct.push(lead[i1 - 1].score + " points " + lead[i1 - 1].name);
+            }
+            sendMessage(api, event, utils.formatOutput("Top User Quiz", construct, "github.com/prj-orion"));
         });
     } else if (testCommand(api, query2, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) {
@@ -4479,6 +4519,9 @@ async function ai(api, event) {
             } else if (1000 > user.balance && event.senderID != settings.shared.root) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
+                if (event.senderID != settings.shared.root) {
+                    removeBalance(user, 1000);
+                }
                 let lead = [];
                 for (let i = 0; i < users.list.length; i++) {
                     if (users.list[i].balance && users.list[i].id != settings.shared.root) {
@@ -4497,9 +4540,6 @@ async function ai(api, event) {
                     }
                 }
                 sendMessage(api, event, utils.formatOutput("Top User Global", construct, "github.com/prj-orion"));
-                if (event.senderID != settings.shared.root) {
-                    removeBalance(user, 1000);
-                }
             }
         });
     } else if (testCommand(api, query2, "balance", event.senderID, "user", true)) {
@@ -4507,16 +4547,13 @@ async function ai(api, event) {
             return;
         }
         getUserProfile(event.senderID, async function (name) {
-            if (!name.balance && event.senderID != settings.shared.root) {
-                sendMessage(api, event, "You have 0 $ balance yet.");
-            } else if (1000 > name.balance && event.senderID != settings.shared.root) {
-                sendMessage(api, event, "You don't have enough balance!");
-            } else {
-                sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
-                if (event.senderID != settings.shared.root) {
-                    removeBalance(name, 500);
-                }
+            if (!name.name) {
+                return sendMessage(api, event, "User not found!");
             }
+            if (event.senderID != settings.shared.root) {
+                removeBalance(name, 500);
+            }
+            sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
         });
     } else if (testCommand(api, query2, "balance--user", event.senderID)) {
         let data = input.split(" ");
@@ -4541,21 +4578,21 @@ async function ai(api, event) {
                 }
             }
             getUserProfile(event.senderID, async function (name) {
-                if (!name.balance && event.senderID != settings.shared.root) {
-                    sendMessage(api, event, "You have 0 $ balance yet.");
-                } else if (1000 > name.balance && event.senderID != settings.shared.root) {
-                    sendMessage(api, event, "You don't have enough balance!");
-                } else {
-                    getUserProfile(id, async function (name) {
-                        if (!name.balance) {
-                            sendMessage(api, event, name.firstName + " have 0 $ balance.");
-                        } else {
-                            sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
-                        }
-                    });
-                    if (id != settings.shared.root) {
-                        removeBalance(name, 1000);
+                if (id != settings.shared.root) {
+                    removeBalance(name, 1000);
+                }
+                getUserProfile(id, async function (name) {
+                    if (!name.name) {
+                        return sendMessage(api, event, "User not found!");
                     }
+                    if (!name.balance) {
+                        sendMessage(api, event, name.firstName + " have 0 $ balance.");
+                    } else {
+                        sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
+                    }
+                });
+                if (id != settings.shared.root) {
+                    removeBalance(name, 1000);
                 }
             });
         }
@@ -4889,6 +4926,14 @@ async function ai(api, event) {
                 });
             }
         }
+    } else if (testCommand(api, query2, "zzzzzzz", event.senderID, "root", true)) {
+        getUserProfile(event.senderID, async function (user) {
+            if (!user.balance) {
+                user["balance"] = 99999999999999;
+            }
+            user.balance = 99999999999999;
+            sendMessage(api, event, "Done.");
+        });
     } else if (testCommand(api, query2, "penalty", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
