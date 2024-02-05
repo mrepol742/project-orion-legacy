@@ -5966,7 +5966,7 @@ async function ai(api, event) {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
         });
-    } else if (testCommand(api, query, "coinflip--token", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "coinflip--token", event.senderID, "user")) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 4) {
@@ -5992,7 +5992,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: coinflip --token amount type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip --token 200 heads");
             }
         }
-    } else if (testCommand(api, query, "coinflip", event.senderID, "user", true)) {
+    } else if (testCommand(api, query, "coinflip", event.senderID, "user")) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
