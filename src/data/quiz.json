@@ -1146,7 +1146,7 @@
     {
         "question": "What is the name of the official residence of the President of the United States?",
         "choices" : [
-            "Buckingham Palace", "10 Downing Street", "The White Houseu", "Elysee Palace"
+            "Buckingham Palace", "10 Downing Street", "The White House", "Elysee Palace"
         ],
         "answer": "thewhitehouse",
         "topic": "politics"
