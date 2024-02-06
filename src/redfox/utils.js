@@ -35,10 +35,8 @@ function logged(data) {
         } else {
             console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", d.join(" "));
         }
-    } else if (!(data.code === undefined)) {
-        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", "\x1b[40m error_code\x1b[0m", data.code);
     } else {
-        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", data.stack);
+        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", data);
     }
 }
 

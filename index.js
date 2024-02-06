@@ -127,11 +127,13 @@ const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 /*
  * CREATE SERVER
  */
+/*
 const PORT = 8080;
 
 http.createServer(getRoutes()).listen(PORT, () => {
     utils.logged("server_running http://localhost:" + PORT);
 });
+*/
 
 /*
  * LOAD WEB
@@ -305,8 +307,11 @@ function redfox_fb(fca_state, login, cb) {
                     delete settingsThread[threads]["lock"];
                 }
             }
-            unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
-            unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
+
+            if (err && err.error && err.error == "unable to get cookie.") {
+                unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
+                unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
+            }
 
             if (typeof cb === "function") {
                 return cb(true);
@@ -405,8 +410,10 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
-                unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
-                unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
+                if (err && err.error && err.error == "unable to get cookie.") {
+                    unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
+                    unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
+                }
 
                 if (typeof cb === "function") {
                     return cb(true);
@@ -8311,25 +8318,7 @@ function getRoutes() {
         let ress = req.url;
         let url = ress.split("?")[0];
         utils.logged(req.method + " " + req.headers.origin + " " + url);
-        if (url == "/cache" || url == "/cache/index.html") {
-            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
-                let data = ress.split("?")[1];
-                if (fs.existsSync(__dirname + "/cache/" + data)) {
-                    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-                    res.setHeader("Content-Type", utils.getContentType(data));
-                    res.writeHead(200);
-                    res.end(fs.readFileSync(__dirname + "/cache/" + data, "utf8"));
-                } else {
-                    res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
-                    res.setHeader("Content-Type", "text/plain");
-                    res.writeHead(404);
-                    res.end(errorpage);
-                }
-            } else {
-                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
-                res.end();
-            }
-        } else if (url == "/search" || url == "/search/index.html") {
+        if (url == "/search" || url == "/search/index.html") {
             if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
                 let data = ress.split("?")[1];
                 let results = [];
@@ -8360,7 +8349,7 @@ function getRoutes() {
                     } catch (err) {}
                 } catch (err) {}
             } else {
-                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized/?utm_source=prj-orion-srvr" });
                 res.end();
             }
         } else if (url == "/searchimg" || url == "/searchimg/index.html") {
@@ -8379,19 +8368,7 @@ function getRoutes() {
                     res.end(JSON.stringify(results));
                 } catch (err) {}
             } else {
-                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
-                res.end();
-            }
-        } else if (url == "/query/get_block_user") {
-            if (settings.shared.cors.indexOf(req.headers.origin) !== -1) {
-                res.setHeader("Content-Type", "application/json");
-                res.writeHead(200);
-                let b = JSON.stringify(users.blocked);
-                let b2 = JSON.stringify(users.bot);
-                let b3 = JSON.stringify(users.muted);
-                res.end("{blocked: " + b + ", bot: " + b2 + ", muted: " + b3 + "}");
-            } else {
-                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized" });
+                res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized/?utm_source=prj-orion-srvr" });
                 res.end();
             }
         } else if (traceroute[url]) {
