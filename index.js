@@ -9188,6 +9188,8 @@ function handleError(err) {
 function updateUserData(user, uid) {
     getUserProfile(uid, async function (name) {
         if (name) {
+            name["name"] = user[uid].name;
+
             if (user[uid].firstName != "") {
                 name["firstName"] = user[uid].firstName;
             }
