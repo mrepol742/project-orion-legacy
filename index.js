@@ -301,14 +301,16 @@ function redfox_fb(fca_state, login, cb) {
     new redfox(fca_state, (err, api) => {
         if (err) {
             handleError({ stacktrace: err, cuid: login });
-            accounts = accounts.filter((item) => item !== login);
+
+            if (err && err.error && err.error == "unable to get cookie.") {
+
+                accounts = accounts.filter((item) => item !== login);
             for (threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                     delete settingsThread[threads]["lock"];
                 }
             }
 
-            if (err && err.error && err.error == "unable to get cookie.") {
                 unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
                 unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
             }
@@ -401,7 +403,9 @@ function redfox_fb(fca_state, login, cb) {
 
         api.eventListener(async (err, event) => {
             if (err) {
-                handleError({ stacktrace: err, cuid: login, e: event });
+
+                if (err && err.error && err.error == "unable to get cookie.") {
+                                  handleError({ stacktrace: err, cuid: login, e: event });
 
                 accounts = accounts.filter((item) => item !== login);
                 for (threads in settingsThread) {
@@ -409,8 +413,6 @@ function redfox_fb(fca_state, login, cb) {
                         delete settingsThread[threads]["lock"];
                     }
                 }
-
-                if (err && err.error && err.error == "unable to get cookie.") {
                     unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
                     unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
                 }
@@ -1376,7 +1378,7 @@ async function ai22(api, event, query, query2) {
                     if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
                         addBalance(name, points);
                     } else {
-                        removeBalance(name, 150);
+                        removeBalance(name, 500);
                     }
                 });
 
@@ -5989,7 +5991,14 @@ async function ai(api, event) {
                             sendMessage(api, event, "You have 0 $ balance yet.");
                         } else if (points >= name.balance && event.senderID != settings.shared.root) {
                             sendMessage(api, event, "You don't have enough balance!");
+                        } else if (points < 500) {
+                            sendMessage(api, event, "Token provided is too small! Minimum of 500 tokens.");
+                        } else if (points > 9999) {
+                            sendMessage(api, event, "Token provided is too larged! Maximum of 10, 000 tokens");
                         } else if ((picker == 1 && /^head(s|)$/.test(data[1])) || (picker == 0 && /^tail(s|)$/.test(data[1]))) {
+                            if (points >= 2000) {
+                                points = points - (points * .15);
+                            }
                             addBalance(name, points);
                             sendMessage(api, event, "You win!");
                         } else {
@@ -6006,7 +6015,7 @@ async function ai(api, event) {
                         addBalance(name, 500);
                         sendMessage(api, event, "You win!");
                     } else {
-                        removeBalance(name, 250);
+                        removeBalance(name, 200);
                         sendMessage(api, event, "You loss!");
                     }
                 });
@@ -6034,6 +6043,10 @@ async function ai(api, event) {
 
         const answer = quiz[picker].answer;
 
+        if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && settings.shared.root != event.senderID && settings.shared.delay && bn) {
+            await sleep(2000);
+        }
+        
         api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
             if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
 
