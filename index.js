@@ -5984,7 +5984,7 @@ async function ai(api, event) {
             data.shift();
             const picker = Math.floor(Math.random() * 2);
             if (/^\d+$/.test(data[0])) {
-                const points = parseInt(data[0]);
+                let points = parseInt(data[0]);
                 if (/^(head(s|)|tail(s|))$/.test(data[1])) {
                     getUserProfile(event.senderID, async function (name) {
                         if (!name.balance && event.senderID != settings.shared.root) {
@@ -5997,7 +5997,7 @@ async function ai(api, event) {
                             sendMessage(api, event, "Token provided is too larged! Maximum of 10, 000 tokens");
                         } else if ((picker == 1 && /^head(s|)$/.test(data[1])) || (picker == 0 && /^tail(s|)$/.test(data[1]))) {
                             if (points >= 2000) {
-                                points = points - (points * .15);
+                                points = points - (points * 0.15);
                             }
                             addBalance(name, points);
                             sendMessage(api, event, "You win!");
@@ -6046,7 +6046,7 @@ async function ai(api, event) {
         if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && settings.shared.root != event.senderID && settings.shared.delay && bn) {
             await sleep(2000);
         }
-        
+
         api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
             if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
 
