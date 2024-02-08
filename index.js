@@ -2865,7 +2865,6 @@ async function ai(api, event) {
             data.shift();
             let aa = data.join(" ");
             exec("traceroute " + aa, function (err, stdout, stderr) {
-                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 let com = stderr.replace(/\s+/g, "");
                 if (com == "") {
                     traceroute["/" + aa] = stdout;
@@ -3981,17 +3980,14 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query, "sync", event.senderID, "root", true)) {
         exec("git pull", function (err, stdout, stderr) {
-            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
     } else if (testCommand(api, query, "push", event.senderID, "root", true)) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
-            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
     } else if (testCommand(api, query, "push--force", event.senderID, "root", true)) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master --force', function (err, stdout, stderr) {
-            if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             sendMessage(api, event, stdout + "\n\n" + stderr);
         });
     } else if (testCommand(api, query, "unblock--all", event.senderID, "root", true)) {
@@ -4015,7 +4011,6 @@ async function ai(api, event) {
             } else {
                 data.shift();
                 exec("git " + data.join(" "), function (err, stdout, stderr) {
-                    if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     let str = stdout + "\n\n" + stderr;
                     let com = str.replaceAll(/\s+/g, "");
                     if (com == "") {
@@ -4087,7 +4082,6 @@ async function ai(api, event) {
             data.shift();
             let sff = data.join(" ");
             exec(sff, function (err, stdout, stderr) {
-                if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 let str = stdout + "\n\n" + stderr;
                 let com = str.replaceAll(/\s+/g, "");
                 if (com == "") {
