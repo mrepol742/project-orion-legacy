@@ -42,7 +42,6 @@ function gen() {
 
     help["root"] = help["root"].sort((a, b) => a.localeCompare(b));
     help["owner"] = help["owner"].sort((a, b) => a.localeCompare(b));
-    help["admin"] = help["admin"].sort((a, b) => a.localeCompare(b));
     commandAll = commandAll.sort((a, b) => a.localeCompare(b));
 
     for (cmd in commandAll) {

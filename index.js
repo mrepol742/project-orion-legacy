@@ -44,12 +44,12 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
                      "                                        
 `);
 
-let folder_dir = ["/cache", "/data", "/data/cookies"];
+let folder_dir = ["/cache", "/data", "/data/cookies", "/log"];
 for (folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
 }
 
-let data_json = ["groups", "pin", "accountPreferences", "threadPreferences", "users", "crash-log"];
+let data_json = ["groups", "pin", "accountPreferences", "threadPreferences", "users"];
 for (file in data_json) {
     writeFile(__dirname + "/data/" + data_json[file] + ".json", "{}");
 }
@@ -61,7 +61,6 @@ let settings = JSON.parse(fs.readFileSync(__dirname + "/data/accountPreferences.
 let settingsThread = JSON.parse(fs.readFileSync(__dirname + "/data/threadPreferences.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
 let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
-let crashLog = JSON.parse(fs.readFileSync(__dirname + "/data/crash-log.json"));
 
 let quiz = JSON.parse(fs.readFileSync(__dirname + "/src/data/quiz.json", "utf-8"));
 let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/src/data/ascii.json"));
@@ -78,6 +77,11 @@ let R_S_H_12_mmm = fs.existsSync(__dirname + "/.nosave");
 if (R_S_H_12_mmm) {
     settingsThread = { default: { leave: false, unsend: false, nsfw: true, cmd: 1 } };
 }
+
+/*
+ * Logs
+ */
+let crashLog = "";
 
 console.log("\tProject Information");
 console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Blocked: " + (users.blocked.length + users.bot.length) + "\n  Muted: " + users.muted.length + "\n  Admin: " + users.admin.length);
@@ -127,11 +131,12 @@ const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 /*
  * CREATE SERVER
  */
-/*
-const PORT = 8080;
 
-http.createServer(getRoutes()).listen(PORT, () => {
-    utils.logged("server_running http://localhost:" + PORT);
+/*
+const LOG_PORT = 8081;
+
+http.createServer(getLogs()).listen(LOG_PORT, () => {
+    utils.logged("log_server_running http://0.0.0.0:" + LOG_PORT);
 });
 */
 
@@ -303,13 +308,12 @@ function redfox_fb(fca_state, login, cb) {
             handleError({ stacktrace: err, cuid: login });
 
             if (err && err.error && err.error == "unable to get cookie.") {
-
                 accounts = accounts.filter((item) => item !== login);
-            for (threads in settingsThread) {
-                if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                    delete settingsThread[threads]["lock"];
+                for (threads in settingsThread) {
+                    if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
+                        delete settingsThread[threads]["lock"];
+                    }
                 }
-            }
 
                 unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
                 unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
@@ -403,16 +407,15 @@ function redfox_fb(fca_state, login, cb) {
 
         api.eventListener(async (err, event) => {
             if (err) {
-
                 if (err && err.error && err.error == "unable to get cookie.") {
-                                  handleError({ stacktrace: err, cuid: login, e: event });
+                    handleError({ stacktrace: err, cuid: login, e: event });
 
-                accounts = accounts.filter((item) => item !== login);
-                for (threads in settingsThread) {
-                    if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
-                        delete settingsThread[threads]["lock"];
+                    accounts = accounts.filter((item) => item !== login);
+                    for (threads in settingsThread) {
+                        if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
+                            delete settingsThread[threads]["lock"];
+                        }
                     }
-                }
                     unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
                     unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
                 }
@@ -640,6 +643,8 @@ function redfox_fb(fca_state, login, cb) {
                         if (gc.threadName) {
                             newThread["name"] = gc.threadName;
                         }
+
+                        newThread["created_date"] = new Date().toISOString();
 
                         groups.list.push(newThread);
 
@@ -1424,7 +1429,7 @@ async function ai22(api, event, query, query2) {
                 api.unsendMessage(event.messageReply.messageID, (err) => {
                     if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                 });
-                return;
+                return true;
             }
         }
     }
@@ -1878,7 +1883,8 @@ async function ai(api, event) {
 
     if (event.type == "message_reply") {
         if (event.body != "." && event.body != "?" && event.body != "!") {
-            ai22(api, event, query, query2);
+            let st = ai22(api, event, query, query2);
+            if (st) return;
             // TODO: undefined sender id no idea why
             if (accounts.includes(event.messageReply.senderID)) {
                 someA(api, event, query, input);
@@ -2370,7 +2376,7 @@ async function ai(api, event) {
                 sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(api, query, "clear--cache", event.senderID, "admin", true)) {
+    } else if (testCommand(api, query, "clear--cache", event.senderID, "root", true)) {
         let count = 0;
         fs.readdir(__dirname + "/cache/", function (err, files) {
             if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
@@ -4099,7 +4105,7 @@ async function ai(api, event) {
             });
             sendMessage(api, event, "Please check your inbox.");
         });
-    } else if (testCommand(api, query2, "handleMessageRequest--tid", event.senderID, "admin")) {
+    } else if (testCommand(api, query2, "handleMessageRequest--tid", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest --tid threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleMessageRequest --tid 0000000000000");
@@ -4841,7 +4847,7 @@ async function ai(api, event) {
 
             sendMessage(api, event, "Changes have been reflected to following accounts:\n" + utils.formatOutput("ApiKey", data1, "github.com/prj-orion"));
         }
-    } else if (testCommand(api, query2, "setKey", event.senderID, "admin")) {
+    } else if (testCommand(api, query2, "setKey", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2 || !data[1].includes(":")) {
             sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: setKey name:key instead.");
@@ -5307,8 +5313,6 @@ async function ai(api, event) {
                 sendMessage(api, event, formatGen(cmdPage["help1"]) + NP);
                 settingsThread[event.threadID].cmd = 1;
             }
-        } else if (data[1] == "admin") {
-            sendMessage(api, event, formatGen(cmdPage["admin"]));
         } else if (data[1] == "owner") {
             sendMessage(api, event, formatGen(cmdPage["owner"]));
         } else if (data[1] == "root") {
@@ -5317,7 +5321,7 @@ async function ai(api, event) {
             sendMessage(api, event, formatGen(cmdPage["help1"]) + NP);
             settingsThread[event.threadID].cmd = 1;
         } else {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, prev, admin, owner and root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, prev, owner and root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
         }
     } else if (testCommand(api, query2, "wiki", event.senderID)) {
         if (isGoingToFast(api, event)) return;
@@ -5997,7 +6001,7 @@ async function ai(api, event) {
                             sendMessage(api, event, "Token provided is too larged! Maximum of 10, 000 tokens");
                         } else if ((picker == 1 && /^head(s|)$/.test(data[1])) || (picker == 0 && /^tail(s|)$/.test(data[1]))) {
                             if (points >= 2000) {
-                                points = points - (points * 0.15);
+                                points = points - points * 0.15;
                             }
                             addBalance(name, points);
                             sendMessage(api, event, "You win!");
@@ -6631,6 +6635,8 @@ function isGoingToFast(api, event) {
             if (data1[event.senderID].gender != "") {
                 newUser["gender"] = data1[event.senderID].gender;
             }
+            newUser["created_date"] = new Date().toISOString();
+
             users.list.push(newUser);
 
             reactMessage(api, event, ":heart:");
@@ -8073,12 +8079,18 @@ function findPrefix(event, id) {
 }
 
 function saveState() {
+    let dir = __dirname + "/log/main.log";
+    if (!fs.existsSync(dir)) {
+        fs.writeFileSync(dir, "", "utf8");
+    }
+    fs.appendFileSync(dir, crashLog);
+    crashLog = "";
+
     if (R_S_H_12_mmm) return;
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings), "utf8");
     fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread), "utf8");
-    fs.writeFileSync(__dirname + "/data/crash-log.json", JSON.stringify(crashLog, null, 4), "utf8");
 }
 
 function getIdFromUrl(url) {
@@ -8326,6 +8338,21 @@ function getCountryOrigin(model) {
     return "Singapore";
 }
 
+function getLogs() {
+    return async function (req, res) {
+        let ress = req.url;
+        let url = ress.split("?")[0];
+        utils.logged(req.method + " " + req.headers.origin + " " + url);
+        if (!fs.existsSync(__dirname + "/log/main.log")) {
+            res.writeHead(200);
+            res.end("No logs found!");
+        } else {
+            let file = fs.readFileSync(__dirname + "/log/main.log", "utf8");
+            res.writeHead(200);
+            res.end(file);
+        }
+    };
+}
 function getRoutes() {
     return async function (req, res) {
         let ress = req.url;
@@ -9145,14 +9172,15 @@ function handleError(err) {
     crashes++;
     utils.logged(err.stacktrace);
     let eid = Math.floor(100000000 + Math.random() * 900000000);
-    crashLog[eid] = { date: new Date() };
+    let cInfo = "\n\n-----------\ndate: " + new Date().toISOString();
     if (err.cuid) {
-        crashLog[eid]["cuid"] = err.cuid;
+        cInfo += "\ncuid: " + err.cuid;
     }
     if (err.e) {
-        crashLog[eid]["event"] = err.e;
+        cInfo += "\nevent: " + err.e;
     }
-    crashLog[eid]["stacktrace"] = err.stacktrace;
+    cInfo += "\nstacktrace: " + err.stacktrace;
+    crashLog += cInfo;
     let ct =
         "\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A" +
         "\n- project orion build __version__ github.com/prj-orion^M" +
@@ -9199,6 +9227,8 @@ function updateUserData(user, uid) {
             if (user[uid].gender != "") {
                 name["gender"] = user[uid].gender;
             }
+
+            name["updated_date"] = new Date().toISOString();
         }
     });
 }
@@ -9209,8 +9239,11 @@ function updateGroupData(gc, gid) {
             if (gc.threadName) {
                 group["name"] = gc.threadName;
             }
+
             let arr = gc.participantIDs;
             group["members"] = arr.length;
+
+            group["updated_date"] = new Date().toISOString();
         }
     });
 }

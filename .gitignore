@@ -2,4 +2,5 @@
 /cache/*
 /data/cookies/*
 /build/*
+/log/*
 .nosave
