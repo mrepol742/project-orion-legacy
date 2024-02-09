@@ -6041,7 +6041,7 @@ async function ai(api, event) {
 
         const answer = quiz[picker].answer;
 
-        if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && settings.shared.root != event.senderID && settings.shared.delay && bn) {
+        if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && settings.shared.root != event.senderID && settings.shared.delay) {
             await sleep(2000);
         }
 
