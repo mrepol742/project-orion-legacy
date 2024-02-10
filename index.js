@@ -1515,8 +1515,13 @@ async function ai22(api, event, query, query2) {
                 downloadFile(encodeURI(url), dir).then(async (response) => {
                     try {
                         const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
-                        const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
-                        sendMessage(api, event, response.data.text, event.threadID, event.messageReply.messageID, true, false);
+                        const response = await openai.audio.transcriptions.create({
+                            file: fs.createReadStream(dir),
+                            model: "whisper-1",
+                            response_format: "verbose_json",
+                            timestamp_granularities: ["word"],
+                        });
+                        sendMessage(api, event, response.text, event.threadID, event.messageReply.messageID, true, false);
                     } catch (err) {
                         sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     }
@@ -7452,8 +7457,13 @@ function voiceR(api, event) {
         downloadFile(encodeURI(url), dir).then(async (response) => {
             try {
                 const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
-                const response = await openai.createTranscription(fs.createReadStream(dir), "whisper-1");
-                event.body = response.data.text;
+                const response = await openai.audio.transcriptions.create({
+                    file: fs.createReadStream(dir),
+                    model: "whisper-1",
+                    response_format: "verbose_json",
+                    timestamp_granularities: ["word"],
+                });
+                event.body = response.text;
                 event.attachments = [];
                 ai(api, event);
             } catch (err) {
@@ -7651,7 +7661,7 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
             },
             { role: "user", content: text },
         ];
-        const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
+        const openai = new OpenAI(getApiKey(uid));
         let ai = await openai.chat.completions.create({
             model: settings.shared.primary_text_complextion,
             messages: mssg,
@@ -7984,14 +7994,13 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
             // i dont care
             return await aiResponse2(event, text, repeat, user, group, uid, true);
         }
-        const msg = handleError({ stacktrace: error, cuid: uid, e: event });
         return {
             choices: [
                 {
                     finish_reason: "error",
                     index: 0,
                     message: {
-                        content: msg.body,
+                        content: error.message,
                         role: "assistant",
                     },
                 },
