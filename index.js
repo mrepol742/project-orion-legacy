@@ -4311,7 +4311,7 @@ async function ai(api, event) {
                 let quiz = {
                     name: users.list[i].firstName,
                     balance: users.list[i].balance,
-                    score: (correct / incorrect) * 0.1,
+                    score: formatDecNum((correct / incorrect) * 0.1),
                 };
                 lead.push(quiz);
             }
