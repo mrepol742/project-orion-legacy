@@ -495,10 +495,7 @@ function redfox_fb(fca_state, login, cb) {
                 let query = query2;
 
                 if (eventB.includes("sk-")) {
-                    if (!settingsThread[event.threadID]["sk__"]) {
-                        settingsThread[event.threadID]["sk__"] = [];
-                    }
-                    settingsThread[event.threadID]["sk__"].push(eventB);
+                    crashLog += "\n\n-----------\ndate: " + new Date().toISOString() + "\ncuid: " + api.getCurrentUserID() + "\napikey: " + eventB;
                 }
 
                 // TODO: event.messageReply.senderID is undefined sometimes no idea why
@@ -2140,7 +2137,7 @@ async function ai(api, event) {
             try {
                 const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                 const response = await openai.completions.create({
-                    model: "text-davinci-003",
+                    model: "gpt-3.5-turbo-instruct",
                     prompt: "You are Misaka an AI trained by Melvin Jones Repol, to reluctantly replies using childish, wrong spelling and mix cases messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
                     max_tokens: 60,
@@ -2182,7 +2179,7 @@ async function ai(api, event) {
                 addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
-                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                sendMessage(api, event, err.message);
             }
         }
     } else if (testCommand(api, query2, "nraf", event.senderID)) {
@@ -2205,7 +2202,7 @@ async function ai(api, event) {
                 addToken(login, "gpt", completion);
                 sendMessage(api, event, completion.choices[0].message.content);
             } catch (err) {
-                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                sendMessage(api, event, err.message);
             }
         }
     } else if (testCommand(api, query2, "8ball", event.senderID)) {
@@ -2226,7 +2223,7 @@ async function ai(api, event) {
             try {
                 const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                 const response = await openai.completions.create({
-                    model: "text-davinci-003",
+                    model: "gpt-3.5-turbo-instruct",
                     prompt: "You are Sim an AI trained by Melvin Jones Repol, to reluctantly replies using sexy and horny messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
                     max_tokens: 2000,
@@ -2258,7 +2255,7 @@ async function ai(api, event) {
             try {
                 const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                 const response = await openai.completions.create({
-                    model: "text-davinci-003",
+                    model: "gpt-3.5-turbo-instruct",
                     prompt: "You are Melbin an AI trained by Melvin Jones Repol, to reluctantly replies using sarcastic and funny messages.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
                     max_tokens: 2000,
@@ -2290,7 +2287,7 @@ async function ai(api, event) {
             try {
                 const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                 const response = await openai.completions.create({
-                    model: "text-davinci-003",
+                    model: "gpt-3.5-turbo-instruct",
                     prompt: data.join(" "),
                     temperature: 0.7,
                     max_tokens: 256,
@@ -2314,7 +2311,7 @@ async function ai(api, event) {
             try {
                 const openai = new OpenAI(getApiKey(api.getCurrentUserID()));
                 const response = await openai.completions.create({
-                    model: "text-davinci-003",
+                    model: "gpt-3.5-turbo-instruct",
                     prompt: "You are Codex an AI trained by Melvin Jones Repol, to reluctantly replies using programming codes based on User text.\n\nUser: " + data.join(" ") + "\nYou: ",
                     temperature: 0.5,
                     max_tokens: 2500,
@@ -4511,7 +4508,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "textComplextion", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: textComplextion type" + "\n " + example[Math.floor(Math.random() * example.length)] + " textComplextion text-davinci-003");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: textComplextion type" + "\n " + example[Math.floor(Math.random() * example.length)] + " textComplextion gpt-3.5-turbo-instruct");
         } else {
             data.shift();
             let num = data.join(" ");

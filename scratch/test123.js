@@ -1,23 +1,21 @@
 const OpenAI = require("openai");
 
-const openai = new OpenAI({ apiKey: 'sk-adadad' });
+const openai = new OpenAI({ apiKey: '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' });
 
 async function main() {
     try {
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: "You are a helpful assistant designed to output JSON.",
-      },
-      { role: "user", content: "Who won the world series in 2020?" },
-    ],
-    model: "gpt-3.5-turbo-0125",
-    response_format: { type: "json_object" },
+  const completion = await openai.completions.create({
+                    prompt: "You are Sim an AI trained by Melvin Jones Repol, to reluctantly replies using sexy and horny messages.\n\nUser: " + "a something" + "\nYou: ",
+                    temperature: 0.5,
+                    max_tokens: 2000,
+                    top_p: 0.3,
+                    frequency_penalty: 0.5,
+                    presence_penalty: 0,
+    model: "gpt-3.5-turbo-instruct"
   });
-  console.log(completion.choices[0].message.content);
+  console.log(completion);
 } catch (err) {
-    console.log(err.status)
+    console.log(err.message)
 }
 }
 
