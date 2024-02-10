@@ -4299,14 +4299,21 @@ async function ai(api, event) {
         getUserProfile(event.senderID, async function (user) {
             let lead = [];
             for (let i = 0; i < users.list.length; i++) {
+                let correct = 1;
+                let incorrect = 1;
                 if (users.list[i].quiz_answered_correct) {
-                    let quiz = {
-                        name: users.list[i].firstName,
-                        balance: users.list[i].balance,
-                        score: users.list[i].quiz_answered_correct,
-                    };
-                    lead.push(quiz);
+                    correct = users.list[i].quiz_answered_correct;
                 }
+                if (users.list[i].quiz_answered_incorrect) {
+                    incorrect = users.list[i].quiz_answered_incorrect;
+                }
+
+                let quiz = {
+                    name: users.list[i].firstName,
+                    balance: users.list[i].balance,
+                    score: (correct / incorrect) * 0.1,
+                };
+                lead.push(quiz);
             }
             lead.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
 
