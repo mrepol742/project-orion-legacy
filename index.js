@@ -111,6 +111,8 @@ let traceroute = {};
 let threadIdMV = {};
 let cmd = {};
 let thread = {};
+let musicSearch = [];
+let quizData = [];
 let acGG = [];
 let emo = [];
 let userPresence = {};
@@ -407,7 +409,7 @@ function redfox_fb(fca_state, login, cb) {
 
         api.eventListener(async (err, event) => {
             if (err) {
-                if (err && err.error && err.error == "unable to get cookie.") {
+                if (err && err.error && (err.error == "unable to get cookie." || err.error == "Connection Closed")) {
                     handleError({ stacktrace: err, cuid: login, e: event });
 
                     accounts = accounts.filter((item) => item !== login);
@@ -1370,14 +1372,14 @@ async function ai22(api, event, query, query2) {
     let eventB = event.body;
     let input = eventB.normalize("NFKC");
 
-    if (settings.shared.quiz) {
-        for (q in settings.shared.quiz) {
-            if (settings.shared.quiz[q].messageID && event.messageReply.messageID == settings.shared.quiz[q].messageID) {
+    if (quizData) {
+        for (q in quizData) {
+            if (quizData[q].messageID && event.messageReply.messageID == quizData[q].messageID) {
                 let rawUserAnswer = input;
                 let userAnswer = rawUserAnswer.replaceAll(" ", "").toLowerCase();
                 getUserProfile(event.senderID, async function (name) {
                     const points = Math.floor(Math.random() * 1500);
-                    if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
+                    if (userAnswer == quizData[q].correctAnswer1 || userAnswer == quizData[q].correctAnswer) {
                         addBalance(name, points);
                     } else {
                         removeBalance(name, 500);
@@ -1386,7 +1388,7 @@ async function ai22(api, event, query, query2) {
 
                 let num = Math.floor(Math.random() * 10);
 
-                if (userAnswer == settings.shared.quiz[q].correctAnswer1 || userAnswer == settings.shared.quiz[q].correctAnswer) {
+                if (userAnswer == quizData[q].correctAnswer1 || userAnswer == quizData[q].correctAnswer) {
                     if (num % 2 == 0) {
                         sendMessage(api, event, quizCorrect[Math.floor(Math.random() * quizCorrect.length)]);
                     } else {
@@ -1418,15 +1420,42 @@ async function ai22(api, event, query, query2) {
                     });
                 }
 
-                delete settings.shared.quiz[q]["correctAnswer1"];
-                delete settings.shared.quiz[q]["correctAnswer"];
-                delete settings.shared.quiz[q]["messageID"];
-                settings.shared.quiz[q]["timeout"] = true;
+                delete quizData[q]["correctAnswer1"];
+                delete quizData[q]["correctAnswer"];
+                delete quizData[q]["messageID"];
+                quizData[q]["timeout"] = true;
 
                 api.unsendMessage(event.messageReply.messageID, (err) => {
                     if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                 });
                 return true;
+            }
+        }
+    }
+    if (musicSearch) {
+        for (q in musicSearch) {
+            if (musicSearch[q].messageID && event.messageReply.messageID == musicSearch[q].messageID) {
+                if (/^\d+$/.test(input)) {
+                    switch (input) {
+                        case "1":
+                            break;
+                        case "2":
+                            break;
+                        case "3":
+                            break;
+                        case "4":
+                            break;
+                        case "5":
+                            break;
+                        case "6":
+                            break;
+                        default:
+                            sendMessage(api, event, "Please enter the correct item number from 1 to 6!");
+                            break;
+                    }
+                } else {
+                    sendMessage(api, event, "Please enter the item number!");
+                }
             }
         }
     }
@@ -1612,7 +1641,7 @@ async function ai22(api, event, query, query2) {
                             } else {
                                 ongoingLogin.push(login);
                                 utils.logged("adding_account " + login);
-                                sendMessage(api, event, "Login initiated for user id " + login + ".");
+                                sendMessage(api, event, "Please wait while Orion logs into your account.");
                                 redfox_fb(
                                     {
                                         appState: appsss,
@@ -1632,15 +1661,8 @@ async function ai22(api, event, query, query2) {
                                         } else {
                                             downloadFile(getProfilePic(login), dirp).then(async (response) => {
                                                 let message = {
-                                                    body: updateFont(
-                                                        "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
-                                                        login
-                                                    ),
+                                                    body: updateFont("Orion successfully connected to this account.", login),
                                                     attachment: fs.createReadStream(dirp),
-                                                };
-                                                let message1 = {
-                                                    body: updateFont("Created by your's truly Melvin Jones Repol.\n\nhttps://mrepol742.github.io", login),
-                                                    url: "https://mrepol742.github.io",
                                                 };
                                                 api.sendMessage(
                                                     message,
@@ -1650,17 +1672,6 @@ async function ai22(api, event, query, query2) {
                                                     },
                                                     event.messageReply.messageID
                                                 );
-
-                                                settings[login]["notif"] = {
-                                                    thank_you: "Thank you for using Project Orion!",
-                                                    welcome_msg:
-                                                        "Bot successfully connected to this account\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/prj-orion^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
-                                                };
-
-                                                if (!settings[login]["openai"]) {
-                                                    settings[login]["notif"]["open_ai"] = "You are currently using the default openai key and if it run out of funds your bot command would no longer work.\n\nYou can set your own openai key by sending this message `apikey`.";
-                                                }
-
                                                 unLink(dirp);
                                             });
 
@@ -3112,6 +3123,50 @@ async function ai(api, event) {
                 } else {
                     sendMessage(api, event, "I cant find any relevant videos about " + data.join(" "));
                 }
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
+            }
+        }
+    } else if (testCommand(api, query2, "music--search", event.senderID)) {
+        if (isGoingToFast(api, event)) return;
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music --search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music --search hello world");
+        } else {
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
+                let qsearch = getDataFromQuery(data);
+                const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
+                const search = await yt.search(qsearch, { type: "video" });
+
+                let stringBuilder = "";
+                let thumbnails = [];
+                let time = utils.getTimestamp();
+                let musicIds = [];
+                for (musicID in search.results) {
+                    if (musicID < 7 && search.results[musicID].type == "Video") {
+                        stringBuilder += parseInt(musicID) + 1 + ". " + search.results[musicID].title.text;
+                        stringBuilder += "\n" + search.results[musicID].published.text;
+                        stringBuilder += "\n" + search.results[musicID].short_view_count.text;
+                        stringBuilder += "\n" + search.results[musicID].duration.text + " minutes";
+                        if (musicID != 5) stringBuilder += "\n-------\n";
+                        let fname = __dirname + "/cache/musicsearch" + musicID + "_" + time + ".png";
+                        await downloadFile(encodeURI(search.results[musicID].thumbnails[0].url), fname).then((response1) => {
+                            thumbnails.push(fname);
+                        });
+                        musicIds.push(search.results[musicID].id);
+                    }
+                }
+
+                let message = {
+                    body: stringBuilder,
+                    attachment: [],
+                };
+
+                for (thumbnail in thumbnails) {
+                    message.attachment.push(fs.createReadStream(thumbnails[thumbnail]));
+                }
+                sendMessage(api, event, message);
+                musicSearch.push({ messageID: event.messageID, music_ids: musicIds, time: new Date().toISOString() });
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
@@ -4923,6 +4978,17 @@ async function ai(api, event) {
             let t1 = JSON.stringify(a1).replaceAll(",null", "");
             users = JSON.parse(t1);
         }
+        delete settings.shared.quiz;
+        for (setting in settings) {
+            if (settings[setting].notif) {
+                delete settings[setting].notif;
+            }
+        }
+        for (settings_t in settingsThread) {
+            if (settingsThread[settings_t].sk__) {
+                delete settingsThread[settings_t].sk__;
+            }
+        }
         sendMessage(api, event, "Cleaning done.");
     } else if (testCommand(api, query2, "add--admin", event.senderID, "root")) {
         let data = input.split(" ");
@@ -6056,18 +6122,13 @@ async function ai(api, event) {
 
         api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
             if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
-
-            if (!settings.shared.quiz) {
-                settings.shared["quiz"] = [];
-            }
-
             if (!messageInfo.messageID) return utils.logged("undefined messageinfo.messageID");
 
-            settings.shared.quiz.push({ uid: event.senderID, correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: new Date().toISOString() });
+            quizData.push({ uid: event.senderID, correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: new Date().toISOString() });
 
             await sleep(60000);
-            for (q in settings.shared.quiz) {
-                if (messageInfo.messageID == settings.shared.quiz[q].messageID && settings.shared.quiz[q].timeout) {
+            for (q in quizData) {
+                if (messageInfo.messageID == quizData.messageID && quizData[q].timeout) {
                     api.unsendMessage(messageInfo.messageID, (err) => {
                         if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                     });
