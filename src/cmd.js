@@ -49,7 +49,7 @@ function gen() {
         if (count % 21 == 0) {
             helpCount++;
         } else {
-            if (help["help" + helpCount] !== undefined) {
+            if (help["help" + helpCount]) {
                 help["help" + helpCount].push(commandAll[cmd]);
             } else {
                 help["help" + helpCount] = [commandAll[cmd]];
@@ -68,12 +68,10 @@ function formatGen(gen) {
     strs += "│\n└─ @ỹ@cmd-prj- orion";
     return strs;
 }
-
 /*
 
-* let gen1 = JSON.parse(gen());
-* console.log(formatGen(gen1["admin"]))
-
+ let gen1 = JSON.parse(gen());
+ console.log(formatGen(gen1["root"]))
 */
 
 module.exports = {
