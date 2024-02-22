@@ -115,6 +115,7 @@ let musicSearch = [];
 let quizData = [];
 let acGG = [];
 let emo = [];
+let failedLogin = [];
 let userPresence = {};
 let threadMaintenance = {};
 let userWhoSendDamnReports = {};
@@ -216,6 +217,7 @@ process.on("exit", (code) => {
     utils.logged("fca_status offline");
 });
 
+
 /*
  * INITIALIZE LOGIN
  */
@@ -290,7 +292,7 @@ utils.logged("task_unblock global initiated");
 task(
     function () {
         deleteCacheData(false);
-        console.clear();
+        console.log('\033[2J');
         utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls);
         cmd = {};
         acGG = [];
@@ -323,6 +325,10 @@ function redfox_fb(fca_state, login, cb) {
 
             if (typeof cb === "function") {
                 return cb(true);
+            }
+
+            if (accounts.length == 0) {
+                addAccount();
             }
             return;
         }
@@ -424,6 +430,10 @@ function redfox_fb(fca_state, login, cb) {
 
                 if (typeof cb === "function") {
                     return cb(true);
+                }
+
+                if (accounts.length == 0) {
+                    addAccount();
                 }
                 return;
             }
@@ -1456,6 +1466,7 @@ async function ai22(api, event, query, query2) {
                 } else {
                     sendMessage(api, event, "Please enter the item number!");
                 }
+                return true;
             }
         }
     }
@@ -1649,16 +1660,19 @@ async function ai22(api, event, query, query2) {
                                     login,
                                     function (isLogin) {
                                         ongoingLogin = ongoingLogin.filter((item) => item !== login);
-                                        if (isLogin) {
+                                        if (isLogin && !failedLogin.includes(login)) {
                                             api.sendMessage(
-                                                updateFont("Failed to Login!", login),
+                                                updateFont("Orion experience a connection issue on this account! Login failed.", login),
                                                 event.threadID,
                                                 (err, messageInfo) => {
                                                     if (err) utils.logged(err);
                                                 },
                                                 event.messageReply.messageID
                                             );
-                                        } else {
+                                            failedLogin.push(login);
+                                        }
+                                        
+                                        if (!isLogin) {
                                             downloadFile(getProfilePic(login), dirp).then(async (response) => {
                                                 let message = {
                                                     body: updateFont("Orion successfully connected to this account.", login),
@@ -2389,6 +2403,11 @@ async function ai(api, event) {
                 sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
+    } else if (testCommand(api, query, "zszszszszszsz", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "zsvdvdvdvdv", event.senderID, "root", true)) {
+        } else if (testCommand(api, query, "zdasfsfsf", event.senderID, "root", true)) {
+        } else if (testCommand(api, query, "zfegbgege", event.senderID, "root", true)) {
+        } else if (testCommand(api, query, "zsgeshrhewheh", event.senderID, "root", true)) {
     } else if (testCommand(api, query, "clear--cache", event.senderID, "root", true)) {
         let count = 0;
         fs.readdir(__dirname + "/cache/", function (err, files) {
@@ -5365,7 +5384,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query2, "cmd", event.senderID)) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
-        let NP = "\n\n< prev  ─────────  next >";
+        let NP = "\n\n< prev  ───────────  next >";
         if (data[1] == "next") {
             if (cmdPage["help" + settingsThread[event.threadID].cmd++]) {
                 sendMessage(api, event, formatGen(cmdPage["help" + settingsThread[event.threadID].cmd++]) + NP);
@@ -7726,7 +7745,8 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
             },
             { role: "user", content: text },
         ];
-        const openai = new OpenAI(getApiKey(uid));
+        const apikey = getApiKey(uid);
+        const openai = new OpenAI(apikey);
         let ai = await openai.chat.completions.create({
             model: settings.shared.primary_text_complextion,
             messages: mssg,
