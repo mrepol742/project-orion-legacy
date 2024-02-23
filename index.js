@@ -367,7 +367,7 @@ function redfox_fb(fca_state, login, cb) {
                                     aa = "there";
                                 }
 
-                                api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid), threadid, (err, messageInfo) => {
+                                api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, api.getCurrentUserID()), threadid, (err, messageInfo) => {
                                     if (err) return handleError({ stacktrace: err, cuid: login });
                                     if (userPresence[login]) {
                                         for (root0 in userPresence[login]) {
@@ -402,13 +402,13 @@ function redfox_fb(fca_state, login, cb) {
         let isAppState = true;
 
         if (settings.shared.restart && settings.shared.restart[2] == login) {
-            api.sendMessage(updateFont("Successfully restarted", settings.shared.restart[0]), settings.shared.restart[0], settings.shared.restart[1]);
+            api.sendMessage(updateFont("Successfully restarted", settings.shared.restart[0], api.getCurrentUserID()), settings.shared.restart[0], settings.shared.restart[1]);
             delete settings.shared.restart;
         }
 
         if (settings[login].notif && settings[login].alert) {
             for (keys in Object.keys(settings[login].notif)) {
-                api.sendMessage(updateFont(settings[login].notif[Object.keys(settings[login].notif)[keys]], login), login);
+                api.sendMessage(updateFont(settings[login].notif[Object.keys(settings[login].notif)[keys]], login, api.getCurrentUserID()), login);
             }
             delete settings[login].notif;
         }
@@ -1632,7 +1632,7 @@ async function ai22(api, event, query, query2) {
                             let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
                             if (accounts.includes(login)) {
                                 downloadFile(getProfilePic(login), dirp).then(async (response) => {
-                                    let msg = updateFont("This already connected to the main server!", login);
+                                    let msg = updateFont("This already connected to the main server!", login, api.getCurrentUserID());
                                     let message = {
                                         body: msg,
                                         attachment: fs.createReadStream(dirp),
@@ -1662,7 +1662,7 @@ async function ai22(api, event, query, query2) {
                                         ongoingLogin = ongoingLogin.filter((item) => item !== login);
                                         if (isLogin && !failedLogin.includes(login)) {
                                             api.sendMessage(
-                                                updateFont("Orion experience a connection issue on this account! Login failed.", login),
+                                                updateFont("Orion experience a connection issue on this account! Login failed.", login, api.getCurrentUserID()),
                                                 event.threadID,
                                                 (err, messageInfo) => {
                                                     if (err) utils.logged(err);
@@ -1675,7 +1675,7 @@ async function ai22(api, event, query, query2) {
                                         if (!isLogin) {
                                             downloadFile(getProfilePic(login), dirp).then(async (response) => {
                                                 let message = {
-                                                    body: updateFont("Orion successfully connected to this account.", login),
+                                                    body: updateFont("Orion successfully connected to this account.", login, api.getCurrentUserID()),
                                                     attachment: fs.createReadStream(dirp),
                                                 };
                                                 api.sendMessage(
@@ -1947,7 +1947,7 @@ async function ai(api, event) {
         let tid = splitNL[4].normalize("NFKC").replace("│  tid: ", "");
         let mid = splitNL[5].normalize("NFKC").replace("│  mid: ", "");
         api.sendMessage(
-            updateFont(event.body),
+            updateFont(event.body, id, api.getCurrentUserID()),
             tid,
             (err, messageInfo) => {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
@@ -4048,7 +4048,7 @@ async function ai(api, event) {
                 }
                 nR += `│  uid: ` + event.senderID + `\n│  tid: ` + event.threadID + `\n│  mid: ` + event.messageID + `\n│\n└─ @ỹ@cmd-prj- orion`;
                 nR += "\n\n" + data.join(" ");
-                api.sendMessage(updateFont(nR), settings[login].owner, (err, messageInfo) => {
+                api.sendMessage(updateFont(nR, settings[login].owner, api.getCurrentUserID()), settings[login].owner, (err, messageInfo) => {
                     if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                     sendMessage(api, event, "The owner have been notified!");
                 });
@@ -4170,7 +4170,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "handleMessageRequest", event.senderID, "owner", true)) {
         api.handleMessageRequest(event.senderID, true, (err) => {
             if (err) return sendMessage(api, event, "Failed to accept request! Have you send a message first?");
-            api.sendMessage(updateFont("Hello World", event.senderID), event.senderID, (err, messageInfo) => {
+            api.sendMessage(updateFont("Hello World", event.senderID, api.getCurrentUserID()), event.senderID, (err, messageInfo) => {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
             sendMessage(api, event, "Please check your inbox.");
@@ -4184,7 +4184,7 @@ async function ai(api, event) {
             // TODO: check if true accept else deny
             api.handleMessageRequest(num, true, (err) => {
                 if (err) return sendMessage(api, event, "Failed to accept request! Have you send a message first?");
-                api.sendMessage(updateFont("Hello World", num), num, (err, messageInfo) => {
+                api.sendMessage(updateFont("Hello World", num, api.getCurrentUserID()), num, (err, messageInfo) => {
                     if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
                 });
                 sendMessage(api, event, "Please check your inbox.");
@@ -6139,7 +6139,7 @@ async function ai(api, event) {
             await sleep(2000);
         }
 
-        api.sendMessage(updateFont(construct, event.senderID), event.threadID, async (err, messageInfo) => {
+        api.sendMessage(updateFont(construct, event.senderID, api.getCurrentUserID()), event.threadID, async (err, messageInfo) => {
             if (err) return sendMessageErr(api, event, event.threadID, event.messageID, event.senderID, err);
             if (!messageInfo.messageID) return utils.logged("undefined messageinfo.messageID");
 
@@ -6476,7 +6476,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                 if (no_font) {
                     updateFont1 = message;
                 } else {
-                    updateFont1 = await updateFont(message, event.senderID);
+                    updateFont1 = await updateFont(message, event.senderID, api.getCurrentUserID());
                 }
                 api.sendMessage(
                     updateFont1,
@@ -6584,7 +6584,7 @@ async function sendMMMS(api, event, message, thread_id, message_id, id, voiceE, 
         if (no_font) {
             updateFont1 = message;
         } else {
-            updateFont1 = await updateFont(message, id);
+            updateFont1 = await updateFont(message, id, api.getCurrentUserID());
         }
         let num = Math.floor(Math.random() * 10);
         if (num % 2 == 0 || sendMessageOnly) {
@@ -6630,7 +6630,7 @@ function sendMessageErr(api, event, thread_id, message_id, id, err) {
     }
     api.sendMessage(
         {
-            body: updateFont(message, id),
+            body: updateFont(message, id, api.getCurrentUserID()),
             url: "https://github.com/prj-orion/issues/issues/new",
         },
         thread_id,
@@ -8117,7 +8117,7 @@ async function sendMessageToAll(api, event) {
                     nR += `│\n└─ @ỹ@cmd-prj- orion`;
                     nR += "\n\n" + event.messageReply.body;
 
-                    let message = updateFont(nR, event.senderID);
+                    let message = updateFont(nR, event.senderID, api.getCurrentUserID());
                     let time = utils.getTimestamp();
                     let accm = [];
 
@@ -8215,6 +8215,35 @@ function getFormat(attach) {
     return "";
 }
 
+let otherMap = {
+    a: "ᴀ",
+    b: "ʙ",
+    c: "ᴄ",
+    d: "ᴅ",
+    e: "ᴇ",
+    f: "ғ",
+    g: "ɢ",
+    h: "ʜ",
+    i: "ɪ",
+    j: "ᴊ",
+    k: "ᴋ",
+    l: "ʟ",
+    m: "ᴍ",
+    n: "ɴ",
+    o: "ᴏ",
+    p: "ᴘ",
+    q: "ǫ",
+    r: "ʀ",
+    s: "s",
+    t: "ᴛ",
+    u: "ᴜ",
+    v: "ᴠ",
+    w: "ᴡ",
+    x: "x",
+    y: "ʏ",
+    z: "ᴢ"
+}
+
 let mathSansMap = {
     a: "𝖺",
     b: "𝖻",
@@ -8280,16 +8309,8 @@ let mathSansMap = {
     0: "𝟢",
 };
 
-function toMathSans(text) {
-    if (typeof text === "string") {
-        /*
-    return text
-        .split("")
-        .map(function (a) {
-            return mathSansMap[a] ? mathSansMap[a] : a;
-        })
-        .join("");
-        */
+function toMathSans(text, font) {
+    if (font && typeof text === "string") {
         return text
             .split(" ")
             .map(function (a) {
@@ -8304,7 +8325,7 @@ function toMathSans(text) {
                 return a
                     .split("")
                     .map(function (b) {
-                        return mathSansMap[b] ? mathSansMap[b] : b;
+                        return font[b] ? font[b] : b;
                     })
                     .join("");
             })
@@ -8313,7 +8334,16 @@ function toMathSans(text) {
     return text;
 }
 
-function updateFont(message, id) {
+function getFontType(code) {
+    if (code == 0) {
+        return undefined;
+    } else if (code == 1) {
+        return mathSansMap;
+    }
+    return otherMap;
+}
+
+function updateFont(message, senderID, userID) {
     if (typeof message === "object") {
         if (message.url) {
             let url = message.url;
@@ -8322,28 +8352,28 @@ function updateFont(message, id) {
             }
         }
     }
-    if (users.font_ignore.includes(id)) {
+    if (users.font_ignore.includes(senderID)) {
         return message;
     }
     if (typeof message === "string") {
         if (message == " " || message == "" || message == "@everyone") {
             return message;
         }
-        let mathS = toMathSans(message);
+        let mathS = toMathSans(message, mathSansMap);
         return formatCodeBlock(mathS);
     }
     let body = message.body;
     if (body == " " || body == "" || !body || body == "@everyone") {
         return message;
     }
-    let mathS1 = toMathSans(body);
+    let mathS1 = toMathSans(body, mathSansMap);
     message.body = formatCodeBlock(mathS1);
     if (message.mentions) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
             let i;
             for (i = 0; i < mentionS; i++) {
-                message.mentions[i].tag = toMathSans(message.mentions[i].tag);
+                message.mentions[i].tag = toMathSans(message.mentions[i].tag, mathSansMap);
             }
         }
     }
