@@ -4892,9 +4892,9 @@ async function ai(api, event) {
                         let user = getDataFromQuery(data);
                         let attem = getIdFromUrl(user);
                         if (/^[0-9]+$/.test(attem)) {
-                            id = attem;
+                            return unblockUser(api, event, attem);
                         } else if (/^[0-9]+$/.test(user)) {
-                            id = user;
+                            return unblockUser(api, event, user);
                         } else {
                             return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
                         }
