@@ -4888,9 +4888,6 @@ async function ai(api, event) {
             if (!id) {
                 if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
-                } else {
-                    if (event.type == "message_reply") {
-                        id = event.messageReply.senderID;
                     } else {
                         let user = getDataFromQuery(data);
                         let attem = getIdFromUrl(user);
@@ -4901,7 +4898,6 @@ async function ai(api, event) {
                         } else {
                             return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
                         }
-                    }
                 }
             }
             unblockUser(api, event, id);
@@ -8242,7 +8238,7 @@ let otherMap = {
     x: "x",
     y: "ʏ",
     z: "ᴢ"
-}
+};
 
 let mathSansMap = {
     a: "𝖺",
