@@ -111,6 +111,7 @@ let traceroute = {};
 let threadIdMV = {};
 let cmd = {};
 let thread = {};
+let videoSearch = [];
 let musicSearch = [];
 let quizData = [];
 let acGG = [];
@@ -217,7 +218,6 @@ process.on("exit", (code) => {
     utils.logged("fca_status offline");
 });
 
-
 /*
  * INITIALIZE LOGIN
  */
@@ -292,7 +292,7 @@ utils.logged("task_unblock global initiated");
 task(
     function () {
         deleteCacheData(false);
-        console.log('\033[2J');
+        console.log("\033[2J");
         utils.logged("clear_list User: " + Object.keys(cmd).length + " Group: " + acGG.length + " Command Call: " + commandCalls);
         cmd = {};
         acGG = [];
@@ -501,6 +501,10 @@ function redfox_fb(fca_state, login, cb) {
                     }
                 }
 
+                if (mainInput.includes("\n")) {
+                    event.body = mainInput.replaceAll("\n", " ");
+                }
+
                 let eventB = event.body;
                 let input = eventB.toLowerCase().normalize("NFKC");
                 let query2 = formatQuery(input);
@@ -530,15 +534,7 @@ function redfox_fb(fca_state, login, cb) {
                         } else if (settings[login].maintenance) {
                             sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues");
                         } else {
-                            getUserProfile(event.senderID, async function (name) {
-                                let aa = "";
-                                if (name.firstName != undefined) {
-                                    aa = name.firstName;
-                                } else {
-                                    aa = "there";
-                                }
-                                sendMessage(api, event, "Hello, i am up and running. How can i help you " + aa + "?");
-                            });
+                            sendMessage(api, event, "If you're reading this message, it's because our servers are working");
                         }
                     } else if (testCommand(api, query, "unblock--thread", event.senderID, "owner", true)) {
                         unblockGroup(api, event, event.threadID);
@@ -1442,9 +1438,35 @@ async function ai22(api, event, query, query2) {
             }
         }
     }
-    if (musicSearch) {
+    if (musicSearch || videoSearch) {
         for (q in musicSearch) {
-            if (musicSearch[q].messageID && event.messageReply.messageID == musicSearch[q].messageID) {
+            if (musicSearch[q] && event.messageReply.messageID == musicSearch[q]) {
+                if (/^\d+$/.test(input)) {
+                    switch (input) {
+                        case "1":
+                            break;
+                        case "2":
+                            break;
+                        case "3":
+                            break;
+                        case "4":
+                            break;
+                        case "5":
+                            break;
+                        case "6":
+                            break;
+                        default:
+                            sendMessage(api, event, "Please enter the correct item number from 1 to 6!");
+                            break;
+                    }
+                } else {
+                    sendMessage(api, event, "Please enter the item number!");
+                }
+                return true;
+            }
+        }
+        for (q in videoSearch) {
+            if (videoSearch[q] && event.messageReply.messageID == videoSearch[q]) {
                 if (/^\d+$/.test(input)) {
                     switch (input) {
                         case "1":
@@ -1671,7 +1693,7 @@ async function ai22(api, event, query, query2) {
                                             );
                                             failedLogin.push(login);
                                         }
-                                        
+
                                         if (!isLogin) {
                                             downloadFile(getProfilePic(login), dirp).then(async (response) => {
                                                 let message = {
@@ -2405,9 +2427,9 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query, "zszszszszszsz", event.senderID, "root", true)) {
     } else if (testCommand(api, query, "zsvdvdvdvdv", event.senderID, "root", true)) {
-        } else if (testCommand(api, query, "zdasfsfsf", event.senderID, "root", true)) {
-        } else if (testCommand(api, query, "zfegbgege", event.senderID, "root", true)) {
-        } else if (testCommand(api, query, "zsgeshrhewheh", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "zdasfsfsf", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "zfegbgege", event.senderID, "root", true)) {
+    } else if (testCommand(api, query, "zsgeshrhewheh", event.senderID, "root", true)) {
     } else if (testCommand(api, query, "clear--cache", event.senderID, "root", true)) {
         let count = 0;
         fs.readdir(__dirname + "/cache/", function (err, files) {
@@ -3146,11 +3168,11 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(api, query2, "music--search", event.senderID)) {
+    } else if (testCommand(api, query2, "video--search", event.senderID)) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music --search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music --search hello world");
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video --search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video --search hello world");
         } else {
             if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
                 let qsearch = getDataFromQuery(data);
@@ -3160,19 +3182,19 @@ async function ai(api, event) {
                 let stringBuilder = "";
                 let thumbnails = [];
                 let time = utils.getTimestamp();
-                let musicIds = [];
-                for (musicID in search.results) {
-                    if (musicID < 7 && search.results[musicID].type == "Video") {
-                        stringBuilder += parseInt(musicID) + 1 + ". " + search.results[musicID].title.text;
-                        stringBuilder += "\n" + search.results[musicID].published.text;
-                        stringBuilder += "\n" + search.results[musicID].short_view_count.text;
-                        stringBuilder += "\n" + search.results[musicID].duration.text + " minutes";
-                        if (musicID != 5) stringBuilder += "\n-------\n";
-                        let fname = __dirname + "/cache/musicsearch" + musicID + "_" + time + ".png";
-                        await downloadFile(encodeURI(search.results[musicID].thumbnails[0].url), fname).then((response1) => {
+                let videoIDS = [];
+                for (videoID in search.results) {
+                    if (videoID < 7 && search.results[videoID].type == "Video") {
+                        stringBuilder += parseInt(videoID) + 1 + ". " + search.results[videoID].title.text;
+                        stringBuilder += "\n" + search.results[videoID].published.text;
+                        stringBuilder += "\n" + search.results[videoID].short_view_count.text;
+                        stringBuilder += "\n" + search.results[videoID].duration.text + " minutes";
+                        if (videoID != 5) stringBuilder += "\n-------\n";
+                        let fname = __dirname + "/cache/videosearch" + videoID + "_" + time + ".png";
+                        await downloadFile(encodeURI(search.results[videoID].thumbnails[0].url), fname).then((response1) => {
                             thumbnails.push(fname);
                         });
-                        musicIds.push(search.results[musicID].id);
+                        videoIDS.push(search.results[videoID].id);
                     }
                 }
 
@@ -3185,7 +3207,7 @@ async function ai(api, event) {
                     message.attachment.push(fs.createReadStream(thumbnails[thumbnail]));
                 }
                 sendMessage(api, event, message);
-                musicSearch.push({ messageID: event.messageID, music_ids: musicIds, time: new Date().toISOString() });
+                videoSearch.push({ messageID: event.messageID, music_ids: videoIDS, time: new Date().toISOString() });
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
@@ -4888,16 +4910,16 @@ async function ai(api, event) {
             if (!id) {
                 if (event.type == "message_reply") {
                     id = event.messageReply.senderID;
+                } else {
+                    let user = getDataFromQuery(data);
+                    let attem = getIdFromUrl(user);
+                    if (/^[0-9]+$/.test(attem)) {
+                        id = attem;
+                    } else if (/^[0-9]+$/.test(user)) {
+                        id = user;
                     } else {
-                        let user = getDataFromQuery(data);
-                        let attem = getIdFromUrl(user);
-                        if (/^[0-9]+$/.test(attem)) {
-                            return unblockUser(api, event, attem);
-                        } else if (/^[0-9]+$/.test(user)) {
-                            return unblockUser(api, event, user);
-                        } else {
-                            return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
-                        }
+                        return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
+                    }
                 }
             }
             unblockUser(api, event, id);
@@ -8237,7 +8259,11 @@ let otherMap = {
     w: "ᴡ",
     x: "x",
     y: "ʏ",
+<<<<<<< HEAD
+    z: "ᴢ",
+=======
     z: "ᴢ"
+>>>>>>> ac2e1ada835a5d7ae618d6180a03652a3ec20db2
 };
 
 let mathSansMap = {
@@ -9162,9 +9188,6 @@ function isJson(str) {
 }
 
 function testCommand(api, message, prefix, senderID, permission, regex) {
-    if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) {
-        return false;
-    }
     if (!permission) {
         permission = "user";
     }
@@ -9174,6 +9197,11 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
     }
 
     prefix = prefix.toLowerCase().replace("--", " --");
+
+    if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) {
+        utils.logged("block_cmd " + prefix);
+        return false;
+    }
 
     if (regex) {
         if (prefix == message) return checkCmdPermission(api, permission, senderID);
