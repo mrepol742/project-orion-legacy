@@ -8259,7 +8259,11 @@ let otherMap = {
     w: "ᴡ",
     x: "x",
     y: "ʏ",
+<<<<<<< HEAD
     z: "ᴢ",
+=======
+    z: "ᴢ"
+>>>>>>> ac2e1ada835a5d7ae618d6180a03652a3ec20db2
 };
 
 let mathSansMap = {
