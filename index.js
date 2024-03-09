@@ -9194,15 +9194,13 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
 
     prefix = prefix.toLowerCase().replace("--", " --");
 
-    if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) {
-        utils.logged("block_cmd " + prefix);
-        return false;
-    }
+    if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) return false;
 
     if (regex) {
         if (prefix == message) return checkCmdPermission(api, permission, senderID);
         return false;
     }
+
     const regExp = new RegExp("(^" + prefix + "$|^" + prefix + "\\s)");
     if (regExp.test(message)) return checkCmdPermission(api, permission, senderID);
     return false;
