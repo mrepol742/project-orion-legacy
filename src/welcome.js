@@ -23,23 +23,23 @@ async function generateWelcomeGif(pictureFile, name, group, member) {
     }
     
     const callBack = async (ctx, width, height, totalFrames, currentFrame) => {
-        ctx.fillStyle = "#212121";
+        ctx.fillStyle = "#fff";
         ctx.textAlign = "center";
-        ctx.font = 'bold 28px "Operator Mono Bold"';
+        ctx.font = 'bold 60px "Operator Mono"';
         ctx.fillText(name, width * 0.5, height * 0.7);
-        ctx.font = '18px "Operator Mono"';
-        ctx.fillText(group, width * 0.5, height * 0.8);
-        ctx.font = '15px "Operator Mono"';
-        ctx.fillText(member, width * 0.5, height * 0.9);
+        ctx.font = '28px "Operator Mono"';
+        ctx.fillText(group, width * 0.5, height * 0.77);
+        ctx.font = '25px "Operator Mono"';
+        ctx.fillText(member, width * 0.5, height * 0.82);
 
         x = width / 2;
         y = height / 3;
-        radius = 50;
+        radius = 130;
         ctx.save();
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI);
 
-        ctx.strokeStyle = "#212121";
+        ctx.strokeStyle = "#fff";
         ctx.stroke();
         ctx.clip();
         let img = fs.readFileSync(pictureFile);
@@ -60,7 +60,7 @@ async function generateWelcomeGif(pictureFile, name, group, member) {
         quality: 50,
     };
 
-    return await canvasGif(__dirname + "/welcome/welcome" + Math.floor(Math.random() * 10) + ".gif", callBack, options)
+    return await canvasGif(__dirname + "/welcome/" + (Math.floor(Math.random() * 5) + 1) + ".gif", callBack, options)
         .then((buffer) => {
             let timesta = utils.getTimestamp();
             fs.writeFileSync(returnD() + "/welcome_" + timesta + ".gif" , buffer);

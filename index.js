@@ -1980,8 +1980,8 @@ async function ai(api, event) {
     }
 
     if (event.type == "message") {
-        let cmmdReply = ["balance --transfer", "add --instance", "unsend", "notify", "totext", "bgremove", "gphoto", "image --reverse", "run", "count", "count --vowels", "count --consonants", "wfind", "pin --add", "translate"];
-        if (cmmdReply.includes(query)) {
+        let cmmdReply = ["balance--transfer", "add--instance", "unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
+        if (cmmdReply.includes(query) && testCommand(api, query2, query2.replace("--", " --"), event.senderID)) {
             if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(query)) {
                 return;
             }
