@@ -8704,8 +8704,8 @@ async function sendAiMessage(api, event, ss) {
                     let filename = __dirname + "/cache/attach_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (var chunk of Utils.streamToIterable(stream)) {
-                        file.write(chunk);
+                    for await (var chunk1 of Utils.streamToIterable(stream)) {
+                        file.write(chunk1);
                     }
                     message["attachment"] = await fs.createReadStream(filename);
                 }
