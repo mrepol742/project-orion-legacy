@@ -136,13 +136,17 @@ const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
  * CREATE SERVER
  */
 
-/*
 const LOG_PORT = 8081;
-
+const WEB_PORT = 3000;
+/*
 http.createServer(getLogs()).listen(LOG_PORT, () => {
     utils.logged("log_server_running http://0.0.0.0:" + LOG_PORT);
 });
 */
+
+http.createServer(getRoutes()).listen(WEB_PORT, () => {
+    utils.logged("log_server_running http://0.0.0.0:" + LOG_PORT);
+});
 
 /*
  * LOAD WEB
@@ -339,7 +343,6 @@ function redfox_fb(fca_state, login, cb) {
         task(
             function () {
                 fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
-                fb_stateD = utils.getCurrentTime();
                 utils.logged("cookie_state " + login + " synchronized");
             },
             Math.floor(1800000 * Math.random() + 1200000)
@@ -680,7 +683,7 @@ function redfox_fb(fca_state, login, cb) {
 
             switch (event.type) {
                 case "message":
-                case "message_reply":
+                case "message_reply": 
                     saveEvent(api, event);
                     ai(api, event);
                     break;
@@ -1645,7 +1648,6 @@ async function ai22(api, event, query, query2) {
                     if (Array.isArray(appsss)) {
                         let login = getUserIdFromAppState(appsss);
                         if (login) {
-                            const login = appsss[item].value;
                             if (!settings[login]) {
                                 settings[login] = settings.default;
                             }
@@ -1816,7 +1818,7 @@ async function ai22(api, event, query, query2) {
                         if (i == response.data.length) {
                             let ss2 = {
                                 body: " ",
-                                attachment: attach,
+                                attachment: attch,
                             };
                             sendMessage(api, event, ss2);
                             unLink(filename);
@@ -2026,7 +2028,7 @@ async function ai(api, event) {
         } else {
             let query = getDataFromQuery(data);
             getResponseData("https://api.duckduckgo.com/?q=" + query + "&format=json&pretty=1").then((response) => {
-                if (response == null) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+                if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                 if (response.Abstract == "") {
                     sendMessage(api, event, "No results found for `" + query + "`");
                 } else {
@@ -2471,7 +2473,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "left", event.senderID, "owner", true)) {
         let login = api.getCurrentUserID();
         api.removeUserFromGroup(login, event.threadID, (err) => {
-            for (let hreads in settingsThread) {
+            for (let threads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                     delete settingsThread[threads]["lock"];
                 }
@@ -3662,15 +3664,6 @@ async function ai(api, event) {
                 sendMessage(api, event, response.baybayin);
             });
         }
-    } else if (testCommand(api, query2, "doubleStruck", event.senderID)) {
-        if (isGoingToFast(api, event)) return;
-        let data = input.split(" ");
-        if (data.length < 2) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: doubleStruck text" + "\n " + example[Math.floor(Math.random() * example.length)] + " doublestruck Hello World");
-        } else {
-            data.shift();
-            sendMessage(api, event, toDoublestruck(data.join(" ")));
-        }
     } else if (testCommand(api, query2, "weather", event.senderID)) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
@@ -3905,11 +3898,12 @@ async function ai(api, event) {
                 let repository = response.repository;
                 let author_email = response.author_email;
                 let message = {
-                    body: "⦿ Name: " + name + " v" + version + "\n⦿ Author: " + author + "\n⦿ Email: " + author_email + "\n⦿ Updated on: " + last_published + "\n⦿ Repository: " + repository + "\n\n" + description,
+                    body: "⦿ Name: " + name + " v" + version + "\n⦿ Author: " + author + "\n⦿ Email: " + author_email + "\n⦿ Updated on: " + last_published + "\n⦿ Repository: " + repository + "\n⦿ Downloads: " + downloads_this_year + "\n\n" + description,
                 };
                 if (repository != "None") {
                     message["url"] = repository;
                 }
+
                 sendMessage(api, event, message);
             });
         }
@@ -4310,7 +4304,7 @@ async function ai(api, event) {
             let num = data.join(" ");
             if (num > 1) {
                 sendMessage(api, event, "Opps! the limit is 1.");
-            } else if (num < -0) {
+            } else if (num < 0.1) {
                 sendMessage(api, event, "Opps! the minimum value 0.1");
             } else {
                 settings.shared.temperature = num;
@@ -4583,8 +4577,8 @@ async function ai(api, event) {
                                 .replace(/\s+/g, " ")
                                 .replaceAll("__new_tab_here__", "\n")
 
-                                .replace(/\%delete_span\%(.*?)\%\^delete_span\%/g, "")
-                                .replace(/\%delete_span\%/g, "");
+                                .replace(/%delete_span%(.*?)%\^delete_span%/g, "")
+                                .replace(/%delete_span%/g, "");
 
                             construct += "\n\n" + formatMalRes(mal1("[itemprop=description]"), true).replace(/\s+/g, " ").replaceAll("__new_tab_here__", "\n");
 
@@ -4688,7 +4682,7 @@ async function ai(api, event) {
                         api.addUserToGroup(pref, event.threadID, (err) => {
                             if (err) {
                                 if (err.error == 1545052) {
-                                    return sendMessage(api, event, data[id].firstName + " could not be added to the conversation. Please try again later.");
+                                    return sendMessage(api, event, pref + " could not be added to the conversation. Please try again later.");
                                 }
                                 return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
                             }
@@ -5291,7 +5285,7 @@ async function ai(api, event) {
                     api.getThreadInfo(event.threadID, (err, a) => {
                         if (err) sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
 
-                        updateGroupData(gc, event.threadID);
+                        updateGroupData(a, event.threadID);
 
                         let inf = "";
                         let usern = a.userInfo.length;
@@ -6077,7 +6071,6 @@ async function ai(api, event) {
         fs.writeFileSync(__dirname + "/data/cookies/" + api.getCurrentUserID() + ".bin", getAppState(api), "utf8");
         utils.logged("cookie_state synchronized");
         sendMessage(api, event, "The AppState refreshed.");
-        fb_stateD = utils.getCurrentTime();
     } else if (testCommand(api, query, "state--save", event.senderID, "owner", true)) {
         saveState();
         sendMessage(api, event, "The state have saved successfully.");
@@ -6091,7 +6084,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "setNickname--random", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
-            if (response == null) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+            if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             api.setNickname(response.names[0] + " " + response.names[1], event.threadID, event.senderID, (err) => {
                 if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             });
@@ -6494,7 +6487,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
                         message,
                         thread_id,
                         (err, messageInfo) => {
-                            if (err) return sendMessageErr(api, event, thread_id, message_id, id, err);
+                            if (err) return sendMessageErr(api, event, thread_id, message_id, event.senderID, err);
                         },
                         message_id
                     );

@@ -52,7 +52,7 @@ function getCurrentTime() {
 }
 
 function setProxy(url) {
-    if (typeof url == undefined)
+    if (!url)
         return (request = bluebird.promisify(
             require("request").defaults({
                 jar: true,
@@ -793,7 +793,6 @@ function getAdminTextMessageType(type) {
             return "log:call_participant_joined";
         case "pin_messages_v2":
             return "log:pin_messages";
-            pin_messages;
         case "unpin_messages_v2":
             return "log:unpin_messages";
         default:
@@ -806,7 +805,7 @@ function formatDeltaEvent(m) {
     var logMessageData;
     switch (m.class) {
         default:
-            utils.logged(m.class);
+            logged(m.class);
             break;
         case "AdminTextMessage":
             logMessageData = m.untypedData;
