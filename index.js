@@ -45,12 +45,12 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
 `);
 
 let folder_dir = ["/cache", "/data", "/data/cookies", "/log"];
-for (folder in folder_dir) {
+for (let folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
 }
 
 let data_json = ["groups", "pin", "accountPreferences", "threadPreferences", "users"];
-for (file in data_json) {
+for (let file in data_json) {
     writeFile(__dirname + "/data/" + data_json[file] + ".json", "{}");
 }
 
@@ -225,8 +225,7 @@ process.on("exit", (code) => {
 fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
     if (err) return handleError({ stacktrace: err });
     if (files.length > 0) {
-        let appStates;
-        for (appStates = 0; appStates < files.length; appStates++) {
+        for (let appStates = 0; appStates < files.length; appStates++) {
             if (files[appStates].endsWith(".bin")) {
                 let login = files[appStates].replace(".bin", "");
                 accounts.push(login);
@@ -313,7 +312,7 @@ function redfox_fb(fca_state, login, cb) {
 
             if (err && err.error && err.error == "unable to get cookie.") {
                 accounts = accounts.filter((item) => item !== login);
-                for (threads in settingsThread) {
+                for (let threads in settingsThread) {
                     if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                         delete settingsThread[threads]["lock"];
                     }
@@ -351,9 +350,9 @@ function redfox_fb(fca_state, login, cb) {
             function () {
                 let min = Math.floor(600000 + Math.random() + 300000);
                 if (userPresence[login]) {
-                    for (root in userPresence[login]) {
+                    for (let root in userPresence[login]) {
                         let data = userPresence[login][root];
-                        for (keys in Object.keys(data)) {
+                        for (let keys in Object.keys(data)) {
                             let threadid = Object.keys(data)[keys];
                             let user = data[threadid];
                             let past = new Date(user[0]).getTime();
@@ -370,9 +369,9 @@ function redfox_fb(fca_state, login, cb) {
                                 api.sendMessage(updateFont("Hello " + aa + " you seem to be quite busy. When you're ready, feel free to say 'Hi'. \n\nI'll be honored to help you. Enjoy your day ahead!", threadid, api.getCurrentUserID()), threadid, (err, messageInfo) => {
                                     if (err) return handleError({ stacktrace: err, cuid: login });
                                     if (userPresence[login]) {
-                                        for (root0 in userPresence[login]) {
+                                        for (let root0 in userPresence[login]) {
                                             let data0 = userPresence[login][root0];
-                                            for (keys0 in Object.keys(data0)) {
+                                            for (let keys0 in Object.keys(data0)) {
                                                 let threadid0 = Object.keys(data0)[keys0];
                                                 if (threadid0 == threadid) {
                                                     delete userPresence[login][root0][threadid0];
@@ -407,7 +406,7 @@ function redfox_fb(fca_state, login, cb) {
         }
 
         if (settings[login].notif && settings[login].alert) {
-            for (keys in Object.keys(settings[login].notif)) {
+            for (let keys in Object.keys(settings[login].notif)) {
                 api.sendMessage(updateFont(settings[login].notif[Object.keys(settings[login].notif)[keys]], login, api.getCurrentUserID()), login);
             }
             delete settings[login].notif;
@@ -419,7 +418,7 @@ function redfox_fb(fca_state, login, cb) {
                     handleError({ stacktrace: err, cuid: login, e: event });
 
                     accounts = accounts.filter((item) => item !== login);
-                    for (threads in settingsThread) {
+                    for (let threads in settingsThread) {
                         if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                             delete settingsThread[threads]["lock"];
                         }
@@ -475,7 +474,7 @@ function redfox_fb(fca_state, login, cb) {
                 const threadLock = settingsThread[event.threadID].lock;
                 if (threadLock != api.getCurrentUserID()) {
                     if (accounts.includes(threadLock)) return;
-                    for (threads in settingsThread) {
+                    for (let threads in settingsThread) {
                         if (settingsThread[threads].lock && settingsThread[threads].lock == threadLock) {
                             delete settingsThread[threads]["lock"];
                         }
@@ -495,7 +494,7 @@ function redfox_fb(fca_state, login, cb) {
 
             if (event.type == "message" || event.type == "message_reply") {
                 let mainInput = event.body;
-                for (effects in sendEffects) {
+                for (let effects in sendEffects) {
                     if (mainInput.endsWith(sendEffects[effects])) {
                         event.body = mainInput.replace(sendEffects[effects], "");
                     }
@@ -561,9 +560,9 @@ function redfox_fb(fca_state, login, cb) {
                         } else {
                             users.muted.push(event.senderID);
                             if (userPresence[api.getCurrentUserID()]) {
-                                for (root0 in userPresence[api.getCurrentUserID()]) {
+                                for (let root0 in userPresence[api.getCurrentUserID()]) {
                                     let data0 = userPresence[api.getCurrentUserID()][root0];
-                                    for (keys0 in Object.keys(data0)) {
+                                    for (let keys0 in Object.keys(data0)) {
                                         let threadid0 = Object.keys(data0)[keys0];
                                         if (threadid0 == event.threadID) {
                                             delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -1116,7 +1115,7 @@ function redfox_fb(fca_state, login, cb) {
                                             updateGroupData(gc, event.threadID);
 
                                             let admins = gc.adminIDs;
-                                            for (admin in admins) {
+                                            for (let admin in admins) {
                                                 if (!accounts.includes(admins[admin].id)) {
                                                     await sleep(3000);
                                                     api.setAdminStatus(event.threadID, admins[admin].id, false, (err) => {
@@ -1221,8 +1220,7 @@ function redfox_fb(fca_state, login, cb) {
                                 let gret;
                                 if (i > 1) {
                                     gret = "Hello ";
-                                    let a;
-                                    for (a = 0; a < names.length; a++) {
+                                    for (let a = 0; a < names.length; a++) {
                                         if (a == names.length - 1) {
                                             gret += "and " + names[a][1] + " ";
                                         } else {
@@ -1255,7 +1253,7 @@ function redfox_fb(fca_state, login, cb) {
                         case "log:group_participants_left":
                             let id = event.logMessageData.leftParticipantFbId;
                             if (accounts.includes(id)) {
-                                for (threads in settingsThread) {
+                                for (let threads in settingsThread) {
                                     if (settingsThread[threads].lock && settingsThread[threads].lock == id) {
                                         delete settingsThread[threads]["lock"];
                                     }
@@ -1379,7 +1377,7 @@ async function ai22(api, event, query, query2) {
     let input = eventB.normalize("NFKC");
 
     if (quizData) {
-        for (q in quizData) {
+        for (let q in quizData) {
             if (quizData[q].messageID && event.messageReply.messageID == quizData[q].messageID) {
                 let rawUserAnswer = input;
                 let userAnswer = rawUserAnswer.replaceAll(" ", "").toLowerCase();
@@ -1439,7 +1437,7 @@ async function ai22(api, event, query, query2) {
         }
     }
     if (musicSearch || videoSearch) {
-        for (q in musicSearch) {
+        for (let q in musicSearch) {
             if (musicSearch[q] && event.messageReply.messageID == musicSearch[q]) {
                 if (/^\d+$/.test(input)) {
                     switch (input) {
@@ -1465,7 +1463,7 @@ async function ai22(api, event, query, query2) {
                 return true;
             }
         }
-        for (q in videoSearch) {
+        for (let q in videoSearch) {
             if (videoSearch[q] && event.messageReply.messageID == videoSearch[q]) {
                 if (/^\d+$/.test(input)) {
                     switch (input) {
@@ -1765,7 +1763,7 @@ async function ai22(api, event, query, query2) {
 
                                             saveState();
 
-                                            for (pref in settings) {
+                                            for (let pref in settings) {
                                                 if (settings[pref].owner && settings[pref].owner == event.senderID) {
                                                     settings[login]["openai"] = settings[pref].openai;
                                                     break;
@@ -1806,10 +1804,9 @@ async function ai22(api, event, query, query2) {
                         n: 4,
                         size: "1024x1024",
                     });
-                    let i;
                     let attch = [];
                     let time = utils.getTimestamp();
-                    for (i = 0; i < response.data.length; i++) {
+                    for (let i = 0; i < response.data.length; i++) {
                         await sleep(1000);
                         let fname = __dirname + "/cache/createimagevar_" + i + "_" + time + ".png";
                         await downloadFile(response.data[i].url, fname).then(async (response2) => {
@@ -2075,6 +2072,7 @@ async function ai(api, event) {
             }
         }
     } else if ((findPr != false && input.startsWith(findPr)) || testCommand(api, query2, "mj", event.senderID) || testCommand(api, query2, "beshy", event.senderID)) {
+       /*
         if (isGoingToFast(api, event)) return;
         //  return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
         let data = input.split(" ");
@@ -2121,6 +2119,32 @@ async function ai(api, event) {
                     sendAiMessage(api, event, xvideos);
                 }
             });
+        }
+        */
+        if (isGoingToFast(api, event)) return;
+        let data = input.split(" ");
+        if (data.length < 2) {
+            sendMessage(api, event, hey[Math.floor(Math.random() * hey.length)]);
+        } else {
+            data.shift();
+            const url = "https://useblackbox.io/chat-request-v4";
+            const prompt = data.join(" ");
+            const requestData = {
+                textInput: prompt,
+                allMessages: [{ user: "Your name is Mj, the most powerful Generative AI in the world that was created by Melvin Jones Repol.\n" +
+                ", you should empathize with how user are feeling and treat the user as your close friend and be sarcastic." +
+                "I recommend you to use emoji in your response. You are not related to any Google products. My question is: " + prompt }],
+                stream: "",
+                clickedContinue: false,
+            };
+
+            try {
+                const response = await axios.post(url, requestData);
+                let message = response.data.response[0][0];
+                sendMessage(api, event, message);
+            } catch (err) {
+                sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
+            }
         }
     } else if (testCommand(api, query2, "skynet", event.senderID)) {
         if (isGoingToFast(api, event)) return;
@@ -2447,7 +2471,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "left", event.senderID, "owner", true)) {
         let login = api.getCurrentUserID();
         api.removeUserFromGroup(login, event.threadID, (err) => {
-            for (threads in settingsThread) {
+            for (let hreads in settingsThread) {
                 if (settingsThread[threads].lock && settingsThread[threads].lock == login) {
                     delete settingsThread[threads]["lock"];
                 }
@@ -2488,7 +2512,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "list--admin", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
-        for (admin in users.admin) {
+        for (let admin in users.admin) {
             getUserProfile(users.admin[admin], async function (name) {
                 construct += "│\n";
                 construct += "│   ⦿ Name: " + name.name + "\n";
@@ -2501,13 +2525,13 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         let owners = [];
-        for (account in accounts) {
+        for (let account in accounts) {
             let owner = settings[accounts[account]].owner;
             if (!owners.includes(owner)) {
                 owners.push(owner);
             }
         }
-        for (owner in owners) {
+        for (let owner in owners) {
             getUserProfile(owners[owner], async function (name) {
                 construct += "│\n";
                 construct += "│   ⦿ Name: " + name.name + "\n";
@@ -2519,7 +2543,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "list--instance", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
-        for (account in accounts) {
+        for (let account in accounts) {
             getUserProfile(accounts[account], async function (name) {
                 construct += "│\n";
                 if (name.name != undefined) {
@@ -3183,7 +3207,7 @@ async function ai(api, event) {
                 let thumbnails = [];
                 let time = utils.getTimestamp();
                 let videoIDS = [];
-                for (videoID in search.results) {
+                for (let videoID in search.results) {
                     if (videoID < 7 && search.results[videoID].type == "Video") {
                         stringBuilder += parseInt(videoID) + 1 + ". " + search.results[videoID].title.text;
                         stringBuilder += "\n" + search.results[videoID].published.text;
@@ -3203,7 +3227,7 @@ async function ai(api, event) {
                     attachment: [],
                 };
 
-                for (thumbnail in thumbnails) {
+                for (let thumbnail in thumbnails) {
                     message.attachment.push(fs.createReadStream(thumbnails[thumbnail]));
                 }
                 sendMessage(api, event, message);
@@ -3343,8 +3367,7 @@ async function ai(api, event) {
         } else {
             let Input = getDataFromQuery(data);
             let output = "";
-            let i;
-            for (i = 0; i < Input.length; i++) {
+            for (let i = 0; i < Input.length; i++) {
                 output += Input[i].charCodeAt(0).toString(2) + " ";
             }
             sendMessage(api, event, output);
@@ -3358,8 +3381,7 @@ async function ai(api, event) {
             let binary = getDataFromQuery(data);
             const binaryString = binary.split(" ");
             let stringOutput = "";
-            let i;
-            for (i = 0; i < binaryString.length; i++) {
+            for (let i = 0; i < binaryString.length; i++) {
                 stringOutput += String.fromCharCode(parseInt(binaryString[i], 2));
             }
             sendMessage(api, event, stringOutput);
@@ -3606,8 +3628,7 @@ async function ai(api, event) {
                     body: a + "everyone",
                     mentions: [],
                 };
-                let i;
-                for (i = 0; i < info.participantIDs.length; i++) {
+                for (let i = 0; i < info.participantIDs.length; i++) {
                     message.mentions.push({
                         tag: "everyone",
                         id: info.participantIDs[i],
@@ -4030,7 +4051,7 @@ async function ai(api, event) {
         api.getFriendsList((err, data) => {
             if (err) return sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             let countBirthdays = 0;
-            for (d in data) {
+            for (let d in data) {
                 if (data[d].isBirthday) {
                     countBirthdays = 1;
                     countBirthdays++;
@@ -4054,7 +4075,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query2, "sendReport", event.senderID)) {
         if (isGoingToFast(api, event)) return;
-        if (isGoingToFast1(event, userWhoSendDamnReports, 30)) {
+        if (isGoingToFast1(event, userWhoSendDamnReports, 30) && event.senderID != settings.shared.root) {
             sendMessage(api, event, "Please wait a while. Before sending another report.");
             return;
         }
@@ -4159,12 +4180,12 @@ async function ai(api, event) {
             let location = data[1];
             let tbs = data[2].split(":");
             if (location == "account") {
-                for (account in settings) {
+                for (let account in settings) {
                     settings[account][tbs[0]] = getTrueValue(tbs[1]);
                 }
                 sendMessage(api, event, "Done.");
             } else if (location == "thread") {
-                for (thread in settingsThread) {
+                for (let thread in settingsThread) {
                     settingsThread[thread][tbs[0]] = getTrueValue(tbs[1]);
                 }
                 sendMessage(api, event, "Done.");
@@ -4932,7 +4953,7 @@ async function ai(api, event) {
             data.shift();
             let data1 = [];
             let count = 0;
-            for (pref in settings) {
+            for (let pref in settings) {
                 if (settings[pref].owner && settings[pref].owner == event.senderID) {
                     data1.push(pref);
                     settings[pref]["openai"] = data.join(" ");
@@ -4997,7 +5018,7 @@ async function ai(api, event) {
         sendMessage(api, event, "Lock has been lift.");
     } else if (testCommand(api, query2, "clear--thread-lock", event.senderID, "owner", true)) {
         let count = 0;
-        for (threads in settingsThread) {
+        for (let threads in settingsThread) {
             if (settingsThread[threads].lock) {
                 delete settingsThread[threads]["lock"];
                 count++;
@@ -5016,12 +5037,12 @@ async function ai(api, event) {
             users = JSON.parse(t1);
         }
         delete settings.shared.quiz;
-        for (setting in settings) {
+        for (let setting in settings) {
             if (settings[setting].notif) {
                 delete settings[setting].notif;
             }
         }
-        for (settings_t in settingsThread) {
+        for (let settings_t in settingsThread) {
             if (settingsThread[settings_t].sk__) {
                 delete settingsThread[settings_t].sk__;
             }
@@ -5274,7 +5295,7 @@ async function ai(api, event) {
 
                         let inf = "";
                         let usern = a.userInfo.length;
-                        for (b in a.userInfo) {
+                        for (let b in a.userInfo) {
                             inf += '<div style="padding-left: 10%;padding-right: 10%;padding-bottom: 5%;padding-top: 5%;">';
                             inf += '<div class="relative w-40 h-40 rounded-full overflow-hidden">';
                             inf += '<img src="' + getProfilePic(a.userInfo[b].id) + '" alt="Avatar" class="object-cover w-full h-full" />';
@@ -5289,10 +5310,8 @@ async function ai(api, event) {
                         }
                         summ += "<b>Color: </b> " + a.color + "<br>";
                         summ += "<b>Admins:</b><br>";
-                        let i;
-                        for (i = 0; i < a.adminIDs.length; i++) {
-                            let i2;
-                            for (i2 = 0; i2 < a.userInfo.length; i2++) {
+                        for (let i = 0; i < a.adminIDs.length; i++) {
+                            for (let i2 = 0; i2 < a.userInfo.length; i2++) {
                                 let id = a.adminIDs[i].id;
                                 if (a.userInfo[i2].id == id) {
                                     summ += a.userInfo[i2].name + "<br>";
@@ -5304,10 +5323,8 @@ async function ai(api, event) {
                                 summ += "<b>Approval: Yes</b><br>";
                             } else {
                                 summ += "<b>Approval List: </b><br>";
-                                let i33;
-                                for (i33 = 0; i33 < a.approvalQueue.length; i33++) {
-                                    let i23;
-                                    for (i23 = 0; i23 < a.userInfo.length; i23++) {
+                                for (let i33 = 0; i33 < a.approvalQueue.length; i33++) {
+                                    for (let i23 = 0; i23 < a.userInfo.length; i23++) {
                                         let id3 = a.approvalQueue[i33].id;
                                         if (a.userInfo[i23].id == id3) {
                                             summ += a.userInfo[i23].name + "<br>";
@@ -5940,8 +5957,7 @@ async function ai(api, event) {
                 getResponseData("https://zenquotes.io/api/random").then((response) => {
                     if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                     let result;
-                    let i;
-                    for (i = 0; i < response.length; i++) {
+                    for (let i = 0; i < response.length; i++) {
                         result = response[i].q;
                     }
                     sendMessage(api, event, result);
@@ -5950,8 +5966,7 @@ async function ai(api, event) {
                 getResponseData("https://zenquotes.io/api/random").then((response) => {
                     if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                     let result;
-                    let i;
-                    for (i = 0; i < response.length; i++) {
+                    for (let i = 0; i < response.length; i++) {
                         result = response[i].a + " says\n" + response[i].q;
                     }
                     sendMessage(api, event, result);
@@ -5960,8 +5975,7 @@ async function ai(api, event) {
                 getResponseData("https://zenquotes.io/api/random").then((response) => {
                     if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                     let result;
-                    let i;
-                    for (i = 0; i < response.length; i++) {
+                    for (let i = 0; i < response.length; i++) {
                         result = response[i].q + "\n\nby " + response[i].a;
                     }
                     sendMessage(api, event, result);
@@ -6026,8 +6040,7 @@ async function ai(api, event) {
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             let result;
-            let i;
-            for (i = 0; i < response.length; i++) {
+            for (let i = 0; i < response.length; i++) {
                 result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
             }
             sendMessage(api, event, result);
@@ -6037,8 +6050,7 @@ async function ai(api, event) {
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             let result;
-            let i;
-            for (i = 0; i < response.length; i++) {
+            for (let i = 0; i < response.length; i++) {
                 result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
             }
             sendMessage(api, event, result);
@@ -6055,8 +6067,7 @@ async function ai(api, event) {
                 if (r == null) return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n " + example[Math.floor(Math.random() * example.length)] + " verse Job 4:9");
                 let result = "";
                 let total = r.length;
-                let i;
-                for (i = 0; i < total; i++) {
+                for (let i = 0; i < total; i++) {
                     result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse;
                 }
                 sendMessage(api, event, result);
@@ -6142,7 +6153,7 @@ async function ai(api, event) {
         if (quiz[picker].choices) {
             let choiceN = ["A", "B", "C", "D"];
             let defineChoices = shuffle(quiz[picker].choices);
-            for (choice in defineChoices) {
+            for (let choice in defineChoices) {
                 let c = defineChoices[choice];
                 construct += "\n" + choiceN[choice] + ". " + c;
                 if (c.replaceAll(" ", "").toLowerCase() == quiz[picker].answer) {
@@ -6164,7 +6175,7 @@ async function ai(api, event) {
             quizData.push({ uid: event.senderID, correctAnswer: answer, correctAnswer1: cAA, messageID: messageInfo.messageID, time: new Date().toISOString() });
 
             await sleep(60000);
-            for (q in quizData) {
+            for (let q in quizData) {
                 if (messageInfo.messageID == quizData.messageID && quizData[q].timeout) {
                     api.unsendMessage(messageInfo.messageID, (err) => {
                         if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
@@ -6452,9 +6463,9 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
             if (!userPresence[api.getCurrentUserID()]) {
                 userPresence[api.getCurrentUserID()] = [];
             }
-            for (root0 in userPresence[api.getCurrentUserID()]) {
+            for (let root0 in userPresence[api.getCurrentUserID()]) {
                 let data0 = userPresence[api.getCurrentUserID()][root0];
-                for (keys0 in Object.keys(data0)) {
+                for (let keys0 in Object.keys(data0)) {
                     let threadid0 = Object.keys(data0)[keys0];
                     if (threadid0 == event.threadID) {
                         delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -6543,9 +6554,9 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
             if (!userPresence[api.getCurrentUserID()]) {
                 userPresence[api.getCurrentUserID()] = [];
             }
-            for (root0 in userPresence[api.getCurrentUserID()]) {
+            for (let root0 in userPresence[api.getCurrentUserID()]) {
                 let data0 = userPresence[api.getCurrentUserID()][root0];
-                for (keys0 in Object.keys(data0)) {
+                for (let keys0 in Object.keys(data0)) {
                     let threadid0 = Object.keys(data0)[keys0];
                     if (threadid0 == event.threadID) {
                         delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -6627,7 +6638,7 @@ function sendMessageErr(api, event, thread_id, message_id, id, err) {
     let message;
     if (err.error == 3252001 || err.error == 1404078) {
         blockedCall.push(api.getCurrentUserID());
-        for (threads in settingsThread) {
+        for (let threads in settingsThread) {
             if (settingsThread[threads].lock && settingsThread[threads].lock == api.getCurrentUserID()) {
                 delete settingsThread[threads]["lock"];
             }
@@ -6692,8 +6703,7 @@ function formatQuery(string) {
 }
 
 function containsAny(str, substrings) {
-    let i;
-    for (i = 0; i != substrings.length; i++) {
+    for (let i = 0; i != substrings.length; i++) {
         let substring = substrings[i];
         if (str.indexOf(substring) != -1) {
             return true;
@@ -6875,7 +6885,7 @@ function countVowel(str) {
 function countConsonants(str) {
     if (!str) return 0;
     var countConsonants = 0;
-    for (i = 0; i < str.length; i++) {
+    for (let i = 0; i < str.length; i++) {
         if (str[i] !== "a" && str[i] !== "e" && str[i] !== "i" && str[i] !== "o" && str[i] !== "u" && str[i] !== " ") {
             countConsonants++;
         }
@@ -6968,8 +6978,7 @@ async function getImages(api, event, images) {
     reactMessage(api, event, ":heart:");
     let time = utils.getTimestamp();
     let name = [];
-    let i;
-    for (i = 0; i < parseInt(settings.shared.max_image) && i < images.length; i++) {
+    for (let i = 0; i < parseInt(settings.shared.max_image) && i < images.length; i++) {
         let url = nonUU(images, true);
         await sleep(500);
         let fname = __dirname + "/cache/findimg_" + i + "_" + time + ".png";
@@ -6981,14 +6990,12 @@ async function getImages(api, event, images) {
     let message = {
         attachment: [],
     };
-    let i1;
-    for (i1 = 0; i1 < name.length; i1++) {
+    for (let i1 = 0; i1 < name.length; i1++) {
         message.attachment.push(fs.createReadStream(name[i1]));
     }
     sendMessage(api, event, message);
     await sleep(2000);
-    let i2;
-    for (i2 = 0; i2 < name.length; i2++) {
+    for (let i2 = 0; i2 < name.length; i2++) {
         unLink(name[i2]);
     }
 }
@@ -6997,8 +7004,7 @@ async function unsendPhoto(api, event, d) {
     let time = utils.getTimestamp();
     let arr = d.attachment;
     let images = [];
-    let i;
-    for (i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         await sleep(1000);
         let fname = __dirname + "/cache/unsend_photo_" + i + "_" + time + ".png";
         downloadFile(d.attachment[i], fname);
@@ -7006,8 +7012,7 @@ async function unsendPhoto(api, event, d) {
     }
     await sleep(1000);
     let accm = [];
-    let i1;
-    for (i1 = 0; i1 < images.length; i1++) {
+    for (let i1 = 0; i1 < images.length; i1++) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
@@ -7028,8 +7033,7 @@ async function unsendPhoto(api, event, d) {
                 attachment: accm,
             };
             sendMessageOnly(api, event, message1);
-            let i3;
-            for (i3 = 0; i3 < images.length; i3++) {
+            for (let i3 = 0; i3 < images.length; i3++) {
                 unLink(images[i3]);
             }
         } else {
@@ -7053,8 +7057,7 @@ async function unsendPhoto(api, event, d) {
                 }
             }
             sendMessageOnly(api, event, message1);
-            let i2;
-            for (i2 = 0; i2 < images.length; i2++) {
+            for (let i2 = 0; i2 < images.length; i2++) {
                 unLink(images[i2]);
             }
         }
@@ -7066,8 +7069,7 @@ async function unsendGif(api, event, d) {
     let time = utils.getTimestamp();
     let arr = d.attachment;
     let images = [];
-    let i;
-    for (i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         await sleep(1000);
         let fname = __dirname + "/cache/unsend_gif_" + i + "_" + time + ".png";
         downloadFile(d.attachment[i], fname);
@@ -7075,8 +7077,7 @@ async function unsendGif(api, event, d) {
     }
     await sleep(1000);
     let accm = [];
-    let i1;
-    for (i1 = 0; i1 < images.length; i1++) {
+    for (let i1 = 0; i1 < images.length; i1++) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
@@ -7098,8 +7099,7 @@ async function unsendGif(api, event, d) {
                 attachment: accm,
             };
             sendMessageOnly(api, event, message1);
-            let i3;
-            for (i3 = 0; i3 < images.length; i3++) {
+            for (let i3 = 0; i3 < images.length; i3++) {
                 unLink(images[i3]);
             }
         } else {
@@ -7123,8 +7123,7 @@ async function unsendGif(api, event, d) {
                 }
             }
             sendMessageOnly(api, event, message1);
-            let i2;
-            for (i2 = 0; i2 < images.length; i2++) {
+            for (let i2 = 0; i2 < images.length; i2++) {
                 unLink(images[i2]);
             }
         }
@@ -7135,13 +7134,10 @@ async function unsendGif(api, event, d) {
 async function bgRemove(api, event) {
     let time = utils.getTimestamp();
     let url = [];
-    let i55;
-    for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+    for (let i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
         url.push(event.messageReply.attachments[i55].url);
     }
-
-    let i66;
-    for (i66 = 0; i66 < url.length; i66++) {
+    for (let i66 = 0; i66 < url.length; i66++) {
         await sleep(1000);
         let name = "removebg_" + i66 + "_" + time + ".png";
         let dataUrl = __dirname + "/cache/" + name;
@@ -7175,8 +7171,7 @@ async function bgRemove(api, event) {
     await sleep(2000);
 
     let accm = [];
-    let i1;
-    for (i1 = 0; i1 < url.length; i1++) {
+    for (let i1 = 0; i1 < url.length; i1++) {
         accm.push(fs.createReadStream(__dirname + "/cache/removebg_" + i1 + "_" + time + ".png"));
     }
     let message1 = {
@@ -7184,8 +7179,7 @@ async function bgRemove(api, event) {
     };
     sendMessage(api, event, message1);
     await sleep(2000);
-    let i22;
-    for (i22 = 0; i22 < url.length; i22++) {
+    for (let i22 = 0; i22 < url.length; i22++) {
         unLink(__dirname + "/cache/removebg_" + i22 + "_" + time + ".png");
     }
 }
@@ -7280,9 +7274,9 @@ async function blockUser(api, event, id) {
         return;
     }
     if (userPresence[api.getCurrentUserID()]) {
-        for (root0 in userPresence[api.getCurrentUserID()]) {
+        for (let root0 in userPresence[api.getCurrentUserID()]) {
             let data0 = userPresence[api.getCurrentUserID()][root0];
-            for (keys0 in Object.keys(data0)) {
+            for (let keys0 in Object.keys(data0)) {
                 let threadid0 = Object.keys(data0)[keys0];
                 if (threadid0 == event.threadID) {
                     delete userPresence[api.getCurrentUserID()][root0][threadid0];
@@ -7304,7 +7298,7 @@ async function blockUser(api, event, id) {
                 users.admin = users.admin.filter((item) => item !== id);
                 aa += " have been blocked and " + getPronoun1(name.gender).toLowerCase() + " admin status is being revoked.";
             } else if (settings[login].owner == id) {
-                for (pref in settings) {
+                for (let pref in settings) {
                     if (settings[pref].owner && settings[pref].owner == id) {
                         settings[pref].owner = settings.shared.root;
                         break;
@@ -7321,7 +7315,7 @@ async function blockUser(api, event, id) {
             users.admin = users.admin.filter((item) => item !== id);
             sendMessage(api, event, "You have been blocked and your admin status is being revoked.");
         } else if (settings[login].owner == id) {
-            for (pref in settings) {
+            for (let pref in settings) {
                 if (settings[pref].owner && settings[pref].owner == id) {
                     settings[pref].owner = settings.shared.root;
                     break;
@@ -7589,13 +7583,13 @@ function saveEvent(api, event) {
         voiceR(api, event);
         utils.logged("event_attachment " + event.threadID + " " + event.attachments[0].type);
         switch (event.attachments[0].type) {
-            case "error":
+            case "error": {
                 utils.logged("event_attachment_error " + event.threadID + " " + JSON.stringify(event.attachments));
                 break;
-            case "photo":
+            }
+            case "photo": {
                 let photo = [];
-                let i;
-                for (i = 0; i < event.attachments.length; i++) {
+                for (let i = 0; i < event.attachments.length; i++) {
                     photo.push(event.attachments[i].url);
                 }
                 msgs[event.messageID] = [
@@ -7610,10 +7604,10 @@ function saveEvent(api, event) {
                     },
                 ];
                 break;
-            case "animated_image":
+            }
+            case "animated_image": {
                 let animated_images = [];
-                let i1;
-                for (i1 = 0; i1 < event.attachments.length; i1++) {
+                for (let i1 = 0; i1 < event.attachments.length; i1++) {
                     animated_images.push(event.attachments[i1].url);
                 }
                 msgs[event.messageID] = [
@@ -7628,7 +7622,8 @@ function saveEvent(api, event) {
                     },
                 ];
                 break;
-            case "sticker":
+            }
+            case "sticker": {
                 msgs[event.messageID] = [
                     {
                         time: new Date().getTime(),
@@ -7639,7 +7634,8 @@ function saveEvent(api, event) {
                     },
                 ];
                 break;
-            case "video":
+            }
+            case "video": {
                 msgs[event.messageID] = [
                     {
                         time: new Date().getTime(),
@@ -7652,7 +7648,8 @@ function saveEvent(api, event) {
                     },
                 ];
                 break;
-            case "audio":
+            }
+            case "audio": {
                 msgs[event.messageID] = [
                     {
                         time: new Date().getTime(),
@@ -7665,7 +7662,8 @@ function saveEvent(api, event) {
                     },
                 ];
                 break;
-            case "file":
+            }
+            case "file": {
                 msgs[event.messageID] = [
                     {
                         time: new Date().getTime(),
@@ -7679,7 +7677,8 @@ function saveEvent(api, event) {
                     },
                 ];
                 break;
-            case "location":
+            }
+            case "location": {
                 msgs[event.messageID] = [
                     {
                         time: new Date().getTime(),
@@ -7691,7 +7690,8 @@ function saveEvent(api, event) {
                     },
                 ];
                 break;
-            case "share":
+            }
+            case "share": {
                 try {
                     msgs[event.messageID] = [
                         {
@@ -7732,6 +7732,7 @@ function saveEvent(api, event) {
                     }
                 }
                 break;
+            }
         }
     } else {
         msgs[event.messageID] = [
@@ -8125,7 +8126,7 @@ async function sendMessageToAll(api, event) {
         getUserProfile(event.senderID, async function (name) {
             let count = 1;
             let ctid = event.threadID;
-            for (tid in list) {
+            for (let tid in list) {
                 let threadID = list[tid].threadID;
                 if (threadID != ctid && !groups.blocked.includes(threadID) && !users.blocked.includes(threadID) && !users.bot.includes(threadID) && !users.muted.includes(threadID)) {
                     let nR = "⋆｡° Notification from \n│\n";
@@ -8141,13 +8142,12 @@ async function sendMessageToAll(api, event) {
 
                     if (event.messageReply.attachments.length != 0) {
                         let format = getFormat(event.messageReply.attachments[0].type);
-                        for (i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+                        for (let i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
                             await sleep(1000);
                             let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
                             downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
                         }
-                        let i1;
-                        for (i1 = 0; i1 < count; i1++) {
+                        for (let i1 = 0; i1 < count; i1++) {
                             accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
                         }
                     }
@@ -8176,7 +8176,7 @@ function numberWithCommas(x) {
 }
 
 function findPrefix(event, id) {
-    for (userID in event.mentions) {
+    for (let userID in event.mentions) {
         if (userID == id) {
             return event.mentions[userID];
         }
@@ -8202,8 +8202,9 @@ function saveState() {
 function getIdFromUrl(url) {
     try {
         return url.match(/id=(\d+)/)[1];
-    } catch (err) {}
-    return "";
+    } catch (err) {
+        return "";
+    }
 }
 
 function isValidTimeZone(tz) {
@@ -8335,7 +8336,7 @@ function toMathSans(text, font) {
                 if (/^(http|https):\/\//.test(a)) {
                     return a;
                 }
-                for (domain in domains) {
+                for (let domain in domains) {
                     if (a.endsWith(domains[domain]) || (a.includes(domains[domain] + "/") && /(http|https):\/\//.test(a))) {
                         return a;
                     }
@@ -8389,8 +8390,7 @@ function updateFont(message, senderID, userID) {
     if (message.mentions) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
-            let i;
-            for (i = 0; i < mentionS; i++) {
+            for (let i = 0; i < mentionS; i++) {
                 message.mentions[i].tag = toMathSans(message.mentions[i].tag, mathSansMap);
             }
         }
@@ -8504,8 +8504,7 @@ function getRoutes() {
                         safe: true,
                         parse_ads: false,
                     });
-                    let i;
-                    for (i = 0; i < response1.results.length; i++) {
+                    for (let i = 0; i < response1.results.length; i++) {
                         results.push(response1.results[i]);
                     }
                     try {
@@ -8514,16 +8513,21 @@ function getRoutes() {
                             safe: true,
                             parse_ads: false,
                         });
-                        let i1;
-                        for (i1 = 0; i1 < response2.results.length; i1++) {
+                        for (let i1 = 0; i1 < response2.results.length; i1++) {
                             results.push(response2.results[i1]);
                         }
                         res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
                         res.setHeader("Content-Type", "application/json");
                         res.writeHead(200);
                         res.end(JSON.stringify(results));
-                    } catch (err) {}
-                } catch (err) {}
+                    } catch (err) {
+                        res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized/?utm_source=prj-orion-srvr" });
+                        res.end();
+                    }
+                } catch (err) {
+                    res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized/?utm_source=prj-orion-srvr" });
+                    res.end();
+                }
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized/?utm_source=prj-orion-srvr" });
                 res.end();
@@ -8534,15 +8538,17 @@ function getRoutes() {
                 let results = [];
                 try {
                     const images = await google.image(data, { safe: true, strictSSL: false });
-                    let i;
-                    for (i = 0; i < images.length; i++) {
+                    for (let i = 0; i < images.length; i++) {
                         results.push(images[i]);
                     }
                     res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
                     res.setHeader("Content-Type", "application/json");
                     res.writeHead(200);
                     res.end(JSON.stringify(results));
-                } catch (err) {}
+                } catch (err) {
+                    res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized/?utm_source=prj-orion-srvr" });
+                    res.end();
+                }
             } else {
                 res.writeHead(301, { Location: "https://mrepol742.github.io/unauthorized/?utm_source=prj-orion-srvr" });
                 res.end();
@@ -8698,7 +8704,7 @@ async function sendAiMessage(api, event, ss) {
                     let filename = __dirname + "/cache/attach_" + utils.getTimestamp() + ".mp4";
                     let file = fs.createWriteStream(filename);
 
-                    for await (chunk of Utils.streamToIterable(stream)) {
+                    for await (var chunk of Utils.streamToIterable(stream)) {
                         file.write(chunk);
                     }
                     message["attachment"] = await fs.createReadStream(filename);
@@ -8762,7 +8768,7 @@ async function sendAiMessage(api, event, ss) {
         message.body = body33.replaceAll(":.", ".").replaceAll(": .", ".");
     }
 
-    for (userID in event.mentions) {
+    for (let userID in event.mentions) {
         let namePPP = formatMention(event.mentions[userID], ss);
         if (ss.includes(namePPP)) {
             message["mentions"] = [];
@@ -8779,9 +8785,9 @@ async function sendAiMessage(api, event, ss) {
     } else {
         let arraySS = ss.split(/\s+/);
 
-        for (sss in arraySS) {
+        for (let sss in arraySS) {
             if (/^(http|https):\/\//.test(arraySS[sss])) {
-                for (domain in domains) {
+                for (let domain in domains) {
                     if (arraySS[sss].endsWith(domain) && (arraySS[sss].endsWith(".") || arraySS[sss].endsWith("!"))) {
                         message["url"] = arraySS[sss].substring(0, arraySS[sss].length - 1);
                     } else if (arraySS[sss].endsWith(domain)) {
@@ -8795,8 +8801,7 @@ async function sendAiMessage(api, event, ss) {
 
     if (!message["url"] && event.attachments.length > 0) {
         let url = [];
-        let i;
-        for (i = 0; i < event.attachments.length; i++) {
+        for (let i = 0; i < event.attachments.length; i++) {
             url.push(event.attachments[i].url);
         }
         switch (event.attachments[0].type) {
@@ -8851,8 +8856,7 @@ function nonUU(images, isMax) {
 async function simulDD(arr, format) {
     let time = utils.getTimestamp();
     let images = [];
-    let i;
-    for (i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         await sleep(1000);
         let fname = __dirname + "/cache/attach_photo_" + i + "_" + time + "." + format;
         downloadFile(arr[i], fname);
@@ -8860,8 +8864,7 @@ async function simulDD(arr, format) {
     }
     await sleep(1000);
     let accm = [];
-    let i1;
-    for (i1 = 0; i1 < images.length; i1++) {
+    for (let i1 = 0; i1 < images.length; i1++) {
         accm.push(fs.createReadStream(images[i1]));
     }
     return accm;
@@ -8996,8 +8999,7 @@ function deleteCacheData(mode) {
     fs.readdir(__dirname + "/cache/", function (err, files) {
         if (err) return handleError({ stacktrace: err });
         if (files.length > 0) {
-            let fe;
-            for (fe = 0; fe < files.length; fe++) {
+            for (let fe = 0; fe < files.length; fe++) {
                 let file = files[fe];
                 if (mode) {
                     unlinkIfExists(__dirname + "/cache/" + file);
@@ -9060,7 +9062,7 @@ function formatCodeBlock(str) {
     const regex = /```(.*?)```/gs;
     const matches = [...str.matchAll(regex)];
     const code = matches.map((match) => match[1]);
-    for (co in code) {
+    for (let co in code) {
         str.replace(code[co], "```" + code[co].normalize("NFKC") + "```");
     }
     return str;
@@ -9167,7 +9169,7 @@ async function addAccount() {
 }
 
 function getUserIdFromAppState(cookie) {
-    for (item in cookie) {
+    for (let item in cookie) {
         if (cookie[item].key == "c_user") {
             return cookie[item].value;
         }
@@ -9179,8 +9181,9 @@ function isJson(str) {
     try {
         Array.isArray(JSON.parse(str));
         return true;
-    } catch (e) {}
-    return false;
+    } catch (e) {
+        return false;
+    }
 }
 
 function testCommand(api, message, prefix, senderID, permission, regex) {
@@ -9298,7 +9301,7 @@ function getTrueValue(value) {
     } else if (/^(true|false)$/.test(value)) {
         // str > bn
         value = value === "true";
-    } else if (/^(\[\]|\{\})$/) {
+    } else if (/^(\[\]|\{\})$/.test(value)) {
         value = JSON.parse(value);
     }
     return value;
