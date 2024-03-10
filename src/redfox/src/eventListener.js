@@ -257,13 +257,7 @@ function eventListener(defaultFuncs, api, ctx, globalCallback) {
     mqttClient.on("close", function () {
         utils.logged("fca_mqtt_client connection closed restarting now...");
         mqttClient.end();
-        globalCallback(
-            {
-                type: "stop_listen",
-                error: "Connection refused: Server unavailable",
-            },
-            null
-        );
+        process.exit(0);
     });
 }
 
