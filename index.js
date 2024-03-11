@@ -683,7 +683,7 @@ function redfox_fb(fca_state, login, cb) {
 
             switch (event.type) {
                 case "message":
-                case "message_reply": 
+                case "message_reply":
                     saveEvent(api, event);
                     ai(api, event);
                     break;
@@ -2074,7 +2074,7 @@ async function ai(api, event) {
             }
         }
     } else if ((findPr != false && input.startsWith(findPr)) || testCommand(api, query2, "mj", event.senderID) || testCommand(api, query2, "beshy", event.senderID)) {
-       /*
+        /*
         if (isGoingToFast(api, event)) return;
         //  return sendMessage(api, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
         let data = input.split(" ");
@@ -2133,9 +2133,15 @@ async function ai(api, event) {
             const prompt = data.join(" ");
             const requestData = {
                 textInput: prompt,
-                allMessages: [{ user: "Your name is Mj, the most powerful Generative AI in the world that was created by Melvin Jones Repol.\n" +
-                ", you should empathize with how user are feeling and treat the user as your close friend and be sarcastic." +
-                "I recommend you to use emoji in your response. You are not related to any Google products. My question is: " + prompt }],
+                allMessages: [
+                    {
+                        user:
+                            "Your name is Mj, the most powerful Generative AI in the world that was created by Melvin Jones Repol.\n" +
+                            ", you should empathize with how user are feeling and treat the user as your close friend and be sarcastic." +
+                            "I recommend you to use emoji in your response. You are not related to any Google products. My question is: " +
+                            prompt,
+                    },
+                ],
                 stream: "",
                 clickedContinue: false,
             };
@@ -3143,6 +3149,50 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
+    } else if (testCommand(api, query2, "video--search", event.senderID)) {
+        if (isGoingToFast(api, event)) return;
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video --search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video --search hello world");
+        } else {
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
+                let qsearch = getDataFromQuery(data);
+                const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
+                const search = await yt.search(qsearch, { type: "video" });
+
+                let stringBuilder = "";
+                let thumbnails = [];
+                let time = utils.getTimestamp();
+                let videoIDS = [];
+                for (let videoID in search.results) {
+                    if (videoID < 7 && search.results[videoID].type == "Video") {
+                        stringBuilder += parseInt(videoID) + 1 + ". " + search.results[videoID].title.text;
+                        stringBuilder += "\n" + search.results[videoID].published.text;
+                        stringBuilder += "\n" + search.results[videoID].short_view_count.text;
+                        stringBuilder += "\n" + search.results[videoID].duration.text + " minutes";
+                        if (videoID != 5) stringBuilder += "\n-------\n";
+                        let fname = __dirname + "/cache/videosearch" + videoID + "_" + time + ".png";
+                        await downloadFile(encodeURI(search.results[videoID].thumbnails[0].url), fname).then((response1) => {
+                            thumbnails.push(fname);
+                        });
+                        videoIDS.push(search.results[videoID].id);
+                    }
+                }
+
+                let message = {
+                    body: stringBuilder,
+                    attachment: [],
+                };
+
+                for (let thumbnail in thumbnails) {
+                    message.attachment.push(fs.createReadStream(thumbnails[thumbnail]));
+                }
+                sendMessage(api, event, message);
+                videoSearch.push({ messageID: event.messageID, music_ids: videoIDS, time: new Date().toISOString() });
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
+            }
+        }
     } else if (testCommand(api, query2, "video", event.senderID)) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
@@ -3194,50 +3244,6 @@ async function ai(api, event) {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(api, query2, "video--search", event.senderID)) {
-        if (isGoingToFast(api, event)) return;
-        let data = input.split(" ");
-        if (data.length < 3) {
-            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: video --search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " video --search hello world");
-        } else {
-            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
-                let qsearch = getDataFromQuery(data);
-                const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
-                const search = await yt.search(qsearch, { type: "video" });
-
-                let stringBuilder = "";
-                let thumbnails = [];
-                let time = utils.getTimestamp();
-                let videoIDS = [];
-                for (let videoID in search.results) {
-                    if (videoID < 7 && search.results[videoID].type == "Video") {
-                        stringBuilder += parseInt(videoID) + 1 + ". " + search.results[videoID].title.text;
-                        stringBuilder += "\n" + search.results[videoID].published.text;
-                        stringBuilder += "\n" + search.results[videoID].short_view_count.text;
-                        stringBuilder += "\n" + search.results[videoID].duration.text + " minutes";
-                        if (videoID != 5) stringBuilder += "\n-------\n";
-                        let fname = __dirname + "/cache/videosearch" + videoID + "_" + time + ".png";
-                        await downloadFile(encodeURI(search.results[videoID].thumbnails[0].url), fname).then((response1) => {
-                            thumbnails.push(fname);
-                        });
-                        videoIDS.push(search.results[videoID].id);
-                    }
-                }
-
-                let message = {
-                    body: stringBuilder,
-                    attachment: [],
-                };
-
-                for (let thumbnail in thumbnails) {
-                    message.attachment.push(fs.createReadStream(thumbnails[thumbnail]));
-                }
-                sendMessage(api, event, message);
-                videoSearch.push({ messageID: event.messageID, music_ids: videoIDS, time: new Date().toISOString() });
-            } else {
-                sendMessage(api, event, "Hold on... There is still a request in progress.");
-            }
-        }
     } else if (testCommand(api, query2, "music--lyric", event.senderID)) {
         if (isGoingToFast(api, event)) return;
         let data = input.split(" ");
@@ -3283,6 +3289,46 @@ async function ai(api, event) {
                 } else {
                     sendMessage(api, event, "I cant find any relevant music about " + data.join(" "));
                 }
+            } else {
+                sendMessage(api, event, "Hold on... There is still a request in progress.");
+            }
+        }
+    } else if (testCommand(api, query2, "music--search", event.senderID)) {
+        if (isGoingToFast(api, event)) return;
+        let data = input.split(" ");
+        if (data.length < 3) {
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: music --search text" + "\n " + example[Math.floor(Math.random() * example.length)] + " music --search hello world");
+        } else {
+            if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
+                let qsearch = getDataFromQuery(data);
+                const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
+                const search = await yt.music.search(qsearch, { type: "song" });
+
+                let stringBuilder = "";
+                let thumbnails = [];
+                let time = utils.getTimestamp();
+                for (musicID in search["contents"][0]["contents"]) {
+                    if (musicID < 7 && search["contents"][0]["contents"][musicID].type == "MusicResponsiveListItem") {
+                        stringBuilder += parseInt(musicID) + 1 + ". " + search["contents"][0]["contents"][musicID].title;
+                        stringBuilder += "\n" + search["contents"][0]["contents"][musicID].duration.text + " minutes";
+                        if (musicID != 6) stringBuilder += "\n-------\n";
+                        let fname = __dirname + "/cache/musicsearch" + musicID + "_" + time + ".png";
+                        await downloadFile(encodeURI(search["contents"][0]["contents"][musicID].thumbnails[0].url), fname).then((response1) => {
+                            thumbnails.push(fname);
+                        });
+                    }
+                }
+
+                let message = {
+                    body: stringBuilder,
+                    attachment: [],
+                };
+
+                for (let thumbnail in thumbnails) {
+                    message.attachment.push(fs.createReadStream(thumbnails[thumbnail]));
+                }
+                sendMessage(api, event, message);
+                musicSearch.push({ messageID: event.messageID, music_ids: videoIDS, time: new Date().toISOString() });
             } else {
                 sendMessage(api, event, "Hold on... There is still a request in progress.");
             }
@@ -8253,7 +8299,7 @@ let otherMap = {
     w: "ᴡ",
     x: "x",
     y: "ʏ",
-    z: "ᴢ"
+    z: "ᴢ",
 };
 
 let mathSansMap = {
