@@ -1441,7 +1441,7 @@ async function ai22(api, event, query, query2) {
     }
     if (musicSearch || videoSearch) {
         for (let q in musicSearch) {
-            if (musicSearch[q] && event.messageReply.messageID == musicSearch[q]) {
+            if (musicSearch[q] && event.messageReply.messageID == musicSearch[q].messageID) {
                 if (/^\d+$/.test(input)) {
                     switch (input) {
                         case "1":
@@ -1467,7 +1467,7 @@ async function ai22(api, event, query, query2) {
             }
         }
         for (let q in videoSearch) {
-            if (videoSearch[q] && event.messageReply.messageID == videoSearch[q]) {
+            if (videoSearch[q] && event.messageReply.messageID == videoSearch[q].messageID) {
                 if (/^\d+$/.test(input)) {
                     switch (input) {
                         case "1":
@@ -3308,10 +3308,10 @@ async function ai(api, event) {
                 let thumbnails = [];
                 let time = utils.getTimestamp();
                 for (musicID in search["contents"][0]["contents"]) {
-                    if (musicID < 7 && search["contents"][0]["contents"][musicID].type == "MusicResponsiveListItem") {
+                    if (musicID < 6 && search["contents"][0]["contents"][musicID].type == "MusicResponsiveListItem") {
                         stringBuilder += parseInt(musicID) + 1 + ". " + search["contents"][0]["contents"][musicID].title;
                         stringBuilder += "\n" + search["contents"][0]["contents"][musicID].duration.text + " minutes";
-                        if (musicID != 6) stringBuilder += "\n-------\n";
+                        if (musicID != 5) stringBuilder += "\n-------\n";
                         let fname = __dirname + "/cache/musicsearch" + musicID + "_" + time + ".png";
                         await downloadFile(encodeURI(search["contents"][0]["contents"][musicID].thumbnails[0].url), fname).then((response1) => {
                             thumbnails.push(fname);
