@@ -4875,7 +4875,7 @@ async function ai(api, event) {
                 sendMessage(api, event, "Failed!");
                 return;
             }
-            if (users.bot.includes(id)) {
+            if (users.blocked.includes(id) || users.bot.includes(id)) {
                 sendMessage(api, event, "I already knew it.");
             } else {
                 users.bot.push(id);
@@ -6804,7 +6804,7 @@ function isGoingToFast(api, event) {
             });
         });
     }
-    
+
     if (!users.bot.includes(event.senderID)) {
         if (isItBotOrNot(api, event)) {
             return true;
@@ -7309,7 +7309,7 @@ async function blockUser(api, event, id) {
     }
 
     const login = api.getCurrentUserID();
-    if (users.blocked.includes(id)) {
+    if (users.blocked.includes(id) || users.bot.includes(id)) {
         sendMessage(api, event, "It's already blocked.");
         return;
     }
@@ -7411,14 +7411,7 @@ async function unblockUser(api, event, id) {
 
     if (users.blocked.includes(id)) {
         users.blocked = users.blocked.filter((item) => item !== id);
-        api.setMessageReaction(
-            ":heart:",
-            event.messageID,
-            (err) => {
-                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
-            },
-            true
-        );
+       sendMessage(api, event, "Done captain!");
         getUserProfile(id, async function (name) {
             removeBalance(name, 1500);
         });
@@ -7430,6 +7423,7 @@ async function unblockUser(api, event, id) {
     } else {
         if (isMyId(event.senderID)) {
             users.bot = users.bot.filter((item) => item !== id);
+            sendMessage(api, event, "If you see this messages, means it worked!");
         } else {
             sendMessage(api, event, "Unable to unblocked!");
         }
