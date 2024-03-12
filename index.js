@@ -6769,7 +6769,15 @@ function isGoingToFast(api, event) {
     let input = eventB.normalize("NFKC");
     commandCalls++;
     utils.logged("event_body " + event.threadID + " " + input);
-    if (!users.list.find((user) => event.senderID === user.id)) {
+  
+    if (!users.list.find((user) => event.senderID === user.id && user["name"])) {
+        api.getUserInfo(event.senderID, async (err, data1) => {
+            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+            utils.logged("old_user " + event.threadID + " " + data1[event.senderID].name);
+            updateUserData(data1, event.senderID);
+            reactMessage(api, event, ":heart:");
+        });
+    } else if (!users.list.find((user) => event.senderID === user.id)) {
         api.getUserInfo(event.senderID, async (err, data1) => {
             if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             utils.logged("new_user " + event.threadID + " " + data1[event.senderID].name);
@@ -6796,14 +6804,7 @@ function isGoingToFast(api, event) {
             });
         });
     }
-    if (!users.list.find((user) => event.senderID === user.id && user["name"])) {
-        api.getUserInfo(event.senderID, async (err, data1) => {
-            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
-            utils.logged("old_user " + event.threadID + " " + data1[event.senderID].name);
-            updateUserData(data1, event.senderID);
-            reactMessage(api, event, ":heart:");
-        });
-    }
+    
     if (!users.bot.includes(event.senderID)) {
         if (isItBotOrNot(api, event)) {
             return true;
