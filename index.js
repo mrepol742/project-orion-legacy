@@ -439,7 +439,7 @@ function redfox_fb(fca_state, login, cb) {
                 }
                 return;
             }
-
+            
             if (isAppState) {
                 fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(api), "utf8");
                 utils.logged("cookie_state " + login + " synchronized");
