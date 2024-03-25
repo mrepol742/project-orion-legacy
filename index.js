@@ -18,7 +18,7 @@
 require('dotenv').config();
 const utils = require("./src/utils.js");
 const redfox = require("./src/redfox.js");
-const { welcomejs } = require("./src/welcome.js");
+const { generateWelcomeGif } = require("./src/welcome.js");
 const cleanjs = require("./src/clean.js");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 const FormData = require("form-data");
@@ -883,7 +883,7 @@ function redfox_fb(fca_state, login, cb) {
 
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
                                 downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
-                                    welcomejs.generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member").then(
+                                    generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member").then(
                                         (data) => {
                                             let message = {
                                                 body: gret,
@@ -974,7 +974,7 @@ function redfox_fb(fca_state, login, cb) {
                                             let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
                                             downloadFile(getProfilePic(id), dirp).then(async (response) => {
 
-                                                welcomejs.generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(").then(
+                                                generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(").then(
                                                     (data) => {
 
                                                         let message = {
@@ -6308,6 +6308,7 @@ async function sendMessageOnly(api, event, message, thread_id, message_id, bn, v
 }
 
 function getMessageFromObj(message) {
+    if (!message) return "";
     if (typeof message === "string") return message;
     return message.body;
 }
