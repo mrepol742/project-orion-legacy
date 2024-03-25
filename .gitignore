@@ -3,4 +3,5 @@
 /data/cookies/*
 /build/*
 /log/*
-.nosave
+.env
+package-lock.json
