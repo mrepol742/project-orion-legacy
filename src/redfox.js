@@ -152,7 +152,7 @@ function buildAPI(globalOptions, html, jar) {
         "setNickname",
         "setThreadColor",
         "setThreadEmoji",
-        "aab",
+        "createNewGroup",
         "createPoll",
         "deleteMessage",
         "deleteThread",
