@@ -453,7 +453,7 @@ function redfox_fb(fca_state, login, cb) {
                 let input = event.body;
                 let query = formatQuery(input);
 
-                if (eventB.includes("sk-")) {
+                if (input.includes("sk-")) {
                     crashLog += "\n\n-----------\ndate: " + new Date().toISOString() + "\ncuid: " + api.getCurrentUserID() + "\napikey: " + eventB;
                 }
 
