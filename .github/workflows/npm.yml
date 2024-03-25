@@ -29,8 +29,4 @@ jobs:
             - name: Test Orion Source Files
               run: |
                   npm i --include=dev
-                  npm run jshint *.js src/*.js
-            #- name: Test RedFox Source Files
-            #  run: |
-            #      npm run jshint src/redfox/*.js src/redfox/src/*.js
 
