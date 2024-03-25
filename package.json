@@ -1,5 +1,5 @@
 {
-    "name": "@mrepol742/project-orion",
+    "name": "project-orion",
     "version": "7.0.0",
     "description": "A Chatbot thats trained to understand and respond to a wide range of commands and requests. Providing a valuable service that poeple find useful. Strive to create a platform that is easy to use and provides helpful features that make poeple's lives easier.",
     "main": "index.js",
@@ -7,10 +7,8 @@
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
         "setup": "npm install && apt install traceroute cowsay figlet neofetch gedit",
-        "start": "clear && while [ true ]; do node --trace-deprecation index.js ; done",
-        "dev": "nodemon --trace-deprecation index.js",
-        "jshint": "jshint",
-        "prettier": "prettier"
+        "start": "clear && while [ true ]; do node index.js ; done",
+        "dev": "nodemon index.js"
     },
     "keywords": [],
     "author": {
@@ -33,6 +31,8 @@
         "canvas": "^2.11.2",
         "canvas-gif": "^1.0.3",
         "cheerio": "^0.22.0",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.1",
         "form-data": "^4.0.0",
         "google-tts-api": "^2.0.2",
         "googlethis": "^1.8.0",
@@ -46,9 +46,7 @@
     },
     "devDependencies": {
         "eslint": "^8.57.0",
-        "jshint": "^2.13.6",
-        "nodemon": "^3.0.2",
-        "prettier": "^2.8.4"
+        "nodemon": "^3.0.2"
     },
     "engines": {
         "node": ">=18.x"
