@@ -8314,15 +8314,10 @@ function isValidTimeZone(tz) {
 }
 
 function getFormat(attach) {
-    if (attach == "photo") {
-        return ".png";
-    } else if (attach == "animated_image") {
-        return ".gif";
-    } else if (attach == "video") {
-        return ".mp4";
-    } else if (attach == "audio") {
-        return ".mp3";
-    }
+    if (attach == "photo") return ".png";
+    if (attach == "animated_image") return ".gif";
+    if (attach == "video") return ".mp4";
+    if (attach == "audio") return ".mp3";
     return "";
 }
 
@@ -8446,11 +8441,8 @@ function toMathSans(text, font) {
 }
 
 function getFontType(code) {
-    if (code == 0) {
-        return undefined;
-    } else if (code == 1) {
-        return mathSansMap;
-    }
+    if (code == 0) return undefined;
+    if (code == 1) return mathSansMap;
     return otherMap;
 }
 
@@ -8491,14 +8483,9 @@ function updateFont(message, senderID, userID) {
 }
 
 function removeTags(str) {
-    if (str === null || str === "") {
-        return false;
-    } else {
-        str = str.toString();
-    }
-    if (str.includes("<br>")) {
-        str = str.replaceAll("<br>", "\n");
-    }
+    if (str === null || str === "") return false;
+    str = str.toString();
+    if (str.includes("<br>")) str = str.replaceAll("<br>", "\n");
     return str.replace(/(<([^>]+)>)/gi, "");
 }
 
@@ -9166,15 +9153,11 @@ function isJson(str) {
 }
 
 function testCommand(api, message, prefix, senderID, permission, regex) {
-    if (!permission) {
-        permission = "user";
-    }
+    if (!permission) permission = "user";
+    if (!regex) regex = false;
 
-    if (!regex) {
-        regex = false;
-    }
-
-    prefix = prefix.toLowerCase().replace("--", " --");
+    // temp
+    message = message.replaceAll("--", "");
 
     if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) return false;
 
