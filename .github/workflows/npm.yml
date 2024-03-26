@@ -18,10 +18,8 @@ jobs:
               with:
                   node-version: 20
                   cache: "npm"
-            - name: NPM Clean Install
-              run: npm ci
+            - name: NPM install
+              run: npm i --include=dev
             - name: Eslint
-              run: |
-                  npm i --include=dev
-                  npm run eslint ./
+              run: npm run eslint ./
 

@@ -85,6 +85,7 @@ let cmdPage = JSON.parse(gen());
 
 if (process.env.DEBUG) {
     settingsThread = { default: { leave: false, unsend: false, nsfw: true, cmd: 1 } };
+    utils.logged("debug_enb overriding default threads settings");
 }
 
 /*
@@ -124,7 +125,7 @@ const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 
 /*
-const LOG_PORT = process.env.LOG_PORT || 3001;
+const LOG_PORT = process.env.LOG_PORT;
 http.createServer(getLogs()).listen(LOG_PORT, () => {
     utils.logged("log_server_running http://localhost:" + LOG_PORT);
 });
@@ -376,13 +377,8 @@ function redfox_fb(fca_state, login, cb) {
                     unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
                 }
 
-                if (typeof cb === "function") {
-                    return cb(true);
-                }
-
-                if (accounts.length == 0) {
-                    addAccount();
-                }
+                if (typeof cb === "function") return cb(true);
+                if (accounts.length == 0) addAccount();
                 return;
             }
 
@@ -5693,40 +5689,46 @@ async function ai(api, event) {
         } else {
             data.shift();
             let value = data.join(" ");
-            if (value == "--anime") {
-                getResponseData("https://animechan.vercel.app/api/random").then((response) => {
-                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
-                    sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
-                });
-            } else if (value == "--advice") {
-                getResponseData("https://zenquotes.io/api/random").then((response) => {
-                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
-                    let result;
-                    for (let i = 0; i < response.length; i++) {
-                        result = response[i].q;
-                    }
-                    sendMessage(api, event, result);
-                });
-            } else if (value == "--inspiration") {
-                getResponseData("https://zenquotes.io/api/random").then((response) => {
-                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
-                    let result;
-                    for (let i = 0; i < response.length; i++) {
-                        result = response[i].a + " says\n" + response[i].q;
-                    }
-                    sendMessage(api, event, result);
-                });
-            } else if (value == "--motivation") {
-                getResponseData("https://zenquotes.io/api/random").then((response) => {
-                    if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
-                    let result;
-                    for (let i = 0; i < response.length; i++) {
-                        result = response[i].q + "\n\nby " + response[i].a;
-                    }
-                    sendMessage(api, event, result);
-                });
-            } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
+            switch (value) {
+                case "--anime": {
+                    getResponseData("https://animechan.vercel.app/api/random").then((response) => {
+                        if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                        sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
+                    });
+                }
+                case "--advice": {
+                    getResponseData("https://zenquotes.io/api/random").then((response) => {
+                        if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                        let result;
+                        for (let i = 0; i < response.length; i++) {
+                            result = response[i].q;
+                        }
+                        sendMessage(api, event, result);
+                    });
+                }
+                case "--inspiration": {
+                    getResponseData("https://zenquotes.io/api/random").then((response) => {
+                        if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                        let result;
+                        for (let i = 0; i < response.length; i++) {
+                            result = response[i].a + " says\n" + response[i].q;
+                        }
+                        sendMessage(api, event, result);
+                    });
+                }
+                case "--motivation": {
+                    getResponseData("https://zenquotes.io/api/random").then((response) => {
+                        if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
+                        let result;
+                        for (let i = 0; i < response.length; i++) {
+                            result = response[i].q + "\n\nby " + response[i].a;
+                        }
+                        sendMessage(api, event, result);
+                    });
+                }
+                default: {
+                    sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
+                }
             }
         }
     } else if (testCommand(api, query, "time--timezone", event.senderID)) {
@@ -5737,18 +5739,16 @@ async function ai(api, event) {
         } else {
             let body = getDataFromQuery(data);
             if (isValidTimeZone(body)) {
-                sendMessage(api, event, "It's " + getCurrentDateAndTime(body));
-            } else {
-                sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
+                return sendMessage(api, event, "It's " + getCurrentDateAndTime(body));
             }
+            sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
         }
     } else if (testCommand(api, query, "time", event.senderID, "user", true)) {
         getUserProfile(event.senderID, async function (name) {
             if (name.firstName != undefined && name.timezone) {
-                sendMessage(api, event, "It's " + getCurrentDateAndTime(name.timezone));
-            } else {
-                sendMessage(api, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
+                return sendMessage(api, event, "It's " + getCurrentDateAndTime(name.timezone));
             }
+            sendMessage(api, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
         });
     } else if (testCommand(api, query, "newyear", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
