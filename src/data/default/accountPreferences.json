@@ -22,14 +22,13 @@
             },
             "dell": 0
         },
-        "owner": "100071743848974",
+        "owner": "0",
         "openai": "",
         "mirrorReaction": true,
         "autoReaction": true,
         "alert": true
     },
     "shared": {
-        "root": "100071743848974",
         "delay": true,
         "frequency_penalty": "0",
         "temperature": "0.5",

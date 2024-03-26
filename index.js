@@ -52,13 +52,11 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
 let folder_dir = ["/cache", "/data", "/data/cookies", "/log"];
 for (let folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
-    utils.logged("creating_dir "  + __dirname + folder_dir[folder]);
 }
 
 let data_json = ["groups", "accountPreferences", "threadPreferences", "users"];
 for (let file in data_json) {
     writeFile(__dirname + "/data/" + data_json[file] + ".json", fs.readFileSync(__dirname + "/src/data/default/" + data_json[file] + ".json", "utf8"));
-    utils.logged("writing_data "  + __dirname + data_json[file]);
 }
 
 if (!fs.existsSync(__dirname + "/.env")) {
@@ -83,9 +81,9 @@ let cat = JSON.parse(fs.readFileSync(__dirname + "/src/data/cat.json"));
 let packagejson = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 let cmdPage = JSON.parse(gen());
 
-if (process.env.DEBUG) {
+if (process.env.DEBUG === "true") {
     settingsThread = { default: { leave: false, unsend: false, nsfw: true, cmd: 1 } };
-    utils.logged("debug_enb overriding default threads settings");
+    utils.logged("debug_enabled overriding default threads settings");
 }
 
 /*
@@ -273,13 +271,8 @@ function redfox_fb(fca_state, login, cb) {
                 unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
             }
 
-            if (typeof cb === "function") {
-                return cb(true);
-            }
-
-            if (accounts.length == 0) {
-                addAccount();
-            }
+            if (typeof cb === "function") return cb(true)
+            if (accounts.length == 0) addAccount();
             return;
         }
 
@@ -390,6 +383,8 @@ function redfox_fb(fca_state, login, cb) {
                     cb(false);
                 }
             }
+
+            if (process.env.LOCK_THREAD_ID && event.threadID != process.env.LOCK_THREAD_ID) return;
 
             // check if thread lock exists and is not equal to current bot id
             // then return
@@ -651,7 +646,7 @@ function redfox_fb(fca_state, login, cb) {
                     }
                     d = msgs[event.messageID][0];
 
-                    if (!settingsThread[event.threadID].unsend || users.admin.includes(event.senderID) || settings[login].owner == event.senderID || settings.shared.root == event.senderID) {
+                    if (!settingsThread[event.threadID].unsend || users.admin.includes(event.senderID) || settings[login].owner == event.senderID || process.env.ROOT == event.senderID) {
                         break;
                     }
 
@@ -944,7 +939,7 @@ function redfox_fb(fca_state, login, cb) {
                                         sendMessage(api, event, "It's so sad to see another user of Facebook fades away.");
                                         utils.logged("event_log_unsubsribe " + event.threadID + " " + id);
                                     } else {
-                                        if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID && settings.shared.root != event.senderID) {
+                                        if (settingsThread[event.threadID].leave && !accounts.includes(id) && !users.admin.includes(id) && settings[login].owner != event.senderID && process.env.ROOT != event.senderID) {
                                             api.addUserToGroup(id, event.threadID, (err) => {
                                                 if (err) {
                                                     if (err.error == 1545052) {
@@ -1294,16 +1289,16 @@ async function ai22(api, event, query) {
             if (/^\d+$/.test(data[2])) {
                 let amount = parseInt(data[2]);
                 getUserProfile(event.senderID, async function (name) {
-                    if (!name.balance && event.senderID != settings.shared.root) {
+                    if (!name.balance && event.senderID != process.env.ROOT) {
                         sendMessage(api, event, "You have 0 $ balance yet.");
-                    } else if (amount + 500 > name.balance && event.senderID != settings.shared.root) {
+                    } else if (amount + 500 > name.balance && event.senderID != process.env.ROOT) {
                         sendMessage(api, event, "You don't have enough balance!");
                     } else {
                         getUserProfile(transferTo, async function (name1) {
                             addBalance(name1, amount);
                         });
                         removeBalance(name, amount);
-                        if (event.senderID != settings.shared.root) {
+                        if (event.senderID != process.env.ROOT) {
                             removeBalance(name, 500);
                         }
                         sendMessage(api, event, "Transfer success of " + data[2] + ".");
@@ -1402,7 +1397,7 @@ async function ai22(api, event, query) {
                                                 getUserProfile(settings[login].owner, async function (name) {
                                                     removeBalance(name, 3000);
                                                 });
-                                                if (event.senderID != settings.shared.root) {
+                                                if (event.senderID != process.env.ROOT) {
                                                     getUserProfile(event.senderID, async function (name) {
                                                         removeBalance(name, 1500);
                                                     });
@@ -1416,7 +1411,7 @@ async function ai22(api, event, query) {
                                                 getUserProfile(settings[login].owner, async function (name) {
                                                     removeBalance(name, 6000);
                                                 });
-                                                if (event.senderID != settings.shared.root) {
+                                                if (event.senderID != process.env.ROOT) {
                                                     getUserProfile(event.senderID, async function (name) {
                                                         removeBalance(name, 3000);
                                                     });
@@ -3287,7 +3282,7 @@ async function ai(api, event) {
                     if (partner1 == partner2) {
                         return sendMessage(api, event, "talking 'bout self love!");
                     }
-                    if (partner1 == settings.shared.root || partner2 == settings.shared.root) {
+                    if (partner1 == process.env.ROOT || partner2 == process.env.ROOT) {
                         return sendMessage(api, event, "impossible... just it.");
                     }
                 }
@@ -3816,7 +3811,7 @@ async function ai(api, event) {
         }
     } else if (testCommand(api, query, "sendReport", event.senderID)) {
         if (isGoingToFast(api, event)) return;
-        if (isGoingToFast1(event, userWhoSendDamnReports, 30) && event.senderID != settings.shared.root) {
+        if (isGoingToFast1(event, userWhoSendDamnReports, 30) && event.senderID != process.env.ROOT) {
             sendMessage(api, event, "Please wait a while. Before sending another report.");
             return;
         }
@@ -4109,9 +4104,9 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "top", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
-            if (!user.balance && event.senderID != settings.shared.root) {
+            if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
-            } else if (1000 > user.balance && event.senderID != settings.shared.root) {
+            } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
                 api.getThreadInfo(event.threadID, (err, gc) => {
@@ -4119,7 +4114,7 @@ async function ai(api, event) {
 
                     updateGroupData(gc, event.threadID);
 
-                    if (event.senderID != settings.shared.root) {
+                    if (event.senderID != process.env.ROOT) {
                         removeBalance(user, 1000);
                     }
                     if (gc.isGroup) {
@@ -4127,7 +4122,7 @@ async function ai(api, event) {
                         let participantIDs = gc.participantIDs;
                         for (let i = 0; i < users.list.length; i++) {
                             let cuid = users.list[i].id;
-                            if (users.list[i].balance && participantIDs.includes(cuid) && cuid != settings.shared.root) {
+                            if (users.list[i].balance && participantIDs.includes(cuid) && cuid != process.env.ROOT) {
                                 lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
                             }
                         }
@@ -4184,17 +4179,17 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
-            if (!user.balance && event.senderID != settings.shared.root) {
+            if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
-            } else if (1000 > user.balance && event.senderID != settings.shared.root) {
+            } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
-                if (event.senderID != settings.shared.root) {
+                if (event.senderID != process.env.ROOT) {
                     removeBalance(user, 1000);
                 }
                 let lead = [];
                 for (let i = 0; i < users.list.length; i++) {
-                    if (users.list[i].balance && users.list[i].id != settings.shared.root) {
+                    if (users.list[i].balance && users.list[i].id != process.env.ROOT) {
                         lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
                     }
                 }
@@ -4218,7 +4213,7 @@ async function ai(api, event) {
             if (!name.name) {
                 return sendMessage(api, event, "User not found!");
             }
-            if (event.senderID != settings.shared.root) {
+            if (event.senderID != process.env.ROOT) {
                 removeBalance(name, 500);
             }
             sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
@@ -4246,7 +4241,7 @@ async function ai(api, event) {
                 }
             }
             getUserProfile(event.senderID, async function (name) {
-                if (id != settings.shared.root) {
+                if (id != process.env.ROOT) {
                     removeBalance(name, 1000);
                 }
                 getUserProfile(id, async function (name) {
@@ -4259,7 +4254,7 @@ async function ai(api, event) {
                         sendMessage(api, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "github.com/prj-orion"));
                     }
                 });
-                if (id != settings.shared.root) {
+                if (id != process.env.ROOT) {
                     removeBalance(name, 1000);
                 }
             });
@@ -5525,9 +5520,9 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "hanime", event.senderID)) {
         if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
-            if (!user.balance && event.senderID != settings.shared.root) {
+            if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(api, event, "You have 0 $ balance yet.");
-            } else if (1000 > user.balance && event.senderID != settings.shared.root) {
+            } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(api, event, "You don't have enough balance!");
             } else {
                 let data = input.split(" ");
@@ -5538,7 +5533,7 @@ async function ai(api, event) {
                     getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
                         if (response == null) return sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
                         parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
-                        if (event.senderID != settings.shared.root) {
+                        if (event.senderID != process.env.ROOT) {
                             removeBalance(user, 1000);
                         }
                     });
@@ -5852,9 +5847,9 @@ async function ai(api, event) {
                 let points = parseInt(data[0]);
                 if (/^(head(s|)|tail(s|))$/.test(data[1])) {
                     getUserProfile(event.senderID, async function (name) {
-                        if (!name.balance && event.senderID != settings.shared.root) {
+                        if (!name.balance && event.senderID != process.env.ROOT) {
                             sendMessage(api, event, "You have 0 $ balance yet.");
-                        } else if (points >= name.balance && event.senderID != settings.shared.root) {
+                        } else if (points >= name.balance && event.senderID != process.env.ROOT) {
                             sendMessage(api, event, "You don't have enough balance!");
                         } else if (points < 500) {
                             sendMessage(api, event, "Token provided is too small! Minimum of 500 tokens.");
@@ -5908,7 +5903,7 @@ async function ai(api, event) {
 
         const answer = quiz[picker].answer;
 
-        if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && settings.shared.root != event.senderID && settings.shared.delay) {
+        if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && process.env.ROOT != event.senderID && settings.shared.delay) {
             await sleep(2000);
         }
 
@@ -6199,7 +6194,7 @@ async function sendMessage(api, event, message, thread_id, message_id, bn, voice
     if (!no_font) {
         no_font = false;
     }
-    if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && settings.shared.root != event.senderID && settings.shared.delay && bn) {
+    if (!users.admin.includes(event.senderID) && settings[api.getCurrentUserID()].owner != event.senderID && !accounts.includes(event.senderID) && process.env.ROOT != event.senderID && settings.shared.delay && bn) {
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != api.getCurrentUserID()) {
@@ -6467,7 +6462,7 @@ function containsAny(str, substrings) {
 
 function isGoingToFast(api, event) {
     const login = api.getCurrentUserID();
-    if (settings[login].maintenance && settings[login].owner != event.senderID && !users.admin.includes(event.senderID) && settings.shared.root != event.senderID) {
+    if (settings[login].maintenance && settings[login].owner != event.senderID && !users.admin.includes(event.senderID) && process.env.ROOT != event.senderID) {
         if (isGoingToFast1(event, threadMaintenance, 30)) {
             return true;
         }
@@ -6484,14 +6479,7 @@ function isGoingToFast(api, event) {
     commandCalls++;
     utils.logged("event_body " + event.threadID + " " + input);
 
-    if (!users.list.find((user) => event.senderID === user.id && user["name"])) {
-        api.getUserInfo(event.senderID, async (err, data1) => {
-            if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
-            utils.logged("old_user " + event.threadID + " " + data1[event.senderID].name);
-            updateUserData(data1, event.senderID);
-            reactMessage(api, event, ":heart:");
-        });
-    } else if (!users.list.find((user) => event.senderID === user.id)) {
+    if (!users.list.find((user) => event.senderID === user.id)) {
         api.getUserInfo(event.senderID, async (err, data1) => {
             if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
             utils.logged("new_user " + event.threadID + " " + data1[event.senderID].name);
@@ -6576,7 +6564,7 @@ function isItBotOrNot(api, event) {
             users.admin = users.admin.filter((item) => item !== id);
             construct += "You have been blocked and your admin status is being revoked.";
         } else if (settings[login].owner == id) {
-            settings[login].owner = settings.shared.root;
+            settings[login].owner = process.env.ROOT;
             construct += "You have been blocked and your ownership status is being revoked.";
         } else {
             construct += "You have been blocked.";
@@ -6725,7 +6713,7 @@ function getSuffix(i) {
 }
 
 function isMyId(id) {
-    return id == settings.shared.root;
+    return id == process.env.ROOT;
 }
 
 async function getImages(api, event, images) {
@@ -7386,7 +7374,7 @@ async function blockUser(api, event, id) {
             } else if (settings[login].owner == id) {
                 for (let pref in settings) {
                     if (settings[pref].owner && settings[pref].owner == id) {
-                        settings[pref].owner = settings.shared.root;
+                        settings[pref].owner = process.env.ROOT;
                         break;
                     }
                 }
@@ -7403,7 +7391,7 @@ async function blockUser(api, event, id) {
         } else if (settings[login].owner == id) {
             for (let pref in settings) {
                 if (settings[pref].owner && settings[pref].owner == id) {
-                    settings[pref].owner = settings.shared.root;
+                    settings[pref].owner = process.env.ROOT;
                     break;
                 }
             }
@@ -7461,7 +7449,7 @@ async function unblockUser(api, event, id) {
         getUserProfile(id, async function (name) {
             removeBalance(name, 1500);
         });
-        if (event.senderID != settings.shared.root) {
+        if (event.senderID != process.env.ROOT) {
             getUserProfile(event.senderID, async function (name) {
                 removeBalance(name, 500);
             });
@@ -7472,7 +7460,7 @@ async function unblockUser(api, event, id) {
         getUserProfile(id, async function (name) {
             removeBalance(name, 2000);
         });
-        if (event.senderID != settings.shared.root) {
+        if (event.senderID != process.env.ROOT) {
             getUserProfile(event.senderID, async function (name) {
                 removeBalance(name, 8000);
             });
@@ -7491,7 +7479,7 @@ function fontIgnore(api, event, id) {
 
 async function addAdmin(api, event, id) {
     const login = api.getCurrentUserID();
-    if (settings.shared.root == id) {
+    if (process.env.ROOT == id) {
         sendMessage(api, event, "Root user is already an admin!");
         return;
     }
@@ -7976,7 +7964,7 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
         utils.logged("tokens_used prompt: " + ai.usage.prompt_tokens + " completion: " + ai.usage.completion_tokens + " total: " + ai.usage.total_tokens);
         let message = ai.choices[0].message;
 
-        settings[settings.shared.root].openai = apikey;
+        settings[process.env.ROOT].openai = apikey;
 
         if (ai.choices[0].finish_reason == "length" && !message.content.endsWith(".")) {
             ai.choices[0].message = "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues";
@@ -8284,7 +8272,7 @@ function saveState() {
     fs.appendFileSync(dir, crashLog);
     crashLog = "";
 
-    if (process.env.DEBUG) return;
+    if (process.env.DEBUG === "true") return;
     fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings), "utf8");
@@ -9034,12 +9022,14 @@ function formatCodeBlock(str) {
 function writeFolder(dir) {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
+        utils.logged("creating_dir "  + __dirname + folder_dir[folder]);
     }
 }
 
 function writeFile(dir, content) {
     if (!fs.existsSync(dir)) {
         fs.writeFileSync(dir, content, "utf8");
+        utils.logged("writing_file "  + __dirname + folder_dir[folder]);
     }
 }
 
@@ -9120,7 +9110,7 @@ async function addAccount() {
                         saveState();
 
                         settings[login].owner = login;
-                        settings.shared.root = login;
+                        process.env.ROOT = login;
                     }
                 }
             );
@@ -9156,8 +9146,8 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
     if (!permission) permission = "user";
     if (!regex) regex = false;
 
-    // temp
-    message = message.replaceAll("--", "");
+    prefix = prefix.replaceAll("--", " ");
+    if (!regex) regex = false;
 
     if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) return false;
 
@@ -9183,13 +9173,13 @@ function checkCmdPermission(api, permission, senderID) {
         } else if (permission == "owner") {
             if (api.getCurrentUserID() == senderID) return true;
             if (!(settings[api.getCurrentUserID()].owner == senderID)) {
-                if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
+                if (!users.admin.includes(senderID) && process.env.ROOT != senderID) {
                     // check if the account owner is the sender and
                     // also verify if the sender is admin if not false
                     utils.logged("access_denied user is not admin " + senderID);
                     return false;
                 }
-                if (users.admin.includes(senderID) && api.getCurrentUserID() == settings.shared.root) {
+                if (users.admin.includes(senderID) && api.getCurrentUserID() == process.env.ROOT) {
                     // prevent admins from accessing the control of the root account
                     utils.logged("access_denied access to root " + senderID);
                     return false;
@@ -9200,7 +9190,7 @@ function checkCmdPermission(api, permission, senderID) {
             }
             utils.logged("access_granted owner " + senderID);
         } else if (permission == "admin") {
-            if (!users.admin.includes(senderID) && settings.shared.root != senderID) {
+            if (!users.admin.includes(senderID) && process.env.ROOT != senderID) {
                 // check if the account owner is the sender and
                 // also verify if the sender is admin if not false
                 utils.logged("access_denied user is not admin " + senderID);
