@@ -40,10 +40,6 @@
         "text_complextion": "gpt-3.5-turbo-instruct",
         "primary_text_complextion": "gpt-3.5-turbo-16k-0613",
         "max_image": "6",
-        "apikey": {
-            "ai": "",
-            "facebook": "6628568379%7Cc1e620fa708a1d5696fb991c1bde5662"
-        },
         "cors": [
             "https://mrepol742.github.io",
             "http://0.0.0.0:8000"

@@ -43,9 +43,9 @@ function generateWelcomeGif(pictureFile, name, group, member) {
                 ctx.font = '25px "Operator Mono"';
                 ctx.fillText(member, width * 0.5, height * 0.82);
 
-                x = width / 2;
-                y = height / 3;
-                radius = 130;
+                let x = width / 2;
+                let y = height / 3;
+                let radius = 130;
                 ctx.save();
                 ctx.beginPath();
                 ctx.arc(x, y, radius, 0, 2 * Math.PI);

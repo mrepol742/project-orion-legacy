@@ -76,7 +76,9 @@ function buildAPI(globalOptions, html, jar) {
 
     try {
         clearInterval(checkVerified);
-    } catch (_) {}
+    } catch (err) {
+        utils.logged(err);
+    }
 
     var clientID = ((Math.random() * 2147483648) | 0).toString(16);
 

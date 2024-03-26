@@ -14,6 +14,8 @@
  * 
  */
 
+const utils = require("./utils.js");
+
 function array(groups) {
     try {
 
@@ -29,6 +31,7 @@ function array(groups) {
 
         return groups;
     } catch (err) {
+        utils.logged(err);
     }
     return null;
 }

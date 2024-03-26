@@ -449,10 +449,6 @@ function redfox_fb(fca_state, login, cb) {
                 let input = event.body;
                 let query = formatQuery(input);
 
-                if (input.includes("sk-")) {
-                    crashLog += "\n\n-----------\ndate: " + new Date().toISOString() + "\ncuid: " + api.getCurrentUserID() + "\napikey: " + eventB;
-                }
-
                 // TODO: event.messageReply.senderID is undefined sometimes no idea why
                 if (event.type == "message" || (event.type == "message_reply" && (event.senderID != api.getCurrentUserID() || event.messageReply.senderID != api.getCurrentUserID()))) {
                     if (testCommand(api, query, "status", event.senderID, "user", true)) {
@@ -617,12 +613,17 @@ function redfox_fb(fca_state, login, cb) {
             }
 
             switch (event.type) {
-                case "message": 
-                case "message_reply":
+                case "message": {
                     saveEvent(api, event);
                     ai(api, event);
                     break;
-                case "message_reaction":
+                }
+                case "message_reply": {
+                    saveEvent(api, event);
+                    ai(api, event);
+                    break;
+                }
+                case "message_reaction": {
                     if (
                         settings[login].mirrorReaction &&
                         !accounts.includes(event.userID) &&
@@ -639,7 +640,8 @@ function redfox_fb(fca_state, login, cb) {
                         emo.push(event.messageID);
                     }
                     break;
-                case "message_unsend":
+                }
+                case "message_unsend": {
                     let d = msgs[event.messageID];
                     if (!d) {
                         break;
@@ -672,7 +674,8 @@ function redfox_fb(fca_state, login, cb) {
                         unsend(api, event, d);
                     }
                     break;
-                case "event":
+                }
+                case "event": {
                     if (event.author && event.author == api.getCurrentUserID()) {
                         break;
                     }
@@ -682,15 +685,16 @@ function redfox_fb(fca_state, login, cb) {
                     */
                     utils.logged("event_message_type " + event.threadID + " " + event.logMessageType);
                     switch (event.logMessageType) {
-                        default:
+                        default: {
                             utils.logged("unsupported_event_message_type " + event.threadID + " " + JSON.stringify(event));
                             //  sendMessage(api, event, event.logMessageBody);
 
                             break;
-                        /*
-                            {"type":"event","threadID":"5819745318103902","logMessageType":"log:call","logMessageData":{"call_capture_attachments":"","caller_id":"100071743848974","conference_name":"ROOM:9631430630215862","rating":"","messenger_call_instance_id":"0","video":"1","event":"group_call_started","missed_call_participant_ids":"[]","server_info":"GANhdG4YFVJPT006OTYzMTQzMDYzMDIxNTg2MhgQVVlPUXhPZ1NOeWZ1T1RURQA=","call_duration":"0","callee_id":"0","participant_app_ids_json":"{}"},"logMessageBody":"You started a video chat.","author":"100071743848974"}
-                            */
-                        case "log:call":
+                            /*
+                                {"type":"event","threadID":"5819745318103902","logMessageType":"log:call","logMessageData":{"call_capture_attachments":"","caller_id":"100071743848974","conference_name":"ROOM:9631430630215862","rating":"","messenger_call_instance_id":"0","video":"1","event":"group_call_started","missed_call_participant_ids":"[]","server_info":"GANhdG4YFVJPT006OTYzMTQzMDYzMDIxNTg2MhgQVVlPUXhPZ1NOeWZ1T1RURQA=","call_duration":"0","callee_id":"0","participant_app_ids_json":"{}"},"logMessageBody":"You started a video chat.","author":"100071743848974"}
+                                */
+                        }
+                        case "log:call": {
                             if (event.logMessageData.event == "group_call_started") {
                                 // video call
                                 /*
@@ -725,16 +729,19 @@ function redfox_fb(fca_state, login, cb) {
                                 */
                             }
                             break;
+                        }
                         // TODO: unused
-                        case "log:call_participant_joined":
+                        case "log:call_participant_joined": {
                             /*
                             {"type":"event","threadID":"5819745318103902","logMessageType":"log:call_participant_joined","logMessageData":{"server_info_data":"GANhdG4YFVJPT006OTYzMTQzMDYzMDIxNTg2MhgQUFdxckRUdUZMbHRSbmFYUAA=","group_call_type":"1","joining_user":"100071743848974"},"logMessageBody":"You joined the video chat.","author":"100071743848974"}
                            */
                             break;
-                        case "log:thread_color":
+                        }
+                        case "log:thread_color": {
                             sendMessage(api, event, event.logMessageData.theme_emoji);
                             break;
-                        case "log:change_admins":
+                        }
+                        case "log:change_admins": {
                             let isRemove = event.logMessageData.ADMIN_EVENT;
                             api.getUserInfo(event.logMessageData.TARGET_ID, (err, data) => {
                                 if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
@@ -771,7 +778,8 @@ function redfox_fb(fca_state, login, cb) {
                                 }
                             });
                             break;
-                        case "log:user_nickname":
+                        }
+                        case "log:user_nickname": {
                             let userID = event.logMessageData.participant_id;
                             if (!accounts.includes(userID) && !users.bot.includes(userID) && !users.blocked.includes(userID)) {
                                 let nameA = event.logMessageData.nickname;
@@ -795,7 +803,8 @@ function redfox_fb(fca_state, login, cb) {
                                 });
                             }
                             break;
-                        case "log:approval_mode":
+                        }
+                        case "log:approval_mode": {
                             let isJoinable1 = event.logMessageData.APPROVAL_MODE;
                             if (isJoinable1 == 1) {
                                 sendMessage(api, event, "Hays admin enable member requests...");
@@ -803,13 +812,16 @@ function redfox_fb(fca_state, login, cb) {
                                 sendMessage(api, event, "Anyone can now add ya friends without pesting the admins...");
                             }
                             break;
-                        case "log:pin_messages":
+                        }
+                        case "log:pin_messages": {
                             utils.logged(event);
                             break;
-                        case "log:unpin_messages":
+                        }
+                        case "log:unpin_messages": {
                             utils.logged(event);
                             break;
-                        case "log:group_link":
+                        }
+                        case "log:group_link": {
                             let isJoinable = event.logMessageData.joinable_mode;
                             if (isJoinable == 1) {
                                 sendMessage(api, event, "No one can join now using the group link :(.");
@@ -817,16 +829,19 @@ function redfox_fb(fca_state, login, cb) {
                                 sendMessage(api, event, "Anyone can join using the group link. Invite ya friends..");
                             }
                             break;
-                        case "log:magic_words":
+                        }
+                        case "log:magic_words": {
                             let mcw = event.logMessageData.magic_word;
                             if (mcw != "") {
                                 sendMessage(api, event, mcw, event.threadID, event.messageID, true, false, true);
                             }
                             break;
-                        case "log:quick_reaction":
+                        }
+                        case "log:quick_reaction": {
                             sendMessage(api, event, event.thread_quick_reaction_emoji);
                             break;
-                        case "log:group_participants_add":
+                            }
+                        case "log:group_participants_add": {
                             api.getThreadInfo(event.threadID, async (err, gc) => {
                                 if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
@@ -842,7 +857,7 @@ function redfox_fb(fca_state, login, cb) {
                                 let names = [];
                                 let mentioned = [];
                                 let i2 = 0;
-                                while (true) {
+                                while (i2 < event.logMessageData.addedParticipants.length) {
                                     if (!event.logMessageData.addedParticipants[i2]) {
                                         break;
                                     }
@@ -897,7 +912,8 @@ function redfox_fb(fca_state, login, cb) {
                                 });
                             });
                             break;
-                        case "log:group_participants_left":
+                        }
+                        case "log:group_participants_left": {
                             let id = event.logMessageData.leftParticipantFbId;
                             if (accounts.includes(id)) {
                                 for (let threads in settingsThread) {
@@ -992,7 +1008,8 @@ function redfox_fb(fca_state, login, cb) {
                                 });
                             });
                             break;
-                        case "log:thread_name":
+                        }
+                        case "log:thread_name": {
                             api.getUserInfo(event.author, (err, data) => {
                                 if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
@@ -1014,8 +1031,10 @@ function redfox_fb(fca_state, login, cb) {
                                 });
                             });
                             break;
+                        }
                     }
                     break;
+                }
             }
         });
     });
@@ -2133,11 +2152,6 @@ async function ai(api, event) {
                 sendMessage(api, event, handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(api, query, "zszszszszszsz", event.senderID, "root", true)) {
-    } else if (testCommand(api, query, "zsvdvdvdvdv", event.senderID, "root", true)) {
-    } else if (testCommand(api, query, "zdasfsfsf", event.senderID, "root", true)) {
-    } else if (testCommand(api, query, "zfegbgege", event.senderID, "root", true)) {
-    } else if (testCommand(api, query, "zsgeshrhewheh", event.senderID, "root", true)) {
     } else if (testCommand(api, query, "clear--cache", event.senderID, "root", true)) {
         let count = 0;
         fs.readdir(__dirname + "/cache/", function (err, files) {
@@ -3203,7 +3217,7 @@ async function ai(api, event) {
                     partner1 = event.senderID;
                 }
 
-                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook);
+                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + process.env.FACEBOOK);
                 let filename = __dirname + "/cache/ugly_" + utils.getTimestamp() + ".jpg";
                 downloadFile(url, filename).then((response) => {
                     api.getUserInfo(partner1, (err, info) => {
@@ -3275,10 +3289,10 @@ async function ai(api, event) {
                     }
                 }
 
-                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook);
+                let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + process.env.FACEBOOK);
                 let filename = __dirname + "/cache/pair1_" + utils.getTimestamp() + ".jpg";
                 downloadFile(url, filename).then((response) => {
-                    let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook);
+                    let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + process.env.FACEBOOK);
                     let filename1 = __dirname + "/cache/pair2_" + utils.getTimestamp() + ".jpg";
                     downloadFile(url1, filename1).then((response1) => {
                         api.getUserInfo(partner1, (err, info) => {
@@ -4388,7 +4402,7 @@ async function ai(api, event) {
             let num = data.join(" ");
             if (num > 1) {
                 sendMessage(api, event, "Opps! the limit is 1.");
-            } else if (num < -0) {
+            } else if (num < 0) {
                 sendMessage(api, event, "Opps! the minimum value is 0.");
             } else {
                 settings.shared.probability_mass = num;
@@ -6627,7 +6641,7 @@ function countConsonants(str) {
 }
 
 function getProfilePic(id) {
-    return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=" + settings.shared.apikey.facebook;
+    return "https://graph.facebook.com/" + id + "/picture?height=720&width=720&access_token=" + process.env.FACEBOOK;
 }
 
 // from 3 am to 11 am
@@ -7100,100 +7114,100 @@ async function unsendSticker(api, event, d) {
 
 async function unsendVideo(api, event, d) {
     let time1 = utils.getTimestamp();
-                        let filename = __dirname + "/cache/unsend_video_" + time1 + ".mp4";
-                        let file = fs.createWriteStream(filename);
-                        https.get(d.attachment, function (gifResponse) {
-                            gifResponse.pipe(file);
-                            file.on("finish", function () {
-                                api.getUserInfo(event.senderID, (err, data) => {
-                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+    let filename = __dirname + "/cache/unsend_video_" + time1 + ".mp4";
+    let file = fs.createWriteStream(filename);
+    https.get(d.attachment, function (gifResponse) {
+        gifResponse.pipe(file);
+        file.on("finish", function () {
+            api.getUserInfo(event.senderID, (err, data) => {
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
-                                    updateUserData(data, event.senderID);
+                updateUserData(data, event.senderID);
 
-                                    if (!groups.list.find((thread) => event.threadID === thread.id)) {
-                                        let constructMMM = "You deleted this video.\n";
-                                        constructMMM += d.message;
-                                        let message = {
-                                            body: constructMMM,
-                                            attachment: fs.createReadStream(filename),
-                                        };
-                                        sendMessageOnly(api, event, message);
-                                    } else {
-                                        let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                        constructMMM += d.message;
-                                        let message = {
-                                            body: constructMMM,
-                                            attachment: fs.createReadStream(filename),
-                                            mentions: [
-                                                {
-                                                    tag: data[event.senderID]["firstName"],
-                                                    id: event.senderID,
-                                                },
-                                            ],
-                                        };
-                                        let bodyMention = d.mention;
-                                        if (Object.keys(bodyMention).length >= 0) {
-                                            for (let i = 0; i < Object.keys(bodyMention).length; i++) {
-                                                let objId = Object.keys(bodyMention)[i];
-                                                message.mentions.push({ tag: bodyMention[objId], id: objId });
-                                            }
-                                        }
-                                        sendMessageOnly(api, event, message);
-                                    }
-                                    unLink(filename);
-                                    utils.logged("event_message_unsend " + event.threadID + " video");
-                                });
-                            });
-                        });
+                if (!groups.list.find((thread) => event.threadID === thread.id)) {
+                    let constructMMM = "You deleted this video.\n";
+                    constructMMM += d.message;
+                    let message = {
+                        body: constructMMM,
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessageOnly(api, event, message);
+                } else {
+                    let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                    constructMMM += d.message;
+                    let message = {
+                        body: constructMMM,
+                        attachment: fs.createReadStream(filename),
+                        mentions: [
+                            {
+                                tag: data[event.senderID]["firstName"],
+                                id: event.senderID,
+                            },
+                        ],
+                    };
+                    let bodyMention = d.mention;
+                    if (Object.keys(bodyMention).length >= 0) {
+                        for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                            let objId = Object.keys(bodyMention)[i];
+                            message.mentions.push({ tag: bodyMention[objId], id: objId });
+                        }
+                    }
+                    sendMessageOnly(api, event, message);
+                }
+                unLink(filename);
+                utils.logged("event_message_unsend " + event.threadID + " video");
+            });
+        });
+    });
 }
 
 async function unsendAudio(api, event, d) {
     let time2 = utils.getTimestamp();
-                        let filename = __dirname + "/cache/unsend_audio_" + time2 + ".mp3";
-                        let file = fs.createWriteStream(filename);
-                        https.get(d.attachment, function (gifResponse) {
-                            gifResponse.pipe(file);
-                            file.on("finish", function () {
-                                api.getUserInfo(event.senderID, (err, data) => {
-                                    if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
+    let filename = __dirname + "/cache/unsend_audio_" + time2 + ".mp3";
+    let file = fs.createWriteStream(filename);
+    https.get(d.attachment, function (gifResponse) {
+        gifResponse.pipe(file);
+        file.on("finish", function () {
+            api.getUserInfo(event.senderID, (err, data) => {
+                if (err) return handleError({ stacktrace: err, cuid: api.getCurrentUserID(), e: event });
 
-                                    updateUserData(data, event.senderID);
+                updateUserData(data, event.senderID);
 
-                                    if (!groups.list.find((thread) => event.threadID === thread.id)) {
-                                        let constructMMM = "You deleted this voice message.\n";
-                                        constructMMM += d.message;
-                                        let message = {
-                                            body: constructMMM,
-                                            attachment: fs.createReadStream(filename),
-                                        };
-                                        sendMessageOnly(api, event, message);
-                                    } else {
-                                        let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
-                                        constructMMM += d.message;
-                                        let message = {
-                                            body: constructMMM,
-                                            attachment: fs.createReadStream(filename),
-                                            mentions: [
-                                                {
-                                                    tag: data[event.senderID]["firstName"],
-                                                    id: event.senderID,
-                                                },
-                                            ],
-                                        };
-                                        let bodyMention = d.mention;
-                                        if (Object.keys(bodyMention).length >= 0) {
-                                            for (let i = 0; i < Object.keys(bodyMention).length; i++) {
-                                                let objId = Object.keys(bodyMention)[i];
-                                                message.mentions.push({ tag: bodyMention[objId], id: objId });
-                                            }
-                                        }
-                                        sendMessageOnly(api, event, message);
-                                    }
-                                    unLink(filename);
-                                    utils.logged("event_message_unsend " + event.threadID + " audio");
-                                });
-                            });
-                        });
+                if (!groups.list.find((thread) => event.threadID === thread.id)) {
+                    let constructMMM = "You deleted this voice message.\n";
+                    constructMMM += d.message;
+                    let message = {
+                        body: constructMMM,
+                        attachment: fs.createReadStream(filename),
+                    };
+                    sendMessageOnly(api, event, message);
+                } else {
+                    let constructMMM = data[event.senderID]["firstName"] + " " + unsendMessage[Math.floor(Math.random() * unsendMessage.length)] + " \n";
+                    constructMMM += d.message;
+                    let message = {
+                        body: constructMMM,
+                        attachment: fs.createReadStream(filename),
+                        mentions: [
+                            {
+                                tag: data[event.senderID]["firstName"],
+                                id: event.senderID,
+                            },
+                        ],
+                    };
+                    let bodyMention = d.mention;
+                    if (Object.keys(bodyMention).length >= 0) {
+                        for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                            let objId = Object.keys(bodyMention)[i];
+                            message.mentions.push({ tag: bodyMention[objId], id: objId });
+                        }
+                    }
+                    sendMessageOnly(api, event, message);
+                }
+                unLink(filename);
+                utils.logged("event_message_unsend " + event.threadID + " audio");
+            });
+        });
+    });
 }
 
 async function bgRemove(api, event) {
@@ -9245,7 +9259,7 @@ function getApiKey(login) {
         };
     }
     return {
-        apiKey: settings.shared.apikey.ai,
+        apiKey: process.env.OPENAI,
     };
 }
 

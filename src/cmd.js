@@ -35,7 +35,8 @@ function gen() {
         let query = commands[cmd].replace("testCommand(", "").replace(")", "");
         query = query.replaceAll('"', "").replaceAll("--", " --").split(", ");
 
-        query[2] = query[2];
+        // TODO: review
+       // query[2] = query[2];
 
         let permission = query[4];
         if (["root", "owner", "admin"].includes(permission)) {
