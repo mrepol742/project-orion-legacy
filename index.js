@@ -52,11 +52,18 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
 let folder_dir = ["/cache", "/data", "/data/cookies", "/log"];
 for (let folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
+    utils.logged("creating_dir "  + __dirname + folder_dir[folder]);
 }
 
 let data_json = ["groups", "accountPreferences", "threadPreferences", "users"];
 for (let file in data_json) {
     writeFile(__dirname + "/data/" + data_json[file] + ".json", fs.readFileSync(__dirname + "/src/data/default/" + data_json[file] + ".json", "utf8"));
+    utils.logged("writing_data "  + __dirname + data_json[file]);
+}
+
+if (!fs.existsSync(__dirname + "/.env")) {
+    fs.writeFileSync(__dirname + "/.env", fs.readFileSync(__dirname + "/.env.example", "utf8"), "utf8");
+    utils.logged("writing_env " + __dirname + "/.env");
 }
 
 /*
