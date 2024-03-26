@@ -5690,6 +5690,7 @@ async function ai(api, event) {
                         if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                         sendMessage(api, event, response.quote + "\n\nby " + response.character + " of " + response.anime);
                     });
+                    break;
                 }
                 case "--advice": {
                     getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -5700,6 +5701,7 @@ async function ai(api, event) {
                         }
                         sendMessage(api, event, result);
                     });
+                    break;
                 }
                 case "--inspiration": {
                     getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -5710,6 +5712,7 @@ async function ai(api, event) {
                         }
                         sendMessage(api, event, result);
                     });
+                    break;
                 }
                 case "--motivation": {
                     getResponseData("https://zenquotes.io/api/random").then((response) => {
@@ -5720,9 +5723,11 @@ async function ai(api, event) {
                         }
                         sendMessage(api, event, result);
                     });
+                    break;
                 }
                 default: {
                     sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: qoute type" + "\n " + example[Math.floor(Math.random() * example.length)] + " qoute --anime");
+                    break;
                 }
             }
         }
