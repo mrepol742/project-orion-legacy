@@ -78,7 +78,7 @@ function generateWelcomeGif(pictureFile, name, group, member) {
                     fs.writeFileSync("../cache/welcome_" + timesta + ".gif", buffer);
                     resolve("../cache/welcome_" + timesta + ".gif");
                 })
-                .catch((error) => {
+                .catch((err) => {
                     reject(err);
                 });
         } catch (err) {

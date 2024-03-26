@@ -35,7 +35,7 @@ const cheerio = require("cheerio");
 const OpenAI = require("openai");
 const { sup, hey, unsendMessage, funD, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, example, heyMelbin, heySim, domains, quizCorrect, quizWrong } = require("./src/arrays.js");
 const { gen, formatGen } = require("./src/cmd.js");
-const exec = require("child_process");
+const { exec } = require("child_process");
 const { createInterface } = require("readline");
 const fs = require("fs");
 
