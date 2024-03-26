@@ -2,7 +2,7 @@
 
 <img src="https://mrepol742.github.io/images/orion-banner.png" align="right" width="500px"/>
 
-A Chatbot thats trained to understand and respond to a wide range of commands and requests. Providing a valuable service that poeple find useful. Strive to create a platform that is easy to use and provides helpful features that make poeple's lives easier.
+A Chatbot thats trained to understand and respond to a wide range of commands and requests.
 
 # Pre-requisites
 - Install [Node.js](https://nodejs.org/en/) version 20.x.x

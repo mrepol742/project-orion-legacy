@@ -15,6 +15,7 @@
  */
 
 require('dotenv').config();
+const envfile = require("envfile");
 const utils = require("./src/utils.js");
 const redfox = require("./src/redfox.js");
 const { generateWelcomeGif } = require("./src/welcome.js");
@@ -80,6 +81,7 @@ let joke = JSON.parse(fs.readFileSync(__dirname + "/src/data/joke.json"));
 let cat = JSON.parse(fs.readFileSync(__dirname + "/src/data/cat.json"));
 let packagejson = JSON.parse(fs.readFileSync(__dirname + "/package.json", "utf8"));
 let cmdPage = JSON.parse(gen());
+let processEnv = envfile.parseFileSync(".env");
 
 if (process.env.DEBUG === "true") {
     settingsThread = { default: { leave: false, unsend: false, nsfw: true, cmd: 1 } };
@@ -175,9 +177,13 @@ process.on("exit", (code) => {
 fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
     if (err) return handleError({ stacktrace: err });
     if (files.length > 0) {
-        for (let appStates = 0; appStates < files.length; appStates++) {
+        for (let appStates in files) {
             if (files[appStates].endsWith(".bin")) {
                 let login = files[appStates].replace(".bin", "");
+                if (!process.env.ROOT) {
+                    processEnv.ROOT = login
+                    utils.logged("root_account " + login);
+                }
                 accounts.push(login);
                 let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".bin", "utf8");
                 if (!/^\d+$/.test(login)) {
@@ -874,7 +880,7 @@ function redfox_fb(fca_state, login, cb) {
                                 let gret;
                                 if (i > 1) {
                                     gret = "Hello ";
-                                    for (let a = 0; a < names.length; a++) {
+                                    for (let a in names) {
                                         if (a == names.length - 1) {
                                             gret += "and " + names[a][1] + " ";
                                         } else {
@@ -1481,7 +1487,7 @@ async function ai22(api, event, query) {
                     });
                     let attch = [];
                     let time = utils.getTimestamp();
-                    for (let i = 0; i < response.data.length; i++) {
+                    for (let i in response.data) {
                         await sleep(1000);
                         let fname = __dirname + "/cache/createimagevar_" + i + "_" + time + ".png";
                         await downloadFile(response.data[i].url, fname).then(async (response2) => {
@@ -2117,7 +2123,7 @@ async function ai(api, event) {
                     attachment: [],
                 };
                 sendMessage(api, event, "upload is now progress please wait...");
-                for (let i = 0; i < response.data.length; i++) {
+                for (let i in esponse.data) {
                     await sleep(1000);
                     let dir = __dirname + "/cache/createimg_" + utils.getTimestamp() + ".png";
                     await downloadFile(response.data[i].url, dir).then((response) => {
@@ -3107,7 +3113,7 @@ async function ai(api, event) {
         } else {
             let Input = getDataFromQuery(data);
             let output = "";
-            for (let i = 0; i < Input.length; i++) {
+            for (let i in Input) {
                 output += Input[i].charCodeAt(0).toString(2) + " ";
             }
             sendMessage(api, event, output);
@@ -3121,7 +3127,7 @@ async function ai(api, event) {
             let binary = getDataFromQuery(data);
             const binaryString = binary.split(" ");
             let stringOutput = "";
-            for (let i = 0; i < binaryString.length; i++) {
+            for (let i in binaryString) {
                 stringOutput += String.fromCharCode(parseInt(binaryString[i], 2));
             }
             sendMessage(api, event, stringOutput);
@@ -3372,7 +3378,7 @@ async function ai(api, event) {
                     body: a + "everyone",
                     mentions: [],
                 };
-                for (let i = 0; i < info.participantIDs.length; i++) {
+                for (let i in info.participantIDs) {
                     message.mentions.push({
                         tag: "everyone",
                         id: info.participantIDs[i],
@@ -4120,7 +4126,7 @@ async function ai(api, event) {
                     if (gc.isGroup) {
                         let lead = [];
                         let participantIDs = gc.participantIDs;
-                        for (let i = 0; i < users.list.length; i++) {
+                        for (let i in users.list) {
                             let cuid = users.list[i].id;
                             if (users.list[i].balance && participantIDs.includes(cuid) && cuid != process.env.ROOT) {
                                 lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
@@ -4132,7 +4138,7 @@ async function ai(api, event) {
                         if (totalL >= 31) {
                             totalL = 31;
                         }
-                        for (let i1 = 1; i1 < totalL; i1++) {
+                        for (let i1 in lead) {
                             if (!accounts.includes(lead[i1 - 1].id)) {
                                 const money = formatDecNum((lead[i1 - 1].balance / 1000) * 0.007);
                                 if (money != 0.0) {
@@ -4151,7 +4157,7 @@ async function ai(api, event) {
         if (isGoingToFast(api, event)) return;
         getUserProfile(event.senderID, async function (user) {
             let lead = [];
-            for (let i = 0; i < users.list.length; i++) {
+            for (let i in users.list) {
                 let correct = 1;
                 let incorrect = 1;
                 if (users.list[i].quiz_answered_correct) {
@@ -4171,7 +4177,7 @@ async function ai(api, event) {
             lead.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
 
             let construct = [];
-            for (let i1 = 1; i1 < 31; i1++) {
+            for (let i1 in lead) {
                 construct.push(lead[i1 - 1].score + " points " + lead[i1 - 1].name);
             }
             sendMessage(api, event, utils.formatOutput("Top User Quiz", construct, "github.com/prj-orion"));
@@ -4188,7 +4194,7 @@ async function ai(api, event) {
                     removeBalance(user, 1000);
                 }
                 let lead = [];
-                for (let i = 0; i < users.list.length; i++) {
+                for (let i in users.list) {
                     if (users.list[i].balance && users.list[i].id != process.env.ROOT) {
                         lead.push({ id: users.list[i].id, name: users.list[i].firstName, balance: users.list[i].balance });
                     }
@@ -4196,7 +4202,7 @@ async function ai(api, event) {
                 lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
 
                 let construct = [];
-                for (let i1 = 1; i1 < 31; i1++) {
+                for (let i1 in lead) {
                     if (!accounts.includes(lead[i1 - 1].id)) {
                         const money = formatDecNum((lead[i1 - 1].balance / 1000) * 0.007);
                         if (money != 0.0) {
@@ -4306,7 +4312,7 @@ async function ai(api, event) {
                 let mal = cheerio.load(response.data);
 
                 const findSearchResults = mal("a");
-                for (let i = 0; i < findSearchResults.length; i++) {
+                for (let i in findSearchResults) {
                     if (String(mal(findSearchResults[i]).attr("class")).includes("hoverinfo_trigger")) {
                         let malurl = mal(findSearchResults[i]).attr("href");
                         axios.get(malurl).then((response1) => {
@@ -5046,8 +5052,8 @@ async function ai(api, event) {
                         }
                         summ += "<b>Color: </b> " + a.color + "<br>";
                         summ += "<b>Admins:</b><br>";
-                        for (let i = 0; i < a.adminIDs.length; i++) {
-                            for (let i2 = 0; i2 < a.userInfo.length; i2++) {
+                        for (let i in a.adminIDs) {
+                            for (let i2 in a.userInfo) {
                                 let id = a.adminIDs[i].id;
                                 if (a.userInfo[i2].id == id) {
                                     summ += a.userInfo[i2].name + "<br>";
@@ -5059,8 +5065,8 @@ async function ai(api, event) {
                                 summ += "<b>Approval: Yes</b><br>";
                             } else {
                                 summ += "<b>Approval List: </b><br>";
-                                for (let i33 = 0; i33 < a.approvalQueue.length; i33++) {
-                                    for (let i23 = 0; i23 < a.userInfo.length; i23++) {
+                                for (let i33 in a.approvalQueue) {
+                                    for (let i23 in a.userInfo) {
                                         let id3 = a.approvalQueue[i33].id;
                                         if (a.userInfo[i23].id == id3) {
                                             summ += a.userInfo[i23].name + "<br>";
@@ -5696,7 +5702,7 @@ async function ai(api, event) {
                     getResponseData("https://zenquotes.io/api/random").then((response) => {
                         if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                         let result;
-                        for (let i = 0; i < response.length; i++) {
+                        for (let i in response) {
                             result = response[i].q;
                         }
                         sendMessage(api, event, result);
@@ -5707,7 +5713,7 @@ async function ai(api, event) {
                     getResponseData("https://zenquotes.io/api/random").then((response) => {
                         if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                         let result;
-                        for (let i = 0; i < response.length; i++) {
+                        for (let i in response) {
                             result = response[i].a + " says\n" + response[i].q;
                         }
                         sendMessage(api, event, result);
@@ -5718,7 +5724,7 @@ async function ai(api, event) {
                     getResponseData("https://zenquotes.io/api/random").then((response) => {
                         if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
                         let result;
-                        for (let i = 0; i < response.length; i++) {
+                        for (let i in response) {
                             result = response[i].q + "\n\nby " + response[i].a;
                         }
                         sendMessage(api, event, result);
@@ -5785,7 +5791,7 @@ async function ai(api, event) {
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             let result;
-            for (let i = 0; i < response.length; i++) {
+            for (let i in response) {
                 result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
             }
             sendMessage(api, event, result);
@@ -5795,7 +5801,7 @@ async function ai(api, event) {
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) return sendMessage(api, event, handleError({ stacktrace: response, cuid: api.getCurrentUserID(), e: event }));
             let result;
-            for (let i = 0; i < response.length; i++) {
+            for (let i in response) {
                 result = response[i].text + "\n\n" + response[i].bookname + " " + response[i].chapter + ":" + response[i].verse;
             }
             sendMessage(api, event, result);
@@ -5812,7 +5818,7 @@ async function ai(api, event) {
                 if (r == null) return sendMessage(api, event, "Houston! Unknown or missing option.\n\n Usage: verse book chapter:verse" + "\n " + example[Math.floor(Math.random() * example.length)] + " verse Job 4:9");
                 let result = "";
                 let total = r.length;
-                for (let i = 0; i < total; i++) {
+                for (let i in r) {
                     result += r[i].text + "\n\n" + r[i].bookname + " " + r[i].chapter + ":" + r[i].verse;
                 }
                 sendMessage(api, event, result);
@@ -6456,7 +6462,7 @@ function formatQuery(string) {
 }
 
 function containsAny(str, substrings) {
-    for (let i = 0; i != substrings.length; i++) {
+    for (let i in substrings) {
         let substring = substrings[i];
         if (str.indexOf(substring) != -1) {
             return true;
@@ -6632,7 +6638,7 @@ function countVowel(str) {
 function countConsonants(str) {
     if (!str) return 0;
     var countConsonants = 0;
-    for (let i = 0; i < str.length; i++) {
+    for (let i in str) {
         if (str[i] !== "a" && str[i] !== "e" && str[i] !== "i" && str[i] !== "o" && str[i] !== "u" && str[i] !== " ") {
             countConsonants++;
         }
@@ -6737,12 +6743,12 @@ async function getImages(api, event, images) {
     let message = {
         attachment: [],
     };
-    for (let i1 = 0; i1 < name.length; i1++) {
+    for (let i1 in name) {
         message.attachment.push(fs.createReadStream(name[i1]));
     }
     sendMessage(api, event, message);
     await sleep(2000);
-    for (let i2 = 0; i2 < name.length; i2++) {
+    for (let i2 in name) {
         unLink(name[i2]);
     }
 }
@@ -6771,7 +6777,7 @@ async function unsend(api, event, d) {
             };
             let bodyMention = d.mention;
             if (Object.keys(bodyMention).length >= 0) {
-                for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                for (let i in Object.keys(bodyMention)) {
                     let objId = Object.keys(bodyMention)[i];
                     message.mentions.push({ tag: bodyMention[objId], id: objId });
                 }
@@ -6786,7 +6792,7 @@ async function unsendPhoto(api, event, d) {
     let time = utils.getTimestamp();
     let arr = d.attachment;
     let images = [];
-    for (let i = 0; i < arr.length; i++) {
+    for (let i in d.attachment) {
         await sleep(1000);
         let fname = __dirname + "/cache/unsend_photo_" + i + "_" + time + ".png";
         downloadFile(d.attachment[i], fname);
@@ -6794,7 +6800,7 @@ async function unsendPhoto(api, event, d) {
     }
     await sleep(1000);
     let accm = [];
-    for (let i1 = 0; i1 < images.length; i1++) {
+    for (let i1 in images) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
@@ -6815,7 +6821,7 @@ async function unsendPhoto(api, event, d) {
                 attachment: accm,
             };
             sendMessageOnly(api, event, message1);
-            for (let i3 = 0; i3 < images.length; i3++) {
+            for (let i3 in images) {
                 unLink(images[i3]);
             }
         } else {
@@ -6833,13 +6839,13 @@ async function unsendPhoto(api, event, d) {
             };
             let bodyMention = d.mention;
             if (Object.keys(bodyMention).length >= 0) {
-                for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                for (let i in Object.keys(bodyMention)) {
                     let objId = Object.keys(bodyMention)[i];
                     message1.mentions.push({ tag: bodyMention[objId], id: objId });
                 }
             }
             sendMessageOnly(api, event, message1);
-            for (let i2 = 0; i2 < images.length; i2++) {
+            for (let i2 in images) {
                 unLink(images[i2]);
             }
         }
@@ -6851,7 +6857,7 @@ async function unsendGif(api, event, d) {
     let time = utils.getTimestamp();
     let arr = d.attachment;
     let images = [];
-    for (let i = 0; i < arr.length; i++) {
+    for (let i in d.attachment) {
         await sleep(1000);
         let fname = __dirname + "/cache/unsend_gif_" + i + "_" + time + ".png";
         downloadFile(d.attachment[i], fname);
@@ -6859,7 +6865,7 @@ async function unsendGif(api, event, d) {
     }
     await sleep(1000);
     let accm = [];
-    for (let i1 = 0; i1 < images.length; i1++) {
+    for (let i1 in images) {
         accm.push(fs.createReadStream(images[i1]));
     }
     api.getUserInfo(event.senderID, (err, data) => {
@@ -6881,7 +6887,7 @@ async function unsendGif(api, event, d) {
                 attachment: accm,
             };
             sendMessageOnly(api, event, message1);
-            for (let i3 = 0; i3 < images.length; i3++) {
+            for (let i3 in images) {
                 unLink(images[i3]);
             }
         } else {
@@ -6899,13 +6905,13 @@ async function unsendGif(api, event, d) {
             };
             let bodyMention = d.mention;
             if (Object.keys(bodyMention).length >= 0) {
-                for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                for (let i in Object.keys(bodyMention)) {
                     let objId = Object.keys(bodyMention)[i];
                     message1.mentions.push({ tag: bodyMention[objId], id: objId });
                 }
             }
             sendMessageOnly(api, event, message1);
-            for (let i2 = 0; i2 < images.length; i2++) {
+            for (let i2 in images) {
                 unLink(images[i2]);
             }
         }
@@ -6940,7 +6946,7 @@ async function unsendShare(api, event, d) {
             };
             let bodyMention = d.mention;
             if (Object.keys(bodyMention).length >= 0) {
-                for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                for (let i in Object.keys(bodyMention)) {
                     let objId = Object.keys(bodyMention)[i];
                     message.mentions.push({ tag: bodyMention[objId], id: objId });
                 }
@@ -6988,7 +6994,7 @@ async function unsendFile(api, event, d) {
                     };
                     let bodyMention = d.mention;
                     if (Object.keys(bodyMention).length >= 0) {
-                        for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                        for (let i in Object.keys(bodyMention)) {
                             let objId = Object.keys(bodyMention)[i];
                             message.mentions.push({ tag: bodyMention[objId], id: objId });
                         }
@@ -7147,7 +7153,7 @@ async function unsendVideo(api, event, d) {
                     };
                     let bodyMention = d.mention;
                     if (Object.keys(bodyMention).length >= 0) {
-                        for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                        for (let i in Object.keys(bodyMention)) {
                             let objId = Object.keys(bodyMention)[i];
                             message.mentions.push({ tag: bodyMention[objId], id: objId });
                         }
@@ -7196,7 +7202,7 @@ async function unsendAudio(api, event, d) {
                     };
                     let bodyMention = d.mention;
                     if (Object.keys(bodyMention).length >= 0) {
-                        for (let i = 0; i < Object.keys(bodyMention).length; i++) {
+                        for (let i in Object.keys(bodyMention)) {
                             let objId = Object.keys(bodyMention)[i];
                             message.mentions.push({ tag: bodyMention[objId], id: objId });
                         }
@@ -7213,10 +7219,10 @@ async function unsendAudio(api, event, d) {
 async function bgRemove(api, event) {
     let time = utils.getTimestamp();
     let url = [];
-    for (let i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+    for (let i55 in event.messageReply.attachments) {
         url.push(event.messageReply.attachments[i55].url);
     }
-    for (let i66 = 0; i66 < url.length; i66++) {
+    for (let i66 in url) {
         await sleep(1000);
         let name = "removebg_" + i66 + "_" + time + ".png";
         let dataUrl = __dirname + "/cache/" + name;
@@ -7250,7 +7256,7 @@ async function bgRemove(api, event) {
     await sleep(2000);
 
     let accm = [];
-    for (let i1 = 0; i1 < url.length; i1++) {
+    for (let i1 in url) {
         accm.push(fs.createReadStream(__dirname + "/cache/removebg_" + i1 + "_" + time + ".png"));
     }
     let message1 = {
@@ -7258,7 +7264,7 @@ async function bgRemove(api, event) {
     };
     sendMessage(api, event, message1);
     await sleep(2000);
-    for (let i22 = 0; i22 < url.length; i22++) {
+    for (let i22 in url) {
         unLink(__dirname + "/cache/removebg_" + i22 + "_" + time + ".png");
     }
 }
@@ -7666,7 +7672,7 @@ function saveEvent(api, event) {
             }
             case "photo": {
                 let photo = [];
-                for (let i = 0; i < event.attachments.length; i++) {
+                for (let i in event.attachments) {
                     photo.push(event.attachments[i].url);
                 }
                 msgs[event.messageID] = [
@@ -7684,7 +7690,7 @@ function saveEvent(api, event) {
             }
             case "animated_image": {
                 let animated_images = [];
-                for (let i1 = 0; i1 < event.attachments.length; i1++) {
+                for (let i1 in event.attachments) {
                     animated_images.push(event.attachments[i1].url);
                 }
                 msgs[event.messageID] = [
@@ -8227,7 +8233,7 @@ async function sendMessageToAll(api, event) {
 
                     if (event.messageReply.attachments.length != 0) {
                         let format = getFormat(event.messageReply.attachments[0].type);
-                        for (let i55 = 0; i55 < event.messageReply.attachments.length; i55++) {
+                        for (let i55 in event.messageReply.attachments) {
                             await sleep(1000);
                             let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
                             downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
@@ -8282,6 +8288,7 @@ function saveState() {
     fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
     fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings), "utf8");
     fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread), "utf8");
+    fs.writeFileSync('./.env', envfile.stringifySync(processEnv));
 }
 
 function getIdFromUrl(url) {
@@ -8467,7 +8474,7 @@ function updateFont(message, senderID, userID) {
     if (message.mentions) {
         let mentionS = message.mentions.length;
         if (mentionS > 0) {
-            for (let i = 0; i < mentionS; i++) {
+            for (let i in message.mentions) {
                 message.mentions[i].tag = toMathSans(message.mentions[i].tag, mathSansMap);
             }
         }
@@ -8762,7 +8769,7 @@ async function sendAiMessage(api, event, ss) {
 
     if (!message["url"] && event.attachments.length > 0) {
         let url = [];
-        for (let i = 0; i < event.attachments.length; i++) {
+        for (let i in event.attachments) {
             url.push(event.attachments[i].url);
         }
         switch (event.attachments[0].type) {
@@ -8816,7 +8823,7 @@ function nonUU(images, isMax) {
 async function simulDD(arr, format) {
     let time = utils.getTimestamp();
     let images = [];
-    for (let i = 0; i < arr.length; i++) {
+    for (let i in arr) {
         await sleep(1000);
         let fname = __dirname + "/cache/attach_photo_" + i + "_" + time + "." + format;
         downloadFile(arr[i], fname);
@@ -8824,7 +8831,7 @@ async function simulDD(arr, format) {
     }
     await sleep(1000);
     let accm = [];
-    for (let i1 = 0; i1 < images.length; i1++) {
+    for (let i1 in images) {
         accm.push(fs.createReadStream(images[i1]));
     }
     return accm;
@@ -8963,7 +8970,7 @@ function deleteCacheData(mode) {
     fs.readdir(__dirname + "/cache/", function (err, files) {
         if (err) return handleError({ stacktrace: err });
         if (files.length > 0) {
-            for (let fe = 0; fe < files.length; fe++) {
+            for (let fe in files) {
                 let file = files[fe];
                 if (mode) {
                     unlinkIfExists(__dirname + "/cache/" + file);
@@ -9115,7 +9122,8 @@ async function addAccount() {
                         saveState();
 
                         settings[login].owner = login;
-                        process.env.ROOT = login;
+                        processEnv.ROOT = login
+                        utils.logged("root_account " + login);
                     }
                 }
             );
