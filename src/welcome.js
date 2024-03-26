@@ -1,18 +1,17 @@
 /*
- *
- * Copyright (c) 2022 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
- *
- * License under the Mrepol742 License, version 1.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://github.com/mrepol742/Mrepol742-the-License
- *
- * Unless required by the applicable law or agreed in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * This file is part of Project Orion.
+ * 
+ * Orion is free software: you can redistribute it and/or modify it 
+ * under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation, version 3 of the License
+ * 
+ * Orion is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with Orion. If not, see <https://www.gnu.org/licenses/>.
+ * 
  */
 
 const canvasGif = require("canvas-gif");

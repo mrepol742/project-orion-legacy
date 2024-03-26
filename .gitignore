@@ -3,5 +3,6 @@
 /data/cookies/*
 /build/*
 /log/*
+/data/*
 .env
 package-lock.json

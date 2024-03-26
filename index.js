@@ -1,18 +1,17 @@
 /*
- *
- * Copyright (c) 2023 Melvin Jones Repol (mrepol742.github.io). All Rights Reserved.
- *
- * License under the Mrepol742 License, version 1.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://github.com/mrepol742/Mrepol742-the-License
- *
- * Unless required by the applicable law or agreed in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 
+ * This file is part of Project Orion.
+ * 
+ * Orion is free software: you can redistribute it and/or modify it 
+ * under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation, version 3 of the License
+ * 
+ * Orion is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with Orion. If not, see <https://www.gnu.org/licenses/>.
+ * 
  */
 
 require('dotenv').config();
@@ -55,9 +54,9 @@ for (let folder in folder_dir) {
     writeFolder(__dirname + folder_dir[folder]);
 }
 
-let data_json = ["groups", "pin", "accountPreferences", "threadPreferences", "users"];
+let data_json = ["groups", "accountPreferences", "threadPreferences", "users"];
 for (let file in data_json) {
-    writeFile(__dirname + "/data/" + data_json[file] + ".json", "{}");
+    writeFile(__dirname + "/data/" + data_json[file] + ".json", fs.readFileSync(__dirname + "/src/data/default/" + data_json[file] + ".json", "utf8"));
 }
 
 /*
@@ -118,15 +117,12 @@ const latinC = /[^a-z0-9\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 
 /*
- * CREATE SERVER
- */
-
-/*
 const LOG_PORT = process.env.LOG_PORT || 3001;
 http.createServer(getLogs()).listen(LOG_PORT, () => {
     utils.logged("log_server_running http://localhost:" + LOG_PORT);
 });
 */
+
 
 deleteCacheData(true);
 
