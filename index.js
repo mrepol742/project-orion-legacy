@@ -467,15 +467,15 @@ function redfox_fb(fca_state, login, cb) {
                             // bug this can be initiate if api.markAllAsRead is the reason or attachments
                             sendMessage(api, event, "This account is restricted right now. Please try it again in few hours.");
                         } else if (users.muted.includes(event.senderID)) {
-                            sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/prj-orion/issues");
+                            sendMessage(api, event, "You are muted please enter `unmute` for you to use the bot commands or by creating an appeal at https://github.com/mrepol742/project-orion/issues");
                         } else if (groups.blocked.includes(event.threadID)) {
                             sendMessage(api, event, "This group is blocked. Contact the bot admins for more info.");
                         } else if (users.blocked.includes(event.senderID) || users.bot.includes(event.senderID)) {
-                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/prj-orion/issues");
+                            sendMessage(api, event, "You are blocked from using the bot commands. Contact the bot admins for more info or by creating an appeal at https://github.com/mrepol742/project-orion/issues");
                         } else if (settings[login].stop) {
                             sendMessage(api, event, "The program is currently offline.");
                         } else if (settings[login].maintenance) {
-                            sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/prj-orion/issues");
+                            sendMessage(api, event, "The program is currently under maintenance for more information please refer to the issue declared here https://github.com/mrepol742/project-orion/issues");
                         } else {
                             sendMessage(api, event, "If you're reading this message, it's because our servers are working");
                         }
@@ -3622,7 +3622,7 @@ async function ai(api, event) {
             data.shift();
             let nquery = data.join(" ");
             getResponseData("https://api.popcat.xyz/npm?q=" + nquery).then((response) => {
-                if (response == null) return sendMessage(api, event, 'Unfortunately npm "' + nquery + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                if (response == null) return sendMessage(api, event, 'Unfortunately npm "' + nquery + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.');
                 let name = response.name;
                 let version = response.version;
                 let description = response.description;
@@ -3650,7 +3650,7 @@ async function ai(api, event) {
             data.shift();
             let nquery = data.join(" ");
             getResponseData("https://api.popcat.xyz/steam?q=" + nquery).then((response) => {
-                if (response == null) return sendMessage(api, event, 'Unfortunately the "' + nquery + '" was not found on steam.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                if (response == null) return sendMessage(api, event, 'Unfortunately the "' + nquery + '" was not found on steam.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.');
                 let name = response.name;
                 let developers = response.developers;
                 let website = response.website;
@@ -3679,7 +3679,7 @@ async function ai(api, event) {
             data.shift();
             let name = data.join(" ");
             getResponseData("https://api.popcat.xyz/imdb?q=" + name).then((response) => {
-                if (response == null) return sendMessage(api, event, 'Unfortunately imdb "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                if (response == null) return sendMessage(api, event, 'Unfortunately imdb "' + name + '" was not found.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.');
                 let title = response.title;
                 let year = response.year;
                 let runtime = response.runtime;
@@ -3708,7 +3708,7 @@ async function ai(api, event) {
             data.shift();
             let nquery = data.join(" ");
             getResponseData("https://api.popcat.xyz/itunes?q=" + nquery).then((response) => {
-                if (response == null) return sendMessage(api, event, 'Unfortunately the "' + nquery + '" was not found in itunes music.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.');
+                if (response == null) return sendMessage(api, event, 'Unfortunately the "' + nquery + '" was not found in itunes music.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.');
                 let name = response.name;
                 let artist = response.artist;
                 let album = response.album;
@@ -3731,7 +3731,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "car", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/car").then((response) => {
-            if (response == null) return sendMessage(api, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            if (response == null) return sendMessage(api, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             let image = response.image;
             let title = response.title;
             let filename = __dirname + "/cache/car_" + utils.getTimestamp() + ".png";
@@ -3747,7 +3747,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "rcolor", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/randomcolor").then((response) => {
-            if (response == null) return sendMessage(api, event, "Unfortunately color fades away.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            if (response == null) return sendMessage(api, event, "Unfortunately color fades away.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             let hex = response.hex;
             let name = response.name;
             let url = response.image;
@@ -3765,7 +3765,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "pickuplines", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/pickuplines").then((response) => {
-            if (response == null) return sendMessage(api, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            if (response == null) return sendMessage(api, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             sendMessage(api, event, response.pickupline);
         });
     } else if (testCommand(api, query, "fbi", event.senderID, "user", true)) {
@@ -5182,7 +5182,7 @@ async function ai(api, event) {
         } else {
             data.shift();
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
-                if (response == null) return sendMessage(api, event, "Unfortunately the wiki " + data.join(" ") + " was not found.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                if (response == null) return sendMessage(api, event, "Unfortunately the wiki " + data.join(" ") + " was not found.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
                 let dir = __dirname + "/cache/wiki_" + utils.getTimestamp() + ".png";
                 let url = response.originalimage.source;
                 downloadFile(url, dir).then((response1) => {
@@ -5439,7 +5439,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "coding", event.senderID)) {
         if (isGoingToFast(api, event)) return;
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
-            if (response == null) return sendMessage(api, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            if (response == null) return sendMessage(api, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             let url = response.url;
             let title = response.title;
             let time = utils.getTimestamp();
@@ -5469,7 +5469,7 @@ async function ai(api, event) {
     } else if (testCommand(api, query, "thoughts", event.senderID, "user", true)) {
         if (isGoingToFast(api, event)) return;
         getResponseData("https://api.popcat.xyz/showerthoughts").then((response) => {
-            if (response == null) return sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+            if (response == null) return sendMessage(api, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             sendMessage(api, event, response.result);
         });
     } else if (testCommand(api, query, "drake", event.senderID)) {
@@ -5523,7 +5523,7 @@ async function ai(api, event) {
                 } else {
                     data.shift();
                     getResponseData("https://api.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
-                        if (response == null) return sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                        if (response == null) return sendMessage(api, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
                         parseImage(api, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
                         if (event.senderID != settings.shared.root) {
                             removeBalance(user, 1000);
@@ -5548,7 +5548,7 @@ async function ai(api, event) {
             data.shift();
             let text = data.join(" ");
             getResponseData("https://api.waifu.pics/sfw/" + text).then((response) => {
-                if (response == null) return sendMessage(api, event, "I cannot find any relavant result about " + text + "\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues.");
+                if (response == null) return sendMessage(api, event, "I cannot find any relavant result about " + text + "\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
                 parseImage(api, event, response.url, __dirname + "/cache/anime_" + utils.getTimestamp() + ".png");
             });
         }
@@ -6396,7 +6396,7 @@ function sendMessageErr(api, event, thread_id, message_id, id, err) {
     api.sendMessage(
         {
             body: updateFont(message, id, api.getCurrentUserID()),
-            url: "https://github.com/prj-orion/issues/issues/new",
+            url: "https://github.com/mrepol742/project-orion/issues/issues/new",
         },
         thread_id,
         (err, messageInfo) => {
@@ -6564,7 +6564,7 @@ function isItBotOrNot(api, event) {
         } else {
             construct += "You have been blocked.";
         }
-        construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/prj-orion/issues.";
+        construct += "\n\nWe don't tolerate any kindof inappropriate behavior if you think this is wrong please reach us.\n\nhttps://github.com/mrepol742/project-orion/issues.";
         sendMessageOnly(api, event, construct);
         return true;
     }
@@ -7962,7 +7962,7 @@ async function aiResponse2(event, text, repeat, user, group, uid, retry) {
         settings[settings.shared.root].openai = apikey;
 
         if (ai.choices[0].finish_reason == "length" && !message.content.endsWith(".")) {
-            ai.choices[0].message = "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/prj-orion/issues";
+            ai.choices[0].message = "Hello, the response is not completed due to the complixity and other issue. Please try it again.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues";
             return ai;
         } else if (message.function_call) {
             let functionName = message.function_call.name;
@@ -9296,7 +9296,7 @@ function handleError(err) {
         "\n- floating-point support not loaded^M" +
         "\n\nError ID: " +
         eid +
-        "\nReport at: https://github.com/prj-orion/issues/issues/new";
+        "\nReport at: https://github.com/mrepol742/project-orion/issues/issues/new";
     if (err.stacktrace.name) {
         ct = ct.replace("__error__name__", err.stacktrace.name);
     } else {
@@ -9310,7 +9310,7 @@ function handleError(err) {
     ct = ct.replace("__version__", packagejson.version);
     return {
         body: ct,
-        url: "https://github.com/prj-orion/issues/issues/new",
+        url: "https://github.com/mrepol742/project-orion/issues/issues/new",
     };
 }
 
