@@ -9034,14 +9034,14 @@ function formatCodeBlock(str) {
 function writeFolder(dir) {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
-        utils.logged("creating_dir "  + __dirname + folder_dir[folder]);
+        utils.logged("creating_dir "  + dir);
     }
 }
 
 function writeFile(dir, content) {
     if (!fs.existsSync(dir)) {
         fs.writeFileSync(dir, content, "utf8");
-        utils.logged("writing_file "  + __dirname + folder_dir[folder]);
+        utils.logged("writing_file "  + dir);
     }
 }
 
