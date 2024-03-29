@@ -9159,7 +9159,7 @@ function testCommand(api, message, prefix, senderID, permission, regex) {
     if (!permission) permission = "user";
     if (!regex) regex = false;
 
-    prefix = prefix.replaceAll("--", " ");
+    prefix = prefix.replaceAll("--", " ").replaceAll("-", " ");
     if (!regex) regex = false;
 
     if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) return false;
