@@ -15,15 +15,18 @@
  * 
  */
 
-const axios = require("axios");
+let func = {};
 
-module.exports = (vr) => {
-    return new Promise(async(resolve, reject) => {
-        try {
-            const response = await axios.get("https://raw.githubusercontent.com/mrepol742/project-orion/master/package.json");
-            resolve({currentVersion: vr, remoteVersion: response.data.version});
-        } catch (err) {
-            reject(err);
-        }
-    });
-}
+const fileNames = [
+    'cleanDuplicate',
+    'generateCommandList',
+    'log',
+    'response',
+    'updatePackage'
+]
+
+fileNames.map(function (v) {
+    func[v] = require("./" + v);
+});
+
+module.exports = func;

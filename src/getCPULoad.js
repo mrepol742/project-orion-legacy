@@ -15,15 +15,24 @@
  * 
  */
 
-const axios = require("axios");
+const os = require("os");
 
-module.exports = (vr) => {
-    return new Promise(async(resolve, reject) => {
-        try {
-            const response = await axios.get("https://raw.githubusercontent.com/mrepol742/project-orion/master/package.json");
-            resolve({currentVersion: vr, remoteVersion: response.data.version});
-        } catch (err) {
-            reject(err);
+module.exports = () => {
+    let cpus = os.cpus();
+    let totalTime = -oldCPUTime;
+    let totalIdle = -oldCPUIdle;
+    let i;
+    for (i = 0; i < cpus.length; i++) {
+        let cpu = cpus[i];
+        for (let type in cpu.times) {
+            totalTime += cpu.times[type];
+            if (type == "idle") {
+                totalIdle += cpu.times[type];
+            }
         }
-    });
+    }
+    let load = 100 - Math.round((totalIdle / totalTime) * 100);
+    oldCPUTime = totalTime;
+    oldCPUIdle = totalIdle;
+    return load;
 }

@@ -15,37 +15,34 @@
  * 
  */
 
-module.exports = function (defaultFuncs, api, ctx) {
-    return function cleanDuplicate(arr, callback) {
-        var resolveFunc = function () { };
-        var rejectFunc = function () { };
-        var returnPromise = new Promise(function (resolve, reject) {
-            resolveFunc = resolve;
-            rejectFunc = reject;
-        });
+module.exports = (arr, callback) => {
+    var resolveFunc = function () { };
+    var rejectFunc = function () { };
+    var returnPromise = new Promise(function (resolve, reject) {
+        resolveFunc = resolve;
+        rejectFunc = reject;
+    });
 
-        if (!callback) {
-            callback = function (err, arr) {
-                if (err) return rejectFunc(err);
-                resolveFunc(arr);
-            };
-        }
-        try {
-
-            let ids = [];
-            for (a in arr.list) {
-                id = arr.list[a].id;
-                if (!ids.includes(id)) {
-                    ids.push(id);
-                } else {
-                    delete arr.list[a];
-                }
-            }
-            callback(arr);
-        } catch (err) {
-            callback(err);
-        }
-
-        return returnPromise;
+    if (!callback) {
+        callback = function (err, arr) {
+            if (err) return rejectFunc(err);
+            resolveFunc(arr);
+        };
     }
+    try {
+
+        let ids = [];
+        for (a in arr.list) {
+            id = arr.list[a].id;
+            if (!ids.includes(id)) {
+                ids.push(id);
+            } else {
+                delete arr.list[a];
+            }
+        }
+        callback(null, rr);
+    } catch (err) {
+        callback(err, null);
+    }
+    return returnPromise;
 }

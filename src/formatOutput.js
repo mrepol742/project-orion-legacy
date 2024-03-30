@@ -15,15 +15,11 @@
  * 
  */
 
-const axios = require("axios");
-
-module.exports = (vr) => {
-    return new Promise(async(resolve, reject) => {
-        try {
-            const response = await axios.get("https://raw.githubusercontent.com/mrepol742/project-orion/master/package.json");
-            resolve({currentVersion: vr, remoteVersion: response.data.version});
-        } catch (err) {
-            reject(err);
-        }
-    });
+module.exports = (title, body, footer) => {
+    let construct = "⋆｡° " + title + "\n│\n";
+    for (let i = 0; i < body.length; i++) {
+        construct += '│   ⦿ ' + body[i] + "\n";
+    }
+    construct += '│\n└─  ' + footer;
+    return construct;
 }

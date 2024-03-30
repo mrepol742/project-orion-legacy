@@ -15,15 +15,12 @@
  * 
  */
 
-const axios = require("axios");
 
-module.exports = (vr) => {
-    return new Promise(async(resolve, reject) => {
-        try {
-            const response = await axios.get("https://raw.githubusercontent.com/mrepol742/project-orion/master/package.json");
-            resolve({currentVersion: vr, remoteVersion: response.data.version});
-        } catch (err) {
-            reject(err);
-        }
-    });
+module.exports = (gen) => {
+    let strs = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
+    for (a in gen) {
+        strs += "│  ⦿ " + gen[a] + "\n";
+    }
+    strs += "│\n└─ @ỹ@cmd-prj- orion";
+    return strs;
 }

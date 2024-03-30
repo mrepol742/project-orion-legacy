@@ -4,10 +4,10 @@
 
 A Chatbot thats trained to understand and respond to a wide range of commands and requests.
 
-# Pre-requisites
+## Pre-requisites
 - Install [Node.js](https://nodejs.org/en/) version 20.x.x
 
-# Getting started
+## Getting started
 - Fork the repository
 Click https://github.com/mrepol742/project-orion/fork
 - Clone fork the repository
@@ -26,6 +26,25 @@ cd project-orion && npm i
 ```
 npm run start
 ```
+
+## License
+```
+Copyright (c) 2022 Melvin Jones
+  
+  Orion is free software: you can redistribute it and/or modify it 
+  under the terms of the GNU General Public License as published by 
+  the Free Software Foundation, version 3 of the License
+  
+  Orion is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+  See the GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License along with Orion. If not, see <https://www.gnu.org/licenses/>.
+
+  Portions of this file ('utils.js', 'redfox.js') are derived from code licensed under the MIT License.
+ 
+  The original code licensed under the MIT and its copyright information can be found at <https://github.com/mrepol742/project-orion/blob/master/src/LICENSE/>.
+ ```
 <br>
 This are the following commands available on this chatbot.
 
