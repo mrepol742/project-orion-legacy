@@ -1,4 +1,17 @@
 /* eslint-disable no-redeclare */
+
+/*
+ * This file is part of Project Orion.
+ *
+ * Portions of this file are derived from code licensed under the MIT License.
+ *
+ * The original code licensed under the MIT and its copyright information can be found at <https://github.com/mrepol742/project-orion/blob/master/src/LICENSE/>.
+ *
+ * This file is also subject to the terms and conditions of the GNU General Public License (GPL) vesion 3.0 License, a copy of which can be found in the LICENSE file at the root of this distribution.
+ *
+ * Copyright (c) 2022 Melvin Jones
+ */
+
 var utils = require("../utils.js");
 var mqtt = require("mqtt");
 var websocket = require("websocket-stream");

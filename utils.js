@@ -1,4 +1,17 @@
 /* eslint-disable no-prototype-builtins */
+
+/*
+ * This file is part of Project Orion.
+ *
+ * Portions of this file are derived from code licensed under the MIT License.
+ *
+ * The original code licensed under the MIT and its copyright information can be found at <https://github.com/mrepol742/project-orion/blob/master/src/LICENSE/>.
+ *
+ * This file is also subject to the terms and conditions of the GNU General Public License (GPL) vesion 3.0 License, a copy of which can be found in the LICENSE file at the root of this distribution.
+ *
+ * Copyright (c) 2022 Melvin Jones
+ */
+
 var bluebird = require("bluebird");
 var request = bluebird.promisify(require("request").defaults({ jar: true }));
 var stream = require("stream");
@@ -1338,6 +1351,15 @@ function getTimestamp() {
     return Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 90000) + Math.floor(Math.random() * 20000);
 }
 
+function formatGen(gen) {
+    let strs = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
+    for (a in gen) {
+        strs += "│  ⦿ " + gen[a] + "\n";
+    }
+    strs += "│\n└─ @ỹ@cmd-prj- orion";
+    return strs;
+}
+
 module.exports = {
     isReadableStream,
     get,
@@ -1389,4 +1411,5 @@ module.exports = {
     getContentType,
     formatOutput,
     getTimestamp,
+    formatGen
 };

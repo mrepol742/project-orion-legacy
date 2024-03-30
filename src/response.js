@@ -1,6 +1,7 @@
 /*
  * 
  * This file is part of Project Orion.
+ * Copyright (c) 2022 Melvin Jones
  * 
  * Orion is free software: you can redistribute it and/or modify it 
  * under the terms of the GNU General Public License as published by 

@@ -1,6 +1,7 @@
 /*
  * 
  * This file is part of Project Orion.
+ * Copyright (c) 2022 Melvin Jones
  * 
  * Orion is free software: you can redistribute it and/or modify it 
  * under the terms of the GNU General Public License as published by 
@@ -16,15 +17,14 @@
 
 require('dotenv').config();
 const envfile = require("envfile");
-const utils = require("./src/utils.js");
-const redfox = require("./src/redfox.js");
-const { generateWelcomeGif } = require("./src/welcome.js");
-const cleanjs = require("./src/clean.js");
+const utils = require("./utils");
+const redfox = require("./redfox");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 const FormData = require("form-data");
 const dns = require("dns");
 const http = require("http");
 const https = require("https");
+const express = require("express");
 const os = require("os");
 const WeatherJS = require("weather-js");
 const GoogleTTS = require("google-tts-api");
@@ -33,13 +33,16 @@ const axios = require("axios");
 const crypto = require("crypto");
 const cheerio = require("cheerio");
 const OpenAI = require("openai");
-const { sup, hey, unsendMessage, funD, happyEE, sadEE, loveEE, sizesM, sendEffects, gcolor, example, heyMelbin, heySim, domains, quizCorrect, quizWrong } = require("./src/arrays.js");
-const { gen, formatGen } = require("./src/cmd.js");
 const { exec } = require("child_process");
 const { createInterface } = require("readline");
 const fs = require("fs");
 
 console.log(`
+Project Orion Copyright (c) 2022  Melvin Jones
+This program comes with ABSOLUTELY NO WARRANTY; for details type \`show w'.
+This is free software, and you are welcome to redistribute it
+under certain conditions; type \`show c' for details.
+
 
                                    ""#    mmmmmm    mm   mmmm 
 mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
@@ -47,7 +50,7 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
 # # #   #     #""""  #   #  #   #    #      m"   #mmm#m   m"  
 # # #   #     "#mm"  ##m#"  "#m#"    "mm   m"        #  m#mmmm
                      #                                        
-                     "                                        
+                     "` + process.env.npm_package_version + `
 `);
 
 let folder_dir = ["/cache", "/data", "/data/cookies", "/log"];
@@ -68,6 +71,7 @@ if (!fs.existsSync(__dirname + "/.env")) {
 /*
  * LOAD DATA
  */
+utils.logged("loading_data ................");
 let settings = JSON.parse(fs.readFileSync(__dirname + "/data/accountPreferences.json", "utf8"));
 let settingsThread = JSON.parse(fs.readFileSync(__dirname + "/data/threadPreferences.json", "utf8"));
 let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
@@ -898,7 +902,7 @@ function redfox_fb(fca_state, login, cb) {
 
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
                                 downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
-                                    generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member").then(
+                                    welcome.generateWelcomeGif(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member").then(
                                         (data) => {
                                             let message = {
                                                 body: gret,
@@ -990,7 +994,7 @@ function redfox_fb(fca_state, login, cb) {
                                             let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
                                             downloadFile(getProfilePic(id), dirp).then(async (response) => {
 
-                                                generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(").then(
+                                                welcome.generateWelcomeGif(dirp, "Sayonara", data[id].name, "may the force be with you :(").then(
                                                     (data) => {
 
                                                         let message = {
@@ -4768,12 +4772,12 @@ async function ai(api, event) {
         }
         sendMessage(api, event, count + " deleted.");
     } else if (testCommand(api, query, "clear--dup-data", event.senderID, "root", true)) {
-        let a = await cleanjs.array(groups);
+        let a = await clean.array(groups);
         if (a != null) {
             let t = JSON.stringify(a).replaceAll(",null", "");
             groups = JSON.parse(t);
         }
-        let a1 = await cleanjs.array(users);
+        let a1 = await clean.array(users);
         if (a1 != null) {
             let t1 = JSON.stringify(a1).replaceAll(",null", "");
             users = JSON.parse(t1);

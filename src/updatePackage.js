@@ -1,6 +1,7 @@
 /*
  * 
  * This file is part of Project Orion.
+ * Copyright (c) 2022 Melvin Jones
  * 
  * Orion is free software: you can redistribute it and/or modify it 
  * under the terms of the GNU General Public License as published by 
@@ -13,27 +14,22 @@
  * You should have received a copy of the GNU General Public License along with Orion. If not, see <https://www.gnu.org/licenses/>.
  * 
  */
+const axios = require("axios");
+const utils = require("../utils.js");
 
-const utils = require("./utils.js");
-
-function array(groups) {
-    try {
-
-        let ids = [];
-        for (a in groups.list) {
-            id = groups.list[a].id;
-            if (!ids.includes(id)) {
-                ids.push(id);
-            } else {
-                delete groups.list[a];
-            }
+function checkUpdate(vr) {
+    return new Promise(async(resolve, reject) => {
+        try {
+            const response = await axios.get("https://raw.githubusercontent.com/mrepol742/project-orion/master/package.json");
+            resolve({currentVersion: vr, remoteVersion: response.data.version});
+        } catch (err) {
+            reject(err);
         }
-
-        return groups;
-    } catch (err) {
-        utils.logged(err);
-    }
-    return null;
+    });
 }
 
-module.exports = array;
+checkUpdate(3.3).then(
+    (data) => console.log(data),
+    (err) => utils.logged(err));
+
+module.exports = checkUpdate;

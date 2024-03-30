@@ -1,6 +1,7 @@
 /*
  * 
  * This file is part of Project Orion.
+ * Copyright (c) 2022 Melvin Jones
  * 
  * Orion is free software: you can redistribute it and/or modify it 
  * under the terms of the GNU General Public License as published by 
@@ -15,15 +16,17 @@
  */
 
 const fs = require("fs");
+const utils = require("../utils.js");
 
-function gen() {
+module.exports = function (defaultFuncs, api, ctx) {
+    return 
     let arr = fs.readFileSync("./index.js") + "";
 
     let commands = arr.match(/testCommand\((.*?)\)/g);
 
     commands.pop();
 
-    console.log("found " + commands.length + "cmd");
+    utils.logged("command_found " + commands.length);
 
     let count = 0;
     let helpCount = 1;
@@ -70,14 +73,6 @@ function gen() {
     return JSON.stringify(help, null, 4);
 }
 
-function formatGen(gen) {
-    let strs = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
-    for (a in gen) {
-        strs += "│  ⦿ " + gen[a] + "\n";
-    }
-    strs += "│\n└─ @ỹ@cmd-prj- orion";
-    return strs;
-}
 /*
 
  let gen1 = JSON.parse(gen());
