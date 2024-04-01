@@ -15,33 +15,13 @@
  * 
  */
 
-let func = {};
-
-const fileNames = [
-    'checkCommandPermission',
-    'cleanDuplicate',
-    'decrypt',
-    'encrypt',
-    'formatGen',
-    'formatOutput',
-    'generateCommandList',
-    'getContentType',
-    'getCPULoad',
-    'getGroupProfile',
-    'getProjectTotalSize',
-    'getTimestamp',
-    'getUserProfile',
-    'isBlockedSentence',
-    'isNumeric',
-    'log',
-    'removeMarkdown',
-    'shuffle',
-    'checkUpdate',
-    'watchCookiesChanges'
-]
-
-fileNames.map(function (v) {
-    func[v] = require("./" + v);
-});
-
-module.exports = func;
+module.exports = (groups, id, cb) => {
+    if (!groups.list.find((thread) => id === thread.id)) {
+        cb({ name: undefined });
+    }
+    groups.list.find((thread) => {
+        if (thread.id == id) {
+            cb(thread);
+        }
+    });
+}

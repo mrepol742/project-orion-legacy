@@ -15,33 +15,21 @@
  * 
  */
 
-let func = {};
+const chokidar = require('chokidar')
+const log = require("./log");
 
-const fileNames = [
-    'checkCommandPermission',
-    'cleanDuplicate',
-    'decrypt',
-    'encrypt',
-    'formatGen',
-    'formatOutput',
-    'generateCommandList',
-    'getContentType',
-    'getCPULoad',
-    'getGroupProfile',
-    'getProjectTotalSize',
-    'getTimestamp',
-    'getUserProfile',
-    'isBlockedSentence',
-    'isNumeric',
-    'log',
-    'removeMarkdown',
-    'shuffle',
-    'checkUpdate',
-    'watchCookiesChanges'
-]
-
-fileNames.map(function (v) {
-    func[v] = require("./" + v);
-});
-
-module.exports = func;
+module.exports = () => {
+    const watcher = chokidar.watch('./data/cookies');
+    log("watching_cookie please add your app state to");
+    log("watching_cookies /data/cookies/appstate.bin");
+    watcher
+    .on('add', (path) => {
+        if (path.endsWith(".bin")) {
+            return process.exit(0);
+        } 
+        log("invalid_file_format make sure it ends in .bin");
+    })
+    .on('error', (error) => {
+       log(error);
+    })
+}

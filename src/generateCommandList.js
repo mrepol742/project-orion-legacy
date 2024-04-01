@@ -20,7 +20,7 @@ const log = require("./log");
 
 module.exports = () => {
     try {
-        let arr = fs.readFileSync("../index.js") + "";
+        let arr = fs.readFileSync("./index.js") + "";
 
         let commands = arr.match(/testCommand\((.*?)\)/g);
 

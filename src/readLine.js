@@ -15,33 +15,15 @@
  * 
  */
 
-let func = {};
+const { createInterface } = require("readline");
 
-const fileNames = [
-    'checkCommandPermission',
-    'cleanDuplicate',
-    'decrypt',
-    'encrypt',
-    'formatGen',
-    'formatOutput',
-    'generateCommandList',
-    'getContentType',
-    'getCPULoad',
-    'getGroupProfile',
-    'getProjectTotalSize',
-    'getTimestamp',
-    'getUserProfile',
-    'isBlockedSentence',
-    'isNumeric',
-    'log',
-    'removeMarkdown',
-    'shuffle',
-    'checkUpdate',
-    'watchCookiesChanges'
-]
-
-fileNames.map(function (v) {
-    func[v] = require("./" + v);
-});
-
-module.exports = func;
+module.exports = (msg) => {
+    return new Promise((resolve) => {
+        createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        }).question(msg, (userRes) => {
+            resolve(userRes);
+        });
+    });
+};

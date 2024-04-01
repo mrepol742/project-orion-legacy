@@ -17,14 +17,13 @@
 
 require('dotenv').config();
 const envfile = require("envfile");
-const utils = require("./src/utils");
 const redfox = require("./src/redfox/index");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 const FormData = require("form-data");
 const dns = require("dns");
-const http = require("http");
 const https = require("https");
 const express = require("express");
+const cors = require('cors');
 const os = require("os");
 const WeatherJS = require("weather-js");
 const GoogleTTS = require("google-tts-api");
@@ -36,6 +35,10 @@ const OpenAI = require("openai");
 const { exec } = require("child_process");
 const { createInterface } = require("readline");
 const fs = require("fs");
+const utils = require("./src/utils");
+const indexRoutes = require('./src/routes/index');
+const logRoutes = require('./src/routes/log');
+const responseMiddleware = require('./src/middleware/response');
 
 console.log(`
 Project Orion Copyright (c) 2022  Melvin Jones
@@ -100,6 +103,513 @@ console.log("Users" + "\n  Total: " + Object.keys(users.list).length + "\n  Bloc
 
 console.log("Groups" + "\n  Total: " + Object.keys(groups.list).length + "\n  Blocked: " + groups.blocked.length);
 
+
+const quizCorrect = ["Well done!", "That's correct.", "Correct", "Good Job!", "Great.", "Awesome!", "You got it!", "Your right."];
+const quizWrong = ["Wrong.", "Try again later.", "Naaaah!", "Better luck next time", "Luck isnt at you this time!", "May luck be with you on the next question.", "Ain't lucky today.", "That was wrong."];
+const sup = ["I'm tired", "Not much, you?", "Meh...", "I'm great, how about you?", "What's up with you?", "Nothing much, you?"];
+const hey = ["Sup", "Hey :D", "hey", "yup?", "yes?", "How are you?", "How you doing?", "wassup", "whats new?", "how can i help you?", "hello", "hi", "hellooooo", "hiiiiii"];
+const heyMelbin = ["Sup!!", "hey you!", "why!", "no?", "How are you!", "How you doing!", "wassup!", "whats new!", "how can i suss you!", "hello!!", "hi!!", "hellooooo...", "hiiiiii...."];
+const heySim = ["Sup uhhhh", "heyyyyyyy", "yes i like that.", "Ho-w ar-e yo-u?", "Ughhh how you doinggg?", "wassup but i like wassdown..", "whats new or whats that uhg", "how can i _**;' you?", "hello", "hi", "hellooooo", "hiiiiii"];
+const unsendMessage = ["blewww", "got you", "says:", "send this a while ago:", "deleted this:", "unsend this message:", "unsend this a second ago:", "removed this message:"];
+const funD = ["🤣🤣🤣", "🤣", "😆😆", "😂😂🤣🤣", "😆😆🤣", "😂😆", "😆", "ahahaahh", "hahahahhah", "haahaaa", "ahhaa😂", "hhahahah😆", "🤣🤣hahaahhaha", "hahaa😆🤣", "hahahah funny."];
+const happyEE = ["haha", "ahah", "ahha", "funny ", "insane ", "lol", "lmao", "lmfao", "silly ", "laugh ", "hilarious", "absurd", "ridicolous"];
+const sadEE = ["pain", "painful", "cry ", "crying ", "sad ", "tired", "sick ", "depressed", "miserable ", "heartbroken", "sorry", "traumatic", "truma", "pitiful", "depressing", "depress", "unfortunate", "awful"];
+const loveEE = ["love", "thank", "delight", "pleasure", "regards", "respect", "dear", "darling", "boyfriend", "girlfriend", "sweetheart", "angel", "honey", "adore", "treasure", "devotion", "friend"];
+const sizesM = ["Bytes", "KB", "MB", "GB", "TB"];
+const sendEffects = ["(sent with gift wrap effect)", "(sent with fire effect)", "(sent with celebration effect)", "(sent with love effect)"];
+const example = ["For instance:", "For example:", "Like:", "Suppose that:", "e.g:", "In particular:", "To give you an idea:", "Let's say:", "Example:"];
+const gcolor = {
+    defaultblue: "196241301102133",
+    hotpink: "169463077092846",
+    aquablue: "2442142322678320",
+    brightpurple: "234137870477637",
+    coralpink: "980963458735625",
+    orange: "175615189761153",
+    green: "2136751179887052",
+    lavenderpurple: "2058653964378557",
+    red: "2129984390566328",
+    yellow: "174636906462322",
+    tealblue: "1928399724138152",
+    aqua: "417639218648241",
+    mango: "930060997172551",
+    berry: "164535220883264",
+    citrus: "370940413392601",
+    candy: "205488546921017",
+};
+const domains = [
+    ".aaa",
+    ".abb",
+    ".abc",
+    ".ac",
+    ".aco",
+    ".ad",
+    ".ads",
+    ".ae",
+    ".aeg",
+    ".af",
+    ".afl",
+    ".ag",
+    ".ai",
+    ".aig",
+    ".al",
+    ".am",
+    ".anz",
+    ".ao",
+    ".aol",
+    ".app",
+    ".aq",
+    ".ar",
+    ".art",
+    ".as",
+    ".at",
+    ".au",
+    ".aw",
+    ".aws",
+    ".ax",
+    ".axa",
+    ".az",
+    ".ba",
+    ".bar",
+    ".bb",
+    ".bbc",
+    ".bbt",
+    ".bcg",
+    ".bcn",
+    ".bd",
+    ".be",
+    ".bet",
+    ".bf",
+    ".bg",
+    ".bh",
+    ".bi",
+    ".bid",
+    ".bio",
+    ".biz",
+    ".bj",
+    ".bm",
+    ".bms",
+    ".bmw",
+    ".bn",
+    ".bo",
+    ".bom",
+    ".boo",
+    ".bot",
+    ".box",
+    ".br",
+    ".bs",
+    ".bt",
+    ".buy",
+    ".bv",
+    ".bw",
+    ".by",
+    ".bz",
+    ".bzh",
+    ".ca",
+    ".cab",
+    ".cal",
+    ".cam",
+    ".car",
+    ".cat",
+    ".cba",
+    ".cbn",
+    ".cbs",
+    ".cc",
+    ".cd",
+    ".ceb",
+    ".ceo",
+    ".cf",
+    ".cfa",
+    ".cfd",
+    ".cg",
+    ".ch",
+    ".ci",
+    ".ck",
+    ".cl",
+    ".cm",
+    ".cn",
+    ".co",
+    ".com",
+    ".cpa",
+    ".cr",
+    ".crs",
+    ".csc",
+    ".cu",
+    ".cv",
+    ".cw",
+    ".cx",
+    ".cy",
+    ".cz",
+    ".dad",
+    ".day",
+    ".dds",
+    ".de",
+    ".dev",
+    ".dhl",
+    ".diy",
+    ".dj",
+    ".dk",
+    ".dm",
+    ".dnp",
+    ".do",
+    ".dog",
+    ".dot",
+    ".dtv",
+    ".dvr",
+    ".dz",
+    ".eat",
+    ".ec",
+    ".eco",
+    ".edu",
+    ".ee",
+    ".eg",
+    ".er",
+    ".es",
+    ".esq",
+    ".et",
+    ".eu",
+    ".eus",
+    ".fan",
+    ".fi",
+    ".fit",
+    ".fj",
+    ".fk",
+    ".fly",
+    ".fm",
+    ".fo",
+    ".foo",
+    ".fox",
+    ".fr",
+    ".frl",
+    ".ftr",
+    ".fun",
+    ".fyi",
+    ".ga",
+    ".gal",
+    ".gap",
+    ".gay",
+    ".gb",
+    ".gd",
+    ".gdn",
+    ".ge",
+    ".gea",
+    ".gf",
+    ".gg",
+    ".gh",
+    ".gi",
+    ".gl",
+    ".gle",
+    ".gm",
+    ".gmo",
+    ".gmx",
+    ".gn",
+    ".goo",
+    ".gop",
+    ".got",
+    ".gov",
+    ".gp",
+    ".gq",
+    ".gr",
+    ".gs",
+    ".gt",
+    ".gu",
+    ".gw",
+    ".gy",
+    ".hbo",
+    ".hiv",
+    ".hk",
+    ".hkt",
+    ".hm",
+    ".hn",
+    ".hot",
+    ".how",
+    ".hr",
+    ".ht",
+    ".hu",
+    ".ibm",
+    ".ice",
+    ".icu",
+    ".id",
+    ".ie",
+    ".ifm",
+    ".il",
+    ".im",
+    ".in",
+    ".inc",
+    ".ing",
+    ".ink",
+    ".int",
+    ".io",
+    ".iq",
+    ".ir",
+    ".is",
+    ".ist",
+    ".it",
+    ".itv",
+    ".jcb",
+    ".jcp",
+    ".je",
+    ".jio",
+    ".jll",
+    ".jm",
+    ".jmp",
+    ".jnj",
+    ".jo",
+    ".jot",
+    ".joy",
+    ".jp",
+    ".ke",
+    ".kfh",
+    ".kg",
+    ".kh",
+    ".ki",
+    ".kia",
+    ".kim",
+    ".km",
+    ".kn",
+    ".kp",
+    ".kpn",
+    ".kr",
+    ".krd",
+    ".kw",
+    ".ky",
+    ".kz",
+    ".la",
+    ".lat",
+    ".law",
+    ".lb",
+    ".lc",
+    ".lds",
+    ".li",
+    ".lk",
+    ".llc",
+    ".llp",
+    ".lol",
+    ".lpl",
+    ".lr",
+    ".ls",
+    ".lt",
+    ".ltd",
+    ".lu",
+    ".lv",
+    ".ly",
+    ".ma",
+    ".man",
+    ".map",
+    ".mba",
+    ".mc",
+    ".md",
+    ".me",
+    ".med",
+    ".men",
+    ".mg",
+    ".mh",
+    ".mil",
+    ".mit",
+    ".mk",
+    ".ml",
+    ".mlb",
+    ".mls",
+    ".mm",
+    ".mma",
+    ".mn",
+    ".mo",
+    ".moe",
+    ".moi",
+    ".mom",
+    ".mov",
+    ".mp",
+    ".mq",
+    ".mr",
+    ".ms",
+    ".msd",
+    ".mt",
+    ".mtn",
+    ".mtr",
+    ".mu",
+    ".mv",
+    ".mw",
+    ".mx",
+    ".my",
+    ".mz",
+    ".na",
+    ".nab",
+    ".nba",
+    ".nc",
+    ".ne",
+    ".nec",
+    ".net",
+    ".new",
+    ".nf",
+    ".nfl",
+    ".ng",
+    ".ngo",
+    ".nhk",
+    ".ni",
+    ".nl",
+    ".no",
+    ".now",
+    ".np",
+    ".nr",
+    ".nra",
+    ".nrw",
+    ".ntt",
+    ".nu",
+    ".nyc",
+    ".nz",
+    ".obi",
+    ".off",
+    ".om",
+    ".one",
+    ".ong",
+    ".onl",
+    ".ooo",
+    ".org",
+    ".ott",
+    ".ovh",
+    ".pa",
+    ".pay",
+    ".pe",
+    ".pet",
+    ".pf",
+    ".pg",
+    ".ph",
+    ".phd",
+    ".pid",
+    ".pin",
+    ".pk",
+    ".pl",
+    ".pm",
+    ".pn",
+    ".pnc",
+    ".pr",
+    ".pro",
+    ".pru",
+    ".ps",
+    ".pt",
+    ".pub",
+    ".pw",
+    ".pwc",
+    ".py",
+    ".qa",
+    ".qvc",
+    ".re",
+    ".red",
+    ".ren",
+    ".ril",
+    ".rio",
+    ".rip",
+    ".ro",
+    ".rs",
+    ".ru",
+    ".run",
+    ".rw",
+    ".rwe",
+    ".sa",
+    ".sap",
+    ".sas",
+    ".sb",
+    ".sbi",
+    ".sbs",
+    ".sc",
+    ".sca",
+    ".scb",
+    ".sd",
+    ".se",
+    ".ses",
+    ".sew",
+    ".sex",
+    ".sfr",
+    ".sg",
+    ".sh",
+    ".si",
+    ".sj",
+    ".sk",
+    ".ski",
+    ".sky",
+    ".sl",
+    ".sm",
+    ".sn",
+    ".so",
+    ".soy",
+    ".sr",
+    ".srl",
+    ".ss",
+    ".st",
+    ".stc",
+    ".su",
+    ".sv",
+    ".sx",
+    ".sy",
+    ".sz",
+    ".tab",
+    ".tax",
+    ".tc",
+    ".tci",
+    ".td",
+    ".tdk",
+    ".tel",
+    ".tf",
+    ".tg",
+    ".th",
+    ".thd",
+    ".tj",
+    ".tjx",
+    ".tk",
+    ".tl",
+    ".tm",
+    ".tn",
+    ".to",
+    ".top",
+    ".tr",
+    ".trv",
+    ".tt",
+    ".tui",
+    ".tv",
+    ".tvs",
+    ".tw",
+    ".tz",
+    ".ua",
+    ".ubs",
+    ".ug",
+    ".uk",
+    ".uno",
+    ".uol",
+    ".ups",
+    ".us",
+    ".uy",
+    ".uz",
+    ".va",
+    ".vc",
+    ".ve",
+    ".vet",
+    ".vg",
+    ".vi",
+    ".vig",
+    ".vin",
+    ".vip",
+    ".vn",
+    ".vu",
+    ".wed",
+    ".wf",
+    ".win",
+    ".wme",
+    ".wow",
+    ".ws",
+    ".wtc",
+    ".wtf",
+    ".xin",
+    ".xxx",
+    ".xyz",
+    ".ye",
+    ".you",
+    ".yt",
+    ".yun",
+    ".za",
+    ".zip",
+    ".zm",
+    ".zw",
+];
+
 let threadInfo = {};
 let traceroute = {};
 let threadIdMV = {};
@@ -124,18 +634,25 @@ let crashes = 0;
 let cmdPage = utils.generateCommandList();
 
 const pictographic = /\p{Extended_Pictographic}/gu;
-const latinC = /[^a-z0-9\s]/gi;
+const latinC = /[^a-z0-9-\-\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
+const port = process.env.PORT;
 
-/*
-const LOG_PORT = process.env.LOG_PORT;
-http.createServer(getLogs()).listen(LOG_PORT, () => {
-    utils.log("log_server_running http://localhost:" + LOG_PORT);
+const app = express();
+app.use("*", cors());
+app.use(express.json());
+
+app.use('/', indexRoutes);
+if (process.env.ENABLE_LOG_ROUTE === 'true') {
+    app.use('/log', logRoutes);
+}
+
+app.listen(port, () => {
+    utils.log("server_running http://localhost:" + port + "/")
 });
-*/
-
 
 deleteCacheData(true);
+utils.checkUpdate(process.env.npm_package_version);
 
 
 /*
@@ -220,7 +737,7 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
         }
     } else {
         utils.log("no_account No Account found");
-        addAccount();
+        utils.watchCookiesChanges();
     }
 });
 
@@ -281,12 +798,16 @@ function main(fca_state, login, cb) {
             }
 
             if (typeof cb === "function") return cb(true)
-            if (accounts.length == 0) addAccount();
+            if (accounts.length == 0) utils.watchCookiesChanges();
             return;
         }
 
         if (!settings[login]) {
             settings[login] = settings.default;
+        }
+        if (settings[login].owner == "0") {
+            settings[login].owner == process.env.ROOT;
+            utils.log("owner_" + login + " has been set to " + process.env.ROOT);
         }
 
         task(
@@ -380,7 +901,7 @@ function main(fca_state, login, cb) {
                 }
 
                 if (typeof cb === "function") return cb(true);
-                if (accounts.length == 0) addAccount();
+                if (accounts.length == 0) utils.watchCookiesChanges();
                 return;
             }
 
@@ -1022,7 +1543,7 @@ function main(fca_state, login, cb) {
 
                                 updateUserData(data, event.author);
 
-                                getGroupProfile(event.threadID, async function (group) {
+                                utils.getGroupProfile(groups, event.threadID, async function (group) {
                                     let msgs;
                                     if (group.name != null) {
                                         msgs = data[event.author]["firstName"] + " update the group name from `" + group.name + "` to `" + event.logMessageData.name + "`";
@@ -1062,7 +1583,7 @@ async function ai22(redfox, event, query) {
             if (quizData[q].messageID && event.messageReply.messageID == quizData[q].messageID) {
                 let rawUserAnswer = input;
                 let userAnswer = rawUserAnswer.replaceAll(" ", "").toLowerCase();
-                getUserProfile(event.senderID, async function (name) {
+                utils.getGroupProfile(users, event.senderID, async function (name) {
                     const points = Math.floor(Math.random() * 1500);
                     if (userAnswer == quizData[q].correctAnswer1 || userAnswer == quizData[q].correctAnswer) {
                         addBalance(name, points);
@@ -1080,7 +1601,7 @@ async function ai22(redfox, event, query) {
                         reactMessage(redfox, event, ":heart:");
                         emo.push(event.messageID);
                     }
-                    getUserProfile(event.senderID, async function (name) {
+                    utils.getGroupProfile(users, event.senderID, async function (name) {
                         if (!name.quiz_answered_correct) {
                             name["quiz_answered_correct"] = 1;
                         }
@@ -1097,7 +1618,7 @@ async function ai22(redfox, event, query) {
                         reactMessage(redfox, event, ":dislike:");
                         emo.push(event.messageID);
                     }
-                    getUserProfile(event.senderID, async function (name) {
+                    utils.getGroupProfile(users, event.senderID, async function (name) {
                         if (!name.quiz_answered_incorrect) {
                             name["quiz_answered_incorrect"] = 1;
                         }
@@ -1297,13 +1818,13 @@ async function ai22(redfox, event, query) {
             let transferTo = event.messageReply.senderID;
             if (/^\d+$/.test(data[2])) {
                 let amount = parseInt(data[2]);
-                getUserProfile(event.senderID, async function (name) {
+                utils.getGroupProfile(users, event.senderID, async function (name) {
                     if (!name.balance && event.senderID != process.env.ROOT) {
                         sendMessage(redfox, event, "You have 0 $ balance yet.");
                     } else if (amount + 500 > name.balance && event.senderID != process.env.ROOT) {
                         sendMessage(redfox, event, "You don't have enough balance!");
                     } else {
-                        getUserProfile(transferTo, async function (name1) {
+                        utils.getGroupProfile(users, transferTo, async function (name1) {
                             addBalance(name1, amount);
                         });
                         removeBalance(name, amount);
@@ -1318,7 +1839,7 @@ async function ai22(redfox, event, query) {
             }
         }
     } else if (testCommand(redfox, query, "add--instance", event.senderID, "user", true)) {
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             if (!name.balance) {
                 sendMessage(redfox, event, "You dont have enought balance to continue!");
             } else if (name.balance < 0) {
@@ -1403,11 +1924,11 @@ async function ai22(redfox, event, query) {
                                                 users.blocked = users.blocked.filter((item) => item !== login);
                                                 utils.log("rem_block_user " + login);
                                                 sendMessageOnly(redfox, event, "You've been unblocked!");
-                                                getUserProfile(settings[login].owner, async function (name) {
+                                                utils.getGroupProfile(users, settings[login].owner, async function (name) {
                                                     removeBalance(name, 3000);
                                                 });
                                                 if (event.senderID != process.env.ROOT) {
-                                                    getUserProfile(event.senderID, async function (name) {
+                                                    utils.getGroupProfile(users, event.senderID, async function (name) {
                                                         removeBalance(name, 1500);
                                                     });
                                                 }
@@ -1417,11 +1938,11 @@ async function ai22(redfox, event, query) {
                                                 users.bot = users.bot.filter((item) => item !== login);
                                                 utils.log("rem_block_bot " + login);
                                                 sendMessageOnly(redfox, event, "You've been unblocked!");
-                                                getUserProfile(settings[login].owner, async function (name) {
+                                                utils.getGroupProfile(users, settings[login].owner, async function (name) {
                                                     removeBalance(name, 6000);
                                                 });
                                                 if (event.senderID != process.env.ROOT) {
-                                                    getUserProfile(event.senderID, async function (name) {
+                                                    utils.getGroupProfile(users, event.senderID, async function (name) {
                                                         removeBalance(name, 3000);
                                                     });
                                                 }
@@ -1431,7 +1952,7 @@ async function ai22(redfox, event, query) {
                                                 users.admin = users.admin.filter((item) => item !== event.senderID);
                                                 utils.log("rem_sender_admin " + login);
                                                 sendMessage(redfox, event, "Your admin previliges has been revoke!");
-                                                getUserProfile(event.senderID, async function (name) {
+                                                utils.getGroupProfile(users, event.senderID, async function (name) {
                                                     addBalance(name, 2000);
                                                 });
                                             }
@@ -1440,7 +1961,7 @@ async function ai22(redfox, event, query) {
                                                 users.admin = users.admin.filter((item) => item !== login);
                                                 utils.log("rem_login_adminn " + login);
                                                 sendMessageOnly(redfox, event, "Your admin previliges has been revoke!");
-                                                getUserProfile(event.senderID, async function (name) {
+                                                utils.getGroupProfile(users, event.senderID, async function (name) {
                                                     addBalance(name, 2000);
                                                 });
                                             }
@@ -1754,7 +2275,7 @@ async function ai(redfox, event) {
         if (data.length < 2 || (findPr != false && input == findPr)) {
             let welCC = hey[Math.floor(Math.random() * hey.length)];
             if (welCC.startsWith("How ")) {
-                getUserProfile(event.senderID, async function (name) {
+                utils.getGroupProfile(users, event.senderID, async function (name) {
                     let aa = "";
                     if (name.firstName != undefined) {
                         aa += "Hello " + name.firstName + ". ";
@@ -1775,9 +2296,9 @@ async function ai(redfox, event) {
                 text = text.replace(findPr, "");
             }
 
-            getUserProfile(event.senderID, async function (user) {
+            utils.getGroupProfile(users, event.senderID, async function (user) {
                 if (event.isGroup) {
-                    getGroupProfile(event.threadID, async function (group) {
+                    utils.getGroupProfile(groups, event.threadID, async function (group) {
                         let respo = await aiResponse2(event, text, true, user, group, redfox.getCurrentUserID());
                         addBalance(user, respo.usage.total_tokens);
                         addToken(login, "gpt", respo);
@@ -2216,9 +2737,10 @@ async function ai(redfox, event) {
         }
     } else if (testCommand(redfox, query, "list--admin", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
+        if (users.admin.length == 0) return sendMessage(redfox, event, "Orion has no admin set yet!");
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (let admin in users.admin) {
-            getUserProfile(users.admin[admin], async function (name) {
+            utils.getGroupProfile(users, users.admin[admin], async function (name) {
                 construct += "│\n";
                 construct += "│   ⦿ Name: " + name.name + "\n";
                 construct += "│   ⦿ uid: " + users.admin[admin] + "\n";
@@ -2232,14 +2754,17 @@ async function ai(redfox, event) {
         let owners = [];
         for (let account in accounts) {
             let owner = settings[accounts[account]].owner;
-            if (!owners.includes(owner)) {
+            if (!owners.includes(owner) && owner != "0") {
                 owners.push(owner);
             }
         }
+        if (owners.length == 0) return sendMessage(redfox, event, "Orion has no owners yet!");
         for (let owner in owners) {
-            getUserProfile(owners[owner], async function (name) {
+            utils.getGroupProfile(users, owners[owner], async function (name) {
                 construct += "│\n";
-                construct += "│   ⦿ Name: " + name.name + "\n";
+                if (name.name) {
+                    construct += "│   ⦿ Name: " + name.name + "\n";
+                }
                 construct += "│   ⦿ uid: " + owners[owner] + "\n";
             });
         }
@@ -2249,7 +2774,7 @@ async function ai(redfox, event) {
         if (isGoingToFast(redfox, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (let account in accounts) {
-            getUserProfile(accounts[account], async function (name) {
+            utils.getGroupProfile(users, accounts[account], async function (name) {
                 construct += "│\n";
                 if (name.name != undefined) {
                     construct += "│   ⦿ Name: " + name.name + "\n│   ⦿ uid: " + accounts[account];
@@ -2267,7 +2792,7 @@ async function ai(redfox, event) {
                         construct += "\n│   ⦿ Status: Online\n";
                     }
                 }
-                if (accounts[account] != settings[accounts[account]].owner) {
+                if (accounts[account] != settings[accounts[account]].owner && settings[accounts[account]].owner != "0") {
                     construct += "│   ⦿ Owner: " + settings[accounts[account]].owner + "\n";
                 }
             });
@@ -3829,7 +4354,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: sendReport text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sendReport There is a problem in ______ that cause ______.");
         } else {
             data.shift();
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 let nR = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
                 if (name.name != undefined) {
                     nR += "│  name: " + name.name + "\n";
@@ -4112,7 +4637,7 @@ async function ai(redfox, event) {
         }
     } else if (testCommand(redfox, query, "top", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        getUserProfile(event.senderID, async function (user) {
+        utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(redfox, event, "You have 0 $ balance yet.");
             } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
@@ -4158,7 +4683,7 @@ async function ai(redfox, event) {
         });
     } else if (testCommand(redfox, query, "top--quiz", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        getUserProfile(event.senderID, async function (user) {
+        utils.getGroupProfile(users, event.senderID, async function (user) {
             let lead = [];
             for (let i in users.list) {
                 let correct = 1;
@@ -4187,7 +4712,7 @@ async function ai(redfox, event) {
         });
     } else if (testCommand(redfox, query, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        getUserProfile(event.senderID, async function (user) {
+        utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(redfox, event, "You have 0 $ balance yet.");
             } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
@@ -4218,7 +4743,7 @@ async function ai(redfox, event) {
         });
     } else if (testCommand(redfox, query, "balance", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             if (!name.name) {
                 return sendMessage(redfox, event, "User not found!");
             }
@@ -4249,11 +4774,11 @@ async function ai(redfox, event) {
                     }
                 }
             }
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 if (id != process.env.ROOT) {
                     removeBalance(name, 1000);
                 }
-                getUserProfile(id, async function (name) {
+                utils.getGroupProfile(users, id, async function (name) {
                     if (!name.name) {
                         return sendMessage(redfox, event, "User not found!");
                     }
@@ -4585,13 +5110,13 @@ async function ai(redfox, event) {
             } else {
                 users.bot.push(id);
                 sendMessage(redfox, event, "Noted.");
-                getUserProfile(event.senderID, async function (user) {
+                utils.getGroupProfile(users, event.senderID, async function (user) {
                     addBalance(user, 4000);
                 });
             }
         }
     } else if (testCommand(redfox, query, "zzzzzzz", event.senderID, "root", true)) {
-        getUserProfile(event.senderID, async function (user) {
+        utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance) {
                 user["balance"] = 99999999999999;
             }
@@ -4620,7 +5145,7 @@ async function ai(redfox, event) {
                     }
                 }
             }
-            getUserProfile(id, async function (user) {
+            utils.getGroupProfile(users, id, async function (user) {
                 if (!user.name) {
                     return sendMessage(redfox, event, "User not found!");
                 }
@@ -4834,7 +5359,7 @@ async function ai(redfox, event) {
                     return sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
                 }
             }
-            getUserProfile(id, async function (user) {
+            utils.getGroupProfile(users, id, async function (user) {
                 addBalance(user, 1500);
                 sendMessage(redfox, event, "Added 1500 tokens to the account holder.");
             });
@@ -5128,7 +5653,7 @@ async function ai(redfox, event) {
     } else if (testCommand(redfox, query, "tid", event.senderID, "user", true) || testCommand(redfox, query, "gid", event.senderID) || testCommand(redfox, query, "uid", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.type == "message" && groups.list.find((thread) => event.threadID === thread.id) && (query == "tid" || query == "gid")) {
-            getGroupProfile(event.threadID, async function (group) {
+            utils.getGroupProfile(groups, event.threadID, async function (group) {
                 if (group.name != null) {
                     sendMessage(redfox, event, "The " + group.name + " guid is " + group.id);
                 } else {
@@ -5529,7 +6054,7 @@ async function ai(redfox, event) {
         }
     } else if (testCommand(redfox, query, "hanime", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
-        getUserProfile(event.senderID, async function (user) {
+        utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(redfox, event, "You have 0 $ balance yet.");
             } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
@@ -5754,7 +6279,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
         }
     } else if (testCommand(redfox, query, "time", event.senderID, "user", true)) {
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             if (name.firstName != undefined && name.timezone) {
                 return sendMessage(redfox, event, "It's " + getCurrentDateAndTime(name.timezone));
             }
@@ -5861,7 +6386,7 @@ async function ai(redfox, event) {
             if (/^\d+$/.test(data[0])) {
                 let points = parseInt(data[0]);
                 if (/^(head(s|)|tail(s|))$/.test(data[1])) {
-                    getUserProfile(event.senderID, async function (name) {
+                    utils.getGroupProfile(users, event.senderID, async function (name) {
                         if (!name.balance && event.senderID != process.env.ROOT) {
                             sendMessage(redfox, event, "You have 0 $ balance yet.");
                         } else if (points >= name.balance && event.senderID != process.env.ROOT) {
@@ -5885,7 +6410,7 @@ async function ai(redfox, event) {
                     sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: coinflip token type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip 100 heads");
                 }
             } else if (/^(head(s|)|tail(s|))$/.test(data[0])) {
-                getUserProfile(event.senderID, async function (name) {
+                utils.getGroupProfile(users, event.senderID, async function (name) {
                     if ((picker == 1 && /^head(s|)$/.test(data[0])) || (picker == 0 && /^tail(s|)$/.test(data[0]))) {
                         addBalance(name, 500);
                         sendMessage(redfox, event, "You win!");
@@ -5906,7 +6431,7 @@ async function ai(redfox, event) {
 
         if (quiz[picker].choices) {
             let choiceN = ["A", "B", "C", "D"];
-            let defineChoices = shuffle(quiz[picker].choices);
+            let defineChoices = utils.shuffle(quiz[picker].choices);
             for (let choice in defineChoices) {
                 let c = defineChoices[choice];
                 construct += "\n" + choiceN[choice] + ". " + c;
@@ -5956,7 +6481,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (utils.isValidDateFormat(body)) {
                         name["birthday"] = body;
@@ -5975,7 +6500,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (isValidTimeZone(body)) {
                         name["timezone"] = body;
@@ -5994,7 +6519,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (body.length > 10) {
                         name["location"] = body;
@@ -6013,7 +6538,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     name["bio"] = body;
                     sendMessage(redfox, event, "Hello " + name.firstName + " you have successfully set your bio.");
@@ -6028,7 +6553,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (body.startsWith("@")) {
                         body = body.slice(1);
@@ -6046,7 +6571,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ").toLowerCase();
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (body == "male" || body == "female") {
                         name["gender"] = getGenderCode(body);
@@ -6124,7 +6649,7 @@ function reaction(redfox, event, query, input) {
 function someR(redfox, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
         reactMessage(redfox, event, ":love:");
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             let construct = "Good evening";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6138,7 +6663,7 @@ function someR(redfox, event, query) {
         return true;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         reactMessage(redfox, event, ":love:");
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             let construct = "Good morning";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6152,7 +6677,7 @@ function someR(redfox, event, query) {
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night") || query == "konbanwa") {
         reactMessage(redfox, event, ":love:");
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             let construct = "Good night";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6166,7 +6691,7 @@ function someR(redfox, event, query) {
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
         reactMessage(redfox, event, ":love:");
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             let construct = "Good afternon";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6213,7 +6738,7 @@ async function sendMessage(redfox, event, message, thread_id, message_id, bn, vo
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != redfox.getCurrentUserID()) {
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             if (!userPresence[redfox.getCurrentUserID()]) {
                 userPresence[redfox.getCurrentUserID()] = [];
             }
@@ -6308,7 +6833,7 @@ async function sendMessageOnly(redfox, event, message, thread_id, message_id, bn
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != redfox.getCurrentUserID()) {
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             if (!userPresence[redfox.getCurrentUserID()]) {
                 userPresence[redfox.getCurrentUserID()] = [];
             }
@@ -6341,7 +6866,7 @@ function getMessageFromObj(message) {
 }
 
 async function sendMMMS(redfox, event, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
-    getUserProfile(id, async function (user) {
+    utils.getGroupProfile(users, id, async function (user) {
         let splitNewLines = getMessageFromObj(message).split("\n");
         splitNewLines.shift();
         splitNewLines.pop();
@@ -6423,7 +6948,7 @@ function sendMessageErr(redfox, event, thread_id, message_id, id, err) {
     redfox.sendMessage(
         {
             body: updateFont(message, id, redfox.getCurrentUserID()),
-            url: "https://github.com/mrepol742/project-orion/issues/issues/new",
+            url: "https://github.com/mrepol742/project-orion/issues/new",
         },
         thread_id,
         (err, messageInfo) => {
@@ -6456,8 +6981,8 @@ function formatQuery(string) {
     // remove emojis
     let str = string.replace(pictographic, "");
     // remove custom fancy fonts
-    //let normal = str.normalize("NFKC");
-    let specialCharacters = str.replace(normalize, "");
+    let normal = str.normalize("NFKC");
+    let specialCharacters = normal.replace(normalize, "");
     // only allow letters and numbers
     let normal1 = specialCharacters.normalize("NFD").replace(/\p{Diacritic}/gu, "");
     let latin = normal1.replace(latinC, "");
@@ -7376,7 +7901,7 @@ async function blockUser(redfox, event, id) {
 
     users.blocked.push(id);
     if (event.isGroup) {
-        getUserProfile(id, async function (name) {
+        utils.getGroupProfile(users, id, async function (name) {
             let aa = "";
             if (name.firstName != undefined) {
                 aa += name.firstName;
@@ -7461,22 +7986,22 @@ async function unblockUser(redfox, event, id) {
     if (users.blocked.includes(id)) {
         users.blocked = users.blocked.filter((item) => item !== id);
         sendMessage(redfox, event, "Done captain!");
-        getUserProfile(id, async function (name) {
+        utils.getGroupProfile(users, id, async function (name) {
             removeBalance(name, 1500);
         });
         if (event.senderID != process.env.ROOT) {
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 removeBalance(name, 500);
             });
         }
     } else {
         users.bot = users.bot.filter((item) => item !== id);
         sendMessage(redfox, event, "If you see this messages, means it worked!");
-        getUserProfile(id, async function (name) {
+        utils.getGroupProfile(users, id, async function (name) {
             removeBalance(name, 2000);
         });
         if (event.senderID != process.env.ROOT) {
-            getUserProfile(event.senderID, async function (name) {
+            utils.getGroupProfile(users, event.senderID, async function (name) {
                 removeBalance(name, 8000);
             });
         }
@@ -7504,7 +8029,7 @@ async function addAdmin(redfox, event, id) {
     }
     if (users.blocked.includes(id) || users.bot.includes(id)) {
         if (event.isGroup) {
-            getUserProfile(id, async function (name) {
+            utils.getGroupProfile(users, id, async function (name) {
                 let aa = "Sorry ";
                 if (name.firstName != undefined) {
                     aa += name.firstName;
@@ -7521,7 +8046,7 @@ async function addAdmin(redfox, event, id) {
     }
     if (settings[login].owner == id) {
         if (event.isGroup) {
-            getUserProfile(id, async function (name) {
+            utils.getGroupProfile(users, id, async function (name) {
                 let aa = "Sorry ";
                 if (name.firstName != undefined) {
                     aa += name.firstName;
@@ -7538,7 +8063,7 @@ async function addAdmin(redfox, event, id) {
     }
     if (users.admin.includes(id)) {
         if (event.isGroup) {
-            getUserProfile(id, async function (name) {
+            utils.getGroupProfile(users, id, async function (name) {
                 let aa = "";
                 if (name.firstName != undefined) {
                     aa += name.firstName;
@@ -7555,7 +8080,7 @@ async function addAdmin(redfox, event, id) {
     }
     users.admin.push(id);
     if (event.isGroup) {
-        getUserProfile(id, async function (name) {
+        utils.getGroupProfile(users, id, async function (name) {
             let aa = "";
             if (name.firstName != undefined) {
                 aa += name.firstName;
@@ -8218,7 +8743,7 @@ async function sendMessageToAll(redfox, event) {
     redfox.getThreadList(50, null, ["INBOX"], async (err, list) => {
         if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
         sendMessage(redfox, event, "Message has been scheduled to be send to 50 recents threads.");
-        getUserProfile(event.senderID, async function (name) {
+        utils.getGroupProfile(users, event.senderID, async function (name) {
             let count = 1;
             let ctid = event.threadID;
             for (let tid in list) {
@@ -8557,22 +9082,6 @@ function getCountryOrigin(model) {
     return "Singapore";
 }
 
-function getLogs() {
-    return async function (req, res) {
-        let ress = req.url;
-        let url = ress.split("?")[0];
-        utils.log(req.method + " " + req.headers.origin + " " + url);
-        if (!fs.existsSync(__dirname + "/log/main.log")) {
-            res.writeHead(200);
-            res.end("No logs found!");
-        } else {
-            let file = fs.readFileSync(__dirname + "/log/main.log", "utf8");
-            res.writeHead(200);
-            res.end(file);
-        }
-    };
-}
-
 async function sendAiMessage(redfox, event, ss) {
     if (/\[(y|Y)our\s?(n|N)ame\]/g.test(ss) || (/\[(n|N)ame\]/g.test(ss) && event.type == "message")) {
         redfox.getUserInfo(event.senderID, async (err, data1) => {
@@ -8841,28 +9350,6 @@ async function simulDD(arr, format) {
     return accm;
 }
 
-function getUserProfile(id, cb) {
-    if (!users.list.find((user) => id === user.id)) {
-        cb({ firstName: undefined });
-    }
-    users.list.find((user) => {
-        if (user.id == id) {
-            cb(user);
-        }
-    });
-}
-
-function getGroupProfile(id, cb) {
-    if (!groups.list.find((thread) => id === thread.id)) {
-        cb({ name: undefined });
-    }
-    groups.list.find((thread) => {
-        if (thread.id == id) {
-            cb(thread);
-        }
-    });
-}
-
 function formatMention(name, text) {
     if (!name || name == "") {
         return;
@@ -8978,6 +9465,7 @@ function deleteCacheData(mode) {
                 let file = files[fe];
                 if (mode) {
                     unlinkIfExists(__dirname + "/cache/" + file);
+                    utils.log("delete_cache " + unlinkIfExists);
                 } else {
                     unLink(__dirname + "/cache/" + file);
                 }
@@ -9068,79 +9556,6 @@ const readLineAsync = (msg) => {
     });
 };
 
-async function addAccount() {
-    const contOrNot = await readLineAsync("Do you want to add an account? [Y/n]: ");
-    if (contOrNot != "Y" && contOrNot != "y") {
-        utils.log("no_account exiting now");
-        process.exit(0);
-    }
-    const userRes = await readLineAsync("Enter your facebook cookies: ");
-    let buff = Buffer.from(userRes, "base64");
-    const base642text = buff.toString("ascii");
-    if (!isJson(base642text)) {
-        utils.log("failed_login invalid facebook cookies");
-        return addAccount();
-    }
-    const appsss = JSON.parse(base642text);
-    if (Array.isArray(appsss)) {
-        let login = getUserIdFromAppState(appsss);
-        if (login) {
-            if (!settings[login]) {
-                settings[login] = settings.default;
-            }
-            main(
-                {
-                    appState: appsss,
-                },
-                login,
-                function (isLogin) {
-                    if (isLogin) {
-                        utils.log("failed_login failed to login to " + login);
-                        return addAccount();
-                    } else {
-                        utils.log("success_login account " + login + "  is now connected");
-
-                        accounts.push(login);
-
-                        if (users.blocked.includes(login)) {
-                            users.blocked = users.blocked.filter((item) => item !== login);
-                            utils.log("rem_block_user " + login);
-                            getUserProfile(login, async function (name) {
-                                removeBalance(name, 1500);
-                            });
-                        }
-
-                        if (users.bot.includes(login)) {
-                            users.bot = users.bot.filter((item) => item !== login);
-                            utils.log("rem_block_bot " + login);
-                            getUserProfile(login, async function (name) {
-                                removeBalance(name, 3000);
-                            });
-                        }
-
-                        if (users.admin.includes(login)) {
-                            users.admin = users.admin.filter((item) => item !== login);
-                            utils.log("rem_login_adminn " + login);
-                        }
-
-                        saveState();
-
-                        settings[login].owner = login;
-                        processEnv.ROOT = login
-                        utils.log("root_account " + login);
-                    }
-                }
-            );
-        } else {
-            utils.log("failed_login invalid facebook cookies");
-            return addAccount();
-        }
-    } else {
-        utils.log("failed_login invalid facebook cookies");
-        return addAccount();
-    }
-}
-
 function getUserIdFromAppState(cookie) {
     for (let item in cookie) {
         if (cookie[item].key == "c_user") {
@@ -9163,7 +9578,8 @@ function testCommand(redfox, message, prefix, senderID, permission, regex) {
     if (!permission) permission = "user";
     if (!regex) regex = false;
 
-    prefix = prefix.replaceAll("--", " ").replaceAll("-", " ");
+    prefix = prefix.toLowerCase().replace("--", " --");
+    console.log(message + " " + prefix)
     if (!regex) regex = false;
 
     if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) return false;
@@ -9303,7 +9719,7 @@ function handleError(err) {
         "\n- floating-point support not loaded^M" +
         "\n\nError ID: " +
         eid +
-        "\nReport at: https://github.com/mrepol742/project-orion/issues/issues/new";
+        "\nReport at: https://github.com/mrepol742/project-orion/issues/new";
     if (err.stacktrace.name) {
         ct = ct.replace("__error__name__", err.stacktrace.name);
     } else {
@@ -9317,12 +9733,12 @@ function handleError(err) {
     ct = ct.replace("__version__", process.env.npm_package_version);
     return {
         body: ct,
-        url: "https://github.com/mrepol742/project-orion/issues/issues/new",
+        url: "https://github.com/mrepol742/project-orion/issues/new",
     };
 }
 
 function updateUserData(user, uid) {
-    getUserProfile(uid, async function (name) {
+    utils.getGroupProfile(users, uid, async function (name) {
         if (name) {
             name["name"] = user[uid].name;
 
@@ -9342,7 +9758,7 @@ function updateUserData(user, uid) {
 }
 
 function updateGroupData(gc, gid) {
-    getGroupProfile(gid, async function (group) {
+    utils.getGroupProfile(groups, gid, async function (group) {
         if (group) {
             if (gc.threadName) {
                 group["name"] = gc.threadName;
@@ -9354,15 +9770,4 @@ function updateGroupData(gc, gid) {
             group["updated_date"] = new Date().toISOString();
         }
     });
-}
-
-function shuffle(array) {
-    let currentIndex = array.length,
-        randomIndex;
-    while (currentIndex > 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-    return array;
 }

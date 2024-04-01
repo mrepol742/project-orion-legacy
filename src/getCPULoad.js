@@ -17,6 +17,9 @@
 
 const os = require("os");
 
+let oldCPUTime = 0;
+let oldCPUIdle = 0;
+
 module.exports = () => {
     let cpus = os.cpus();
     let totalTime = -oldCPUTime;

@@ -15,33 +15,11 @@
  * 
  */
 
-let func = {};
+const crypto = require("crypto");
 
-const fileNames = [
-    'checkCommandPermission',
-    'cleanDuplicate',
-    'decrypt',
-    'encrypt',
-    'formatGen',
-    'formatOutput',
-    'generateCommandList',
-    'getContentType',
-    'getCPULoad',
-    'getGroupProfile',
-    'getProjectTotalSize',
-    'getTimestamp',
-    'getUserProfile',
-    'isBlockedSentence',
-    'isNumeric',
-    'log',
-    'removeMarkdown',
-    'shuffle',
-    'checkUpdate',
-    'watchCookiesChanges'
-]
-
-fileNames.map(function (v) {
-    func[v] = require("./" + v);
-});
-
-module.exports = func;
+module.exports = (text, key, iv) => {
+    let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key.toString("hex"), "hex"), Buffer.from(iv.toString("hex"), "hex"));
+    let encrypted = cipher.update(text);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    return encrypted.toString("hex");
+}

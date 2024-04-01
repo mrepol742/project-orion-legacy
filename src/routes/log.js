@@ -15,33 +15,13 @@
  * 
  */
 
-let func = {};
+const express = require("express");
+const router = express.Router();
+const fs = require("fs");
 
-const fileNames = [
-    'checkCommandPermission',
-    'cleanDuplicate',
-    'decrypt',
-    'encrypt',
-    'formatGen',
-    'formatOutput',
-    'generateCommandList',
-    'getContentType',
-    'getCPULoad',
-    'getGroupProfile',
-    'getProjectTotalSize',
-    'getTimestamp',
-    'getUserProfile',
-    'isBlockedSentence',
-    'isNumeric',
-    'log',
-    'removeMarkdown',
-    'shuffle',
-    'checkUpdate',
-    'watchCookiesChanges'
-]
-
-fileNames.map(function (v) {
-    func[v] = require("./" + v);
+router.get('/', async (req, res) => {
+    if (!fs.existsSync("./log/main.log")) res.status(404).send({ message: "No logs found!"});
+    res.status(200).send(fs.readFileSync("./log/main.log", "utf8"));
 });
 
-module.exports = func;
+module.exports = router;

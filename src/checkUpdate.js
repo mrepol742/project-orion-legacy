@@ -15,11 +15,20 @@
  * 
  */
 
-module.exports = (gen) => {
-    let strs = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
-    for (a in gen) {
-        strs += "│  ⦿ " + gen[a] + "\n";
+const axios = require("axios");
+const log = require("./log");
+module.exports = async (vr) => {
+    try {
+        const response = await axios.get("https://raw.githubusercontent.com/mrepol742/project-orion/master/package.json");
+        let remoteV = parseFloat(response.data.version);
+        if (remoteV > parseFloat(vr)) {
+            log("new_update " + response.data.version);
+            log("new_update https://github.com/mrepol742/project-orion/");
+            log("new_update please update to have all enchancements")
+        } else {
+            log("latest_update you are already using the latest version");
+        }
+    } catch (err) {
+        log(err);
     }
-    strs += "│\n└─ @ỹ@cmd-prj- orion";
-    return strs;
 }

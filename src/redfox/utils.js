@@ -5,7 +5,7 @@
  *
  * Portions of this file are derived from code licensed under the MIT License.
  *
- * The original code licensed under the MIT and its copyright information can be found at <https://github.com/mrepol742/project-orion/blob/master/src/LICENSE/>.
+ * The original code licensed under the MIT and its copyright information can be found at <https://github.com/mrepol742/project-orion/blob/master/src/redfox/LICENSE/>.
  *
  * This file is also subject to the terms and conditions of the GNU General Public License (GPL) vesion 3.0 License, a copy of which can be found in the LICENSE file at the root of this distribution.
  *
@@ -17,14 +17,7 @@ var request = bluebird.promisify(require("request").defaults({ jar: true }));
 var stream = require("stream");
 var querystring = require("querystring");
 var url = require("url");
-var fsp = require("fs/promises");
-var path = require("path");
-var os = require("os");
-var crypto = require("crypto");
 const log = require("../log");
-
-let oldCPUTime = 0;
-let oldCPUIdle = 0;
 
 function setProxy(url) {
     if (!url)
@@ -1188,66 +1181,6 @@ function getAppState(jar) {
     return jar.getCookies("https://www.facebook.com").concat(jar.getCookies("https://facebook.com")).concat(jar.getCookies("https://www.messenger.com"));
 }
 
-function getCPULoad() {
-    let cpus = os.cpus();
-    let totalTime = -oldCPUTime;
-    let totalIdle = -oldCPUIdle;
-    let i;
-    for (i = 0; i < cpus.length; i++) {
-        let cpu = cpus[i];
-        for (let type in cpu.times) {
-            totalTime += cpu.times[type];
-            if (type == "idle") {
-                totalIdle += cpu.times[type];
-            }
-        }
-    }
-    let load = 100 - Math.round((totalIdle / totalTime) * 100);
-    oldCPUTime = totalTime;
-    oldCPUIdle = totalIdle;
-    return load;
-}
-
-function isBlockedSentence(str) {
-    if ((/you're\sthe\s/.test(str) && /\smember\sof\sthis\s(shitty\sgroup|group)/.test(str)) || /unable\sto\sre-add\smember/.test(str) || /^active\santiout\smode/.test(str)) {
-        return true;
-    }
-    if (/(you\shave\sbeen\sdetected\sas\sa\sbot|\supdate\suser\snicknames\s|\syour\skeyboard\shero\slevel\shas\sreached\slevel\s|\supdate\sthe\sgroup\sname\sto\s|you\shave\sno\spermission\sto\suse\scommand\s|here's\syour\smusic,\senjoy|how\scan\si\sassist\syou\stoday\?)/.test(str)) {
-        return true;
-    }
-    return /(ina\smo\s|\stang-ina\s|\swala\skang\ssilbi\s|\swala\skang\skwenta\s|\sg4gu\s|\sgagu\s|\sbaliw\ska\s|\shayup\ska\s|\sulol\s|\sb1l4t\s|\sbilat\s|\staena\s|\stae\s|\sbobo\s|\spangit\smo\s|\sg4g0\s|\sgag0\s|\sgago\s|\st4ng1n4\s|\st4ngina\s|\stangina\s|\sliit\stt\s|\skain\stt\s|\st4mod\s|\stam0d\s|\st4m0d\s|\st1t1\s|\sp3p3\s|\spepe\s|\stite\s|\stamd\s|\stamod\s|\seat\sme\s|\sughhh\s|\sugh\s|\s1yut\s|\s1yut1n\s|\siyutin\s|\siyutan\s|\skantotan\s|\siyut\s|\skantot\s|\sahole\s|\sanus\s|\sash0le\s|\sash0les\s|\sasholes\s|\s\sass\s|\sAss\sMonkey\s|\sAssface\s|\sassh0le\s|\sassh0lez\s|\sasshole\s|\sassholes\s|\sassholz\s|\sasswipe\s|\sazzhole\s|\sbassterds\s|\sbastard\s|\sbastards\s|\sbastardz\s|\sbasterds\s|\sbasterdz\s|\sBiatch\s|\sbitch\s|\sbitches\s|\sBlow\sJob\s|\sboffing\s|\sbutthole\s|\sbuttwipe\s|\sc0ck\s|\sc0cks\s|\sc0k\s|\sCarpet\sMuncher\s|\scawk\s|\scawks\s|\sClit\s|\scnts\s|\scntz\s|\scock\s|\scockhead\s|\scock-head\s|\scocks\s|\sCockSucker\s|\scock-sucker\s|\scrap\s|\scum\s|\scunt\s|\scunts\s|\scuntz\s|\sdick\s|\sdild0\s|\sdild0s\s|\sdildo\s|\sdildos\s|\sdilld0\s|\sdilld0s\s|\sdominatricks\s|\sdominatrics\s|\sdominatrix\s|\sdyke\s|\senema\s|\sf\su\sc\sk\s|\sf\su\sc\sk\se\sr\s|\sfag\s|\sfag1t\s|\sfaget\s|\sfagg1t\s|\sfaggit\s|\sfaggot\s|\sfagg0t\s|\sfagit\s|\sfags\s|\sfagz\s|\sfaig\s|\sfaigs\s|\sfart\s|\sflipping\sthe\sbird\s|\sfuck\s|\sfucker\s|\sfuckin\s|\sfucking\s|\sfucks\s|\sFudge\sPacker\s|\sfuk\s|\sFukah\s|\sFuken\s|\sfuker\s|\sFukin\s|\sFukk\s|\sFukkah\s|\sFukken\s|\sFukker\s|\sFukkin\s|\sg00k\s|\sGod-damned\s|\sh00r\s|\sh0ar\s|\sh0re\s|\shells\s|\shoar\s|\shoor\s|\shoore\s|\sjackoff\s|\sjap\s|\sjaps\s|\sjerk-off\s|\sjisim\s|\sjiss\s|\sjizm\s|\sjizz\s|\sknob\s|\sknobs\s|\sknobz\s|\skunt\s|\skunts\s|\skuntz\s|\sLezzian\s|\sLipshits\s|\sLipshitz\s|\smasochist\s|\smasokist\s|\smassterbait\s|\smasstrbait\s|\smasstrbate\s|\smasterbaiter\s|\smasterbate\s|\smasterbates\s|\sMotha\sFucker\s|\sMotha\sFuker\s|\sMotha\sFukkah\s|\sMotha\sFukker\s|\sMother\sFucker\s|\sMother\sFukah\s|\sMother\sFuker\s|\sMother\sFukkah\s|\sMother\sFukker\s|\smother-fucker\s|\sMutha\sFucker\s|\sMutha\sFukah\s|\sMutha\sFuker\s|\sMutha\sFukkah\s|\sMutha\sFukker\s|\sn1gr\s|\snastt\s|\snigger;\s|\snigur;\s|\sniiger;\s|\sniigr;\s|\sorafis\s|\sorgasim;\s|\sorgasm\s|\sorgasum\s|\soriface\s|\sorifice\s|\sorifiss\s|\spacki\s|\spackie\s|\spacky\s|\spaki\s|\spakie\s|\spaky\s|\specker\s|\speeenus\s|\speeenusss\s|\speenus\s|\speinus\s|\spen1s\s|\spenas\s|\spenis\s|\spenis-breath\s|\spenus\s|\spenuus\s|\sPhuc\s|\sPhuck\s|\sPhuk\s|\sPhuker\s|\sPhukker\s|\spolac\s|\spolack\s|\spolak\s|\sPoonani\s|\spr1c\s|\spr1ck\s|\spr1k\s|\spusse\s|\spussee\s|\spussy\s|\spuuke\s|\spuuker\s|\sqweir\s|\srecktum\s|\srectum\s|\sretard\s|\ssadist\s|\sscank\s|\sschlong\s|\sscrewing\s|\ssemen\s|\ssex\s|\ssexy\s|\sSh!t\s|\ssh1t\s|\ssh1ter\s|\ssh1ts\s|\ssh1tter\s|\ssh1tz\s|\sshit\s|\sshits\s|\sshitter\s|\sShitty\s|\sShity\s|\sshitz\s|\sShyt\s|\sShyte\s|\sShytty\s|\sShyty\s|\sskanck\s|\sskank\s|\sskankee\s|\sskankey\s|\sskanks\s|\sSkanky\s|\sslag\s|\sslut\s|\ssluts\s|\sSlutty\s|\sslutz\s|\sson-of-a-bitch\s|\stit\s|\sturd\s|\sva1jina\s|\svag1na\s|\svagiina\s|\svagina\s|\svaj1na\s|\svajina\s|\svullva\s|\svulva\s|\sw0p\s|\swh00r\s|\swh0re\s|\swhore\s|\sxrated\s|\sxxx\s|\sb!+ch\s|\sbitch\s|\sblowjob\s|\sclit\s|\sarschloch\s|\sfuck\s|\sshit\s|\sass\s|\sasshole\s|\sb!tch\s|\sb17ch\s|\sb1tch\s|\sbastard\s|\sbi+ch\s|\sboiolas\s|\sbuceta\s|\sc0ck\s|\scawk\s|\schink\s|\scipa\s|\sclits\s|\scock\s|\scum\s|\scunt\s|\sdildo\s|\sdirsa\s|\sejakulate\s|\sfatass\s|\sfcuk\s|\sfuk\s|\sfux0r\s|\shoer\s|\shore\s|\sjism\s|\skawk\s|\sl3itch\s|\sl3i+ch\s|\smasturbate\s|\smasterbat\*\s|\smasterbat3\s|\smotherfucker\s|\ss\.o\.b\.\s|\smofo\s|\snazi\s|\snigga\s|\snigger\s|\snutsack\s|\sphuck\s|\spimpis\s|\sscrotum\s|\ssh!t\s|\sshemale\s|\sshi+\s|\ssh!+\s|\sslut\s|\ssmut\s|\steets\s|\stits\s|\sboobs\s|\sb00bs\s|\steez\s|\stestical\s|\stesticle\s|\stitt\s|\sw00se\s|\sjackoff\s|\swank\s|\swhoar\s|\swhore\s|\s\*damn\s|\s\*dyke\s|\s\*fuck\*\s|\s\*shit\*\s|\s@$$\s|\samcik\s|\sandskota\s|\sarse\*\s|\sassrammer\s|\sayir\s|\sbi7ch\s|\sbitch\*\s|\sbollock\*\s|\sbreasts\s|\sbutt-pirate\s|\scabron\s|\scazzo\s|\schraa\s|\schuj\s|\sCock\*\s|\scunt\*\s|\sd4mn\s|\sdaygo\s|\sdego\s|\sdick\*\s|\sdike\*\s|\sdupa\s|\sdziwka\s|\sejackulate\s|\sEkrem\*\s|\sEkto\s|\senculer\s|\sfaen\s|\sfag\*\s|\sfanculo\s|\sfanny\s|\sfeces\s|\sfeg\s|\sFelcher\s|\sficken\s|\sfitt\*\s|\sFlikker\s|\sforeskin\s|\sFotze\s|\sFu\(\*\s|\sfuk\*\s|\sfutkretzn\s|\sgook\s|\sguiena\s|\sh0r\s|\sh4x0r\s|\shell\s|\shelvete\s|\shoer\*\s|\shonkey\s|\sHuevon\s|\shui\s|\sinjun\s|\sjizz\s|\skanker\*\s|\skike\s|\sklootzak\s|\skraut\s|\sknulle\s|\skuk\s|\skuksuger\s|\sKurac\s|\skurwa\s|\skusi\*\s|\skyrpa\*\s|\slesbo\s|\smamhoon\s|\smasturbat\*\s|\smerd\*\s|\smibun\s|\smonkleigh\s|\smouliewop\s|\smuie\s|\smulkku\s|\smuschi\s|\snazis\s|\snepesaurio\s|\snigger\*\s|\sorospu\s|\spaska\*\s|\sperse\s|\spicka\s|\spierdol\*\s|\spillu\*\s|\spimmel\s|\spiss\*\s|\spizda\s|\spoontsee\s|\spoop\s|\sporn\s|\sp0rn\s|\spr0n\s|\spreteen\s|\spula\s|\spule\s|\sputa\s|\sputo\s|\sqahbeh\s|\squeef\*\s|\srautenberg\s|\sschaffer\s|\sscheiss\*\s|\sschlampe\s|\sschmuck\s|\sscrew\s|\ssh!t\*\s|\ssharmuta\s|\ssharmute\s|\sshipal\s|\sshiz\s|\sskribz\s|\sskurwysyn\s|\ssphencter\s|\sspic\s|\sspierdalaj\s|\ssplooge\s|\ssuka\s|\sb00b\*\s|\stesticle\*\s|\stitt\*\s|\stwat\s|\svittu\s|\swank\*\s|\swetback\*\s|\swichser\s|\swop\*\s|\syed\s|\szabourah)/.test(
-        str
-    );
-}
-
-function encrypt(text, key, iv) {
-    let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key.toString("hex"), "hex"), Buffer.from(iv.toString("hex"), "hex"));
-    let encrypted = cipher.update(text);
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return encrypted.toString("hex");
-}
-
-function decrypt(text, key, iv) {
-    let encryptedText = Buffer.from(text, "hex");
-    let decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key, "hex"), Buffer.from(iv, "hex"));
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-    return decrypted.toString();
-
-}
-
-function getTimestamp() {
-    return Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 90000) + Math.floor(Math.random() * 20000);
-}
-
-function formatGen(gen) {
-    let strs = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
-    for (a in gen) {
-        strs += "│  ⦿ " + gen[a] + "\n";
-    }
-    strs += "│\n└─ @ỹ@cmd-prj- orion";
-    return strs;
-}
 
 module.exports = {
     isReadableStream,
@@ -1288,17 +1221,4 @@ module.exports = {
     getAppState,
     getAdminTextMessageType,
     setProxy,
-    logged,
-    getCurrentTime,
-    getProjectTotalSize,
-    getCPULoad,
-    isBlockedSentence,
-    isNumeric,
-    encrypt,
-    decrypt,
-    removeMarkdown,
-    getContentType,
-    formatOutput,
-    getTimestamp,
-    formatGen
 };
