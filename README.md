@@ -40,10 +40,6 @@ Copyright (c) 2022 Melvin Jones
   See the GNU General Public License for more details.
   
   You should have received a copy of the GNU General Public License along with Orion. If not, see <https://www.gnu.org/licenses/>.
-
-  Portions of this file ('utils.js', 'redfox.js') are derived from code licensed under the MIT License.
- 
-  The original code licensed under the MIT and its copyright information can be found at <https://github.com/mrepol742/project-orion/blob/master/src/LICENSE/>.
  ```
 <br>
 This are the following commands available on this chatbot.
