@@ -1,6 +1,6 @@
 {
     "name": "project-orion",
-    "version": "9.0.0",
+    "version": "9.1.0",
     "description": "A Chatbot thats trained to understand and respond to a wide range of commands and requests. Providing a valuable service that poeple find useful. Strive to create a platform that is easy to use and provides helpful features that make poeple's lives easier.",
     "main": "index.js",
     "private": true,
@@ -11,7 +11,14 @@
         "eslint": "./node_modules/eslint/bin/eslint.js",
         "dev": "nodemon index.js"
     },
-    "keywords": ["nodejs", "chatbot", "messenger-bot", "facebook-messenger-bot", "messenger-chatbot", "project-orion"],
+    "keywords": [
+        "nodejs",
+        "chatbot",
+        "messenger-bot",
+        "facebook-messenger-bot",
+        "messenger-chatbot",
+        "project-orion"
+    ],
     "author": {
         "name": "Melvin Jones Repol",
         "email": "mrepol742@gmail.com",
