@@ -20,6 +20,7 @@ const envfile = require("envfile");
 const redfox = require("./src/redfox/index");
 const { Innertube, UniversalCache, Utils } = require("youtubei.js");
 const FormData = require("form-data");
+const path = require("path");
 const dns = require("dns");
 const https = require("https");
 const express = require("express");
@@ -42,9 +43,10 @@ const responseMiddleware = require('./src/middleware/response');
 
 console.log(`
 Project Orion Copyright (c) 2022  Melvin Jones
-This program comes with ABSOLUTELY NO WARRANTY; for details type \`show w'.
+This program comes with ABSOLUTELY NO WARRANTY;
 This is free software, and you are welcome to redistribute it
-under certain conditions; type \`show c' for details.
+under certain conditions;
+For details view the license in the root directory.
 
 
                                    ""#    mmmmmm    mm   mmmm 
@@ -91,6 +93,13 @@ let processEnv = envfile.parseFileSync(".env");
 if (process.env.DEBUG === "true") {
     settingsThread = { default: { leave: false, unsend: false, nsfw: true, cmd: 1 } };
     utils.log("debug_enabled overriding default threads settings");
+}
+
+if (!process.env.SET_PULL_ORIGIN || process.env.SET_PULL_ORIGIN === "true") {
+    exec("git remote add origin https://github.com/mrepol742/project-orion", function (err, stdout, stderr) {
+        utils.log(stdout + "\n\n" + stderr);
+    });
+    processEnv.SET_PULL_ORIGIN = true;
 }
 
 /*
@@ -651,7 +660,9 @@ app.listen(port, () => {
     utils.log("server_running http://localhost:" + port + "/")
 });
 
-deleteCacheData(true);
+if (!process.env.DELETE_CACHE_ON_START || process.env.DELETE_CACHE_ON_START === "true") {
+    deleteCacheData(true);
+}
 utils.checkUpdate(process.env.npm_package_version);
 
 
@@ -701,7 +712,7 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
             if (files[appStates].endsWith(".bin")) {
                 let login = files[appStates].replace(".bin", "");
                 if (!process.env.ROOT) {
-                    processEnv.ROOT = login
+                    processEnv.ROOT = login;
                     utils.log("root_account " + login);
                 }
                 accounts.push(login);
@@ -9771,3 +9782,5 @@ function updateGroupData(gc, gid) {
         }
     });
 }
+
+module.exports = main;

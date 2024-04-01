@@ -7,18 +7,17 @@
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
         "setup": "npm install && apt install traceroute cowsay figlet neofetch gedit",
-        "loop": "clear && while [ true ]; do node index.js ; done",
-        "start": "node index.js",
+        "start": "clear && while [ true ]; do node index.js ; done",
         "eslint": "./node_modules/eslint/bin/eslint.js",
         "dev": "nodemon index.js"
     },
-    "keywords": [],
+    "keywords": ["nodejs", "chatbot", "messenger-bot", "facebook-messenger-bot", "messenger-chatbot", "project-orion"],
     "author": {
         "name": "Melvin Jones Repol",
         "email": "mrepol742@gmail.com",
         "url": "https://mrepol742.github.io"
     },
-    "license": "SEE LICENSE IN https://github.com/mrepol742/Mrepol742-the-License",
+    "license": "SEE LICENSE IN https://github.com/mrepol742/project-orion/",
     "repository": {
         "type": "git",
         "url": "https://github.com/mrepol742/project-orion.git"

@@ -15,18 +15,26 @@
  * 
  */
 
+require('dotenv').config({ path: '../.env' });
 const axios = require("axios");
 const log = require("./log");
+
 module.exports = async (vr) => {
     try {
         const response = await axios.get("https://raw.githubusercontent.com/mrepol742/project-orion/master/package.json");
         let remoteV = parseFloat(response.data.version);
         if (remoteV > parseFloat(vr)) {
-            log("new_update " + response.data.version);
-            log("new_update https://github.com/mrepol742/project-orion/");
-            log("new_update please update to have all enchancements")
+            log("check_update " + response.data.version);
+            log("check_update https://github.com/mrepol742/project-orion/");
+            log("check_update please update to have all enchancements");
+            if (!process.env.AUTO_PULL_UPDATE && process.env.AUTO_PULL_UPDATE === "true") {
+                exec("git pull", function (err, stdout, stderr) {
+                    utils.log(stdout + "\n\n" + stderr);
+                    process.exit(0);
+                });
+            }
         } else {
-            log("latest_update you are already using the latest version");
+            log("check_update you are already using the latest version");
         }
     } catch (err) {
         log(err);

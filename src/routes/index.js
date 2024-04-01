@@ -16,10 +16,14 @@
  */
 
 const express = require("express");
+const path = require("path");
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    res.send("Hello World")
+console.log(path.join(__dirname, "public"))
+router.use(express.static(path.join(__dirname, "public")));
+
+router.get('/', (req, res) => {
+    res.send('Hello World!');
 });
 
 module.exports = router;

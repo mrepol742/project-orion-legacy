@@ -15,7 +15,7 @@
  * 
  */
 
-require('dotenv').config({ path: '../.env' })
+require('dotenv').config({ path: '../.env' });
 const log = require("./log");
 
 module.exports = (users, redfox, permission, senderID) => {
