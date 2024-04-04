@@ -37,19 +37,18 @@ module.exports = () => {
         for (cmd in commands) {
             let query = commands[cmd].replace("testCommand(", "").replace(")", "");
             query = query.replaceAll('"', "").replaceAll("--", " --").split(", ");
-
             // TODO: review
             // query[2] = query[2];
 
-            let permission = query[4];
+            let permission = query[5];
             if (["root", "owner", "admin"].includes(permission)) {
                 if (help[permission] !== undefined) {
-                    help[permission].push(query[2]);
+                    help[permission].push(query[3]);
                 } else {
-                    help[permission] = [query[2]];
+                    help[permission] = [query[3]];
                 }
             } else {
-                commandAll.push(query[2]);
+                commandAll.push(query[3]);
             }
         }
 
@@ -62,10 +61,10 @@ module.exports = () => {
             if (count % 21 == 0) {
                 helpCount++;
             } else {
-                if (help["help" + helpCount]) {
-                    help["help" + helpCount].push(commandAll[cmd]);
+                if (help[helpCount]) {
+                    help[helpCount].push(commandAll[cmd]);
                 } else {
-                    help["help" + helpCount] = [commandAll[cmd]];
+                    help[helpCount] = [commandAll[cmd]];
                 }
             }
         }

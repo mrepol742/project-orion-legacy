@@ -99,7 +99,7 @@ if (!process.env.SET_PULL_ORIGIN || process.env.SET_PULL_ORIGIN === "true") {
     exec("git remote add origin https://github.com/mrepol742/project-orion", function (err, stdout, stderr) {
         utils.log(stdout + "\n\n" + stderr);
     });
-    processEnv.SET_PULL_ORIGIN = true;
+    processEnv.SET_PULL_ORIGIN = false;
 }
 
 /*
@@ -640,7 +640,7 @@ let ongoingLogin = [];
 
 let commandCalls = 0;
 let crashes = 0;
-let cmdPage = utils.generateCommandList();
+let cmdPage = JSON.parse(utils.generateCommandList());
 
 const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9-\-\s]/gi;
@@ -664,7 +664,6 @@ if (!process.env.DELETE_CACHE_ON_START || process.env.DELETE_CACHE_ON_START === 
     deleteCacheData(true);
 }
 utils.checkUpdate(process.env.npm_package_version);
-
 
 /*
  * PROCESS
@@ -5702,28 +5701,29 @@ async function ai(redfox, event) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         let NP = "\n\n< prev  ───────────  next >";
+        let commandPosition = settingsThread[event.threadID].cmd;
         if (data[1] == "next") {
-            if (cmdPage["help" + settingsThread[event.threadID].cmd++]) {
-                sendMessage(redfox, event, formatGen(cmdPage["help" + settingsThread[event.threadID].cmd++]) + NP);
+            if (cmdPage[secommandPositionttingsThread[event.threadID].cmd++]) {
+                sendMessage(redfox, event, utils.formatGen(cmdPage[settingsThread[event.threadID].cmd++]) + NP);
                 settingsThread[event.threadID].cmd++;
             } else {
-                sendMessage(redfox, event, formatGen(cmdPage["help1"]) + NP);
+                sendMessage(redfox, event, utils.formatGen(cmdPage[1]) + NP);
                 settingsThread[event.threadID].cmd = 1;
             }
         } else if (data[1] == "prev") {
-            if (cmdPage["help" + settingsThread[event.threadID].cmd - 1]) {
-                sendMessage(redfox, event, formatGen(cmdPage["help" + settingsThread[event.threadID].cmd - 1]) + NP);
+            if (cmdPage[settingsThread[event.threadID].cmd - 1]) {
+                sendMessage(redfox, event, utils.formatGen(cmdPage[settingsThread[event.threadID].cmd - 1]) + NP);
                 settingsThread[event.threadID].cmd = settingsThread[event.threadID].cmd - 1;
             } else {
-                sendMessage(redfox, event, formatGen(cmdPage["help1"]) + NP);
+                sendMessage(redfox, event, utils.formatGen(cmdPage[1]) + NP);
                 settingsThread[event.threadID].cmd = 1;
             }
         } else if (data[1] == "owner") {
-            sendMessage(redfox, event, formatGen(cmdPage["owner"]));
+            sendMessage(redfox, event, utils.formatGen(cmdPage["owner"]));
         } else if (data[1] == "root") {
-            sendMessage(redfox, event, formatGen(cmdPage["root"]));
+            sendMessage(redfox, event, utils.formatGen(cmdPage["root"]));
         } else if (query == "cmd") {
-            sendMessage(redfox, event, formatGen(cmdPage["help1"]) + NP);
+            sendMessage(redfox, event, utils.formatGen(cmdPage[1]) + NP);
             settingsThread[event.threadID].cmd = 1;
         } else {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, prev, owner and root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
@@ -7071,7 +7071,7 @@ function isGoingToFast(redfox, event) {
         if (cmd[event.senderID]) {
             if (Math.floor(Date.now() / 1000) < cmd[event.senderID]) {
                 let seconds = (cmd[event.senderID] - Math.floor(Date.now() / 1000)) % 15;
-                if (seconds > 2) {
+                if (seconds > 3) {
                     utils.log("block_user " + event.senderID + " " + seconds);
                     return true;
                 }
