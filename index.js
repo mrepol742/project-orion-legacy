@@ -990,7 +990,7 @@ function main(fca_state, login, cb) {
 
                 // TODO: event.messageReply.senderID is undefined sometimes no idea why
                 if (event.type == "message" || (event.type == "message_reply" && (event.senderID != redfox.getCurrentUserID() || event.messageReply.senderID != redfox.getCurrentUserID()))) {
-                    if (testCommand(redfox, query, "status", event.senderID, "user", true)) {
+                    if (testCommand(redfox, event, query, "status", event.senderID, "user", true)) {
                         if (isGoingToFast(redfox, event)) {
                             return;
                         }
@@ -1010,16 +1010,16 @@ function main(fca_state, login, cb) {
                         } else {
                             sendMessage(redfox, event, "If you're reading this message, it's because our servers are working");
                         }
-                    } else if (testCommand(redfox, query, "unblock--thread", event.senderID, "owner", true)) {
+                    } else if (testCommand(redfox, event, query, "unblock--thread", event.senderID, "owner", true)) {
                         unblockGroup(redfox, event, event.threadID);
-                    } else if (testCommand(redfox, query, "unblock--thread", event.senderID, "owner")) {
+                    } else if (testCommand(redfox, event, query, "unblock--thread", event.senderID, "owner")) {
                         let data = input.split(" ");
                         if (data.length < 3) {
                             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: unblock --thread uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --thread 5000050005");
                         } else {
                             unblockGroup(redfox, event, getDataFromQuery(data));
                         }
-                    } else if (testCommand(redfox, query, "unmute", event.senderID, "user", true)) {
+                    } else if (testCommand(redfox, event, query, "unmute", event.senderID, "user", true)) {
                         if (isGoingToFast(redfox, event)) {
                             return;
                         }
@@ -1029,7 +1029,7 @@ function main(fca_state, login, cb) {
                         } else {
                             sendMessage(redfox, event, "You aren't muted.");
                         }
-                    } else if (testCommand(redfox, query, "mute", event.senderID, "user", true)) {
+                    } else if (testCommand(redfox, event, query, "mute", event.senderID, "user", true)) {
                         if (users.muted.includes(event.senderID)) {
                             sendMessage(redfox, event, "You are already muted.");
                         } else {
@@ -1065,24 +1065,24 @@ function main(fca_state, login, cb) {
                 let input = event.body;
                 let query = formatQuery(input);
 
-                if (testCommand(redfox, query, "stop", event.senderID, "owner", true)) {
+                if (testCommand(redfox, event, query, "stop", event.senderID, "owner", true)) {
                     if (!settings[login].stop) {
                         sendMessage(redfox, event, "Program stopped its state.");
                         settings[login].stop = true;
                     } else {
                         sendMessage(redfox, event, "Program is already been stopped.");
                     }
-                } else if (testCommand(redfox, query, "destroy", event.senderID, "root", true)) {
+                } else if (testCommand(redfox, event, query, "destroy", event.senderID, "root", true)) {
                     sendMessage(redfox, event, "Program destroyed its state.");
                     return;
-                } else if (testCommand(redfox, query, "resume", event.senderID, "owner", true)) {
+                } else if (testCommand(redfox, event, query, "resume", event.senderID, "owner", true)) {
                     if (settings[login].stop) {
                         sendMessage(redfox, event, "Program resumed its state.");
                         settings[login].stop = false;
                     } else {
                         sendMessage(redfox, event, "Program is already been resumed.");
                     }
-                } else if (testCommand(redfox, query, "restart", event.senderID, "root", true)) {
+                } else if (testCommand(redfox, event, query, "restart", event.senderID, "root", true)) {
                     saveState();
                     let rs = [];
                     rs.push(event.threadID);
@@ -1703,19 +1703,19 @@ async function ai22(redfox, event, query) {
             }
         }
     }
-    if (testCommand(redfox, query, "notify", event.senderID, "owner", true)) {
+    if (testCommand(redfox, event, query, "notify", event.senderID, "owner", true)) {
         if (event.messageReply.body == "" && event.messageReply.attachments.length == 0) {
             sendMessage(redfox, event, "You need to reply notify to a message which is not empty to notify it to all group chats.");
         } else {
             sendMessageToAll(redfox, event);
         }
-    } else if (testCommand(redfox, query, "unsend", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "unsend", event.senderID, "owner", true)) {
         if (event.messageReply.senderID == redfox.getCurrentUserID()) {
             redfox.unsendMessage(event.messageReply.messageID, (err) => {
                 if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             });
         }
-    } else if (testCommand(redfox, query, "pin--add", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "pin--add", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(redfox, event, "You need to reply pin add to a message which is not empty to pin it.");
@@ -1723,28 +1723,28 @@ async function ai22(redfox, event, query) {
             settings.shared.pin[event.threadID] = event.messageReply.body;
             sendMessage(redfox, event, 'Message pinned.. Enter "pin" to show it.');
         }
-    } else if (testCommand(redfox, query, "count--vowels", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "count--vowels", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(redfox, event, "You need to reply count --vowels to a message.");
         } else {
             sendMessage(redfox, event, "The vowels on this message is about " + countVowel(event.messageReply.body) + ".");
         }
-    } else if (testCommand(redfox, query, "count--consonants", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "count--consonants", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(redfox, event, "You need to reply count --consonants to a message.");
         } else {
             sendMessage(redfox, event, "The consonants on this message is about " + countConsonants(event.messageReply.body) + ".");
         }
-    } else if (testCommand(redfox, query, "count", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "count", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.messageReply.body == "") {
             sendMessage(redfox, event, "You need to reply count to a message.");
         } else {
             sendMessage(redfox, event, "The words on this message is about " + countWords(event.messageReply.body) + ".");
         }
-    } else if (testCommand(redfox, query, "wfind", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "wfind", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -1760,7 +1760,7 @@ async function ai22(redfox, event, query) {
                 sendMessage(redfox, event, "I cannot found any apperance of your search term on the message.");
             }
         }
-    } else if (testCommand(redfox, query, "translate", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "translate", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (event.messageReply.body == "" || data.length < 2) {
@@ -1778,7 +1778,7 @@ async function ai22(redfox, event, query) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "totext", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "totext", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || event.messageReply.attachments[0].type != "audio") {
@@ -1805,7 +1805,7 @@ async function ai22(redfox, event, query) {
         } else {
             sendMessage(redfox, event, "Hold on... There is still a request in progress.");
         }
-    } else if (testCommand(redfox, query, "decrypt", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "decrypt", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -1821,7 +1821,7 @@ async function ai22(redfox, event, query) {
                 sendMessage(redfox, event, "Invalid Key!");
             }
         }
-    } else if (testCommand(redfox, query, "balance--transfer", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "balance--transfer", event.senderID)) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: balance --transfer amount" + "\n " + example[Math.floor(Math.random() * example.length)] + " balance --transfer 1000");
@@ -1849,7 +1849,7 @@ async function ai22(redfox, event, query) {
                 sendMessage(redfox, event, "Must be number!");
             }
         }
-    } else if (testCommand(redfox, query, "add--instance", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "add--instance", event.senderID, "user", true)) {
         utils.getGroupProfile(users, event.senderID, async function (name) {
             if (!name.balance) {
                 sendMessage(redfox, event, "You dont have enought balance to continue!");
@@ -2002,7 +2002,7 @@ async function ai22(redfox, event, query) {
                 }
             }
         });
-    } else if (testCommand(redfox, query, "createImageVariation", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "createImageVariation", event.senderID)) {
         //TODO: not working
         if (isGoingToFast(redfox, event)) return;
         if (event.messageReply.attachments.length < 1) {
@@ -2043,7 +2043,7 @@ async function ai22(redfox, event, query) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "run", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "run", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2086,7 +2086,7 @@ async function ai22(redfox, event, query) {
                     break;
             }
         }
-    } else if (testCommand(redfox, query, "image--bgremove", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "image--bgremove", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1) {
@@ -2097,7 +2097,7 @@ async function ai22(redfox, event, query) {
         } else {
             sendMessage(redfox, event, "Hold on... There is still a request in progress.");
         }
-    } else if (testCommand(redfox, query, "image--reverse", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "image--reverse", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (!threadIdMV[event.threadID] || threadIdMV[event.threadID] == true) {
             if (event.messageReply.attachments.length < 1 || (event.messageReply.attachments[0].type != "photo" && event.messageReply.attachments[0].type != "animated_image" && event.messageReply.attachments[0].type != "sticker")) {
@@ -2112,7 +2112,7 @@ async function ai22(redfox, event, query) {
         } else {
             sendMessage(redfox, event, "Hold on... There is still a request in progress.");
         }
-    } else if (testCommand(redfox, query, "gphoto", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "gphoto", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.isGroup) {
             if (event.messageReply.attachments.length < 1) {
@@ -2190,7 +2190,7 @@ async function ai(redfox, event) {
 
     if (event.type == "message") {
         let cmmdReply = ["balance--transfer", "add--instance", "unsend", "notify", "totext", "bgremove", "gphoto", "image--reverse", "run", "count", "count--vowels", "count--consonants", "wfind", "pin--add", "translate"];
-        if (cmmdReply.includes(query) && testCommand(redfox, query, query.replace("--", " --"), event.senderID)) {
+        if (cmmdReply.includes(query) && testCommand(redfox, event, query, query.replace("--", " --"), event.senderID)) {
             if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(query)) {
                 return;
             }
@@ -2204,7 +2204,7 @@ async function ai(redfox, event) {
 
     let findPr = findPrefix(event, redfox.getCurrentUserID());
 
-    if (testCommand(redfox, query, "image", event.senderID)) {
+    if (testCommand(redfox, event, query, "image", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2221,7 +2221,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(redfox, query, "search", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "search", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2232,7 +2232,7 @@ async function ai(redfox, event) {
             let web = await getWebResults(query, 7, true);
             sendMessage(redfox, event, web);
         }
-    } else if (testCommand(redfox, query, "search--dnt", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "search--dnt", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -2261,7 +2261,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "bb", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "bb", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2278,7 +2278,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if ((findPr != false && input.startsWith(findPr)) || testCommand(redfox, query, "ai", event.senderID) || testCommand(redfox, query, "mj", event.senderID) || testCommand(redfox, query, "beshy", event.senderID)) {
+    } else if ((findPr != false && input.startsWith(findPr)) || testCommand(redfox, event, query, "ai", event.senderID) || testCommand(redfox, event, query, "mj", event.senderID) || testCommand(redfox, event, query, "beshy", event.senderID)) {
         /*
         if (isGoingToFast(redfox, event)) return;
         //  return sendMessage(redfox, event, "Unde maintenance please check it soon. Enter `cmd` to open the command list.");
@@ -2347,7 +2347,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "skynet", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "skynet", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2384,7 +2384,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "chatgpt", event.senderID), testCommand(redfox, query, "gpt", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "chatgpt", event.senderID), testCommand(redfox, event, query, "gpt", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2419,7 +2419,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "misaka", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "misaka", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2451,7 +2451,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "chad", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "chad", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2484,7 +2484,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "nraf", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "nraf", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2518,7 +2518,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "8ball", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "8ball", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2526,7 +2526,7 @@ async function ai(redfox, event) {
         } else {
             sendMessage(redfox, event, Eball[Math.floor(Math.random() * Eball.length)]);
         }
-    } else if (testCommand(redfox, query, "sim", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "sim", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2558,7 +2558,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "melbin", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "melbin", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2590,7 +2590,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "openai", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "openai", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2614,7 +2614,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "codex", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "codex", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2638,7 +2638,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "dell", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "dell", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2671,7 +2671,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "poli", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "poli", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -2691,7 +2691,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "clear--cache", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "clear--cache", event.senderID, "root", true)) {
         let count = 0;
         fs.readdir(__dirname + "/cache/", function (err, files) {
             if (err) return handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event });
@@ -2705,7 +2705,7 @@ async function ai(redfox, event) {
         sendMessage(redfox, event, "Total cache to be deleted is " + count + " and it's size is " + convertBytes(totalCache) + " and total " + (Object.keys(threadIdMV).length + Object.keys(cmd).length) + " arrays to be removed.");
         threadIdMV = {};
         cmd = {};
-    } else if (testCommand(redfox, query, "left", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "left", event.senderID, "owner", true)) {
         let login = redfox.getCurrentUserID();
         redfox.removeUserFromGroup(login, event.threadID, (err) => {
             for (let threads in settingsThread) {
@@ -2716,12 +2716,12 @@ async function ai(redfox, event) {
 
             if (err) return handleError({ stacktrace: err, cuid: login, e: event });
         });
-    } else if (testCommand(redfox, query, "logout", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "logout", event.senderID, "owner", true)) {
         sendMessage(redfox, event, "sayonara... logging out!");
         redfox.logout((err) => {
             if (err) return handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event });
         });
-    } else if (testCommand(redfox, query, "maintenance", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "maintenance", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
@@ -2746,7 +2746,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: maintenance status" + "\n " + example[Math.floor(Math.random() * example.length)] + " maintenance --on");
             }
         }
-    } else if (testCommand(redfox, query, "list--admin", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "list--admin", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (users.admin.length == 0) return sendMessage(redfox, event, "Orion has no admin set yet!");
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
@@ -2759,7 +2759,7 @@ async function ai(redfox, event) {
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(redfox, event, construct);
-    } else if (testCommand(redfox, query, "list--owner", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "list--owner", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         let owners = [];
@@ -2781,7 +2781,7 @@ async function ai(redfox, event) {
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(redfox, event, construct);
-    } else if (testCommand(redfox, query, "list--instance", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "list--instance", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (let account in accounts) {
@@ -2810,7 +2810,7 @@ async function ai(redfox, event) {
         }
         construct += "│\n└─ @ỹ@cmd-prj- orion";
         sendMessage(redfox, event, construct);
-    } else if (testCommand(redfox, query, "autoMarkRead", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "autoMarkRead", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
@@ -2835,7 +2835,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkRead status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkRead --on");
             }
         }
-    } else if (testCommand(redfox, query, "online", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "online", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
@@ -2860,7 +2860,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: online status" + "\n " + example[Math.floor(Math.random() * example.length)] + " online --on");
             }
         }
-    } else if (testCommand(redfox, query, "autoReaction", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "autoReaction", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: autoReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoReaction --on");
@@ -2885,7 +2885,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: autoReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoReaction --on");
             }
         }
-    } else if (testCommand(redfox, query, "mirrorReaction", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "mirrorReaction", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: mirrorReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " mirrorReaction --on");
@@ -2910,7 +2910,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: mirrorReaction status" + "\n " + example[Math.floor(Math.random() * example.length)] + " mirrorReaction --on");
             }
         }
-    } else if (testCommand(redfox, query, "selfListen", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "selfListen", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
@@ -2935,7 +2935,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: selfListen status" + "\n " + example[Math.floor(Math.random() * example.length)] + " selfListen --on");
             }
         }
-    } else if (testCommand(redfox, query, "autoMarkDelivery", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "autoMarkDelivery", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
@@ -2960,7 +2960,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: autoMarkDelivery status" + "\n " + example[Math.floor(Math.random() * example.length)] + " autoMarkDelivery --on");
             }
         }
-    } else if (testCommand(redfox, query, "typingIndicator", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "typingIndicator", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: typingIndicator status" + "\n " + example[Math.floor(Math.random() * example.length)] + " typingIndicator --on");
@@ -2985,7 +2985,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: typingIndicator status" + "\n " + example[Math.floor(Math.random() * example.length)] + " typingIndicator --on");
             }
         }
-    } else if (testCommand(redfox, query, "say--jap", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "say--jap", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3014,7 +3014,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "say", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "say", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3037,7 +3037,7 @@ async function ai(redfox, event) {
                 unLink(filename);
             });
         }
-    } else if (testCommand(redfox, query, "aes--encrypt", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "aes--encrypt", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3047,7 +3047,7 @@ async function ai(redfox, event) {
             const iv = crypto.randomBytes(16);
             sendMessage(redfox, event, utils.encrypt(getDataFromQuery(data), key, iv) + "\n\nKey1: " + key.toString("hex") + "\nKey2: " + iv.toString("hex"));
         }
-    } else if (testCommand(redfox, query, "stats", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "stats", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let stat = [
             "Users: " + numberWithCommas(Object.keys(cmd).length) + "/" + numberWithCommas(users.list.length),
@@ -3058,11 +3058,11 @@ async function ai(redfox, event) {
             "Command Call: " + commandCalls,
         ];
         sendMessage(redfox, event, utils.formatOutput("Statistics", stat, "project-orion"));
-    } else if (testCommand(redfox, query, "uptime", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "uptime", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let uptime = ["Login: " + secondsToTime(process.uptime()), "Server: " + secondsToTime(os.uptime()), "Server Location: " + getCountryOrigin(os.cpus()[0].model)];
         sendMessage(redfox, event, utils.formatOutput("Uptime", uptime, "project-orion"));
-    } else if (testCommand(redfox, query, "tokens", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "tokens", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let token = [
             "Prompt: " + formatDecNum(settings.shared.tokens["gpt"]["prompt_tokens"] + settings.shared.tokens["davinci"]["prompt_tokens"]),
@@ -3071,7 +3071,7 @@ async function ai(redfox, event) {
             "Cost: " + formatDecNum((settings.shared.tokens["gpt"]["total_tokens"] / 1000) * 0.007 + (settings.shared.tokens["davinci"]["total_tokens"] / 1000) * 0.02),
         ];
         sendMessage(redfox, event, utils.formatOutput("Token Usage", token, "project-orion"));
-    } else if (testCommand(redfox, query, "sysinfo", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "sysinfo", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let avg_load = os.loadavg();
         let rom = await utils.getProjectTotalSize(__dirname + "/");
@@ -3090,7 +3090,7 @@ async function ai(redfox, event) {
             "Average Load: " + Math.floor((avg_load[0] + avg_load[1] + avg_load[2]) / 3) + "%",
         ];
         sendMessage(redfox, event, utils.formatOutput("System Info", sysinfo, "project-orion"));
-    } else if (testCommand(redfox, query, "ascii--random", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "ascii--random", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3101,7 +3101,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(redfox, query, "ascii", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "ascii", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3119,7 +3119,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, font + " font not found or not yet supported.");
             }
         }
-    } else if (testCommand(redfox, query, "dns4", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "dns4", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3131,7 +3131,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, addresses[0]);
             });
         }
-    } else if (testCommand(redfox, query, "dns6", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "dns6", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3143,7 +3143,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, addresses[0]);
             });
         }
-    } else if (testCommand(redfox, query, "getHeaders", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "getHeaders", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3155,7 +3155,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(redfox, query, "nslookup", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "nslookup", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3167,7 +3167,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(redfox, query, "ping", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "ping", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3179,7 +3179,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, stdout + "\n\n" + stderr);
             });
         }
-    } else if (testCommand(redfox, query, "traceroute", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "traceroute", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3203,7 +3203,7 @@ async function ai(redfox, event) {
             });
         }
         // TODO: covid and covid
-    } else if (testCommand(redfox, query, "covid--global", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "covid--global", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         const options = {
             method: "GET",
@@ -3222,7 +3222,7 @@ async function ai(redfox, event) {
             .catch(function (err) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             });
-    } else if (testCommand(redfox, query, "covid", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "covid", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3258,7 +3258,7 @@ async function ai(redfox, event) {
                     sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
                 });
         }
-    } else if (testCommand(redfox, query, "nba", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "nba", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3299,7 +3299,7 @@ async function ai(redfox, event) {
                     sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
                 });
         }
-    } else if (testCommand(redfox, query, "urlShortener", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "urlShortener", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3335,7 +3335,7 @@ async function ai(redfox, event) {
                     sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
                 });
         }
-    } else if (testCommand(redfox, query, "video--lyric", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "video--lyric", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3386,7 +3386,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(redfox, query, "video--search", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "video--search", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3430,7 +3430,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(redfox, query, "video", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "video", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3481,7 +3481,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(redfox, query, "music--lyric", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "music--lyric", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3530,7 +3530,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(redfox, query, "music--search", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "music--search", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3570,7 +3570,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(redfox, query, "music", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "music", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3618,7 +3618,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Hold on... There is still a request in progress.");
             }
         }
-    } else if (testCommand(redfox, query, "lyric", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "lyric", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3644,7 +3644,7 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "binary--encode", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "binary--encode", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3657,7 +3657,7 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, output);
         }
-    } else if (testCommand(redfox, query, "binary--decode", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "binary--decode", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3671,7 +3671,7 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, stringOutput);
         }
-    } else if (testCommand(redfox, query, "base64--encode", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "base64--encode", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3681,7 +3681,7 @@ async function ai(redfox, event) {
             let base64data = buff.toString("base64");
             sendMessage(redfox, event, base64data);
         }
-    } else if (testCommand(redfox, query, "base64--decode", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "base64--decode", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -3691,7 +3691,7 @@ async function ai(redfox, event) {
             let base642text = buff.toString("ascii");
             sendMessage(redfox, event, base642text);
         }
-    } else if (testCommand(redfox, query, "reverseText", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "reverseText", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3703,11 +3703,11 @@ async function ai(redfox, event) {
             let joinArray = reverseArray.join("");
             sendMessage(redfox, event, joinArray);
         }
-    } else if (testCommand(redfox, query, "pin--remove", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "pin--remove", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         delete settings.shared.pin[event.threadID];
         sendMessage(redfox, event, "Pinned message removed.");
-    } else if (testCommand(redfox, query, "pin", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "pin", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (!settings.shared.pin[event.threadID]) {
             if (event.isGroup) {
@@ -3718,7 +3718,7 @@ async function ai(redfox, event) {
         } else {
             sendMessage(redfox, event, settings.shared.pin[event.threadID]);
         }
-    } else if (testCommand(redfox, query, "dictionary", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "dictionary", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3744,7 +3744,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             }
         }
-    } else if (testCommand(redfox, query, "ugly", event.senderID, "user", true) || testCommand(redfox, query, "ugly--random", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "ugly", event.senderID, "user", true) || testCommand(redfox, event, query, "ugly--random", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.isGroup) {
             redfox.getThreadInfo(event.threadID, (err, info) => {
@@ -3795,7 +3795,7 @@ async function ai(redfox, event) {
         } else {
             sendMessage(redfox, event, "Your ugly as wtf!!");
         }
-    } else if (testCommand(redfox, query, "pair", event.senderID, "user", true) || testCommand(redfox, query, "pair--random", event.senderID, "user", true) || testCommand(redfox, query, "lovetest", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "pair", event.senderID, "user", true) || testCommand(redfox, event, query, "pair--random", event.senderID, "user", true) || testCommand(redfox, event, query, "lovetest", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         if (query.startsWith("lovetest")) {
             let data = input.split(" ");
@@ -3904,7 +3904,7 @@ async function ai(redfox, event) {
         } else {
             sendMessage(redfox, event, "Why don't you love yourself?");
         }
-    } else if (testCommand(redfox, query, "@everyone", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "@everyone", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.isGroup) {
             redfox.getThreadInfo(event.threadID, (err, info) => {
@@ -3939,7 +3939,7 @@ async function ai(redfox, event) {
         }
         sendMessage(redfox, event, message);
         */
-    } else if (testCommand(redfox, query, "baybayin", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "baybayin", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -3951,7 +3951,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, response.baybayin);
             });
         }
-    } else if (testCommand(redfox, query, "weather", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "weather", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4019,7 +4019,7 @@ async function ai(redfox, event) {
                 }
             );
         }
-    } else if (testCommand(redfox, query, "facts", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "facts", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4029,38 +4029,38 @@ async function ai(redfox, event) {
             let url = "https://redfox.popcat.xyz/facts?text=" + data.join(" ");
             parseImage(redfox, event, url, __dirname + "/cache/facts_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "wouldYourRather", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "wouldYourRather", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let getWyr = wyr[Math.floor(Math.random() * wyr.length)];
         sendMessage(redfox, event, "Would you rather " + getWyr.ops1 + " or " + getWyr.ops2);
-    } else if (testCommand(redfox, query, "facts--meow", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "facts--meow", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         sendMessage(redfox, event, cat[Math.floor(Math.random() * cat.length)]);
-    } else if (testCommand(redfox, query, "facts--math", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "facts--math", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("http://numbersapi.com/random/math").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
             sendMessage(redfox, event, response);
         });
-    } else if (testCommand(redfox, query, "facts--date", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "facts--date", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("http://numbersapi.com/random/date").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
             sendMessage(redfox, event, response);
         });
-    } else if (testCommand(redfox, query, "facts--trivia", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "facts--trivia", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("http://numbersapi.com/random/trivia").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
             sendMessage(redfox, event, response);
         });
-    } else if (testCommand(redfox, query, "facts--year", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "facts--year", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("http://numbersapi.com/random/year").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
             sendMessage(redfox, event, response);
         });
-    } else if (testCommand(redfox, query, "getProfilePic", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "getProfilePic", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let id;
         if (event.type == "message_reply" && event.senderID != redfox.getCurrentUserID()) {
@@ -4069,7 +4069,7 @@ async function ai(redfox, event) {
             id = event.senderID;
         }
         parseImage(redfox, event, getProfilePic(id), __dirname + "/cache/profilepic_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(redfox, query, "github", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "github", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4134,7 +4134,7 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "periodicTable", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "periodicTable", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4166,7 +4166,7 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "npm", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "npm", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4194,7 +4194,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, message);
             });
         }
-    } else if (testCommand(redfox, query, "steam", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "steam", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4223,7 +4223,7 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "imdb", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "imdb", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4252,7 +4252,7 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "itunes", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "itunes", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4281,7 +4281,7 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "car", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "car", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://redfox.popcat.xyz/car").then((response) => {
             if (response == null) return sendMessage(redfox, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
@@ -4297,7 +4297,7 @@ async function ai(redfox, event) {
                 unLink(filename);
             });
         });
-    } else if (testCommand(redfox, query, "rcolor", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "rcolor", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://redfox.popcat.xyz/randomcolor").then((response) => {
             if (response == null) return sendMessage(redfox, event, "Unfortunately color fades away.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
@@ -4315,19 +4315,19 @@ async function ai(redfox, event) {
                 unLink(filename);
             });
         });
-    } else if (testCommand(redfox, query, "pickuplines", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "pickuplines", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://redfox.popcat.xyz/pickuplines").then((response) => {
             if (response == null) return sendMessage(redfox, event, "Unfortunately i forgot the line.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             sendMessage(redfox, event, response.pickupline);
         });
-    } else if (testCommand(redfox, query, "fbi", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "fbi", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let message = {
             attachment: fs.createReadStream(__dirname + "/assets/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
         };
         sendMessage(redfox, event, message);
-    } else if (testCommand(redfox, query, "friendlist", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "friendlist", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         redfox.getFriendsList((err, data) => {
             if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
@@ -4340,7 +4340,7 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, utils.formatOutput("Bot Friend List", [data.length + " friends", countBirthdays + " birthdays"], "project-orion"));
         });
-    } else if (testCommand(redfox, query, "thread--emoji", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "thread--emoji", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -4354,7 +4354,7 @@ async function ai(redfox, event) {
                 if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             });
         }
-    } else if (testCommand(redfox, query, "sendReport", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "sendReport", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         if (isGoingToFast1(event, userWhoSendDamnReports, 30) && event.senderID != process.env.ROOT) {
             sendMessage(redfox, event, "Please wait a while. Before sending another report.");
@@ -4378,19 +4378,19 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "sync", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "sync", event.senderID, "root", true)) {
         exec("git pull", function (err, stdout, stderr) {
             sendMessage(redfox, event, stdout + "\n\n" + stderr);
         });
-    } else if (testCommand(redfox, query, "push", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "push", event.senderID, "root", true)) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master', function (err, stdout, stderr) {
             sendMessage(redfox, event, stdout + "\n\n" + stderr);
         });
-    } else if (testCommand(redfox, query, "push--force", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "push--force", event.senderID, "root", true)) {
         exec('git add . && git commit -m "Initial Commit" && git push origin master --force', function (err, stdout, stderr) {
             sendMessage(redfox, event, stdout + "\n\n" + stderr);
         });
-    } else if (testCommand(redfox, query, "unblock--all", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "unblock--all", event.senderID, "root", true)) {
         let size = users.blocked.length;
         if (size == 0) {
             sendMessage(redfox, event, "No users blocked.");
@@ -4398,12 +4398,12 @@ async function ai(redfox, event) {
             users.blocked = [];
             sendMessage(redfox, event, size + " users have been unblocked.");
         }
-    } else if (testCommand(redfox, query, "unblock--everyone", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "unblock--everyone", event.senderID, "root", true)) {
         let size = users.bot.length + users.blocked.length;
         users.blocked = [];
         users.bot = [];
         sendMessage(redfox, event, size + " users have been unblocked.");
-    } else if (testCommand(redfox, query, "git", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "git", event.senderID)) {
         if (isMyId(event.senderID)) {
             let data = input.split(" ");
             if (data.length < 2) {
@@ -4421,7 +4421,7 @@ async function ai(redfox, event) {
                 });
             }
         }
-    } else if (testCommand(redfox, query, "block--command", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "block--command", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: block --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --command cmd");
@@ -4437,7 +4437,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "command `" + command + "` has been blocked.");
             }
         }
-    } else if (testCommand(redfox, query, "unblock--command", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "unblock--command", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: unblock --command cmd" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --command cmd");
@@ -4453,7 +4453,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "This command is not in block list.");
             }
         }
-    } else if (testCommand(redfox, query, "insertData", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "insertData", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: insertData file name:value" + "\n " + example[Math.floor(Math.random() * example.length)] + " insertData account nsfw:true");
@@ -4474,7 +4474,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Unsupported file value!");
             }
         }
-    } else if (testCommand(redfox, query, "shell", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "shell", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: shell code" + "\n " + example[Math.floor(Math.random() * example.length)] + " shell uptime");
@@ -4491,7 +4491,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "handleMessageRequest", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "handleMessageRequest", event.senderID, "owner", true)) {
         redfox.handleMessageRequest(event.senderID, true, (err) => {
             if (err) return sendMessage(redfox, event, "Failed to accept request! Have you send a message first?");
             redfox.sendMessage(updateFont("Hello World", event.senderID, redfox.getCurrentUserID()), event.senderID, (err, messageInfo) => {
@@ -4499,7 +4499,7 @@ async function ai(redfox, event) {
             });
             sendMessage(redfox, event, "Please check your inbox.");
         });
-    } else if (testCommand(redfox, query, "handleMessageRequest--tid", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "handleMessageRequest--tid", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: handleMessageRequest --tid threadid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleMessageRequest --tid 0000000000000");
@@ -4514,7 +4514,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Please check your inbox.");
             });
         }
-    } else if (testCommand(redfox, query, "cors--add", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "cors--add", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: cors --add url" + "\n " + example[Math.floor(Math.random() * example.length)] + " cors --add https://mrepol742.github.io");
@@ -4529,7 +4529,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, cors + " authorized!");
             }
         }
-    } else if (testCommand(redfox, query, "cors--rem", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "cors--rem", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: cors --rem url" + "\n " + example[Math.floor(Math.random() * example.length)] + " cors --rem https://mrepol742.github.io");
@@ -4544,7 +4544,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, cors + " deauthorize!");
             }
         }
-    } else if (testCommand(redfox, query, "changeBio", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "changeBio", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: changeBio text" + "\n " + example[Math.floor(Math.random() * example.length)] + " changebio hello world");
@@ -4555,7 +4555,7 @@ async function ai(redfox, event) {
             });
             sendMessage(redfox, event, "Done");
         }
-    } else if (testCommand(redfox, query, "handleFriendRequest", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "handleFriendRequest", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: handleFriendRequest uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " handleFriendRequest 0000000000000");
@@ -4566,7 +4566,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Friend Request Accepted!");
             });
         }
-    } else if (testCommand(redfox, query, "maxTokens", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "maxTokens", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: maxTokens int" + "\n " + example[Math.floor(Math.random() * example.length)] + " maxTokens 1000");
@@ -4582,7 +4582,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Max Tokens is now set to " + num);
             }
         }
-    } else if (testCommand(redfox, query, "temperature", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "temperature", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: temperature int" + "\n " + example[Math.floor(Math.random() * example.length)] + " temperature 0");
@@ -4598,7 +4598,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Temperature is now set to " + num);
             }
         }
-    } else if (testCommand(redfox, query, "fbdl", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "fbdl", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4646,7 +4646,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "HTTP(s) protocol not found.");
             }
         }
-    } else if (testCommand(redfox, query, "top", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "top", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
@@ -4692,7 +4692,7 @@ async function ai(redfox, event) {
                 });
             }
         });
-    } else if (testCommand(redfox, query, "top--quiz", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "top--quiz", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         utils.getGroupProfile(users, event.senderID, async function (user) {
             let lead = [];
@@ -4721,7 +4721,7 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, utils.formatOutput("Top User Quiz", construct, "project-orion"));
         });
-    } else if (testCommand(redfox, query, "top--global", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
@@ -4752,7 +4752,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, utils.formatOutput("Top User Global", construct, "project-orion"));
             }
         });
-    } else if (testCommand(redfox, query, "balance", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "balance", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         utils.getGroupProfile(users, event.senderID, async function (name) {
             if (!name.name) {
@@ -4763,7 +4763,7 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, utils.formatOutput("Balance", [formatDecNum((name.balance / 1000) * 0.007) + "$ " + name.firstName], "project-orion"));
         });
-    } else if (testCommand(redfox, query, "balance--user", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "balance--user", event.senderID)) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: balance --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " balance --user @Zero Two");
@@ -4804,7 +4804,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "mdl", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "mdl", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4839,7 +4839,7 @@ async function ai(redfox, event) {
                 });
             });
         }
-    } else if (testCommand(redfox, query, "mal", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "mal", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -4880,7 +4880,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "penalty--frequency", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "penalty--frequency", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: penalty --frequency int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --frequency 1");
@@ -4895,7 +4895,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Frequency Penalty is now set to " + num);
             }
         }
-    } else if (testCommand(redfox, query, "penalty--presence", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "penalty--presence", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: penalty --presence int" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty --presence 1");
@@ -4910,7 +4910,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Presence Penalty is now set to " + num);
             }
         }
-    } else if (testCommand(redfox, query, "textComplextion", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "textComplextion", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: textComplextion type" + "\n " + example[Math.floor(Math.random() * example.length)] + " textComplextion gpt-3.5-turbo-instruct");
@@ -4920,7 +4920,7 @@ async function ai(redfox, event) {
             settings.shared.text_complextion = num;
             sendMessage(redfox, event, "Text Complextion is now set to " + num);
         }
-    } else if (testCommand(redfox, query, "maxImage", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "maxImage", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: maxImage int" + "\n " + example[Math.floor(Math.random() * example.length)] + " maxImage 12");
@@ -4936,7 +4936,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Max Image is now set to " + num);
             }
         }
-    } else if (testCommand(redfox, query, "probabilityMass", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "probabilityMass", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: probabilityMass int" + "\n " + example[Math.floor(Math.random() * example.length)] + " probabilityMass 0.1");
@@ -4952,7 +4952,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Probability Mass is now set to " + num);
             }
         }
-    } else if (testCommand(redfox, query, "add--user", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "add--user", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -4986,7 +4986,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: add --user uid" + "\n " + example[Math.floor(Math.random() * example.length)] + " add --user 100024563636366");
             }
         }
-    } else if (testCommand(redfox, query, "thread--theme", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "thread--theme", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -5009,7 +5009,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: thread --theme type" + "\n " + example[Math.floor(Math.random() * example.length)] + " thread --theme type");
             }
         }
-    } else if (testCommand(redfox, query, "remove--user", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "remove--user", event.senderID, "owner")) {
         redfox.getThreadInfo(event.threadID, (err, gc) => {
             if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             if (gc.isGroup) {
@@ -5044,7 +5044,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Unfortunately this is a personal chat and not a group chat.");
             }
         });
-    } else if (testCommand(redfox, query, "threadLock", event.senderID, "user")) {
+    } else if (testCommand(redfox, event, query, "threadLock", event.senderID, "user")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: threadLock @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " setThreadLock @Zero Two");
@@ -5091,7 +5091,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "No orion found on this account!.");
             }
         }
-    } else if (testCommand(redfox, query, "block--bot", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "block--bot", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: block --bot @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --bot @Zero Two");
@@ -5126,7 +5126,7 @@ async function ai(redfox, event) {
                 });
             }
         }
-    } else if (testCommand(redfox, query, "zzzzzzz", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "zzzzzzz", event.senderID, "root", true)) {
         utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance) {
                 user["balance"] = 99999999999999;
@@ -5134,7 +5134,7 @@ async function ai(redfox, event) {
             user.balance = 99999999999999;
             sendMessage(redfox, event, "Done.");
         });
-    } else if (testCommand(redfox, query, "penalty", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "penalty", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: penalty @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " penalty @Zero Two");
@@ -5167,7 +5167,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, user.firstName + " has been penalize!");
             });
         }
-    } else if (testCommand(redfox, query, "block--user", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "block--user", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: block --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --user @Zero Two");
@@ -5190,20 +5190,20 @@ async function ai(redfox, event) {
             }
             blockUser(redfox, event, id);
         }
-    } else if (testCommand(redfox, query, "block--thread--tid", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "block--thread--tid", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: block --thread --tid groupid" + "\n " + example[Math.floor(Math.random() * example.length)] + " block --thread --tid 5000050005");
         } else {
             blockGroup(redfox, event, getDataFromQuery(data, [0, 2]));
         }
-    } else if (testCommand(redfox, query, "block--thread", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "block--thread", event.senderID, "owner", true)) {
         blockGroup(redfox, event, event.threadID);
-    } else if (testCommand(redfox, query, "tts--enable", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "tts--enable", event.senderID)) {
         enableTTS(redfox, event, event.threadID);
-    } else if (testCommand(redfox, query, "tts--disable", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "tts--disable", event.senderID)) {
         disableTTS(redfox, event, event.threadID);
-    } else if (testCommand(redfox, query, "unblock--user", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "unblock--user", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: unblock --user @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " unblock --user @Zero Two");
@@ -5226,7 +5226,7 @@ async function ai(redfox, event) {
             }
             unblockUser(redfox, event, id);
         }
-    } else if (testCommand(redfox, query, "apikey", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "apikey", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: apikey key" + "\n " + example[Math.floor(Math.random() * example.length)] + " apikey sk-blablablaabla");
@@ -5244,7 +5244,7 @@ async function ai(redfox, event) {
 
             sendMessage(redfox, event, "Changes have been reflected to following accounts:\n" + utils.formatOutput("ApiKey", data1, "project-orion"));
         }
-    } else if (testCommand(redfox, query, "setKey", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "setKey", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2 || !data[1].includes(":")) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: setKey name:key instead.");
@@ -5253,7 +5253,7 @@ async function ai(redfox, event) {
             settings.shared.apikey[inp[0]] = inp[1];
             sendMessage(redfox, event, "Successfully saved " + inp[0] + ".");
         }
-    } else if (testCommand(redfox, query, "fontIgnore", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "fontIgnore", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: fontIgnore @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " fontignore @Zero Two");
@@ -5273,7 +5273,7 @@ async function ai(redfox, event) {
             }
             fontIgnore(redfox, event, id);
         }
-    } else if (testCommand(redfox, query, "owner", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "owner", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         const login = redfox.getCurrentUserID();
         const uid = settings[login].owner;
@@ -5294,10 +5294,10 @@ async function ai(redfox, event) {
                 unLink(dirp);
             });
         });
-    } else if (testCommand(redfox, query, "reset--thread-lock", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "reset--thread-lock", event.senderID, "owner", true)) {
         delete settingsThread[event.threadID]["lock"];
         sendMessage(redfox, event, "Lock has been lift.");
-    } else if (testCommand(redfox, query, "clear--thread-lock", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "clear--thread-lock", event.senderID, "owner", true)) {
         let count = 0;
         for (let threads in settingsThread) {
             if (settingsThread[threads].lock) {
@@ -5306,7 +5306,7 @@ async function ai(redfox, event) {
             }
         }
         sendMessage(redfox, event, count + " deleted.");
-    } else if (testCommand(redfox, query, "clear--dup-data", event.senderID, "root", true)) {
+    } else if (testCommand(redfox, event, query, "clear--dup-data", event.senderID, "root", true)) {
         utils.cleanDuplicate(groups, (err, res) => {
             if (err) utils.log(err);
             let t = JSON.stringify(a).replaceAll(",null", "");
@@ -5330,7 +5330,7 @@ async function ai(redfox, event) {
             }
         }
         sendMessage(redfox, event, "Cleaning done.");
-    } else if (testCommand(redfox, query, "add--admin", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "add--admin", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 3 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: add --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addAdmin @Zero Two");
@@ -5353,7 +5353,7 @@ async function ai(redfox, event) {
             }
             addAdmin(redfox, event, id);
         }
-    } else if (testCommand(redfox, query, "add--token", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "add--token", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.lenght < 3 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
@@ -5375,7 +5375,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Added 1500 tokens to the account holder.");
             });
         }
-    } else if (testCommand(redfox, query, "remove--admin", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "remove--admin", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.lenght < 2 && event.type != "message_reply") {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: remove --admin @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " remAdmin @Zero Two");
@@ -5397,7 +5397,7 @@ async function ai(redfox, event) {
             }
             remAdmin(redfox, event, id);
         }
-    } else if (testCommand(redfox, query, "unsendMessages", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "unsendMessages", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: unsendMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " unsendMessages --on");
@@ -5422,7 +5422,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: unsendMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " unsendMessages --on");
             }
         }
-    } else if (testCommand(redfox, query, "leaveThread", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "leaveThread", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
@@ -5447,7 +5447,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: leaveThread status" + "\n " + example[Math.floor(Math.random() * example.length)] + " leaveThread --on");
             }
         }
-    } else if (testCommand(redfox, query, "webApi", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "webApi", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: webApi status" + "\n " + example[Math.floor(Math.random() * example.length)] + " webApi --on");
@@ -5472,7 +5472,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: webApi status" + "\n " + example[Math.floor(Math.random() * example.length)] + " webApi --on");
             }
         }
-    } else if (testCommand(redfox, query, "delayMessages", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "delayMessages", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: delayMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " delayMessages --on");
@@ -5497,7 +5497,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: delayMessages status" + "\n " + example[Math.floor(Math.random() * example.length)] + " delayMessages --on");
             }
         }
-    } else if (testCommand(redfox, query, "nsfw", event.senderID, "owner")) {
+    } else if (testCommand(redfox, event, query, "nsfw", event.senderID, "owner")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: nsfw status" + "\n " + example[Math.floor(Math.random() * example.length)] + " nsfw --on");
@@ -5522,7 +5522,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: nsfw status" + "\n " + example[Math.floor(Math.random() * example.length)] + " nsfw --on");
             }
         }
-    } else if (testCommand(redfox, query, "simultaneousExec", event.senderID, "root")) {
+    } else if (testCommand(redfox, event, query, "simultaneousExec", event.senderID, "root")) {
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: simultaneousExec status" + "\n " + example[Math.floor(Math.random() * example.length)] + " simultaneousExec --on");
@@ -5547,7 +5547,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: simultaneousExec status" + "\n " + example[Math.floor(Math.random() * example.length)] + " simultaneousExec --on");
             }
         }
-    } else if (testCommand(redfox, query, "group", event.senderID, "user")) {
+    } else if (testCommand(redfox, event, query, "group", event.senderID, "user")) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5661,7 +5661,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: group type" + "\n " + example[Math.floor(Math.random() * example.length)] + " group --member");
             }
         }
-    } else if (testCommand(redfox, query, "tid", event.senderID, "user", true) || testCommand(redfox, query, "gid", event.senderID) || testCommand(redfox, query, "uid", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "tid", event.senderID, "user", true) || testCommand(redfox, event, query, "gid", event.senderID) || testCommand(redfox, event, query, "uid", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.type == "message" && groups.list.find((thread) => event.threadID === thread.id) && (query == "tid" || query == "gid")) {
             utils.getGroupProfile(groups, event.threadID, async function (group) {
@@ -5698,7 +5698,7 @@ async function ai(redfox, event) {
         } else {
             sendMessage(redfox, event, utils.formatOutput("!--!", JSON.parse("[" + event.senderID + "]"), "project-orion"));
         }
-    } else if (testCommand(redfox, query, "cmd", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "cmd", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         let NP = "\n\n< prev  ───────────  next >";
@@ -5728,7 +5728,7 @@ async function ai(redfox, event) {
         } else {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: cmd option \n Options: \n   next, prev, owner and root" + "\n " + example[Math.floor(Math.random() * example.length)] + " cmd next");
         }
-    } else if (testCommand(redfox, query, "wiki", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "wiki", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5750,21 +5750,21 @@ async function ai(redfox, event) {
             });
         }
     } else if (
-        testCommand(redfox, query, "kiss", event.senderID) ||
-        testCommand(redfox, query, "lick", event.senderID) ||
-        testCommand(redfox, query, "hug", event.senderID) ||
-        testCommand(redfox, query, "cuddle", event.senderID) ||
-        testCommand(redfox, query, "headpat", event.senderID) ||
-        testCommand(redfox, query, "blush", event.senderID) ||
-        testCommand(redfox, query, "wave", event.senderID) ||
-        testCommand(redfox, query, "highfive", event.senderID) ||
-        testCommand(redfox, query, "bite", event.senderID) ||
-        testCommand(redfox, query, "kick", event.senderID) ||
-        testCommand(redfox, query, "wink", event.senderID) ||
-        testCommand(redfox, query, "cringe", event.senderID) ||
-        testCommand(redfox, query, "slap", event.senderID) ||
-        testCommand(redfox, query, "kill", event.senderID) ||
-        testCommand(redfox, query, "smug", event.senderID)
+        testCommand(redfox, event, query, "kiss", event.senderID) ||
+        testCommand(redfox, event, query, "lick", event.senderID) ||
+        testCommand(redfox, event, query, "hug", event.senderID) ||
+        testCommand(redfox, event, query, "cuddle", event.senderID) ||
+        testCommand(redfox, event, query, "headpat", event.senderID) ||
+        testCommand(redfox, event, query, "blush", event.senderID) ||
+        testCommand(redfox, event, query, "wave", event.senderID) ||
+        testCommand(redfox, event, query, "highfive", event.senderID) ||
+        testCommand(redfox, event, query, "bite", event.senderID) ||
+        testCommand(redfox, event, query, "kick", event.senderID) ||
+        testCommand(redfox, event, query, "wink", event.senderID) ||
+        testCommand(redfox, event, query, "cringe", event.senderID) ||
+        testCommand(redfox, event, query, "slap", event.senderID) ||
+        testCommand(redfox, event, query, "kill", event.senderID) ||
+        testCommand(redfox, event, query, "smug", event.senderID)
     ) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
@@ -5794,20 +5794,20 @@ async function ai(redfox, event) {
             getAnimeGif(redfox, event, id, prrr);
         }
     } else if (
-        testCommand(redfox, query, "gun", event.senderID) ||
-        testCommand(redfox, query, "wanted", event.senderID) ||
-        testCommand(redfox, query, "clown", event.senderID) ||
-        testCommand(redfox, query, "drip", event.senderID) ||
-        testCommand(redfox, query, "communist", event.senderID) ||
-        testCommand(redfox, query, "advert", event.senderID) ||
-        testCommand(redfox, query, "uncover", event.senderID) ||
-        testCommand(redfox, query, "jail", event.senderID) ||
-        testCommand(redfox, query, "invert", event.senderID) ||
-        testCommand(redfox, query, "pet", event.senderID) ||
-        testCommand(redfox, query, "mnm", event.senderID) ||
-        testCommand(redfox, query, "greyscale", event.senderID) ||
-        testCommand(redfox, query, "jokeover", event.senderID) ||
-        testCommand(redfox, query, "blur", event.senderID)
+        testCommand(redfox, event, query, "gun", event.senderID) ||
+        testCommand(redfox, event, query, "wanted", event.senderID) ||
+        testCommand(redfox, event, query, "clown", event.senderID) ||
+        testCommand(redfox, event, query, "drip", event.senderID) ||
+        testCommand(redfox, event, query, "communist", event.senderID) ||
+        testCommand(redfox, event, query, "advert", event.senderID) ||
+        testCommand(redfox, event, query, "uncover", event.senderID) ||
+        testCommand(redfox, event, query, "jail", event.senderID) ||
+        testCommand(redfox, event, query, "invert", event.senderID) ||
+        testCommand(redfox, event, query, "pet", event.senderID) ||
+        testCommand(redfox, event, query, "mnm", event.senderID) ||
+        testCommand(redfox, event, query, "greyscale", event.senderID) ||
+        testCommand(redfox, event, query, "jokeover", event.senderID) ||
+        testCommand(redfox, event, query, "blur", event.senderID)
     ) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
@@ -5833,7 +5833,7 @@ async function ai(redfox, event) {
             if (isMyId(id)) return;
             getPopcatImage(redfox, event, id, prrr);
         }
-    } else if (testCommand(redfox, query, "ship", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "ship", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5880,7 +5880,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: ship @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " ship @Edogawa Conan @Ran Mouri");
             }
         }
-    } else if (testCommand(redfox, query, "1v1", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "1v1", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5928,7 +5928,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: www @mention @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " www @Edogawa Conan @Ran Mouri");
             }
         }
-    } else if (testCommand(redfox, query, "formatNumbers", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "formatNumbers", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5937,7 +5937,7 @@ async function ai(redfox, event) {
             data.shift();
             sendMessage(redfox, event, numberWithCommas(data.join(" ")));
         }
-    } else if (testCommand(redfox, query, "stalk", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "stalk", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2 && event.type != "message_reply") {
@@ -5966,7 +5966,7 @@ async function ai(redfox, event) {
                 console.log(JSON.stringify(data1));
             });
         }
-    } else if (testCommand(redfox, query, "morse", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "morse", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5978,7 +5978,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, response.morse);
             });
         }
-    } else if (testCommand(redfox, query, "lulcat", event.senderID) || testCommand(redfox, query, "mock", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "lulcat", event.senderID) || testCommand(redfox, event, query, "mock", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5990,7 +5990,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, response.text);
             });
         }
-    } else if (testCommand(redfox, query, "coding", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "coding", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://eager-meitner-f8adb8.netlify.app/.netlify/functions/random").then((response) => {
             if (response == null) return sendMessage(redfox, event, "Unfortunately the code throws an exception.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
@@ -6007,26 +6007,26 @@ async function ai(redfox, event) {
                 unLink(filename);
             });
         });
-    } else if (testCommand(redfox, query, "joke", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "joke", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         sendMessage(redfox, event, joke[Math.floor(Math.random() * joke.length)]);
-    } else if (testCommand(redfox, query, "barrier", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "barrier", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let message = {
             body: "Anti horny barrier activated.",
             attachment: fs.createReadStream(__dirname + "/assets/barrier.jpg"),
         };
         sendMessage(redfox, event, message);
-    } else if (testCommand(redfox, query, "dyk", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "dyk", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         sendMessage(redfox, event, "Did you know?\n\n" + dyk[Math.floor(Math.random() * dyk.length)]);
-    } else if (testCommand(redfox, query, "thoughts", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "thoughts", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://redfox.popcat.xyz/showerthoughts").then((response) => {
             if (response == null) return sendMessage(redfox, event, "Unfortunately i never had any shower thoughts anymore.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             sendMessage(redfox, event, response.result);
         });
-    } else if (testCommand(redfox, query, "drake", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "drake", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -6036,7 +6036,7 @@ async function ai(redfox, event) {
             let text = data.join(" ").split(":");
             parseImage(redfox, event, "https://redfox.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/drake_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "pika", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "pika", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6045,16 +6045,16 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "https://redfox.popcat.xyz/pikachu?text=" + data.join(" "), __dirname + "/cache/pika_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "meme", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "meme", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://redfox.popcat.xyz/meme").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
             parseImage(redfox, event, response.image, __dirname + "/cache/meme_" + utils.getTimestamp() + ".png");
         });
-    } else if (testCommand(redfox, query, "conan", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "conan", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         parseImage(redfox, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/conan_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(redfox, query, "oogway", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "oogway", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6063,7 +6063,7 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "https://redfox.popcat.xyz/oogway?text=" + data.join(" "), __dirname + "/cache/oogway_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "hanime", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "hanime", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         utils.getGroupProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
@@ -6086,7 +6086,7 @@ async function ai(redfox, event) {
                 }
             }
         });
-    } else if (testCommand(redfox, query, "anime", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "anime", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6106,7 +6106,7 @@ async function ai(redfox, event) {
                 parseImage(redfox, event, response.url, __dirname + "/cache/anime_" + utils.getTimestamp() + ".png");
             });
         }
-    } else if (testCommand(redfox, query, "getImage", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "getImage", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6120,7 +6120,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
-    } else if (testCommand(redfox, query, "qrcode", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "qrcode", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6133,7 +6133,7 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "http://redfox.qrserver.com/v1/create-qr-code/?150x150&data=" + data.join(" "), __dirname + "/cache/qrcode_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "alert", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "alert", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6142,7 +6142,7 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "https://redfox.popcat.xyz/alert?text=" + data.join(" "), __dirname + "/cache/alert_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "caution", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "caution", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6151,7 +6151,7 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "https://redfox.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/caution_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "screenshot", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "screenshot", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6169,7 +6169,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
-    } else if (testCommand(redfox, query, "unforgivable", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "unforgivable", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6178,7 +6178,7 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "https://redfox.popcat.xyz/unforgivable?text=" + data.join(" "), __dirname + "/cache/god_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "sadcat", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "sadcat", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6187,7 +6187,7 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "https://redfox.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/sadcat_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "pooh", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "pooh", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -6197,13 +6197,13 @@ async function ai(redfox, event) {
             let text = data.join(" ").split(":");
             parseImage(redfox, event, "https://redfox.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/pooh_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "wallpaper--land--random", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "wallpaper--land--random", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         parseImage(redfox, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(redfox, query, "wallpaper--port--random", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "wallpaper--port--random", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         parseImage(redfox, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
-    } else if (testCommand(redfox, query, "wallpaper--land", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "wallpaper--land", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6212,7 +6212,7 @@ async function ai(redfox, event) {
             data.shift();
             parseImage(redfox, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
         }
-    } else if (testCommand(redfox, query, "wallpaper--port", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "wallpaper--port", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6222,7 +6222,7 @@ async function ai(redfox, event) {
             parseImage(redfox, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
         }
         //TODO: continue here
-    } else if (testCommand(redfox, query, "qoute", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "qoute", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6277,7 +6277,7 @@ async function ai(redfox, event) {
                 }
             }
         }
-    } else if (testCommand(redfox, query, "time--timezone", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "time--timezone", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 3) {
@@ -6289,14 +6289,14 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
         }
-    } else if (testCommand(redfox, query, "time", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "time", event.senderID, "user", true)) {
         utils.getGroupProfile(users, event.senderID, async function (name) {
             if (name.firstName != undefined && name.timezone) {
                 return sendMessage(redfox, event, "It's " + getCurrentDateAndTime(name.timezone));
             }
             sendMessage(redfox, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
         });
-    } else if (testCommand(redfox, query, "newyear", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "newyear", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         // TODO: update
         let yr = new Date().getFullYear() + 1;
@@ -6311,7 +6311,7 @@ async function ai(redfox, event) {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before New Year.",
         };
         sendMessage(redfox, event, message);
-    } else if (testCommand(redfox, query, "christmas", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "christmas", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         // TODO: update
         let yr = new Date().getFullYear();
@@ -6326,7 +6326,7 @@ async function ai(redfox, event) {
             body: "There's " + days + "days " + hours + "hours " + minutes + "minutes and " + seconds + "seconds before Christmas.",
         };
         sendMessage(redfox, event, message);
-    } else if (testCommand(redfox, query, "verse--random", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "verse--random", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("http://labs.bible.org/api/?passage=random&type=json").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
@@ -6336,7 +6336,7 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, result);
         });
-    } else if (testCommand(redfox, query, "verse--today", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "verse--today", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://labs.bible.org/api/?passage=votd&type=json").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
@@ -6346,7 +6346,7 @@ async function ai(redfox, event) {
             }
             sendMessage(redfox, event, result);
         });
-    } else if (testCommand(redfox, query, "verse", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "verse", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6364,21 +6364,21 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, result);
             });
         }
-    } else if (testCommand(redfox, query, "state--refresh", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "state--refresh", event.senderID, "owner", true)) {
         fs.writeFileSync(__dirname + "/data/cookies/" + redfox.getCurrentUserID() + ".bin", getAppState(redfox), "utf8");
         utils.log("cookie_state synchronized");
         sendMessage(redfox, event, "The AppState refreshed.");
-    } else if (testCommand(redfox, query, "state--save", event.senderID, "owner", true)) {
+    } else if (testCommand(redfox, event, query, "state--save", event.senderID, "owner", true)) {
         saveState();
         sendMessage(redfox, event, "The state have saved successfully.");
-    } else if (testCommand(redfox, query, "test", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "test", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (crashes > 0) {
             sendMessage(redfox, event, utils.formatOutput("Crash", [crashes + " uncaught exception "], "project-orion"));
         } else {
             sendMessage(redfox, event, "It seems like everything is normal.");
         }
-    } else if (testCommand(redfox, query, "setNickname--random", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "setNickname--random", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
@@ -6386,7 +6386,7 @@ async function ai(redfox, event) {
                 if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             });
         });
-    } else if (testCommand(redfox, query, "coinflip", event.senderID, "user")) {
+    } else if (testCommand(redfox, event, query, "coinflip", event.senderID, "user")) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6434,7 +6434,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: coinflip type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip heads");
             }
         }
-    } else if (testCommand(redfox, query, "quiz", event.senderID, "user", true)) {
+    } else if (testCommand(redfox, event, query, "quiz", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         const picker = Math.floor(Math.random() * quiz.length);
         let construct = quiz[picker].question + "\n";
@@ -6473,7 +6473,7 @@ async function ai(redfox, event) {
                 }
             }
         });
-    } else if (testCommand(redfox, query, "setNickname", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "setNickname", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6484,7 +6484,7 @@ async function ai(redfox, event) {
                 if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
             });
         }
-    } else if (testCommand(redfox, query, "setBirthday", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "setBirthday", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6503,7 +6503,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "setTimezone", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "setTimezone", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6522,7 +6522,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "setAddress", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "setAddress", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6541,7 +6541,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "setBio", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "setBio", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6556,7 +6556,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "setUsername", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "setUsername", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -6574,7 +6574,7 @@ async function ai(redfox, event) {
                 }
             });
         }
-    } else if (testCommand(redfox, query, "setGender", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "setGender", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -9585,32 +9585,32 @@ function isJson(str) {
     }
 }
 
-function testCommand(redfox, message, prefix, senderID, permission, regex) {
+function testCommand(redfox, event, message, prefix, senderID, permission, regex) {
     if (!permission) permission = "user";
     if (!regex) regex = false;
 
     prefix = prefix.toLowerCase().replace("--", " --");
-    console.log(message + " " + prefix)
     if (!regex) regex = false;
 
     if (settings.shared["block_cmd"] && settings.shared["block_cmd"].includes(prefix)) return false;
 
     if (regex) {
-        if (prefix == message) return checkCmdPermission(redfox, permission, senderID);
+        if (prefix == message) return checkCmdPermission(redfox, event, permission, senderID);
         return false;
     }
 
     const regExp = new RegExp("(^" + prefix + "$|^" + prefix + "\\s)");
-    if (regExp.test(message)) return checkCmdPermission(redfox, permission, senderID);
+    if (regExp.test(message)) return checkCmdPermission(redfox, event, permission, senderID);
     return false;
 }
 
-function checkCmdPermission(redfox, permission, senderID) {
+function checkCmdPermission(redfox, event, permission, senderID) {
     if (permission != "user") {
         if (permission == "root") {
             if (!isMyId(senderID)) {
                 // deny access to root user if the id did not match
                 utils.log("access_denied root " + senderID);
+                sendMessage(redfox, event, "error: you cannot perform this operation unless you are root.");
                 return false;
             }
             utils.log("access_granted root " + senderID);
@@ -9621,11 +9621,13 @@ function checkCmdPermission(redfox, permission, senderID) {
                     // check if the account owner is the sender and
                     // also verify if the sender is admin if not false
                     utils.log("access_denied user is not admin " + senderID);
+                    sendMessage(redfox, event, "error: you cannot perform this operation unless you are admin.");
                     return false;
                 }
                 if (users.admin.includes(senderID) && redfox.getCurrentUserID() == process.env.ROOT) {
                     // prevent admins from accessing the control of the root account
                     utils.log("access_denied access to root " + senderID);
+                    sendMessage(redfox, event, "error: you cannot perform this operation unless you are root.");
                     return false;
                 }
                 utils.log("access_granted admin " + senderID);
@@ -9638,6 +9640,7 @@ function checkCmdPermission(redfox, permission, senderID) {
                 // check if the account owner is the sender and
                 // also verify if the sender is admin if not false
                 utils.log("access_denied user is not admin " + senderID);
+                sendMessage(redfox, event, "error: you cannot perform this operation unless you are admin.");
                 return false;
             }
         }
