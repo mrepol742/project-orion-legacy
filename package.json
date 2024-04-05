@@ -1,7 +1,7 @@
 {
     "name": "project-orion",
     "version": "9.1.0",
-    "description": "A Chatbot thats trained to understand and respond to a wide range of commands and requests. Providing a valuable service that poeple find useful. Strive to create a platform that is easy to use and provides helpful features that make poeple's lives easier.",
+    "description": "Meet the lightning-fast Facebook Messenger chatbot, seamlessly managing multiple accounts with access to 271 commands. With distinct privileges for admins, owners, roots, and users, it's the lightweight solution for efficient and personalized interactions.",
     "main": "index.js",
     "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",

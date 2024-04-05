@@ -31,6 +31,8 @@ const fileNames = [
     'getProjectTotalSize',
     'getTimestamp',
     'getUserProfile',
+    'generatePoster',
+    'downloadFile',
     'isBlockedSentence',
     'isNumeric',
     'log',

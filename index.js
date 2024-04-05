@@ -1432,7 +1432,7 @@ function main(fca_state, login, cb) {
 
                                 let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
                                 downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
-                                    redfox.generatePoster(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member").then(
+                                    utils.generatePoster(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member").then(
                                         (data) => {
                                             let message = {
                                                 body: gret,
@@ -1524,7 +1524,7 @@ function main(fca_state, login, cb) {
                                             let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
                                             downloadFile(getProfilePic(id), dirp).then(async (response) => {
 
-                                                redfox.generatePoster(dirp, "Sayonara", data[id].name, "may the force be with you :(").then(
+                                                utils.generatePoster(dirp, "Sayonara", data[id].name, "may the force be with you :(").then(
                                                     (data) => {
 
                                                         let message = {

@@ -1,31 +1,35 @@
 # project-orion [![Project Orion CI](https://github.com/mrepol742/project-orion/actions/workflows/npm.yml/badge.svg)](https://github.com/mrepol742/project-orion/actions/workflows/npm.yml)
 
-<img src="https://mrepol742.github.io/images/orion-banner.png" align="right" width="500px"/>
+<img src="https://mrepol742.github.io/images/orion-banner.png" align="right" width="300px"/>
 
-Meet my lightning-fast Facebook Messenger chatbot, seamlessly managing multiple accounts with access to 271 commands. With distinct privileges for admins, owners, roots, and users, it's the lightweight solution for efficient and personalized interactions.
+Meet the lightning-fast Facebook Messenger chatbot, seamlessly managing multiple accounts with access to 271 commands and more.
 
 ## Pre-requisites
 - Install [Node.js](https://nodejs.org/en/) version 20.x.x
 
 ## Getting started
-- Fork the repository
-Click https://github.com/mrepol742/project-orion/fork
+- Fork the repository  <br>
+  https://github.com/mrepol742/project-orion/fork
 - Clone fork the repository
-```
-_> using https
-git clone https://github.com/<your-username>/project-orion
-
-_> using ssh
-git clone git@github.com:<your-username>/project-orion
-```
+  ```
+  # using https
+  git clone https://github.com/<your-username>/project-orion
+  
+  # using ssh
+  git clone git@github.com:<your-username>/project-orion
+  ```
 - Install dependencies
-```
-cd project-orion && npm i
-```
+  ```
+  cd project-orion && npm i
+  ```
 - Run the project
-```
-npm run start
-```
+  ```
+  npm run start
+  ```
+
+
+## Contribute
+Code contributions are welcome! Please commit any pull requests against the master branch. Security audits and feedback are welcome. Please open an issue or email us privately if the report is sensitive in nature.
 
 ## License
 ```
