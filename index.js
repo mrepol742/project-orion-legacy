@@ -919,18 +919,10 @@ function main(fca_state, login, cb) {
                 fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(redfox), "utf8");
                 utils.log("cookie_state " + login + " synchronized");
                 isAppState = false;
-                if (typeof cb === "function") {
-                    cb(false);
-                }
+                if (typeof cb === "function") cb(false);
             }
 
             if (process.env.LOCK_THREAD_ID && event.threadID != process.env.LOCK_THREAD_ID) return;
-
-            // check if thread lock exists and is not equal to current bot id
-            // then return
-            if (settingsThread[event.threadID] && settingsThread[event.threadID].lock && settingsThread[event.threadID].lock != redfox.getCurrentUserID()) {
-                return;
-            }
 
             // if the current bot id is not the root user
             if (!isMyId(redfox.getCurrentUserID())) {
@@ -951,8 +943,10 @@ function main(fca_state, login, cb) {
                     utils.log("thread_lock " + event.threadID + " to " + redfox.getCurrentUserID());
                 }
 
+                // check if thread lock exists and is not equal to current bot id
+                // then return
                 const threadLock = settingsThread[event.threadID].lock;
-                if (threadLock != redfox.getCurrentUserID()) {
+                if (threadLock && threadLock != redfox.getCurrentUserID()) {
                     if (accounts.includes(threadLock)) return;
                     for (let threads in settingsThread) {
                         if (settingsThread[threads].lock && settingsThread[threads].lock == threadLock) {
