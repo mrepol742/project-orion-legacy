@@ -6,8 +6,10 @@
     "private": true,
     "homepage": "https://mrepol742.github.io/project-orion/",
     "scripts": {
-        "setup": "npm install && apt install traceroute cowsay figlet neofetch gedit",
+        "setup": "npm i -include=dev",
+        "setup_extra": "apt install traceroute cowsay figlet neofetch gedit",
         "start": "clear && while [ true ]; do node index.js ; done",
+        "start_win": "node index.js",
         "eslint": "./node_modules/eslint/bin/eslint.js",
         "dev": "nodemon index.js"
     },

@@ -21,7 +21,7 @@ const log = require("./log");
 module.exports = () => {
     const watcher = chokidar.watch('./data/cookies');
     log("watching_cookie please add your app state to");
-    log("watching_cookies /data/cookies/appstate.bin");
+    log("watching_cookie /data/cookies/appstate.bin");
     watcher
     .on('add', (path) => {
         if (path.endsWith(".bin")) {
