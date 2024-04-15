@@ -646,6 +646,7 @@ const pictographic = /\p{Extended_Pictographic}/gu;
 const latinC = /[^a-z0-9-\-\s]/gi;
 const normalize = /[\u0300-\u036f|\u00b4|\u0060|\u005e|\u007e]/g;
 const port = process.env.PORT;
+let PROCESS_APP_INSTANCE_UID;
 
 const app = express();
 app.use("*", cors());
@@ -710,6 +711,11 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
     if (process.env.APP_STATE) {
         const app_state_env = JSON.parse(process.env.APP_STATE);
         const login_from_env = getUserIdFromAppState(app_state_env);
+        if (!process.env.ROOT) {
+            processEnv.ROOT = login_from_env;
+            utils.log("root_account " + login_from_env);
+        }
+        accounts.push(login_from_env);
         if (!settings[login_from_env]) {
             settings[login_from_env] = settings.default;
         }
@@ -720,6 +726,7 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
             login_from_env
         );
         hasAppState = true;
+        PROCESS_APP_INSTANCE_UID = login_from_env;
     }
     if (files.length > 0) {
         for (let appStates in files) {
@@ -729,34 +736,36 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
                     processEnv.ROOT = login;
                     utils.log("root_account " + login);
                 }
-                accounts.push(login);
-                let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".bin", "utf8");
-                if (!/^\d+$/.test(login)) {
-                    unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
-                }
-                if (state.includes("facebook.com") || state.includes("messenger.com")) {
-                    const login_state = JSON.parse(state);
-                    login = getUserIdFromAppState(login_state);
-                    if (!settings[login]) {
-                        settings[login] = settings.default;
+                if (!accounts.includes(login)) {
+                    accounts.push(login);
+                    let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".bin", "utf8");
+                    if (!/^\d+$/.test(login)) {
+                        unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
                     }
-                    main(
-                        {
-                            appState: login_state,
-                        },
-                        login
-                    );
-                } else {
-                    try {
-                        let key = JSON.parse(fs.readFileSync(__dirname + "/data/cookies/" + login + ".key", "utf8"));
+                    if (state.includes("facebook.com") || state.includes("messenger.com")) {
+                        const login_state = JSON.parse(state);
+                        login = getUserIdFromAppState(login_state);
+                        if (!settings[login]) {
+                            settings[login] = settings.default;
+                        }
                         main(
                             {
-                                appState: JSON.parse(utils.decrypt(state, key[0], key[1])),
+                                appState: login_state,
                             },
                             login
                         );
-                    } catch (err1) {
-                        handleError({ stacktrace: err1 });
+                    } else {
+                        try {
+                            let key = JSON.parse(fs.readFileSync(__dirname + "/data/cookies/" + login + ".key", "utf8"));
+                            main(
+                                {
+                                    appState: JSON.parse(utils.decrypt(state, key[0], key[1])),
+                                },
+                                login
+                            );
+                        } catch (err1) {
+                            handleError({ stacktrace: err1 });
+                        }
                     }
                 }
             }
@@ -836,14 +845,16 @@ function main(fca_state, login, cb) {
             utils.log("owner_" + login + " has been set to " + process.env.ROOT);
         }
 
-        task(
-            function () {
-                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(redfox), "utf8");
-                utils.log("cookie_state " + login + " synchronized");
-            },
-            Math.floor(1800000 * Math.random() + 1200000)
-        );
-        utils.log("task_login_state " + login + " initiated");
+        if (PROCESS_APP_INSTANCE_UID != login) {
+            task(
+                function () {
+                    fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(redfox), "utf8");
+                    utils.log("cookie_state " + login + " synchronized");
+                },
+                Math.floor(1800000 * Math.random() + 1200000)
+            );
+            utils.log("task_login_state " + login + " initiated");
+        }
 
         task(
             function () {
@@ -931,7 +942,7 @@ function main(fca_state, login, cb) {
                 return;
             }
 
-            if (isAppState) {
+            if (isAppState && PROCESS_APP_INSTANCE_UID != login) {
                 fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(redfox), "utf8");
                 utils.log("cookie_state " + login + " synchronized");
                 isAppState = false;
