@@ -90,7 +90,18 @@ Meet the lightning-fast Facebook Messenger chatbot, seamlessly managing multiple
   npm run eslint ./
   ```
 
-
+## Common Problems & Fixes
+- Module not found
+  ```sh
+  # run 
+  npm run setup
+  ```
+- Problems related to .env
+  ```sh
+  rm -rf .env
+  # just delete the .env
+  # and start again
+  ```
 ## Contribute
 Code contributions are welcome! Please commit any pull requests against the master branch. Security audits and feedback are welcome. Please open an issue or email us privately if the report is sensitive in nature.
 

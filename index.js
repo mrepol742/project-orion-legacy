@@ -711,7 +711,7 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
     if (process.env.APP_STATE) {
         const app_state_env = JSON.parse(process.env.APP_STATE);
         const login_from_env = getUserIdFromAppState(app_state_env);
-        if (!process.env.ROOT) {
+        if (!process.env.ROOT && !processEnv.ROOT) {
             processEnv.ROOT = login_from_env;
             utils.log("root_account " + login_from_env);
         }
@@ -732,7 +732,7 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
         for (let appStates in files) {
             if (files[appStates].endsWith(".bin")) {
                 let login = files[appStates].replace(".bin", "");
-                if (!process.env.ROOT) {
+                if (!process.env.ROOT && !processEnv.ROOT) {
                     processEnv.ROOT = login;
                     utils.log("root_account " + login);
                 }
