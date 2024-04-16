@@ -4,6 +4,7 @@
 /build/*
 /log/*
 /data/*
+/src/.cmd/*
 .env
 .env.backup
 .env.production

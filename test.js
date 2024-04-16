@@ -1,3 +1,29 @@
-const generatePoster = require("./src/generatePoster");
+const { Innertube, UniversalCache, Utils } = require("youtubei.js");
+const fs = require("fs");
 
-generatePoster("null", "null", "null")
+async function main() {
+const yt = await Innertube.create({ cache: new UniversalCache(false), generate_session_locally: true });
+const search = await yt.music.search("in the end ", { type: "song" });
+
+let stringBuilder = "";
+let thumbnails = [];
+let time =" utils.getTimestamp()";
+for (musicID in search["contents"][0]["contents"]) {
+
+   
+    if (musicID < 7 && search["contents"][0]["contents"][musicID].type == "MusicResponsiveListItem") {
+        
+        stringBuilder += (parseInt(musicID) + 1) + ". " + search["contents"][0]["contents"][musicID].title;
+        stringBuilder += "\n" + search["contents"][0]["contents"][musicID].duration.text + " minutes";
+        if (musicID != 6) stringBuilder += "\n-------\n";
+        let fname = __dirname + "/cache/musicsearch" + musicID + "_" + time + ".png";
+     
+    }
+    
+}
+
+
+    console.log(stringBuilder)
+}
+
+main();

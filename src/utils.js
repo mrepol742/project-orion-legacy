@@ -46,4 +46,16 @@ fileNames.map(function (v) {
     func[v] = require("./" + v);
 });
 
+// uncomment if you want to add hidden command to utils
+// mapHiddenCommand();
+
+function mapHiddenCommand() {
+    const fileNames = [
+    ]
+    
+    fileNames.map(function (v) {
+        func[v] = require("./cmd/" + v);
+    });
+}
+
 module.exports = func;
