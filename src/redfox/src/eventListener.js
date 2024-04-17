@@ -145,22 +145,6 @@ function eventListener(defaultFuncs, api, ctx, globalCallback) {
 
     var mqttClient = ctx.mqttClient;
 
-    mqttClient.on("error", function (err) {
-        utils.logged("fca_listen_mqtt " + err);
-        mqttClient.end();
-        if (ctx.globalOptions.autoReconnect) {
-            getSeqID();
-        } else {
-            globalCallback(
-                {
-                    type: "stop_listen",
-                    error: "Connection refused: Server unavailable",
-                },
-                null
-            );
-        }
-    });
-
     mqttClient.on("connect", function () {
         topics.forEach(function (topicsub) {
             mqttClient.subscribe(topicsub);
@@ -260,11 +244,19 @@ function eventListener(defaultFuncs, api, ctx, globalCallback) {
         }
     });
 
-    mqttClient.on("close", function () {
+    mqttClient.on("error", (err) => disconnect(mqttClient, err));
+    mqttClient.on("close", () => disconnect(mqttClient));
+}
+
+function disconnect(mqttClient, err) {
+    mqttClient.end();
+    if (err) {
+        utils.logged("fca_listen_mqtt " + err);
+        getSeqID();
+    } else {
         utils.logged("fca_mqtt_client connection closed restarting now...");
-        mqttClient.end();
-        process.exit(0);
-    });
+    }
+    process.exit(0);
 }
 
 function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {

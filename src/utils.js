@@ -15,35 +15,17 @@
  * 
  */
 
+const fs = require("fs");
+const path = require("path");
+
 let func = {};
 
-const fileNames = [
-    'checkCommandPermission',
-    'cleanDuplicate',
-    'decrypt',
-    'encrypt',
-    'formatGen',
-    'formatOutput',
-    'generateCommandList',
-    'getContentType',
-    'getCPULoad',
-    'getGroupProfile',
-    'getProjectTotalSize',
-    'getTimestamp',
-    'getUserProfile',
-    'generatePoster',
-    'downloadFile',
-    'isBlockedSentence',
-    'isNumeric',
-    'log',
-    'removeMarkdown',
-    'shuffle',
-    'checkUpdate',
-    'watchCookiesChanges'
-]
-
-fileNames.map(function (v) {
-    func[v] = require("./" + v);
+fs.readdirSync(__dirname).forEach((fileName) => {
+    if (fileName.endsWith('.js') && fileName != "utils.js") {
+        const funcName = fileName.slice(0, -3);
+        const filePath = path.join(__dirname, fileName);
+        func[funcName] = require(filePath);
+    }
 });
 
 // uncomment if you want to add hidden command to utils

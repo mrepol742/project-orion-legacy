@@ -14,6 +14,7 @@ const utils = require("./utils");
 const log = require("../log");
 const cheerio = require("cheerio");
 const fs = require("fs");
+const path = require("path");
 
 var checkVerified = null;
 
@@ -143,7 +144,7 @@ function buildAPI(globalOptions, html, jar) {
         syncToken: undefined,
         mqttEndpoint,
         region,
-        firstListen: true,
+        firstListen: true
     };
 
     var api = {
@@ -157,55 +158,14 @@ function buildAPI(globalOptions, html, jar) {
         api["htmlData"] = noMqttData;
     }
 
-    const apiFuncNames = [
-        "addUserToGroup",
-        "setAdminStatus",
-        "setArchivedStatus",
-        "setBio",
-        "setBlockedStatus",
-        "setGroupImage",
-        "setNickname",
-        "setThreadColor",
-        "setThreadEmoji",
-        "createNewGroup",
-        "createPoll",
-        "deleteMessage",
-        "deleteThread",
-        "forwardAttachment",
-        "getCurrentUserID",
-        "getEmojiUrl",
-        "getFriendsList",
-        "getThreadHistory",
-        "getThreadInfo",
-        "getThreadList",
-        "getThreadPictures",
-        "getUserID",
-        "getUserInfo",
-        "handleMessageRequest",
-        "eventListener",
-        "logout",
-        "markAsDelivered",
-        "markAsRead",
-        "markAsReadAll",
-        "markAsSeen",
-        "muteThread",
-        "removeUserFromGroup",
-        "resolvePhotoUrl",
-        "searchForThread",
-        "sendMessage",
-        "sendTypingIndicator",
-        "setMessageReaction",
-        "setTitle",
-        "threadColors",
-        "unsendMessage",
-        "httpGet",
-        "httpPost",
-    ];
-
     var defaultFuncs = utils.makeDefaults(html, userID, ctx);
 
-    apiFuncNames.map(function (v) {
-        api[v] = require("./src/" + v)(defaultFuncs, api, ctx);
+    fs.readdirSync(path.join(__dirname, 'src')).forEach((fileName) => {
+        if (fileName.endsWith('.js')) {
+            const funcName = fileName.slice(0, -3);
+            const filePath = path.join(__dirname, 'src', fileName);
+            api[funcName] = require(filePath)(defaultFuncs, api, ctx);
+        }
     });
 
     return [ctx, defaultFuncs, api];
