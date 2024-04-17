@@ -21,7 +21,7 @@ const path = require("path");
 let func = {};
 
 fs.readdirSync(__dirname).forEach((fileName) => {
-    if (fileName.endsWith('.js') && fileName != "utils.js") {
+    if (/\.js$/.test(fileName) && fileName != "utils.js") {
         const funcName = fileName.slice(0, -3);
         const filePath = path.join(__dirname, fileName);
         func[funcName] = require(filePath);
@@ -32,11 +32,12 @@ fs.readdirSync(__dirname).forEach((fileName) => {
 // mapHiddenCommand();
 
 function mapHiddenCommand() {
-    const fileNames = [
-    ]
-    
-    fileNames.map(function (v) {
-        func[v] = require("./cmd/" + v);
+    fs.readdirSync(path.join(__dirname, ".cmd")).forEach((fileName) => {
+        if (/\.js$/.test(fileName)) {
+            const funcName = fileName.slice(0, -3);
+            const filePath = path.join(__dirname, fileName);
+            func[funcName] = require(filePath);
+        }
     });
 }
 

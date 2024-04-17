@@ -161,7 +161,7 @@ function buildAPI(globalOptions, html, jar) {
     var defaultFuncs = utils.makeDefaults(html, userID, ctx);
 
     fs.readdirSync(path.join(__dirname, 'src')).forEach((fileName) => {
-        if (fileName.endsWith('.js')) {
+        if (/\.js$/.test(fileName)) {
             const funcName = fileName.slice(0, -3);
             const filePath = path.join(__dirname, 'src', fileName);
             api[funcName] = require(filePath)(defaultFuncs, api, ctx);

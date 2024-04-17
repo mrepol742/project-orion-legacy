@@ -32,7 +32,7 @@ module.exports = (data) => {
             console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", d.join(" "));
         }
     } else {
-        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", data);
+        console.log("\x1b[36m[", getCurrentTime(), "]\x1b[0m", JSON.stringify(data));
     }
 }
 

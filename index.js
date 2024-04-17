@@ -191,7 +191,23 @@ app.listen(port, () => {
 if (!process.env.DELETE_CACHE_ON_START || process.env.DELETE_CACHE_ON_START === "true") {
     deleteCacheData(true);
 }
-utils.checkUpdate(process.env.npm_package_version);
+
+utils.checkUpdate(process.env.npm_package_version, function (err, isLatest, response) {
+    if (err) return utils.log(err);
+    if (isLatest) {
+        log("check_update " + response.data.version);
+        log("check_update https://github.com/mrepol742/project-orion/");
+        log("check_update please update to have all enchancements");
+        if (!process.env.AUTO_PULL_UPDATE && process.env.AUTO_PULL_UPDATE === "true") {
+            exec("git pull", function (err, stdout, stderr) {
+                utils.log(stdout + "\n\n" + stderr);
+                process.exit(0);
+            });
+        }
+    } else {
+        log("check_update you are already using the latest version");
+    }
+});
 
 /*
  * PROCESS
@@ -300,7 +316,6 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
         }
     } else if (!hasAppState) {
         utils.log("no_account No Account found");
-        utils.watchCookiesChanges();
     }
 });
 
@@ -361,7 +376,7 @@ function main(fca_state, login, cb) {
             }
 
             if (typeof cb === "function") return cb(true)
-            if (accounts.length == 0) utils.logged("no_acount_found");
+            if (accounts.length == 0) utils.log("no_acount_found");
             return;
         }
 
@@ -466,7 +481,7 @@ function main(fca_state, login, cb) {
                 }
 
                 if (typeof cb === "function") return cb(true);
-                if (accounts.length == 0) utils.watchCookiesChanges();
+                if (accounts.length == 0) utils.log("no_acount_found");
                 return;
             }
 
@@ -1836,7 +1851,7 @@ async function ai(redfox, event) {
             if (welCC.startsWith("How ")) {
                 utils.getProfile(users, event.senderID, async function (name) {
                     let aa = "";
-                    if (name.firstName != undefined) {
+                    if (!name) {
                         aa += "Hello " + name.firstName + ". ";
                     }
                     aa += welCC;
@@ -2321,7 +2336,7 @@ async function ai(redfox, event) {
         for (let owner in owners) {
             utils.getProfile(users, owners[owner], async function (name) {
                 construct += "│\n";
-                if (name.name) {
+                if (name) {
                     construct += "│   ⦿ Name: " + name.name + "\n";
                 }
                 construct += "│   ⦿ uid: " + owners[owner] + "\n";
@@ -2335,7 +2350,7 @@ async function ai(redfox, event) {
         for (let account in accounts) {
             utils.getProfile(users, accounts[account], async function (name) {
                 construct += "│\n";
-                if (name.name != undefined) {
+                if (!name) {
                     construct += "│   ⦿ Name: " + name.name + "\n│   ⦿ uid: " + accounts[account];
                 } else {
                     construct += "│   ⦿ uid: " + accounts[account];
@@ -3915,7 +3930,7 @@ async function ai(redfox, event) {
             data.shift();
             utils.getProfile(users, event.senderID, async function (name) {
                 let nR = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
-                if (name.name != undefined) {
+                if (!name) {
                     nR += "│  name: " + name.name + "\n";
                 }
                 nR += `│  uid: ` + event.senderID + `\n│  tid: ` + event.threadID + `\n│  mid: ` + event.messageID + `\n│\n└─ @ỹ@cmd-prj- orion`;
@@ -4229,15 +4244,11 @@ async function ai(redfox, event) {
 
                         lead.sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
                         let construct = [];
-                        let totalL = lead.length;
-                        if (totalL >= 31) {
-                            totalL = 31;
-                        }
                         for (let i1 in lead) {
-                            if (!accounts.includes(lead[i1 - 1].id)) {
-                                const money = formatDecNum((lead[i1 - 1].balance / 1000) * 0.007);
+                            if (!accounts.includes(lead[i1].id) && i1 <= 14) {
+                                const money = formatDecNum((lead[i1].balance / 1000) * 0.007);
                                 if (money != 0.0) {
-                                    construct.push(money + "$ " + lead[i1 - 1].name);
+                                    construct.push(money + "$ " + lead[i1].name);
                                 }
                             }
                         }
@@ -4281,7 +4292,9 @@ async function ai(redfox, event) {
 
             let construct = [];
             for (let i1 in lead) {
-                construct.push(lead[i1 - 1].score + " points " + lead[i1 - 1].name);
+                if (i1 <= 14) {
+                construct.push(lead[i1].score + " points " + lead[i1].name);
+                }
             }
             sendMessage(redfox, event, utils.formatOutput("Top User Quiz", construct, "project-orion"));
     } else if (testCommand(redfox, event, query, "top--global", event.senderID, "user", true)) {
@@ -4313,10 +4326,10 @@ async function ai(redfox, event) {
 
                 let construct = [];
                 for (let i1 in lead) {
-                    if (!accounts.includes(lead[i1 - 1].id)) {
-                        const money = formatDecNum((lead[i1 - 1].balance / 1000) * 0.007);
+                    if (!accounts.includes(lead[i1].id) && i1 <= 14) {
+                        const money = formatDecNum((lead[i1].balance / 1000) * 0.007);
                         if (money != 0.0) {
-                            construct.push(money + "$ " + lead[i1 - 1].name);
+                            construct.push(money + "$ " + lead[i1].name);
                         }
                     }
                 }
@@ -4326,7 +4339,7 @@ async function ai(redfox, event) {
     } else if (testCommand(redfox, event, query, "balance", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         utils.getProfile(users, event.senderID, async function (name) {
-            if (!name.name) {
+            if (!name) {
                 return sendMessage(redfox, event, "User not found!");
             }
             if (event.senderID != process.env.ROOT) {
@@ -4361,7 +4374,7 @@ async function ai(redfox, event) {
                     removeBalance(name, 1000);
                 }
                 utils.getProfile(users, id, async function (name) {
-                    if (!name.name) {
+                    if (!name) {
                         return sendMessage(redfox, event, "User not found!");
                     }
                     if (!name.balance) {
@@ -5864,7 +5877,7 @@ async function ai(redfox, event) {
         }
     } else if (testCommand(redfox, event, query, "time", event.senderID, "user", true)) {
         utils.getProfile(users, event.senderID, async function (name) {
-            if (name.firstName != undefined && name.timezone) {
+            if (!name && name.timezone) {
                 return sendMessage(redfox, event, "It's " + getCurrentDateAndTime(name.timezone));
             }
             sendMessage(redfox, event, "It's " + getCurrentDateAndTime("Asia/Manila"));
@@ -6066,7 +6079,7 @@ async function ai(redfox, event) {
             data.shift();
             let body = data.join(" ");
             utils.getProfile(users, event.senderID, async function (name) {
-                if (name.firstName != undefined) {
+                if (!name) {
                     if (utils.isValidDateFormat(body)) {
                         name["birthday"] = body;
                         sendMessage(redfox, event, "Hello " + name.firstName + " you have successfully set your birthday to " + body + ".");
@@ -6085,7 +6098,7 @@ async function ai(redfox, event) {
             data.shift();
             let body = data.join(" ");
             utils.getProfile(users, event.senderID, async function (name) {
-                if (name.firstName != undefined) {
+                if (!name) {
                     if (isValidTimeZone(body)) {
                         name["timezone"] = body;
                         sendMessage(redfox, event, "Hello " + name.firstName + " you have successfully set your timezone to " + body + ".");
@@ -6104,7 +6117,7 @@ async function ai(redfox, event) {
             data.shift();
             let body = data.join(" ");
             utils.getProfile(users, event.senderID, async function (name) {
-                if (name.firstName != undefined) {
+                if (!name) {
                     if (body.length > 10) {
                         name["location"] = body;
                         sendMessage(redfox, event, "Hello " + name.firstName + " you have successfully set your address to " + body + ".");
@@ -6123,7 +6136,7 @@ async function ai(redfox, event) {
             data.shift();
             let body = data.join(" ");
             utils.getProfile(users, event.senderID, async function (name) {
-                if (name.firstName != undefined) {
+                if (!name) {
                     name["bio"] = body;
                     sendMessage(redfox, event, "Hello " + name.firstName + " you have successfully set your bio.");
                 }
@@ -6138,7 +6151,7 @@ async function ai(redfox, event) {
             data.shift();
             let body = data.join(" ");
             utils.getProfile(users, event.senderID, async function (name) {
-                if (name.firstName != undefined) {
+                if (!name) {
                     if (body.startsWith("@")) {
                         body = body.slice(1);
                     }
@@ -6156,7 +6169,7 @@ async function ai(redfox, event) {
             data.shift();
             let body = data.join(" ").toLowerCase();
             utils.getProfile(users, event.senderID, async function (name) {
-                if (name.firstName != undefined) {
+                if (!name) {
                     if (body == "male" || body == "female") {
                         name["gender"] = getGenderCode(body);
                         sendMessage(redfox, event, "Hello " + name.firstName + " you have successfully set your gender to " + body + ".");
@@ -6235,7 +6248,7 @@ function someR(redfox, event, query) {
         reactMessage(redfox, event, ":love:");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good evening";
-            if (name.firstName != undefined) {
+            if (!name) {
                 construct += " " + name.firstName;
             }
             if (!isEvening()) {
@@ -6249,7 +6262,7 @@ function someR(redfox, event, query) {
         reactMessage(redfox, event, ":love:");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good morning";
-            if (name.firstName != undefined) {
+            if (!name) {
                 construct += " " + name.firstName;
             }
             if (!isMorning()) {
@@ -6263,7 +6276,7 @@ function someR(redfox, event, query) {
         reactMessage(redfox, event, ":love:");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good night";
-            if (name.firstName != undefined) {
+            if (!name) {
                 construct += " " + name.firstName;
             }
             if (!isNight()) {
@@ -6277,7 +6290,7 @@ function someR(redfox, event, query) {
         reactMessage(redfox, event, ":love:");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good afternon";
-            if (name.firstName != undefined) {
+            if (!name) {
                 construct += " " + name.firstName;
             }
             if (!isAfternoon()) {
@@ -6532,7 +6545,7 @@ function sendMessageErr(redfox, event, thread_id, message_id, id, err) {
     redfox.sendMessage(
         {
             body: updateFont(message, id, redfox.getCurrentUserID()),
-            url: "https://github.com/mrepol742/project-orion/issues/new",
+            url: errMM.url,
         },
         thread_id,
         (err, messageInfo) => {
@@ -7487,7 +7500,7 @@ async function blockUser(redfox, event, id) {
     if (event.isGroup) {
         utils.getProfile(users, id, async function (name) {
             let aa = "";
-            if (name.firstName != undefined) {
+            if (!name) {
                 aa += name.firstName;
             } else {
                 aa += "The user " + id;
@@ -7615,7 +7628,7 @@ async function addAdmin(redfox, event, id) {
         if (event.isGroup) {
             utils.getProfile(users, id, async function (name) {
                 let aa = "Sorry ";
-                if (name.firstName != undefined) {
+                if (!name) {
                     aa += name.firstName;
                 } else {
                     aa += id;
@@ -7632,7 +7645,7 @@ async function addAdmin(redfox, event, id) {
         if (event.isGroup) {
             utils.getProfile(users, id, async function (name) {
                 let aa = "Sorry ";
-                if (name.firstName != undefined) {
+                if (!name) {
                     aa += name.firstName;
                 } else {
                     aa += id;
@@ -7649,7 +7662,7 @@ async function addAdmin(redfox, event, id) {
         if (event.isGroup) {
             utils.getProfile(users, id, async function (name) {
                 let aa = "";
-                if (name.firstName != undefined) {
+                if (!name) {
                     aa += name.firstName;
                 } else {
                     aa += "The user " + id;
@@ -7666,7 +7679,7 @@ async function addAdmin(redfox, event, id) {
     if (event.isGroup) {
         utils.getProfile(users, id, async function (name) {
             let aa = "";
-            if (name.firstName != undefined) {
+            if (!name) {
                 aa += name.firstName;
             } else {
                 aa += "The user " + id;
@@ -8334,8 +8347,10 @@ async function sendMessageToAll(redfox, event) {
                 let threadID = list[tid].threadID;
                 if (threadID != ctid && !groups.blocked.includes(threadID) && !users.blocked.includes(threadID) && !users.bot.includes(threadID) && !users.muted.includes(threadID)) {
                     let nR = "⋆｡° Notification from \n│\n";
-                    if (name.name != undefined) {
+                    if (!name) {
                         nR += "│  name: " + name.name + "\n";
+                    } else {
+                        nR += "│  uid: " + event.senderID + "\n";
                     }
                     nR += `│\n└─ @ỹ@cmd-prj- orion`;
                     nR += "\n\n" + event.messageReply.body;
@@ -9310,7 +9325,7 @@ function handleError(err) {
     ct = ct.replace("__version__", process.env.npm_package_version);
     return {
         body: ct,
-        url: "https://github.com/mrepol742/project-orion/issues/new",
+        url: ("https://github.com/mrepol742/project-orion/issues/new?title=error%20" + eid),
     };
 }
 

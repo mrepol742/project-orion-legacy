@@ -17,7 +17,7 @@
 
 module.exports = (_list, id, cb) => {
     if (!_list.list.find((v) => id === v.id)) {
-        cb({ name: undefined });
+        cb(undefined);
     }
     _list.list.find((v) => {
         if (v.id == id) {

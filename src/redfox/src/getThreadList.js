@@ -1,4 +1,5 @@
 const utils = require("../utils");
+const ex_utils = require("../../utils");
 
 function createProfileUrl(url, username, id) {
     if (url) return url;
@@ -63,7 +64,7 @@ function formatParticipants(participants) {
                     isMessageBlockedByViewer: p.is_message_blocked_by_viewer, // true/false
                 };
             default:
-                utils.logged("fca_thread_list Found participant with unsupported typename." + JSON.stringify(p));
+                ex_utils.log("fca_thread_list Found participant with unsupported typename." + JSON.stringify(p));
                 return {
                     accountType: p["__typename"],
                     userID: utils.formatID(p.id.toString()),
