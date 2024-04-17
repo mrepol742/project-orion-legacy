@@ -1102,7 +1102,7 @@ function main(fca_state, login, cb) {
 
                                 updateUserData(data, event.author);
 
-                                utils.getGroupProfile(groups, event.threadID, async function (group) {
+                                utils.getProfile(groups, event.threadID, async function (group) {
                                     let msgs;
                                     if (group.name != null) {
                                         msgs = data[event.author]["firstName"] + " update the group name from `" + group.name + "` to `" + event.logMessageData.name + "`";
@@ -1142,7 +1142,7 @@ async function ai22(redfox, event, query) {
             if (quizData[q].messageID && event.messageReply.messageID == quizData[q].messageID) {
                 let rawUserAnswer = input;
                 let userAnswer = rawUserAnswer.replaceAll(" ", "").toLowerCase();
-                utils.getGroupProfile(groups, event.senderID, async function (name) {
+                utils.getProfile(users, event.senderID, async function (name) {
                     const points = Math.floor(Math.random() * 1500);
                     if (userAnswer == quizData[q].correctAnswer1 || userAnswer == quizData[q].correctAnswer) {
                         addBalance(name, points);
@@ -1160,7 +1160,7 @@ async function ai22(redfox, event, query) {
                         reactMessage(redfox, event, ":heart:");
                         emo.push(event.messageID);
                     }
-                    utils.getGroupProfile(groups, event.senderID, async function (name) {
+                    utils.getProfile(users, event.senderID, async function (name) {
                         if (!name.quiz_answered_correct) {
                             name["quiz_answered_correct"] = 1;
                         }
@@ -1177,7 +1177,7 @@ async function ai22(redfox, event, query) {
                         reactMessage(redfox, event, ":dislike:");
                         emo.push(event.messageID);
                     }
-                    utils.getGroupProfile(groups, event.senderID, async function (name) {
+                    utils.getProfile(users, event.senderID, async function (name) {
                         if (!name.quiz_answered_incorrect) {
                             name["quiz_answered_incorrect"] = 1;
                         }
@@ -1377,13 +1377,13 @@ async function ai22(redfox, event, query) {
             let transferTo = event.messageReply.senderID;
             if (/^\d+$/.test(data[2])) {
                 let amount = parseInt(data[2]);
-                utils.getGroupProfile(groups, event.senderID, async function (name) {
+                utils.getProfile(users, event.senderID, async function (name) {
                     if (!name.balance && event.senderID != process.env.ROOT) {
                         sendMessage(redfox, event, "You have 0 $ balance yet.");
                     } else if (amount + 500 > name.balance && event.senderID != process.env.ROOT) {
                         sendMessage(redfox, event, "You don't have enough balance!");
                     } else {
-                        utils.getGroupProfile(groups, transferTo, async function (name1) {
+                        utils.getProfile(users, transferTo, async function (name1) {
                             addBalance(name1, amount);
                         });
                         removeBalance(name, amount);
@@ -1398,7 +1398,7 @@ async function ai22(redfox, event, query) {
             }
         }
     } else if (testCommand(redfox, event, query, "add--instance", event.senderID, "user", true)) {
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             if (!name.balance) {
                 sendMessage(redfox, event, "You dont have enought balance to continue!");
             } else if (name.balance < 0) {
@@ -1483,11 +1483,11 @@ async function ai22(redfox, event, query) {
                                                 users.blocked = users.blocked.filter((item) => item !== login);
                                                 utils.log("rem_block_user " + login);
                                                 sendMessageOnly(redfox, event, "You've been unblocked!");
-                                                utils.getGroupProfile(groups, settings[login].owner, async function (name) {
+                                                utils.getProfile(users, settings[login].owner, async function (name) {
                                                     removeBalance(name, 3000);
                                                 });
                                                 if (event.senderID != process.env.ROOT) {
-                                                    utils.getGroupProfile(groups, event.senderID, async function (name) {
+                                                    utils.getProfile(users, event.senderID, async function (name) {
                                                         removeBalance(name, 1500);
                                                     });
                                                 }
@@ -1497,11 +1497,11 @@ async function ai22(redfox, event, query) {
                                                 users.bot = users.bot.filter((item) => item !== login);
                                                 utils.log("rem_block_bot " + login);
                                                 sendMessageOnly(redfox, event, "You've been unblocked!");
-                                                utils.getGroupProfile(groups, settings[login].owner, async function (name) {
+                                                utils.getProfile(users, settings[login].owner, async function (name) {
                                                     removeBalance(name, 6000);
                                                 });
                                                 if (event.senderID != process.env.ROOT) {
-                                                    utils.getGroupProfile(groups, event.senderID, async function (name) {
+                                                    utils.getProfile(users, event.senderID, async function (name) {
                                                         removeBalance(name, 3000);
                                                     });
                                                 }
@@ -1511,7 +1511,7 @@ async function ai22(redfox, event, query) {
                                                 users.admin = users.admin.filter((item) => item !== event.senderID);
                                                 utils.log("rem_sender_admin " + login);
                                                 sendMessage(redfox, event, "Your admin previliges has been revoke!");
-                                                utils.getGroupProfile(groups, event.senderID, async function (name) {
+                                                utils.getProfile(users, event.senderID, async function (name) {
                                                     addBalance(name, 2000);
                                                 });
                                             }
@@ -1520,7 +1520,7 @@ async function ai22(redfox, event, query) {
                                                 users.admin = users.admin.filter((item) => item !== login);
                                                 utils.log("rem_login_adminn " + login);
                                                 sendMessageOnly(redfox, event, "Your admin previliges has been revoke!");
-                                                utils.getGroupProfile(groups, event.senderID, async function (name) {
+                                                utils.getProfile(users, event.senderID, async function (name) {
                                                     addBalance(name, 2000);
                                                 });
                                             }
@@ -1834,7 +1834,7 @@ async function ai(redfox, event) {
         if (data.length < 2 || (findPr != false && input == findPr)) {
             let welCC = hey[Math.floor(Math.random() * hey.length)];
             if (welCC.startsWith("How ")) {
-                utils.getGroupProfile(groups, event.senderID, async function (name) {
+                utils.getProfile(users, event.senderID, async function (name) {
                     let aa = "";
                     if (name.firstName != undefined) {
                         aa += "Hello " + name.firstName + ". ";
@@ -1855,9 +1855,9 @@ async function ai(redfox, event) {
                 text = text.replace(findPr, "");
             }
 
-            utils.getGroupProfile(groups, event.senderID, async function (user) {
+            utils.getProfile(users, event.senderID, async function (user) {
                 if (event.isGroup) {
-                    utils.getGroupProfile(groups, event.threadID, async function (group) {
+                    utils.getProfile(users, event.threadID, async function (group) {
                         let respo = await aiResponse2(event, text, true, user, group, redfox.getCurrentUserID());
                         addBalance(user, respo.usage.total_tokens);
                         addToken(login, "gpt", respo);
@@ -2299,7 +2299,7 @@ async function ai(redfox, event) {
         if (users.admin.length == 0) return sendMessage(redfox, event, "Orion has no admin set yet!");
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (let admin in users.admin) {
-            utils.getGroupProfile(groups, users.admin[admin], async function (name) {
+            utils.getProfile(users, users.admin[admin], async function (name) {
                 construct += "│\n";
                 construct += "│   ⦿ Name: " + name.name + "\n";
                 construct += "│   ⦿ uid: " + users.admin[admin] + "\n";
@@ -2319,7 +2319,7 @@ async function ai(redfox, event) {
         }
         if (owners.length == 0) return sendMessage(redfox, event, "Orion has no owners yet!");
         for (let owner in owners) {
-            utils.getGroupProfile(groups, owners[owner], async function (name) {
+            utils.getProfile(users, owners[owner], async function (name) {
                 construct += "│\n";
                 if (name.name) {
                     construct += "│   ⦿ Name: " + name.name + "\n";
@@ -2333,7 +2333,7 @@ async function ai(redfox, event) {
         if (isGoingToFast(redfox, event)) return;
         let construct = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n";
         for (let account in accounts) {
-            utils.getGroupProfile(groups, accounts[account], async function (name) {
+            utils.getProfile(users, accounts[account], async function (name) {
                 construct += "│\n";
                 if (name.name != undefined) {
                     construct += "│   ⦿ Name: " + name.name + "\n│   ⦿ uid: " + accounts[account];
@@ -3913,7 +3913,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: sendReport text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sendReport There is a problem in ______ that cause ______.");
         } else {
             data.shift();
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 let nR = "⋆｡° ^@^C^A>^D^A^@^P^C^AL\n│\n";
                 if (name.name != undefined) {
                     nR += "│  name: " + name.name + "\n";
@@ -4196,7 +4196,7 @@ async function ai(redfox, event) {
         }
     } else if (testCommand(redfox, event, query, "top", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        utils.getGroupProfile(groups, event.senderID, async function (user) {
+        utils.getProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(redfox, event, "You have 0 $ balance yet.");
             } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
@@ -4250,7 +4250,6 @@ async function ai(redfox, event) {
         });
     } else if (testCommand(redfox, event, query, "top--quiz", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        utils.getGroupProfile(groups, event.senderID, async function (user) {
             let lead = [];
 
             if (users.list.length == 0) return sendMessage(redfox, event, "No users yet!");
@@ -4285,10 +4284,9 @@ async function ai(redfox, event) {
                 construct.push(lead[i1 - 1].score + " points " + lead[i1 - 1].name);
             }
             sendMessage(redfox, event, utils.formatOutput("Top User Quiz", construct, "project-orion"));
-        });
     } else if (testCommand(redfox, event, query, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        utils.getGroupProfile(groups, event.senderID, async function (user) {
+        utils.getProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(redfox, event, "You have 0 $ balance yet.");
             } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
@@ -4327,7 +4325,7 @@ async function ai(redfox, event) {
         });
     } else if (testCommand(redfox, event, query, "balance", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             if (!name.name) {
                 return sendMessage(redfox, event, "User not found!");
             }
@@ -4358,11 +4356,11 @@ async function ai(redfox, event) {
                     }
                 }
             }
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 if (id != process.env.ROOT) {
                     removeBalance(name, 1000);
                 }
-                utils.getGroupProfile(groups, id, async function (name) {
+                utils.getProfile(users, id, async function (name) {
                     if (!name.name) {
                         return sendMessage(redfox, event, "User not found!");
                     }
@@ -4694,14 +4692,14 @@ async function ai(redfox, event) {
             } else {
                 users.bot.push(id);
                 sendMessage(redfox, event, "Noted.");
-                utils.getGroupProfile(groups, event.senderID, async function (user) {
+                utils.getProfile(users, event.senderID, async function (user) {
                     addBalance(user, 4000);
                 });
             }
         }
         /*
     } else if (testCommand(redfox, event, query, "zzzzzzz", event.senderID, "root", true)) {
-        utils.getGroupProfile(groups, event.senderID, async function (user) {
+        utils.getProfile(users, event.senderID, async function (user) {
             if (!user.balance) {
                 user["balance"] = 99999999999999;
             }
@@ -4731,7 +4729,7 @@ async function ai(redfox, event) {
                     }
                 }
             }
-            utils.getGroupProfile(groups, id, async function (user) {
+            utils.getProfile(users, id, async function (user) {
                 if (!user.name) {
                     return sendMessage(redfox, event, "User not found!");
                 }
@@ -4945,7 +4943,7 @@ async function ai(redfox, event) {
                     return sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: add --token @mention" + "\n " + example[Math.floor(Math.random() * example.length)] + " addtoken @Zero Two");
                 }
             }
-            utils.getGroupProfile(groups, id, async function (user) {
+            utils.getProfile(users, id, async function (user) {
                 addBalance(user, 1500);
                 sendMessage(redfox, event, "Added 1500 tokens to the account holder.");
             });
@@ -5239,7 +5237,7 @@ async function ai(redfox, event) {
     } else if (testCommand(redfox, event, query, "tid", event.senderID, "user", true) || testCommand(redfox, event, query, "gid", event.senderID) || testCommand(redfox, event, query, "uid", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         if (event.type == "message" && groups.list.find((thread) => event.threadID === thread.id) && (query == "tid" || query == "gid")) {
-            utils.getGroupProfile(groups, event.threadID, async function (group) {
+            utils.getProfile(groups, event.threadID, async function (group) {
                 if (group.name != null) {
                     sendMessage(redfox, event, "The " + group.name + " guid is " + group.id);
                 } else {
@@ -5640,7 +5638,7 @@ async function ai(redfox, event) {
         }
     } else if (testCommand(redfox, event, query, "hanime", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
-        utils.getGroupProfile(groups, event.senderID, async function (user) {
+        utils.getProfile(users, event.senderID, async function (user) {
             if (!user.balance && event.senderID != process.env.ROOT) {
                 sendMessage(redfox, event, "You have 0 $ balance yet.");
             } else if (1000 > user.balance && event.senderID != process.env.ROOT) {
@@ -5865,7 +5863,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: time --timezone tmz" + "\n " + example[Math.floor(Math.random() * example.length)] + " time --timezone Asia/Manila");
         }
     } else if (testCommand(redfox, event, query, "time", event.senderID, "user", true)) {
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             if (name.firstName != undefined && name.timezone) {
                 return sendMessage(redfox, event, "It's " + getCurrentDateAndTime(name.timezone));
             }
@@ -5972,7 +5970,7 @@ async function ai(redfox, event) {
             if (/^\d+$/.test(data[0])) {
                 let points = parseInt(data[0]);
                 if (/^(head(s|)|tail(s|))$/.test(data[1])) {
-                    utils.getGroupProfile(groups, event.senderID, async function (name) {
+                    utils.getProfile(users, event.senderID, async function (name) {
                         if (!name.balance && event.senderID != process.env.ROOT) {
                             sendMessage(redfox, event, "You have 0 $ balance yet.");
                         } else if (points >= name.balance && event.senderID != process.env.ROOT) {
@@ -5996,7 +5994,7 @@ async function ai(redfox, event) {
                     sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: coinflip token type" + "\n " + example[Math.floor(Math.random() * example.length)] + " coinflip 100 heads");
                 }
             } else if (/^(head(s|)|tail(s|))$/.test(data[0])) {
-                utils.getGroupProfile(groups, event.senderID, async function (name) {
+                utils.getProfile(users, event.senderID, async function (name) {
                     if ((picker == 1 && /^head(s|)$/.test(data[0])) || (picker == 0 && /^tail(s|)$/.test(data[0]))) {
                         addBalance(name, 500);
                         sendMessage(redfox, event, "You win!");
@@ -6067,7 +6065,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (utils.isValidDateFormat(body)) {
                         name["birthday"] = body;
@@ -6086,7 +6084,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (isValidTimeZone(body)) {
                         name["timezone"] = body;
@@ -6105,7 +6103,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (body.length > 10) {
                         name["location"] = body;
@@ -6124,7 +6122,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     name["bio"] = body;
                     sendMessage(redfox, event, "Hello " + name.firstName + " you have successfully set your bio.");
@@ -6139,7 +6137,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ");
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (body.startsWith("@")) {
                         body = body.slice(1);
@@ -6157,7 +6155,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let body = data.join(" ").toLowerCase();
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 if (name.firstName != undefined) {
                     if (body == "male" || body == "female") {
                         name["gender"] = getGenderCode(body);
@@ -6235,7 +6233,7 @@ function reaction(redfox, event, query, input) {
 function someR(redfox, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
         reactMessage(redfox, event, ":love:");
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good evening";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6249,7 +6247,7 @@ function someR(redfox, event, query) {
         return true;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
         reactMessage(redfox, event, ":love:");
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good morning";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6263,7 +6261,7 @@ function someR(redfox, event, query) {
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night") || query == "konbanwa") {
         reactMessage(redfox, event, ":love:");
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good night";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6277,7 +6275,7 @@ function someR(redfox, event, query) {
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
         reactMessage(redfox, event, ":love:");
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good afternon";
             if (name.firstName != undefined) {
                 construct += " " + name.firstName;
@@ -6324,7 +6322,7 @@ async function sendMessage(redfox, event, message, thread_id, message_id, bn, vo
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != redfox.getCurrentUserID()) {
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             if (!userPresence[redfox.getCurrentUserID()]) {
                 userPresence[redfox.getCurrentUserID()] = [];
             }
@@ -6419,7 +6417,7 @@ async function sendMessageOnly(redfox, event, message, thread_id, message_id, bn
         await sleep(2000);
     }
     if (!groups.list.find((thread) => event.threadID === thread.id) && event.senderID != redfox.getCurrentUserID()) {
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             if (!userPresence[redfox.getCurrentUserID()]) {
                 userPresence[redfox.getCurrentUserID()] = [];
             }
@@ -6452,7 +6450,7 @@ function getMessageFromObj(message) {
 }
 
 async function sendMMMS(redfox, event, message, thread_id, message_id, id, voiceE, no_font, sendMessageOnly) {
-    utils.getGroupProfile(groups, id, async function (user) {
+    utils.getProfile(users, id, async function (user) {
         let splitNewLines = getMessageFromObj(message).split("\n");
         splitNewLines.shift();
         splitNewLines.pop();
@@ -7487,7 +7485,7 @@ async function blockUser(redfox, event, id) {
 
     users.blocked.push(id);
     if (event.isGroup) {
-        utils.getGroupProfile(groups, id, async function (name) {
+        utils.getProfile(users, id, async function (name) {
             let aa = "";
             if (name.firstName != undefined) {
                 aa += name.firstName;
@@ -7572,22 +7570,22 @@ async function unblockUser(redfox, event, id) {
     if (users.blocked.includes(id)) {
         users.blocked = users.blocked.filter((item) => item !== id);
         sendMessage(redfox, event, "Done captain!");
-        utils.getGroupProfile(groups, id, async function (name) {
+        utils.getProfile(users, id, async function (name) {
             removeBalance(name, 1500);
         });
         if (event.senderID != process.env.ROOT) {
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 removeBalance(name, 500);
             });
         }
     } else {
         users.bot = users.bot.filter((item) => item !== id);
         sendMessage(redfox, event, "If you see this messages, means it worked!");
-        utils.getGroupProfile(groups, id, async function (name) {
+        utils.getProfile(users, id, async function (name) {
             removeBalance(name, 2000);
         });
         if (event.senderID != process.env.ROOT) {
-            utils.getGroupProfile(groups, event.senderID, async function (name) {
+            utils.getProfile(users, event.senderID, async function (name) {
                 removeBalance(name, 8000);
             });
         }
@@ -7615,7 +7613,7 @@ async function addAdmin(redfox, event, id) {
     }
     if (users.blocked.includes(id) || users.bot.includes(id)) {
         if (event.isGroup) {
-            utils.getGroupProfile(groups, id, async function (name) {
+            utils.getProfile(users, id, async function (name) {
                 let aa = "Sorry ";
                 if (name.firstName != undefined) {
                     aa += name.firstName;
@@ -7632,7 +7630,7 @@ async function addAdmin(redfox, event, id) {
     }
     if (settings[login].owner == id) {
         if (event.isGroup) {
-            utils.getGroupProfile(groups, id, async function (name) {
+            utils.getProfile(users, id, async function (name) {
                 let aa = "Sorry ";
                 if (name.firstName != undefined) {
                     aa += name.firstName;
@@ -7649,7 +7647,7 @@ async function addAdmin(redfox, event, id) {
     }
     if (users.admin.includes(id)) {
         if (event.isGroup) {
-            utils.getGroupProfile(groups, id, async function (name) {
+            utils.getProfile(users, id, async function (name) {
                 let aa = "";
                 if (name.firstName != undefined) {
                     aa += name.firstName;
@@ -7666,7 +7664,7 @@ async function addAdmin(redfox, event, id) {
     }
     users.admin.push(id);
     if (event.isGroup) {
-        utils.getGroupProfile(groups, id, async function (name) {
+        utils.getProfile(users, id, async function (name) {
             let aa = "";
             if (name.firstName != undefined) {
                 aa += name.firstName;
@@ -8329,7 +8327,7 @@ async function sendMessageToAll(redfox, event) {
     redfox.getThreadList(50, null, ["INBOX"], async (err, list) => {
         if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
         sendMessage(redfox, event, "Message has been scheduled to be send to 50 recents threads.");
-        utils.getGroupProfile(groups, event.senderID, async function (name) {
+        utils.getProfile(users, event.senderID, async function (name) {
             let count = 1;
             let ctid = event.threadID;
             for (let tid in list) {
@@ -9317,7 +9315,7 @@ function handleError(err) {
 }
 
 function updateUserData(user, uid) {
-    utils.getGroupProfile(groups, uid, async function (name) {
+    utils.getProfile(users, uid, async function (name) {
         if (name) {
             name["name"] = user[uid].name;
 
@@ -9337,7 +9335,7 @@ function updateUserData(user, uid) {
 }
 
 function updateGroupData(gc, gid) {
-    utils.getGroupProfile(groups, gid, async function (group) {
+    utils.getProfile(groups, gid, async function (group) {
         if (group) {
             if (gc.threadName) {
                 group["name"] = gc.threadName;

@@ -15,13 +15,13 @@
  * 
  */
 
-module.exports = (groups, id, cb) => {
-    if (!groups.list.find((thread) => id === thread.id)) {
+module.exports = (_list, id, cb) => {
+    if (!_list.list.find((v) => id === v.id)) {
         cb({ name: undefined });
     }
-    groups.list.find((thread) => {
-        if (thread.id == id) {
-            cb(thread);
+    _list.list.find((v) => {
+        if (v.id == id) {
+            cb(v);
         }
     });
 }
