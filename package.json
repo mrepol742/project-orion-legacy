@@ -1,6 +1,6 @@
 {
     "name": "project-orion",
-    "version": "9.2.3",
+    "version": "9.3.0",
     "description": "Meet the lightning-fast Facebook Messenger chatbot, seamlessly managing multiple accounts with access to 271 commands. With distinct privileges for admins, owners, roots, and users, it's the lightweight solution for efficient and personalized interactions.",
     "main": "index.js",
     "private": true,
