@@ -1,4 +1,5 @@
-var utils = require("../utils");
+const path = require("path");
+var utils = require(path.join(__dirname, '..', 'utils'));
 var ex_utils = require("../../utils");
 
 module.exports = function (defaultFuncs, api, ctx) {

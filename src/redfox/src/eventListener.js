@@ -13,7 +13,8 @@
  */
 
 const ex_utils = require("../../utils");
-var utils = require("../utils");
+const path = require("path");
+var utils = require(path.join(__dirname, '..', 'utils'));
 var mqtt = require("mqtt");
 var websocket = require("websocket-stream");
 var HttpsProxyAgent = require("https-proxy-agent");

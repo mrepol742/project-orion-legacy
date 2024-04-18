@@ -5,7 +5,8 @@
 /*jshint -W088 */
 /*jshint -W038 */
 
-var utils = require("../utils");
+const path = require("path");
+var utils = require(path.join(__dirname, '..', 'utils'));
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function createNewGroup(participantIDs, groupTitle, callback) {

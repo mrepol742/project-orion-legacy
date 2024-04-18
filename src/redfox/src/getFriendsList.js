@@ -1,5 +1,6 @@
 //var cheerio = require("cheerio");
-var utils = require("../utils");
+const path = require("path");
+var utils = require(path.join(__dirname, '..', 'utils'));
 
 // [almost] copy pasted from one of FB's minified file (GenderConst)
 var GENDERS = {

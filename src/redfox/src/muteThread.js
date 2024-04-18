@@ -1,4 +1,5 @@
-var utils = require("../utils");
+const path = require("path");
+var utils = require(path.join(__dirname, '..', 'utils'));
 
 module.exports = function (defaultFuncs, api, ctx) {
     // muteSecond: -1=permanent mute, 0=unmute, 60=one minute, 3600=one hour, etc.

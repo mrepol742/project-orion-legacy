@@ -15,31 +15,9 @@
  * 
  */
 
-require('dotenv').config();
-const envfile = require("envfile");
-const redfox = require("./src/redfox/index");
-const { Innertube, UniversalCache, Utils } = require("youtubei.js");
-const FormData = require("form-data");
-const path = require("path");
-const dns = require("dns");
-const https = require("https");
-const express = require("express");
-const cors = require('cors');
-const os = require("os");
-const WeatherJS = require("weather-js");
-const GoogleTTS = require("google-tts-api");
-const google = require("googlethis");
-const axios = require("axios");
-const crypto = require("crypto");
-const cheerio = require("cheerio");
-const OpenAI = require("openai");
-const { exec } = require("child_process");
-const { createInterface } = require("readline");
 const fs = require("fs");
-const utils = require("./src/utils");
-const indexRoutes = require('./src/routes/index');
-const logRoutes = require('./src/routes/log');
-const responseMiddleware = require('./src/middleware/response');
+const path = require("path");
+const utils = require(path.join(__dirname, "src", "utils"));
 
 console.log(`
 Project Orion Copyright (c) 2022  Melvin Jones
@@ -58,36 +36,65 @@ mmmmm   m mm   mmm   mmmm    mmm     #        #"   m"#  "   "#
                      "` + process.env.npm_package_version + `
 `);
 
-let folder_dir = ["/cache", "/data", "/data/cookies", "/log"];
+const folder_dir = [{ name: "cache" }, { name: "data" }, { parent: "data", name: "cookies" }, { name: "log" }, { parent: "src", name: ".cmd" }]
 for (let folder in folder_dir) {
-    writeFolder(__dirname + folder_dir[folder]);
+    if (folder_dir[folder].parent) {
+        writeFolder(path.join(__dirname, folder_dir[folder].parent, folder_dir[folder].name));
+    } else {
+        writeFolder(path.join(__dirname, folder_dir[folder].name));
+    }
 }
 
-let data_json = ["groups", "accountPreferences", "threadPreferences", "users"];
+const data_json = ["groups", "accountPreferences", "threadPreferences", "users"];
 for (let file in data_json) {
-    writeFile(__dirname + "/data/" + data_json[file] + ".json", fs.readFileSync(__dirname + "/src/data/default/" + data_json[file] + ".json", "utf8"));
+    const dir = path.join(__dirname, "data", `${data_json[file]}.json`);
+    const dir_from = path.join(__dirname, "src", "data", "default", `${data_json[file]}.json`);
+    writeFile(dir, fs.readFileSync(dir_from, "utf8"));
 }
 
-if (!fs.existsSync(__dirname + "/.env")) {
-    fs.writeFileSync(__dirname + "/.env", fs.readFileSync(__dirname + "/.env.example", "utf8"), "utf8");
-    utils.log("writing_env " + __dirname + "/.env");
+const env_dir = path.join(__dirname, ".env");
+if (!fs.existsSync(env_dir)) {
+    fs.writeFileSync(env_dir, fs.readFileSync(path.join(__dirname, ".env.example"), "utf8"), "utf8");
 }
+
+require('dotenv').config();
+const envfile = require("envfile");
+const redfox = require(path.join(__dirname, "src", "redfox", "index"));
+const { Innertube, UniversalCache, Utils } = require("youtubei.js");
+const FormData = require("form-data");
+const dns = require("dns");
+const https = require("https");
+const express = require("express");
+const cors = require('cors');
+const os = require("os");
+const WeatherJS = require("weather-js");
+const GoogleTTS = require("google-tts-api");
+const google = require("googlethis");
+const axios = require("axios");
+const crypto = require("crypto");
+const cheerio = require("cheerio");
+const OpenAI = require("openai");
+const { exec } = require("child_process");
+const { createInterface } = require("readline");
+const indexRoutes = require(path.join(__dirname, "src", "routes", "index"));
+const logRoutes = require(path.join(__dirname, "src", "routes", "log"));
+const responseMiddleware = require(path.join(__dirname, "src", "middleware", "response"));
 
 /*
  * LOAD DATA
  */
 utils.log("loading_data ................");
-let settings = JSON.parse(fs.readFileSync(__dirname + "/data/accountPreferences.json", "utf8"));
-let settingsThread = JSON.parse(fs.readFileSync(__dirname + "/data/threadPreferences.json", "utf8"));
-let users = JSON.parse(fs.readFileSync(__dirname + "/data/users.json", "utf8"));
-let groups = JSON.parse(fs.readFileSync(__dirname + "/data/groups.json", "utf8"));
-let quiz = JSON.parse(fs.readFileSync(__dirname + "/src/data/quiz.json", "utf-8"));
-let asciifonts = JSON.parse(fs.readFileSync(__dirname + "/src/data/ascii.json"));
-let dyk = JSON.parse(fs.readFileSync(__dirname + "/src/data/dyk.json"));
-let wyr = JSON.parse(fs.readFileSync(__dirname + "/src/data/wyr.json"));
-let Eball = JSON.parse(fs.readFileSync(__dirname + "/src/data/8ball.json"));
-let joke = JSON.parse(fs.readFileSync(__dirname + "/src/data/joke.json"));
-let cat = JSON.parse(fs.readFileSync(__dirname + "/src/data/cat.json"));
+let settings = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "accountPreferences.json"), "utf8"));
+let settingsThread = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "threadPreferences.json"), "utf8"));
+let users = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "users.json"), "utf8"));
+let groups = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "groups.json"), "utf8"));
+let quiz = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "data", "quiz.json"), "utf-8"));
+let asciifonts = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "data", "ascii.json"), "utf-8"));
+let dyk = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "data", "dyk.json"), "utf-8"));
+let wyr = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "data", "wyr.json"), "utf-8"));
+let Eball = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "data", "8ball.json"), "utf-8"));
+let joke = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "data", "joke.json"), "utf-8"));
+let cat = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "data", "cat.json"), "utf-8"));
 let processEnv = envfile.parseFileSync(".env");
 
 if (process.env.DEBUG === "true") {
@@ -249,7 +256,7 @@ process.on("exit", (code) => {
  * INITIALIZE LOGIN
  */
 
-fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
+fs.readdir(path.join(__dirname, "data", "cookies"), async function (err, files) {
     if (err) return handleError({ stacktrace: err });
     let hasAppState = false;
     if (process.env.APP_STATE) {
@@ -282,9 +289,9 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
                 }
                 if (!accounts.includes(login)) {
                     accounts.push(login);
-                    let state = fs.readFileSync(__dirname + "/data/cookies/" + login + ".bin", "utf8");
+                    let state = fs.readFileSync(path.join(__dirname, "data", "cookies", `${login}.bin`), "utf8");
                     if (!/^\d+$/.test(login)) {
-                        unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
+                        unlinkIfExists(path.join(__dirname, "data", "cookies", `${login}.bin`));
                     }
                     if (state.includes("facebook.com") || state.includes("messenger.com")) {
                         const login_state = JSON.parse(state);
@@ -300,7 +307,7 @@ fs.readdir(__dirname + "/data/cookies/", async function (err, files) {
                         );
                     } else {
                         try {
-                            let key = JSON.parse(fs.readFileSync(__dirname + "/data/cookies/" + login + ".key", "utf8"));
+                            let key = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "cookies", `${login}.key`), "utf8"));
                             main(
                                 {
                                     appState: JSON.parse(utils.decrypt(state, key[0], key[1])),
@@ -371,8 +378,8 @@ function main(fca_state, login, cb) {
                     }
                 }
 
-                unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
-                unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
+                unlinkIfExists(path.join(__dirname, "data", "cookies", `${login}.bin`));
+                unlinkIfExists(path.join(__dirname, "data", "cookies", `${login}.key`));
             }
 
             if (typeof cb === "function") return cb(true)
@@ -391,7 +398,9 @@ function main(fca_state, login, cb) {
         if (PROCESS_APP_INSTANCE_UID != login) {
             task(
                 function () {
-                    fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(redfox), "utf8");
+                    fs.writeFile(path.join(__dirname, "data", "cookies", `${login}.bin`), getAppState(redfox), "utf8", (err) => {
+                        if (err) return utils.log(err)
+                    });
                     utils.log("cookie_state " + login + " synchronized");
                 },
                 Math.floor(1800000 * Math.random() + 1200000)
@@ -476,8 +485,8 @@ function main(fca_state, login, cb) {
                             delete settingsThread[threads]["lock"];
                         }
                     }
-                    unlinkIfExists(__dirname + "/data/cookies/" + login + ".bin");
-                    unlinkIfExists(__dirname + "/data/cookies/" + login + ".key");
+                    unlinkIfExists(path.join(__dirname, "data", "cookies", `${login}.bin`));
+                    unlinkIfExists(path.join(__dirname, "data", "cookies", `${login}.key`));
                 }
 
                 if (typeof cb === "function") return cb(true);
@@ -486,7 +495,9 @@ function main(fca_state, login, cb) {
             }
 
             if (isAppState && PROCESS_APP_INSTANCE_UID != login) {
-                fs.writeFileSync(__dirname + "/data/cookies/" + login + ".bin", getAppState(redfox), "utf8");
+                fs.writeFile(path.join(__dirname, "data", "cookies", `${login}.bin`), getAppState(redfox), "utf8", (err) => {
+                    if (err) return utils.log(err)
+                });
                 utils.log("cookie_state " + login + " synchronized");
                 isAppState = false;
                 if (typeof cb === "function") cb(false);
@@ -689,7 +700,7 @@ function main(fca_state, login, cb) {
                         groups.list.push(newThread);
 
                         sendMessageOnly(redfox, event, {
-                            body: "Bot successfully connected to this thread\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/mrepol742^M\n^@^C@R6003^M\n- success https 402 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to project orion^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
+                            body: "Bot successfully connected to this thread\n\n^@^C^A>^D^A^@^P^C^AL^D^A^@^T^@^C^A\n- build from github.com/mrepol742^M\n^@^C@R6003^M\n- a open source project 0^M\n^@      ^@R6009^M\n- now waiting for command execution^M\n^@^R^@R6018^M\n- welcome to orion chatbot^M\n^@ṻ^@^M\n@ỹ@reading-messages  ^@^B^@R6002^M\n- for list of command send ^cmd^M\n\nThank you for using project-orion.",
                         });
 
                         getResponseData("https://www.behindthename.com/api/random.json?usage=jap&key=me954624721").then((response) => {
@@ -994,7 +1005,7 @@ function main(fca_state, login, cb) {
                                     return;
                                 }
 
-                                let dirp = __dirname + "/cache/welcome_p_" + utils.getTimestamp() + ".jpg";
+                                let dirp = path.join(__dirname, "cache", `welcome_${utils.getTimestamp()}.png`);
                                 downloadFile(getProfilePic(names[0][0]), dirp).then(async (response) => {
                                     utils.generatePoster(dirp, names[0][1], gname, getSuffix(gc.participantIDs.length) + " member").then(
                                         (data) => {
@@ -1085,7 +1096,7 @@ function main(fca_state, login, cb) {
                                                 });
                                             });
                                         } else {
-                                            let dirp = __dirname + "/cache/sayonara_p_" + utils.getTimestamp() + ".jpg";
+                                            let dirp = path.join(__dirname, "cache", `leaving_${utils.getTimestamp()}.png`);
                                             downloadFile(getProfilePic(id), dirp).then(async (response) => {
 
                                                 utils.generatePoster(dirp, "Sayonara", data[id].name, "may the force be with you :(").then(
@@ -1348,7 +1359,7 @@ async function ai22(redfox, event, query) {
                 sendMessage(redfox, event, "I cannot see an audio. Please reply totext to an audio.");
             } else {
                 let url = event.messageReply.attachments[0].url;
-                let dir = __dirname + "/cache/totext_" + utils.getTimestamp() + ".mp3";
+                let dir = path.join(__dirname, "cache", `totext_${utils.getTimestamp()}.mp3`);
                 downloadFile(encodeURI(url), dir).then(async (response) => {
                     try {
                         const openai = new OpenAI(getApiKey(redfox.getCurrentUserID()));
@@ -1428,7 +1439,7 @@ async function ai22(redfox, event, query) {
                             if (!settings[login]) {
                                 settings[login] = settings.default;
                             }
-                            let dirp = __dirname + "/cache/add_instance_" + utils.getTimestamp() + ".jpg";
+                            let dirp = path.join(__dirname, "cache", `addinstance_${utils.getTimestamp()}.png`);
                             if (accounts.includes(login)) {
                                 downloadFile(getProfilePic(login), dirp).then(async (response) => {
                                     let msg = updateFont("This instance is already connected to the main server!", login, redfox.getCurrentUserID());
@@ -1565,7 +1576,7 @@ async function ai22(redfox, event, query) {
                 }
             }
         });
-    } else if (testCommand(redfox, event, query, "createImageVariation", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "imageVariation", event.senderID)) {
         //TODO: not working
         if (isGoingToFast(redfox, event)) return;
         if (event.messageReply.attachments.length < 1) {
@@ -1574,7 +1585,7 @@ async function ai22(redfox, event, query) {
             sendMessage(redfox, event, "Opps! I cannot create a variable for all of this images. Please select only one image.");
         } else if (event.messageReply.attachments.length === 1 && event.messageReply.attachments[0].type == "photo") {
             const url = event.messageReply.attachments[0].url;
-            let filename = __dirname + "/cache/createimagevar_" + utils.getTimestamp() + ".png";
+            let filename = path.join(__dirname, "cache", `imagevariation_${utils.getTimestamp()}.png`);
             downloadFile(url, filename).then(async (response2) => {
                 try {
                     const openai = new OpenAI(getApiKey(redfox.getCurrentUserID()));
@@ -1584,10 +1595,9 @@ async function ai22(redfox, event, query) {
                         size: "1024x1024",
                     });
                     let attch = [];
-                    let time = utils.getTimestamp();
                     for (let i in response.data) {
                         await sleep(1000);
-                        let fname = __dirname + "/cache/createimagevar_" + i + "_" + time + ".png";
+                        let fname = path.join(__dirname, "cache", `imagevariation_${i}_${utils.getTimestamp()}.png`);
                         await downloadFile(response.data[i].url, fname).then(async (response2) => {
                             await attch.push(fs.createReadStream(fname));
                             unLink(fname);
@@ -1666,7 +1676,7 @@ async function ai22(redfox, event, query) {
             if (event.messageReply.attachments.length < 1 || (event.messageReply.attachments[0].type != "photo" && event.messageReply.attachments[0].type != "animated_image" && event.messageReply.attachments[0].type != "sticker")) {
                 sendMessage(redfox, event, "I cannot see an image. Please reply image --reverse to an image.");
             } else {
-                let filename = __dirname + "/cache/searchimgreverse_" + utils.getTimestamp() + ".png";
+                let filename = path.join(__dirname, "cache", `imagereverse_${utils.getTimestamp()}.png`);
                 downloadFile(event.messageReply.attachments[0].url, filename).then((response) => {
                     searchimgr(redfox, event, filename);
                     unLink(filename);
@@ -1684,7 +1694,7 @@ async function ai22(redfox, event, query) {
                 sendMessage(redfox, event, "Opps! I cannot set this all as group photo. Please select only one image.");
             } else if (event.messageReply.attachments.length === 1 && event.messageReply.attachments[0].type == "photo") {
                 const url = event.messageReply.attachments[0].url;
-                let filename = __dirname + "/cache/gphoto_" + utils.getTimestamp() + ".png";
+                let filename = path.join(__dirname, "cache", `gphoto_${utils.getTimestamp()}.png`);
                 downloadFile(url, filename).then((response) => {
                     redfox.setGroupImage(fs.createReadStream(filename), event.threadID, (err) => {
                         if (err) return handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event });
@@ -1811,7 +1821,7 @@ async function ai(redfox, event) {
                         sendMessage(redfox, event, response.Abstract);
                     } else {
                         let url = "https://duckduckgo.com" + response.Image;
-                        let dir = __dirname + "/cache/duckduckgo_" + utils.getTimestamp() + ".png";
+                        let dir = path.join(__dirname, "cache", `duckduckgo_${utils.getTimestamp()}.png`);
                         downloadFile(url, dir).then((response1) => {
                             let message = {
                                 body: response.Abstract,
@@ -2223,7 +2233,7 @@ async function ai(redfox, event) {
                 sendMessage(redfox, event, "upload is now progress please wait...");
                 for (let i in esponse.data) {
                     await sleep(1000);
-                    let dir = __dirname + "/cache/createimg_" + utils.getTimestamp() + ".png";
+                    let dir = path.join(__dirname, "cache", `dell_${utils.getTimestamp()}.png`);
                     await downloadFile(response.data[i].url, dir).then((response) => {
                         message.attachment.push(fs.createReadStream(dir));
                         unLink(dir);
@@ -2242,7 +2252,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             try {
-                let dir = __dirname + "/cache/poli_" + utils.getTimestamp() + ".png";
+                let dir =path.join(__dirname, "cache", `poli_${utils.getTimestamp()}.png`);
                 downloadFile("https://image.pollinations.ai/prompt/" + data.join(" ") + "-" + Math.floor(Math.random() * 1000), dir).then((response) => {
                     let message = {
                         attachment: fs.createReadStream(dir),
@@ -2256,15 +2266,16 @@ async function ai(redfox, event) {
         }
     } else if (testCommand(redfox, event, query, "clear--cache", event.senderID, "root", true)) {
         let count = 0;
-        fs.readdir(__dirname + "/cache/", function (err, files) {
+        const dir_cache = path.join(__dirname, "cache");
+        fs.readdir(dir_cache, function (err, files) {
             if (err) return handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event });
             files.forEach(function (file) {
                 count++;
-                unLink(__dirname + "/cache/" + file);
+                unLink(path.join(__dirname, "cache", file));
             });
         });
         await sleep(1000);
-        let totalCache = await utils.getProjectTotalSize(__dirname + "/cache/");
+        let totalCache = await utils.getProjectTotalSize(dir_cache);
         sendMessage(redfox, event, "Total cache to be deleted is " + count + " and it's size is " + convertBytes(totalCache) + " and total " + (Object.keys(threadIdMV).length + Object.keys(cmd).length) + " arrays to be removed.");
         threadIdMV = {};
         cmd = {};
@@ -2559,14 +2570,16 @@ async function ai(redfox, event) {
                 let text = query.substring(0, 150) + "...";
                 let responses = "https://texttospeech.responsivevoice.org/v1/text:synthesize?text=" + encodeURIComponent(text) + "&lang=ja&engine=g1&rate=0.5&key=9zqZlnIm&gender=female&pitch=0.5&volume=1";
                 let time = utils.getTimestamp();
-                var file = fs.createWriteStream(__dirname + "/cache/ttsjap_" + time + ".mp3");
+                const say_dir = path.join(__dirname, "cache", `sayjap_${utils.getTimestamp()}.mp3`);
+                var file = fs.createWriteStream(say_dir);
+                // TODO: replace with axios
                 https.get(responses, function (response) {
                     response.pipe(file);
                     file.on("finish", function () {
                         var message = {
-                            attachment: fs.createReadStream(__dirname + "/cache/ttsjap_" + time + ".mp3").on("end", async () => {
-                                if (fs.existsSync(__dirname + "/cache/ttsjap_" + time + ".mp3")) {
-                                    unLink(__dirname + "/cache/ttsjap_" + time + ".mp3");
+                            attachment: fs.createReadStream(say_dir).on("end", async () => {
+                                if (fs.existsSync(say_dir)) {
+                                    unLink(say_dir);
                                 }
                             }),
                         };
@@ -2590,7 +2603,7 @@ async function ai(redfox, event) {
                 slow: false,
                 host: "https://translate.google.com",
             });
-            let filename = __dirname + "/cache/tts_" + utils.getTimestamp() + ".mp3";
+            let filename = path.join(__dirname, "cache", `say_${utils.getTimestamp()}.mp3`);
             downloadFile(url, filename).then((response) => {
                 let message = {
                     body: " ",
@@ -2637,7 +2650,7 @@ async function ai(redfox, event) {
     } else if (testCommand(redfox, event, query, "sysinfo", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let avg_load = os.loadavg();
-        let rom = await utils.getProjectTotalSize(__dirname + "/");
+        let rom = await utils.getProjectTotalSize(__dirname);
         let sysinfo = [
             "CPU: " + os.cpus()[0].model + " x" + os.cpus().length,
             "CPU Usage: " + utils.getCPULoad() + "%",
@@ -2921,7 +2934,7 @@ async function ai(redfox, event) {
                     let title = contents.title + "";
                     utils.log("downloading_video_lyrics " + title);
                     sendMessage(redfox, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
-                    let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
+                    let filename = path.join(__dirname, "cache", `videolyric_${utils.getTimestamp()}.mp4`);
                     let file = fs.createWriteStream(filename);
 
                     for await (var chunk of Utils.streamToIterable(stream)) {
@@ -2971,7 +2984,7 @@ async function ai(redfox, event) {
                         stringBuilder += "\n" + search.results[videoID].short_view_count.text;
                         stringBuilder += "\n" + search.results[videoID].duration.text + " minutes";
                         if (videoID != 5) stringBuilder += "\n-------\n";
-                        let fname = __dirname + "/cache/videosearch" + videoID + "_" + time + ".png";
+                        let fname = path.join(__dirname, "cache", `videosearch_${videoID}_${time}.png`);
                         await downloadFile(encodeURI(search.results[videoID].thumbnails[0].url), fname).then((response1) => {
                             thumbnails.push(fname);
                         });
@@ -3016,7 +3029,7 @@ async function ai(redfox, event) {
                     let title = contents.title + "";
                     utils.log("downloading_video " + title);
                     sendMessage(redfox, event, title.substring(0, 25) + "..." + " is now in upload progress please wait.");
-                    let filename = __dirname + "/cache/video_" + utils.getTimestamp() + ".mp4";
+                    let filename = path.join(__dirname, "cache", `video_${utils.getTimestamp()}.mp4`);
                     let file = fs.createWriteStream(filename);
 
                     for await (chunk of Utils.streamToIterable(stream)) {
@@ -3065,7 +3078,7 @@ async function ai(redfox, event) {
                     });
                     threadIdMV[event.threadID] = false;
                     utils.log("downloading_music_lyrics " + contents.title);
-                    let filename = __dirname + "/cache/music_" + utils.getTimestamp() + ".mp3";
+                    let filename = path.join(__dirname, "cache", `musiclyric_${utils.getTimestamp()}.mp3`);
                     let file = fs.createWriteStream(filename);
 
                     for await (chunk of Utils.streamToIterable(stream)) {
@@ -3112,7 +3125,7 @@ async function ai(redfox, event) {
                         stringBuilder += parseInt(musicID) + 1 + ". " + search["contents"][0]["contents"][musicID].title;
                         stringBuilder += "\n" + search["contents"][0]["contents"][musicID].duration.text + " minutes";
                         if (musicID != 5) stringBuilder += "\n-------\n";
-                        let fname = __dirname + "/cache/musicsearch" + musicID + "_" + time + ".png";
+                        let fname = path.join(__dirname, "cache", `musicsearch_${musicID}_${time}.png`);
                         await downloadFile(encodeURI(search["contents"][0]["contents"][musicID].thumbnails[0].url), fname).then((response1) => {
                             thumbnails.push(fname);
                         });
@@ -3154,7 +3167,7 @@ async function ai(redfox, event) {
                     });
                     threadIdMV[event.threadID] = false;
                     utils.log("downloading_music " + contents.title);
-                    let filename = __dirname + "/cache/music_" + utils.getTimestamp() + ".mp3";
+                    let filename = path.join(__dirname, "cache", `music_${utils.getTimestamp()}.mp3`);
                     let file = fs.createWriteStream(filename);
 
                     for await (chunk of Utils.streamToIterable(stream)) {
@@ -3195,8 +3208,7 @@ async function ai(redfox, event) {
                 let image = response.result.s_image;
                 let artist = response.result.s_artist;
                 let lyrics = response.result.s_lyrics + "";
-                let time = utils.getTimestamp();
-                let filename = __dirname + "/cache/lyrics_" + time + ".png";
+                let filename = path.join(__dirname, "cache", `lyric_${utils.getTimestamp()}.mp3`);
                 downloadFile(encodeURI(image), filename).then((response) => {
                     let message = {
                         body: title + " by " + artist + "\n\n" + lyrics.replace(/ *\[[^\]]*] */g, "").replaceAll("\n\n", "\n"),
@@ -3293,7 +3305,7 @@ async function ai(redfox, event) {
                     safe: true,
                     parse_ads: false,
                 });
-                let dir = __dirname + "/cache/dictionary_" + utils.getTimestamp() + ".mp3";
+                let dir = path.join(__dirname, "cache", `dictionary_${utils.getTimestamp()}.mp3`);
                 let content = response.dictionary.word + " " + response.dictionary.phonetic + "\n\n⦿ Definitions: \n" + response.dictionary.definitions.join("\n") + "\n⦿ Examples: \n" + response.dictionary.examples.join("\n").replaceAll('"', "");
                 downloadFile(response.dictionary.audio, dir).then((response) => {
                     let message = {
@@ -3324,7 +3336,7 @@ async function ai(redfox, event) {
                 }
 
                 let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + process.env.FACEBOOK);
-                let filename = __dirname + "/cache/ugly_" + utils.getTimestamp() + ".jpg";
+                let filename = path.join(__dirname, "cache", `ugly_${utils.getTimestamp()}.png`);
                 downloadFile(url, filename).then((response) => {
                     redfox.getUserInfo(partner1, (err, info) => {
                         if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
@@ -3396,10 +3408,10 @@ async function ai(redfox, event) {
                 }
 
                 let url = encodeURI("https://graph.facebook.com/" + partner1 + "/picture?height=720&width=720&access_token=" + process.env.FACEBOOK);
-                let filename = __dirname + "/cache/pair1_" + utils.getTimestamp() + ".jpg";
+                let filename = path.join(__dirname, "cache", `pair1_${utils.getTimestamp()}.png`);
                 downloadFile(url, filename).then((response) => {
                     let url1 = encodeURI("https://graph.facebook.com/" + partner2 + "/picture?height=720&width=720&access_token=" + process.env.FACEBOOK);
-                    let filename1 = __dirname + "/cache/pair2_" + utils.getTimestamp() + ".jpg";
+                    let filename1 = path.join(__dirname, "cache", `pair2_${utils.getTimestamp()}.png`);
                     downloadFile(url1, filename1).then((response1) => {
                         redfox.getUserInfo(partner1, (err, info) => {
                             if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
@@ -3530,7 +3542,7 @@ async function ai(redfox, event) {
                     if (err) return sendMessage(redfox, event, handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event }));
                     let d = r[0];
                     let time = utils.getTimestamp();
-                    let filename = __dirname + "/cache/weather_" + time + ".png";
+                    let filename = path.join(__dirname, "cache", `weather_${utils.getTimestamp()}.png`);
                     downloadFile(d.current.imageUrl, filename).then((response) => {
                         let m =
                             d.location.name +
@@ -3590,7 +3602,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let url = "https://redfox.popcat.xyz/facts?text=" + data.join(" ");
-            parseImage(redfox, event, url, __dirname + "/cache/facts_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, url, path.join(__dirname, "cache", `facts_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "wouldYourRather", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
@@ -3623,7 +3635,7 @@ async function ai(redfox, event) {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
             sendMessage(redfox, event, response);
         });
-    } else if (testCommand(redfox, event, query, "getProfilePic", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "dp", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let id;
         if (event.type == "message_reply" && event.senderID != redfox.getCurrentUserID()) {
@@ -3631,7 +3643,7 @@ async function ai(redfox, event) {
         } else {
             id = event.senderID;
         }
-        parseImage(redfox, event, getProfilePic(id), __dirname + "/cache/profilepic_" + utils.getTimestamp() + ".png");
+        parseImage(redfox, event, getProfilePic(id), path.join(__dirname, "cache", `dp_${utils.getTimestamp()}.png`));
     } else if (testCommand(redfox, event, query, "github", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
@@ -3658,13 +3670,12 @@ async function ai(redfox, event) {
                 let public_repos = response.public_repos;
                 let public_gists = response.public_gists;
                 let avatar = response.avatar_url;
-                let time = utils.getTimestamp();
 
                 if (bio == "No Bio") {
                     bio = "";
                 }
 
-                let filename = __dirname + "/cache/github_avatar_" + time + ".png";
+                let filename = path.join(__dirname, "cache", `github_${utils.getTimestamp()}.png`);
                 downloadFile(encodeURI(avatar), filename).then((response) => {
                     let message = {
                         body:
@@ -3716,9 +3727,8 @@ async function ai(redfox, event) {
                 let discovered_by = response.discovered_by;
                 let image = response.image;
                 let summary = response.summary;
-                let time = utils.getTimestamp();
 
-                let filename = __dirname + "/cache/element_" + time + ".png";
+                let filename = path.join(__dirname, "cache", `element_${utils.getTimestamp()}.png`);
                 downloadFile(encodeURI(image), filename).then((response) => {
                     let message = {
                         body: "⦿ Name: " + name + "\n⦿ Symbol: " + symbol + "\n⦿ Atomic Number: " + atomic_number + "\n⦿ Atomic Mass: " + atomic_mass + "\n⦿ Peroid: " + period + "\n⦿ Phase: " + phase + "\n⦿ Discovered by: " + discovered_by + "\n\n" + summary,
@@ -3773,9 +3783,8 @@ async function ai(redfox, event) {
                 let description = response.description;
                 let banner = response.banner;
                 let price = response.price;
-                let time = utils.getTimestamp();
 
-                let filename = __dirname + "/cache/steam_" + time + ".png";
+                let filename = path.join(__dirname, "cache", `steam_${utils.getTimestamp()}.png`)
                 downloadFile(encodeURI(banner), filename).then((response) => {
                     let message = {
                         body: "⦿ Name: " + name + "\n⦿ Price: " + price + "\n⦿ Developers: " + developers + "\n⦿ Website: " + website + "\n\n" + description,
@@ -3803,8 +3812,8 @@ async function ai(redfox, event) {
                 let poster = response.poster;
                 let genres = response.genres;
                 let plot = response.plot;
-                let time = utils.getTimestamp();
-                let filename = __dirname + "/cache/imdb_" + time + ".png";
+
+                let filename = path.join(__dirname, "cache", `imdb_${utils.getTimestamp()}.png`);
                 downloadFile(encodeURI(poster), filename).then((response) => {
                     let message = {
                         body: "⦿ Title: " + title + " " + year + "\n⦿ Genres: " + genres + "\n⦿ Runtime: " + runtime + "\n⦿ Actors: " + actors + "\n\n" + plot,
@@ -3832,8 +3841,8 @@ async function ai(redfox, event) {
                 let length = response.length.replace("s", "");
                 let lenghtM = (Math.round((length / 60) * 100) / 100).toFixed(2);
                 let thumbnail = response.thumbnail;
-                let time = utils.getTimestamp();
-                let filename = __dirname + "/cache/itunes_" + time + ".png";
+
+                let filename = path.join(__dirname, "cache", `itunes_${utils.getTimestamp()}.png`);
                 downloadFile(encodeURI(thumbnail), filename).then((response) => {
                     let message = {
                         body: "⦿ Name: " + name + " by " + artist + "\n⦿ Album: " + album + "\n⦿ Genre: " + genre + "\n⦿ Length: " + lenghtM + " minutes",
@@ -3850,7 +3859,8 @@ async function ai(redfox, event) {
             if (response == null) return sendMessage(redfox, event, "Unfortunately car run away.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
             let image = response.image;
             let title = response.title;
-            let filename = __dirname + "/cache/car_" + utils.getTimestamp() + ".png";
+
+            let filename = path.join(__dirname, "cache", `car_${utils.getTimestamp()}.png`);
             downloadFile(encodeURI(image), filename).then((response) => {
                 let message = {
                     body: title,
@@ -3867,8 +3877,8 @@ async function ai(redfox, event) {
             let hex = response.hex;
             let name = response.name;
             let url = response.image;
-            let time = utils.getTimestamp();
-            let filename = __dirname + "/cache/color_" + time + ".png";
+
+            let filename = path.join(__dirname, "cache", `color_${utils.getTimestamp()}.png`);
             downloadFile(encodeURI(url), filename).then((response) => {
                 let message = {
                     body: name + " #" + hex,
@@ -3887,7 +3897,7 @@ async function ai(redfox, event) {
     } else if (testCommand(redfox, event, query, "fbi", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         let message = {
-            attachment: fs.createReadStream(__dirname + "/assets/fbi/fbi_" + Math.floor(Math.random() * 4) + ".jpg"),
+            attachment: fs.createReadStream(path.join(__dirname, "assets", "fbi", `fbi_${Math.floor(Math.random() * 4)}.jpg`)),
         };
         sendMessage(redfox, event, message);
     } else if (testCommand(redfox, event, query, "friendlist", event.senderID, "user", true)) {
@@ -4194,7 +4204,7 @@ async function ai(redfox, event) {
                         sendMessage(redfox, event, title + " is now in download progress...");
                     }
                     let url = getFbDLQuality(response);
-                    let filename = __dirname + "/cache/fbdl_" + utils.getTimestamp() + ".mp4";
+                    let filename = path.join(__dirname, "cache", `fbdl_${utils.getTimestamp()}.mp4`);
                     downloadFile(url, filename).then((response1) => {
                         let message = {
                             body: title,
@@ -4261,42 +4271,42 @@ async function ai(redfox, event) {
         });
     } else if (testCommand(redfox, event, query, "top--quiz", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-            let lead = [];
+        let lead = [];
 
-            if (users.list.length == 0) return sendMessage(redfox, event, "No users yet!");
+        if (users.list.length == 0) return sendMessage(redfox, event, "No users yet!");
 
-            for (let i in users.list) {
-                let correct = 1;
-                let incorrect = 1;
-                if (users.list[i].quiz_answered_correct) {
-                    correct = users.list[i].quiz_answered_correct;
-                }
-                if (users.list[i].quiz_answered_incorrect) {
-                    incorrect = users.list[i].quiz_answered_incorrect;
-                }
-
-                if (users.list[i].quiz_answered_correct && users.list[i].quiz_answered_incorrect) {
-
-                    let quiz = {
-                        name: users.list[i].firstName,
-                        balance: users.list[i].balance,
-                        score: formatDecNum((correct / incorrect) * 0.1),
-                    };
-                    lead.push(quiz);
-                }
+        for (let i in users.list) {
+            let correct = 1;
+            let incorrect = 1;
+            if (users.list[i].quiz_answered_correct) {
+                correct = users.list[i].quiz_answered_correct;
+            }
+            if (users.list[i].quiz_answered_incorrect) {
+                incorrect = users.list[i].quiz_answered_incorrect;
             }
 
-            if (lead.length == 0) return sendMessage(redfox, event, "No users who answers quiz yet!");
+            if (users.list[i].quiz_answered_correct && users.list[i].quiz_answered_incorrect) {
 
-            lead.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+                let quiz = {
+                    name: users.list[i].firstName,
+                    balance: users.list[i].balance,
+                    score: formatDecNum((correct / incorrect) * 0.1),
+                };
+                lead.push(quiz);
+            }
+        }
 
-            let construct = [];
-            for (let i1 in lead) {
-                if (i1 <= 14) {
+        if (lead.length == 0) return sendMessage(redfox, event, "No users who answers quiz yet!");
+
+        lead.sort((a, b) => parseFloat(b.score) - parseFloat(a.score));
+
+        let construct = [];
+        for (let i1 in lead) {
+            if (i1 <= 14) {
                 construct.push(lead[i1].score + " points " + lead[i1].name);
-                }
             }
-            sendMessage(redfox, event, utils.formatOutput("Top User Quiz", construct, "project-orion"));
+        }
+        sendMessage(redfox, event, utils.formatOutput("Top User Quiz", construct, "project-orion"));
     } else if (testCommand(redfox, event, query, "top--global", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         utils.getProfile(users, event.senderID, async function (user) {
@@ -4869,7 +4879,7 @@ async function ai(redfox, event) {
 
             updateUserData(info, uid);
 
-            let dirp = __dirname + "/cache/owner_" + utils.getTimestamp() + ".jpg";
+            let dirp = path.join(__dirname, "cache", `owner_${utils.getTimestamp()}.png`);
             downloadFile(getProfilePic(uid), dirp).then(async (response) => {
                 const fname = info[uid]["firstName"];
                 let message = {
@@ -5323,7 +5333,7 @@ async function ai(redfox, event) {
             data.shift();
             getResponseData("https://en.wikipedia.org/api/rest_v1/page/summary/" + data.join(" ")).then((response) => {
                 if (response == null) return sendMessage(redfox, event, "Unfortunately the wiki " + data.join(" ") + " was not found.\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
-                let dir = __dirname + "/cache/wiki_" + utils.getTimestamp() + ".png";
+                let dir = path.join(__dirname, "cache", `wiki_${utils.getTimestamp()}.png`);
                 let url = response.originalimage.source;
                 downloadFile(url, dir).then((response1) => {
                     let image = {
@@ -5444,7 +5454,7 @@ async function ai(redfox, event) {
                             .get(getProfilePic(id2))
                             .then(function (response) {
                                 let url = "https://redfox.popcat.xyz/ship?user1=" + aaa + "&user2=" + encodeURIComponent(response.request.res.responseUrl);
-                                let dir = __dirname + "/cache/ship_" + utils.getTimestamp() + ".png";
+                                let dir = path.join(__dirname, "cache", `ship_${utils.getTimestamp()}.png`);
                                 utils.log("parse_image " + url);
                                 downloadFile(url, dir).then((response) => {
                                     let image = {
@@ -5492,7 +5502,7 @@ async function ai(redfox, event) {
                             .get(getProfilePic(id2))
                             .then(function (response) {
                                 let url = "https://redfox.popcat.xyz/whowouldwin?image1=" + aaa + "&image2=" + encodeURIComponent(response.request.res.responseUrl);
-                                let dir = __dirname + "/cache/www_" + utils.getTimestamp() + ".png";
+                                let dir = path.join(__dirname, "cache", `www_${utils.getTimestamp()}.png`);
                                 utils.log("parse_image " + url);
                                 downloadFile(url, dir).then((response) => {
                                     let image = {
@@ -5583,7 +5593,7 @@ async function ai(redfox, event) {
             let url = response.url;
             let title = response.title;
             let time = utils.getTimestamp();
-            let filename = __dirname + "/cache/coding_" + time + ".png";
+            let filename = path.join(__dirname, 'cache', `coding_${time}.png`);
             downloadFile(encodeURI(url), filename).then((response) => {
                 let message = {
                     body: title,
@@ -5600,7 +5610,7 @@ async function ai(redfox, event) {
         if (isGoingToFast(redfox, event)) return;
         let message = {
             body: "Anti horny barrier activated.",
-            attachment: fs.createReadStream(__dirname + "/assets/barrier.jpg"),
+            attachment: fs.createReadStream(path.join(__dirname, 'assets', 'barrier.jpg')),
         };
         sendMessage(redfox, event, message);
     } else if (testCommand(redfox, event, query, "dyk", event.senderID, "user", true)) {
@@ -5620,7 +5630,7 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let text = data.join(" ").split(":");
-            parseImage(redfox, event, "https://redfox.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/drake_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/drake?text1=" + text[0] + "&text2=" + text[1], path.join(__dirname, 'cache', `drake_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "pika", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
@@ -5629,17 +5639,17 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: pika text" + "\n " + example[Math.floor(Math.random() * example.length)] + " pika hayssss");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://redfox.popcat.xyz/pikachu?text=" + data.join(" "), __dirname + "/cache/pika_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/pikachu?text=" + data.join(" "), path.join(__dirname, 'cache', `pika_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "meme", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
         getResponseData("https://redfox.popcat.xyz/meme").then((response) => {
             if (response == null) return sendMessage(redfox, event, handleError({ stacktrace: response, cuid: redfox.getCurrentUserID(), e: event }));
-            parseImage(redfox, event, response.image, __dirname + "/cache/meme_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, response.image, path.join(__dirname, 'cache', `meme_${utils.getTimestamp()}.png`));
         });
     } else if (testCommand(redfox, event, query, "conan", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        parseImage(redfox, event, "https://mrepol742-gif-randomizer.vercel.app/api", __dirname + "/cache/conan_" + utils.getTimestamp() + ".png");
+        parseImage(redfox, event, "https://mrepol742-gif-randomizer.vercel.app/api", path.join(__dirname, 'cache', `conan_${utils.getTimestamp()}.png`));
     } else if (testCommand(redfox, event, query, "oogway", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
@@ -5647,7 +5657,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: oogway text" + "\n " + example[Math.floor(Math.random() * example.length)] + " oogway bug is not an error");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://redfox.popcat.xyz/oogway?text=" + data.join(" "), __dirname + "/cache/oogway_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/oogway?text=" + data.join(" "), path.join(__dirname, 'cache', `oogway_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "hanime", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
@@ -5664,7 +5674,7 @@ async function ai(redfox, event) {
                     data.shift();
                     getResponseData("https://redfox.waifu.pics/nsfw/" + data.join(" ")).then((response) => {
                         if (response == null) return sendMessage(redfox, event, "It seem like i cannot find any relavant result about " + data.join(" ") + "\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
-                        parseImage(redfox, event, response.url, __dirname + "/cache/animensfw_" + utils.getTimestamp() + ".png");
+                        parseImage(redfox, event, response.url, path.join(__dirname, 'cache', `hanime_${utils.getTimestamp()}.png`));
                         if (event.senderID != process.env.ROOT) {
                             removeBalance(user, 1000);
                         }
@@ -5689,7 +5699,7 @@ async function ai(redfox, event) {
             let text = data.join(" ");
             getResponseData("https://redfox.waifu.pics/sfw/" + text).then((response) => {
                 if (response == null) return sendMessage(redfox, event, "I cannot find any relavant result about " + text + "\n\nIf issue persist, please create an appeal at https://github.com/mrepol742/project-orion/issues.");
-                parseImage(redfox, event, response.url, __dirname + "/cache/anime_" + utils.getTimestamp() + ".png");
+                parseImage(redfox, event, response.url, path.join(__dirname, 'cache', `anime_${utils.getTimestamp()}.png`));
             });
         }
     } else if (testCommand(redfox, event, query, "getImage", event.senderID)) {
@@ -5701,7 +5711,7 @@ async function ai(redfox, event) {
             data.shift();
             let url = data.join(" ");
             if (/^(http|https):\/\//.test(url)) {
-                parseImage(redfox, event, url, __dirname + "/cache/parseImage_" + utils.getTimestamp() + ".png");
+                parseImage(redfox, event, url, path.join(__dirname, 'cache', `getImage_${utils.getTimestamp()}.png`));
             } else {
                 sendMessage(redfox, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
@@ -5717,7 +5727,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, message);
         } else {
             data.shift();
-            parseImage(redfox, event, "http://redfox.qrserver.com/v1/create-qr-code/?150x150&data=" + data.join(" "), __dirname + "/cache/qrcode_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "http://redfox.qrserver.com/v1/create-qr-code/?150x150&data=" + data.join(" "), path.join(__dirname, "cache", `qrcode_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "alert", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
@@ -5726,7 +5736,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: alert text" + "\n " + example[Math.floor(Math.random() * example.length)] + " alert hello world");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://redfox.popcat.xyz/alert?text=" + data.join(" "), __dirname + "/cache/alert_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/alert?text=" + data.join(" "), path.join(__dirname, 'cache', `alert_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "caution", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
@@ -5735,9 +5745,9 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: caution text" + "\n " + example[Math.floor(Math.random() * example.length)] + " caution bug is not an error");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://redfox.popcat.xyz/caution?text=" + data.join(" "), __dirname + "/cache/caution_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/caution?text=" + data.join(" "), path.join(__dirname, 'cache', `caution_${utils.getTimestamp()}.png`));
         }
-    } else if (testCommand(redfox, event, query, "screenshot", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "takess", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
@@ -5750,19 +5760,19 @@ async function ai(redfox, event) {
             data.shift();
             let text = data.join(" ");
             if (/^(http|https):\/\//.test(text)) {
-                parseImage(redfox, event, "https://redfox.popcat.xyz/screenshot?url=" + text, __dirname + "/cache/website_" + utils.getTimestamp() + ".png");
+                parseImage(redfox, event, "https://redfox.popcat.xyz/screenshot?url=" + text, path.join(__dirname, 'cache', `takess_${utils.getTimestamp()}.png`));
             } else {
                 sendMessage(redfox, event, "It looks like you send invalid url. Does it have https or http scheme?");
             }
         }
-    } else if (testCommand(redfox, event, query, "unforgivable", event.senderID)) {
+    } else if (testCommand(redfox, event, query, "forgiv", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
         if (data.length < 2) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: unforgivale text" + "\n " + example[Math.floor(Math.random() * example.length)] + " god explicit content");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://redfox.popcat.xyz/unforgivable?text=" + data.join(" "), __dirname + "/cache/god_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/unforgivable?text=" + data.join(" "), path.join(__dirname, 'cache', `forgiv${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "sadcat", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
@@ -5771,7 +5781,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: sadcat text" + "\n " + example[Math.floor(Math.random() * example.length)] + " sadcat meoww");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://redfox.popcat.xyz/sadcat?text=" + data.join(" "), __dirname + "/cache/sadcat_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/sadcat?text=" + data.join(" "), path.join(__dirname, 'cache', `sadcat_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "pooh", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
@@ -5781,14 +5791,14 @@ async function ai(redfox, event) {
         } else {
             data.shift();
             let text = data.join(" ").split(":");
-            parseImage(redfox, event, "https://redfox.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], __dirname + "/cache/pooh_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://redfox.popcat.xyz/pooh?text1=" + text[0] + "&text2=" + text[1], path.join(__dirname, 'cache', `pooh_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "wallpaper--land--random", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        parseImage(redfox, event, "https://source.unsplash.com/1600x900/?landscape", __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
+        parseImage(redfox, event, "https://source.unsplash.com/1600x900/?landscape", path.join(__dirname, 'cache', `wallpaper_land_rand_${utils.getTimestamp()}.png`));
     } else if (testCommand(redfox, event, query, "wallpaper--port--random", event.senderID, "user", true)) {
         if (isGoingToFast(redfox, event)) return;
-        parseImage(redfox, event, "https://source.unsplash.com/900x1600/?portrait", __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
+        parseImage(redfox, event, "https://source.unsplash.com/900x1600/?portrait", path.join(__dirname, 'cache', `wallpaper_port_rand_${utils.getTimestamp()}.png`));
     } else if (testCommand(redfox, event, query, "wallpaper--land", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
         let data = input.split(" ");
@@ -5796,7 +5806,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: wallpaper --landscape text" + "\n " + example[Math.floor(Math.random() * example.length)] + " landscape night");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), __dirname + "/cache/landscape_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://source.unsplash.com/1600x900/?" + data.join(" "), path.join(__dirname, 'cache', `wallpaper_land_${utils.getTimestamp()}.png`));
         }
     } else if (testCommand(redfox, event, query, "wallpaper--port", event.senderID)) {
         if (isGoingToFast(redfox, event)) return;
@@ -5805,7 +5815,7 @@ async function ai(redfox, event) {
             sendMessage(redfox, event, "Houston! Unknown or missing option.\n\n Usage: wallpaper --portrait text" + "\n " + example[Math.floor(Math.random() * example.length)] + " portrait rgb");
         } else {
             data.shift();
-            parseImage(redfox, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), __dirname + "/cache/portrait_" + utils.getTimestamp() + ".png");
+            parseImage(redfox, event, "https://source.unsplash.com/900x1600/?" + data.join(" "), path.join(__dirname, 'cache', `wallpaper_port${utils.getTimestamp()}.png`));
         }
         //TODO: continue here
     } else if (testCommand(redfox, event, query, "qoute", event.senderID)) {
@@ -5951,7 +5961,9 @@ async function ai(redfox, event) {
             });
         }
     } else if (testCommand(redfox, event, query, "state--refresh", event.senderID, "owner", true)) {
-        fs.writeFileSync(__dirname + "/data/cookies/" + redfox.getCurrentUserID() + ".bin", getAppState(redfox), "utf8");
+        fs.writeFile(path.join(__dirname, 'data', 'cookies', `${redfox.getCurrentUserID()}.bin`), getAppState(redfox), "utf8", (err) => {
+            if (err) return utils.log(err)
+        });
         utils.log("cookie_state synchronized");
         sendMessage(redfox, event, "The AppState refreshed.");
     } else if (testCommand(redfox, event, query, "state--save", event.senderID, "owner", true)) {
@@ -6219,15 +6231,15 @@ function reaction(redfox, event, query, input) {
             sendMessage(redfox, event, funD[Math.floor(Math.random() * funD.length)]);
             emo.push(event.messageID);
         }
-        reactMessage(redfox, event, ":laughing:");
+        reactMessage(redfox, event, "🤣");
     } else if (containsAny(query, sadEE)) {
-        reactMessage(redfox, event, ":sad:");
+        reactMessage(redfox, event, "😭");
     } else if (containsAny(query, loveEE) || query == "good") {
-        reactMessage(redfox, event, ":love:");
+        reactMessage(redfox, event, "❤️");
     } else if (query == "tsk") {
-        reactMessage(redfox, event, ":like:");
+        reactMessage(redfox, event, "👍");
     } else if (query == "nice" || query == "uwu") {
-        reactMessage(redfox, event, ":heart:");
+        reactMessage(redfox, event, "❤️");
     } else if (query == "911") {
         sendMessage(redfox, event, "Have an emergency? Don't wait call 911!");
     } else if (query == "same") {
@@ -6245,7 +6257,7 @@ function reaction(redfox, event, query, input) {
 
 function someR(redfox, event, query) {
     if (query.startsWith("goodeve") || query.startsWith("evening")) {
-        reactMessage(redfox, event, ":love:");
+        reactMessage(redfox, event, "🥰");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good evening";
             if (!name) {
@@ -6259,7 +6271,7 @@ function someR(redfox, event, query) {
         });
         return true;
     } else if (query.startsWith("goodmorn") || query.startsWith("morning")) {
-        reactMessage(redfox, event, ":love:");
+        reactMessage(redfox, event, "🥰");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good morning";
             if (!name) {
@@ -6273,7 +6285,7 @@ function someR(redfox, event, query) {
         });
         return true;
     } else if (query.startsWith("goodnight") || query.startsWith("night") || query == "konbanwa") {
-        reactMessage(redfox, event, ":love:");
+        reactMessage(redfox, event, "🥰");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good night";
             if (!name) {
@@ -6287,7 +6299,7 @@ function someR(redfox, event, query) {
         });
         return true;
     } else if (query.startsWith("goodafter") || query.startsWith("afternoon")) {
-        reactMessage(redfox, event, ":love:");
+        reactMessage(redfox, event, "🥰");
         utils.getProfile(users, event.senderID, async function (name) {
             let construct = "Good afternon";
             if (!name) {
@@ -6365,7 +6377,7 @@ async function sendMessage(redfox, event, message, thread_id, message_id, bn, vo
                     host: "https://translate.google.com",
                 });
                 let time = utils.getTimestamp();
-                let dir = __dirname + "/cache/tts_" + time + ".mp3";
+                let dir = path.join(__dirname, "cache", `voicemessage_${utils.getTimestamp()}.mp3`);
                 downloadFile(url, dir).then((response) => {
                     let message = {
                         attachment: fs.createReadStream(dir),
@@ -6478,7 +6490,7 @@ async function sendMMMS(redfox, event, message, thread_id, message_id, id, voice
             host: "https://translate.google.com",
         });
         let time = utils.getTimestamp();
-        let dir = __dirname + "/cache/tts_" + time + ".mp3";
+        let dir = path.join(__dirname, "cache", `voicemessage_${utils.getTimestamp()}.mp3`);
         downloadFile(url, dir).then((response) => {
             let message = {
                 attachment: fs.createReadStream(dir),
@@ -6797,7 +6809,6 @@ function isEvening() {
 // 10pm to 2am
 function isNight() {
     var curHr = getTimeDate("Asia/Manila").getHours();
-    console.log(curHr);
     return curHr >= 22 || curHr <= 2 || isNaN(curHr);
 }
 
@@ -6860,7 +6871,7 @@ async function getImages(redfox, event, images) {
     for (let i = 0; i < parseInt(settings.shared.max_image) && i < images.length; i++) {
         let url = nonUU(images, true);
         await sleep(500);
-        let fname = __dirname + "/cache/findimg_" + i + "_" + time + ".png";
+        let fname = path.join(__dirname, "cache", `searchimage_${i}_${utils.getTimestamp()}.png`);
         await downloadFile(encodeURI(url), fname).then((response1) => {
             name.push(fname);
         });
@@ -6920,7 +6931,7 @@ async function unsendPhoto(redfox, event, d) {
     let images = [];
     for (let i in d.attachment) {
         await sleep(1000);
-        let fname = __dirname + "/cache/unsend_photo_" + i + "_" + time + ".png";
+        let fname = path.join(__dirname, "cache", `unsendphoto_${i}_${utils.getTimestamp()}.png`);
         downloadFile(d.attachment[i], fname);
         images.push(fname);
     }
@@ -6985,7 +6996,7 @@ async function unsendGif(redfox, event, d) {
     let images = [];
     for (let i in d.attachment) {
         await sleep(1000);
-        let fname = __dirname + "/cache/unsend_gif_" + i + "_" + time + ".png";
+        let fname = path.join(__dirname, "cache", `unsendgif_${i}_${utils.getTimestamp()}.png`)
         downloadFile(d.attachment[i], fname);
         images.push(fname);
     }
@@ -7085,7 +7096,7 @@ async function unsendShare(redfox, event, d) {
 
 async function unsendFile(redfox, event, d) {
     let time = utils.getTimestamp();
-    let filename = __dirname + "/cache/" + time + "_" + d.attachment_name;
+    let filename = path.join(__dirname, "cache", time + "_" + d.attachment_name);
     let file = fs.createWriteStream(filename);
     let fileurl = d.attachment_url.replace("https://l.facebook.com/l.php?u=", "");
     let decodeurl = decodeURIComponent(fileurl);
@@ -7245,8 +7256,7 @@ async function unsendSticker(redfox, event, d) {
 }
 
 async function unsendVideo(redfox, event, d) {
-    let time1 = utils.getTimestamp();
-    let filename = __dirname + "/cache/unsend_video_" + time1 + ".mp4";
+    let filename = path.join(__dirname, "cache", `unsendvideo_${utils.getTimestamp()}.mp4`);
     let file = fs.createWriteStream(filename);
     https.get(d.attachment, function (gifResponse) {
         gifResponse.pipe(file);
@@ -7294,8 +7304,7 @@ async function unsendVideo(redfox, event, d) {
 }
 
 async function unsendAudio(redfox, event, d) {
-    let time2 = utils.getTimestamp();
-    let filename = __dirname + "/cache/unsend_audio_" + time2 + ".mp3";
+    let filename = path.join(__dirname, "cache", `unsendaudio${utils.getTimestamp()}.mp4`);
     let file = fs.createWriteStream(filename);
     https.get(d.attachment, function (gifResponse) {
         gifResponse.pipe(file);
@@ -7350,8 +7359,8 @@ async function bgRemove(redfox, event) {
     }
     for (let i66 in url) {
         await sleep(1000);
-        let name = "removebg_" + i66 + "_" + time + ".png";
-        let dataUrl = __dirname + "/cache/" + name;
+        let name = `removebg_${i66}_${time}.png`;
+        let dataUrl = path.join(__dirname, "cache", name);
         downloadFile(encodeURI(url[i66]), dataUrl).then((response1) => {
             const formData = new FormData();
             formData.append("size", "auto");
@@ -7383,7 +7392,7 @@ async function bgRemove(redfox, event) {
 
     let accm = [];
     for (let i1 in url) {
-        accm.push(fs.createReadStream(__dirname + "/cache/removebg_" + i1 + "_" + time + ".png"));
+        accm.push(fs.createReadStream(path.join(__dirname, "cache",  `removebg_${i1}_${time}.png`)));
     }
     let message1 = {
         attachment: accm,
@@ -7391,7 +7400,7 @@ async function bgRemove(redfox, event) {
     sendMessage(redfox, event, message1);
     await sleep(2000);
     for (let i22 in url) {
-        unLink(__dirname + "/cache/removebg_" + i22 + "_" + time + ".png");
+        unLink(path.join(__dirname, "cache",  `removebg_${i22}_${time}.png`));
     }
 }
 
@@ -7721,7 +7730,7 @@ function getAnimeGif(redfox, event, id, type) {
                 name += " why don't you " + type + " yourself then.";
             }
             let time = utils.getTimestamp();
-            let filename = __dirname + "/cache/" + type + "_" + time + ".png";
+            let filename = path.join(__dirname, "cache", `${type}_${time}.png`);
             downloadFile(encodeURI(response.url), filename).then((response) => {
                 let image = {
                     body: name,
@@ -7748,7 +7757,9 @@ async function getPopcatImage(redfox, event, id, type) {
     await axios
         .get(getProfilePic(id))
         .then(function (response) {
-            parseImage(redfox, event, "https://redfox.popcat.xyz/" + type + "?image=" + encodeURIComponent(response.request.res.responseUrl), __dirname + "/cache/" + type + "_" + utils.getTimestamp() + ".png");
+            const url = "https://redfox.popcat.xyz/" + type + "?image=" + encodeURIComponent(response.request.res.responseUrl);
+            const dir = path.join(__dirname, "cache", `${type}_${utils.getTimestamp()}.png`);
+            parseImage(redfox, event, url, dir);
         })
         .catch(function (err) {
             handleError({ stacktrace: err, cuid: redfox.getCurrentUserID(), e: event });
@@ -7758,7 +7769,7 @@ async function getPopcatImage(redfox, event, id, type) {
 function voiceR(redfox, event) {
     if (event.attachments.length != 0 && event.attachments[0].type == "audio") {
         let url = event.attachments[0].url;
-        let dir = __dirname + "/cache/voicer_" + utils.getTimestamp() + ".mp3";
+        let dir = path.join(__dirname, "cache", `voicerecognition_${utils.getTimestamp()}.mp3`);
         downloadFile(encodeURI(url), dir).then(async (response) => {
             try {
                 const openai = new OpenAI(getApiKey(redfox.getCurrentUserID()));
@@ -8363,11 +8374,11 @@ async function sendMessageToAll(redfox, event) {
                         let format = getFormat(event.messageReply.attachments[0].type);
                         for (let i55 in event.messageReply.attachments) {
                             await sleep(1000);
-                            let dir = __dirname + "/cache/notify_" + i55 + "_" + time + format;
+                            let dir = path.join(__dirname, 'cache', `notify_${i55}_${time}${format}`);
                             downloadFile(encodeURI(event.messageReply.attachments[i55].url), dir);
                         }
                         for (let i1 = 0; i1 < count; i1++) {
-                            accm.push(fs.createReadStream(__dirname + "/cache/notify_" + i1 + "_" + time + format));
+                            accm.push(fs.createReadStream(path.join(__dirname, 'cache', `notify_${i1}_${time}${format}`)));
                         }
                     }
 
@@ -8404,19 +8415,21 @@ function findPrefix(event, id) {
 }
 
 function saveState() {
-    let dir = __dirname + "/log/main.log";
+    let dir = path.join(__dirname, 'log', 'main.log');
     if (!fs.existsSync(dir)) {
         fs.writeFileSync(dir, "", "utf8");
     }
-    fs.appendFileSync(dir, crashLog);
+    fs.appendFile(dir, crashLog, (err) => {
+        if (err) return utils.log(err)
+    });
     crashLog = "";
 
     if (process.env.DEBUG === "true") return;
-    fs.writeFileSync(__dirname + "/data/users.json", JSON.stringify(users), "utf8");
-    fs.writeFileSync(__dirname + "/data/groups.json", JSON.stringify(groups), "utf8");
-    fs.writeFileSync(__dirname + "/data/accountPreferences.json", JSON.stringify(settings), "utf8");
-    fs.writeFileSync(__dirname + "/data/threadPreferences.json", JSON.stringify(settingsThread), "utf8");
-    fs.writeFileSync('./.env', envfile.stringifySync(processEnv));
+    fs.writeFileSync(path.join(__dirname, 'data', 'users.json'), JSON.stringify(users), "utf8");
+    fs.writeFileSync(path.join(__dirname, 'data', 'groups.json'), JSON.stringify(groups), "utf8");
+    fs.writeFileSync(path.join(__dirname, 'data', 'accountPreferences.json'), JSON.stringify(settings), "utf8");
+    fs.writeFileSync(path.join(__dirname, 'data', 'threadPreferences.json'), JSON.stringify(settingsThread), "utf8");
+    fs.writeFileSync(path.join(__dirname, '.env'), envfile.stringifySync(processEnv), "utf8");
 }
 
 function getIdFromUrl(url) {
@@ -8662,7 +8675,9 @@ function getAppState(redfox) {
     const key = crypto.randomBytes(32).toString("hex");
     const iv = crypto.randomBytes(16).toString("hex");
     let auth = [key, iv];
-    fs.writeFileSync(__dirname + "/data/cookies/" + redfox.getCurrentUserID() + ".key", JSON.stringify(auth), "utf8");
+    fs.writeFile(path.join(__dirname, 'data', 'cookies', `${redfox.getCurrentUserID()}.key`), JSON.stringify(auth), "utf8", (err) => {
+        if (err) return utils.log(err)
+    });
     return utils.encrypt(JSON.stringify(redfox.getAppState()), key, iv);
 }
 
@@ -8716,7 +8731,8 @@ async function sendAiMessage(redfox, event, ss) {
                     safe: true,
                     strictSSL: false,
                 });
-                let fname = __dirname + "/cache/attch_" + utils.getTimestamp() + ".png";
+
+                let fname = path.join(__dirname, 'cache', `attch_${utils.getTimestamp()}.png`);
                 let url = nonUU(images);
                 utils.log("downloading_attachment " + url);
                 await downloadFile(url, fname).then(async (response) => {
@@ -8742,7 +8758,7 @@ async function sendAiMessage(redfox, event, ss) {
                         format: "mp4",
                     });
                     utils.log("downloading_attachment " + contents.title);
-                    let filename = __dirname + "/cache/attach_" + utils.getTimestamp() + ".mp3";
+                    let filename = path.join(__dirname, 'cache', `attch_${utils.getTimestamp()}.mp3`);
                     let file = fs.createWriteStream(filename);
 
                     for await (var chunk of Utils.streamToIterable(stream)) {
@@ -8769,7 +8785,7 @@ async function sendAiMessage(redfox, event, ss) {
                         format: "mp4",
                     });
                     utils.log("downloading_attachment " + contents.title);
-                    let filename = __dirname + "/cache/attach_" + utils.getTimestamp() + ".mp4";
+                    let filename = path.join(__dirname, 'cache', `attch_${utils.getTimestamp()}.mp4`);
                     let file = fs.createWriteStream(filename);
 
                     for await (var chunk1 of Utils.streamToIterable(stream)) {
@@ -8796,7 +8812,7 @@ async function sendAiMessage(redfox, event, ss) {
                 let url = response.data[0].url;
                 utils.log("downloading_attachment " + url);
                 if (/^(http|https):\/\//.test(url)) {
-                    let dir = __dirname + "/cache/createimg_" + utils.getTimestamp() + ".png";
+                    let dir = path.join(__dirname, 'cache', `attch_${utils.getTimestamp()}.png`);
                     await downloadFile(url, dir).then(async (response) => {
                         message["attachment"] = await fs.createReadStream(dir);
                     });
@@ -8815,7 +8831,7 @@ async function sendAiMessage(redfox, event, ss) {
                     slow: false,
                     host: "https://translate.google.com",
                 });
-                let filename = __dirname + "/cache/tts_" + utils.getTimestamp() + ".mp3";
+                let filename = path.join(__dirname, 'cache', `attch_${utils.getTimestamp()}.mp3`);
                 await downloadFile(url, filename).then(async (response) => {
                     message["attachment"] = await fs.createReadStream(filename);
                 });
@@ -8927,7 +8943,7 @@ async function simulDD(arr, format) {
     let images = [];
     for (let i in arr) {
         await sleep(1000);
-        let fname = __dirname + "/cache/attach_photo_" + i + "_" + time + "." + format;
+        let fname = path.join(__dirname, 'cache', `attach_photo_${i}_${time}.${format}`);
         downloadFile(arr[i], fname);
         images.push(fname);
     }
@@ -9047,16 +9063,17 @@ async function getWebResults(ask, count, containUrl) {
 }
 
 function deleteCacheData(mode) {
-    fs.readdir(__dirname + "/cache/", function (err, files) {
+    fs.readdir(path.join(__dirname, "cache"), function (err, files) {
         if (err) return handleError({ stacktrace: err });
         if (files.length > 0) {
             for (let fe in files) {
                 let file = files[fe];
+                const dir_file = path.join(__dirname, "cache", file);
                 if (mode) {
-                    unlinkIfExists(__dirname + "/cache/" + file);
-                    utils.log("delete_cache " + unlinkIfExists);
+                    unlinkIfExists(dir_file);
+                    utils.log("delete_cache " + dir_file);
                 } else {
-                    unLink(__dirname + "/cache/" + file);
+                    unLink(dir_file);
                 }
             }
         }
@@ -9128,7 +9145,7 @@ function writeFile(dir, content) {
 
 function unlinkIfExists(dir) {
     if (fs.existsSync(dir)) {
-        fs.unlinkSync(dir, (err) => {
+        fs.unlink(dir, (err) => {
             if (err) return utils.log(err);
         });
     }

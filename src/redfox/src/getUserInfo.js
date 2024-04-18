@@ -1,4 +1,5 @@
-var utils = require("../utils");
+const path = require("path");
+var utils = require(path.join(__dirname, '..', 'utils'));
 
 function formatData(data) {
     var retObj = {};

@@ -1,4 +1,17 @@
-var utils = require("../utils");
+/*
+ * This file is part of Project Orion.
+ *
+ * Portions of this file are derived from code licensed under the MIT License.
+ *
+ * The original code licensed under the MIT and its copyright information can be found at <https://github.com/mrepol742/project-orion/blob/master/src/redfox/LICENSE/>.
+ *
+ * This file is also subject to the terms and conditions of the GNU General Public License (GPL) vesion 3.0 License, a copy of which can be found in the LICENSE file at the root of this distribution.
+ *
+ * Copyright (c) 2022 Melvin Jones
+ */
+
+const path = require("path");
+var utils = require(path.join(__dirname, '..', 'utils'));
 
 module.exports = function (defaultFuncs, api, ctx) {
     return function setMessageReaction(reaction, messageID, callback, forceCustomReaction) {
@@ -16,59 +29,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 }
                 resolveFunc(friendList);
             };
-        }
-
-        switch (reaction) {
-            case "\uD83D\uDE0D": //:heart_eyes:
-            case "\uD83D\uDE06": //:laughing:
-            case "\uD83D\uDE2E": //:open_mouth:
-            case "\uD83D\uDE22": //:cry:
-            case "\uD83D\uDE20": //:angry:
-            case "\uD83D\uDC4D": //:thumbsup:
-            case "\uD83D\uDC4E": //:thumbsdown:
-            case "\u2764": //:heart:
-            case "\uD83D\uDC97": //:glowingheart:
-            case "":
-                //valid
-                break;
-            case ":heart_eyes:":
-            case ":love:":
-                reaction = "\uD83D\uDE0D";
-                break;
-            case ":laughing:":
-            case ":haha:":
-                reaction = "\uD83D\uDE06";
-                break;
-            case ":open_mouth:":
-            case ":wow:":
-                reaction = "\uD83D\uDE2E";
-                break;
-            case ":cry:":
-            case ":sad:":
-                reaction = "\uD83D\uDE22";
-                break;
-            case ":angry:":
-                reaction = "\uD83D\uDE20";
-                break;
-            case ":thumbsup:":
-            case ":like:":
-                reaction = "\uD83D\uDC4D";
-                break;
-            case ":thumbsdown:":
-            case ":dislike:":
-                reaction = "\uD83D\uDC4E";
-                break;
-            case ":heart:":
-                reaction = "\u2764";
-                break;
-            case ":glowingheart:":
-                reaction = "\uD83D\uDC97";
-                break;
-            default:
-                if (forceCustomReaction) {
-                    break;
-                }
-                return callback({ error: "Reaction is not a valid emoji." });
         }
 
         var variables = {
@@ -92,7 +52,7 @@ module.exports = function (defaultFuncs, api, ctx) {
             .then(utils.parseAndCheckLogin(ctx.jar, defaultFuncs))
             .then(function (resData) {
                 if (!resData) {
-                    throw { error: "setReaction returned empty object." };
+                    throw { error: "glowingheart returned empty object." };
                 }
                 if (resData.error) {
                     throw resData;
