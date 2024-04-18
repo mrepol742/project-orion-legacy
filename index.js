@@ -517,17 +517,10 @@ function main(fca_state, login, cb) {
                     });
                 }
 
-                // check if thread lock didnt exists
-                if (!settingsThread[event.threadID].lock) {
-                    // apply thread lock from the first bot
-                    settingsThread[event.threadID]["lock"] = redfox.getCurrentUserID();
-                    utils.log("thread_lock " + event.threadID + " to " + redfox.getCurrentUserID());
-                }
+                const threadLock = settingsThread[event.threadID].lock;
 
                 // check if thread lock exists and is not equal to current bot id
                 // then return
-                /*
-                const threadLock = settingsThread[event.threadID].lock;
                 if (threadLock && threadLock != redfox.getCurrentUserID()) {
                     if (accounts.includes(threadLock)) return;
                     for (let threads in settingsThread) {
@@ -536,7 +529,13 @@ function main(fca_state, login, cb) {
                         }
                     }
                 }
-                */
+
+                // check if thread lock didnt exists
+                if (!threadLock) {
+                    // apply thread lock from the first bot
+                    settingsThread[event.threadID]["lock"] = redfox.getCurrentUserID();
+                    utils.log("thread_lock " + event.threadID + " to " + redfox.getCurrentUserID());
+                }
             }
 
             if ((event.type == "message" || event.type == "message_reply") && event.senderID == redfox.getCurrentUserID()) {
