@@ -526,6 +526,7 @@ function main(fca_state, login, cb) {
 
                 // check if thread lock exists and is not equal to current bot id
                 // then return
+                /*
                 const threadLock = settingsThread[event.threadID].lock;
                 if (threadLock && threadLock != redfox.getCurrentUserID()) {
                     if (accounts.includes(threadLock)) return;
@@ -535,6 +536,7 @@ function main(fca_state, login, cb) {
                         }
                     }
                 }
+                */
             }
 
             if ((event.type == "message" || event.type == "message_reply") && event.senderID == redfox.getCurrentUserID()) {
