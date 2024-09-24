@@ -417,7 +417,6 @@ function makeLogin(jar, email, password, loginOptions, callback, prCallback) {
     };
 }
 
-// Helps the login
 function loginHelper(appState, email, password, globalOptions, callback, prCallback) {
     var mainPromise = null;
     var jar = utils.getJar();
@@ -425,13 +424,13 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
     // If we're given an appState we loop through it and save each cookie
     // back into the jar.
     if (appState) {
-        appState.map(function (c) {
+        appState.map(function(c) {
             var str = c.key + "=" + c.value + "; expires=" + c.expires + "; domain=" + c.domain + "; path=" + c.path + ";";
             jar.setCookie(str, "http://" + c.domain);
         });
 
         // Load the main page.
-        mainPromise = utils.get("https://www.facebook.com/", jar, null, globalOptions, { noRef: true }).then(utils.saveCookies(jar));
+        mainPromise = utils.get('https://www.facebook.com/', jar, null, globalOptions, { noRef: true }).then(utils.saveCookies(jar));
     } else {
         // Open the main page, then we login with the given credentials and finally
         // load the main page again (it'll give us some IDs that we need)
@@ -439,26 +438,52 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
             .get("https://www.facebook.com/", null, null, globalOptions, { noRef: true })
             .then(utils.saveCookies(jar))
             .then(makeLogin(jar, email, password, globalOptions, callback, prCallback))
-            .then(function () {
-                return utils.get("https://www.facebook.com/", jar, null, globalOptions).then(utils.saveCookies(jar));
+            .then(function() {
+                return utils.get('https://www.facebook.com/', jar, null, globalOptions).then(utils.saveCookies(jar));
             });
     }
+    let redirect = [1, "https://m.facebook.com/"], bypass_region_err = false, ctx, _defaultFuncs, api;
+    function CheckAndFixErr(res) {
+        let reg_antierr = /This browser is not supported/gs; // =))))))
+        if (reg_antierr.test(res.body)) {
+            const Data = JSON.stringify(res.body);
+            const Dt_Check = Data.split('2Fhome.php&amp;gfid=')[1];
+            if (Dt_Check == undefined) return res
+            const fid = Dt_Check.split("\\\\")[0];//fix sau
+            if (Dt_Check == undefined || Dt_Check == "") return res
+            const final_fid = fid.split(`\\`)[0];
+            if (final_fid == undefined || final_fid == '') return res;
+            const redirectlink = redirect[1] + "a/preferences.php?basic_site_devices=m_basic&uri=" + encodeURIComponent("https://m.facebook.com/home.php") + "&gfid=" + final_fid;
+            bypass_region_err = true;
+            return utils.get(redirectlink, jar, null, globalOptions).then(utils.saveCookies(jar));
+        }
+        else return res
+    }
 
-    var ctx = null;
-    var _defaultFuncs = null;
-    var api = null;
+    function Redirect(res) {
+        var reg = /<meta http-equiv="refresh" content="0;url=([^"]+)[^>]+>/;
+        redirect = reg.exec(res.body);
+            if (redirect && redirect[1]) return utils.get(redirect[1], jar, null, globalOptions).then(utils.saveCookies(jar));
+        return res;
+    }
+            mainPromise = mainPromise
+                .then(res => Redirect(res))
+                .then(res => CheckAndFixErr(res))
+               
+                //fix via login with defaut UA return WWW.facebook.com not m.facebook.com
 
-    mainPromise = mainPromise
-        .then(function (res) {
-            // Hacky check for the redirection that happens on some ISPs, which doesn't return statusCode 3xx
-            var reg = /<meta http-equiv="refresh" content="0;url=([^"]+)[^>]+>/;
-            var redirect = reg.exec(res.body);
-            if (redirect && redirect[1]) {
-                return utils.get(redirect[1], jar, null, globalOptions).then(utils.saveCookies(jar));
-            }
-            return res;
-        })
-        .then(function (res) {
+                .then(function(res) {
+                    let Regex_Via = /MPageLoadClientMetrics/gs; //default for normal account, can easily get region, without this u can't get region in some case but u can run normal
+                    if (!Regex_Via.test(res.body)) {
+                        //www.facebook.com
+                        globalOptions.userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1";
+                        return utils.get('https://www.facebook.com/', jar, null, globalOptions, { noRef: true }).then(utils.saveCookies(jar));
+                    }
+                    else return res
+                })
+                .then(res => Redirect(res))
+                .then(res => CheckAndFixErr(res))
+        .then(function(res) {
             var html = res.body;
             var stuff = buildAPI(globalOptions, html, jar);
             ctx = stuff[0];
@@ -470,25 +495,25 @@ function loginHelper(appState, email, password, globalOptions, callback, prCallb
     // given a pageID we log in as a page
     if (globalOptions.pageID) {
         mainPromise = mainPromise
-            .then(function () {
-                return utils.get("https://www.facebook.com/" + ctx.globalOptions.pageID + "/messages/?section=messages&subsection=inbox", ctx.jar, null, globalOptions);
+            .then(function() {
+                return utils.get('https://www.facebook.com/' + ctx.globalOptions.pageID + '/messages/?section=messages&subsection=inbox', ctx.jar, null, globalOptions);
             })
-            .then(function (resData) {
-                var url = utils.getFrom(resData.body, 'window.location.replace("https:\\/\\/www.facebook.com\\', '");').split("\\").join("");
+            .then(function(resData) {
+                var url = utils.getFrom(resData.body, 'window.location.replace("https:\\/\\/www.facebook.com\\', '");').split('\\').join('');
                 url = url.substring(0, url.length - 1);
-
-                return utils.get("https://www.facebook.com" + url, ctx.jar, null, globalOptions);
+                return utils.get('https://www.facebook.com' + url, ctx.jar, null, globalOptions);
             });
     }
 
     // At the end we call the callback or catch an exception
     mainPromise
-        .then(function () {
-            log("fca_status " + api.getCurrentUserID() + " online");
+        .then(function() {
+            
             return callback(null, api);
         })
-        .catch(function (err) {
-            return callback(err);
+        .catch(function(e) {
+            log.error("login", e.error || e);
+            callback(e);
         });
 }
 
